@@ -15,6 +15,7 @@ import {
   courseGenerationQueue,
   closeQueues,
 } from '../src/jobs/queue';
+import { redis } from '../src/config/redis';
 import type { GeneratedCourse } from '../src/modules/courses/course.generator';
 
 const TEST_DB = 'mongodb://127.0.0.1:27017/b2c_test_courses';
@@ -79,6 +80,7 @@ afterAll(async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.disconnect();
   await closeQueues();
+  redis.disconnect();
 });
 
 describe('POST /courses', () => {

@@ -14,4 +14,14 @@ const exerciseSubmissionSchema = new Schema(
   { timestamps: true },
 );
 
+exerciseSubmissionSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: (_doc, ret) => {
+    const out = ret as Record<string, unknown>;
+    delete out._id;
+    return out;
+  },
+});
+
 export const ExerciseSubmission = model('ExerciseSubmission', exerciseSubmissionSchema);

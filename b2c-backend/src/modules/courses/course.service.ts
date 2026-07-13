@@ -128,6 +128,7 @@ export async function runCourseGeneration(
         const l = m.lessons[li];
         const lesson = await Lesson.create({
           moduleId: mod._id,
+          courseId: course._id,
           title: l.title,
           content: { summary: l.summary },
           order: li,

@@ -3,6 +3,8 @@ import { Schema, model, Types } from 'mongoose';
 const lessonSchema = new Schema(
   {
     moduleId: { type: Types.ObjectId, ref: 'Module', required: true, index: true },
+    // Denormalized from Module for efficient ownership checks + progress-% recompute.
+    courseId: { type: Types.ObjectId, ref: 'Course', required: true, index: true },
     title: { type: String, required: true },
     content: { type: Schema.Types.Mixed }, // AI-generated content block(s)
     order: { type: Number, required: true },

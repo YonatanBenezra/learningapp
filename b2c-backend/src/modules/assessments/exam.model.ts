@@ -1,5 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
-import { questionSchema } from './quiz.model';
+import { questionSchema, stripAnswers } from './quiz.model';
 
 const examSchema = new Schema(
   {
@@ -11,5 +11,7 @@ const examSchema = new Schema(
   },
   { timestamps: true },
 );
+
+examSchema.set('toJSON', { virtuals: true, versionKey: false, transform: stripAnswers });
 
 export const Exam = model('Exam', examSchema);

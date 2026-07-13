@@ -4,7 +4,7 @@ const exerciseSchema = new Schema(
   {
     lessonId: { type: Types.ObjectId, ref: 'Lesson', required: true, index: true },
     userId: { type: Types.ObjectId, ref: 'User', required: true, index: true },
-    domain: { type: String, required: true }, // inherited from Module -> lab environment
+    domain: { type: String, required: true }, // inherited from Module -> lab environment (§2)
     taskSpec: {
       description: { type: String },
       starterState: { type: Schema.Types.Mixed }, // starter code / initial fs / scenario data
@@ -14,5 +14,15 @@ const exerciseSchema = new Schema(
   },
   { timestamps: true },
 );
+
+exerciseSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: (_doc, ret) => {
+    const out = ret as Record<string, unknown>;
+    delete out._id;
+    return out;
+  },
+});
 
 export const Exercise = model('Exercise', exerciseSchema);

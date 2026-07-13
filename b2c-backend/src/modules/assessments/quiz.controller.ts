@@ -1,5 +1,20 @@
-import type { Request, Response, NextFunction } from 'express';
+import { asyncHandler } from '../../common/utils/asyncHandler';
+import * as quizService from './quiz.service';
 
-// TODO: implement controller handlers
+// POST /lessons/:id/quizzes — generate a fresh quiz for a lesson.
+export const generateForLesson = asyncHandler(async (req, res) => {
+  const quiz = await quizService.generateQuiz(req.user!.id, req.params.id);
+  res.status(201).json({ quiz });
+});
 
-export {};
+// GET /quizzes/:id — fetch a quiz to take (answers stripped by toJSON).
+export const getQuiz = asyncHandler(async (req, res) => {
+  const quiz = await quizService.getQuiz(req.user!.id, req.params.id);
+  res.json({ quiz });
+});
+
+// POST /quizzes/:id/submit — grade and return score + per-question results (with correct answers).
+export const submitQuiz = asyncHandler(async (req, res) => {
+  const submission = await quizService.submitQuiz(req.user!.id, req.params.id, req.body.answers);
+  res.status(201).json({ submission });
+});
