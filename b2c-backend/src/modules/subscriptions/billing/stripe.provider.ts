@@ -127,6 +127,20 @@ export class StripeBillingProvider implements BillingProvider {
     }
     return normalize(event);
   }
+
+  async fetchSubscription(subscriptionId: string): Promise<BillingEvent | null> {
+    let sub: Stripe.Subscription;
+    try {
+      sub = await getStripe().subscriptions.retrieve(subscriptionId);
+    } catch {
+      return null;
+    }
+    // Reuse the updated-event mapping by wrapping the subscription in that shape.
+    return normalize({
+      type: 'customer.subscription.updated',
+      data: { object: sub },
+    } as unknown as Stripe.Event);
+  }
 }
 
 let provider: BillingProvider | null = null;

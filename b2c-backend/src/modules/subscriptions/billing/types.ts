@@ -41,4 +41,6 @@ export interface BillingProvider {
   createPortalSession(params: PortalParams): Promise<{ url: string }>;
   // Verifies the webhook signature and returns a normalized event; throws on a bad signature.
   constructEvent(rawBody: Buffer, signature: string): BillingEvent;
+  // Fetches a subscription's current normalized state (for reconciliation); null if unavailable.
+  fetchSubscription(subscriptionId: string): Promise<BillingEvent | null>;
 }

@@ -3,6 +3,7 @@ import type { Logger } from 'pino';
 import { ZodError } from 'zod';
 import { AppError } from '../common/errors/AppError';
 import { logger } from '../common/utils/logger';
+import { captureException } from '../common/observability/sentry';
 
 type RequestWithLog = Request & { id?: string; log?: Logger };
 
@@ -24,5 +25,6 @@ export function errorMiddleware(err: unknown, req: Request, res: Response, _next
   }
 
   (log ?? logger).error({ err }, 'Unhandled error');
+  captureException(err, { requestId }); // report only truly unexpected (500) errors
   return res.status(500).json({ error: 'Internal Server Error', requestId });
 }

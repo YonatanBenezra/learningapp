@@ -19,10 +19,22 @@ import {
   stopDailyReminderWorker,
   scheduleDailyReminders,
 } from './jobs/dailyReminderWorker';
+import {
+  startAccountPurgeWorker,
+  stopAccountPurgeWorker,
+  scheduleAccountPurge,
+} from './jobs/accountPurgeWorker';
+import {
+  startSubscriptionSyncWorker,
+  stopSubscriptionSyncWorker,
+  scheduleSubscriptionSync,
+} from './jobs/subscriptionSyncWorker';
 import { seedAchievements } from './modules/gamification/gamification.service';
+import { initSentry } from './common/observability/sentry';
 import { logger } from './common/utils/logger';
 
 async function bootstrap(): Promise<void> {
+  initSentry();
   await connectDB();
   await ensureIndexes();
   await seedAchievements();
@@ -35,6 +47,10 @@ async function bootstrap(): Promise<void> {
   await scheduleStreakReset();
   startDailyReminderWorker();
   await scheduleDailyReminders();
+  startAccountPurgeWorker();
+  await scheduleAccountPurge();
+  startSubscriptionSyncWorker();
+  await scheduleSubscriptionSync();
 
   const server = createServer(app);
   server.listen(env.port, () => logger.info(`b2c-backend listening on :${env.port}`));
@@ -54,6 +70,12 @@ async function bootstrap(): Promise<void> {
     );
     await stopDailyReminderWorker().catch((err) =>
       logger.error({ err }, 'Error stopping daily-reminder worker'),
+    );
+    await stopAccountPurgeWorker().catch((err) =>
+      logger.error({ err }, 'Error stopping account-purge worker'),
+    );
+    await stopSubscriptionSyncWorker().catch((err) =>
+      logger.error({ err }, 'Error stopping subscription-sync worker'),
     );
     await closeQueues().catch((err) => logger.error({ err }, 'Error closing queues'));
     await disconnectDB().catch((err) => logger.error({ err }, 'Error disconnecting Mongo'));

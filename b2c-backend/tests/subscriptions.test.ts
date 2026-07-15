@@ -13,6 +13,7 @@ import {
   createPortal,
   handleBillingEvent,
   processStripeWebhook,
+  reconcileSubscriptions,
 } from '../src/modules/subscriptions/subscription.service';
 import type { BillingProvider, BillingEvent } from '../src/modules/subscriptions/billing/types';
 import { normalize, mapStatus } from '../src/modules/subscriptions/billing/stripe.provider';
@@ -37,6 +38,9 @@ const fakeProvider: BillingProvider = {
   },
   constructEvent(rawBody) {
     return JSON.parse(rawBody.toString()) as BillingEvent;
+  },
+  async fetchSubscription() {
+    return null;
   },
 };
 
@@ -348,6 +352,67 @@ describe('processStripeWebhook', () => {
     expect(res.status).toBe(200);
     expect(res.body.received).toBe(true);
     expect((await User.findById(userId))!.tier).toBe('premium');
+  });
+});
+
+describe('reconcileSubscriptions (Stripe ↔ DB safety net)', () => {
+  it('corrects DB drift from the provider (missed cancel webhook)', async () => {
+    const { userId } = await signup('drift@example.com');
+    await Subscription.create({
+      userId,
+      tier: 'premium',
+      status: 'active',
+      stripeSubscriptionId: 'sub_x',
+      stripeCustomerId: 'cus_x',
+    });
+    await User.updateOne({ _id: userId }, { tier: 'premium' });
+
+    const provider = {
+      ...fakeProvider,
+      fetchSubscription: async (): Promise<BillingEvent> => ({
+        type: 'subscription.updated',
+        customerId: 'cus_x',
+        subscriptionId: 'sub_x',
+        status: 'canceled', // Stripe says canceled; DB still says premium
+      }),
+    };
+
+    expect(await reconcileSubscriptions(provider)).toBe(1);
+    expect((await Subscription.findOne({ userId }))!.tier).toBe('free');
+    expect((await User.findById(userId))!.tier).toBe('free');
+  });
+
+  it('is a no-op when the DB already matches the provider', async () => {
+    const { userId } = await signup('insync@example.com');
+    await Subscription.create({
+      userId,
+      tier: 'premium',
+      status: 'active',
+      stripeSubscriptionId: 'sub_y',
+    });
+    const provider = {
+      ...fakeProvider,
+      fetchSubscription: async (): Promise<BillingEvent> => ({
+        type: 'subscription.updated',
+        subscriptionId: 'sub_y',
+        status: 'active',
+      }),
+    };
+    expect(await reconcileSubscriptions(provider)).toBe(0);
+    expect((await Subscription.findOne({ userId }))!.tier).toBe('premium');
+  });
+
+  it('skips subscriptions the provider cannot fetch', async () => {
+    const { userId } = await signup('gone@example.com');
+    await Subscription.create({
+      userId,
+      tier: 'premium',
+      status: 'active',
+      stripeSubscriptionId: 'sub_z',
+    });
+    const provider = { ...fakeProvider, fetchSubscription: async (): Promise<BillingEvent | null> => null };
+    expect(await reconcileSubscriptions(provider)).toBe(0);
+    expect((await Subscription.findOne({ userId }))!.tier).toBe('premium'); // untouched
   });
 });
 

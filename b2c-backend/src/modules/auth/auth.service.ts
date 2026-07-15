@@ -50,6 +50,7 @@ export async function login(input: { email: string; password: string }) {
   if (!user?.passwordHash) throw new AppError(401, 'Invalid credentials');
   const ok = await bcrypt.compare(input.password, user.passwordHash);
   if (!ok) throw new AppError(401, 'Invalid credentials');
+  if (user.deletedAt) throw new AppError(403, 'This account has been deactivated.');
   const tokens = await issueTokenPair({ userId: String(user._id), role: user.role, tier: user.tier });
   return { user, ...tokens };
 }
@@ -72,7 +73,7 @@ export async function refresh(token: string) {
   }
 
   const user = await User.findById(record.userId);
-  if (!user) throw new AppError(401, 'Invalid refresh token');
+  if (!user || user.deletedAt) throw new AppError(401, 'Invalid refresh token');
 
   // Rotate within the same family.
   const userId = String(user._id);

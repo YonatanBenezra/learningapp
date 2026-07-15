@@ -17,6 +17,8 @@ const userSchema = new Schema(
       current: { type: Number, default: 0 },
       lastActivityDate: { type: Date },
     },
+    // Soft-delete (§12): set on account deletion; blocks login; purge job hard-deletes later.
+    deletedAt: { type: Date, default: null, index: true },
   },
   { timestamps: true },
 );

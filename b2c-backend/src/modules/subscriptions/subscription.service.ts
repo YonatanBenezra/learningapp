@@ -108,3 +108,38 @@ export async function processStripeWebhook(
   const event = provider.constructEvent(rawBody, signature);
   return handleBillingEvent(event);
 }
+
+// Reconciliation safety net (§7): webhooks are the primary sync path, but a missed
+// webhook would leave the DB drifted from Stripe. This job re-fetches each linked
+// subscription's current state and re-applies it (idempotent). Returns the number
+// whose tier actually changed (drift corrected).
+export async function reconcileSubscriptions(
+  provider: BillingProvider = getBillingProvider(),
+): Promise<number> {
+  const subs = await Subscription.find({
+    stripeSubscriptionId: { $ne: null },
+  }).select('userId stripeSubscriptionId tier');
+
+  let corrected = 0;
+  for (const sub of subs) {
+    const subscriptionId = sub.get('stripeSubscriptionId') as string | undefined;
+    if (!subscriptionId) continue;
+
+    let event: BillingEvent | null;
+    try {
+      event = await provider.fetchSubscription(subscriptionId);
+    } catch (err) {
+      logger.error({ err, subscriptionId }, 'Subscription reconcile fetch failed');
+      continue;
+    }
+    if (!event) continue;
+
+    const before = sub.get('tier');
+    await handleBillingEvent({ ...event, userId: event.userId ?? String(sub.get('userId')) });
+    const after = (await Subscription.findById(sub._id))?.get('tier');
+    if (before !== after) corrected += 1;
+  }
+
+  logger.info({ corrected, checked: subs.length }, 'Subscription reconciliation complete');
+  return corrected;
+}

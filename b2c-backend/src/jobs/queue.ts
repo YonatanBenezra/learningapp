@@ -7,6 +7,8 @@ export const QUEUE_NAMES = {
   grading: 'grading',
   streakReset: 'streak-reset',
   dailyReminder: 'daily-reminder',
+  accountPurge: 'account-purge',
+  subscriptionSync: 'subscription-sync',
 } as const;
 
 // Plain connection options — BullMQ manages its own dedicated connection (recommended,
@@ -39,6 +41,8 @@ export const courseGenerationQueue = (): Queue => getQueue(QUEUE_NAMES.courseGen
 export const gradingQueue = (): Queue => getQueue(QUEUE_NAMES.grading);
 export const streakResetQueue = (): Queue => getQueue(QUEUE_NAMES.streakReset);
 export const dailyReminderQueue = (): Queue => getQueue(QUEUE_NAMES.dailyReminder);
+export const accountPurgeQueue = (): Queue => getQueue(QUEUE_NAMES.accountPurge);
+export const subscriptionSyncQueue = (): Queue => getQueue(QUEUE_NAMES.subscriptionSync);
 
 // Premium jobs jump the queue (§6). In BullMQ a lower priority value is processed
 // first, so premium=1 outranks free=10.

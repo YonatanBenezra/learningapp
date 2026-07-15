@@ -30,6 +30,10 @@ const envSchema = z
 
     EMAIL_PROVIDER_API_KEY: z.string().default(''),
 
+    ACCOUNT_PURGE_WINDOW_DAYS: z.coerce.number().int().positive().default(30),
+
+    SENTRY_DSN: z.string().default(''),
+
     STRIPE_SECRET_KEY: z.string().default(''),
     STRIPE_WEBHOOK_SECRET: z.string().default(''),
     STRIPE_PRICE_ID: z.string().default(''),
@@ -83,6 +87,8 @@ export const env = {
   sandboxMaxOutputBytes: data.SANDBOX_MAX_OUTPUT_BYTES,
   labCodeMaxBytes: data.LAB_CODE_MAX_BYTES,
   emailProviderApiKey: data.EMAIL_PROVIDER_API_KEY,
+  accountPurgeWindowDays: data.ACCOUNT_PURGE_WINDOW_DAYS,
+  sentryDsn: data.SENTRY_DSN,
   stripeSecretKey: data.STRIPE_SECRET_KEY,
   stripeWebhookSecret: data.STRIPE_WEBHOOK_SECRET,
   stripePriceId: data.STRIPE_PRICE_ID,
