@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: theme flips when a `.dark` ancestor is present. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============ Design tokens (light) ============ */
+:root {
+  --bg: #ffffff;
+  --bg-soft: #fbfaff;
+  --bg-lav: #f4f1fe;
+  --bg-elev: #ffffff;
+
+  --ink: #16162a;
+  --ink-2: #5a5a72;
+  --ink-3: #8b8ba1;
+
+  --line: #eceaf6;
+  --line-2: #e3e0f2;
+
+  --primary: #6c5ce7;
+  --primary-2: #9b8cfb;
+  --primary-soft: #eee9ff;
+  --primary-ink: #ffffff;
+
+  --good: #2cb673;
+  --good-soft: #e4f6ec;
+  --bad: #f0596b;
+  --bad-soft: #fdeaec;
+  --warn: #f3a73b;
+  --warn-soft: #fdf0dd;
+
+  --tint-blue: #e9effc;
+  --tint-mint: #e4f6ec;
+  --tint-peach: #fcede4;
+  --tint-pink: #fce7f1;
+  --tint-lime: #eff5da;
+  --tint-lav: #eee9fe;
+
+  --shadow-soft: 0 2px 8px rgba(20, 16, 60, 0.05);
+  --shadow-card: 0 10px 30px -12px rgba(60, 44, 140, 0.18);
+  --shadow-lift: 0 30px 70px -30px rgba(60, 44, 140, 0.35);
+}
+
+/* ============ Design tokens (dark) ============ */
+.dark {
+  --bg: #131222;
+  --bg-soft: #171528;
+  --bg-lav: #1c1935;
+  --bg-elev: #1a1830;
+
+  --ink: #f1effb;
+  --ink-2: #aba8c4;
+  --ink-3: #7b7896;
+
+  --line: #2a2742;
+  --line-2: #322e4e;
+
+  --primary: #9184fb;
+  --primary-2: #b4a8ff;
+  --primary-soft: #241f3e;
+  --primary-ink: #131222;
+
+  --good: #37d08a;
+  --good-soft: #16301f;
+  --bad: #ff6b7c;
+  --bad-soft: #331a20;
+  --warn: #f5b653;
+  --warn-soft: #33260f;
+
+  --tint-blue: #1b2540;
+  --tint-mint: #16301f;
+  --tint-peach: #33221a;
+  --tint-pink: #331e2a;
+  --tint-lime: #2a2e17;
+  --tint-lav: #241f3e;
+
+  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 14px 34px -14px rgba(0, 0, 0, 0.6);
+  --shadow-lift: 0 34px 80px -30px rgba(0, 0, 0, 0.75);
+}
+
+/* ============ Map tokens to Tailwind utilities (bg-primary, text-ink, …) ============ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-bg-lav: var(--bg-lav);
+  --color-bg-elev: var(--bg-elev);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-primary: var(--primary);
+  --color-primary-2: var(--primary-2);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-ink: var(--primary-ink);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-tint-blue: var(--tint-blue);
+  --color-tint-mint: var(--tint-mint);
+  --color-tint-peach: var(--tint-peach);
+  --color-tint-pink: var(--tint-pink);
+  --color-tint-lime: var(--tint-lime);
+  --color-tint-lav: var(--tint-lav);
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: var(--primary);
+  color: #ffffff;
+}
