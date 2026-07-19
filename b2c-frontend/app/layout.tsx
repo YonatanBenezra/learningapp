@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono, Poppins, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/src/providers";
 
@@ -14,8 +14,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "ABC — Learn, Lab, Level up",
+  title: "Bina B2C — Learn, Lab, Level up",
   description:
     "Turn any topic into a full AI-built course — then practice in real, hands-on labs.",
 };
@@ -30,7 +44,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${geistMono.variable} h-full`}
+      className={`${inter.variable} ${geistMono.variable} ${poppins.variable} ${openSans.variable} h-full`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

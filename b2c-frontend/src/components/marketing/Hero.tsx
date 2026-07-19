@@ -1,174 +1,252 @@
+'use client';
+
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
+  ArrowRight,
   BookOpen,
-  Check,
-  CircleCheckBig,
-  Flame,
-  FlaskConical,
   GraduationCap,
-  LayoutDashboard,
-  Settings,
-  Sparkles,
-  Star,
-  Terminal,
-  TrendingUp,
-  Trophy,
+  MonitorPlay,
+  Users,
 } from 'lucide-react';
-import { buttonClasses } from '@/src/components/ui/button';
 import { Container } from './Container';
 
-const tabs = [
-  { label: 'Course builder', icon: BookOpen },
-  { label: 'Labs', icon: FlaskConical },
-  { label: 'Quizzes', icon: CircleCheckBig },
-  { label: 'Progress', icon: TrendingUp },
-  { label: 'AI assistant', icon: Sparkles, active: true },
+const avatars = [
+  { src: 'https://i.pravatar.cc/150?img=1', size: 110, top: '170px', left: '150px', delay: 0 },
+  { src: 'https://i.pravatar.cc/150?img=5', size: 95, top: '350px', left: '300px', delay: 0.5 },
+  { src: 'https://i.pravatar.cc/150?img=8', size: 105, bottom: '210px', left: '170px', delay: 1 },
+  { src: 'https://i.pravatar.cc/150?img=12', size: 105, top: '150px', right: '180px', delay: 0.3 },
+  { src: 'https://i.pravatar.cc/150?img=16', size: 95, top: '330px', right: '260px', delay: 0.8 },
+  { src: 'https://i.pravatar.cc/150?img=20', size: 110, bottom: '220px', right: '140px', delay: 1.2 },
 ];
 
-const sidebar = [
-  { label: 'Dashboard', icon: LayoutDashboard, active: true },
-  { label: 'Courses', icon: BookOpen },
-  { label: 'Labs', icon: Terminal },
-  { label: 'Achievements', icon: Trophy },
-  { label: 'Settings', icon: Settings },
+const stats = [
+  { icon: BookOpen, value: '1,090+', label: 'Our Online Courses' },
+  { icon: Users, value: '120+', label: 'Our Instructors' },
+  { icon: MonitorPlay, value: '145+', label: 'Total Video Lessons' },
+  { icon: GraduationCap, value: '6,000+', label: 'Total Students Enrolled' },
 ];
 
 export function Hero() {
   return (
-    <section id="top" className="relative pt-14 text-center">
-      <Container>
-        <span className="inline-flex items-center gap-2 rounded-full bg-primary-soft px-3.5 py-1.5 text-[12.5px] font-semibold text-primary">
-          <Sparkles className="size-3.5" /> AI course builder + hands-on labs
-        </span>
+    <section
+      id="top"
+      className="relative h-[900px] overflow-hidden bg-white"
+    >
+      {/* ─── Gradient Background ─── */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-40 -top-40 size-[700px] rounded-full bg-[#D4ECFF] opacity-60 blur-[140px]" />
+        <div className="absolute -right-32 top-10 size-[600px] rounded-full bg-[#FFE4CC] opacity-55 blur-[140px]" />
+        <div className="absolute bottom-20 left-[20%] size-[550px] rounded-full bg-[#FFDDD6] opacity-50 blur-[130px]" />
+        <div className="absolute -right-20 bottom-10 size-[500px] rounded-full bg-[#EDE4FF] opacity-55 blur-[130px]" />
+        <div className="absolute left-[40%] top-[30%] size-[400px] rounded-full bg-[#FFF3D6] opacity-45 blur-[120px]" />
+        <div className="absolute -left-20 bottom-[30%] size-[350px] rounded-full bg-[#D6F0FF] opacity-40 blur-[110px]" />
+      </div>
 
-        <h1 className="mx-auto mt-5 max-w-[17ch] text-[clamp(2.4rem,6vw,4.1rem)] font-extrabold leading-[1.08] tracking-[-0.033em]">
-          Turn Any Topic
-          <span className="relative mx-3 inline-block size-14 rotate-45 rounded-[15px] bg-linear-to-br from-[#f6c650] to-[#e19a16] align-middle shadow-[0_16px_30px_-12px_rgba(225,154,22,0.55)]">
-            <GraduationCap className="absolute inset-0 m-auto size-6 -rotate-45 text-[#49330a]" />
-          </span>
-          Into Real Skills
-        </h1>
+      {/* ─── Decorations ─── */}
+      <div className="pointer-events-none absolute inset-0">
+        {/* Yellow confetti — top left */}
+        <svg className="absolute left-[12%] top-[18%] size-14 opacity-20" viewBox="0 0 56 56">
+          <circle cx="6" cy="6" r="2.5" fill="#F7C948" />
+          <circle cx="18" cy="6" r="2.5" fill="#F7C948" />
+          <circle cx="30" cy="6" r="2.5" fill="#F7C948" />
+          <circle cx="6" cy="18" r="2.5" fill="#F7C948" />
+          <circle cx="18" cy="18" r="2.5" fill="#F7C948" />
+          <circle cx="30" cy="18" r="2.5" fill="#F7C948" />
+          <circle cx="6" cy="30" r="2.5" fill="#F7C948" />
+          <circle cx="18" cy="30" r="2.5" fill="#F7C948" />
+          <circle cx="30" cy="30" r="2.5" fill="#F7C948" />
+        </svg>
 
-        <p className="mx-auto mt-5 max-w-[52ch] text-lg text-ink-2">
-          One AI system builds your full course — modules, lessons, quizzes, exams — then drops you
-          into real labs to actually practice.
-        </p>
+        {/* Curved yellow lines — bottom left */}
+        <svg className="absolute bottom-[38%] left-[7%] size-16 opacity-15" viewBox="0 0 64 64" fill="none">
+          <path d="M8 48 C20 20, 44 16, 56 28" stroke="#F7C948" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M12 56 C24 30, 48 26, 60 36" stroke="#F7C948" strokeWidth="2" strokeLinecap="round" />
+        </svg>
 
-        <div className="mt-7 flex flex-wrap justify-center gap-3">
-          <Link href="/signup" className={buttonClasses({ size: 'lg' })}>
-            Start Free Trial
-          </Link>
-          <Link href="#how" className={buttonClasses({ variant: 'soft', size: 'lg' })}>
-            Book A Demo
-          </Link>
-        </div>
+        {/* Purple dotted blob — top right */}
+        <svg className="absolute right-[8%] top-[14%] size-24 opacity-12" viewBox="0 0 96 96">
+          {[...Array(8)].map((_, row) =>
+            [...Array(8)].map((__, col) => (
+              <circle
+                key={`${row}-${col}`}
+                cx={col * 12 + 6}
+                cy={row * 12 + 6}
+                r={1.5 + ((row + col) % 3)}
+                fill="#7C3AED"
+              />
+            )),
+          )}
+        </svg>
 
-        {/* floating coins */}
-        <span className="absolute left-[4%] top-32 hidden size-16 place-items-center rounded-full bg-linear-to-br from-[#37d083] to-[#22a863] text-white shadow-card md:grid">
-          <Check className="size-6" strokeWidth={2.6} />
-        </span>
-        <span className="absolute right-[4%] top-40 hidden size-16 place-items-center rounded-full bg-linear-to-br from-primary to-primary-2 text-white shadow-card md:grid">
-          <Star className="size-6" />
-        </span>
+        {/* Yellow circle — right */}
+        <svg className="absolute right-[6%] top-[45%] size-12 opacity-15" viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#F7C948" strokeWidth="2.5" />
+        </svg>
 
-        {/* feature tabs */}
-        <div className="relative z-10 mt-12 flex flex-wrap justify-center gap-2.5">
-          {tabs.map((t) => (
-            <span
-              key={t.label}
-              className={
-                t.active
-                  ? 'inline-flex items-center gap-2 rounded-xl bg-[#17163a] px-4 py-2.5 text-[13.5px] font-medium text-white dark:bg-primary'
-                  : 'inline-flex items-center gap-2 rounded-xl border border-line bg-bg px-4 py-2.5 text-[13.5px] font-medium text-ink-2 shadow-soft'
-              }
-            >
-              <t.icon className="size-4" /> {t.label}
+        {/* Small purple outline — bottom right */}
+        <svg className="absolute bottom-[32%] right-[9%] size-16 opacity-10" viewBox="0 0 64 64">
+          <polygon points="32,4 60,20 52,52 12,52 4,20" fill="none" stroke="#7C3AED" strokeWidth="2" />
+        </svg>
+      </div>
+
+      {/* ─── Floating Avatars ─── */}
+      {avatars.map((a, i) => (
+        <motion.div
+          key={i}
+          className="absolute z-10 hidden overflow-hidden rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.1)] lg:block"
+          style={{
+            width: a.size,
+            height: a.size,
+            top: 'top' in a ? a.top : undefined,
+            bottom: 'bottom' in a ? a.bottom : undefined,
+            left: 'left' in a ? a.left : undefined,
+            right: 'right' in a ? a.right : undefined,
+          }}
+          animate={{ y: [-8, 8] }}
+          transition={{
+            duration: 5 + i * 0.5,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut',
+            delay: a.delay,
+          }}
+        >
+          <img
+            src={a.src}
+            alt={`Student ${i + 1}`}
+            className="size-full object-cover"
+            loading="lazy"
+          />
+        </motion.div>
+      ))}
+
+      {/* ─── Main Content ─── */}
+      <Container className="relative z-20 pt-[160px] lg:pt-[170px]">
+        <div className="mx-auto max-w-[780px] text-center">
+          {/* Headline */}
+          <motion.h1
+            className="mx-auto max-w-[780px] text-[clamp(2.5rem,5vw,72px)] font-[800] leading-[1.05] tracking-tight text-[#111827]"
+            style={{ fontFamily: 'var(--font-poppins)' }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+          >
+            Unlock Your Potential with
+            <br />
+            Expert Online{' '}
+            <span className="relative inline-block">
+              <span className="relative z-10">Learning</span>
+              <svg
+                className="absolute -bottom-1 left-0 z-0 h-[18px] w-full"
+                viewBox="0 0 200 20"
+                preserveAspectRatio="none"
+                fill="none"
+              >
+                <path
+                  d="M2 14C30 6 70 2 100 4C130 6 170 10 198 6"
+                  stroke="#F7C948"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  opacity="0.7"
+                />
+              </svg>
             </span>
-          ))}
+          </motion.h1>
+
+          {/* Description */}
+          <motion.p
+            className="mx-auto mt-7 max-w-[780px] text-[18px] leading-[1.8] text-[#6B7280]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            Join Educeet to explore high-quality online courses, gain real-world
+            skills, and achieve your goals with guidance from expert
+            instructors—anytime, anywhere, at your pace.
+          </motion.p>
+
+          {/* Buttons */}
+          <motion.div
+            className="mt-10 flex flex-wrap items-center justify-center gap-5"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.45 }}
+          >
+            <Link
+              href="/courses"
+              className="group inline-flex h-[50px] items-center gap-2.5 rounded-xl bg-[#0D6E63] px-[34px] text-[16px] font-semibold text-white shadow-[0_4px_14px_rgba(13,110,99,0.35)] transition-all duration-300 hover:-translate-y-[3px] hover:bg-[#095c52] hover:shadow-[0_8px_25px_rgba(13,110,99,0.45)]"
+              style={{ fontFamily: 'var(--font-poppins)' }}
+            >
+              Find Courses
+              <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex h-[50px] items-center gap-2.5 rounded-xl border border-[#0D6E63] bg-transparent px-[34px] text-[16px] font-semibold text-[#0D6E63] transition-all duration-300 hover:bg-[#F8FAFA]"
+              style={{ fontFamily: 'var(--font-poppins)' }}
+            >
+              Apply Now
+              <ArrowRight className="size-5" />
+            </Link>
+          </motion.div>
         </div>
       </Container>
 
-      {/* dashboard mockup on a lavender pad */}
-      <Container className="mt-6">
-        <div className="rounded-t-[28px] bg-linear-to-b from-tint-lav to-transparent px-6 pt-8 sm:px-10">
-          <div className="mx-auto max-w-[850px] overflow-hidden rounded-t-2xl border border-line bg-bg-elev text-left shadow-lift">
-            <div className="flex items-center gap-2 border-b border-line bg-bg-soft px-4 py-3">
-              <span className="flex gap-1.5">
-                <i className="size-2.5 rounded-full bg-line-2" />
-                <i className="size-2.5 rounded-full bg-line-2" />
-                <i className="size-2.5 rounded-full bg-line-2" />
-              </span>
-              <span className="ml-2 rounded-md bg-bg-lav px-3 py-1 font-mono text-[11px] text-ink-3">
-                app.abc.io/dashboard
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-[190px_1fr]">
-              <aside className="hidden flex-col gap-1 border-r border-line p-3 sm:flex">
-                {sidebar.map((s) => (
-                  <span
-                    key={s.label}
-                    className={
-                      s.active
-                        ? 'flex items-center gap-2.5 rounded-lg bg-primary-soft px-3 py-2.5 text-[13px] font-semibold text-primary'
-                        : 'flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-medium text-ink-2'
-                    }
-                  >
-                    <s.icon className="size-4" /> {s.label}
-                  </span>
-                ))}
-              </aside>
-
-              <div className="flex flex-col gap-4 p-5">
-                <div>
-                  <div className="text-xs text-ink-3">Welcome back,</div>
-                  <div className="text-lg font-bold">Rafi&rsquo;s dashboard</div>
-                </div>
-                <div className="grid grid-cols-3 gap-2.5">
-                  {[
-                    { k: 'STREAK', v: '12', flame: true },
-                    { k: 'COURSES', v: '3' },
-                    { k: 'XP', v: '2,480' },
-                  ].map((s) => (
-                    <div key={s.k} className="rounded-xl border border-line p-3">
-                      <div className="font-mono text-[11px] text-ink-3">{s.k}</div>
-                      <div className="flex items-center gap-1 text-xl font-extrabold tracking-tight text-ink">
-                        {s.v}
-                        {s.flame && <Flame className="size-4 text-primary" />}
-                      </div>
+      {/* ─── Bottom Stats Card ─── */}
+      <motion.div
+        className="absolute bottom-0 left-1/2 z-30 w-full -translate-x-1/2 px-6 pb-0"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.6 }}
+      >
+        <div className="mx-auto max-w-[1200px]">
+          {/* Green card with curved top */}
+          <div className="rounded-t-[70px] rounded-b-[28px] bg-[#0C665B] px-14 py-8 shadow-[0_-4px_30px_rgba(12,102,91,0.25)] ring-1 ring-[#F6C23E]/20">
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
+              {stats.map((s) => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl border border-[#F6C23E]/30 bg-[#F6C23E]/10">
+                    <s.icon className="size-7 text-[#F6C23E]" />
+                  </div>
+                  <div>
+                    <div
+                      className="text-[16px] font-semibold leading-none text-white md:text-[22px]"
+                      style={{ fontFamily: 'var(--font-poppins)' }}
+                    >
+                      {s.value}
                     </div>
-                  ))}
-                </div>
-                <div className="rounded-xl border border-line bg-linear-to-br from-tint-lav to-transparent p-4">
-                  <div className="flex items-center justify-between">
-                    <b className="text-sm">SOC Analyst — Level 1</b>
-                    <span className="rounded-full bg-good-soft px-2.5 py-0.5 font-mono text-[10.5px] text-good">
-                      68% done
-                    </span>
-                  </div>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-line-2">
-                    <div className="h-full w-[68%] rounded-full bg-linear-to-r from-primary to-primary-2" />
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2 font-mono text-[10.5px] text-ink-3">
-                    <span className="rounded-md border border-primary px-2 py-1 text-primary">
-                      Module 02
-                    </span>
-                    <span className="rounded-md border border-dashed border-line-2 px-2 py-1">
-                      Log Analysis
-                    </span>
-                    <span className="rounded-md border border-dashed border-line-2 px-2 py-1">
-                      6 labs
-                    </span>
-                    <span className="rounded-md border border-dashed border-line-2 px-2 py-1">
-                      3 exams
-                    </span>
+                    <div
+                      className="mt-2 text-[12px] font-semibold text-[#E8F4F2] md:text-[16px]"
+                      style={{ fontFamily: 'var(--font-poppins)' }}
+                    >
+                      {s.label}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
+          {/* Thin yellow bottom border */}
+          <div className="mx-auto h-[3px] w-full rounded-b-full bg-gradient-to-r from-transparent via-[#F6C23E] to-transparent opacity-60" />
         </div>
-      </Container>
+      </motion.div>
+
+      {/* ─── Bottom White Wave Curve ─── */}
+      <div className="absolute bottom-[-1px] left-0 right-0 z-20">
+        <svg
+          className="w-full"
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 80V30C200 0 500 0 720 20C940 40 1200 60 1440 30V80H0Z"
+            fill="white"
+          />
+        </svg>
+      </div>
     </section>
   );
 }

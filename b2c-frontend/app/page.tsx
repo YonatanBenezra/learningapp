@@ -1,5 +1,6 @@
 import { Navbar } from '@/src/components/marketing/Navbar';
 import { Hero } from '@/src/components/marketing/Hero';
+import { Categories } from '@/src/components/marketing/Categories';
 import {
   WhySection,
   FeaturesSection,
@@ -19,6 +20,7 @@ export default function LandingPage() {
       <Navbar />
       <main>
         <Hero />
+        <Categories />
         <WhySection />
         <FeaturesSection />
         <LabBand />
