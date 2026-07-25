@@ -50,6 +50,10 @@ export interface Messages {
     adminMetrics: string;
     adminCosts: string;
     adminContent: string;
+    instructor: string;
+    instructorDashboard: string;
+    instructorCourses: string;
+    instructorSales: string;
     home: string;
     learningPath: string;
     pricing: string;
@@ -62,5 +66,8 @@ export interface Messages {
   settings: StringMap;
   achievements: StringMap;
   admin: StringMap;
+  instructor: StringMap & {
+    newCourse: string;
+  };
   marketing: StringMap;
 }

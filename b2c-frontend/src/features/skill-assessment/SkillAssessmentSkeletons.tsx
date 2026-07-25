@@ -9,19 +9,19 @@ function AssessmentPageSkeletonShell({ children }: { children: React.ReactNode }
 
 function AssessmentCardSkeleton() {
   return (
-    <div className="rounded-3xl border border-line/80 bg-bg-elev p-6 shadow-card">
+    <div className="rounded-lg border border-line bg-bg-elev p-6 shadow-soft">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-3">
           <Skeleton className="h-3 w-24" />
           <Skeleton className="h-7 w-3/4" />
         </div>
-        <Skeleton className="h-7 w-24 rounded-full" />
+        <Skeleton className="h-7 w-24 rounded-lg" />
       </div>
       <div className="mt-5 flex flex-wrap gap-3">
-        <Skeleton className="h-8 w-32 rounded-full" />
-        <Skeleton className="h-8 w-28 rounded-full" />
+        <Skeleton className="h-8 w-32 rounded-lg" />
+        <Skeleton className="h-8 w-28 rounded-lg" />
       </div>
-      <Skeleton className="mt-6 h-11 w-44 rounded-xl" />
+      <Skeleton className="mt-6 h-9 w-44 rounded-lg" />
     </div>
   );
 }
@@ -49,26 +49,26 @@ function QuestionCardSkeleton() {
 export function AssessmentsListSkeleton() {
   return (
     <AssessmentPageSkeletonShell>
-      <div className="flex flex-1 flex-col pb-16 pt-8 lg:pt-12">
-        <Container className="flex max-w-[1240px] flex-1 flex-col">
-          <div className="overflow-hidden rounded-3xl border border-line/80 bg-bg-elev shadow-lift">
-            <div className="border-b border-line/70 px-6 py-6 sm:px-8 sm:py-8">
+      <div className="pb-16 pt-8 lg:pt-12">
+        <Container>
+          <div className="overflow-hidden rounded-lg border border-line bg-bg-elev shadow-soft">
+            <div className="border-b border-line px-6 py-6 sm:px-8 sm:py-8">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-2xl space-y-4">
-                  <Skeleton className="h-7 w-40 rounded-full" />
+                  <Skeleton className="h-7 w-40 rounded-lg" />
                   <Skeleton className="h-10 w-72" />
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-4/5" />
                 </div>
                 <div className="flex gap-3">
-                  <Skeleton className="h-14 w-36 rounded-2xl" />
-                  <Skeleton className="h-14 w-48 rounded-xl" />
+                  <Skeleton className="h-14 w-36 rounded-lg" />
+                  <Skeleton className="h-14 w-48 rounded-lg" />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 grid flex-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <AssessmentCardSkeleton key={i} />
             ))}

@@ -31,6 +31,10 @@ export const messages = {
     adminMetrics: 'মেট্রিক্স',
     adminCosts: 'AI খরচ',
     adminContent: 'মডারেশন',
+    instructor: 'ইন্সট্রাক্টর',
+    instructorDashboard: 'ড্যাশবোর্ড',
+    instructorCourses: 'আমার কোর্স',
+    instructorSales: 'বিক্রয়',
     home: 'হোম',
     learningPath: 'লার্নিং পাথ',
     pricing: 'প্রাইসিং',
@@ -149,6 +153,9 @@ export const messages = {
     costsTitle: 'AI খরচ ড্যাশবোর্ড',
     contentTitle: 'কনটেন্ট মডারেশন',
     accessDenied: 'অ্যাডমিন অ্যাক্সেস প্রয়োজন।',
+  },
+  instructor: {
+    newCourse: 'নতুন কোর্স',
   },
   marketing: {
     findLearningPath: 'আমার লার্নিং পাথ খুঁজুন',

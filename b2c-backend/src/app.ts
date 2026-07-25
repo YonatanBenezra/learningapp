@@ -29,6 +29,8 @@ import gamificationRoutes from './modules/gamification/gamification.routes';
 import subscriptionRoutes from './modules/subscriptions/subscription.routes';
 import notificationRoutes from './modules/notifications/notification.routes';
 import adminRoutes from './modules/admin/admin.routes';
+import instructorRoutes from './modules/instructor/instructor.routes';
+import marketplaceRoutes from './modules/marketplace/marketplace.routes';
 
 export const app = express();
 
@@ -93,6 +95,8 @@ app.use('/gamification', gamificationRoutes);
 app.use('/subscriptions', subscriptionRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/admin', adminRoutes);
+app.use('/instructor', instructorRoutes);
+app.use('/marketplace', marketplaceRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

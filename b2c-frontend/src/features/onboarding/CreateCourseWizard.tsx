@@ -27,6 +27,7 @@ import { useCreateCourse, useCourse, useCourses } from '@/src/features/courses';
 import type { CourseLevel } from '@/src/domain/course';
 import { readLearningPathPrefill } from '@/src/features/learning-path/learningPathRecommendation';
 import { useAuthStore } from '@/src/store/authStore';
+import { activeCourseLimitForTier } from '@/src/constants/tierLimits';
 import { cn } from '@/src/lib/utils';
 
 const STEPS = [
@@ -120,13 +121,14 @@ export function CreateCourseWizard() {
   const create = useCreateCourse();
   const { data: coursesData } = useCourses();
   const tier = useAuthStore((s) => s.user?.tier ?? 'free');
+  const activeCourseLimit = activeCourseLimitForTier(tier);
 
   const activeCourseCount = useMemo(
     () => (coursesData?.courses ?? []).filter((c) => ACTIVE_STATUSES.has(c.status)).length,
     [coursesData?.courses],
   );
 
-  const atFreeLimit = tier === 'free' && activeCourseCount >= 1;
+  const atCourseLimit = activeCourseLimit !== null && activeCourseCount >= activeCourseLimit;
 
   useEffect(() => {
     if (!autoStart || autoTriggered || createdId || !level || !category.trim() || topics.length === 0) {
@@ -202,9 +204,10 @@ export function CreateCourseWizard() {
         </NoticeBanner>
       ) : null}
 
-      {atFreeLimit ? (
-        <NoticeBanner tone="warn" title="Free plan limit reached">
-          Your account allows one active course on the free plan.{' '}
+      {atCourseLimit ? (
+        <NoticeBanner tone="warn" title="Active course limit reached">
+          Your {tier} plan allows {activeCourseLimit ?? 'unlimited'} active course
+          {activeCourseLimit === 1 ? '' : 's'}.{' '}
           <Link href="/my-courses" className="font-semibold text-primary hover:underline">
             Manage existing courses
           </Link>{' '}
@@ -272,7 +275,7 @@ export function CreateCourseWizard() {
             <Button
               onClick={submit}
               loading={create.isPending}
-              disabled={!level || atFreeLimit}
+              disabled={!level || atCourseLimit}
               className="sm:min-w-48"
             >
               <Sparkles className="size-4" /> Generate course

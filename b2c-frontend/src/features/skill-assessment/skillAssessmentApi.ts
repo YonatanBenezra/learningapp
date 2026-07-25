@@ -35,7 +35,7 @@ export function getGuestSessionId(): string {
   return id;
 }
 
-export function listMySkillAssessments(_isAuthenticated = false) {
+export function listMySkillAssessments() {
   const guestSessionId = getGuestSessionId();
   const query = guestSessionId
     ? `?guestSessionId=${encodeURIComponent(guestSessionId)}`

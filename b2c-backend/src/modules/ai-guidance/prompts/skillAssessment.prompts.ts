@@ -21,5 +21,6 @@ export function buildSkillAssessmentPrompt(input: SkillAssessmentPromptInput): s
     '- Include roughly 3 beginner, 4 intermediate, and 3 advanced questions.',
     '- Questions should test practical understanding, not trivia.',
     '- Provide the correct answer as the exact option text.',
+    '- Keep all four options similar in length; do not make the correct answer noticeably longer.',
   ].join('\n');
 }

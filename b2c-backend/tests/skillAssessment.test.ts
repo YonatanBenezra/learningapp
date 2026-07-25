@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import mongoose from 'mongoose';
 import request from 'supertest';
+import { Worker } from 'bullmq';
 import { app } from '../src/app';
 import { User } from '../src/modules/users/user.model';
 import { RefreshToken } from '../src/modules/auth/refreshToken.model';
@@ -8,12 +9,13 @@ import { SkillAssessment } from '../src/modules/assessments/skillAssessment.mode
 import { SkillAssessmentSubmission } from '../src/modules/assessments/skillAssessmentSubmission.model';
 import {
   generateSkillAssessment,
+  runSkillAssessmentGeneration,
   submitSkillAssessment,
   scoreToLevel,
   type SkillAssessmentGenerator,
 } from '../src/modules/assessments/skillAssessment.service';
-import type { GeneratedSkillAssessment } from '../src/modules/assessments/skillAssessment.schema';
 import { redis } from '../src/config/redis';
+import { QUEUE_NAMES, redisConnectionOptions, skillAssessmentGenerationQueue } from '../src/jobs/queue';
 
 const TEST_DB = 'mongodb://127.0.0.1:27017/b2c_test_skill_assessment';
 
@@ -33,6 +35,7 @@ async function signup(email = 'skill@example.com') {
 
 beforeAll(async () => {
   await mongoose.connect(TEST_DB);
+  if (redis.status !== 'ready') await redis.connect();
 });
 
 afterEach(async () => {
@@ -44,6 +47,13 @@ afterEach(async () => {
   ]);
   const keys = await redis.keys('rl:*');
   if (keys.length) await redis.del(...keys);
+  const jobs = await skillAssessmentGenerationQueue().getJobs([
+    'waiting',
+    'active',
+    'delayed',
+    'prioritized',
+  ]);
+  await Promise.all(jobs.map((job) => job.remove().catch(() => undefined)));
 });
 
 afterAll(async () => {
@@ -77,8 +87,9 @@ describe('skill assessment API', () => {
       fakeGen,
     );
 
-    const res = await request(app).get(`/skill-assessments/${assessment.id}`);
+    const res = await request(app).get(`/skill-assessments/${assessment!.id}`);
     expect(res.status).toBe(200);
+    expect(res.body.assessment.status).toBe('ready');
     expect(res.body.assessment.questions).toHaveLength(10);
     expect(res.body.assessment.questions[0].correctAnswer).toBeUndefined();
   });
@@ -88,17 +99,21 @@ describe('skill assessment API', () => {
     const assessment = await generateSkillAssessment({ topic: 'Networking' }, userId, 'free', fakeGen);
 
     const unauth = await request(app)
-      .post(`/skill-assessments/${assessment.id}/submit`)
+      .post(`/skill-assessments/${assessment!.id}/submit`)
       .send({ answers: [{ questionIndex: 0, answer: 'A' }] });
     expect(unauth.status).toBe(401);
 
-    const answers = mcqQuestions.map((_, i) => ({ questionIndex: i, answer: 'A' }));
-    const submission = await submitSkillAssessment(userId, assessment.id, answers);
+    const stored = await SkillAssessment.findById(assessment!.id).lean();
+    const answers = (stored?.questions ?? []).map((q, i) => ({
+      questionIndex: i,
+      answer: (q as { correctAnswer: string }).correctAnswer,
+    }));
+    const submission = await submitSkillAssessment(userId, assessment!.id, answers);
     expect(submission.score).toBe(100);
     expect(submission.level).toBe('Expert');
 
     const res = await request(app)
-      .get(`/skill-assessments/${assessment.id}/result`)
+      .get(`/skill-assessments/${assessment!.id}/result`)
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
     expect(res.body.submission.level).toBe('Expert');
@@ -108,9 +123,13 @@ describe('skill assessment API', () => {
   it('rejects duplicate submission', async () => {
     const { userId } = await signup('dup@example.com');
     const assessment = await generateSkillAssessment({ topic: 'General' }, userId, 'free', fakeGen);
-    const answers = [{ questionIndex: 0, answer: 'A' }];
-    await submitSkillAssessment(userId, assessment.id, answers);
-    await expect(submitSkillAssessment(userId, assessment.id, answers)).rejects.toMatchObject({
+    const stored = await SkillAssessment.findById(assessment!.id).lean();
+    const answers = (stored?.questions ?? []).map((q, i) => ({
+      questionIndex: i,
+      answer: (q as { correctAnswer: string }).correctAnswer,
+    }));
+    await submitSkillAssessment(userId, assessment!.id, answers);
+    await expect(submitSkillAssessment(userId, assessment!.id, answers)).rejects.toMatchObject({
       statusCode: 409,
     });
   });
@@ -124,7 +143,7 @@ describe('skill assessment API', () => {
 
   it('lists guest assessments and enforces free-plan quota', async () => {
     const guestSessionId = crypto.randomUUID();
-    for (let i = 0; i < 3; i += 1) {
+    for (let i = 0; i < 5; i += 1) {
       await generateSkillAssessment({ topic: 'General', guestSessionId }, undefined, 'free', fakeGen);
     }
 
@@ -132,14 +151,45 @@ describe('skill assessment API', () => {
       .get('/skill-assessments/mine')
       .query({ guestSessionId });
     expect(list.status).toBe(200);
-    expect(list.body.assessments).toHaveLength(3);
-    expect(list.body.quota.used).toBe(3);
+    expect(list.body.assessments).toHaveLength(5);
+    expect(list.body.quota.used).toBe(5);
     expect(list.body.quota.remaining).toBe(0);
 
     const blocked = await request(app)
       .post('/skill-assessments/generate')
       .send({ topic: 'Programming', guestSessionId });
     expect(blocked.status).toBe(429);
+  });
+
+  it('returns 401 when bearer token is invalid on list', async () => {
+    const res = await request(app)
+      .get('/skill-assessments/mine')
+      .set('Authorization', 'Bearer invalid-token')
+      .query({ guestSessionId: crypto.randomUUID() });
+    expect(res.status).toBe(401);
+  });
+
+  it('claims guest assessments for authenticated user on list', async () => {
+    const { token, userId } = await signup('claim-list@example.com');
+    const guestSessionId = crypto.randomUUID();
+
+    await generateSkillAssessment({ topic: 'Programming', guestSessionId }, undefined, 'free', fakeGen);
+    await generateSkillAssessment({ topic: 'Networking', guestSessionId }, undefined, 'free', fakeGen);
+    await generateSkillAssessment({ topic: 'General' }, userId, 'free', fakeGen);
+
+    const list = await request(app)
+      .get('/skill-assessments/mine')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ guestSessionId });
+
+    expect(list.status).toBe(200);
+    expect(list.body.assessments).toHaveLength(3);
+    expect(list.body.quota.used).toBe(3);
+
+    const claimed = await SkillAssessment.countDocuments({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
+    expect(claimed).toBe(3);
   });
 
   it('marks guest assessment completed after authenticated submit', async () => {
@@ -151,8 +201,12 @@ describe('skill assessment API', () => {
       'free',
       fakeGen,
     );
-    const answers = mcqQuestions.map((_, i) => ({ questionIndex: i, answer: 'A' }));
-    await submitSkillAssessment(userId, assessment.id, answers);
+    const stored = await SkillAssessment.findById(assessment!.id).lean();
+    const answers = (stored?.questions ?? []).map((q, i) => ({
+      questionIndex: i,
+      answer: (q as { correctAnswer: string }).correctAnswer,
+    }));
+    await submitSkillAssessment(userId, assessment!.id, answers);
 
     const list = await request(app)
       .get('/skill-assessments/mine')
@@ -163,4 +217,43 @@ describe('skill assessment API', () => {
     expect(list.body.assessments[0].status).toBe('completed');
     expect(list.body.assessments[0].submission.score).toBe(100);
   });
+});
+
+describe('full async flow (BullMQ)', () => {
+  it(
+    'POST -> worker consumes job -> poll shows ready with questions',
+    async () => {
+      const worker = new Worker(
+        QUEUE_NAMES.skillAssessmentGeneration,
+        async (job: { data: { assessmentId: string } }) => {
+          await runSkillAssessmentGeneration(job.data.assessmentId, fakeGen);
+        },
+        { connection: redisConnectionOptions() },
+      );
+      await worker.waitUntilReady();
+      try {
+        const guestSessionId = crypto.randomUUID();
+        const create = await request(app)
+          .post('/skill-assessments/generate')
+          .send({ topic: 'Programming', guestSessionId });
+        expect(create.status).toBe(202);
+        expect(create.body.assessment.status).toBe('generating');
+        const id = create.body.assessment.id;
+
+        let status = 'generating';
+        for (let i = 0; i < 160 && status === 'generating'; i += 1) {
+          await new Promise((r) => setTimeout(r, 100));
+          const poll = await request(app).get(`/skill-assessments/${id}`);
+          status = poll.body.assessment.status;
+        }
+        expect(status).toBe('ready');
+
+        const poll = await request(app).get(`/skill-assessments/${id}`);
+        expect(poll.body.assessment.questions).toHaveLength(10);
+      } finally {
+        await worker.close();
+      }
+    },
+    30000,
+  );
 });

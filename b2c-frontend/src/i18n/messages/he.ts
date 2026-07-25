@@ -31,6 +31,10 @@ export const messages = {
     adminMetrics: 'מדדים',
     adminCosts: 'עלויות AI',
     adminContent: 'ניהול תוכן',
+    instructor: 'מרצה',
+    instructorDashboard: 'לוח בקרה',
+    instructorCourses: 'הקורסים שלי',
+    instructorSales: 'מכירות',
     home: 'בית',
     learningPath: 'מסלול למידה',
     pricing: 'תמחור',
@@ -148,6 +152,9 @@ export const messages = {
     costsTitle: 'לוח עלויות AI',
     contentTitle: 'ניהול תוכן',
     accessDenied: 'נדרשת גישת מנהל.',
+  },
+  instructor: {
+    newCourse: 'קורס חדש',
   },
   marketing: {
     findLearningPath: 'מצא את מסלול הלמידה שלי',

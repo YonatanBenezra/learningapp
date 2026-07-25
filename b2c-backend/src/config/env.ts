@@ -41,6 +41,7 @@ const envSchema = z
     STRIPE_SECRET_KEY: z.string().default(''),
     STRIPE_WEBHOOK_SECRET: z.string().default(''),
     STRIPE_PRICE_ID: z.string().default(''),
+    STRIPE_STANDARD_PRICE_ID: z.string().default(''),
     STRIPE_SUCCESS_URL: z.string().default('http://localhost:3000/billing/success'),
     STRIPE_CANCEL_URL: z.string().default('http://localhost:3000/billing/cancel'),
   })
@@ -97,6 +98,7 @@ export const env = {
   stripeSecretKey: data.STRIPE_SECRET_KEY,
   stripeWebhookSecret: data.STRIPE_WEBHOOK_SECRET,
   stripePriceId: data.STRIPE_PRICE_ID,
+  stripeStandardPriceId: data.STRIPE_STANDARD_PRICE_ID,
   stripeSuccessUrl: data.STRIPE_SUCCESS_URL,
   stripeCancelUrl: data.STRIPE_CANCEL_URL,
 } as const;

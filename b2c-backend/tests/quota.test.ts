@@ -46,10 +46,10 @@ afterAll(async () => {
 
 describe('consumeQuota', () => {
   it('allows up to the free daily limit then throws QuotaError', async () => {
-    const userId = uid(); // free course limit = 3
-    expect(await consumeQuota(userId, 'free', 'course')).toEqual({ limit: 3, used: 1 });
-    await consumeQuota(userId, 'free', 'course');
-    expect((await consumeQuota(userId, 'free', 'course')).used).toBe(3);
+    const userId = uid(); // free course limit = 5
+    expect(await consumeQuota(userId, 'free', 'course')).toEqual({ limit: 5, used: 1 });
+    for (let i = 0; i < 3; i += 1) await consumeQuota(userId, 'free', 'course');
+    expect((await consumeQuota(userId, 'free', 'course')).used).toBe(5);
     await expect(consumeQuota(userId, 'free', 'course')).rejects.toBeInstanceOf(QuotaError);
   });
 
@@ -57,16 +57,16 @@ describe('consumeQuota', () => {
     const userId = uid();
     const day1 = new Date('2026-07-13T10:00:00Z');
     const day2 = new Date('2026-07-14T09:00:00Z');
-    for (let i = 0; i < 3; i += 1) await consumeQuota(userId, 'free', 'course', day1);
+    for (let i = 0; i < 5; i += 1) await consumeQuota(userId, 'free', 'course', day1);
     await expect(consumeQuota(userId, 'free', 'course', day1)).rejects.toBeInstanceOf(QuotaError);
     const next = await consumeQuota(userId, 'free', 'course', day2);
     expect(next.used).toBe(1);
   });
 
-  it('gives premium users a higher limit', async () => {
-    const userId = uid(); // premium course limit = 50
-    for (let i = 0; i < 10; i += 1) await consumeQuota(userId, 'premium', 'course');
-    expect((await consumeQuota(userId, 'premium', 'course')).used).toBe(11);
+  it('gives premium users unlimited daily quota', async () => {
+    const userId = uid();
+    for (let i = 0; i < 25; i += 1) await consumeQuota(userId, 'premium', 'course');
+    expect((await consumeQuota(userId, 'premium', 'course')).limit).toBe(Number.POSITIVE_INFINITY);
   });
 
   it('tracks each kind independently', async () => {
@@ -77,19 +77,18 @@ describe('consumeQuota', () => {
   });
 
   it('is race-safe under concurrent consumption (never exceeds the limit)', async () => {
-    const userId = uid(); // free course limit = 3
+    const userId = uid(); // free course limit = 5
     const results = await Promise.allSettled(
-      Array.from({ length: 8 }, () => consumeQuota(userId, 'free', 'course')),
+      Array.from({ length: 10 }, () => consumeQuota(userId, 'free', 'course')),
     );
     const ok = results.filter((r) => r.status === 'fulfilled').length;
     const rejected = results.filter((r) => r.status === 'rejected');
-    expect(ok).toBe(3);
+    expect(ok).toBe(5);
     expect(rejected).toHaveLength(5);
     expect(rejected.every((r) => (r as PromiseRejectedResult).reason instanceof QuotaError)).toBe(
       true,
     );
-    // The persisted count must land exactly on the limit — no lost updates.
-    expect((await getQuota(userId, 'free')).counts.courseGenerations).toBe(3);
+    expect((await getQuota(userId, 'free')).counts.courseGenerations).toBe(5);
   });
 });
 
@@ -99,7 +98,7 @@ describe('getQuota', () => {
     expect(snap.period).toBe('daily');
     expect(snap.counts.courseGenerations).toBe(0);
     expect(snap.counts.quizGenerations).toBe(0);
-    expect(snap.limits.courseGenerationsPerDay).toBe(3);
+    expect(snap.limits.courseGenerationsPerDay).toBe(5);
   });
 
   it('reflects usage after consumption', async () => {
@@ -114,44 +113,35 @@ describe('getQuota', () => {
 });
 
 describe('usageQuota middleware (HTTP 429)', () => {
-  it('429s with quota headers when the daily limit is already reached', async () => {
-    const s = await request(app)
-      .post('/auth/signup')
-      .send({ email: 'q@example.com', password: 'supersecret1' });
-    const token = s.body.accessToken;
-    const userId = s.body.user.id;
-    const course = await Course.create({
-      userId,
-      title: 'C',
-      category: 'X',
-      topics: ['x'],
-      level: 'beginner',
-      status: 'ready',
-      moduleOrder: [],
-      progressPercent: 0,
-    });
+  it('429s with quota headers when the monthly quiz limit is already reached', async () => {
+    const qApp = express();
+    qApp.post('/q', authenticate, usageQuota('quiz'), (_req, res) => res.json({ ok: true }));
+    qApp.use(errorMiddleware);
 
-    // Seed today's usage at the free exam limit (5).
+    const userId = uid();
+    const token = signAccessToken({ sub: userId, role: 'user', tier: 'free' });
+    const monthStart = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1));
+
     await UsageQuota.create({
       userId,
-      period: 'daily',
-      periodStart: utcDay(new Date()),
+      period: 'monthly',
+      periodStart: monthStart,
       counts: {
         courseGenerations: 0,
         exerciseGenerations: 0,
-        quizGenerations: 0,
-        examGenerations: 5,
+        quizGenerations: 20,
+        examGenerations: 0,
         labExecutions: 0,
       },
     });
 
-    const res = await request(app)
-      .post(`/courses/${course._id}/exam`)
+    const res = await request(qApp)
+      .post('/q')
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(429);
-    expect(res.body.kind).toBe('exam');
-    expect(res.body.limit).toBe(5);
-    expect(res.headers['x-quota-limit']).toBe('5');
+    expect(res.body.kind).toBe('quiz');
+    expect(res.body.limit).toBe(20);
+    expect(res.headers['x-quota-limit']).toBe('20');
     expect(res.headers['x-quota-remaining']).toBe('0');
   });
 });
@@ -162,7 +152,7 @@ describe('usageQuota middleware (success path)', () => {
     qApp.get('/g', authenticate, usageQuota('quiz'), (_req, res) => res.json({ ok: true }));
     qApp.use(errorMiddleware);
 
-    const token = signAccessToken({ sub: uid(), role: 'user', tier: 'free' }); // quiz free = 20
+    const token = signAccessToken({ sub: uid(), role: 'user', tier: 'free' }); // quiz free = 20/month
     const auth = { Authorization: `Bearer ${token}` };
 
     const r1 = await request(qApp).get('/g').set(auth);

@@ -52,12 +52,16 @@ export interface AssessmentSubmission {
 
 export type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
 
+export type SkillAssessmentGenerationStatus = 'generating' | 'ready' | 'failed';
+
 export interface SkillAssessment {
   id: string;
   topic: string;
   customTopic: string | null;
   questions: AssessmentQuestion[];
   generatedAt: string;
+  status?: SkillAssessmentGenerationStatus;
+  failureReason?: string | null;
 }
 
 export interface SkillAssessmentSubmission extends AssessmentSubmission {
@@ -75,6 +79,8 @@ export interface SkillAssessmentSummary {
   questionCount: number;
   generatedAt: string;
   expiresAt: string;
+  generationStatus?: SkillAssessmentGenerationStatus;
+  failureReason?: string | null;
   status: SkillAssessmentStatus;
   submission?: {
     score: number;

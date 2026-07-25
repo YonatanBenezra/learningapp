@@ -1,5 +1,5 @@
-export type Tier = 'free' | 'premium';
-export type Role = 'user' | 'admin';
+export type Tier = 'free' | 'standard' | 'premium';
+export type Role = 'user' | 'admin' | 'instructor';
 
 export interface User {
   id: string;

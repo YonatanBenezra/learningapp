@@ -55,6 +55,29 @@ export function RequireAdmin({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function isInstructorRole(role?: string | null) {
+  return role === 'instructor' || role === 'admin';
+}
+
+// Instructor dashboard routes. Learners are sent back to the main dashboard.
+export function RequireInstructor({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const hydrated = useAuthHydrated();
+  const token = useAuthStore((s) => s.accessToken);
+  const user = useAuthStore((s) => s.user);
+
+  useEffect(() => {
+    if (hydrated && token && user && !isInstructorRole(user.role)) {
+      router.replace('/dashboard');
+    }
+  }, [hydrated, token, user, router]);
+
+  if (!hydrated) return <FullScreen />;
+  if (!token || !user) return null;
+  if (!isInstructorRole(user.role)) return null;
+  return <>{children}</>;
+}
+
 // For /login and /signup: send users who ARRIVE already-authenticated to the
 // dashboard. The check runs once (in an effect, after hydration) so it does NOT
 // fire mid-flow — otherwise the token appearing during signup would hijack the

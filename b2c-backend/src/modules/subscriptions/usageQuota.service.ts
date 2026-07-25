@@ -1,8 +1,9 @@
 import { UsageQuota } from './usageQuota.model';
 import { AppError } from '../../common/errors/AppError';
-import { TIER_LIMITS } from '../../config/constants';
+import { tierLimits, isUnlimitedLimit } from '../../config/tiers';
 
 export type QuotaKind = 'course' | 'exercise' | 'quiz' | 'exam' | 'lab';
+export type QuotaPeriod = 'daily' | 'monthly';
 
 const KIND_TO_COUNT: Record<QuotaKind, string> = {
   course: 'courseGenerations',
@@ -15,10 +16,18 @@ const KIND_TO_COUNT: Record<QuotaKind, string> = {
 const KIND_TO_LIMIT = {
   course: 'courseGenerationsPerDay',
   exercise: 'exerciseGenerationsPerDay',
-  quiz: 'quizGenerationsPerDay',
-  exam: 'examGenerationsPerDay',
+  quiz: 'quizGenerationsPerMonth',
+  exam: 'examGenerationsPerMonth',
   lab: 'labExecutionsPerDay',
 } as const;
+
+const KIND_PERIOD: Record<QuotaKind, QuotaPeriod> = {
+  course: 'daily',
+  exercise: 'daily',
+  quiz: 'monthly',
+  exam: 'monthly',
+  lab: 'daily',
+};
 
 const ZERO_COUNTS = {
   courseGenerations: 0,
@@ -28,13 +37,14 @@ const ZERO_COUNTS = {
   labExecutions: 0,
 };
 
-// 429 raised when a per-day quota is exhausted.
 export class QuotaError extends AppError {
   constructor(
     public readonly limit: number,
     public readonly kind: QuotaKind,
+    period: QuotaPeriod,
   ) {
-    super(429, `Daily ${kind} generation limit reached (${limit}/day). Upgrade for more.`);
+    const unit = period === 'monthly' ? 'month' : 'day';
+    super(429, `${kind} generation limit reached (${limit}/${unit}). Upgrade for more.`);
     this.name = 'QuotaError';
   }
 }
@@ -43,28 +53,40 @@ function utcDay(now: Date): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 }
 
+function utcMonth(now: Date): Date {
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+}
+
+function periodFor(kind: QuotaKind): QuotaPeriod {
+  return KIND_PERIOD[kind];
+}
+
+function periodStartFor(kind: QuotaKind, now: Date): Date {
+  return periodFor(kind) === 'monthly' ? utcMonth(now) : utcDay(now);
+}
+
 export function limitFor(tier: string, kind: QuotaKind): number {
-  const limits = TIER_LIMITS[tier === 'premium' ? 'premium' : 'free'];
+  const limits = tierLimits(tier);
   return limits[KIND_TO_LIMIT[kind]];
 }
 
-// Atomically consumes one unit of the given quota for the user's current day.
-// The daily doc is keyed by (userId, period, periodStart) so a new day starts a
-// fresh doc — no reset job needed. Throws QuotaError (429) when the limit is hit.
 export async function consumeQuota(
   userId: string,
   tier: string,
   kind: QuotaKind,
   now: Date = new Date(),
 ): Promise<{ limit: number; used: number }> {
-  const periodStart = utcDay(now);
+  const period = periodFor(kind);
+  const periodStart = periodStartFor(kind, now);
   const countKey = KIND_TO_COUNT[kind];
   const limit = limitFor(tier, kind);
+  if (isUnlimitedLimit(limit)) {
+    return { limit, used: 0 };
+  }
 
-  // Ensure today's doc exists (benign duplicate-key race under concurrency is ignored).
   try {
     await UsageQuota.updateOne(
-      { userId, period: 'daily', periodStart },
+      { userId, period, periodStart },
       { $setOnInsert: { counts: ZERO_COUNTS } },
       { upsert: true },
     );
@@ -72,42 +94,50 @@ export async function consumeQuota(
     if (!(err instanceof Error && err.message.includes('E11000'))) throw err;
   }
 
-  // Atomic, race-safe increment that only succeeds while under the limit.
   const updated = await UsageQuota.findOneAndUpdate(
-    { userId, period: 'daily', periodStart, [`counts.${countKey}`]: { $lt: limit } },
+    { userId, period, periodStart, [`counts.${countKey}`]: { $lt: limit } },
     { $inc: { [`counts.${countKey}`]: 1 } },
     { new: true },
   );
-  if (!updated) throw new QuotaError(limit, kind);
+  if (!updated) throw new QuotaError(limit, kind, period);
 
   const used = (updated.counts as unknown as Record<string, number>)[countKey];
   return { limit, used };
 }
 
-// Releases one previously-consumed unit (never below zero). Used when a charged
-// operation could not actually run — e.g. a sandbox that failed to launch.
 export async function refundQuota(
   userId: string,
   kind: QuotaKind,
   now: Date = new Date(),
 ): Promise<void> {
-  const periodStart = utcDay(now);
+  const period = periodFor(kind);
+  const periodStart = periodStartFor(kind, now);
   const countKey = KIND_TO_COUNT[kind];
   await UsageQuota.updateOne(
-    { userId, period: 'daily', periodStart, [`counts.${countKey}`]: { $gt: 0 } },
+    { userId, period, periodStart, [`counts.${countKey}`]: { $gt: 0 } },
     { $inc: { [`counts.${countKey}`]: -1 } },
   );
 }
 
-// Current-day usage snapshot for a user (for the admin cost view / a usage endpoint).
 export async function getQuota(userId: string, tier: string, now: Date = new Date()) {
-  const periodStart = utcDay(now);
-  const doc = await UsageQuota.findOne({ userId, period: 'daily', periodStart });
-  const counts = (doc?.counts as unknown as Record<string, number>) ?? { ...ZERO_COUNTS };
+  const dailyStart = utcDay(now);
+  const monthlyStart = utcMonth(now);
+  const [dailyDoc, monthlyDoc] = await Promise.all([
+    UsageQuota.findOne({ userId, period: 'daily', periodStart: dailyStart }),
+    UsageQuota.findOne({ userId, period: 'monthly', periodStart: monthlyStart }),
+  ]);
+  const daily = (dailyDoc?.counts as unknown as Record<string, number>) ?? { ...ZERO_COUNTS };
+  const monthly = (monthlyDoc?.counts as unknown as Record<string, number>) ?? { ...ZERO_COUNTS };
   return {
     period: 'daily' as const,
-    periodStart,
-    counts,
-    limits: TIER_LIMITS[tier === 'premium' ? 'premium' : 'free'],
+    periodStart: dailyStart,
+    counts: {
+      courseGenerations: daily.courseGenerations ?? 0,
+      exerciseGenerations: daily.exerciseGenerations ?? 0,
+      quizGenerations: monthly.quizGenerations ?? 0,
+      examGenerations: monthly.examGenerations ?? 0,
+      labExecutions: daily.labExecutions ?? 0,
+    },
+    limits: tierLimits(tier),
   };
 }

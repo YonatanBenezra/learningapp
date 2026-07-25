@@ -8,6 +8,10 @@ import {
   startCourseGenerationWorker,
   stopCourseGenerationWorker,
 } from './jobs/courseGenerationWorker';
+import {
+  startSkillAssessmentGenerationWorker,
+  stopSkillAssessmentGenerationWorker,
+} from './jobs/skillAssessmentGenerationWorker';
 import { startGradingWorker, stopGradingWorker } from './jobs/gradingWorker';
 import {
   startStreakResetWorker,
@@ -44,6 +48,7 @@ async function bootstrap(): Promise<void> {
     logger.info('Redis connected');
 
     startCourseGenerationWorker();
+    startSkillAssessmentGenerationWorker();
     startGradingWorker();
     startStreakResetWorker();
     await scheduleStreakReset();
@@ -68,6 +73,9 @@ async function bootstrap(): Promise<void> {
     server.close();
     await stopCourseGenerationWorker().catch((err) =>
       logger.error({ err }, 'Error stopping course worker'),
+    );
+    await stopSkillAssessmentGenerationWorker().catch((err) =>
+      logger.error({ err }, 'Error stopping skill assessment worker'),
     );
     await stopGradingWorker().catch((err) => logger.error({ err }, 'Error stopping grading worker'));
     await stopStreakResetWorker().catch((err) =>

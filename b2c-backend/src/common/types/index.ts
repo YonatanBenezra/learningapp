@@ -1,5 +1,5 @@
-export type Tier = 'free' | 'premium';
-export type Role = 'user' | 'admin';
+export type Tier = 'free' | 'standard' | 'premium';
+export type Role = 'user' | 'admin' | 'instructor';
 export type Domain = 'programming' | 'networking' | 'cybersecurity' | 'os' | 'general';
 export type CourseStatus = 'generating' | 'ready' | 'failed' | 'archived' | 'completed';
 

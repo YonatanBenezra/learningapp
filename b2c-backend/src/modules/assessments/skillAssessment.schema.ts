@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { AppError } from '../../common/errors/AppError';
+import { shuffleMcqOptions } from './mcqOptions';
 
 const AiSkillMcqQuestionSchema = z
   .object({
@@ -54,14 +55,14 @@ export function normalizeSkillQuestions(
       throw new AppError(502, 'AI returned a question with too few options');
     }
     const correctAnswer = q.correctAnswer.trim();
-    const resolvedCorrect =
-      options.find((o) => o.toLowerCase() === correctAnswer.toLowerCase()) ??
-      options.find((o) => o === correctAnswer) ??
-      options[0];
+    const { options: shuffledOptions, correctAnswer: resolvedCorrect } = shuffleMcqOptions(
+      options,
+      correctAnswer,
+    );
     return {
       question: q.question,
       type: 'mcq' as const,
-      options,
+      options: shuffledOptions,
       correctAnswer: resolvedCorrect,
     };
   });

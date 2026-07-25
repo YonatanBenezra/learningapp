@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { getBillingProvider } from './billing/stripe.provider';
 import * as service from './subscription.service';
 
 export async function getMySubscription(
@@ -16,7 +17,8 @@ export async function getMySubscription(
 
 export async function checkout(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { url } = await service.createCheckout(req.user!.id);
+    const plan = req.body?.plan === 'standard' ? 'standard' : 'premium';
+    const { url } = await service.createCheckout(req.user!.id, getBillingProvider(), plan);
     res.json({ url });
   } catch (err) {
     next(err);

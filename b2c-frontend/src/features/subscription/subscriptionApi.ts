@@ -17,8 +17,11 @@ export function getMySubscription(): Promise<{ subscription: Subscription }> {
   return apiClient<{ subscription: Subscription }>('/subscriptions/me');
 }
 
-export function createCheckout(): Promise<{ url: string }> {
-  return apiClient<{ url: string }>('/subscriptions/checkout', { method: 'POST' });
+export function createCheckout(plan: 'standard' | 'premium' = 'premium'): Promise<{ url: string }> {
+  return apiClient<{ url: string }>('/subscriptions/checkout', {
+    method: 'POST',
+    body: JSON.stringify({ plan }),
+  });
 }
 
 export function createPortal(): Promise<{ url: string }> {

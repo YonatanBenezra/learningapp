@@ -16,10 +16,24 @@ import {
   type SkillMcqQuestion,
 } from './skillAssessment.schema';
 import type { ZodType } from 'zod';
-import { scoreToLevel, skillAssessmentLimitFor, FREE_SKILL_ASSESSMENT_LIMIT } from './skillAssessment.constants';
+import { scoreToLevel, skillAssessmentLimitFor } from './skillAssessment.constants';
 import { gradeSubmission, type ShortAnswerJudge } from './grading.service';
 import type { SubmittedAnswer } from './assessment.schema';
 import { assertPlatformAccess } from '../subscriptions/subscription.service';
+import { skillAssessmentGenerationQueue, jobPriority } from '../../jobs/queue';
+import { logger } from '../../common/utils/logger';
+
+export type SkillAssessmentStatus = 'generating' | 'ready' | 'failed';
+
+export function resolveAssessmentStatus(assessment: {
+  status?: SkillAssessmentStatus | null;
+  questions?: unknown[];
+}): SkillAssessmentStatus {
+  if (assessment.status) return assessment.status;
+  return Array.isArray(assessment.questions) && assessment.questions.length > 0
+    ? 'ready'
+    : 'generating';
+}
 
 export type SkillAssessmentGenerator = (input: {
   topicLabel: string;
@@ -43,9 +57,25 @@ function topicLabel(topic: string, customTopic?: string | null): string {
   return topic === 'Other' && customTopic ? customTopic.trim() : topic;
 }
 
+function activeAssessmentFilter(now = new Date()) {
+  return { $or: [{ expiresAt: null }, { expiresAt: { $gt: now } }] };
+}
+
+/** Attach guest-session assessments to the authenticated user (same browser). */
+export async function claimGuestAssessments(
+  userId: string,
+  guestSessionId?: string | null,
+): Promise<number> {
+  if (!guestSessionId?.trim()) return 0;
+  const result = await SkillAssessment.updateMany(
+    { guestSessionId: guestSessionId.trim(), userId: null },
+    { $set: { userId: new Types.ObjectId(userId) } },
+  );
+  return result.modifiedCount;
+}
+
 async function countSkillAssessments(userId?: string, guestSessionId?: string): Promise<number> {
-  const now = new Date();
-  const active = { $or: [{ expiresAt: null }, { expiresAt: { $gt: now } }] };
+  const active = activeAssessmentFilter();
   if (userId) {
     return SkillAssessment.countDocuments({ ...active, userId: new Types.ObjectId(userId) });
   }
@@ -64,10 +94,7 @@ export async function assertSkillAssessmentQuota(
   if (!Number.isFinite(limit)) return;
   const used = await countSkillAssessments(userId, guestSessionId);
   if (used >= limit) {
-    throw new AppError(
-      429,
-      `Free plan allows up to ${FREE_SKILL_ASSESSMENT_LIMIT} active assessments.`,
-    );
+    throw new AppError(429, `Your plan allows up to ${limit} active assessments.`);
   }
 }
 
@@ -90,20 +117,15 @@ export async function listSkillAssessments(
     };
   }
 
+  if (userId) {
+    await claimGuestAssessments(userId, guestSessionId);
+  }
+
   const used = await countSkillAssessments(userId, guestSessionId);
   const submissionByAssessment = new Map<
     string,
     { score: number; level: string; submittedAt: Date }
   >();
-
-  let docs: Array<{
-    _id: Types.ObjectId;
-    topic: string;
-    customTopic?: string | null;
-    generatedAt: Date;
-    expiresAt?: Date | null;
-    questions?: unknown[];
-  }> = [];
 
   if (userId) {
     const userObjectId = new Types.ObjectId(userId);
@@ -117,46 +139,35 @@ export async function listSkillAssessments(
         submittedAt: sub.submittedAt,
       });
     }
-
-    const orFilters: Record<string, unknown>[] = [{ userId: userObjectId }];
-    const submittedIds = subs.map((s) => s.assessmentId);
-    if (submittedIds.length) orFilters.push({ _id: { $in: submittedIds } });
-    if (guestSessionId) orFilters.push({ guestSessionId, userId: null });
-
-    docs = await SkillAssessment.find({ $or: orFilters })
-      .sort({ createdAt: -1 })
-      .select('topic customTopic generatedAt expiresAt questions')
-      .lean();
-  } else if (guestSessionId) {
-    docs = await SkillAssessment.find({ guestSessionId, userId: null })
-      .sort({ createdAt: -1 })
-      .select('topic customTopic generatedAt expiresAt questions')
-      .lean();
   }
 
-  const seen = new Set<string>();
-  const assessments = docs
-    .filter((doc) => {
-      const id = String(doc._id);
-      if (seen.has(id)) return false;
-      seen.add(id);
-      return true;
-    })
-    .map((doc) => {
-      const id = String(doc._id);
-      const submission = submissionByAssessment.get(id);
-      return {
-        id,
-        topic: doc.topic,
-        customTopic: doc.customTopic ?? null,
-        topicLabel: topicLabel(doc.topic, doc.customTopic),
-        questionCount: Array.isArray(doc.questions) ? doc.questions.length : 0,
-        generatedAt: doc.generatedAt,
-        expiresAt: doc.expiresAt,
-        status: submission ? ('completed' as const) : ('pending' as const),
-        submission,
-      };
-    });
+  const filter = userId
+    ? { userId: new Types.ObjectId(userId), ...activeAssessmentFilter() }
+    : { guestSessionId, userId: null, ...activeAssessmentFilter() };
+
+  const docs = await SkillAssessment.find(filter)
+    .sort({ createdAt: -1 })
+    .select('topic customTopic generatedAt expiresAt questions status failureReason')
+    .lean();
+
+  const assessments = docs.map((doc) => {
+    const id = String(doc._id);
+    const submission = submissionByAssessment.get(id);
+    const generationStatus = resolveAssessmentStatus(doc);
+    return {
+      id,
+      topic: doc.topic,
+      customTopic: doc.customTopic ?? null,
+      topicLabel: topicLabel(doc.topic, doc.customTopic),
+      questionCount: Array.isArray(doc.questions) ? doc.questions.length : 0,
+      generatedAt: doc.generatedAt,
+      expiresAt: doc.expiresAt,
+      generationStatus,
+      failureReason: doc.failureReason ?? null,
+      status: submission ? ('completed' as const) : ('pending' as const),
+      submission,
+    };
+  });
 
   return {
     assessments,
@@ -173,20 +184,61 @@ export async function generateSkillAssessment(
   input: { topic: string; customTopic?: string; guestSessionId?: string },
   userId?: string,
   tier?: string | null,
-  generate: SkillAssessmentGenerator = defaultGenerator,
+  generate?: SkillAssessmentGenerator,
 ) {
   if (userId) await assertPlatformAccess(userId);
   await assertSkillAssessmentQuota(userId, input.guestSessionId, tier);
-  const label = topicLabel(input.topic, input.customTopic);
-  const generated = await generate({ topicLabel: label, userId });
-  const questions = normalizeSkillQuestions(generated.questions);
-  return SkillAssessment.create({
+
+  const assessment = await SkillAssessment.create({
     topic: input.topic,
     customTopic: input.customTopic ?? null,
     userId: userId ? new Types.ObjectId(userId) : null,
     guestSessionId: input.guestSessionId ?? null,
-    questions,
+    questions: [],
+    status: 'generating',
   });
+
+  const assessmentId = String(assessment._id);
+
+  if (generate) {
+    await runSkillAssessmentGeneration(assessmentId, generate);
+    return SkillAssessment.findById(assessmentId);
+  }
+
+  await skillAssessmentGenerationQueue().add(
+    'generate',
+    { assessmentId },
+    { priority: jobPriority(tier ?? undefined) },
+  );
+
+  return assessment;
+}
+
+export async function runSkillAssessmentGeneration(
+  assessmentId: string,
+  generate: SkillAssessmentGenerator = defaultGenerator,
+): Promise<void> {
+  const assessment = await SkillAssessment.findById(assessmentId);
+  if (!assessment || resolveAssessmentStatus(assessment) !== 'generating') return;
+
+  try {
+    const label = topicLabel(assessment.topic, assessment.customTopic);
+    const userId = assessment.userId ? String(assessment.userId) : undefined;
+    const generated = await generate({ topicLabel: label, userId });
+    const questions = normalizeSkillQuestions(generated.questions);
+
+    assessment.set('questions', questions);
+    assessment.status = 'ready';
+    assessment.generatedAt = new Date();
+    assessment.failureReason = null;
+    await assessment.save();
+    logger.info({ assessmentId }, 'Skill assessment generation succeeded');
+  } catch (err) {
+    assessment.status = 'failed';
+    assessment.failureReason = err instanceof Error ? err.message : 'generation failed';
+    await assessment.save();
+    logger.error({ err, assessmentId }, 'Skill assessment generation failed');
+  }
 }
 
 export async function getSkillAssessment(assessmentId: string) {
@@ -206,6 +258,12 @@ export async function submitSkillAssessment(
   judge?: ShortAnswerJudge,
 ) {
   const assessment = await getSkillAssessment(assessmentId);
+  if (resolveAssessmentStatus(assessment) !== 'ready') {
+    throw new AppError(409, 'Assessment is not ready yet');
+  }
+
+  await claimGuestAssessments(userId, assessment.guestSessionId);
+
   const existing = await SkillAssessmentSubmission.findOne({
     assessmentId: assessment._id,
     userId,

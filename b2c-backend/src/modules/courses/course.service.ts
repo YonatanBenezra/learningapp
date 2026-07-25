@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { tierLimits } from '../../config/tiers';
 import { Course } from './course.model';
 import { Module } from '../modules-content/module.model';
 import { Lesson } from '../lessons/lesson.model';
@@ -24,12 +24,13 @@ export async function createCourse(userId: string, input: CreateCourseInput) {
   const user = await User.findById(userId);
   if (!user) throw new AppError(404, 'User not found');
 
-  // Free tier: 1 active course (full entitlement handling lands in Phase 8).
-  if (user.tier === 'free') {
-    const active = await Course.countDocuments({ userId, status: { $in: ACTIVE_STATUSES } });
-    if (active >= 1) {
-      throw new AppError(403, 'Free tier allows only 1 active course. Upgrade or archive one.');
-    }
+  const activeLimit = tierLimits(user.tier).activeCourses;
+  const active = await Course.countDocuments({ userId, status: { $in: ACTIVE_STATUSES } });
+  if (Number.isFinite(activeLimit) && active >= activeLimit) {
+    throw new AppError(
+      403,
+      `${user.tier === 'free' ? 'Free' : user.tier === 'standard' ? 'Standard' : 'Your'} tier allows only ${activeLimit} active course${activeLimit === 1 ? '' : 's'}. Upgrade or archive one.`,
+    );
   }
 
   const course = await Course.create({
@@ -157,7 +158,9 @@ export async function runCourseGeneration(
       moduleIds.push(mod._id);
     }
 
-    course.title = tree.title;
+    if (course.kind !== 'marketplace') {
+      course.title = tree.title;
+    }
     course.set('moduleOrder', moduleIds);
     course.status = 'ready';
     course.generatedAt = new Date();

@@ -5,7 +5,7 @@ import { Schema, model, Types } from 'mongoose';
 const subscriptionSchema = new Schema(
   {
     userId: { type: Types.ObjectId, ref: 'User', required: true, index: true, unique: true },
-    tier: { type: String, enum: ['free', 'premium'], default: 'free' },
+    tier: { type: String, enum: ['free', 'standard', 'premium'], default: 'free' },
     status: {
       type: String,
       enum: ['active', 'canceled', 'past_due', 'incomplete'],

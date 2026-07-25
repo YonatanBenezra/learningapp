@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -37,6 +37,7 @@ export function PaginatedSkillAssessment({
   const token = useAuthStore((s) => s.accessToken);
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
+  const questionsRef = useRef<HTMLDivElement>(null);
 
   const totalPages = Math.ceil(questions.length / PAGE_SIZE);
   const pageQuestions = useMemo(
@@ -62,6 +63,10 @@ export function PaginatedSkillAssessment({
     if (isLastPage) handleSubmit();
     else setPage((p) => p + 1);
   };
+
+  useEffect(() => {
+    questionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [page]);
 
   const handleSubmit = () => {
     if (!allAnswered || submitting) return;
@@ -156,7 +161,7 @@ export function PaginatedSkillAssessment({
           </div>
         </div>
 
-        <div className="mt-8 grid gap-6 xl:grid-cols-2">
+        <div ref={questionsRef} className="mt-8 grid gap-6 xl:grid-cols-2">
           {pageQuestions.map((q, offset) => {
             const i = startIndex + offset;
             const answered = Boolean(answers[i]?.trim());

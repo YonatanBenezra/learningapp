@@ -12,6 +12,7 @@ import { AiUsage } from '../ai-guidance/aiUsage.model';
 import { Achievement } from '../gamification/achievement.model';
 import { ContentFlag } from './contentFlag.model';
 import { AppError } from '../../common/errors/AppError';
+import type { Role } from '../../common/types';
 import { courseGenerationQueue } from '../../jobs/queue';
 import { generateQuiz, type QuizGenerator } from '../assessments/quiz.service';
 import { generateExercise, type ExerciseGenerator } from '../exercises/exercise.service';
@@ -213,4 +214,10 @@ export async function upsertAchievement(input: {
 }) {
   await Achievement.updateOne({ key: input.key }, { $set: input }, { upsert: true });
   return Achievement.findOne({ key: input.key });
+}
+
+export async function setUserRole(userId: string, role: Role) {
+  const user = await User.findByIdAndUpdate(userId, { $set: { role } }, { new: true });
+  if (!user) throw new AppError(404, 'User not found');
+  return user;
 }

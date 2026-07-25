@@ -8,11 +8,14 @@ import * as api from './skillAssessmentApi';
 
 export function useMySkillAssessments() {
   const hydrated = useAuthHydrated();
-  const token = useAuthStore((s) => s.accessToken);
+  const userId = useAuthStore((s) => s.user?.id);
+  const guestSessionId = typeof window !== 'undefined' ? api.getGuestSessionId() : '';
   return useQuery({
-    queryKey: ['skill-assessments-mine', token ? 'auth' : 'guest', api.getGuestSessionId()],
-    queryFn: () => api.listMySkillAssessments(Boolean(token)),
+    queryKey: ['skill-assessments-mine', userId ?? 'guest', guestSessionId],
+    queryFn: () => api.listMySkillAssessments(),
     enabled: hydrated,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 }
 
@@ -31,6 +34,8 @@ export function useSkillAssessment(id: string) {
     queryKey: ['skill-assessment', id],
     queryFn: () => api.getSkillAssessment(id),
     enabled: Boolean(id),
+    refetchInterval: (query) =>
+      query.state.data?.status === 'generating' ? 1500 : false,
   });
 }
 

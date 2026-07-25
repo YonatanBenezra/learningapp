@@ -1,4 +1,5 @@
 import { config } from '@/src/config/env';
+import type { User } from '@/src/domain/user';
 import { useAuthStore } from '@/src/store/authStore';
 
 export class ApiError extends Error {
@@ -16,7 +17,7 @@ export class ApiError extends Error {
 let refreshing: Promise<boolean> | null = null;
 
 async function refreshTokens(): Promise<boolean> {
-  const { refreshToken, setTokens, clear } = useAuthStore.getState();
+  const { refreshToken, setTokens, setUser, clear } = useAuthStore.getState();
   if (!refreshToken) return false;
 
   if (!refreshing) {
@@ -30,8 +31,13 @@ async function refreshTokens(): Promise<boolean> {
           clear();
           return false;
         }
-        const data = (await res.json()) as { accessToken: string; refreshToken: string };
+        const data = (await res.json()) as {
+          accessToken: string;
+          refreshToken: string;
+          user?: User;
+        };
         setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken });
+        if (data.user) setUser(data.user);
         return true;
       })
       .catch(() => {

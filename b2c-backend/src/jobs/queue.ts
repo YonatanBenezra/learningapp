@@ -6,6 +6,7 @@ export { redisConnectionOptions };
 // Async queues (§8). Workers are added per phase (course gen §3, grading §6).
 export const QUEUE_NAMES = {
   courseGeneration: 'course-generation',
+  skillAssessmentGeneration: 'skill-assessment-generation',
   grading: 'grading',
   streakReset: 'streak-reset',
   dailyReminder: 'daily-reminder',
@@ -27,6 +28,8 @@ function getQueue(name: string): Queue {
 }
 
 export const courseGenerationQueue = (): Queue => getQueue(QUEUE_NAMES.courseGeneration);
+export const skillAssessmentGenerationQueue = (): Queue =>
+  getQueue(QUEUE_NAMES.skillAssessmentGeneration);
 export const gradingQueue = (): Queue => getQueue(QUEUE_NAMES.grading);
 export const streakResetQueue = (): Queue => getQueue(QUEUE_NAMES.streakReset);
 export const dailyReminderQueue = (): Queue => getQueue(QUEUE_NAMES.dailyReminder);
@@ -35,7 +38,11 @@ export const subscriptionSyncQueue = (): Queue => getQueue(QUEUE_NAMES.subscript
 
 // Premium jobs jump the queue (§6). In BullMQ a lower priority value is processed
 // first, so premium=1 outranks free=10.
-export const jobPriority = (tier?: string): number => (tier === 'premium' ? 1 : 10);
+export const jobPriority = (tier?: string): number => {
+  if (tier === 'premium') return 1;
+  if (tier === 'standard') return 5;
+  return 10;
+};
 
 export async function closeQueues(): Promise<void> {
   await Promise.all([...queues.values()].map((queue) => queue.close()));

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { authenticate, requireRole } from '../../middlewares/auth.middleware';
 import { validate } from '../../middlewares/validate.middleware';
+import { setUserRoleSchema } from '../instructor/instructor.validation';
 import * as controller from './admin.controller';
 
 const flagSchema = z.object({ reason: z.string().min(1).max(1000) });
@@ -29,5 +30,6 @@ router.get('/flags', controller.listFlags);
 router.post('/flags/:id/resolve', validate({ body: resolveSchema }), controller.resolveFlag);
 
 router.post('/achievements', validate({ body: achievementSchema }), controller.upsertAchievement);
+router.patch('/users/:id/role', validate({ body: setUserRoleSchema }), controller.setUserRole);
 
 export default router;

@@ -4,6 +4,7 @@ import { AppError } from '../../common/errors/AppError';
 import { logger } from '../../common/utils/logger';
 import { env } from '../../config/env';
 import { TRIAL_PERIOD_DAYS } from '../../config/constants';
+import { isPaidTier, type Tier } from '../../config/tiers';
 import { getBillingProvider } from './billing/stripe.provider';
 import type { BillingEvent, BillingProvider } from './billing/types';
 
@@ -24,7 +25,17 @@ export function hasPlatformAccess(
   sub: { tier: string; trialEndsAt?: Date | null },
   now = new Date(),
 ): boolean {
-  return sub.tier === 'premium' || isTrialActive(sub, now);
+  return isPaidTier(sub.tier) || isTrialActive(sub, now);
+}
+
+function resolvePaidTierFromPrice(priceId?: string | null): Tier {
+  if (priceId) {
+    if (env.stripePriceId && priceId === env.stripePriceId) return 'premium';
+    if (env.stripeStandardPriceId && priceId === env.stripeStandardPriceId) return 'standard';
+  }
+  // Backward compatible: legacy single-price setups map to Premium.
+  if (env.stripePriceId && !env.stripeStandardPriceId) return 'premium';
+  return 'standard';
 }
 
 export function serializeSubscription(
@@ -83,8 +94,13 @@ export async function assertPlatformAccess(userId: string, now = new Date()): Pr
 export async function createCheckout(
   userId: string,
   provider: BillingProvider = getBillingProvider(),
+  plan: 'standard' | 'premium' = 'premium',
 ): Promise<{ url: string }> {
-  if (!env.stripePriceId) throw new AppError(500, 'Stripe price is not configured.');
+  const priceId =
+    plan === 'standard'
+      ? env.stripeStandardPriceId || env.stripePriceId
+      : env.stripePriceId;
+  if (!priceId) throw new AppError(500, 'Stripe price is not configured.');
   const user = await User.findById(userId);
   if (!user) throw new AppError(404, 'User not found');
 
@@ -93,7 +109,7 @@ export async function createCheckout(
     userId,
     email: user.email as string,
     customerId: sub.stripeCustomerId ?? undefined,
-    priceId: env.stripePriceId,
+    priceId,
     successUrl: env.stripeSuccessUrl,
     cancelUrl: env.stripeCancelUrl,
   });
@@ -135,11 +151,11 @@ export async function handleBillingEvent(event: BillingEvent) {
     return null;
   }
 
-  // Premium access continues through the dunning grace period (past_due); only an
+  // Paid access continues through the dunning grace period (past_due); only an
   // explicit cancellation / unpaid subscription drops the user back to free.
-  const retainsPremium = event.status === 'active' || event.status === 'past_due';
-  const isActive = event.type !== 'subscription.canceled' && retainsPremium;
-  const tier = isActive ? 'premium' : 'free';
+  const retainsPaidAccess = event.status === 'active' || event.status === 'past_due';
+  const isActive = event.type !== 'subscription.canceled' && retainsPaidAccess;
+  const tier: Tier = isActive ? resolvePaidTierFromPrice(event.priceId) : 'free';
   const status = event.status ?? (isActive ? 'active' : 'canceled');
 
   const sub = await Subscription.findOneAndUpdate(

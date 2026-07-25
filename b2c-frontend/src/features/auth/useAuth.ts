@@ -1,9 +1,11 @@
 'use client';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/src/store/authStore';
 import * as authApi from './authApi';
+
+export { useMe, AuthSessionSync } from './useMe';
 
 function navigateAfterAuth(router: ReturnType<typeof useRouter>, defaultPath: string) {
   const params = new URLSearchParams(window.location.search);
@@ -11,17 +13,19 @@ function navigateAfterAuth(router: ReturnType<typeof useRouter>, defaultPath: st
   router.push(redirect?.startsWith('/') ? redirect : defaultPath);
 }
 
-export function useMe() {
-  return useQuery({ queryKey: ['me'], queryFn: authApi.getMe });
+function invalidateAssessmentQueries(queryClient: ReturnType<typeof useQueryClient>) {
+  void queryClient.invalidateQueries({ queryKey: ['skill-assessments-mine'] });
 }
 
 export function useLogin() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const setAuth = useAuthStore((s) => s.setAuth);
   return useMutation({
     mutationFn: authApi.login,
     onSuccess: (data) => {
       setAuth(data);
+      invalidateAssessmentQueries(queryClient);
       navigateAfterAuth(router, '/dashboard');
     },
   });
@@ -29,11 +33,13 @@ export function useLogin() {
 
 export function useSignup() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const setAuth = useAuthStore((s) => s.setAuth);
   return useMutation({
     mutationFn: authApi.signup,
     onSuccess: (data) => {
       setAuth(data);
+      invalidateAssessmentQueries(queryClient);
       navigateAfterAuth(router, '/create-course');
     },
   });
@@ -41,11 +47,13 @@ export function useSignup() {
 
 export function useGoogleLogin() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const setAuth = useAuthStore((s) => s.setAuth);
   return useMutation({
     mutationFn: authApi.loginWithGoogle,
     onSuccess: (data) => {
       setAuth(data);
+      invalidateAssessmentQueries(queryClient);
       navigateAfterAuth(router, '/dashboard');
     },
   });

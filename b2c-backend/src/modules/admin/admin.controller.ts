@@ -43,3 +43,8 @@ export const upsertAchievement = asyncHandler(async (req, res) => {
   const achievement = await service.upsertAchievement(req.body);
   res.status(201).json({ achievement });
 });
+
+export const setUserRole = asyncHandler(async (req, res) => {
+  const user = await service.setUserRole(req.params.id, req.body.role);
+  res.json({ user });
+});

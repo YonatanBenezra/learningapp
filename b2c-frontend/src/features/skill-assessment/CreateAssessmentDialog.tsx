@@ -26,6 +26,10 @@ import { ApiError } from '@/src/infrastructure/apiClient';
 import type { SkillAssessmentQuota } from '@/src/domain/assessment';
 import { TRIAL_PERIOD_MONTHS } from '@/src/constants/pricing';
 import {
+  isAssessmentQuotaExhausted,
+  tierPlanLabel,
+} from '@/src/constants/tierLimits';
+import {
   saveLearningGoal,
   type LearningGoal,
 } from '@/src/features/learning-path/learningPathRecommendation';
@@ -137,7 +141,7 @@ export function CreateAssessmentDialog({
   const [goal, setGoal] = useState<LearningGoal>('career');
   const [error, setError] = useState<string | null>(null);
 
-  const atLimit = quota?.remaining === 0;
+  const atLimit = isAssessmentQuotaExhausted(quota);
   const topicLabel =
     topic === 'Other' && customTopic.trim() ? customTopic.trim() : topic;
   const step1Valid = topic !== 'Other' || customTopic.trim().length > 0;
@@ -180,7 +184,7 @@ export function CreateAssessmentDialog({
   function onCreate() {
     setError(null);
     if (atLimit) {
-      setError('You have reached the free plan limit of 3 assessments.');
+      setError('You have reached the assessment limit for your current plan.');
       return;
     }
     if (!step1Valid) {
@@ -259,12 +263,24 @@ export function CreateAssessmentDialog({
           {step === 1 ? (
             <div className="space-y-6">
               {quota && quota.limit !== null && (
-                <div className="rounded-xl border border-line bg-bg-soft px-4 py-3 text-sm text-ink-2">
-                  <span className="font-medium text-ink">Plan usage:</span>{' '}
+                <div
+                  className={cn(
+                    'rounded-xl border px-4 py-3 text-sm',
+                    atLimit
+                      ? 'border-bad/35 bg-bad-soft text-bad'
+                      : 'border-line bg-bg-soft text-ink-2',
+                  )}
+                  role={atLimit ? 'alert' : undefined}
+                >
+                  <span className={cn('font-medium', atLimit ? 'text-bad' : 'text-ink')}>
+                    {tierPlanLabel(quota.tier)} plan:
+                  </span>{' '}
                   {quota.used} of {quota.limit} assessments used
-                  {quota.remaining !== null && quota.remaining > 0
-                    ? ` · ${quota.remaining} remaining`
-                    : ' · limit reached'}
+                  {atLimit ? (
+                    <span className="font-semibold"> · Limit reached</span>
+                  ) : quota.remaining !== null && quota.remaining > 0 ? (
+                    ` · ${quota.remaining} remaining`
+                  ) : null}
                 </div>
               )}
 
@@ -419,7 +435,7 @@ export function CreateAssessmentDialog({
               <Button variant="ghost" onClick={onClose}>
                 Cancel
               </Button>
-              <Button size="lg" onClick={goToStep2} disabled={!step1Valid}>
+              <Button size="lg" onClick={goToStep2} disabled={!step1Valid || atLimit}>
                 Continue to goal selection
                 <ArrowRight className="size-4" />
               </Button>

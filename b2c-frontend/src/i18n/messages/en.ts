@@ -31,6 +31,10 @@ export const messages = {
     adminMetrics: 'Metrics',
     adminCosts: 'AI costs',
     adminContent: 'Moderation',
+    instructor: 'Instructor',
+    instructorDashboard: 'Dashboard',
+    instructorCourses: 'My courses',
+    instructorSales: 'Sales',
     home: 'Home',
     learningPath: 'Learning path',
     pricing: 'Pricing',
@@ -150,6 +154,9 @@ export const messages = {
     costsTitle: 'AI cost dashboard',
     contentTitle: 'Content moderation',
     accessDenied: 'Admin access required.',
+  },
+  instructor: {
+    newCourse: 'New course',
   },
   marketing: {
     findLearningPath: 'Find my learning path',

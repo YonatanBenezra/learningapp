@@ -433,8 +433,9 @@ describe('requirePremium', () => {
 });
 
 describe('priority AI queue', () => {
-  it('jobPriority ranks premium above free', () => {
+  it('jobPriority ranks premium above standard above free', () => {
     expect(jobPriority('premium')).toBe(1);
+    expect(jobPriority('standard')).toBe(5);
     expect(jobPriority('free')).toBe(10);
     expect(jobPriority(undefined)).toBe(10);
   });

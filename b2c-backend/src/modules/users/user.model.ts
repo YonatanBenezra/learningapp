@@ -6,8 +6,8 @@ const userSchema = new Schema(
     // Never selected by default — must be explicitly requested with `.select('+passwordHash')`.
     passwordHash: { type: String, select: false },
     oauth: { provider: String, providerId: String },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    tier: { type: String, enum: ['free', 'premium'], default: 'free' },
+    role: { type: String, enum: ['user', 'admin', 'instructor'], default: 'user' },
+    tier: { type: String, enum: ['free', 'standard', 'premium'], default: 'free' },
     preferences: {
       visualsPreferred: { type: Boolean, default: false },
       dailyNotification: { type: Boolean, default: false },

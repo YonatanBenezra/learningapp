@@ -31,6 +31,7 @@ export type MessageKey =
   | `settings.${keyof Messages['settings']}`
   | `achievements.${keyof Messages['achievements']}`
   | `admin.${keyof Messages['admin']}`
+  | `instructor.${keyof Messages['instructor']}`
   | `marketing.${keyof Messages['marketing']}`;
 
 export function translate(locale: Locale, key: MessageKey, vars?: Record<string, string>): string {

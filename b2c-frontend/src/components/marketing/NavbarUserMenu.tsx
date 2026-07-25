@@ -6,6 +6,7 @@ import { Avatar } from '@/src/components/ui/avatar';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
 import { useLogout } from '@/src/features/auth';
 import { useAuthStore } from '@/src/store/authStore';
+import type { Tier } from '@/src/domain/user';
 import { cn } from '@/src/lib/utils';
 
 function userDisplayName(email?: string) {
@@ -17,8 +18,10 @@ function userDisplayName(email?: string) {
   return name.length <= maxLen ? name : `${name.slice(0, maxLen)}…`;
 }
 
-function tierLabel(tier?: 'free' | 'premium') {
-  return tier === 'premium' ? 'Premium' : 'Free plan';
+function tierLabel(tier?: Tier) {
+  if (tier === 'premium') return 'Premium';
+  if (tier === 'standard') return 'Standard';
+  return 'Free plan';
 }
 
 export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {

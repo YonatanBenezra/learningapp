@@ -1,3 +1,5 @@
+import { TIER_LIMITS, tierLimits } from '../../config/tiers';
+
 export const SKILL_TOPICS = [
   'Programming',
   'Artificial Intelligence',
@@ -21,8 +23,8 @@ export function scoreToLevel(score: number): SkillLevel {
   return 'Beginner';
 }
 
-export const FREE_SKILL_ASSESSMENT_LIMIT = 3;
+export const FREE_SKILL_ASSESSMENT_LIMIT = TIER_LIMITS.free.activeAssessments;
 
 export function skillAssessmentLimitFor(tier?: string | null): number {
-  return tier === 'premium' ? Number.POSITIVE_INFINITY : FREE_SKILL_ASSESSMENT_LIMIT;
+  return tierLimits(tier).activeAssessments;
 }

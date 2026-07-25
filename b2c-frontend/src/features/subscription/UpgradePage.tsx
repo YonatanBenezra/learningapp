@@ -81,6 +81,8 @@ export function UpgradePage() {
 
   const subscription = subscriptionQ.data!.subscription;
   const isPremium = subscription.tier === 'premium';
+  const isStandard = subscription.tier === 'standard';
+  const isPaid = isPremium || isStandard;
   const periodEnd = formatDate(subscription.currentPeriodEnd);
   const trialEnds = formatDate(subscription.trialEndsAt);
   const actionError = checkoutMut.error ?? portalMut.error;
@@ -91,11 +93,11 @@ export function UpgradePage() {
         <div className="flex flex-wrap items-center gap-3">
           <Crown className="size-7 text-secondary" />
           <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            {isPremium ? 'Your Premium plan' : 'Upgrade to Premium'}
+            {isPaid ? `Your ${isPremium ? 'Premium' : 'Standard'} plan` : 'Upgrade your plan'}
           </h1>
         </div>
         <p className="mt-2 max-w-2xl text-sm text-ink-2 sm:text-base">
-          {isPremium
+          {isPaid
             ? 'Manage billing, invoices, and renewal from the Stripe customer portal.'
             : subscription.requiresPayment
               ? 'Your free trial has ended. Subscribe to continue learning and unlock premium features.'
@@ -103,7 +105,7 @@ export function UpgradePage() {
         </p>
       </div>
 
-      {!isPremium && subscription.trialActive ? (
+      {!isPaid && subscription.trialActive ? (
         <div className="mb-6 flex items-start gap-3 rounded-2xl border border-primary/20 bg-primary-soft px-5 py-4">
           <Clock className="mt-0.5 size-5 shrink-0 text-primary" />
           <div>
@@ -118,19 +120,21 @@ export function UpgradePage() {
         </div>
       ) : null}
 
-      {!isPremium && subscription.requiresPayment ? (
+      {!isPaid && subscription.requiresPayment ? (
         <div className="mb-6 rounded-2xl border border-bad/20 bg-bad-soft px-5 py-4 text-sm text-ink">
           Your {TRIAL_PERIOD_MONTHS}-month trial has ended. Subscribe to Premium to continue creating
           courses and using AI features.
         </div>
       ) : null}
 
-      {isPremium ? (
+      {isPaid ? (
         <section className="rounded-2xl border border-line bg-bg-elev p-6 shadow-soft sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-sm text-ink-2">Current plan</p>
-              <p className="mt-2 text-2xl font-bold text-ink">Premium</p>
+              <p className="mt-2 text-2xl font-bold text-ink">
+                {isPremium ? 'Premium' : 'Standard'}
+              </p>
               {periodEnd ? (
                 <p className="mt-2 text-sm text-ink-2">
                   {subscription.cancelAtPeriodEnd
@@ -217,7 +221,7 @@ export function UpgradePage() {
         <p className={cn('mt-4 text-sm text-bad')}>{mutationMessage(actionError)}</p>
       ) : null}
 
-      {!isPremium ? (
+      {!isPaid ? (
         <p className="mt-6 text-center text-xs text-ink-3">
           Secure checkout powered by Stripe. Cancel anytime from your billing portal.
         </p>

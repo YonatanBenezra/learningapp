@@ -18,6 +18,8 @@ import {
   BarChart3,
   Sparkles,
   Crown,
+  DollarSign,
+  Store,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { useLogout, useMe } from "@/src/features/auth";
@@ -104,6 +106,15 @@ const adminGroup: NavGroup = {
   ],
 };
 
+const instructorGroup: NavGroup = {
+  title: "INSTRUCTOR",
+  items: [
+    { labelKey: "nav.instructorDashboard", href: "/instructor/dashboard", icon: Store },
+    { labelKey: "nav.instructorCourses", href: "/instructor/courses", icon: BookOpen },
+    { labelKey: "nav.instructorSales", href: "/instructor/sales", icon: DollarSign },
+  ],
+};
+
 function SidebarNavItem({
   item,
   active,
@@ -184,7 +195,13 @@ export function Sidebar() {
   const meQ = useMe();
   const { t } = useTranslation();
   const isAdmin = meQ.data?.user.role === "admin";
-  const groups = isAdmin ? [...navGroups, adminGroup] : navGroups;
+  const isInstructor =
+    meQ.data?.user.role === "instructor" || meQ.data?.user.role === "admin";
+  const groups = [
+    ...navGroups,
+    ...(isInstructor ? [instructorGroup] : []),
+    ...(isAdmin ? [adminGroup] : []),
+  ];
 
   const renderContent = (isCollapsed: boolean) => (
     <div className="flex h-full flex-col bg-bg-elev">

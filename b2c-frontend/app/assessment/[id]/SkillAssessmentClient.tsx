@@ -2,7 +2,10 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
 import { Container } from '@/src/components/marketing/Container';
+import { Button } from '@/src/components/ui/button';
 import { PaginatedSkillAssessment } from '@/src/features/skill-assessment/PaginatedSkillAssessment';
 import { AssessmentTakeSkeleton } from '@/src/features/skill-assessment/SkillAssessmentSkeletons';
 import { useAuthStore } from '@/src/store/authStore';
@@ -14,6 +17,11 @@ import {
 
 function topicLabel(topic: string, customTopic: string | null) {
   return topic === 'Other' && customTopic ? customTopic : topic;
+}
+
+function assessmentStatus(assessment: { status?: string; questions: unknown[] }) {
+  if (assessment.status) return assessment.status;
+  return assessment.questions.length > 0 ? 'ready' : 'generating';
 }
 
 export default function SkillAssessmentPage({ id }: { id: string }) {
@@ -41,6 +49,41 @@ export default function SkillAssessmentPage({ id }: { id: string }) {
           <p className="mt-2 text-sm text-ink-2">
             This assessment may have expired or been removed.
           </p>
+        </div>
+      </Container>
+    );
+  }
+
+  const status = assessmentStatus(assessment);
+
+  if (status === 'generating') {
+    return (
+      <Container className="max-w-[1240px] py-20">
+        <div className="mx-auto max-w-xl border border-line bg-bg-elev px-6 py-12 text-center">
+          <div className="mx-auto grid size-14 place-items-center border border-primary/20 bg-primary-soft text-primary">
+            <Loader2 className="size-7 animate-spin" />
+          </div>
+          <h1 className="mt-6 text-xl font-semibold text-ink">Preparing your assessment</h1>
+          <p className="mt-2 text-sm text-ink-2">
+            Generating 10 questions for {topicLabel(assessment.topic, assessment.customTopic)}.
+            You can leave this page — generation continues in the background.
+          </p>
+        </div>
+      </Container>
+    );
+  }
+
+  if (status === 'failed') {
+    return (
+      <Container className="max-w-[1240px] py-20">
+        <div className="mx-auto max-w-xl border border-line bg-bg-elev px-6 py-12 text-center">
+          <h1 className="text-xl font-semibold text-ink">Could not generate assessment</h1>
+          <p className="mt-2 text-sm text-ink-2">
+            {assessment.failureReason ?? 'Something went wrong while building your questions.'}
+          </p>
+          <Link href="/assessments" className="mt-6 inline-block">
+            <Button variant="outline">Back to assessments</Button>
+          </Link>
         </div>
       </Container>
     );
