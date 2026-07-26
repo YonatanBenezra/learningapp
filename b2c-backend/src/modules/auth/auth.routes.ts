@@ -18,6 +18,7 @@ router.post('/signup', authLimiter, validate({ body: signupSchema }), controller
 router.post('/login', authLimiter, validate({ body: loginSchema }), controller.login);
 router.post('/refresh', validate({ body: refreshSchema }), controller.refresh);
 router.post('/logout', validate({ body: refreshSchema }), controller.logout);
+router.get('/session', controller.session);
 router.post('/oauth/google', authLimiter, validate({ body: oauthGoogleSchema }), controller.googleOAuth);
 
 export default router;

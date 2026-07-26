@@ -93,9 +93,12 @@ const fakeLessonContent = async (input: {
   ],
 });
 
+import { parseAuthCookies } from './helpers/authCookies';
+
 async function signup(email = 'learner@example.com') {
   const res = await request(app).post('/auth/signup').send({ email, password: 'supersecret1' });
-  return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+  const cookies = parseAuthCookies(res);
+  return { token: cookies.access, userId: res.body.user.id as string };
 }
 
 const generatingCourse = (userId: string, over: Record<string, unknown> = {}) =>

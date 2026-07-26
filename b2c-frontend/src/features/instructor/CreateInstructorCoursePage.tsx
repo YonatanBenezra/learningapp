@@ -69,7 +69,7 @@ export function CreateInstructorCoursePage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div>
         <h2 className="text-2xl font-bold text-ink">Create a course to sell</h2>
         <p className="mt-1 text-sm text-ink-2">

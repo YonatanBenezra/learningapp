@@ -51,11 +51,11 @@ export function useSubmitSkillAssessment(id: string) {
 }
 
 export function useSkillAssessmentResult(id: string, enabled = true) {
-  const token = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   return useQuery({
     queryKey: ['skill-assessment-result', id],
     queryFn: () => api.getSkillAssessmentResult(id),
-    enabled: Boolean(id) && enabled && Boolean(token),
+    enabled: Boolean(id) && enabled && isAuthenticated,
     retry: false,
   });
 }

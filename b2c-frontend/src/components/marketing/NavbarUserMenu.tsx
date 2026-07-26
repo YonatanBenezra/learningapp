@@ -5,6 +5,7 @@ import { LayoutDashboard, LogOut, Settings, UserRound } from 'lucide-react';
 import { Avatar } from '@/src/components/ui/avatar';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
 import { useLogout } from '@/src/features/auth';
+import { defaultDashboardPath } from '@/src/features/auth/dashboardRoutes';
 import { useAuthStore } from '@/src/store/authStore';
 import type { Tier } from '@/src/domain/user';
 import { cn } from '@/src/lib/utils';
@@ -44,6 +45,7 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
   }
 
   const name = userDisplayName(user.email);
+  const dashboardHref = defaultDashboardPath(user.role);
 
   if (compact) {
     return (
@@ -59,7 +61,7 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
         </div>
         <div className="grid gap-1">
           <Link
-            href="/dashboard"
+            href={dashboardHref}
             className="flex items-center gap-2 rounded-lg px-2 py-2.5 text-sm font-medium text-ink hover:bg-bg-soft"
           >
             <LayoutDashboard className="size-4 text-ink-3" />
@@ -88,7 +90,7 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex items-center gap-2">
       <Link
-        href="/dashboard"
+        href={dashboardHref}
         className="relative grid size-11 place-items-center rounded-full border border-line-2 transition-opacity hover:opacity-85"
         aria-label="Open dashboard"
       >
@@ -96,7 +98,7 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
       </Link>
       <span className="flex max-w-[120px] flex-col leading-tight">
         <Link
-          href="/dashboard"
+          href={dashboardHref}
           className="truncate text-[15px] font-bold text-ink transition-colors hover:text-primary"
         >
           {name}

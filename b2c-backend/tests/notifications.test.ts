@@ -18,9 +18,12 @@ import { redis } from '../src/config/redis';
 
 const TEST_DB = 'mongodb://127.0.0.1:27017/b2c_test_notifications';
 
+import { parseAuthCookies } from './helpers/authCookies';
+
 async function signup(email = 'notif@example.com') {
   const res = await request(app).post('/auth/signup').send({ email, password: 'supersecret1' });
-  return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+  const cookies = parseAuthCookies(res);
+  return { token: cookies.access, userId: res.body.user.id as string };
 }
 
 // Channel resolver that captures whatever would have been sent.

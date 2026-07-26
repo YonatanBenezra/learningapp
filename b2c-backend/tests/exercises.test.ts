@@ -35,9 +35,12 @@ const fakeGen: ExerciseGenerator = async () => ({
 });
 const fakeEval: SubmissionEvaluator = async () => ({ score: 80, feedback: 'Good work.' });
 
+import { parseAuthCookies } from './helpers/authCookies';
+
 async function signup(email = 'learner@example.com') {
   const res = await request(app).post('/auth/signup').send({ email, password: 'supersecret1' });
-  return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+  const cookies = parseAuthCookies(res);
+  return { token: cookies.access, userId: res.body.user.id as string };
 }
 
 async function seed(userId: string) {

@@ -29,9 +29,12 @@ const uid = (): string => new mongoose.Types.ObjectId().toString();
 const streakCurrent = (u: { streak?: unknown }): number =>
   (u.streak as { current?: number } | undefined)?.current ?? 0;
 
+import { parseAuthCookies } from './helpers/authCookies';
+
 async function signup(email = 'gam@example.com') {
   const res = await request(app).post('/auth/signup').send({ email, password: 'supersecret1' });
-  return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+  const cookies = parseAuthCookies(res);
+  return { token: cookies.access, userId: res.body.user.id as string };
 }
 
 beforeAll(async () => {

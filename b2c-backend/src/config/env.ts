@@ -44,6 +44,14 @@ const envSchema = z
     STRIPE_STANDARD_PRICE_ID: z.string().default(''),
     STRIPE_SUCCESS_URL: z.string().default('http://localhost:3000/billing/success'),
     STRIPE_CANCEL_URL: z.string().default('http://localhost:3000/billing/cancel'),
+
+    /** Comma-separated emails auto-promoted to admin on server boot (user must exist). */
+    BOOTSTRAP_ADMIN_EMAILS: z.string().default(''),
+    /** Comma-separated emails auto-promoted to instructor on server boot (user must exist). */
+    BOOTSTRAP_INSTRUCTOR_EMAILS: z.string().default(''),
+
+    /** Cookie path prefix (use `/api` when Next.js proxies API on same origin). */
+    AUTH_COOKIE_PATH: z.string().default('/api'),
   })
   // Secrets that are optional in dev/test but MUST be present in production.
   .superRefine((val, ctx) => {
@@ -101,4 +109,9 @@ export const env = {
   stripeStandardPriceId: data.STRIPE_STANDARD_PRICE_ID,
   stripeSuccessUrl: data.STRIPE_SUCCESS_URL,
   stripeCancelUrl: data.STRIPE_CANCEL_URL,
+  bootstrapAdminEmails: data.BOOTSTRAP_ADMIN_EMAILS,
+  bootstrapInstructorEmails: data.BOOTSTRAP_INSTRUCTOR_EMAILS,
+  authCookiePath: data.NODE_ENV === 'test' ? '/' : data.AUTH_COOKIE_PATH,
+  authCookieSecure: data.NODE_ENV === 'production',
+  authCookieSameSite: 'lax' as const,
 } as const;

@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import { pinoHttp } from 'pino-http';
@@ -49,6 +50,7 @@ app.use(
 
 app.use(helmet());
 app.use(cors({ origin: env.corsOrigin, credentials: true }));
+app.use(cookieParser());
 
 // The Stripe webhook needs the raw body for signature verification, so it must
 // bypass the JSON parser (its route mounts express.raw itself).

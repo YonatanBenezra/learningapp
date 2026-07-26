@@ -56,7 +56,7 @@ export function InstructorDashboardPage() {
   const { stats, recentSales } = data;
 
   return (
-    <div className="space-y-8">
+    <div className="w-full space-y-8 p-4 sm:p-6 lg:p-8">
       <div>
         <h2 className="text-2xl font-bold text-ink">Instructor dashboard</h2>
         <p className="mt-1 text-sm text-ink-2">

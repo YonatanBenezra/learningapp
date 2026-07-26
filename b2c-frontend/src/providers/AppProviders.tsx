@@ -3,7 +3,7 @@
 import { ThemeProvider } from './ThemeProvider';
 import { QueryProvider } from './QueryProvider';
 import { I18nProvider } from '@/src/i18n';
-import { AuthSessionSync } from '@/src/features/auth/useMe';
+import { AuthSessionBootstrap, AuthSessionSync } from '@/src/features/auth/useMe';
 
 // Composes all client-side providers. Rendered once in the root layout.
 export function AppProviders({ children }: { children: React.ReactNode }) {
@@ -11,6 +11,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     <ThemeProvider>
       <I18nProvider>
         <QueryProvider>
+          <AuthSessionBootstrap />
           <AuthSessionSync />
           {children}
         </QueryProvider>

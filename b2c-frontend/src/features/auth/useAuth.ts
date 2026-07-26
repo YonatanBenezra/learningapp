@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/src/store/authStore';
 import * as authApi from './authApi';
+import { defaultDashboardPath } from './dashboardRoutes';
 
 export { useMe, AuthSessionSync } from './useMe';
 
@@ -20,13 +21,15 @@ function invalidateAssessmentQueries(queryClient: ReturnType<typeof useQueryClie
 export function useLogin() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const setUser = useAuthStore((s) => s.setUser);
+  const setSessionReady = useAuthStore((s) => s.setSessionReady);
   return useMutation({
     mutationFn: authApi.login,
     onSuccess: (data) => {
-      setAuth(data);
+      setUser(data.user);
+      setSessionReady(true);
       invalidateAssessmentQueries(queryClient);
-      navigateAfterAuth(router, '/dashboard');
+      navigateAfterAuth(router, defaultDashboardPath(data.user.role));
     },
   });
 }
@@ -34,11 +37,13 @@ export function useLogin() {
 export function useSignup() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const setUser = useAuthStore((s) => s.setUser);
+  const setSessionReady = useAuthStore((s) => s.setSessionReady);
   return useMutation({
     mutationFn: authApi.signup,
     onSuccess: (data) => {
-      setAuth(data);
+      setUser(data.user);
+      setSessionReady(true);
       invalidateAssessmentQueries(queryClient);
       navigateAfterAuth(router, '/create-course');
     },
@@ -48,23 +53,24 @@ export function useSignup() {
 export function useGoogleLogin() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const setUser = useAuthStore((s) => s.setUser);
+  const setSessionReady = useAuthStore((s) => s.setSessionReady);
   return useMutation({
     mutationFn: authApi.loginWithGoogle,
     onSuccess: (data) => {
-      setAuth(data);
+      setUser(data.user);
+      setSessionReady(true);
       invalidateAssessmentQueries(queryClient);
-      navigateAfterAuth(router, '/dashboard');
+      navigateAfterAuth(router, defaultDashboardPath(data.user.role));
     },
   });
 }
 
 export function useLogout() {
   const router = useRouter();
+  const clear = useAuthStore((s) => s.clear);
   return () => {
-    const { refreshToken, clear } = useAuthStore.getState();
-    // Revoke the refresh-token family server-side (fire-and-forget), then clear locally.
-    if (refreshToken) void authApi.logout(refreshToken).catch(() => {});
+    void authApi.logout().catch(() => {});
     clear();
     router.push('/login');
   };

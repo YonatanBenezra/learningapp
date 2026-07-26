@@ -15,14 +15,13 @@ import {
   Settings,
   LogOut,
   Shield,
-  BarChart3,
   Sparkles,
   Crown,
   DollarSign,
-  Store,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { useLogout, useMe } from "@/src/features/auth";
+import { defaultDashboardPath } from "@/src/features/auth/dashboardRoutes";
 import { useTranslation } from "@/src/i18n";
 import type { MessageKey } from "@/src/i18n";
 
@@ -70,7 +69,7 @@ interface NavGroup {
   items: NavItem[];
 }
 
-const navGroups: NavGroup[] = [
+const learnerNavGroups: NavGroup[] = [
   {
     title: "CLIENT APP",
     items: [
@@ -98,10 +97,16 @@ const navGroups: NavGroup[] = [
   },
 ];
 
+const accountSettingsGroup: NavGroup = {
+  title: "ACCOUNT",
+  items: [{ labelKey: "nav.settings", href: "/settings", icon: Settings }],
+};
+
 const adminGroup: NavGroup = {
   title: "ADMIN PANEL",
   items: [
-    { labelKey: "nav.adminMetrics", href: "/admin/metrics", icon: BarChart3 },
+    { labelKey: "nav.dashboard", href: "/admin/metrics", icon: LayoutDashboard },
+    { labelKey: "nav.adminCosts", href: "/admin/costs", icon: DollarSign },
     { labelKey: "nav.adminContent", href: "/admin/content", icon: Shield },
   ],
 };
@@ -109,11 +114,22 @@ const adminGroup: NavGroup = {
 const instructorGroup: NavGroup = {
   title: "INSTRUCTOR",
   items: [
-    { labelKey: "nav.instructorDashboard", href: "/instructor/dashboard", icon: Store },
+    { labelKey: "nav.instructorDashboard", href: "/instructor/dashboard", icon: LayoutDashboard },
     { labelKey: "nav.instructorCourses", href: "/instructor/courses", icon: BookOpen },
+    { labelKey: "instructor.newCourse", href: "/instructor/courses/new", icon: Sparkles },
     { labelKey: "nav.instructorSales", href: "/instructor/sales", icon: DollarSign },
   ],
 };
+
+function sidebarGroupsForRole(role?: string | null): NavGroup[] {
+  if (role === "admin") {
+    return [adminGroup, accountSettingsGroup];
+  }
+  if (role === "instructor") {
+    return [instructorGroup, accountSettingsGroup];
+  }
+  return learnerNavGroups;
+}
 
 function SidebarNavItem({
   item,
@@ -144,7 +160,22 @@ function SidebarNavItem({
   );
 }
 
-function SidebarGroupSection({ group, collapsed }: { group: NavGroup; collapsed: boolean }) {
+function resolveNavItemHref(item: NavItem, role?: string | null): NavItem {
+  if (item.href === "/dashboard") {
+    return { ...item, href: defaultDashboardPath(role) };
+  }
+  return item;
+}
+
+function SidebarGroupSection({
+  group,
+  collapsed,
+  role,
+}: {
+  group: NavGroup;
+  collapsed: boolean;
+  role?: string | null;
+}) {
   const pathname = usePathname();
   const { t } = useTranslation();
 
@@ -157,11 +188,13 @@ function SidebarGroupSection({ group, collapsed }: { group: NavGroup; collapsed:
       )}
       <div className="flex flex-col gap-0.5">
         {group.items.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const resolved = resolveNavItemHref(item, role);
+          const active =
+            pathname === resolved.href || pathname.startsWith(`${resolved.href}/`);
           return (
             <SidebarNavItem
               key={item.href}
-              item={item}
+              item={resolved}
               active={active}
               collapsed={collapsed}
               label={t(item.labelKey)}
@@ -173,9 +206,9 @@ function SidebarGroupSection({ group, collapsed }: { group: NavGroup; collapsed:
   );
 }
 
-function BrandLogo({ collapsed }: { collapsed: boolean }) {
+function BrandLogo({ collapsed, homeHref }: { collapsed: boolean; homeHref: string }) {
   return (
-    <Link href="/dashboard" className="flex items-center gap-3">
+    <Link href={homeHref} className="flex items-center gap-3">
       <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary-2 shadow-[var(--shadow-primary)]">
         <GraduationCap className="size-5 text-primary-ink" strokeWidth={2} />
       </span>
@@ -194,30 +227,31 @@ export function Sidebar() {
   const logout = useLogout();
   const meQ = useMe();
   const { t } = useTranslation();
-  const isAdmin = meQ.data?.user.role === "admin";
-  const isInstructor =
-    meQ.data?.user.role === "instructor" || meQ.data?.user.role === "admin";
-  const groups = [
-    ...navGroups,
-    ...(isInstructor ? [instructorGroup] : []),
-    ...(isAdmin ? [adminGroup] : []),
-  ];
+  const role = meQ.data?.user.role;
+  const homeHref = defaultDashboardPath(role);
+  const groups = sidebarGroupsForRole(role);
+  const showUpgradeCta = !role || role === "user";
 
   const renderContent = (isCollapsed: boolean) => (
     <div className="flex h-full flex-col bg-bg-elev">
       <div className={cn("border-b border-line py-5", isCollapsed ? "px-3" : "px-5")}>
-        <BrandLogo collapsed={isCollapsed} />
+        <BrandLogo collapsed={isCollapsed} homeHref={homeHref} />
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4">
         <div className="flex flex-col gap-5">
           {groups.map((group) => (
-            <SidebarGroupSection key={group.title} group={group} collapsed={isCollapsed} />
+            <SidebarGroupSection
+              key={group.title}
+              group={group}
+              collapsed={isCollapsed}
+              role={role}
+            />
           ))}
         </div>
       </nav>
 
-      {!isCollapsed && (
+      {!isCollapsed && showUpgradeCta && (
         <div className="border-t border-line px-5 py-5">
           <Link
             href="/upgrade"

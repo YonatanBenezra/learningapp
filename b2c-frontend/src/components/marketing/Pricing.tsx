@@ -10,6 +10,7 @@ import {
   STANDARD_PRICE_USD,
 } from '@/src/constants/pricing';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
+import { defaultDashboardPath } from '@/src/features/auth/dashboardRoutes';
 import { useAuthStore } from '@/src/store/authStore';
 import { Container } from './Container';
 import { cn } from '@/src/lib/utils';
@@ -127,10 +128,11 @@ function PlanCard({
 function PricingPlans({ fullPage = false }: { fullPage?: boolean }) {
   const hydrated = useAuthHydrated();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
+  const userRole = useAuthStore((s) => s.user?.role);
 
   function planHref(id: PlanId) {
     if (id === 'premium') return hydrated && isAuthenticated ? '/upgrade' : '/signup';
-    return hydrated && isAuthenticated ? '/dashboard' : '/signup';
+    return hydrated && isAuthenticated ? defaultDashboardPath(userRole) : '/signup';
   }
 
   function planCta(id: PlanId) {

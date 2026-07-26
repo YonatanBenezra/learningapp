@@ -25,14 +25,17 @@ import {
   purgeDeletedUsers,
 } from '../src/modules/privacy/privacy.service';
 import { redis } from '../src/config/redis';
+import { cookieHeader, parseAuthCookies } from './helpers/authCookies';
 
 const TEST_DB = 'mongodb://127.0.0.1:27017/b2c_test_privacy';
 
 async function signup(email = 'priv@example.com') {
   const res = await request(app).post('/auth/signup').send({ email, password: 'supersecret1' });
+  const cookies = parseAuthCookies(res);
   return {
-    token: res.body.accessToken as string,
-    refreshToken: res.body.refreshToken as string,
+    token: cookies.access,
+    refreshToken: cookies.refresh,
+    cookies,
     userId: res.body.user.id as string,
     email,
   };
@@ -211,9 +214,9 @@ describe('soft delete', () => {
   });
 
   it('blocks refresh after soft-delete', async () => {
-    const { refreshToken, userId } = await signup('r@example.com');
+    const { cookies, userId } = await signup('r@example.com');
     await softDeleteUser(userId);
-    const res = await request(app).post('/auth/refresh').send({ refreshToken });
+    const res = await request(app).post('/auth/refresh').set('Cookie', cookieHeader(cookies));
     expect(res.status).toBe(401);
   });
 

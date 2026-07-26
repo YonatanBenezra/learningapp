@@ -199,7 +199,8 @@ export async function publishInstructorCourse(instructorId: string, courseId: st
   if (course.status !== 'ready') {
     throw new AppError(400, 'Course must finish generating before it can be published.');
   }
-  if (!course.priceCents || course.priceCents <= 0) {
+  const priceCents = Number(course.priceCents ?? 0);
+  if (priceCents <= 0) {
     throw new AppError(400, 'Set a price greater than zero before publishing.');
   }
 

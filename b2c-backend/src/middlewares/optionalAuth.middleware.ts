@@ -1,17 +1,16 @@
 import type { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../modules/auth/token.service';
+import { extractAccessToken } from '../modules/auth/authCookies';
 
-// Attaches req.user when a valid Bearer token is present; otherwise continues as guest.
-// If a Bearer token is present but invalid/expired, respond 401 so the client can refresh
-// instead of silently listing guest data for a signed-in user.
+// Attaches req.user when a valid access token is present; otherwise continues as guest.
 export function optionalAuthenticate(req: Request, res: Response, next: NextFunction): void {
-  const header = req.headers.authorization;
-  if (!header?.startsWith('Bearer ')) {
+  const token = extractAccessToken(req);
+  if (!token) {
     next();
     return;
   }
   try {
-    const payload = verifyAccessToken(header.slice(7));
+    const payload = verifyAccessToken(token);
     req.user = { id: payload.sub, role: payload.role, tier: payload.tier };
     next();
   } catch {

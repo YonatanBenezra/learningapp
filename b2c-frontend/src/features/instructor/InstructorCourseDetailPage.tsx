@@ -54,6 +54,7 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
 
   function onSave(e: React.FormEvent) {
     e.preventDefault();
+    if (!course) return;
     setError(null);
     setMessage(null);
     const priceCents = Math.round(Number(price) * 100);
@@ -71,6 +72,7 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
   }
 
   function onPublishToggle() {
+    if (!course) return;
     setError(null);
     setMessage(null);
     const action = course.isPublished ? unpublish : publish;
@@ -85,7 +87,7 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
   const busy = update.isPending || publish.isPending || unpublish.isPending;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6 p-4 sm:p-6 lg:p-8">
       <Link
         href="/instructor/courses"
         className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 hover:text-primary"

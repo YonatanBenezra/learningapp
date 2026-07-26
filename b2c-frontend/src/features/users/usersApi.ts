@@ -1,5 +1,4 @@
 import { config } from '@/src/config/env';
-import { useAuthStore } from '@/src/store/authStore';
 import { apiClient } from '@/src/infrastructure/apiClient';
 import type { User } from '@/src/domain/user';
 
@@ -17,11 +16,8 @@ export function updatePreferences(input: UpdatePreferencesInput): Promise<{ user
 }
 
 export async function exportUserData(): Promise<void> {
-  const token = useAuthStore.getState().accessToken;
   const res = await fetch(`${config.apiBaseUrl}/users/me/export`, {
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
+    credentials: 'include',
   });
   if (!res.ok) {
     let message = res.statusText;

@@ -3,12 +3,13 @@
 import { useSyncExternalStore } from 'react';
 import { useAuthStore } from '@/src/store/authStore';
 
-// True once the persisted auth store has rehydrated from localStorage. Guards use
-// this so they don't redirect a logged-in user during the initial (empty) render.
+// True once the client auth session has been resolved (cookie session check finished).
 export function useAuthHydrated(): boolean {
   return useSyncExternalStore(
-    (cb) => useAuthStore.persist.onFinishHydration(cb),
-    () => useAuthStore.persist.hasHydrated(),
+    (cb) => useAuthStore.subscribe((state, prev) => {
+      if (state.sessionReady !== prev.sessionReady) cb();
+    }),
+    () => useAuthStore.getState().sessionReady,
     () => false,
   );
 }

@@ -8,8 +8,6 @@ export interface Credentials {
 
 export interface AuthResult {
   user: User;
-  accessToken: string;
-  refreshToken: string;
 }
 
 export function signup(input: Credentials): Promise<AuthResult> {
@@ -33,14 +31,17 @@ export function loginWithGoogle(idToken: string): Promise<AuthResult> {
   });
 }
 
-// Revokes the refresh-token family server-side. Fire-and-forget on logout.
-export function logout(refreshToken: string): Promise<void> {
+export function logout(): Promise<void> {
   return apiClient<void>('/auth/logout', {
     method: 'POST',
-    body: JSON.stringify({ refreshToken }),
+    body: JSON.stringify({}),
   });
 }
 
 export function getMe(): Promise<{ user: User }> {
   return apiClient<{ user: User }>('/users/me');
+}
+
+export function getSession(): Promise<{ user: User }> {
+  return apiClient<{ user: User }>('/auth/session');
 }

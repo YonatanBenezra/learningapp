@@ -208,7 +208,7 @@ export function UpgradePage() {
             <Button
               className="mt-auto pt-8"
               loading={checkoutMut.isPending}
-              onClick={() => checkoutMut.mutate()}
+              onClick={() => checkoutMut.mutate('premium')}
             >
               <Sparkles className="size-4" />
               {subscription.requiresPayment ? 'Subscribe now' : 'Upgrade now'}

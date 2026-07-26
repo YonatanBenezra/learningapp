@@ -13,35 +13,27 @@ export class ApiError extends Error {
   }
 }
 
-// Single-flight refresh: concurrent 401s share one refresh request.
 let refreshing: Promise<boolean> | null = null;
 
-async function refreshTokens(): Promise<boolean> {
-  const { refreshToken, setTokens, setUser, clear } = useAuthStore.getState();
-  if (!refreshToken) return false;
-
+export async function refreshSession(): Promise<boolean> {
   if (!refreshing) {
     refreshing = fetch(`${config.apiBaseUrl}/auth/refresh`, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
+      body: JSON.stringify({}),
     })
       .then(async (res) => {
         if (!res.ok) {
-          clear();
+          useAuthStore.getState().clear();
           return false;
         }
-        const data = (await res.json()) as {
-          accessToken: string;
-          refreshToken: string;
-          user?: User;
-        };
-        setTokens({ accessToken: data.accessToken, refreshToken: data.refreshToken });
-        if (data.user) setUser(data.user);
+        const data = (await res.json()) as { user?: User };
+        if (data.user) useAuthStore.getState().setUser(data.user);
         return true;
       })
       .catch(() => {
-        clear();
+        useAuthStore.getState().clear();
         return false;
       })
       .finally(() => {
@@ -51,25 +43,22 @@ async function refreshTokens(): Promise<boolean> {
   return refreshing;
 }
 
-// Typed fetch wrapper: attaches the bearer token and transparently refreshes once
-// on a 401 before retrying. Throws a typed ApiError on failure.
 export async function apiClient<T>(
   path: string,
   init: RequestInit = {},
   retry = true,
 ): Promise<T> {
-  const token = useAuthStore.getState().accessToken;
   const res = await fetch(`${config.apiBaseUrl}${path}`, {
     ...init,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(init.headers ?? {}),
     },
   });
 
   if (res.status === 401 && retry) {
-    const ok = await refreshTokens();
+    const ok = await refreshSession();
     if (ok) return apiClient<T>(path, init, false);
   }
 

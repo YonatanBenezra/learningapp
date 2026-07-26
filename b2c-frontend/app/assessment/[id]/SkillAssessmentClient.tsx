@@ -26,18 +26,18 @@ function assessmentStatus(assessment: { status?: string; questions: unknown[] })
 
 export default function SkillAssessmentPage({ id }: { id: string }) {
   const router = useRouter();
-  const token = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const { data: assessment, isLoading, isError } = useSkillAssessment(id);
-  const { data: submission, isLoading: loadingResult } = useSkillAssessmentResult(id, Boolean(token));
+  const { data: submission, isLoading: loadingResult } = useSkillAssessmentResult(id, isAuthenticated);
   const submit = useSubmitSkillAssessment(id);
 
   useEffect(() => {
-    if (token && submission) {
+    if (isAuthenticated && submission) {
       router.replace(`/assessment/${id}/result`);
     }
-  }, [token, submission, id, router]);
+  }, [isAuthenticated, submission, id, router]);
 
-  if (isLoading || (token && loadingResult) || (token && submission)) {
+  if (isLoading || (isAuthenticated && loadingResult) || (isAuthenticated && submission)) {
     return <AssessmentTakeSkeleton />;
   }
 

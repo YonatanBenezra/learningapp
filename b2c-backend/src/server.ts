@@ -34,6 +34,7 @@ import {
   scheduleSubscriptionSync,
 } from './jobs/subscriptionSyncWorker';
 import { seedAchievements } from './modules/gamification/gamification.service';
+import { bootstrapRoles } from './modules/users/bootstrapRoles';
 import { initSentry } from './common/observability/sentry';
 import { logger } from './common/utils/logger';
 
@@ -42,6 +43,7 @@ async function bootstrap(): Promise<void> {
   await connectDB();
   await ensureIndexes();
   await seedAchievements();
+  await bootstrapRoles(env.bootstrapAdminEmails, env.bootstrapInstructorEmails);
 
   if (env.redisEnabled) {
     await redis.connect();

@@ -34,7 +34,7 @@ export function PaginatedSkillAssessment({
   onSubmit: (answers: SubmittedAnswer[]) => void;
 }) {
   const router = useRouter();
-  const token = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const questionsRef = useRef<HTMLDivElement>(null);
@@ -71,7 +71,7 @@ export function PaginatedSkillAssessment({
   const handleSubmit = () => {
     if (!allAnswered || submitting) return;
     const payload = buildAnswers();
-    if (!token) {
+    if (!isAuthenticated) {
       sessionStorage.setItem(pendingAnswersKey(assessmentId), JSON.stringify(payload));
       router.push(`/login?redirect=${encodeURIComponent(`/assessment/${assessmentId}/result`)}`);
       return;

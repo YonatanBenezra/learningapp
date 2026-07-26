@@ -10,6 +10,7 @@ import { upsertOAuthUser } from '../src/modules/auth/oauth.service';
 import { authenticate, requireRole } from '../src/middlewares/auth.middleware';
 import { errorMiddleware } from '../src/middlewares/error.middleware';
 import { signAccessToken } from '../src/modules/auth/token.service';
+import { cookieHeader, parseAuthCookies } from './helpers/authCookies';
 
 const TEST_DB = 'mongodb://127.0.0.1:27017/b2c_test_auth';
 const creds = { email: 'user@example.com', password: 'supersecret1' };
@@ -33,11 +34,14 @@ afterAll(async () => {
 });
 
 describe('auth flow', () => {
-  it('signs up, returns tokens, and never leaks passwordHash', async () => {
+  it('signs up, sets httpOnly cookies, and never leaks passwordHash', async () => {
     const res = await request(app).post('/auth/signup').send(creds);
-    expect(res.status).toBe(201);
-    expect(res.body.accessToken).toBeTruthy();
-    expect(res.body.refreshToken).toBeTruthy();
+    expect(res.status).toBe(200);
+    const cookies = parseAuthCookies(res);
+    expect(cookies.access).toBeTruthy();
+    expect(cookies.refresh).toBeTruthy();
+    expect(res.body.accessToken).toBeUndefined();
+    expect(res.body.refreshToken).toBeUndefined();
     expect(res.body.user.email).toBe(creds.email);
     expect(res.body.user.id).toBeTruthy();
     expect(res.body.user.passwordHash).toBeUndefined();
@@ -60,14 +64,13 @@ describe('auth flow', () => {
     expect(res.status).toBe(401);
   });
 
-  it('logs in and accesses a protected route', async () => {
+  it('logs in and accesses a protected route via cookie', async () => {
     await request(app).post('/auth/signup').send(creds);
     const login = await request(app).post('/auth/login').send(creds);
     expect(login.status).toBe(200);
+    const cookies = parseAuthCookies(login);
 
-    const me = await request(app)
-      .get('/users/me')
-      .set('Authorization', `Bearer ${login.body.accessToken}`);
+    const me = await request(app).get('/users/me').set('Cookie', cookieHeader(cookies));
     expect(me.status).toBe(200);
     expect(me.body.user.email).toBe(creds.email);
   });
@@ -79,9 +82,10 @@ describe('auth flow', () => {
 
   it('updates preferences via PATCH /users/me', async () => {
     const signup = await request(app).post('/auth/signup').send(creds);
+    const cookies = parseAuthCookies(signup);
     const res = await request(app)
       .patch('/users/me')
-      .set('Authorization', `Bearer ${signup.body.accessToken}`)
+      .set('Cookie', cookieHeader(cookies))
       .send({ dailyNotification: true, timezone: 'Asia/Dhaka' });
     expect(res.status).toBe(200);
     expect(res.body.user.preferences.dailyNotification).toBe(true);
@@ -92,33 +96,32 @@ describe('auth flow', () => {
 describe('refresh rotation + reuse detection', () => {
   it('rotates the refresh token', async () => {
     const signup = await request(app).post('/auth/signup').send(creds);
-    const r1 = signup.body.refreshToken;
-    const rotated = await request(app).post('/auth/refresh').send({ refreshToken: r1 });
+    const c1 = parseAuthCookies(signup);
+    const rotated = await request(app).post('/auth/refresh').set('Cookie', cookieHeader(c1));
     expect(rotated.status).toBe(200);
-    expect(rotated.body.refreshToken).toBeTruthy();
-    expect(rotated.body.refreshToken).not.toBe(r1);
+    const c2 = parseAuthCookies(rotated);
+    expect(c2.refresh).toBeTruthy();
+    expect(c2.refresh).not.toBe(c1.refresh);
   });
 
   it('detects reuse of a rotated token and revokes the whole family', async () => {
     const signup = await request(app).post('/auth/signup').send(creds);
-    const r1 = signup.body.refreshToken;
-    const rotated = await request(app).post('/auth/refresh').send({ refreshToken: r1 });
-    const r2 = rotated.body.refreshToken;
+    const c1 = parseAuthCookies(signup);
+    const rotated = await request(app).post('/auth/refresh').set('Cookie', cookieHeader(c1));
+    const c2 = parseAuthCookies(rotated);
 
-    // Replaying r1 (already rotated) is detected.
-    const reuse = await request(app).post('/auth/refresh').send({ refreshToken: r1 });
+    const reuse = await request(app).post('/auth/refresh').set('Cookie', cookieHeader(c1));
     expect(reuse.status).toBe(401);
 
-    // Family revoked → even the freshly rotated r2 is now invalid.
-    const afterRevoke = await request(app).post('/auth/refresh').send({ refreshToken: r2 });
+    const afterRevoke = await request(app).post('/auth/refresh').set('Cookie', cookieHeader(c2));
     expect(afterRevoke.status).toBe(401);
   });
 
   it('invalidates refresh tokens on logout', async () => {
     const signup = await request(app).post('/auth/signup').send(creds);
-    const r1 = signup.body.refreshToken;
-    await request(app).post('/auth/logout').send({ refreshToken: r1 });
-    const res = await request(app).post('/auth/refresh').send({ refreshToken: r1 });
+    const c1 = parseAuthCookies(signup);
+    await request(app).post('/auth/logout').set('Cookie', cookieHeader(c1));
+    const res = await request(app).post('/auth/refresh').set('Cookie', cookieHeader(c1));
     expect(res.status).toBe(401);
   });
 });
@@ -148,7 +151,6 @@ describe('oauth upsert (create/link)', () => {
 });
 
 describe('requireRole guard', () => {
-  // Minimal app exercising authenticate + requireRole (no admin route exists until Phase 12).
   const guarded = express();
   guarded.get('/admin-only', authenticate, requireRole('admin'), (_req, res) => res.json({ ok: true }));
   guarded.use(errorMiddleware);
@@ -174,7 +176,6 @@ describe('requireRole guard', () => {
 
 describe('rate limiting', () => {
   it('returns 429 once the credential-endpoint window max is exceeded', async () => {
-    // Limiter is max 20 / window, keyed by IP. The 21st request should be blocked.
     let last = 0;
     for (let i = 0; i < 21; i++) {
       const res = await request(app)

@@ -29,7 +29,7 @@ export function InstructorSalesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
       <div>
         <h2 className="text-2xl font-bold text-ink">Sales</h2>
         <p className="mt-1 text-sm text-ink-2">All enrollments and payments for your courses.</p>

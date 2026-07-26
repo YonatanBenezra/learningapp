@@ -86,7 +86,7 @@ function CreateAssessmentButton({
   atLimit: boolean;
   onClick: () => void;
   className?: string;
-  size?: 'lg' | 'default';
+  size?: 'lg' | 'md';
   label?: string;
 }) {
   return (

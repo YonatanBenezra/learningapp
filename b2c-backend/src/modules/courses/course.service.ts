@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { tierLimits } from '../../config/tiers';
 import { Course } from './course.model';
 import { Module } from '../modules-content/module.model';

@@ -15,9 +15,12 @@ const T = new Date('2026-07-13T10:00:00Z');
 const YESTERDAY = new Date('2026-07-12T10:00:00Z');
 const THREE_AGO = new Date('2026-07-10T10:00:00Z');
 
+import { parseAuthCookies } from './helpers/authCookies';
+
 async function signup(email = 'learner@example.com') {
   const res = await request(app).post('/auth/signup').send({ email, password: 'supersecret1' });
-  return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+  const cookies = parseAuthCookies(res);
+  return { token: cookies.access, userId: res.body.user.id as string };
 }
 
 async function seedCourse(userId: string) {
