@@ -4,4 +4,12 @@ export { useLogin, useSignup, useGoogleLogin, useLogout, useMe, AuthSessionSync 
 export { useAuthHydrated } from './useAuthHydrated';
 export { RequireAuth, RedirectIfAuthed, RequireAdmin, RequireInstructor, RequireLearnerDashboard } from './guards';
 export { defaultDashboardPath, isLearnerDashboardPath } from './dashboardRoutes';
+export {
+  createCoursePath,
+  learnerCoursePath,
+  learnerCourseStructurePath,
+  marketplaceCatalogPath,
+  marketplaceCoursePath,
+  myCoursesPath,
+} from './learnerRoutes';
 export { AuthForm } from './AuthForm';

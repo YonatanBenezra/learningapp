@@ -6,6 +6,7 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Spinner } from '@/src/components/ui/spinner';
 import { formatMoney } from '@/src/domain/instructor';
+import { CourseGenerationFlowPanel } from '@/src/features/instructor/CourseGenerationFlowPanel';
 import {
   useInstructorCourse,
   usePublishInstructorCourse,
@@ -85,136 +86,141 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
   }
 
   const busy = update.isPending || publish.isPending || unpublish.isPending;
+  const showFlow = course.status === 'generating' || course.status === 'ready';
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 p-4 sm:p-6 lg:p-8">
-      <Link
-        href="/instructor/courses"
-        className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 hover:text-primary"
-      >
-        <ArrowLeft className="size-4" />
-        Back to courses
-      </Link>
+    <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg">
+      <div className="w-full space-y-6 p-4 sm:p-6 lg:p-8">
+        <Link
+          href="/instructor/courses"
+          className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 hover:text-primary"
+        >
+          <ArrowLeft className="size-4" />
+          Back to courses
+        </Link>
 
-      <div className="rounded-lg border border-line bg-bg-elev p-6 shadow-soft">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="rounded-lg border border-line bg-bg-elev p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink-3">
+                {course.category} · {course.level}
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-ink">{course.title}</h2>
+              <p className="mt-2 text-sm text-ink-2">
+                Status:{' '}
+                <span className="font-medium text-ink">
+                  {course.status === 'generating'
+                    ? 'Generating content…'
+                    : course.isPublished
+                      ? 'Published'
+                      : course.status}
+                </span>
+              </p>
+            </div>
+            <div className="text-right text-sm text-ink-2">
+              <p>
+                Sales: <strong className="text-ink">{course.enrollmentCount}</strong>
+              </p>
+              <p>
+                Revenue:{' '}
+                <strong className="text-ink">
+                  {formatMoney(course.revenueCents, course.currency)}
+                </strong>
+              </p>
+            </div>
+          </div>
+
+          {course.status === 'failed' ? (
+            <div className="mt-6 rounded-lg border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad">
+              {course.failureReason ?? 'Generation failed. Update details and create a new course.'}
+            </div>
+          ) : null}
+        </div>
+
+        {showFlow ? (
+          <CourseGenerationFlowPanel
+            courseId={courseId}
+            courseTitle={course.title}
+            isGenerating={course.status === 'generating'}
+          />
+        ) : null}
+
+        <form onSubmit={onSave} className="space-y-5 rounded-lg border border-line bg-bg-elev p-6">
+          <h3 className="text-lg font-semibold text-ink">Course details</h3>
+
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ink-3">
-              {course.category} · {course.level}
-            </p>
-            <h2 className="mt-2 text-2xl font-bold text-ink">{course.title}</h2>
-            <p className="mt-2 text-sm text-ink-2">
-              Status:{' '}
-              <span className="font-medium text-ink">
-                {course.status === 'generating'
-                  ? 'Generating content…'
-                  : course.isPublished
-                    ? 'Published'
-                    : course.status}
-              </span>
-            </p>
+            <label htmlFor="title" className="mb-2 block text-sm font-medium text-ink">
+              Title
+            </label>
+            <input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="h-11 w-full rounded-lg border border-line px-4 text-sm outline-none focus:border-primary"
+            />
           </div>
-          <div className="text-right text-sm text-ink-2">
-            <p>
-              Sales: <strong className="text-ink">{course.enrollmentCount}</strong>
-            </p>
-            <p>
-              Revenue:{' '}
-              <strong className="text-ink">
-                {formatMoney(course.revenueCents, course.currency)}
-              </strong>
-            </p>
-          </div>
-        </div>
 
-        {course.status === 'generating' ? (
-          <div className="mt-6 rounded-lg border border-primary/20 bg-primary-soft px-4 py-3 text-sm text-primary">
-            AI is building modules and lessons. This page refreshes automatically.
+          <div>
+            <label htmlFor="description" className="mb-2 block text-sm font-medium text-ink">
+              Description
+            </label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              className="w-full rounded-lg border border-line px-4 py-3 text-sm outline-none focus:border-primary"
+            />
           </div>
-        ) : null}
 
-        {course.status === 'failed' ? (
-          <div className="mt-6 rounded-lg border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad">
-            {course.failureReason ?? 'Generation failed. Update details and create a new course.'}
+          <div>
+            <label htmlFor="price" className="mb-2 block text-sm font-medium text-ink">
+              Price (USD)
+            </label>
+            <input
+              id="price"
+              type="number"
+              min="1"
+              step="1"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="h-11 w-full max-w-xs rounded-lg border border-line px-4 text-sm outline-none focus:border-primary"
+            />
           </div>
-        ) : null}
+
+          {message ? (
+            <p className="rounded-lg border border-good/30 bg-good-soft px-4 py-3 text-sm text-good">
+              {message}
+            </p>
+          ) : null}
+          {error ? (
+            <p className="rounded-lg border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad">
+              {error}
+            </p>
+          ) : null}
+
+          <div className="flex flex-wrap gap-3">
+            <Button type="submit" disabled={busy} variant="soft" className="rounded-lg">
+              {update.isPending ? <Loader2 className="size-4 animate-spin" /> : null}
+              Save changes
+            </Button>
+            <Button
+              type="button"
+              disabled={busy || course.status !== 'ready'}
+              className="rounded-lg bg-primary"
+              onClick={onPublishToggle}
+            >
+              {publish.isPending || unpublish.isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : null}
+              {course.isPublished ? 'Unpublish' : 'Publish for sale'}
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => refetch()}>
+              Refresh
+            </Button>
+          </div>
+        </form>
       </div>
-
-      <form onSubmit={onSave} className="space-y-5 rounded-lg border border-line bg-bg-elev p-6 shadow-soft">
-        <h3 className="font-semibold text-ink">Course details</h3>
-
-        <div>
-          <label htmlFor="title" className="mb-2 block text-sm font-medium text-ink">
-            Title
-          </label>
-          <input
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="h-11 w-full rounded-lg border border-line px-4 text-sm outline-none focus:border-primary"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="description" className="mb-2 block text-sm font-medium text-ink">
-            Description
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            className="w-full rounded-lg border border-line px-4 py-3 text-sm outline-none focus:border-primary"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="price" className="mb-2 block text-sm font-medium text-ink">
-            Price (USD)
-          </label>
-          <input
-            id="price"
-            type="number"
-            min="1"
-            step="1"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="h-11 w-full max-w-xs rounded-lg border border-line px-4 text-sm outline-none focus:border-primary"
-          />
-        </div>
-
-        {message ? (
-          <p className="rounded-lg border border-good/30 bg-good-soft px-4 py-3 text-sm text-good">
-            {message}
-          </p>
-        ) : null}
-        {error ? (
-          <p className="rounded-lg border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad">
-            {error}
-          </p>
-        ) : null}
-
-        <div className="flex flex-wrap gap-3">
-          <Button type="submit" disabled={busy} variant="soft" className="rounded-lg">
-            {update.isPending ? <Loader2 className="size-4 animate-spin" /> : null}
-            Save changes
-          </Button>
-          <Button
-            type="button"
-            disabled={busy || course.status !== 'ready'}
-            className="rounded-lg bg-primary"
-            onClick={onPublishToggle}
-          >
-            {publish.isPending || unpublish.isPending ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : null}
-            {course.isPublished ? 'Unpublish' : 'Publish for sale'}
-          </Button>
-          <Button type="button" variant="ghost" onClick={() => refetch()}>
-            Refresh
-          </Button>
-        </div>
-      </form>
     </div>
   );
 }

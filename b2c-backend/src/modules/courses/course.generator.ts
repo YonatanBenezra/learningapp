@@ -1,25 +1,14 @@
-import { z } from 'zod';
 import { getAiClient } from '../ai-guidance/ai.client';
+import { RawAiJsonSchema } from '../ai-guidance/aiJson.schema';
 import { COURSE_SYSTEM_PROMPT, buildCoursePrompt } from '../ai-guidance/prompts';
+import { parseGeneratedCourse, type GeneratedCourse } from './course.normalize';
 
-// Shape the AI must return for a generated course (validated by AiClient + here).
-export const GeneratedLessonSchema = z.object({
-  title: z.string().min(1),
-  summary: z.string().min(1),
-});
-
-export const GeneratedModuleSchema = z.object({
-  title: z.string().min(1),
-  domain: z.enum(['programming', 'networking', 'cybersecurity', 'os', 'general']),
-  lessons: z.array(GeneratedLessonSchema).min(1),
-});
-
-export const GeneratedCourseSchema = z.object({
-  title: z.string().min(1),
-  modules: z.array(GeneratedModuleSchema).min(1),
-});
-
-export type GeneratedCourse = z.infer<typeof GeneratedCourseSchema>;
+export {
+  GeneratedCourseSchema,
+  GeneratedModuleSchema,
+  GeneratedLessonSchema,
+  type GeneratedCourse,
+} from './course.schemas';
 
 export interface CourseGenInput {
   category: string;
@@ -27,6 +16,7 @@ export interface CourseGenInput {
   level: 'beginner' | 'intermediate' | 'advanced';
   visualsPreferred: boolean;
   userId?: string | null;
+  aiModel?: string | null;
 }
 
 export type CourseTreeGenerator = (input: CourseGenInput) => Promise<GeneratedCourse>;
@@ -44,8 +34,14 @@ Each module carries a domain tag (programming | networking | cybersecurity | os 
 Each lesson has a title and a one- or two-sentence summary. Order modules and lessons progressively.`;
 
   const result = await getAiClient().completeStructured(
-    { system: COURSE_SYSTEM_PROMPT, prompt, useCase: 'course', userId: input.userId ?? null },
-    GeneratedCourseSchema,
+    {
+      system: COURSE_SYSTEM_PROMPT,
+      prompt,
+      useCase: 'course',
+      userId: input.userId ?? null,
+      model: input.aiModel ?? undefined,
+    },
+    RawAiJsonSchema,
   );
-  return result.data;
+  return parseGeneratedCourse(result.data, input.category);
 };

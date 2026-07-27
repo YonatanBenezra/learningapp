@@ -10,6 +10,7 @@ const courseSchema = new Schema(
     preferences: {
       visualsPreferred: { type: Boolean, default: false },
       dailyNotification: { type: Boolean, default: false },
+      aiModel: { type: String, default: null },
     },
     kind: {
       type: String,

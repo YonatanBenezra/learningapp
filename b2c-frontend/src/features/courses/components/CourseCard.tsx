@@ -3,6 +3,7 @@ import { ArrowRight, BookOpen, Loader2 } from 'lucide-react';
 import { Badge, type BadgeProps } from '@/src/components/ui/badge';
 import { Progress } from '@/src/components/ui/progress';
 import type { Course, CourseStatus } from '@/src/domain/course';
+import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { cn } from '@/src/lib/utils';
 
 export const statusVariant: Record<CourseStatus, BadgeProps['variant']> = {
@@ -31,7 +32,7 @@ export function CourseCard({ course }: { course: Course }) {
 
   return (
     <Link
-      href={`/courses/${course.id}`}
+      href={learnerCoursePath(course.id)}
       className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-bg-elev shadow-soft transition hover:border-primary/30 hover:shadow-card"
     >
       <div className="border-b border-line bg-bg-soft/70 px-5 py-4">
@@ -111,7 +112,7 @@ export function CourseCard({ course }: { course: Course }) {
 export function CourseCardCompact({ course }: { course: Course }) {
   return (
     <Link
-      href={`/courses/${course.id}`}
+      href={learnerCoursePath(course.id)}
       className="flex items-center gap-4 rounded-xl border border-line bg-bg-elev px-4 py-3.5 shadow-soft transition hover:border-primary/30 hover:bg-bg-soft"
     >
       <div className="grid size-10 shrink-0 place-items-center rounded-lg border border-line bg-bg-soft text-primary">

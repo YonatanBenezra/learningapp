@@ -32,7 +32,7 @@ test.describe('Core learner flow', () => {
     });
 
     await page.getByRole('link', { name: /Courses|কোর্স/i }).click();
-    await expect(page).toHaveURL(/\/courses/);
+    await expect(page).toHaveURL(/\/my-courses/);
 
     await page.getByRole('link', { name: /Settings|সেটিংস/i }).click();
     await expect(page).toHaveURL(/\/settings/);

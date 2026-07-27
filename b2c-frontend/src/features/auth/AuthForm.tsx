@@ -66,7 +66,11 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
     if (isSignup && password.length < 8)
       return setLocalError(t('auth.errorPasswordShort'));
     if (!password) return setLocalError(t('auth.errorPasswordRequired'));
-    mutation.mutate({ email: email.trim(), password });
+    if (isSignup) {
+      signup.mutate({ email: email.trim(), password, name: fullName.trim() });
+      return;
+    }
+    login.mutate({ email: email.trim(), password });
   }
 
   const inputBase =

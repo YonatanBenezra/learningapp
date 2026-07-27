@@ -1,16 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AlertTriangle, Download, Settings, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import {
+  AlertTriangle,
+  Bell,
+  ChevronRight,
+  Download,
+  Globe,
+  Settings,
+  Sparkles,
+  Trash2,
+  UserRound,
+} from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { useMe } from '@/src/features/auth';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { useTranslation } from '@/src/i18n';
 import { LanguageSelector } from '@/src/components/layout/LanguageSelector';
+import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { Switch } from '@/src/components/ui/switch';
+import { listAiModels } from '@/src/features/ai/aiApi';
 import { useDeleteAccount, useExportUserData, useUpdatePreferences } from './useSettings';
 
 const TIMEZONES = [
@@ -29,6 +43,9 @@ const TIMEZONES = [
   'Australia/Sydney',
 ];
 
+const selectClassName =
+  'mt-2 w-full rounded-lg border border-line-2 bg-bg px-4 py-3 text-sm text-ink outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20';
+
 function mutationMessage(error: unknown) {
   if (error instanceof ApiError) return error.message;
   if (error instanceof Error) return error.message;
@@ -37,11 +54,66 @@ function mutationMessage(error: unknown) {
 
 function SettingsSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-2xl p-4 sm:p-6 lg:p-8">
-      <Skeleton className="h-10 w-40" />
-      <Skeleton className="mt-2 h-5 w-72" />
-      <Skeleton className="mt-8 h-56 rounded-2xl" />
-      <Skeleton className="mt-6 h-40 rounded-2xl" />
+    <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg">
+      <div className="mx-auto w-full max-w-6xl space-y-8 p-4 sm:p-6 lg:p-8">
+        <Skeleton className="h-36 w-full rounded-lg" />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Skeleton className="h-56 rounded-lg" />
+          <Skeleton className="h-56 rounded-lg" />
+        </div>
+        <Skeleton className="h-[420px] rounded-lg" />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Skeleton className="h-40 rounded-lg" />
+          <Skeleton className="h-52 rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SectionCard({
+  title,
+  description,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-lg border border-line bg-bg-elev p-6 shadow-soft sm:p-7">
+      <div className="flex items-start gap-3">
+        <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-line bg-bg-soft text-primary">
+          <Icon className="size-4" strokeWidth={1.75} />
+        </span>
+        <div className="min-w-0">
+          <h2 className="text-lg font-bold text-ink">{title}</h2>
+          <p className="mt-1 text-sm text-ink-2">{description}</p>
+        </div>
+      </div>
+      <div className="mt-6">{children}</div>
+    </section>
+  );
+}
+
+function PreferenceRow({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-lg border border-line bg-bg-soft/40 px-4 py-4">
+      <div className="min-w-0">
+        <p className="font-medium text-ink">{title}</p>
+        <p className="mt-0.5 text-sm text-ink-2">{hint}</p>
+      </div>
+      <div className="shrink-0">{children}</div>
     </div>
   );
 }
@@ -52,10 +124,16 @@ export function SettingsPage() {
   const updateMut = useUpdatePreferences();
   const exportMut = useExportUserData();
   const deleteMut = useDeleteAccount();
+  const modelsQ = useQuery({
+    queryKey: ['ai-models'],
+    queryFn: listAiModels,
+    staleTime: 10 * 60_000,
+  });
 
   const [visualsPreferred, setVisualsPreferred] = useState(true);
   const [dailyNotification, setDailyNotification] = useState(true);
   const [timezone, setTimezone] = useState('UTC');
+  const [aiModel, setAiModel] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deletePhrase, setDeletePhrase] = useState('');
 
@@ -65,16 +143,17 @@ export function SettingsPage() {
     setVisualsPreferred(prefs.visualsPreferred);
     setDailyNotification(prefs.dailyNotification);
     setTimezone(prefs.timezone ?? 'UTC');
+    setAiModel(prefs.aiModel ?? '');
   }, [meQ.data?.user.preferences]);
 
   if (meQ.isLoading) return <SettingsSkeleton />;
 
   if (meQ.isError || !meQ.data) {
     return (
-      <div className="mx-auto w-full max-w-2xl p-4 sm:p-6 lg:p-8">
-        <div className="rounded-2xl border border-line bg-bg-elev p-10 text-center">
-          <p className="text-ink-2">Couldn&rsquo;t load your settings.</p>
-          <Button variant="soft" className="mt-4" onClick={() => meQ.refetch()}>
+      <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg p-4 sm:p-6 lg:p-8">
+        <div className="mx-auto max-w-6xl rounded-lg border border-line bg-bg-elev p-10 text-center shadow-soft">
+          <p className="text-lg font-semibold text-ink">{t('settings.loadError')}</p>
+          <Button variant="soft" className="mt-4 rounded-lg" onClick={() => meQ.refetch()}>
             Retry
           </Button>
         </div>
@@ -84,176 +163,257 @@ export function SettingsPage() {
 
   const user = meQ.data.user;
   const saveDisabled = updateMut.isPending;
+  const tierLabel = user.tier.charAt(0).toUpperCase() + user.tier.slice(1);
 
   return (
-    <div className="mx-auto w-full max-w-2xl p-4 sm:p-6 lg:p-8">
-      <div className="flex items-center gap-3">
-        <span className="grid size-11 place-items-center rounded-2xl bg-primary-soft text-primary">
-          <Settings className="size-5" />
-        </span>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{t('settings.title')}</h1>
-          <p className="mt-1 text-sm text-ink-2">{t('settings.subtitle')}</p>
-        </div>
-      </div>
+    <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg">
+      <div className="mx-auto w-full max-w-6xl space-y-8 p-4 sm:p-6 lg:p-8">
+        <section className="rounded-lg border border-line bg-bg-elev p-6 shadow-soft sm:p-8">
+          <nav className="flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
+            <Link href="/dashboard" className="transition hover:text-primary">
+              Dashboard
+            </Link>
+            <ChevronRight className="size-3.5" />
+            <span className="font-medium text-ink">{t('settings.title')}</span>
+          </nav>
 
-      <section className="mt-8 rounded-2xl border border-line bg-bg-elev p-6 shadow-soft">
-        <h2 className="text-lg font-bold text-ink">{t('settings.profile')}</h2>
-        <p className="mt-1 text-sm text-ink-2">Your account details.</p>
-        <div className="mt-5 space-y-4">
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" value={user.email} readOnly className="mt-2 bg-bg-soft" />
-          </div>
-          <div>
-            <Label htmlFor="tier">Plan</Label>
-            <Input
-              id="tier"
-              value={user.tier.charAt(0).toUpperCase() + user.tier.slice(1)}
-              readOnly
-              className="mt-2 bg-bg-soft capitalize"
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-6 rounded-2xl border border-line bg-bg-elev p-6 shadow-soft">
-        <h2 className="text-lg font-bold text-ink">{t('settings.preferences')}</h2>
-        <p className="mt-1 text-sm text-ink-2">Customize how you learn.</p>
-        <div className="mt-5 space-y-5">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="font-medium text-ink">Visual aids in lessons</p>
-              <p className="text-sm text-ink-2">Show diagrams and visual content when available.</p>
-            </div>
-            <Switch checked={visualsPreferred} onChange={setVisualsPreferred} />
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="font-medium text-ink">Daily reminder</p>
-              <p className="text-sm text-ink-2">Get nudges to keep your learning streak alive.</p>
-            </div>
-            <Switch checked={dailyNotification} onChange={setDailyNotification} />
-          </div>
-          <div className="flex items-center justify-between gap-4 rounded-xl border border-line bg-bg-soft px-4 py-3">
-            <div>
-              <p className="font-medium text-ink">{t('settings.language')}</p>
-              <p className="text-sm text-ink-2">{t('settings.languageHint')}</p>
-            </div>
-            <LanguageSelector compact />
-          </div>
-          <div>
-            <Label htmlFor="timezone">Timezone</Label>
-            <select
-              id="timezone"
-              value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
-            >
-              {TIMEZONES.map((tz) => (
-                <option key={tz} value={tz}>
-                  {tz}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        {updateMut.isError ? (
-          <p className="mt-4 text-sm text-bad">{mutationMessage(updateMut.error)}</p>
-        ) : null}
-        {updateMut.isSuccess ? (
-          <p className="mt-4 text-sm text-good">Preferences saved.</p>
-        ) : null}
-        <Button
-          className="mt-5"
-          disabled={saveDisabled}
-          onClick={() =>
-            updateMut.mutate({
-              visualsPreferred,
-              dailyNotification,
-              timezone,
-            })
-          }
-        >
-          {saveDisabled ? t('common.loading') : t('common.save')}
-        </Button>
-      </section>
-
-      <section className="mt-6 rounded-2xl border border-line bg-bg-elev p-6 shadow-soft">
-        <h2 className="text-lg font-bold text-ink">Privacy & data</h2>
-        <p className="mt-1 text-sm text-ink-2">
-          Download a copy of your data or permanently deactivate your account.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <Button
-            variant="soft"
-            disabled={exportMut.isPending}
-            onClick={() => exportMut.mutate()}
-          >
-            <Download className="size-4" />
-            {exportMut.isPending ? t('common.loading') : t('settings.exportData')}
-          </Button>
-        </div>
-        {exportMut.isError ? (
-          <p className="mt-3 text-sm text-bad">{mutationMessage(exportMut.error)}</p>
-        ) : null}
-      </section>
-
-      <section className="mt-6 rounded-2xl border border-bad/20 bg-bad-soft/30 p-6">
-        <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-bad" />
-          <div className="flex-1">
-            <h2 className="text-lg font-bold text-ink">Delete account</h2>
-            <p className="mt-1 text-sm text-ink-2">
-              This deactivates your account. Your data will be permanently removed after the
-              retention window.
-            </p>
-            {!confirmDelete ? (
-              <Button
-                variant="soft"
-                className="mt-4 border border-bad/20 text-bad hover:bg-bad-soft"
-                onClick={() => setConfirmDelete(true)}
-              >
-                <Trash2 className="size-4" />
-                Delete my account
-              </Button>
-            ) : (
-              <div className="mt-4 space-y-3">
-                <p className="text-sm text-ink-2">
-                  Type <strong>DELETE</strong> to confirm.
+          <div className="mt-5 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="grid size-12 shrink-0 place-items-center rounded-lg border border-primary/20 bg-primary-soft text-primary">
+                <Settings className="size-5" />
+              </span>
+              <div className="max-w-2xl">
+                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
+                  Account
                 </p>
-                <Input
-                  value={deletePhrase}
-                  onChange={(e) => setDeletePhrase(e.target.value)}
-                  placeholder="DELETE"
-                />
-                <div className="flex flex-wrap gap-3">
+                <h1 className="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                  {t('settings.title')}
+                </h1>
+                <p className="mt-3 text-base leading-7 text-ink-2">{t('settings.subtitle')}</p>
+              </div>
+            </div>
+            <Link href="/profile">
+              <Button variant="soft" className="rounded-lg">
+                <UserRound className="size-4" />
+                Edit profile
+              </Button>
+            </Link>
+          </div>
+        </section>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SectionCard
+            title={t('settings.profile')}
+            description="Your account details and current plan."
+            icon={UserRound}
+          >
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" value={user.email} readOnly className="mt-2 bg-bg-soft" />
+              </div>
+              <div>
+                <Label htmlFor="tier">Plan</Label>
+                <div className="mt-2 flex items-center gap-3">
+                  <Input
+                    id="tier"
+                    value={tierLabel}
+                    readOnly
+                    className="bg-bg-soft capitalize"
+                  />
+                  <Badge variant={user.tier === 'premium' ? 'primary' : 'outline'}>
+                    {tierLabel}
+                  </Badge>
+                </div>
+              </div>
+              {user.tier !== 'premium' ? (
+                <Link href="/upgrade" className="inline-block text-sm font-medium text-primary hover:underline">
+                  View upgrade options
+                </Link>
+              ) : null}
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title="Regional"
+            description="Language and timezone preferences."
+            icon={Globe}
+          >
+            <div className="space-y-4">
+              <PreferenceRow title={t('settings.language')} hint={t('settings.languageHint')}>
+                <LanguageSelector compact />
+              </PreferenceRow>
+              <div>
+                <Label htmlFor="timezone">{t('settings.timezone')}</Label>
+                <select
+                  id="timezone"
+                  value={timezone}
+                  onChange={(event) => setTimezone(event.target.value)}
+                  className={selectClassName}
+                >
+                  {TIMEZONES.map((tz) => (
+                    <option key={tz} value={tz}>
+                      {tz}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </SectionCard>
+        </div>
+
+        <SectionCard
+          title={t('settings.preferences')}
+          description={t('settings.customizeLearn')}
+          icon={Sparkles}
+        >
+          <div className="space-y-4">
+            <PreferenceRow title={t('settings.visualsTitle')} hint={t('settings.visualsHint')}>
+              <Switch checked={visualsPreferred} onChange={setVisualsPreferred} />
+            </PreferenceRow>
+            <PreferenceRow
+              title={t('settings.dailyReminderTitle')}
+              hint={t('settings.dailyReminderHint')}
+            >
+              <Switch checked={dailyNotification} onChange={setDailyNotification} />
+            </PreferenceRow>
+
+            <div className="rounded-lg border border-line bg-bg-soft/40 px-4 py-4">
+              <Label htmlFor="aiModel">{t('settings.aiModel')}</Label>
+              <p className="mt-1 text-sm text-ink-2">{t('settings.aiModelHint')}</p>
+              <Input
+                id="aiModel"
+                list="openrouter-models"
+                value={aiModel}
+                onChange={(event) => setAiModel(event.target.value)}
+                placeholder="anthropic/claude-sonnet-4"
+                className="mt-3 font-mono text-sm"
+              />
+              <datalist id="openrouter-models">
+                {modelsQ.data?.models.map((model) => (
+                  <option key={model.id} value={model.id}>
+                    {model.name}
+                  </option>
+                ))}
+              </datalist>
+              <p className="mt-2 text-xs text-ink-3">{t('settings.aiModelCustom')}</p>
+              <Button
+                type="button"
+                variant="ghost"
+                className="mt-2 h-8 px-2 text-xs"
+                onClick={() => setAiModel('')}
+              >
+                {t('settings.aiModelDefault')}
+              </Button>
+            </div>
+          </div>
+
+          {updateMut.isError ? (
+            <p className="mt-4 text-sm text-bad">{mutationMessage(updateMut.error)}</p>
+          ) : null}
+          {updateMut.isSuccess ? (
+            <p className="mt-4 text-sm font-medium text-good">{t('settings.saved')}</p>
+          ) : null}
+
+          <Button
+            className="mt-6 rounded-lg"
+            disabled={saveDisabled}
+            onClick={() =>
+              updateMut.mutate({
+                visualsPreferred,
+                dailyNotification,
+                timezone,
+                aiModel: aiModel.trim() || null,
+              })
+            }
+          >
+            {saveDisabled ? t('common.loading') : t('common.save')}
+          </Button>
+        </SectionCard>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SectionCard
+            title={t('settings.privacy')}
+            description={t('settings.privacyHint')}
+            icon={Download}
+          >
+            <Button
+              variant="soft"
+              className="rounded-lg"
+              disabled={exportMut.isPending}
+              onClick={() => exportMut.mutate()}
+            >
+              <Download className="size-4" />
+              {exportMut.isPending ? t('common.loading') : t('settings.exportData')}
+            </Button>
+            {exportMut.isError ? (
+              <p className="mt-3 text-sm text-bad">{mutationMessage(exportMut.error)}</p>
+            ) : null}
+          </SectionCard>
+
+          <section className="rounded-lg border border-bad/20 bg-bad-soft/20 p-6 shadow-soft sm:p-7">
+            <div className="flex items-start gap-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-bad/20 bg-bad-soft text-bad">
+                <AlertTriangle className="size-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg font-bold text-ink">{t('settings.deleteAccount')}</h2>
+                <p className="mt-1 text-sm leading-6 text-ink-2">{t('settings.deleteWarning')}</p>
+
+                {!confirmDelete ? (
                   <Button
                     variant="soft"
-                    className="border border-bad/20 text-bad hover:bg-bad-soft"
-                    disabled={deleteMut.isPending || deletePhrase !== 'DELETE'}
-                    onClick={() => deleteMut.mutate()}
+                    className="mt-5 rounded-lg border border-bad/20 text-bad hover:bg-bad-soft"
+                    onClick={() => setConfirmDelete(true)}
                   >
-                    {deleteMut.isPending ? 'Deleting…' : 'Confirm delete'}
+                    <Trash2 className="size-4" />
+                    {t('settings.deleteAccount')}
                   </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      setConfirmDelete(false);
-                      setDeletePhrase('');
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-                {deleteMut.isError ? (
-                  <p className="text-sm text-bad">{mutationMessage(deleteMut.error)}</p>
-                ) : null}
+                ) : (
+                  <div className="mt-5 space-y-3">
+                    <p className="text-sm text-ink-2">
+                      {t('settings.deleteConfirm')}
+                    </p>
+                    <Input
+                      value={deletePhrase}
+                      onChange={(event) => setDeletePhrase(event.target.value)}
+                      placeholder="DELETE"
+                    />
+                    <div className="flex flex-wrap gap-3">
+                      <Button
+                        variant="soft"
+                        className="rounded-lg border border-bad/20 text-bad hover:bg-bad-soft"
+                        disabled={deleteMut.isPending || deletePhrase !== 'DELETE'}
+                        onClick={() => deleteMut.mutate()}
+                      >
+                        {deleteMut.isPending ? 'Deleting…' : 'Confirm delete'}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="rounded-lg"
+                        onClick={() => {
+                          setConfirmDelete(false);
+                          setDeletePhrase('');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                    {deleteMut.isError ? (
+                      <p className="text-sm text-bad">{mutationMessage(deleteMut.error)}</p>
+                    ) : null}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          </section>
         </div>
-      </section>
+
+        <div className="flex items-start gap-3 rounded-lg border border-line bg-bg-elev px-4 py-4 text-sm text-ink-2 shadow-soft">
+          <Bell className="mt-0.5 size-4 shrink-0 text-primary" />
+          Daily reminders and notification history are managed from your account preferences above.
+        </div>
+      </div>
     </div>
   );
 }

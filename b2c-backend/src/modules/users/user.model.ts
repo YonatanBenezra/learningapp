@@ -8,10 +8,17 @@ const userSchema = new Schema(
     oauth: { provider: String, providerId: String },
     role: { type: String, enum: ['user', 'admin', 'instructor'], default: 'user' },
     tier: { type: String, enum: ['free', 'standard', 'premium'], default: 'free' },
+    name: { type: String, default: '', trim: true },
+    imageUrl: { type: String, default: '', trim: true },
+    address: { type: String, default: '', trim: true },
+    profession: { type: String, default: '', trim: true },
+    experience: { type: String, default: '', trim: true },
     preferences: {
       visualsPreferred: { type: Boolean, default: false },
       dailyNotification: { type: Boolean, default: false },
       timezone: { type: String, default: 'UTC' },
+      /** OpenRouter model slug, e.g. anthropic/claude-sonnet-4 */
+      aiModel: { type: String, default: null },
       skillAssessment: {
         topic: String,
         customTopic: String,

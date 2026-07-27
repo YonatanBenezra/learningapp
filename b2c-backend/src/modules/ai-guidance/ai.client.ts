@@ -1,13 +1,14 @@
 // Single shared AI wrapper (§2.5.1). Every module (courses, exercises, assessments)
-// calls THROUGH this — never the Anthropic SDK directly. Centralizes retry/backoff,
+// calls THROUGH this — never the OpenRouter API directly. Centralizes retry/backoff,
 // cost/token accounting, and provider swapping.
 import type { ZodType } from 'zod';
 import { AiError } from './ai.error';
 import { estimateCostUsd } from './pricing';
 import { AI_CONFIG } from './ai.config';
-import { AnthropicProvider } from './provider';
+import { OpenRouterProvider } from './provider';
 import { MongoUsageRecorder, logUsage, type UsageRecorder, type AiUsageEntry } from './usageRecorder';
 import { logger } from '../../common/utils/logger';
+import { resolveUserAiModel } from './modelResolver';
 import type { AiProvider, AiGenerateRequest, AiTextResult, AiStructuredResult } from './types';
 
 export interface AiCallOptions extends AiGenerateRequest {
@@ -39,7 +40,8 @@ export class AiClient {
   }
 
   async complete(opts: AiCallOptions): Promise<AiTextResult & { costUsd: number }> {
-    const result = await this.withRetry(() => this.provider.generateText(opts));
+    const model = opts.model ?? (await resolveUserAiModel(opts.userId));
+    const result = await this.withRetry(() => this.provider.generateText({ ...opts, model }));
     const costUsd = estimateCostUsd(result.model, result.usage);
     await this.track({
       useCase: opts.useCase ?? 'other',
@@ -55,7 +57,10 @@ export class AiClient {
     opts: AiCallOptions,
     schema: ZodType<T>,
   ): Promise<AiStructuredResult<T> & { costUsd: number }> {
-    const result = await this.withRetry(() => this.provider.generateStructured(opts, schema));
+    const model = opts.model ?? (await resolveUserAiModel(opts.userId));
+    const result = await this.withRetry(() =>
+      this.provider.generateStructured({ ...opts, model }, schema),
+    );
 
     // Defense in depth: re-validate the provider's output against the schema.
     const parsed = schema.safeParse(result.data);
@@ -102,10 +107,10 @@ export class AiClient {
 
 let singleton: AiClient | null = null;
 
-// Lazily-constructed default client (Anthropic + Mongo-backed usage recording).
+// Lazily-constructed default client (OpenRouter + Mongo-backed usage recording).
 export function getAiClient(): AiClient {
   if (!singleton) {
-    singleton = new AiClient(new AnthropicProvider(), new MongoUsageRecorder());
+    singleton = new AiClient(new OpenRouterProvider(), new MongoUsageRecorder());
   }
   return singleton;
 }

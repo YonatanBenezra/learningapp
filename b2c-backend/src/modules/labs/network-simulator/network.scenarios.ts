@@ -58,4 +58,74 @@ export const NETWORK_SCENARIOS: Record<string, NetworkScenario> = {
       },
     ],
   },
+  'syn-flood': {
+    id: 'syn-flood',
+    title: 'Perimeter SYN Flood',
+    description: 'The edge firewall is logging an abnormal burst of half-open TCP connections.',
+    difficulty: 'medium',
+    pcapSummary: [
+      '203.0.113.44 -> 10.0.0.10:443 SYN',
+      '203.0.113.44 -> 10.0.0.10:443 SYN',
+      '203.0.113.44 -> 10.0.0.10:443 SYN',
+      '203.0.113.44 -> 10.0.0.10:443 SYN (12000 SYN/sec, no ACK)',
+      '10.0.0.10 -> 203.0.113.44:443 SYN-ACK (backlog saturated)',
+    ],
+    questions: [
+      { id: 'q1', prompt: 'Which IP is the attack source?', expected: ['203.0.113.44'] },
+      { id: 'q2', prompt: 'Which internal service is targeted?', expected: ['10.0.0.10'] },
+      {
+        id: 'q3',
+        prompt: 'What attack type is shown? (two words)',
+        expected: ['syn flood', 'syn-flood', 'tcp syn flood'],
+      },
+    ],
+  },
+  'lateral-scan': {
+    id: 'lateral-scan',
+    title: 'Internal Lateral Scan',
+    description: 'A compromised workstation is probing adjacent hosts on common admin ports.',
+    difficulty: 'medium',
+    pcapSummary: [
+      '10.0.1.15 -> 10.0.1.20:445 SYN',
+      '10.0.1.15 -> 10.0.1.21:445 SYN',
+      '10.0.1.15 -> 10.0.1.22:445 SYN',
+      '10.0.1.15 -> 10.0.1.20:3389 SYN',
+      '10.0.1.15 -> 10.0.1.21:3389 SYN (15 hosts in 30s)',
+    ],
+    questions: [
+      { id: 'q1', prompt: 'Which host is scanning internally?', expected: ['10.0.1.15'] },
+      {
+        id: 'q2',
+        prompt: 'Which port suggests Windows admin access attempts?',
+        expected: ['445', 'port 445'],
+      },
+      {
+        id: 'q3',
+        prompt: 'What stage of attack is this? (one word)',
+        expected: ['lateral', 'lateral movement', 'discovery'],
+      },
+    ],
+  },
+  beaconing: {
+    id: 'beaconing',
+    title: 'C2 Beaconing Pattern',
+    description: 'NetFlow shows a workstation calling out to the same external host every 60 seconds.',
+    difficulty: 'hard',
+    pcapSummary: [
+      '10.0.2.88 -> 198.51.100.7:443 HTTPS (60s interval)',
+      '10.0.2.88 -> 198.51.100.7:443 HTTPS (60s interval)',
+      '10.0.2.88 -> 198.51.100.7:443 HTTPS (60s interval)',
+      '10.0.2.88 -> 198.51.100.7:443 HTTPS (fixed 512-byte payload)',
+      '10.0.2.88 -> 198.51.100.7:443 HTTPS (beacon pattern over 6 hours)',
+    ],
+    questions: [
+      { id: 'q1', prompt: 'Which internal host is beaconing?', expected: ['10.0.2.88'] },
+      { id: 'q2', prompt: 'What is the external C2 IP?', expected: ['198.51.100.7'] },
+      {
+        id: 'q3',
+        prompt: 'What is this behavior called? (one word)',
+        expected: ['beaconing', 'c2', 'command and control'],
+      },
+    ],
+  },
 };

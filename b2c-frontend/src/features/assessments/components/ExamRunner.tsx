@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ApiError } from '@/src/infrastructure/apiClient';
+import { learnerCoursePath, myCoursesPath } from '@/src/features/auth/learnerRoutes';
 import { useExam, useGenerateExam, useSubmitExam } from '../useAssessments';
 import { AssessmentView } from './AssessmentView';
 import { AssessmentShell, AssessmentError, AssessmentLoading } from './shell';
@@ -14,12 +15,12 @@ export function ExamRunner({ examId }: { examId: string }) {
 
   if (examQ.isLoading) return <AssessmentLoading />;
   if (examQ.isError || !examQ.data)
-    return <AssessmentError backHref="/my-courses" backLabel="Courses" label="Exam not found" />;
+    return <AssessmentError backHref={myCoursesPath()} backLabel="Courses" label="Exam not found" />;
 
   const exam = examQ.data;
   // Course exams can return to their course; module exams (scopeId is a module id)
   // fall back to the course list.
-  const backHref = exam.scope === 'course' ? `/courses/${exam.scopeId}` : '/my-courses';
+  const backHref = exam.scope === 'course' ? learnerCoursePath(exam.scopeId) : myCoursesPath();
   const backLabel = exam.scope === 'course' ? 'Back to course' : 'Courses';
 
   return (

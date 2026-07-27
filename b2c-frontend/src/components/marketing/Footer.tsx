@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
-import Image from 'next/image';
+import { useEffect, useLayoutEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Mail, MapPin, Phone, Plus } from 'lucide-react';
 import { FOOTER_CONTACT, FOOTER_LINKS } from './data';
@@ -55,6 +54,26 @@ function FooterLinkList({ items, hrefPrefix }: { items: readonly string[]; hrefP
         </li>
       ))}
     </ul>
+  );
+}
+
+function AppStoreBadge({ variant }: { variant: 'google' | 'apple' }) {
+  const isGoogle = variant === 'google';
+  return (
+    <span className="inline-flex h-12 min-w-[148px] flex-col justify-center rounded-lg border border-line bg-bg-elev px-4 py-2 transition-colors hover:border-primary">
+      <span className="text-[10px] uppercase tracking-wide text-ink-3">
+        {isGoogle ? 'Get it on' : 'Download on the'}
+      </span>
+      <span className="text-sm font-semibold text-ink">{isGoogle ? 'Google Play' : 'App Store'}</span>
+    </span>
+  );
+}
+
+function PaymentBadge({ label }: { label: string }) {
+  return (
+    <span className="inline-flex h-7 items-center rounded border border-line bg-bg px-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink-2">
+      {label}
+    </span>
   );
 }
 
@@ -130,22 +149,10 @@ export function Footer() {
                 <h4 className="text-[24px] font-medium leading-6 text-ink">Download Apps</h4>
                 <div className="mt-3 flex flex-wrap gap-3">
                   <Link href="#contact" className="inline-block">
-                    <Image
-                      src="https://fistudy-laravel.mnsithub.com/assets/images/icon/google-play-icon-2.png"
-                      alt="Get it on Google Play"
-                      width={160}
-                      height={48}
-                      className="h-12 w-auto"
-                    />
+                    <AppStoreBadge variant="google" />
                   </Link>
                   <Link href="#contact" className="inline-block">
-                    <Image
-                      src="https://fistudy-laravel.mnsithub.com/assets/images/icon/apple-icon-2.png"
-                      alt="Download on the App Store"
-                      width={160}
-                      height={48}
-                      className="h-12 w-auto"
-                    />
+                    <AppStoreBadge variant="apple" />
                   </Link>
                 </div>
               </div>
@@ -178,16 +185,10 @@ export function Footer() {
               . All Rights Reserved
             </p>
             <ul className="flex flex-wrap items-center gap-3">
-              {[1, 2, 3].map((n) => (
-                <li key={n}>
+              {['Visa', 'Mastercard', 'Amex'].map((label) => (
+                <li key={label}>
                   <Link href="#contact">
-                    <Image
-                      src={`https://fistudy-laravel.mnsithub.com/assets/images/icon/card-icon-${n}.png`}
-                      alt=""
-                      width={46}
-                      height={28}
-                      className="h-7 w-auto"
-                    />
+                    <PaymentBadge label={label} />
                   </Link>
                 </li>
               ))}

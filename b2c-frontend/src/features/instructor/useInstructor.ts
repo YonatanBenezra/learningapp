@@ -79,3 +79,78 @@ export function useUnpublishInstructorCourse(id: string) {
     },
   });
 }
+
+export function useDeleteInstructorCourse() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.deleteInstructorCourse(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['instructor'] });
+    },
+  });
+}
+
+function invalidateStructure(qc: ReturnType<typeof useQueryClient>, courseId: string) {
+  qc.invalidateQueries({ queryKey: ['course', courseId, 'structure'] });
+  qc.invalidateQueries({ queryKey: ['instructor', 'courses', courseId] });
+}
+
+export function useUpdateInstructorModuleTitle(courseId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ moduleId, title }: { moduleId: string; title: string }) =>
+      api.updateInstructorModuleTitle(courseId, moduleId, title),
+    onSuccess: () => invalidateStructure(qc, courseId),
+  });
+}
+
+export function useDeleteInstructorModule(courseId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (moduleId: string) => api.deleteInstructorModule(courseId, moduleId),
+    onSuccess: () => invalidateStructure(qc, courseId),
+  });
+}
+
+export function useUpdateInstructorLessonTitle(courseId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ lessonId, title }: { lessonId: string; title: string }) =>
+      api.updateInstructorLessonTitle(courseId, lessonId, title),
+    onSuccess: () => invalidateStructure(qc, courseId),
+  });
+}
+
+export function useUpdateInstructorLessonContent(courseId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      lessonId,
+      input,
+    }: {
+      lessonId: string;
+      input: Parameters<typeof api.updateInstructorLessonContent>[2];
+    }) => api.updateInstructorLessonContent(courseId, lessonId, input),
+    onSuccess: (_data, variables) => {
+      invalidateStructure(qc, courseId);
+      qc.invalidateQueries({ queryKey: ['lesson', variables.lessonId] });
+    },
+  });
+}
+
+export function useDeleteInstructorLesson(courseId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (lessonId: string) => api.deleteInstructorLesson(courseId, lessonId),
+    onSuccess: () => invalidateStructure(qc, courseId),
+  });
+}
+
+export function useReorderInstructorStructure(courseId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { moduleOrder: string[]; lessonsByModule: Record<string, string[]> }) =>
+      api.reorderInstructorStructure(courseId, input),
+    onSuccess: () => invalidateStructure(qc, courseId),
+  });
+}

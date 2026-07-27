@@ -20,7 +20,12 @@ const envSchema = z
 
     GOOGLE_CLIENT_ID: z.string().default(''),
 
+    /** @deprecated Use OPENROUTER_API_KEY. Kept as fallback for existing deployments. */
     AI_PROVIDER_API_KEY: z.string().default(''),
+    OPENROUTER_API_KEY: z.string().default(''),
+    OPENROUTER_MODEL: z.string().default('anthropic/claude-sonnet-4'),
+    OPENROUTER_APP_URL: z.string().default('http://localhost:3000'),
+    OPENROUTER_APP_NAME: z.string().default('Bina B2C'),
 
     SANDBOX_EXECUTION_PROVIDER: z
       .enum(['docker-local', 'firecracker', 'third-party'])
@@ -52,6 +57,10 @@ const envSchema = z
 
     /** Cookie path prefix (use `/api` when Next.js proxies API on same origin). */
     AUTH_COOKIE_PATH: z.string().default('/api'),
+
+    CLOUDINARY_CLOUD_NAME: z.string().default(''),
+    CLOUDINARY_API_KEY: z.string().default(''),
+    CLOUDINARY_API_SECRET: z.string().default(''),
   })
   // Secrets that are optional in dev/test but MUST be present in production.
   .superRefine((val, ctx) => {
@@ -92,7 +101,11 @@ export const env = {
   jwtAccessSecret: data.JWT_ACCESS_SECRET || (isProd ? '' : 'dev-access-secret'),
   jwtRefreshSecret: data.JWT_REFRESH_SECRET || (isProd ? '' : 'dev-refresh-secret'),
   googleClientId: data.GOOGLE_CLIENT_ID,
-  aiProviderApiKey: data.AI_PROVIDER_API_KEY,
+  aiProviderApiKey: data.OPENROUTER_API_KEY || data.AI_PROVIDER_API_KEY,
+  openRouterApiKey: data.OPENROUTER_API_KEY || data.AI_PROVIDER_API_KEY,
+  openRouterModel: data.OPENROUTER_MODEL,
+  openRouterAppUrl: data.OPENROUTER_APP_URL,
+  openRouterAppName: data.OPENROUTER_APP_NAME,
   sandboxProvider: data.SANDBOX_EXECUTION_PROVIDER,
   sandboxTimeoutMs: data.SANDBOX_EXECUTION_TIMEOUT_MS,
   sandboxMaxMemoryMb: data.SANDBOX_MAX_MEMORY_MB,
@@ -114,4 +127,7 @@ export const env = {
   authCookiePath: data.NODE_ENV === 'test' ? '/' : data.AUTH_COOKIE_PATH,
   authCookieSecure: data.NODE_ENV === 'production',
   authCookieSameSite: 'lax' as const,
+  cloudinaryCloudName: data.CLOUDINARY_CLOUD_NAME,
+  cloudinaryApiKey: data.CLOUDINARY_API_KEY,
+  cloudinaryApiSecret: data.CLOUDINARY_API_SECRET,
 } as const;

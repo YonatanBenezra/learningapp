@@ -286,6 +286,28 @@ h1, h2, h3, h4, h5, h6 {
   50% { opacity: 0.6; }
 }
 
+.course-flow-node-pulse {
+  animation: course-flow-node-pulse 1.6s ease-in-out infinite;
+}
+
+.react-flow__node-structure {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+@keyframes course-flow-node-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary) 0%, transparent);
+  }
+}
+
 @keyframes live-pulse-ring {
   0% {
     transform: scale(1);

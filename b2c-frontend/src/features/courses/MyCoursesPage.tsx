@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useCourses } from '@/src/features/courses';
+import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import {
   CourseCard,
   statusLabel,
@@ -145,16 +146,23 @@ export function MyCoursesPage() {
           <div className="mx-auto grid size-14 place-items-center rounded-xl border border-line bg-primary-soft text-primary">
             <Sparkles className="size-7" />
           </div>
-          <h2 className="mt-4 text-xl font-bold text-ink">No courses enrolled</h2>
+          <h2 className="mt-4 text-xl font-bold text-ink">No courses yet</h2>
           <p className="mx-auto mt-2 max-w-[42ch] text-sm text-ink-2">
-            Create your first course to begin structured learning with modules, lessons, and
-            assessments.
+            Create your own AI course or browse the marketplace to enroll in instructor-led
+            courses.
           </p>
-          <Link href="/create-course" className="mt-6 inline-block">
-            <Button size="lg">
-              <Plus className="size-4" /> Create course
-            </Button>
-          </Link>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link href="/courses">
+              <Button size="lg" variant="soft">
+                Browse courses
+              </Button>
+            </Link>
+            <Link href="/create-course">
+              <Button size="lg">
+                <Plus className="size-4" /> Create course
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -288,7 +296,7 @@ export function MyCoursesPage() {
               >
                 <div className="min-w-0">
                   <Link
-                    href={`/courses/${course.id}`}
+                    href={learnerCoursePath(course.id)}
                     className="font-medium text-ink transition hover:text-primary"
                   >
                     {course.title}
@@ -311,7 +319,7 @@ export function MyCoursesPage() {
                 </div>
                 <div className="sm:text-right">
                   <Link
-                    href={`/courses/${course.id}`}
+                    href={learnerCoursePath(course.id)}
                     className="inline-grid size-8 place-items-center rounded-lg border border-line bg-bg-soft text-ink-3 transition hover:border-primary/20 hover:text-primary"
                   >
                     <ChevronRight className="size-4" />

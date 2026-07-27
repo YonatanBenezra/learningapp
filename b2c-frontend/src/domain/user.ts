@@ -6,10 +6,16 @@ export interface User {
   email: string;
   role: Role;
   tier: Tier;
+  name?: string;
+  imageUrl?: string;
+  address?: string;
+  profession?: string;
+  experience?: string;
   preferences: {
     visualsPreferred: boolean;
     dailyNotification: boolean;
     timezone?: string;
+    aiModel?: string | null;
   };
   streak?: {
     current: number;

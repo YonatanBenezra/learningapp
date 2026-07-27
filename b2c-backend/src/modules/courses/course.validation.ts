@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { optionalAiModel } from '../../common/validation/aiModel';
 
 // Onboarding config (§1.2) that triggers async course generation.
 export const createCourseSchema = z
@@ -8,5 +9,6 @@ export const createCourseSchema = z
     level: z.enum(['beginner', 'intermediate', 'advanced']),
     visualsPreferred: z.boolean().optional(),
     dailyNotification: z.boolean().optional(),
+    aiModel: optionalAiModel,
   })
   .strict();

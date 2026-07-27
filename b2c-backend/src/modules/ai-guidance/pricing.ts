@@ -5,24 +5,21 @@ export interface ModelPricing {
   outputPerMTok: number;
 }
 
-// USD per 1M tokens (Claude pricing reference). Unknown models fall back to Opus 4.8.
+// USD per 1M tokens (OpenRouter reference pricing). Unknown models fall back to Sonnet 4.
 export const MODEL_PRICING: Record<string, ModelPricing> = {
-  'claude-opus-4-8': { inputPerMTok: 5, outputPerMTok: 25 },
-  'claude-opus-4-7': { inputPerMTok: 5, outputPerMTok: 25 },
-  'claude-sonnet-5': { inputPerMTok: 3, outputPerMTok: 15 },
-  'claude-haiku-4-5': { inputPerMTok: 1, outputPerMTok: 5 },
-  'claude-fable-5': { inputPerMTok: 10, outputPerMTok: 50 },
+  'anthropic/claude-opus-4': { inputPerMTok: 15, outputPerMTok: 75 },
+  'anthropic/claude-sonnet-4': { inputPerMTok: 3, outputPerMTok: 15 },
+  'anthropic/claude-haiku-4': { inputPerMTok: 0.8, outputPerMTok: 4 },
+  'openai/gpt-4o': { inputPerMTok: 2.5, outputPerMTok: 10 },
+  'openai/gpt-4o-mini': { inputPerMTok: 0.15, outputPerMTok: 0.6 },
+  'google/gemini-2.5-pro-preview': { inputPerMTok: 1.25, outputPerMTok: 10 },
 };
 
-const FALLBACK = MODEL_PRICING['claude-opus-4-8'];
+const FALLBACK = MODEL_PRICING['anthropic/claude-sonnet-4'];
 
 export function estimateCostUsd(model: string, usage: AiUsage): number {
   const pricing = MODEL_PRICING[model] ?? FALLBACK;
   const input = (usage.inputTokens / 1_000_000) * pricing.inputPerMTok;
   const output = (usage.outputTokens / 1_000_000) * pricing.outputPerMTok;
-  // Cache reads bill ~0.1x, cache writes ~1.25x of input price.
-  const cacheRead = ((usage.cacheReadInputTokens ?? 0) / 1_000_000) * pricing.inputPerMTok * 0.1;
-  const cacheWrite =
-    ((usage.cacheCreationInputTokens ?? 0) / 1_000_000) * pricing.inputPerMTok * 1.25;
-  return input + output + cacheRead + cacheWrite;
+  return input + output;
 }

@@ -1,8 +1,9 @@
-// Central AI tuning. Default model is Claude Opus 4.8 — do not downgrade without
-// an explicit product decision (§15.3 provider/cost). Retry is owned by AiClient,
-// so the provider's own SDK retries are disabled.
+import { env } from '../../config/env';
+
+// Central AI tuning. Default model is configured via OPENROUTER_MODEL.
+// Retry is owned by AiClient — the provider does not retry internally.
 export const AI_CONFIG = {
-  defaultModel: 'claude-opus-4-8',
+  defaultModel: env.openRouterModel,
   defaultMaxTokens: 8000,
   timeoutMs: 120_000,
   maxRetries: 2,

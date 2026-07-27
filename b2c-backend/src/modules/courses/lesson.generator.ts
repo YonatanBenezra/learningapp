@@ -1,27 +1,14 @@
-import { z } from 'zod';
 import { getAiClient } from '../ai-guidance/ai.client';
+import { RawAiJsonSchema } from '../ai-guidance/aiJson.schema';
 import { LESSON_CONTENT_SYSTEM_PROMPT, buildLessonContentPrompt } from '../ai-guidance/prompts/lesson.prompts';
+import { parseGeneratedLessonContent } from './lesson.normalize';
 
-export const GeneratedLessonVisualSchema = z.object({
-  type: z.enum(['diagram', 'timeline', 'comparison', 'flowchart', 'infographic']),
-  title: z.string().min(1),
-  description: z.string().min(40),
-  elements: z.array(z.string().min(1)).min(2).max(8).optional(),
-});
-
-export const GeneratedLessonSectionSchema = z.object({
-  title: z.string().min(1),
-  body: z.string().min(180),
-  visual: GeneratedLessonVisualSchema.optional(),
-});
-
-export const GeneratedLessonContentSchema = z.object({
-  summary: z.string().min(80),
-  sections: z.array(GeneratedLessonSectionSchema).min(4).max(6),
-  keyPoints: z.array(z.string().min(1)).min(4).max(8),
-});
-
-export type GeneratedLessonContent = z.infer<typeof GeneratedLessonContentSchema>;
+export {
+  GeneratedLessonVisualSchema,
+  GeneratedLessonSectionSchema,
+  GeneratedLessonContentSchema,
+  type GeneratedLessonContent,
+} from './lesson.schemas';
 
 export interface LessonContentInput {
   courseTitle: string;
@@ -32,32 +19,28 @@ export interface LessonContentInput {
   level: 'beginner' | 'intermediate' | 'advanced';
   visualsPreferred: boolean;
   userId?: string | null;
+  aiModel?: string | null;
 }
 
-export type LessonContentGenerator = (input: LessonContentInput) => Promise<GeneratedLessonContent>;
-
-function schemaForInput(input: LessonContentInput) {
-  if (!input.visualsPreferred) return GeneratedLessonContentSchema;
-
-  return GeneratedLessonContentSchema.superRefine((data, ctx) => {
-    const withVisual = data.sections.filter((section) => section.visual).length;
-    if (withVisual < 2) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'At least 2 sections must include a visual when visualsPreferred is true',
-        path: ['sections'],
-      });
-    }
-  });
-}
+export type LessonContentGenerator = (input: LessonContentInput) => Promise<
+  import('./lesson.schemas').GeneratedLessonContent
+>;
 
 export const generateLessonContent: LessonContentGenerator = async (input) => {
   const prompt = buildLessonContentPrompt(input);
-  const schema = schemaForInput(input);
 
   const result = await getAiClient().completeStructured(
-    { system: LESSON_CONTENT_SYSTEM_PROMPT, prompt, useCase: 'lesson', userId: input.userId ?? null },
-    schema,
+    {
+      system: LESSON_CONTENT_SYSTEM_PROMPT,
+      prompt,
+      useCase: 'lesson',
+      userId: input.userId ?? null,
+      model: input.aiModel ?? undefined,
+    },
+    RawAiJsonSchema,
   );
-  return result.data;
+  return parseGeneratedLessonContent(result.data, {
+    visualsPreferred: input.visualsPreferred,
+    lessonTitle: input.lessonTitle,
+  });
 };

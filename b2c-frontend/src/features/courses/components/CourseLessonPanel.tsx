@@ -61,7 +61,7 @@ export function CourseLessonPanel({
 
   if (lessonQ.isLoading) {
     return (
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="p-6">
         <Skeleton className="h-6 w-48" />
         <Skeleton className="mt-4 h-10 w-2/3" />
         <Skeleton className="mt-6 h-64 w-full rounded-xl" />
@@ -71,7 +71,7 @@ export function CourseLessonPanel({
 
   if (lessonQ.isError || !lessonQ.data) {
     return (
-      <div className="flex flex-1 items-center justify-center p-6">
+      <div className="flex items-center justify-center p-6">
         <div className="rounded-xl border border-line bg-bg-soft p-8 text-center">
           <p className="font-medium text-ink">Unable to load this lesson.</p>
           <p className="mt-1 text-sm text-ink-2">Select another item from the module list.</p>
@@ -85,7 +85,7 @@ export function CourseLessonPanel({
   const labMeta = moduleDomain ? resolveLabForDomain(moduleDomain) : null;
 
   return (
-    <div className="flex-1 overflow-y-auto p-5 sm:p-6 lg:p-8">
+    <div className="p-5 sm:p-6 lg:p-8">
       <div className="w-full">
         <div className="flex flex-wrap items-center gap-2">
           {moduleTitle ? (

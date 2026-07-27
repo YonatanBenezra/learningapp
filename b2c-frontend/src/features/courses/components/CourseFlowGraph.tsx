@@ -3,74 +3,27 @@
 import { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Background, Controls, MiniMap, ReactFlow, type Edge, type Node } from '@xyflow/react';
+import { Background, Controls, ReactFlow, type Node } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { useCourseStructure } from '@/src/features/courses';
-
-const COL = 280;
-const nodeBase = { width: 220, borderRadius: 12, padding: 10, fontSize: 13 } as const;
+import { buildCourseFlowGraph } from '@/src/features/courses/courseFlowLayout';
 
 export default function CourseFlowGraph({ courseId }: { courseId: string }) {
   const router = useRouter();
   const { data, isLoading } = useCourseStructure(courseId);
   const status = data?.course.status;
 
-  const { nodes, edges } = useMemo(() => {
-    const modules = data?.modules ?? [];
-    const ns: Node[] = [];
-    const es: Edge[] = [];
-    const centerX = ((Math.max(modules.length, 1) - 1) * COL) / 2;
-
-    ns.push({
-      id: 'course',
-      position: { x: centerX, y: 0 },
-      data: { label: data?.course.title ?? 'Course' },
-      style: {
-        ...nodeBase,
-        background: 'var(--primary)',
-        color: 'var(--primary-ink)',
-        border: 'none',
-        fontWeight: 700,
-      },
-    });
-
-    modules.forEach((m, i) => {
-      const mid = `m-${m.id}`;
-      ns.push({
-        id: mid,
-        position: { x: i * COL, y: 170 },
-        data: { label: `${String(i + 1).padStart(2, '0')} · ${m.title}` },
-        style: {
-          ...nodeBase,
-          background: 'var(--primary-soft)',
-          color: 'var(--primary)',
-          border: '1px solid var(--primary)',
-          fontWeight: 600,
-        },
-      });
-      es.push({ id: `e-course-${mid}`, source: 'course', target: mid });
-
-      m.lessons.forEach((l, j) => {
-        const lid = `l-${l.id}`;
-        ns.push({
-          id: lid,
-          position: { x: i * COL, y: 320 + j * 76 },
-          data: { label: l.title, href: `/lesson/${l.id}` },
-          style: {
-            ...nodeBase,
-            background: 'var(--bg-elev)',
-            color: 'var(--ink)',
-            border: '1px solid var(--line-2)',
-            cursor: 'pointer',
-          },
-        });
-        es.push({ id: `e-${mid}-${lid}`, source: mid, target: lid });
-      });
-    });
-
-    return { nodes: ns, edges: es };
-  }, [data]);
+  const { nodes, edges } = useMemo(
+    () =>
+      buildCourseFlowGraph({
+        courseTitle: data?.course.title ?? 'Course',
+        modules: data?.modules ?? [],
+        lessonHref: (lessonId) => `/lesson/${lessonId}`,
+      }),
+    [data],
+  );
 
   const onNodeClick = useCallback(
     (_: unknown, node: Node) => {
@@ -93,7 +46,7 @@ export default function CourseFlowGraph({ courseId }: { courseId: string }) {
       <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
         <p className="text-ink-2">This course isn&rsquo;t ready to explore yet.</p>
         <Link
-          href={`/courses/${courseId}`}
+          href={learnerCoursePath(courseId)}
           className="text-sm font-semibold text-primary hover:underline"
         >
           Back to course
@@ -105,8 +58,8 @@ export default function CourseFlowGraph({ courseId }: { courseId: string }) {
   return (
     <div className="relative h-full w-full">
       <Link
-        href={`/courses/${courseId}`}
-        className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-lg border border-line bg-bg-elev px-3 py-2 text-sm font-medium text-ink shadow-soft hover:text-primary"
+        href={learnerCoursePath(courseId)}
+        className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-lg border border-line bg-bg-elev px-3 py-2 text-sm font-medium text-ink hover:text-primary"
       >
         <ArrowLeft className="size-4" /> Course
       </Link>
@@ -119,10 +72,10 @@ export default function CourseFlowGraph({ courseId }: { courseId: string }) {
         nodesDraggable={false}
         nodesConnectable={false}
         minZoom={0.2}
+        proOptions={{ hideAttribution: true }}
       >
         <Background color="var(--line-2)" gap={20} />
         <Controls showInteractive={false} />
-        <MiniMap pannable zoomable />
       </ReactFlow>
     </div>
   );

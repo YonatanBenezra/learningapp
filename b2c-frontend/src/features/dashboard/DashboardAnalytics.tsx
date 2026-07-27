@@ -22,6 +22,7 @@ import { useMyExams, useMyQuizzes } from '@/src/features/assessments/useAssessme
 import { useTranslation } from '@/src/i18n';
 import { useTheme } from '@/src/providers';
 import { cn } from '@/src/lib/utils';
+import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 
 type ActivityItem =
   | { kind: 'quiz'; item: QuizHistoryItem }
@@ -369,7 +370,7 @@ export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
               <p className="text-xs text-ink-3">{course.category}</p>
             </div>
             <Link
-              href={`/courses/${course.id}`}
+              href={learnerCoursePath(course.id)}
               className="grid size-8 shrink-0 place-items-center rounded-full border border-line text-ink-3 transition hover:bg-primary-soft hover:text-primary"
             >
               <ArrowRight className="size-4" />

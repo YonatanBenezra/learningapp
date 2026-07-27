@@ -28,7 +28,7 @@ export interface AiStructuredResult<T> {
   stopReason: string | null;
 }
 
-// Provider-agnostic seam (§2.5.1). Swap AnthropicProvider for another provider
+// Provider-agnostic seam (§2.5.1). Swap OpenRouterProvider for another provider
 // without touching callers or the AiClient.
 export interface AiProvider {
   generateText(req: AiGenerateRequest): Promise<AiTextResult>;

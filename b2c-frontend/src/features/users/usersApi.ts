@@ -1,11 +1,20 @@
 import { config } from '@/src/config/env';
-import { apiClient } from '@/src/infrastructure/apiClient';
+import { apiClient, ApiError } from '@/src/infrastructure/apiClient';
 import type { User } from '@/src/domain/user';
 
 export interface UpdatePreferencesInput {
   visualsPreferred?: boolean;
   dailyNotification?: boolean;
   timezone?: string;
+  aiModel?: string | null;
+}
+
+export interface UpdateProfileInput {
+  name?: string;
+  imageUrl?: string;
+  address?: string;
+  profession?: string;
+  experience?: string;
 }
 
 export function updatePreferences(input: UpdatePreferencesInput): Promise<{ user: User }> {
@@ -13,6 +22,36 @@ export function updatePreferences(input: UpdatePreferencesInput): Promise<{ user
     method: 'PATCH',
     body: JSON.stringify(input),
   });
+}
+
+export function updateProfile(input: UpdateProfileInput): Promise<{ user: User }> {
+  return apiClient<{ user: User }>('/users/me/profile', {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
+}
+
+export async function uploadProfileAvatar(file: File): Promise<{ user: User }> {
+  const form = new FormData();
+  form.append('avatar', file);
+
+  const res = await fetch(`${config.apiBaseUrl}/users/me/avatar`, {
+    method: 'POST',
+    credentials: 'include',
+    body: form,
+  });
+
+  if (!res.ok) {
+    let body: { error?: string } = {};
+    try {
+      body = (await res.json()) as { error?: string };
+    } catch {
+      /* non-JSON */
+    }
+    throw new ApiError(res.status, body.error ?? res.statusText);
+  }
+
+  return (await res.json()) as { user: User };
 }
 
 export async function exportUserData(): Promise<void> {

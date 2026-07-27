@@ -27,6 +27,8 @@ export interface LessonContent {
 export interface GetLessonResponse {
   lesson: Lesson & { courseId: string; content: LessonContent | null };
   progress: LessonProgress | null;
+  canEditContent?: boolean;
+  instructorCourseId?: string | null;
 }
 
 export interface CompleteLessonResult {

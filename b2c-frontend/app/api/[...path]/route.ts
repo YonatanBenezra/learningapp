@@ -54,6 +54,13 @@ async function proxy(req: NextRequest, context: { params: Promise<{ path: string
     responseHeaders.append('Set-Cookie', cookie);
   }
 
+  if (upstream.status === 204 || upstream.status === 205) {
+    return new NextResponse(null, {
+      status: upstream.status,
+      headers: responseHeaders,
+    });
+  }
+
   return new NextResponse(upstream.body, {
     status: upstream.status,
     statusText: upstream.statusText,

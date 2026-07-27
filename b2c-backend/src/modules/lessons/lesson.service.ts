@@ -1,10 +1,10 @@
 import { Types } from 'mongoose';
 import { Lesson } from './lesson.model';
-import { Course } from '../courses/course.model';
 import { User } from '../users/user.model';
 import { UserLessonProgress } from '../progress/progress.model';
 import { safeAward } from '../gamification/gamification.service';
 import { AppError } from '../../common/errors/AppError';
+import { findAccessibleCourse, isCourseOwner } from '../courses/courseAccess.service';
 
 // Pure daily-streak transition (calendar-day based, UTC). Exported for tests.
 export function nextStreak(
@@ -21,20 +21,35 @@ export function nextStreak(
   return 1; // gap — reset
 }
 
-// Resolves a lesson the user actually owns (lesson -> course -> userId), else 404.
+// Resolves a lesson the user can access (owned course or marketplace enrollment).
 export async function resolveOwnedLesson(userId: string, lessonId: string) {
   if (!Types.ObjectId.isValid(lessonId)) throw new AppError(404, 'Lesson not found');
   const lesson = await Lesson.findById(lessonId);
   if (!lesson) throw new AppError(404, 'Lesson not found');
-  const course = await Course.findOne({ _id: lesson.courseId, userId });
+  const course = await findAccessibleCourse(userId, String(lesson.courseId));
   if (!course) throw new AppError(404, 'Lesson not found');
   return { lesson, course };
 }
 
 export async function getLesson(userId: string, lessonId: string) {
-  const { lesson } = await resolveOwnedLesson(userId, lessonId);
-  const progress = await UserLessonProgress.findOne({ userId, lessonId });
-  return { lesson, progress };
+  const { lesson, course } = await resolveOwnedLesson(userId, lessonId);
+  const [progress, user] = await Promise.all([
+    UserLessonProgress.findOne({ userId, lessonId }),
+    User.findById(userId).select('role').lean(),
+  ]);
+
+  const role = user?.role as string | undefined;
+  const canEditContent =
+    (role === 'instructor' || role === 'admin') &&
+    course.kind === 'marketplace' &&
+    course.status !== 'generating';
+
+  return {
+    lesson,
+    progress,
+    canEditContent,
+    instructorCourseId: canEditContent ? String(course._id) : null,
+  };
 }
 
 export async function startLesson(userId: string, lessonId: string) {
@@ -76,9 +91,18 @@ export async function completeLesson(userId: string, lessonId: string, now: Date
     status: 'completed',
   });
   const progressPercent = total > 0 ? Math.round((done / total) * 100) : 0;
-  course.progressPercent = progressPercent;
-  if (progressPercent >= 100 && course.status === 'ready') course.status = 'completed';
-  await course.save();
+
+  const owner = isCourseOwner(course, userId);
+  let courseStatus = course.status;
+
+  if (owner || course.kind !== 'marketplace') {
+    course.progressPercent = progressPercent;
+    if (progressPercent >= 100 && course.status === 'ready') course.status = 'completed';
+    courseStatus = course.status;
+    await course.save();
+  } else {
+    courseStatus = progressPercent >= 100 ? 'completed' : 'ready';
+  }
 
   // Gamification (§3): award lesson / streak / course-completion achievements.
   // Non-fatal — a gamification failure must never break lesson completion.
@@ -92,5 +116,5 @@ export async function completeLesson(userId: string, lessonId: string, now: Date
     courseCompleted: progressPercent >= 100,
   });
 
-  return { progress, streak, course: { progressPercent, status: course.status }, achievements };
+  return { progress, streak, course: { progressPercent, status: courseStatus }, achievements };
 }

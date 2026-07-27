@@ -1,8 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Loader2, Network } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  CheckCircle2,
+  Filter,
+  Loader2,
+  Network,
+  Search,
+  XCircle,
+} from 'lucide-react';
+import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
+import { Input } from '@/src/components/ui/input';
+import { cn } from '@/src/lib/utils';
 import {
   getNetworkScenario,
   listNetworkScenarios,
@@ -10,6 +20,17 @@ import {
   type NetworkScenario,
   type ScenarioSubmitResult,
 } from '../labsApi';
+import {
+  collectHosts,
+  filterNetworkFlows,
+  parseNetworkFlowLines,
+} from './network/parseNetworkFlows';
+import {
+  NetworkCaptureBanner,
+  NetworkFlowStats,
+  NetworkFlowViewer,
+  NetworkHostList,
+} from './network/NetworkFlowViewer';
 
 export interface ScenarioLabSubmission {
   scenarioId: string;
@@ -23,6 +44,12 @@ function scenarioIdFromStarter(starterState: unknown, fallback: string): string 
     if (typeof s.scenarioId === 'string') return s.scenarioId;
   }
   return fallback;
+}
+
+function difficultyVariant(difficulty: string): 'good' | 'warn' | 'bad' | 'outline' {
+  if (difficulty === 'easy') return 'good';
+  if (difficulty === 'hard') return 'bad';
+  return 'warn';
 }
 
 export function NetworkSimulatorLab({
@@ -44,6 +71,10 @@ export function NetworkSimulatorLab({
   const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [filterQuery, setFilterQuery] = useState('');
+  const [selectedHost, setSelectedHost] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [capturing, setCapturing] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,7 +85,11 @@ export function NetworkSimulatorLab({
         const scenarios = await listNetworkScenarios();
         const id = scenarioIdFromStarter(starterState, scenarios[0]?.id ?? 'port-scan');
         const data = await getNetworkScenario(id);
-        if (!cancelled) setScenario(data);
+        if (!cancelled) {
+          setScenario(data);
+          setVisibleCount(0);
+          setCapturing(true);
+        }
       } catch {
         if (!cancelled) setError('Could not load network scenario.');
       } finally {
@@ -63,6 +98,46 @@ export function NetworkSimulatorLab({
     }
     void load();
   }, [starterState]);
+
+  const allFlows = useMemo(
+    () => (scenario ? parseNetworkFlowLines(scenario.pcapSummary) : []),
+    [scenario],
+  );
+
+  useEffect(() => {
+    if (!scenario || allFlows.length === 0) return;
+    setVisibleCount(0);
+    setCapturing(true);
+    const timers = allFlows.map((_, index) =>
+      window.setTimeout(() => setVisibleCount(index + 1), 450 + index * 420),
+    );
+    const doneTimer = window.setTimeout(() => setCapturing(false), 450 + allFlows.length * 420 + 200);
+    return () => {
+      timers.forEach(clearTimeout);
+      clearTimeout(doneTimer);
+    };
+  }, [scenario, allFlows]);
+
+  const hosts = useMemo(() => collectHosts(allFlows), [allFlows]);
+
+  const flowCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const flow of allFlows) {
+      counts[flow.source] = (counts[flow.source] ?? 0) + 1;
+      counts[flow.destination] = (counts[flow.destination] ?? 0) + 1;
+    }
+    return counts;
+  }, [allFlows]);
+
+  const filteredFlows = useMemo(() => {
+    let flows = allFlows.slice(0, visibleCount);
+    if (selectedHost) {
+      flows = flows.filter(
+        (flow) => flow.source === selectedHost || flow.destination === selectedHost,
+      );
+    }
+    return filterNetworkFlows(flows, filterQuery);
+  }, [allFlows, visibleCount, selectedHost, filterQuery]);
 
   useEffect(() => {
     if (scenario) onChange({ scenarioId: scenario.id, answers, localResult });
@@ -88,8 +163,9 @@ export function NetworkSimulatorLab({
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 rounded-2xl border border-line bg-bg-soft p-8 text-sm text-ink-2">
-        <Loader2 className="size-4 animate-spin" /> Loading network scenario…
+      <div className="flex items-center gap-3 rounded-lg border border-[#2d2d2d] bg-[#1e1e1e] p-8 text-sm text-[#cccccc]">
+        <Loader2 className="size-5 animate-spin text-[#007F8E]" />
+        Initializing network capture interface…
       </div>
     );
   }
@@ -100,56 +176,151 @@ export function NetworkSimulatorLab({
 
   if (!scenario) return null;
 
+  const resultByQuestion = new Map(localResult?.results.map((r) => [r.questionId, r]) ?? []);
+
   return (
-    <div className="flex flex-col gap-5">
-      <div className="rounded-2xl border border-line bg-bg-soft p-5">
-        <div className="flex items-center gap-2 font-semibold text-ink">
-          <Network className="size-5 text-primary" />
-          {scenario.title}
+    <div className="overflow-hidden rounded-lg border border-[#2d2d2d] bg-[#1e1e1e]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2d2d2d] bg-[#252526] px-4 py-3">
+        <div className="flex items-center gap-3">
+          <span className="grid size-9 place-items-center rounded-lg border border-[#007F8E]/30 bg-[#007F8E]/10 text-[#4ec9b0]">
+            <Network className="size-4" />
+          </span>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#858585]">
+              Network simulator
+            </p>
+            <p className="text-sm font-semibold text-[#cccccc]">{scenario.title}</p>
+          </div>
         </div>
-        <p className="mt-2 text-sm text-ink-2">{scenario.description}</p>
+        <Badge variant={difficultyVariant(scenario.difficulty)} className="capitalize">
+          {scenario.difficulty}
+        </Badge>
       </div>
 
-      <div className="rounded-2xl border border-line bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">Flow summary</p>
-        <pre className="mt-3 max-h-56 overflow-auto rounded-xl bg-[#0F172A] p-3 font-mono text-xs leading-6 text-[#E2E8F0]">
-          {scenario.pcapSummary.join('\n')}
-        </pre>
-      </div>
-
-      <div className="rounded-2xl border border-line bg-white p-5">
-        <p className="text-sm font-semibold text-ink">Analysis questions</p>
-        <div className="mt-4 space-y-4">
-          {scenario.questions.map((q) => (
-            <div key={q.id}>
-              <label className="text-sm font-medium text-ink" htmlFor={`net-${q.id}`}>
-                {q.prompt}
-              </label>
-              {q.hint && <p className="mt-1 text-xs text-ink-3">{q.hint}</p>}
-              <input
-                id={`net-${q.id}`}
-                value={answers[q.id] ?? ''}
-                readOnly={readOnly}
-                onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
-                className="mt-2 h-11 w-full rounded-lg border border-line px-3 text-sm outline-none focus:border-primary"
-              />
-            </div>
-          ))}
+      <div className="space-y-4 p-4 sm:p-5">
+        <div className="rounded-lg border border-[#2d2d2d] bg-[#252526] p-4">
+          <p className="text-sm font-medium text-[#cccccc]">{scenario.title}</p>
+          <p className="mt-1 text-sm leading-6 text-[#858585]">{scenario.description}</p>
         </div>
 
-        {!readOnly && (
-          <Button className="mt-5" variant="soft" onClick={() => void checkAnswers()} disabled={checking}>
-            {checking ? <Loader2 className="size-4 animate-spin" /> : 'Check locally'}
-          </Button>
-        )}
+        <NetworkCaptureBanner capturing={capturing} flowCount={visibleCount} />
 
-        {localResult && (
-          <p className="mt-4 text-sm text-ink-2">
-            Local score: <span className="font-semibold text-ink">{localResult.score}%</span> (
-            {localResult.correct}/{localResult.total} correct)
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#858585]" />
+            <Input
+              value={filterQuery}
+              onChange={(e) => setFilterQuery(e.target.value)}
+              placeholder="Filter flows: host 10.0.0.5 · port 22 · SYN"
+              className="h-10 border-[#2d2d2d] bg-[#252526] pl-9 font-mono text-xs text-[#cccccc] placeholder:text-[#6e7681]"
+            />
+          </div>
+          <div className="flex items-center gap-2 text-[11px] text-[#858585]">
+            <Filter className="size-3.5" />
+            BPF-style filters supported
+          </div>
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-[240px_1fr]">
+          <div className="space-y-3">
+            <NetworkHostList
+              hosts={hosts}
+              selectedHost={selectedHost}
+              onSelectHost={setSelectedHost}
+              flowCounts={flowCounts}
+            />
+            <NetworkFlowStats flows={allFlows.slice(0, visibleCount)} />
+          </div>
+
+          <NetworkFlowViewer
+            flows={filteredFlows}
+            visibleCount={filteredFlows.length}
+            selectedHost={selectedHost}
+            onSelectHost={setSelectedHost}
+          />
+        </div>
+
+        <div className="rounded-lg border border-[#2d2d2d] bg-[#252526] p-4 sm:p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#858585]">
+            Raw flow summary
           </p>
-        )}
-        {error && <p className="mt-3 text-sm text-bad">{error}</p>}
+          <pre className="mt-3 max-h-40 overflow-auto rounded-lg border border-[#2d2d2d] bg-[#0d1117] p-3 font-mono text-[12px] leading-6 text-[#e6edf3]">
+            {scenario.pcapSummary.slice(0, visibleCount).join('\n')}
+            {capturing ? '\n… capture running' : ''}
+          </pre>
+        </div>
+
+        <div className="rounded-lg border border-line bg-bg-elev p-4 sm:p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">
+            Analysis worksheet
+          </p>
+          <p className="mt-1 text-sm text-ink-2">
+            Review the flow table, identify suspicious hosts and techniques, then submit your
+            findings.
+          </p>
+
+          <div className="mt-5 space-y-4">
+            {scenario.questions.map((q, index) => {
+              const result = resultByQuestion.get(q.id);
+              return (
+                <div key={q.id} className="rounded-lg border border-line bg-bg-soft/50 p-4">
+                  <label className="text-sm font-medium text-ink" htmlFor={`net-${q.id}`}>
+                    {index + 1}. {q.prompt}
+                  </label>
+                  {q.hint ? <p className="mt-1 text-xs text-ink-3">{q.hint}</p> : null}
+                  <input
+                    id={`net-${q.id}`}
+                    value={answers[q.id] ?? ''}
+                    readOnly={readOnly}
+                    onChange={(e) =>
+                      setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))
+                    }
+                    className={cn(
+                      'mt-2 h-11 w-full rounded-lg border bg-bg-elev px-3 font-mono text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
+                      result?.correct && 'border-good/40',
+                      result && !result.correct && 'border-bad/40',
+                    )}
+                  />
+                  {result ? (
+                    <p
+                      className={cn(
+                        'mt-2 flex items-center gap-1.5 text-xs font-medium',
+                        result.correct ? 'text-good' : 'text-bad',
+                      )}
+                    >
+                      {result.correct ? (
+                        <>
+                          <CheckCircle2 className="size-3.5" /> Correct
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="size-3.5" /> Incorrect — review the flow table
+                        </>
+                      )}
+                    </p>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+
+          {!readOnly ? (
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <Button onClick={() => void checkAnswers()} disabled={checking}>
+                {checking ? <Loader2 className="size-4 animate-spin" /> : 'Validate analysis'}
+              </Button>
+              {localResult ? (
+                <p className="text-sm text-ink-2">
+                  Score:{' '}
+                  <span className="font-semibold text-ink">{localResult.score}%</span> (
+                  {localResult.correct}/{localResult.total} correct)
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
+          {error ? <p className="mt-3 text-sm text-bad">{error}</p> : null}
+        </div>
       </div>
     </div>
   );

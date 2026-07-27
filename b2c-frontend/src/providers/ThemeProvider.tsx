@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useLayoutEffect, useSyncExternalStore } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -12,9 +12,7 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-// Read the current theme from the DOM (the source of truth — set by the head
-// script and updated on toggle). useSyncExternalStore keeps React in sync without
-// a setState-in-effect.
+// Read the current theme from the DOM (source of truth — synced on mount and toggle).
 function subscribe(onChange: () => void): () => void {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -28,6 +26,17 @@ function getServerSnapshot(): Theme {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  useLayoutEffect(() => {
+    try {
+      const stored = localStorage.getItem('abc-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = stored ? stored === 'dark' : prefersDark;
+      document.documentElement.classList.toggle('dark', dark);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const setTheme = useCallback((t: Theme) => {

@@ -35,12 +35,13 @@ export async function issueTokenPair(
   return { accessToken, refreshToken };
 }
 
-export async function signup(input: { email: string; password: string }) {
+export async function signup(input: { email: string; password: string; name?: string }) {
   const email = input.email.toLowerCase().trim();
   const existing = await User.findOne({ email });
   if (existing) throw new AppError(409, 'Email already registered');
   const passwordHash = await bcrypt.hash(input.password, SALT_ROUNDS);
-  const user = await User.create({ email, passwordHash });
+  const name = input.name?.trim() ?? '';
+  const user = await User.create({ email, passwordHash, name });
   await getOrCreateSubscription(String(user._id));
   const tokens = await issueTokenPair({ userId: String(user._id), role: user.role, tier: user.tier });
   return { user, ...tokens };

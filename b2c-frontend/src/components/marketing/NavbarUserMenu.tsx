@@ -9,15 +9,7 @@ import { defaultDashboardPath } from '@/src/features/auth/dashboardRoutes';
 import { useAuthStore } from '@/src/store/authStore';
 import type { Tier } from '@/src/domain/user';
 import { cn } from '@/src/lib/utils';
-
-function userDisplayName(email?: string) {
-  if (!email) return 'User';
-  const raw = email.split('@')[0] ?? 'User';
-  const word = raw.split(/[._-]/)[0] ?? raw;
-  const name = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  const maxLen = 10;
-  return name.length <= maxLen ? name : `${name.slice(0, maxLen)}…`;
-}
+import { getUserAvatarProps, getUserDisplayName } from '@/src/lib/userDisplay';
 
 function tierLabel(tier?: Tier) {
   if (tier === 'premium') return 'Premium';
@@ -44,14 +36,15 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
     return null;
   }
 
-  const name = userDisplayName(user.email);
+  const name = getUserDisplayName(user, { compact: true });
+  const avatar = getUserAvatarProps(user);
   const dashboardHref = defaultDashboardPath(user.role);
 
   if (compact) {
     return (
       <div className="space-y-3 border-t border-bg-soft pt-5">
         <div className="flex items-center gap-3">
-          <Avatar name={user.email} className="size-11" />
+          <Avatar {...avatar} className="size-11" />
           <div className="min-w-0">
             <p className="truncate text-sm font-bold text-ink">{name}</p>
             <p className="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-primary">
@@ -94,7 +87,7 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
         className="relative grid size-11 place-items-center rounded-full border border-line-2 transition-opacity hover:opacity-85"
         aria-label="Open dashboard"
       >
-        <Avatar name={user.email} className="size-11 border-0" />
+        <Avatar {...avatar} className="size-11 border-0" />
       </Link>
       <span className="flex max-w-[120px] flex-col leading-tight">
         <Link

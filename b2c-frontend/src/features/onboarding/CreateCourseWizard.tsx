@@ -7,10 +7,15 @@ import {
   ArrowLeft,
   ArrowRight,
   BarChart3,
+  BookOpen,
   Brain,
   Check,
+  CheckCircle2,
+  Circle,
+  Clock,
   Cloud,
   Code2,
+  GraduationCap,
   Loader2,
   Network,
   ShieldCheck,
@@ -23,9 +28,12 @@ import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Switch } from '@/src/components/ui/switch';
 import { ApiError } from '@/src/infrastructure/apiClient';
+import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { useCreateCourse, useCourse, useCourses } from '@/src/features/courses';
 import type { CourseLevel } from '@/src/domain/course';
 import { readLearningPathPrefill } from '@/src/features/learning-path/learningPathRecommendation';
+import { AiModelField } from '@/src/features/ai/AiModelField';
+import { useMe } from '@/src/features/auth';
 import { useAuthStore } from '@/src/store/authStore';
 import { activeCourseLimitForTier } from '@/src/constants/tierLimits';
 import { cn } from '@/src/lib/utils';
@@ -115,10 +123,12 @@ export function CreateCourseWizard() {
   const [level, setLevel] = useState<CourseLevel | null>(prefill?.courseLevel ?? null);
   const [visualsPreferred, setVisualsPreferred] = useState(true);
   const [dailyNotification, setDailyNotification] = useState(false);
+  const [aiModel, setAiModel] = useState('');
   const [createdId, setCreatedId] = useState<string | null>(null);
   const [autoTriggered, setAutoTriggered] = useState(false);
 
   const create = useCreateCourse();
+  const meQ = useMe();
   const { data: coursesData } = useCourses();
   const tier = useAuthStore((s) => s.user?.tier ?? 'free');
   const activeCourseLimit = activeCourseLimitForTier(tier);
@@ -129,6 +139,10 @@ export function CreateCourseWizard() {
   );
 
   const atCourseLimit = activeCourseLimit !== null && activeCourseCount >= activeCourseLimit;
+
+  useEffect(() => {
+    setAiModel(meQ.data?.user.preferences.aiModel ?? '');
+  }, [meQ.data?.user.preferences.aiModel]);
 
   useEffect(() => {
     if (!autoStart || autoTriggered || createdId || !level || !category.trim() || topics.length === 0) {
@@ -142,6 +156,7 @@ export function CreateCourseWizard() {
         level,
         visualsPreferred,
         dailyNotification,
+        aiModel: aiModel.trim() || null,
       },
       { onSuccess: (data) => setCreatedId(data.course.id) },
     );
@@ -157,14 +172,21 @@ export function CreateCourseWizard() {
   function submit() {
     if (!level) return;
     create.mutate(
-      { category: category.trim(), topics, level, visualsPreferred, dailyNotification },
+      {
+        category: category.trim(),
+        topics,
+        level,
+        visualsPreferred,
+        dailyNotification,
+        aiModel: aiModel.trim() || null,
+      },
       { onSuccess: (data) => setCreatedId(data.course.id) },
     );
   }
 
   if (createdId) {
     return (
-      <CreateCoursePageShell>
+      <CreateCoursePageShell centered>
         <GeneratingPanel id={createdId} onRetry={() => setCreatedId(null)} />
       </CreateCoursePageShell>
     );
@@ -172,10 +194,11 @@ export function CreateCourseWizard() {
 
   if (autoStart && prefill && (create.isPending || autoTriggered)) {
     return (
-      <CreateCoursePageShell>
+      <CreateCoursePageShell centered>
         <StatusPanel
           title="Creating your personalized course"
           description={`${prefill.topicLabel} · ${prefill.skillLevel} track — generating modules from your assessment results.`}
+          topicLabel={prefill.topicLabel}
         />
       </CreateCoursePageShell>
     );
@@ -248,6 +271,8 @@ export function CreateCourseWizard() {
                 setVisualsPreferred={setVisualsPreferred}
                 dailyNotification={dailyNotification}
                 setDailyNotification={setDailyNotification}
+                aiModel={aiModel}
+                setAiModel={setAiModel}
                 errorMsg={errorMsg}
                 is403={create.error instanceof ApiError && create.error.status === 403}
               />
@@ -287,8 +312,217 @@ export function CreateCourseWizard() {
   );
 }
 
-function CreateCoursePageShell({ children }: { children: React.ReactNode }) {
-  return <div className="w-full p-4 sm:p-6 lg:p-8 xl:px-10">{children}</div>;
+function CreateCoursePageShell({
+  children,
+  centered = false,
+}: {
+  children: React.ReactNode;
+  centered?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        'w-full p-4 sm:p-6 lg:p-8 xl:px-10',
+        centered && 'flex min-h-[calc(100dvh-4rem)] items-center py-8',
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+const COURSE_GENERATION_PHASES = [
+  {
+    label: 'Structuring modules',
+    detail: 'Organizing topics into a clear learning path',
+  },
+  {
+    label: 'Writing lesson content',
+    detail: 'Generating explanations, examples, and summaries',
+  },
+  {
+    label: 'Preparing quizzes and assessments',
+    detail: 'Building knowledge checks for each module',
+  },
+  {
+    label: 'Finalizing course structure',
+    detail: 'Linking lessons, labs, exams, and progress tracking',
+  },
+] as const;
+
+function GenerationProgressBar({ progress }: { progress: number }) {
+  return (
+    <div className="mt-8">
+      <div className="mb-2 flex items-center justify-between text-xs font-medium text-ink-3">
+        <span>Generation progress</span>
+        <span className="tabular-nums text-primary">{progress}%</span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-line/70">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-primary to-primary-2 transition-[width] duration-700 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function GenerationHero({
+  eyebrow,
+  title,
+  description,
+  progress,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  progress?: number;
+}) {
+  return (
+    <div className="relative border-b border-line bg-gradient-to-br from-primary/[0.12] via-bg-elev to-bg-soft px-6 py-8 sm:px-10 sm:py-10 lg:px-12">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-16 -top-16 size-52 rounded-full bg-primary/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-20 left-1/4 size-40 rounded-full bg-primary/5 blur-3xl"
+      />
+
+      <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
+        <div className="min-w-0">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+            <Sparkles className="size-3" />
+            {eyebrow}
+          </span>
+          <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h1>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-2 sm:text-base">{description}</p>
+          {typeof progress === 'number' ? <GenerationProgressBar progress={progress} /> : null}
+        </div>
+
+        <div className="grid size-[4.5rem] shrink-0 place-items-center rounded-lg border border-primary/20 bg-bg-elev sm:size-20">
+          <Loader2 className="size-8 animate-spin text-primary sm:size-9" strokeWidth={2} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GenerationPhaseList({ activePhase }: { activePhase: number }) {
+  return (
+    <ul className="divide-y divide-line border-b border-line lg:border-b-0 lg:border-r">
+      {COURSE_GENERATION_PHASES.map((phase, index) => {
+        const done = index < activePhase;
+        const active = index === activePhase;
+
+        return (
+          <li
+            key={phase.label}
+            className={cn(
+              'flex items-start gap-3 px-6 py-4 sm:px-8',
+              active && 'bg-primary/[0.04]',
+            )}
+          >
+            <span
+              className={cn(
+                'mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg border',
+                done && 'border-good/30 bg-good-soft text-good',
+                active && 'border-primary/30 bg-primary/10 text-primary',
+                !done && !active && 'border-line bg-bg-soft text-ink-3',
+              )}
+            >
+              {done ? (
+                <CheckCircle2 className="size-4" />
+              ) : active ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Circle className="size-3.5" />
+              )}
+            </span>
+            <div className="min-w-0">
+              <p className={cn('text-sm font-medium', active ? 'text-ink' : 'text-ink-2')}>
+                {phase.label}
+              </p>
+              <p className="mt-0.5 text-xs leading-5 text-ink-3">{phase.detail}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function GenerationExpectations({
+  courseTitle,
+  category,
+  level,
+  topics,
+}: {
+  courseTitle?: string;
+  category?: string;
+  level?: string;
+  topics?: string[];
+}) {
+  return (
+    <aside className="bg-bg-soft/60 px-6 py-6 sm:px-8 sm:py-7">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-3">
+        What we&apos;re building
+      </p>
+      <dl className="mt-4 space-y-4 text-sm">
+        {courseTitle ? (
+          <div>
+            <dt className="text-ink-3">Course</dt>
+            <dd className="mt-1 font-medium text-ink">{courseTitle}</dd>
+          </div>
+        ) : null}
+        {category ? (
+          <div>
+            <dt className="text-ink-3">Subject</dt>
+            <dd className="mt-1 font-medium text-ink">{category}</dd>
+          </div>
+        ) : null}
+        {level ? (
+          <div>
+            <dt className="text-ink-3">Skill level</dt>
+            <dd className="mt-1 capitalize text-ink-2">{level}</dd>
+          </div>
+        ) : null}
+        {topics && topics.length > 0 ? (
+          <div>
+            <dt className="text-ink-3">Topics</dt>
+            <dd className="mt-2 flex flex-wrap gap-2">
+              {topics.slice(0, 4).map((topic) => (
+                <span
+                  key={topic}
+                  className="rounded-full border border-line bg-bg-elev px-2.5 py-0.5 text-xs text-ink-2"
+                >
+                  {topic}
+                </span>
+              ))}
+            </dd>
+          </div>
+        ) : null}
+        <div>
+          <dt className="text-ink-3">Estimated time</dt>
+          <dd className="mt-1 flex items-center gap-1.5 text-ink-2">
+            <Clock className="size-3.5 text-primary" />
+            About 10–15 seconds
+          </dd>
+        </div>
+        <div>
+          <dt className="text-ink-3">Includes</dt>
+          <dd className="mt-2 space-y-2 text-ink-2">
+            <span className="flex items-center gap-2">
+              <BookOpen className="size-3.5 shrink-0 text-primary" /> Structured modules & lessons
+            </span>
+            <span className="flex items-center gap-2">
+              <GraduationCap className="size-3.5 shrink-0 text-primary" /> Quizzes and final exam
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </aside>
+  );
 }
 
 function NoticeBanner({
@@ -565,6 +799,8 @@ function StepReview({
   setVisualsPreferred,
   dailyNotification,
   setDailyNotification,
+  aiModel,
+  setAiModel,
   errorMsg,
   is403,
 }: {
@@ -575,6 +811,8 @@ function StepReview({
   setVisualsPreferred: (v: boolean) => void;
   dailyNotification: boolean;
   setDailyNotification: (v: boolean) => void;
+  aiModel: string;
+  setAiModel: (v: string) => void;
   errorMsg: string | null;
   is403: boolean;
 }) {
@@ -626,6 +864,7 @@ function StepReview({
           checked={dailyNotification}
           onChange={setDailyNotification}
         />
+        <AiModelField className="border border-line bg-bg-soft px-4 py-3" value={aiModel} onChange={setAiModel} compact />
       </div>
 
       {errorMsg ? (
@@ -671,14 +910,22 @@ function PreferenceCard({
   );
 }
 
-function StatusPanel({ title, description }: { title: string; description: string }) {
+function StatusPanel({
+  title,
+  description,
+  topicLabel,
+}: {
+  title: string;
+  description: string;
+  topicLabel?: string;
+}) {
   return (
-    <div className="mx-auto w-full max-w-xl border border-line bg-bg-elev px-6 py-12 text-center">
-      <div className="mx-auto grid size-14 place-items-center border border-primary/20 bg-primary-soft text-primary">
-        <Loader2 className="size-7 animate-spin" />
+    <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-lg border border-line bg-bg-elev">
+      <GenerationHero eyebrow="Course generation" title={title} description={description} />
+      <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
+        <GenerationPhaseList activePhase={0} />
+        <GenerationExpectations courseTitle={topicLabel} category={topicLabel} />
       </div>
-      <h2 className="mt-6 text-xl font-semibold text-ink">{title}</h2>
-      <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">{description}</p>
     </div>
   );
 }
@@ -687,12 +934,29 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
   const router = useRouter();
   const { data, isError, refetch } = useCourse(id);
   const status = data?.course.status;
+  const course = data?.course;
+  const [activePhase, setActivePhase] = useState(0);
 
   useEffect(() => {
     if (status === 'ready' || status === 'completed') {
-      router.push(`/courses/${id}`);
+      router.push(learnerCoursePath(id));
     }
   }, [status, id, router]);
+
+  useEffect(() => {
+    if (status === 'failed') return;
+    const timers = [
+      window.setTimeout(() => setActivePhase(1), 3500),
+      window.setTimeout(() => setActivePhase(2), 7500),
+      window.setTimeout(() => setActivePhase(3), 11500),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, [status, id]);
+
+  const progress = Math.min(
+    95,
+    Math.round(((activePhase + 1) / COURSE_GENERATION_PHASES.length) * 100),
+  );
 
   if (isError && !status) {
     return (
@@ -718,7 +982,7 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
         tone="bad"
         title="Generation failed"
         description={
-          data?.course.failureReason ?? 'Something went wrong while building your course.'
+          course?.failureReason ?? 'Something went wrong while building your course.'
         }
         actions={
           <>
@@ -732,32 +996,28 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
     );
   }
 
-  const phases = [
-    'Structuring modules',
-    'Writing lesson content',
-    'Preparing quizzes and assessments',
-  ];
-
   return (
-    <div className="mx-auto w-full max-w-xl border border-line bg-bg-elev">
-      <div className="border-b border-line px-6 py-10 text-center">
-        <div className="mx-auto grid size-14 place-items-center border border-primary/20 bg-primary-soft text-primary">
-          <Loader2 className="size-7 animate-spin" />
-        </div>
-        <h2 className="mt-6 text-xl font-semibold text-ink">Generating your course</h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">
-          AIStudy is building modules, lessons, quizzes, and exams. This typically takes 10–15
-          seconds.
-        </p>
+    <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-lg border border-line bg-bg-elev">
+      <GenerationHero
+        eyebrow="Course generation"
+        title="Generating your course"
+        description={
+          course?.title
+            ? `AIStudy is building "${course.title}" with modules, lessons, quizzes, and exams. You will be redirected automatically when it is ready.`
+            : 'AIStudy is building modules, lessons, quizzes, and exams. This typically takes 10–15 seconds.'
+        }
+        progress={progress}
+      />
+
+      <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
+        <GenerationPhaseList activePhase={activePhase} />
+        <GenerationExpectations
+          courseTitle={course?.title}
+          category={course?.category}
+          level={course?.level}
+          topics={course?.topics}
+        />
       </div>
-      <ul className="divide-y divide-line">
-        {phases.map((label) => (
-          <li key={label} className="flex items-center gap-3 px-6 py-3 text-sm text-ink-2">
-            <Loader2 className="size-4 animate-spin text-primary" />
-            {label}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -774,19 +1034,19 @@ function StatusCard({
   actions: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-xl border border-line bg-bg-elev px-6 py-12 text-center">
+    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-lg border border-line bg-bg-elev px-6 py-12 text-center sm:px-10">
       <div
         className={cn(
-          'mx-auto grid size-14 place-items-center border',
+          'mx-auto grid size-16 place-items-center rounded-lg border',
           tone === 'warn'
             ? 'border-warn/30 bg-warn-soft text-warn'
             : 'border-bad/30 bg-bad-soft text-bad',
         )}
       >
-        <X className="size-7" />
+        <X className="size-8" strokeWidth={1.8} />
       </div>
-      <h2 className="mt-6 text-xl font-semibold text-ink">{title}</h2>
-      <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">{description}</p>
+      <h2 className="mt-6 text-2xl font-bold text-ink">{title}</h2>
+      <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-ink-2">{description}</p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">{actions}</div>
     </div>
   );

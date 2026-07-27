@@ -20,6 +20,7 @@ export const messages = {
     dashboard: 'לוח בקרה',
     courses: 'קורסים',
     quizzes: 'חידונים',
+    networkLab: 'מעבדת רשת',
     exams: 'מבחנים',
     assessments: 'הערכות',
     achievements: 'הישגים',
@@ -136,6 +137,10 @@ export const messages = {
     deleteWarning: 'פעולה זו משביתה את החשבון. הנתונים יימחקו לצמיתות לאחר חלון השמירה.',
     deleteConfirm: 'הקלד DELETE לאישור.',
     loadError: 'לא ניתן לטעון הגדרות.',
+    aiModel: 'מודל AI',
+    aiModelHint: 'בחר כל מודל OpenRouter ליצירת קורסים, חידונים והערכות.',
+    aiModelDefault: 'ברירת מחדל של הפלטפורמה',
+    aiModelCustom: 'או הקלד מזהה מודל OpenRouter',
   },
   achievements: {
     title: 'הישגים',

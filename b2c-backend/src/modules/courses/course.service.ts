@@ -4,11 +4,26 @@ import { Course } from './course.model';
 import { Module } from '../modules-content/module.model';
 import { Lesson } from '../lessons/lesson.model';
 import { User } from '../users/user.model';
+import { CourseEnrollment } from '../instructor/courseEnrollment.model';
 import { AppError } from '../../common/errors/AppError';
+import {
+  requireAccessibleCourse,
+  withUserCourseProgress,
+} from './courseAccess.service';
 import { logger } from '../../common/utils/logger';
 import { courseGenerationQueue, jobPriority } from '../../jobs/queue';
 import { generateCourseTree, type CourseTreeGenerator } from './course.generator';
 import { generateLessonContent, type LessonContentGenerator } from './lesson.generator';
+import { AiError } from '../ai-guidance/ai.error';
+
+function formatGenerationFailure(err: unknown): string {
+  if (err instanceof AiError && err.message.includes('schema validation')) {
+    logger.warn({ cause: err.cause }, 'Course generation schema validation failed');
+    return 'We could not build your course from the AI response. Please try again.';
+  }
+  if (err instanceof Error) return err.message;
+  return 'generation failed';
+}
 
 export interface CreateCourseInput {
   category: string;
@@ -16,6 +31,7 @@ export interface CreateCourseInput {
   level: 'beginner' | 'intermediate' | 'advanced';
   visualsPreferred?: boolean;
   dailyNotification?: boolean;
+  aiModel?: string | null;
 }
 
 // Statuses that count against a user's "active course" quota.
@@ -43,6 +59,7 @@ export async function createCourse(userId: string, input: CreateCourseInput) {
     preferences: {
       visualsPreferred: input.visualsPreferred ?? false,
       dailyNotification: input.dailyNotification ?? false,
+      aiModel: input.aiModel?.trim() || null,
     },
     status: 'generating',
     moduleOrder: [],
@@ -59,19 +76,43 @@ export async function createCourse(userId: string, input: CreateCourseInput) {
 }
 
 export async function getCourse(userId: string, courseId: string) {
-  const course = await Course.findOne({ _id: courseId, userId });
-  if (!course) throw new AppError(404, 'Course not found');
-  return course;
+  const course = await requireAccessibleCourse(userId, courseId);
+  const json = course.toJSON() as Record<string, unknown>;
+  return withUserCourseProgress(userId, json);
 }
 
 export async function listCourses(userId: string) {
-  return Course.find({ userId }).sort({ createdAt: -1 });
+  const owned = await Course.find({ userId }).sort({ createdAt: -1 });
+  const enrollments = await CourseEnrollment.find({ studentId: userId, status: 'completed' })
+    .sort({ purchasedAt: -1 })
+    .select('courseId');
+
+  const ownedIds = new Set(owned.map((course) => String(course._id)));
+  const enrolledIds = enrollments
+    .map((enrollment) => String(enrollment.courseId))
+    .filter((id) => !ownedIds.has(id));
+
+  const enrolled =
+    enrolledIds.length > 0 ? await Course.find({ _id: { $in: enrolledIds } }) : [];
+
+  const enrolledById = new Map(enrolled.map((course) => [String(course._id), course]));
+  const orderedEnrolled = enrolledIds
+    .map((id) => enrolledById.get(id))
+    .filter((course): course is NonNullable<typeof course> => Boolean(course));
+
+  const combined = [...owned, ...orderedEnrolled];
+
+  return Promise.all(
+    combined.map(async (course) => {
+      const json = course.toJSON() as Record<string, unknown>;
+      return withUserCourseProgress(userId, json);
+    }),
+  );
 }
 
 // Full Course -> Module -> Lesson tree for React Flow (§1.4). Ordered.
 export async function getStructure(userId: string, courseId: string) {
-  const course = await Course.findOne({ _id: courseId, userId });
-  if (!course) throw new AppError(404, 'Course not found');
+  const course = await requireAccessibleCourse(userId, courseId);
 
   const modules = await Module.find({ courseId: course._id }).sort({ order: 1 });
   const tree = await Promise.all(
@@ -112,13 +153,18 @@ export async function runCourseGeneration(
   if (!course || course.status !== 'generating') return;
 
   try {
-    const prefs = course.preferences as { visualsPreferred?: boolean } | undefined;
+    const prefs = course.preferences as {
+      visualsPreferred?: boolean;
+      aiModel?: string | null;
+    } | undefined;
+    const aiModel = prefs?.aiModel?.trim() || null;
     const tree = await generate({
       category: course.category as string,
       topics: course.topics as unknown as string[],
       level: course.level as 'beginner' | 'intermediate' | 'advanced',
       visualsPreferred: prefs?.visualsPreferred ?? false,
       userId: String(course.userId),
+      aiModel,
     });
 
     const moduleIds: Types.ObjectId[] = [];
@@ -144,6 +190,7 @@ export async function runCourseGeneration(
           level: course.level as 'beginner' | 'intermediate' | 'advanced',
           visualsPreferred: prefs?.visualsPreferred ?? false,
           userId: String(course.userId),
+          aiModel,
         });
         const lesson = await Lesson.create({
           moduleId: mod._id,
@@ -169,7 +216,7 @@ export async function runCourseGeneration(
     logger.info({ courseId, modules: moduleIds.length }, 'Course generation succeeded');
   } catch (err) {
     course.status = 'failed';
-    course.failureReason = err instanceof Error ? err.message : 'generation failed';
+    course.failureReason = formatGenerationFailure(err);
     await course.save();
     logger.error({ err, courseId }, 'Course generation failed');
   }

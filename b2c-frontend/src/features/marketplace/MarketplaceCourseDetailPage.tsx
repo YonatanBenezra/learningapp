@@ -1,0 +1,527 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import {
+  Award,
+  BarChart3,
+  BookOpen,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  ChevronsRight,
+  Clock3,
+  Hash,
+  Layers3,
+  Loader2,
+  Mail,
+  Share2,
+  Sparkles,
+  UserRound,
+} from 'lucide-react';
+import type { MarketplaceCourseDetailResponse } from '@/src/domain/marketplace';
+import { Container } from '@/src/components/marketing/Container';
+import { Badge } from '@/src/components/ui/badge';
+import { Button } from '@/src/components/ui/button';
+import { Skeleton } from '@/src/components/ui/skeleton';
+import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
+import { learnerCoursePath, marketplaceCoursePath } from '@/src/features/auth/learnerRoutes';
+import { useAuthStore } from '@/src/store/authStore';
+import { usePurchaseMarketplaceCourse } from '@/src/features/marketplace';
+import { ApiError } from '@/src/infrastructure/apiClient';
+import { toast } from '@/src/lib/toast';
+import { getUserDisplayName } from '@/src/lib/userDisplay';
+import { cn } from '@/src/lib/utils';
+
+type DetailTab = 'overview' | 'curriculum' | 'instructor';
+
+function MarketplaceCourseDetailSkeleton() {
+  return (
+    <div className="bg-bg-soft pb-16">
+      <Container className="py-6 lg:py-8">
+        <nav aria-hidden="true" className="flex flex-wrap items-center gap-1.5">
+          <Skeleton className="h-4 w-12" />
+          <Skeleton className="size-3.5 rounded-sm" />
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="size-3.5 rounded-sm" />
+          <Skeleton className="h-4 w-40" />
+        </nav>
+
+        <div className="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">
+          <div className="min-w-0">
+            <div className="rounded-lg border border-line bg-bg-elev p-5 sm:p-6">
+              <Skeleton className="h-6 w-24 rounded-md" />
+
+              <Skeleton className="mt-4 h-10 w-full max-w-2xl" />
+              <Skeleton className="mt-2 h-10 w-full max-w-xl" />
+
+              <div className="mt-5 grid gap-4 border-y border-line py-5 sm:grid-cols-2 lg:grid-cols-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="space-y-2">
+                    <Skeleton className="h-3 w-16" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 overflow-hidden rounded-lg border border-line">
+                <div className="flex border-b border-line">
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className="flex min-w-[120px] flex-1 items-center justify-center gap-2 px-4 py-3.5">
+                      <Skeleton className="size-4 rounded-sm" />
+                      <Skeleton className="h-4 w-16" />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-8 p-5 sm:p-6">
+                  <div>
+                    <Skeleton className="h-6 w-36" />
+                    <Skeleton className="mt-3 h-4 w-full" />
+                    <Skeleton className="mt-2 h-4 w-full" />
+                    <Skeleton className="mt-2 h-4 w-5/6" />
+                  </div>
+
+                  <div>
+                    <Skeleton className="h-6 w-40" />
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {Array.from({ length: 4 }).map((_, index) => (
+                        <Skeleton key={index} className="h-12 w-full rounded-lg" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside className="xl:sticky xl:top-24">
+            <div className="rounded-lg border border-line bg-bg-elev p-5 shadow-card sm:p-6">
+              <div className="flex flex-wrap items-end gap-3">
+                <Skeleton className="h-9 w-28" />
+                <Skeleton className="h-5 w-20" />
+                <Skeleton className="h-6 w-16 rounded-md" />
+              </div>
+
+              <Skeleton className="mt-5 h-12 w-full rounded-lg" />
+
+              <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="size-9 rounded-full" />
+              </div>
+
+              <div className="mt-6 border-t border-line pt-5">
+                <Skeleton className="h-4 w-36" />
+                <ul className="mt-4 divide-y divide-line">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <li key={index} className="flex items-center justify-between gap-3 py-3">
+                      <Skeleton className="h-4 w-28" />
+                      <Skeleton className="h-4 w-12" />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <Skeleton className="mt-5 h-16 w-full rounded-lg" />
+            </div>
+          </aside>
+        </div>
+      </Container>
+    </div>
+  );
+}
+
+function formatLevel(level: string): string {
+  return level.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function formatPrice(priceCents: number, currency: string): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency || 'USD',
+  }).format(priceCents / 100);
+}
+
+function moduleLessonCount(modules: MarketplaceCourseDetailResponse['modules']): number {
+  return modules.reduce((total, module) => total + module.lessons.length, 0);
+}
+
+const TABS: { id: DetailTab; label: string; icon: typeof BookOpen }[] = [
+  { id: 'overview', label: 'Overview', icon: BookOpen },
+  { id: 'curriculum', label: 'Curriculum', icon: Layers3 },
+  { id: 'instructor', label: 'Instructor', icon: UserRound },
+];
+
+function MetaItem({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+}) {
+  return (
+    <div className="min-w-0">
+      <p className="text-xs font-medium uppercase tracking-wide text-ink-3">{label}</p>
+      <p className="mt-1 truncate text-sm font-semibold text-ink">{value}</p>
+      {sub ? <p className="mt-0.5 truncate text-xs text-ink-2">{sub}</p> : null}
+    </div>
+  );
+}
+
+function SidebarIncludes({
+  lessonTotal,
+  moduleTotal,
+  level,
+}: {
+  lessonTotal: number;
+  moduleTotal: number;
+  level: string;
+}) {
+  const items = [
+    { icon: BookOpen, label: 'Lessons', value: String(lessonTotal) },
+    { icon: Hash, label: 'Modules', value: String(moduleTotal) },
+    { icon: Clock3, label: 'Access', value: 'Lifetime' },
+    { icon: BarChart3, label: 'Skill level', value: formatLevel(level) },
+    { icon: Award, label: 'Certificate', value: 'On completion' },
+  ];
+
+  return (
+    <div className="mt-6 border-t border-line pt-5">
+      <h3 className="text-sm font-semibold text-ink">This course includes</h3>
+      <ul className="mt-4 divide-y divide-line">
+        {items.map((item) => (
+          <li key={item.label} className="flex items-center justify-between gap-3 py-3 text-sm">
+            <span className="inline-flex items-center gap-2.5 text-ink-2">
+              <item.icon className="size-4 text-ink-3" />
+              {item.label}
+            </span>
+            <span className="font-semibold text-ink">{item.value}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export { MarketplaceCourseDetailSkeleton };
+
+export function MarketplaceCourseDetailPage({
+  data,
+}: {
+  data: MarketplaceCourseDetailResponse;
+}) {
+  const router = useRouter();
+  const hydrated = useAuthHydrated();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const purchase = usePurchaseMarketplaceCourse();
+  const [activeTab, setActiveTab] = useState<DetailTab>('overview');
+  const [openModules, setOpenModules] = useState<Set<string>>(
+    () => new Set(data.modules.slice(0, 1).map((module) => module.id)),
+  );
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
+
+  const { course, modules } = data;
+  const instructor = getUserDisplayName(
+    { name: course.instructorName, email: course.instructorEmail },
+    { fallback: 'Instructor' },
+  );
+  const lessonTotal = course.lessonCount || moduleLessonCount(modules);
+  const moduleTotal = modules.length;
+  const listPriceCents = Math.round(course.priceCents * 1.5);
+  const discount =
+    listPriceCents > course.priceCents
+      ? Math.round(((listPriceCents - course.priceCents) / listPriceCents) * 100)
+      : 0;
+
+  function toggleModule(moduleId: string) {
+    setOpenModules((current) => {
+      const next = new Set(current);
+      if (next.has(moduleId)) next.delete(moduleId);
+      else next.add(moduleId);
+      return next;
+    });
+  }
+
+  function handleEnroll() {
+    if (!hydrated) return;
+    if (!isAuthenticated) {
+      router.push(`/signup?next=${encodeURIComponent(marketplaceCoursePath(course.id))}`);
+      return;
+    }
+
+    setPurchaseError(null);
+    purchase.mutate(course.id, {
+      onSuccess: () => {
+        toast.success(`Enrolled in "${course.title}". Find it in My Courses.`);
+        router.push(learnerCoursePath(course.id));
+      },
+      onError: (error) => {
+        const message =
+          error instanceof ApiError ? error.message : 'Could not complete enrollment.';
+        setPurchaseError(message);
+        toast.error(message);
+      },
+    });
+  }
+
+  function handleShare() {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      void navigator.share({
+        title: course.title,
+        text: course.description,
+        url: window.location.href,
+      });
+      return;
+    }
+    void navigator.clipboard?.writeText(window.location.href);
+  }
+
+  return (
+    <div className="bg-bg-soft pb-16">
+      <Container className="py-6 lg:py-8">
+        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
+          <Link href="/" className="transition hover:text-primary">
+            Home
+          </Link>
+          <ChevronRight className="size-3.5" />
+          <Link href="/courses" className="transition hover:text-primary">
+            Courses
+          </Link>
+          <ChevronRight className="size-3.5" />
+          <span className="line-clamp-1 font-medium text-ink-2">{course.title}</span>
+        </nav>
+
+        <div className="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">
+          <div className="min-w-0">
+            <div className="rounded-lg border border-line bg-bg-elev p-5 sm:p-6">
+              <Badge variant="primary" className="rounded-md uppercase tracking-wide">
+                {course.category}
+              </Badge>
+
+              <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:text-4xl">
+                {course.title}
+              </h1>
+
+              <div className="mt-5 grid gap-4 border-y border-line py-5 sm:grid-cols-2 lg:grid-cols-4">
+                <MetaItem label="Instructor" value={instructor} sub="Course creator" />
+                <MetaItem label="Students" value={String(course.enrollmentCount)} sub="Enrolled learners" />
+                <MetaItem label="Lessons" value={String(lessonTotal)} sub={`${moduleTotal} modules`} />
+                <MetaItem label="Level" value={formatLevel(course.level)} sub="Recommended skill" />
+              </div>
+
+              <div className="mt-5 overflow-hidden rounded-lg border border-line">
+                <div className="flex overflow-x-auto">
+                  {TABS.map((tab) => {
+                    const Icon = tab.icon;
+                    const active = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setActiveTab(tab.id)}
+                        className={cn(
+                          'inline-flex min-w-[120px] flex-1 items-center justify-center gap-2 border-b-2 px-4 py-3.5 text-sm font-semibold transition-colors',
+                          active
+                            ? 'border-primary bg-primary-soft/40 text-primary'
+                            : 'border-transparent text-ink-2 hover:bg-bg-soft hover:text-ink',
+                        )}
+                      >
+                        <Icon className="size-4" />
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="p-5 sm:p-6">
+                  {activeTab === 'overview' ? (
+                    <div className="space-y-8">
+                      <section>
+                        <h2 className="text-lg font-bold text-ink">Course overview</h2>
+                        <p className="mt-3 text-sm leading-7 text-ink-2 sm:text-base">
+                          {course.description ||
+                            'A structured learning path with AI-generated modules, lessons, and practical exercises.'}
+                        </p>
+                      </section>
+
+                      {course.topics.length > 0 ? (
+                        <section>
+                          <h2 className="text-lg font-bold text-ink">What you&apos;ll learn</h2>
+                          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                            {course.topics.map((topic) => (
+                              <li
+                                key={topic}
+                                className="flex items-start gap-2.5 rounded-lg border border-line bg-bg-soft px-3 py-2.5 text-sm leading-6 text-ink-2"
+                              >
+                                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-good" />
+                                <span>{topic}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </section>
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  {activeTab === 'curriculum' ? (
+                    <div>
+                      <div className="flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                          <h2 className="text-lg font-bold text-ink">Course curriculum</h2>
+                          <p className="mt-1 text-sm text-ink-2">
+                            {moduleTotal} modules · {lessonTotal} lessons
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-5 space-y-3">
+                        {modules.map((module, index) => {
+                          const open = openModules.has(module.id);
+                          return (
+                            <div key={module.id} className="overflow-hidden rounded-lg border border-line">
+                              <button
+                                type="button"
+                                onClick={() => toggleModule(module.id)}
+                                className="flex w-full items-center justify-between gap-4 bg-bg-soft px-4 py-4 text-left transition hover:bg-bg"
+                              >
+                                <div className="min-w-0">
+                                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-3">
+                                    Module {index + 1}
+                                  </p>
+                                  <p className="mt-1 font-semibold text-ink">{module.title}</p>
+                                  <p className="mt-1 text-sm text-ink-2">
+                                    {module.lessons.length} lesson
+                                    {module.lessons.length === 1 ? '' : 's'}
+                                  </p>
+                                </div>
+                                <ChevronDown
+                                  className={cn(
+                                    'size-5 shrink-0 text-ink-3 transition-transform',
+                                    open && 'rotate-180',
+                                  )}
+                                />
+                              </button>
+
+                              {open ? (
+                                <ul className="border-t border-line bg-bg-elev">
+                                  {module.lessons.map((lesson, lessonIndex) => (
+                                    <li
+                                      key={lesson.id}
+                                      className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-b-0"
+                                    >
+                                      <span className="grid size-7 place-items-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
+                                        {lessonIndex + 1}
+                                      </span>
+                                      <span className="text-sm text-ink">{lesson.title}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {activeTab === 'instructor' ? (
+                    <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+                      <span className="grid size-16 shrink-0 place-items-center rounded-full bg-primary-soft text-lg font-bold text-primary ring-1 ring-line">
+                        {instructor
+                          .split(' ')
+                          .slice(0, 2)
+                          .map((part) => part[0]?.toUpperCase() ?? '')
+                          .join('')}
+                      </span>
+                      <div className="min-w-0">
+                        <h2 className="text-lg font-bold text-ink">{instructor}</h2>
+                        <p className="mt-1 text-sm text-ink-2">Marketplace instructor</p>
+                        <p className="mt-4 text-sm leading-7 text-ink-2">
+                          Creates structured courses with AI-assisted curriculum design, practical
+                          modules, and learner-focused lesson paths.
+                        </p>
+                        {course.instructorEmail ? (
+                          <p className="mt-4 inline-flex items-center gap-2 text-sm text-ink-2">
+                            <Mail className="size-4 text-ink-3" />
+                            {course.instructorEmail}
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside className="xl:sticky xl:top-24">
+            <div className="rounded-lg border border-line bg-bg-elev p-5 shadow-card sm:p-6">
+              <div className="flex flex-wrap items-end gap-3">
+                  <p className="text-3xl font-bold text-primary">
+                    {formatPrice(course.priceCents, course.currency)}
+                  </p>
+                  {discount > 0 ? (
+                    <>
+                      <p className="text-base text-ink-3 line-through">
+                        {formatPrice(listPriceCents, course.currency)}
+                      </p>
+                      <Badge variant="default" className="rounded-md border-0 bg-secondary text-white">
+                        {discount}% OFF
+                      </Badge>
+                    </>
+                  ) : null}
+                </div>
+
+                <Button
+                  type="button"
+                  className="mt-5 h-12 w-full rounded-lg text-base font-semibold"
+                  onClick={handleEnroll}
+                  disabled={purchase.isPending}
+                >
+                  {purchase.isPending ? (
+                    <Loader2 className="size-5 animate-spin" />
+                  ) : (
+                    <>
+                      {isAuthenticated ? 'Enroll now' : 'Sign up to enroll'}
+                      <ChevronsRight className="size-5" />
+                    </>
+                  )}
+                </Button>
+
+                {purchaseError ? (
+                  <p className="mt-3 text-sm text-bad">{purchaseError}</p>
+                ) : null}
+
+                <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4">
+                  <span className="text-sm font-medium text-ink-2">Share course</span>
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    className="inline-flex size-9 items-center justify-center rounded-full border border-line text-ink-2 transition hover:border-primary hover:text-primary"
+                    aria-label="Share course"
+                  >
+                    <Share2 className="size-4" />
+                  </button>
+                </div>
+
+                <SidebarIncludes
+                  lessonTotal={lessonTotal}
+                  moduleTotal={moduleTotal}
+                  level={course.level}
+                />
+
+                <div className="mt-5 flex items-start gap-2 rounded-lg bg-primary-soft/50 p-4 text-sm text-ink-2">
+                  <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" />
+                  AI-built curriculum with quizzes, exercises, and structured lesson flow.
+                </div>
+            </div>
+          </aside>
+        </div>
+      </Container>
+    </div>
+  );
+}

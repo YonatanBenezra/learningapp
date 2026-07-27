@@ -34,23 +34,23 @@ function makeProvider(impl: {
 
 const textResult = (over: Partial<AiTextResult> = {}): AiTextResult => ({
   text: 'ok',
-  model: 'claude-opus-4-8',
+  model: 'anthropic/claude-sonnet-4',
   usage: { inputTokens: 1, outputTokens: 1 },
   stopReason: 'end_turn',
   ...over,
 });
 
 describe('estimateCostUsd', () => {
-  it('prices opus-4-8 at $5/$25 per 1M tokens', () => {
+  it('prices claude-sonnet-4 at $3/$15 per 1M tokens', () => {
     expect(
-      estimateCostUsd('claude-opus-4-8', { inputTokens: 1_000_000, outputTokens: 1_000_000 }),
-    ).toBeCloseTo(30, 6);
+      estimateCostUsd('anthropic/claude-sonnet-4', { inputTokens: 1_000_000, outputTokens: 1_000_000 }),
+    ).toBeCloseTo(18, 6);
   });
 
-  it('falls back to opus pricing for unknown models', () => {
+  it('falls back to sonnet pricing for unknown models', () => {
     expect(
       estimateCostUsd('mystery-model', { inputTokens: 1_000_000, outputTokens: 0 }),
-    ).toBeCloseTo(5, 6);
+    ).toBeCloseTo(3, 6);
   });
 });
 
@@ -60,7 +60,7 @@ describe('AiClient.completeStructured', () => {
     const provider = makeProvider({
       generateStructured: async () => ({
         data: { title: 'Intro', modules: ['a', 'b'] },
-        model: 'claude-opus-4-8',
+        model: 'anthropic/claude-sonnet-4',
         usage: { inputTokens: 100, outputTokens: 400 },
         stopReason: 'end_turn',
       }),
@@ -72,7 +72,7 @@ describe('AiClient.completeStructured', () => {
     expect(res.data.title).toBe('Intro');
     expect(res.data.modules).toEqual(['a', 'b']);
     expect(res.costUsd).toBeCloseTo(
-      estimateCostUsd('claude-opus-4-8', { inputTokens: 100, outputTokens: 400 }),
+      estimateCostUsd('anthropic/claude-sonnet-4', { inputTokens: 100, outputTokens: 400 }),
       8,
     );
     expect(recorder.entries).toHaveLength(1);
@@ -94,7 +94,7 @@ describe('AiClient.completeStructured', () => {
     const provider = makeProvider({
       generateStructured: async () => ({
         data: { title: 123, modules: 'not-an-array' },
-        model: 'claude-opus-4-8',
+        model: 'anthropic/claude-sonnet-4',
         usage: { inputTokens: 1, outputTokens: 1 },
         stopReason: 'end_turn',
       }),

@@ -47,6 +47,18 @@ describe('auth flow', () => {
     expect(res.body.user.passwordHash).toBeUndefined();
   });
 
+  it('persists name when provided at signup', async () => {
+    const res = await request(app)
+      .post('/auth/signup')
+      .send({ ...creds, email: 'named@example.com', name: 'Rafi Ahmed' });
+    expect(res.status).toBe(200);
+    expect(res.body.user.name).toBe('Rafi Ahmed');
+
+    const me = await request(app).get('/users/me').set('Cookie', cookieHeader(parseAuthCookies(res)));
+    expect(me.status).toBe(200);
+    expect(me.body.user.name).toBe('Rafi Ahmed');
+  });
+
   it('rejects duplicate signup with 409', async () => {
     await request(app).post('/auth/signup').send(creds);
     const res = await request(app).post('/auth/signup').send(creds);
@@ -90,6 +102,38 @@ describe('auth flow', () => {
     expect(res.status).toBe(200);
     expect(res.body.user.preferences.dailyNotification).toBe(true);
     expect(res.body.user.preferences.timezone).toBe('Asia/Dhaka');
+  });
+
+  it('updates profile via PATCH /users/me/profile', async () => {
+    const signup = await request(app).post('/auth/signup').send(creds);
+    const cookies = parseAuthCookies(signup);
+    const res = await request(app)
+      .patch('/users/me/profile')
+      .set('Cookie', cookieHeader(cookies))
+      .send({
+        name: 'Jewel Mia',
+        imageUrl: 'https://i.pravatar.cc/100?img=47',
+        address: 'Dhaka, Bangladesh',
+        profession: 'Software Engineer',
+        experience: '5+ years building web applications',
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.user.name).toBe('Jewel Mia');
+    expect(res.body.user.profession).toBe('Software Engineer');
+    expect(res.body.user.experience).toContain('5+ years');
+  });
+
+  it('returns 503 for avatar upload when Cloudinary is not configured', async () => {
+    const signup = await request(app).post('/auth/signup').send(creds);
+    const cookies = parseAuthCookies(signup);
+    const res = await request(app)
+      .post('/users/me/avatar')
+      .set('Cookie', cookieHeader(cookies))
+      .attach('avatar', Buffer.from('fake'), {
+        filename: 'avatar.png',
+        contentType: 'image/png',
+      });
+    expect(res.status).toBe(503);
   });
 });
 

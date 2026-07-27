@@ -50,6 +50,89 @@ export function unpublishInstructorCourse(id: string): Promise<{ course: Instruc
   });
 }
 
+export function deleteInstructorCourse(id: string): Promise<{ deleted: true }> {
+  return apiClient<{ deleted: true }>(`/instructor/courses/${id}`, {
+    method: 'DELETE',
+  });
+}
+
 export function listInstructorSales(): Promise<{ sales: InstructorSale[] }> {
   return apiClient<{ sales: InstructorSale[] }>('/instructor/sales');
+}
+
+export function updateInstructorModuleTitle(
+  courseId: string,
+  moduleId: string,
+  title: string,
+): Promise<{ module: { id: string; title: string } }> {
+  return apiClient<{ module: { id: string; title: string } }>(
+    `/instructor/courses/${courseId}/modules/${moduleId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ title }),
+    },
+  );
+}
+
+export function deleteInstructorModule(
+  courseId: string,
+  moduleId: string,
+): Promise<{ deleted: true }> {
+  return apiClient<{ deleted: true }>(`/instructor/courses/${courseId}/modules/${moduleId}`, {
+    method: 'DELETE',
+  });
+}
+
+export function updateInstructorLessonTitle(
+  courseId: string,
+  lessonId: string,
+  title: string,
+): Promise<{ lesson: { id: string; title: string } }> {
+  return apiClient<{ lesson: { id: string; title: string } }>(
+    `/instructor/courses/${courseId}/lessons/${lessonId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ title }),
+    },
+  );
+}
+
+export function updateInstructorLessonContent(
+  courseId: string,
+  lessonId: string,
+  input: {
+    title?: string;
+    content: {
+      summary?: string;
+      sections: Array<{ title: string; body: string }>;
+      keyPoints: string[];
+    };
+  },
+): Promise<{ lesson: { id: string; title: string; content: unknown } }> {
+  return apiClient<{ lesson: { id: string; title: string; content: unknown } }>(
+    `/instructor/courses/${courseId}/lessons/${lessonId}/content`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(input),
+    },
+  );
+}
+
+export function deleteInstructorLesson(
+  courseId: string,
+  lessonId: string,
+): Promise<{ deleted: true }> {
+  return apiClient<{ deleted: true }>(`/instructor/courses/${courseId}/lessons/${lessonId}`, {
+    method: 'DELETE',
+  });
+}
+
+export function reorderInstructorStructure(
+  courseId: string,
+  input: { moduleOrder: string[]; lessonsByModule: Record<string, string[]> },
+): Promise<{ reordered: true }> {
+  return apiClient<{ reordered: true }>(`/instructor/courses/${courseId}/structure/order`, {
+    method: 'PATCH',
+    body: JSON.stringify(input),
+  });
 }

@@ -38,15 +38,17 @@ export function resolveAssessmentStatus(assessment: {
 export type SkillAssessmentGenerator = (input: {
   topicLabel: string;
   userId?: string;
+  aiModel?: string | null;
 }) => Promise<GeneratedSkillAssessment>;
 
-const defaultGenerator: SkillAssessmentGenerator = async ({ topicLabel, userId }) => {
+const defaultGenerator: SkillAssessmentGenerator = async ({ topicLabel, userId, aiModel }) => {
   const result = await getAiClient().completeStructured(
     {
       system: SKILL_ASSESSMENT_SYSTEM_PROMPT,
       prompt: buildSkillAssessmentPrompt({ topic: topicLabel, questionCount: 10 }),
       useCase: 'quiz',
       userId,
+      model: aiModel ?? undefined,
     },
     GeneratedSkillAssessmentSchema as ZodType<GeneratedSkillAssessment>,
   );
@@ -181,7 +183,7 @@ export async function listSkillAssessments(
 }
 
 export async function generateSkillAssessment(
-  input: { topic: string; customTopic?: string; guestSessionId?: string },
+  input: { topic: string; customTopic?: string; guestSessionId?: string; aiModel?: string | null },
   userId?: string,
   tier?: string | null,
   generate?: SkillAssessmentGenerator,
@@ -194,6 +196,7 @@ export async function generateSkillAssessment(
     customTopic: input.customTopic ?? null,
     userId: userId ? new Types.ObjectId(userId) : null,
     guestSessionId: input.guestSessionId ?? null,
+    aiModel: input.aiModel?.trim() || null,
     questions: [],
     status: 'generating',
   });
@@ -224,7 +227,8 @@ export async function runSkillAssessmentGeneration(
   try {
     const label = topicLabel(assessment.topic, assessment.customTopic);
     const userId = assessment.userId ? String(assessment.userId) : undefined;
-    const generated = await generate({ topicLabel: label, userId });
+    const aiModel = assessment.aiModel?.trim() || null;
+    const generated = await generate({ topicLabel: label, userId, aiModel });
     const questions = normalizeSkillQuestions(generated.questions);
 
     assessment.set('questions', questions);

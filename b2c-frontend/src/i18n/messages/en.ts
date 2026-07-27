@@ -20,6 +20,7 @@ export const messages = {
     dashboard: 'Dashboard',
     courses: 'Courses',
     quizzes: 'Quizzes',
+    networkLab: 'Network lab',
     exams: 'Exams',
     assessments: 'Assessments',
     achievements: 'Achievements',
@@ -138,6 +139,10 @@ export const messages = {
       'This deactivates your account. Your data will be permanently removed after the retention window.',
     deleteConfirm: 'Type DELETE to confirm.',
     loadError: "Couldn't load your settings.",
+    aiModel: 'AI model',
+    aiModelHint: 'Choose any OpenRouter model for course, quiz, and assessment generation.',
+    aiModelDefault: 'Platform default',
+    aiModelCustom: 'Or type any OpenRouter model ID',
   },
   achievements: {
     title: 'Achievements',

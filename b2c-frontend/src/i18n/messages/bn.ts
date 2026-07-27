@@ -20,6 +20,7 @@ export const messages = {
     dashboard: 'ড্যাশবোর্ড',
     courses: 'কোর্স',
     quizzes: 'কুইজ',
+    networkLab: 'নেটওয়ার্ক ল্যাব',
     exams: 'পরীক্ষা',
     assessments: 'অ্যাসেসমেন্ট',
     achievements: 'অর্জন',
@@ -137,6 +138,10 @@ export const messages = {
     deleteWarning: 'এটি আপনার অ্যাকাউন্ট deactivate করবে। retention window-এর পর data স্থায়ীভাবে মুছে যাবে।',
     deleteConfirm: 'নিশ্চিত করতে DELETE লিখুন।',
     loadError: 'সেটিংস লোড করা যায়নি।',
+    aiModel: 'AI মডেল',
+    aiModelHint: 'course, quiz ও assessment-এর জন্য যেকোনো OpenRouter মডেল বেছে নিন।',
+    aiModelDefault: 'প্ল্যাটফর্ম ডিফল্ট',
+    aiModelCustom: 'অথবা যেকোনো OpenRouter model ID লিখুন',
   },
   achievements: {
     title: 'অর্জন',

@@ -9,6 +9,7 @@ import {
   BookOpen,
   FolderOpen,
   GraduationCap,
+  Network,
   ClipboardList,
   Award,
   Bell,
@@ -71,7 +72,7 @@ interface NavGroup {
 
 const learnerNavGroups: NavGroup[] = [
   {
-    title: "CLIENT APP",
+    title: "OVERVIEW",
     items: [
       { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
       { labelKey: "nav.courses", href: "/my-courses", icon: BookOpen },
@@ -83,6 +84,7 @@ const learnerNavGroups: NavGroup[] = [
     title: "LEARNING",
     items: [
       { labelKey: "nav.quizzes", href: "/quizzes", icon: ClipboardList },
+      { labelKey: "nav.networkLab", href: "/network-lab", icon: Network },
       { labelKey: "nav.exams", href: "/exams", icon: GraduationCap },
       { labelKey: "common.newCourse", href: "/create-course", icon: Sparkles },
     ],
@@ -131,6 +133,20 @@ function sidebarGroupsForRole(role?: string | null): NavGroup[] {
   return learnerNavGroups;
 }
 
+function isNavItemActive(pathname: string, href: string, groupHrefs: string[]): boolean {
+  if (pathname === href) return true;
+  if (!pathname.startsWith(`${href}/`)) return false;
+
+  const hasMoreSpecificMatch = groupHrefs.some(
+    (other) =>
+      other !== href &&
+      other.startsWith(`${href}/`) &&
+      (pathname === other || pathname.startsWith(`${other}/`)),
+  );
+
+  return !hasMoreSpecificMatch;
+}
+
 function SidebarNavItem({
   item,
   active,
@@ -147,7 +163,7 @@ function SidebarNavItem({
       href={item.href}
       title={collapsed ? label : undefined}
       className={cn(
-        "flex items-center rounded-xl text-[15px] font-medium transition-colors duration-200",
+        "flex items-center rounded-lg text-[15px] font-medium transition-colors duration-200",
         collapsed ? "justify-center px-0 py-3" : "gap-3 px-4 py-2.5",
         active
           ? "bg-primary-soft text-primary"
@@ -178,6 +194,7 @@ function SidebarGroupSection({
 }) {
   const pathname = usePathname();
   const { t } = useTranslation();
+  const groupHrefs = group.items.map((item) => resolveNavItemHref(item, role).href);
 
   return (
     <div className={collapsed ? "px-2" : "px-5"}>
@@ -186,11 +203,10 @@ function SidebarGroupSection({
           {group.title}
         </p>
       )}
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-1.5">
         {group.items.map((item) => {
           const resolved = resolveNavItemHref(item, role);
-          const active =
-            pathname === resolved.href || pathname.startsWith(`${resolved.href}/`);
+          const active = isNavItemActive(pathname, resolved.href, groupHrefs);
           return (
             <SidebarNavItem
               key={item.href}

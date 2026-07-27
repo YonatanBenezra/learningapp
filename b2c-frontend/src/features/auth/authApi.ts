@@ -6,11 +6,15 @@ export interface Credentials {
   password: string;
 }
 
+export interface SignupCredentials extends Credentials {
+  name: string;
+}
+
 export interface AuthResult {
   user: User;
 }
 
-export function signup(input: Credentials): Promise<AuthResult> {
+export function signup(input: SignupCredentials): Promise<AuthResult> {
   return apiClient<AuthResult>('/auth/signup', {
     method: 'POST',
     body: JSON.stringify(input),

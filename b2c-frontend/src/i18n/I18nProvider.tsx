@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   useSyncExternalStore,
@@ -42,6 +43,12 @@ function getServerLocaleSnapshot(): Locale {
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const detected = useSyncExternalStore(subscribeLocale, getLocaleSnapshot, getServerLocaleSnapshot);
   const [locale, setLocaleState] = useState<Locale>(detected);
+
+  useLayoutEffect(() => {
+    const initial = detectLocale();
+    document.documentElement.lang = initial;
+    document.documentElement.dir = initial === 'he' || initial === 'ar' ? 'rtl' : 'ltr';
+  }, []);
 
   useEffect(() => {
     setLocaleState(detected);

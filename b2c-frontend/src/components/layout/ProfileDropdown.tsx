@@ -16,6 +16,7 @@ import {
 import { useAuthStore } from '@/src/store/authStore';
 import { useLogout } from '@/src/features/auth';
 import { Avatar } from '@/src/components/ui/avatar';
+import { getUserAvatarProps, getUserDisplayName } from '@/src/lib/userDisplay';
 
 interface ProfileMenuItem {
   label: string;
@@ -68,9 +69,9 @@ export function ProfileDropdown() {
         aria-expanded={open}
         aria-haspopup="true"
       >
-        <Avatar name={user?.email} className="size-9" />
+        <Avatar {...getUserAvatarProps(user)} className="size-9" />
         <span className="hidden max-w-[120px] truncate text-sm font-medium text-ink sm:block">
-          {user?.email?.split('@')[0]?.split(/[._-]/)[0] ?? 'User'}
+          {getUserDisplayName(user, { compact: true })}
         </span>
       </button>
 
@@ -85,10 +86,8 @@ export function ProfileDropdown() {
           >
             {/* User info header */}
             <div className="border-b border-line px-4 py-3.5">
-              <p className="text-sm font-semibold text-ink">
-                {user?.email?.split('@')[0] ?? 'Admin'}
-              </p>
-              <p className="mt-0.5 text-xs text-ink-3">{user?.email ?? 'admin@bina.com'}</p>
+              <p className="text-sm font-semibold text-ink">{getUserDisplayName(user)}</p>
+              <p className="mt-0.5 text-xs text-ink-3">{user?.email ?? ''}</p>
             </div>
 
             {/* Menu items */}

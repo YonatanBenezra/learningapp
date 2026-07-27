@@ -1,5 +1,7 @@
 import { Types } from 'mongoose';
 import { Course } from '../courses/course.model';
+import { Module } from '../modules-content/module.model';
+import { Lesson } from '../lessons/lesson.model';
 import { User } from '../users/user.model';
 import { AppError } from '../../common/errors/AppError';
 import { courseGenerationQueue, jobPriority } from '../../jobs/queue';
@@ -220,6 +222,23 @@ export async function unpublishInstructorCourse(instructorId: string, courseId: 
   return mapCourse(course.toJSON() as Record<string, unknown>);
 }
 
+export async function deleteInstructorCourse(instructorId: string, courseId: string) {
+  const course = await Course.findOne({ _id: courseId, userId: instructorId, kind: 'marketplace' });
+  if (!course) throw new AppError(404, 'Course not found');
+
+  const enrollmentCount = await CourseEnrollment.countDocuments({ courseId: course._id });
+  if (enrollmentCount > 0) {
+    throw new AppError(400, 'Cannot delete a course that has sales. Unpublish it instead.');
+  }
+
+  await Promise.all([
+    Module.deleteMany({ courseId: course._id }),
+    Lesson.deleteMany({ courseId: course._id }),
+  ]);
+  await course.deleteOne();
+  return { deleted: true as const };
+}
+
 export async function listSales(instructorId: string) {
   const sales = await CourseEnrollment.find({ instructorId })
     .sort({ purchasedAt: -1 })
@@ -287,24 +306,108 @@ export async function listPublishedCourses() {
     .select('title description category level priceCents currency slug enrollmentCount userId')
     .lean();
 
+  const courseIds = docs.map((doc) => doc._id);
+  const lessonCounts =
+    courseIds.length > 0
+      ? await Lesson.aggregate<{ _id: Types.ObjectId; count: number }>([
+          { $match: { courseId: { $in: courseIds } } },
+          { $group: { _id: '$courseId', count: { $sum: 1 } } },
+        ])
+      : [];
+  const lessonCountByCourse = new Map(
+    lessonCounts.map((row) => [String(row._id), row.count]),
+  );
+
   const instructorIds = [...new Set(docs.map((d) => String(d.userId)))];
   const instructors = instructorIds.length
     ? await User.find({ _id: { $in: instructorIds } })
-        .select('email')
+        .select('email name')
         .lean()
     : [];
-  const emailById = new Map(instructors.map((u) => [String(u._id), u.email as string]));
+  const instructorById = new Map(
+    instructors.map((u) => [
+      String(u._id),
+      { email: u.email as string, name: (u.name as string) ?? '' },
+    ]),
+  );
 
-  return docs.map((doc) => ({
-    id: String(doc._id),
-    title: doc.title as string,
-    description: (doc.description as string) ?? '',
-    category: doc.category as string,
-    level: doc.level as string,
-    priceCents: (doc.priceCents as number) ?? 0,
-    currency: (doc.currency as string) ?? 'USD',
-    slug: (doc.slug as string) ?? null,
-    enrollmentCount: (doc.enrollmentCount as number) ?? 0,
-    instructorEmail: emailById.get(String(doc.userId)) ?? '',
-  }));
+  return docs.map((doc) => {
+    const instructor = instructorById.get(String(doc.userId));
+    return {
+      id: String(doc._id),
+      title: doc.title as string,
+      description: (doc.description as string) ?? '',
+      category: doc.category as string,
+      level: doc.level as string,
+      priceCents: (doc.priceCents as number) ?? 0,
+      currency: (doc.currency as string) ?? 'USD',
+      slug: (doc.slug as string) ?? null,
+      enrollmentCount: (doc.enrollmentCount as number) ?? 0,
+      lessonCount: lessonCountByCourse.get(String(doc._id)) ?? 0,
+      instructorEmail: instructor?.email ?? '',
+      instructorName: instructor?.name?.trim() ?? '',
+    };
+  });
+}
+
+export async function getPublishedCourse(courseId: string) {
+  const doc = await Course.findOne({
+    _id: courseId,
+    kind: 'marketplace',
+    isPublished: true,
+    status: 'ready',
+  }).lean();
+  if (!doc) throw new AppError(404, 'Course not found');
+
+  const [lessonCount, instructor, modules] = await Promise.all([
+    Lesson.countDocuments({ courseId: doc._id }),
+    User.findById(doc.userId).select('email name').lean(),
+    Module.find({ courseId: doc._id }).sort({ order: 1 }).lean(),
+  ]);
+
+  const moduleIds = modules.map((moduleDoc) => moduleDoc._id);
+  const lessons =
+    moduleIds.length > 0
+      ? await Lesson.find({ moduleId: { $in: moduleIds } })
+          .sort({ order: 1 })
+          .select('moduleId title order')
+          .lean()
+      : [];
+
+  const lessonsByModule = new Map<string, { id: string; title: string; order: number }[]>();
+  for (const lesson of lessons) {
+    const key = String(lesson.moduleId);
+    const bucket = lessonsByModule.get(key) ?? [];
+    bucket.push({
+      id: String(lesson._id),
+      title: lesson.title as string,
+      order: lesson.order as number,
+    });
+    lessonsByModule.set(key, bucket);
+  }
+
+  return {
+    course: {
+      id: String(doc._id),
+      title: doc.title as string,
+      description: (doc.description as string) ?? '',
+      category: doc.category as string,
+      level: doc.level as string,
+      topics: (doc.topics as string[]) ?? [],
+      priceCents: (doc.priceCents as number) ?? 0,
+      currency: (doc.currency as string) ?? 'USD',
+      slug: (doc.slug as string) ?? null,
+      enrollmentCount: (doc.enrollmentCount as number) ?? 0,
+      lessonCount,
+      instructorEmail: (instructor?.email as string) ?? '',
+      instructorName: ((instructor?.name as string) ?? '').trim(),
+    },
+    modules: modules.map((moduleDoc) => ({
+      id: String(moduleDoc._id),
+      title: moduleDoc.title as string,
+      domain: moduleDoc.domain as string,
+      order: moduleDoc.order as number,
+      lessons: lessonsByModule.get(String(moduleDoc._id)) ?? [],
+    })),
+  };
 }

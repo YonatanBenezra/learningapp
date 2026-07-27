@@ -9,6 +9,7 @@ import { Avatar } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { ThemeToggle } from '@/src/components/ui/theme-toggle';
 import { cn } from '@/src/lib/utils';
+import { getUserAvatarProps } from '@/src/lib/userDisplay';
 
 const nav = [
   { label: 'Dashboard', href: '/dashboard' },
@@ -51,7 +52,7 @@ export function AppTopbar() {
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           <ThemeToggle />
-          <Avatar name={user?.email} />
+          <Avatar {...getUserAvatarProps(user)} />
           <Button variant="ghost" size="sm" onClick={logout}>
             <LogOut className="size-4" />
             <span className="hidden sm:inline">Logout</span>

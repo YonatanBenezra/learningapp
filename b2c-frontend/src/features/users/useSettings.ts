@@ -7,10 +7,36 @@ import * as usersApi from './usersApi';
 
 export function useUpdatePreferences() {
   const queryClient = useQueryClient();
+  const setUser = useAuthStore((s) => s.setUser);
   return useMutation({
     mutationFn: usersApi.updatePreferences,
     onSuccess: (data) => {
       queryClient.setQueryData(['me'], data);
+      setUser(data.user);
+    },
+  });
+}
+
+export function useUpdateProfile() {
+  const queryClient = useQueryClient();
+  const setUser = useAuthStore((s) => s.setUser);
+  return useMutation({
+    mutationFn: usersApi.updateProfile,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['me'], data);
+      setUser(data.user);
+    },
+  });
+}
+
+export function useUploadProfileAvatar() {
+  const queryClient = useQueryClient();
+  const setUser = useAuthStore((s) => s.setUser);
+  return useMutation({
+    mutationFn: usersApi.uploadProfileAvatar,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['me'], data);
+      setUser(data.user);
     },
   });
 }

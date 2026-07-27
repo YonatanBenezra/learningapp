@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import type { Course } from '@/src/domain/course';
 import { useCourseStructure } from '@/src/features/courses';
+import { learnerCourseStructurePath } from '@/src/features/auth/learnerRoutes';
 import { useCompleteLesson, useLesson } from '@/src/features/lessons';
 import { useGenerateExam } from '@/src/features/assessments';
 import { CourseModuleSidebar } from '@/src/features/courses/components/CourseModuleSidebar';
@@ -116,7 +117,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
         <Skeleton className="h-16 w-full rounded-none" />
         <div className="flex flex-1">
           <Skeleton className="flex-1 rounded-none" />
-          <Skeleton className="hidden w-[300px] rounded-none lg:block" />
+          <Skeleton className="hidden w-[360px] rounded-none lg:block" />
         </div>
       </div>
     );
@@ -136,8 +137,8 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
   }
 
   return (
-    <div className="flex min-h-[calc(100dvh-4rem)] flex-col">
-      <header className="border-b border-line bg-bg-elev px-4 py-4 sm:px-6">
+    <div className="flex h-[calc(100dvh-4rem)] max-h-[calc(100dvh-4rem)] flex-col overflow-hidden">
+      <header className="shrink-0 border-b border-line bg-bg-elev px-4 py-4 sm:px-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <Link
@@ -177,7 +178,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
             </div>
             <Progress value={justCompleted?.course.progressPercent ?? course.progressPercent} />
             <div className="mt-3 flex flex-wrap gap-2">
-              <Link href={`/courses/${courseId}/structure`}>
+              <Link href={learnerCourseStructurePath(courseId)}>
                 <Button variant="soft" size="sm">
                   <Network className="size-4" /> Diagram
                 </Button>
@@ -206,31 +207,35 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
       </header>
 
       {justCompleted ? (
-        <CourseCompletionBanner
-          streak={justCompleted.streak}
-          courseProgressPercent={justCompleted.course.progressPercent}
-          achievements={justCompleted.achievements}
-        />
+        <div className="shrink-0">
+          <CourseCompletionBanner
+            streak={justCompleted.streak}
+            courseProgressPercent={justCompleted.course.progressPercent}
+            achievements={justCompleted.achievements}
+          />
+        </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <section className="order-2 flex min-h-0 min-w-0 flex-1 flex-col border-line lg:order-1 lg:border-r">
-          {activeLessonId ? (
-            <CourseLessonPanel
-              lessonId={activeLessonId}
-              moduleTitle={nav.moduleTitle}
-              moduleDomain={nav.moduleDomain}
-              position={nav.position}
-            />
-          ) : (
-            <CourseIntroPanel
-              course={course}
-              lessonCount={flatLessons.length}
-              onStart={() => firstLessonId && selectLesson(firstLessonId)}
-            />
-          )}
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+        <section className="order-2 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden border-line lg:order-1 lg:border-r">
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {activeLessonId ? (
+              <CourseLessonPanel
+                lessonId={activeLessonId}
+                moduleTitle={nav.moduleTitle}
+                moduleDomain={nav.moduleDomain}
+                position={nav.position}
+              />
+            ) : (
+              <CourseIntroPanel
+                course={course}
+                lessonCount={flatLessons.length}
+                onStart={() => firstLessonId && selectLesson(firstLessonId)}
+              />
+            )}
+          </div>
 
-          <footer className="mt-auto border-t border-line bg-bg-elev px-4 py-4 sm:px-6 lg:px-8">
+          <footer className="shrink-0 border-t border-line bg-bg-elev px-4 py-4 sm:px-6 lg:px-8">
             <div className="flex w-full flex-wrap items-center justify-between gap-3">
               <div>
                 {nav.prev ? (
@@ -285,7 +290,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
           </footer>
         </section>
 
-        <div className="order-1 min-h-[280px] lg:order-2 lg:min-h-0 lg:shrink-0">
+        <div className="order-1 flex min-h-[280px] shrink-0 flex-col overflow-hidden lg:order-2 lg:h-full lg:w-[360px]">
           <CourseModuleSidebar
             modules={modules}
             activeLessonId={activeLessonId}
@@ -310,7 +315,7 @@ function CourseIntroPanel({
   onStart: () => void;
 }) {
   return (
-    <div className="flex flex-1 items-center justify-center overflow-y-auto p-6 sm:p-8">
+    <div className="flex items-center justify-center p-6 sm:p-8">
       <div className="max-w-2xl text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
           Course overview

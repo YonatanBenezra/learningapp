@@ -8,6 +8,7 @@ import { ThemeToggle } from '@/src/components/ui/theme-toggle';
 import { NavbarAuthLinks, NavbarUserMenu } from '@/src/components/marketing/NavbarUserMenu';
 import { NavbarSearchOverlay } from '@/src/components/marketing/NavbarSearchOverlay';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
+import { myCoursesPath } from '@/src/features/auth/learnerRoutes';
 import { useAuthStore } from '@/src/store/authStore';
 import { NAV_LINKS } from './data';
 import { Container } from './Container';
@@ -45,7 +46,16 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const hydrated = useAuthHydrated();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
+  const user = useAuthStore((s) => s.user);
   const showUserMenu = hydrated && isAuthenticated;
+  const navLinks = NAV_LINKS.map((link) => {
+    if (link.href !== '/courses') return link;
+    const isLearner = !user?.role || user.role === 'user';
+    if (showUserMenu && isLearner) {
+      return { ...link, label: 'My Courses', href: myCoursesPath() };
+    }
+    return link;
+  });
 
   const openSearch = () => {
     setMobileOpen(false);
@@ -62,7 +72,7 @@ export function Navbar() {
 
           <div className="ml-auto hidden items-center gap-2 lg:flex">
             <nav className="mr-4 flex items-center gap-6 xl:mr-6 xl:gap-8" aria-label="Main navigation">
-              {NAV_LINKS.map((link) =>
+              {navLinks.map((link) =>
                 link.href.startsWith('/') ? (
                   <Link
                     key={link.label}
@@ -130,7 +140,7 @@ export function Navbar() {
 
         {mobileOpen ? (
           <nav className="border-t border-line bg-bg-elev px-4 py-4 lg:hidden">
-            {NAV_LINKS.map((link) =>
+            {navLinks.map((link) =>
               link.href.startsWith('/') ? (
                 <Link
                   key={link.label}

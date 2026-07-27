@@ -22,15 +22,15 @@ export function CourseModuleSidebar({
   onSelectLesson,
 }: CourseModuleSidebarProps) {
   return (
-    <aside className="flex h-full w-full flex-col border-b border-line bg-bg-elev lg:w-[300px] lg:border-b-0 lg:border-l">
-      <div className="border-b border-line px-4 py-4">
+    <aside className="flex h-full min-h-0 w-full flex-col border-b border-line bg-bg-elev lg:w-[360px] lg:border-b-0 lg:border-l">
+      <div className="shrink-0 border-b border-line px-4 py-4">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
           Course content
         </p>
         <h2 className="mt-1 text-sm font-semibold text-ink">Modules</h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="min-h-0 flex-1 overflow-y-auto p-2">
         {modules.length === 0 ? (
           <p className="px-2 py-4 text-sm text-ink-3">No modules available yet.</p>
         ) : (

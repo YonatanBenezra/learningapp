@@ -2,11 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Loader2 } from 'lucide-react';
 import { Container } from '@/src/components/marketing/Container';
-import { Button } from '@/src/components/ui/button';
 import { PaginatedSkillAssessment } from '@/src/features/skill-assessment/PaginatedSkillAssessment';
+import {
+  AssessmentFailedPanel,
+  AssessmentGeneratingPanel,
+} from '@/src/features/skill-assessment/AssessmentGeneratingPanel';
 import { AssessmentTakeSkeleton } from '@/src/features/skill-assessment/SkillAssessmentSkeletons';
 import { useAuthStore } from '@/src/store/authStore';
 import {
@@ -58,34 +59,18 @@ export default function SkillAssessmentPage({ id }: { id: string }) {
 
   if (status === 'generating') {
     return (
-      <Container className="max-w-[1240px] py-20">
-        <div className="mx-auto max-w-xl border border-line bg-bg-elev px-6 py-12 text-center">
-          <div className="mx-auto grid size-14 place-items-center border border-primary/20 bg-primary-soft text-primary">
-            <Loader2 className="size-7 animate-spin" />
-          </div>
-          <h1 className="mt-6 text-xl font-semibold text-ink">Preparing your assessment</h1>
-          <p className="mt-2 text-sm text-ink-2">
-            Generating 10 questions for {topicLabel(assessment.topic, assessment.customTopic)}.
-            You can leave this page — generation continues in the background.
-          </p>
-        </div>
-      </Container>
+      <AssessmentGeneratingPanel
+        topicLabel={topicLabel(assessment.topic, assessment.customTopic)}
+      />
     );
   }
 
   if (status === 'failed') {
     return (
-      <Container className="max-w-[1240px] py-20">
-        <div className="mx-auto max-w-xl border border-line bg-bg-elev px-6 py-12 text-center">
-          <h1 className="text-xl font-semibold text-ink">Could not generate assessment</h1>
-          <p className="mt-2 text-sm text-ink-2">
-            {assessment.failureReason ?? 'Something went wrong while building your questions.'}
-          </p>
-          <Link href="/assessments" className="mt-6 inline-block">
-            <Button variant="outline">Back to assessments</Button>
-          </Link>
-        </div>
-      </Container>
+      <AssessmentFailedPanel
+        topicLabel={topicLabel(assessment.topic, assessment.customTopic)}
+        reason={assessment.failureReason}
+      />
     );
   }
 

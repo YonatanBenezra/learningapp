@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { optionalAiModel } from '../../common/validation/aiModel';
 import { SKILL_TOPICS } from './skillAssessment.constants';
 
 export const generateSkillAssessmentSchema = z
@@ -6,6 +7,7 @@ export const generateSkillAssessmentSchema = z
     topic: z.enum(SKILL_TOPICS),
     customTopic: z.string().trim().min(2).max(100).optional(),
     guestSessionId: z.string().uuid().optional(),
+    aiModel: optionalAiModel,
   })
   .strict()
   .superRefine((data, ctx) => {

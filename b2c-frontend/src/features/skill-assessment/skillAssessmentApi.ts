@@ -48,11 +48,13 @@ export function listMySkillAssessments() {
 export function generateSkillAssessment(input: {
   topic: SkillTopic;
   customTopic?: string;
+  aiModel?: string | null;
 }) {
   return apiClient<{ assessment: SkillAssessment }>('/skill-assessments/generate', {
     method: 'POST',
     body: JSON.stringify({
       ...input,
+      aiModel: input.aiModel?.trim() || null,
       guestSessionId: getGuestSessionId(),
     }),
   }).then((r) => r.assessment);

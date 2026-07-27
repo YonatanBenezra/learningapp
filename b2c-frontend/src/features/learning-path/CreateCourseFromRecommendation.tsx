@@ -8,6 +8,7 @@ import { Button } from '@/src/components/ui/button';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { useAuthStore } from '@/src/store/authStore';
 import { useCreateCourse } from '@/src/features/courses';
+import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { TRIAL_PERIOD_MONTHS } from '@/src/constants/pricing';
 import type { LearningPathPrefill } from './learningPathRecommendation';
 
@@ -48,7 +49,7 @@ export function CreateCourseFromRecommendation({ prefill }: { prefill: LearningP
       },
       {
         onSuccess: (data) => {
-          router.push(`/courses/${data.course.id}`);
+          router.push(learnerCoursePath(data.course.id));
         },
         onError: (err) => {
           if (err instanceof ApiError) {

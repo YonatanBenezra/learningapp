@@ -4,14 +4,37 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LayoutGrid, List, Search, SlidersHorizontal } from 'lucide-react';
-import { COURSE_FILTERS, COURSES, type CourseCategory } from './data';
-import { Container } from './Container';
+import type { CatalogCourse } from '@/src/components/marketing/CourseCatalogCard';
 import { CourseCatalogCard } from './CourseCatalogCard';
+import { Container } from './Container';
+import { Skeleton } from '@/src/components/ui/skeleton';
+import type { MarketplaceCourse } from '@/src/domain/marketplace';
+import { useMarketplaceCourses } from '@/src/features/marketplace';
+import { getUserDisplayName } from '@/src/lib/userDisplay';
 import { cn } from '@/src/lib/utils';
 
 type ViewMode = 'grid' | 'list';
+type CourseCategory = 'All Categories' | string;
 
-function buildCoursesUrl(params: { q?: string; category?: CourseCategory }) {
+function toCatalogCourse(course: MarketplaceCourse): CatalogCourse {
+  const price = course.priceCents / 100;
+  return {
+    id: course.id,
+    title: course.title,
+    description: course.description.trim(),
+    price,
+    instructor: getUserDisplayName(
+      { name: course.instructorName, email: course.instructorEmail },
+      { fallback: 'Instructor' },
+    ),
+    lessons: course.lessonCount,
+    students: course.enrollmentCount,
+    category: course.category,
+    level: course.level,
+  };
+}
+
+function buildCoursesUrl(params: { q?: string; category?: string }) {
   const search = new URLSearchParams();
   if (params.q?.trim()) search.set('q', params.q.trim());
   if (params.category && params.category !== 'All Categories') {
@@ -24,8 +47,9 @@ function buildCoursesUrl(params: { q?: string; category?: CourseCategory }) {
 export function CoursesCatalogPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const coursesQ = useMarketplaceCourses();
   const query = searchParams.get('q')?.trim() ?? '';
-  const categoryParam = searchParams.get('category') as CourseCategory | null;
+  const categoryParam = searchParams.get('category');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [filterOpen, setFilterOpen] = useState(false);
   const [searchInput, setSearchInput] = useState(query);
@@ -35,12 +59,22 @@ export function CoursesCatalogPage() {
     setSearchInput(query);
   }, [query]);
 
+  const catalogCourses = useMemo(
+    () => (coursesQ.data?.courses ?? []).map(toCatalogCourse),
+    [coursesQ.data?.courses],
+  );
+
+  const categoryFilters = useMemo(() => {
+    const categories = [...new Set(catalogCourses.map((course) => course.category))].sort();
+    return ['All Categories', ...categories] as CourseCategory[];
+  }, [catalogCourses]);
+
   const activeFilter: CourseCategory =
-    categoryParam && COURSE_FILTERS.includes(categoryParam) ? categoryParam : 'All Categories';
+    categoryParam && categoryFilters.includes(categoryParam) ? categoryParam : 'All Categories';
 
   const filteredCourses = useMemo(() => {
     const normalizedQuery = query.toLowerCase();
-    return COURSES.filter((course) => {
+    return catalogCourses.filter((course) => {
       const matchesCategory =
         activeFilter === 'All Categories' || course.category === activeFilter;
       if (!matchesCategory) return false;
@@ -48,17 +82,17 @@ export function CoursesCatalogPage() {
 
       const haystack = [
         course.title,
+        course.description,
         course.instructor,
         course.category,
         course.level,
-        course.experience,
       ]
         .join(' ')
         .toLowerCase();
 
       return haystack.includes(normalizedQuery);
     });
-  }, [activeFilter, query]);
+  }, [activeFilter, catalogCourses, query]);
 
   function submitSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -154,7 +188,7 @@ export function CoursesCatalogPage() {
 
         {filterOpen ? (
           <div className="mt-4 flex flex-wrap gap-2 rounded-2xl border border-line bg-bg-elev p-4 shadow-soft">
-            {COURSE_FILTERS.map((filter) => {
+            {categoryFilters.map((filter) => {
               const active = activeFilter === filter;
               const href = buildCoursesUrl({ q: query, category: filter });
               return (
@@ -175,11 +209,42 @@ export function CoursesCatalogPage() {
           </div>
         ) : null}
 
-        {filteredCourses.length === 0 ? (
+        {coursesQ.isLoading ? (
+          <div
+            className={cn(
+              'mt-8',
+              viewMode === 'grid'
+                ? 'grid gap-8 md:grid-cols-2 xl:grid-cols-3'
+                : 'flex flex-col gap-6',
+            )}
+          >
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Skeleton key={index} className="h-72 rounded-lg" />
+            ))}
+          </div>
+        ) : coursesQ.isError ? (
           <div className="mx-auto mt-10 max-w-lg rounded-3xl border border-dashed border-line-2 bg-bg-elev p-10 text-center">
-            <p className="text-lg font-semibold text-ink">No courses match your search</p>
+            <p className="text-lg font-semibold text-ink">Could not load courses</p>
+            <p className="mt-2 text-sm text-ink-2">Please refresh the page or try again later.</p>
+            <button
+              type="button"
+              onClick={() => void coursesQ.refetch()}
+              className="mt-6 inline-flex h-11 items-center rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-primary-dark"
+            >
+              Try again
+            </button>
+          </div>
+        ) : filteredCourses.length === 0 ? (
+          <div className="mx-auto mt-10 max-w-lg rounded-3xl border border-dashed border-line-2 bg-bg-elev p-10 text-center">
+            <p className="text-lg font-semibold text-ink">
+              {catalogCourses.length === 0
+                ? 'No published courses yet'
+                : 'No courses match your search'}
+            </p>
             <p className="mt-2 text-sm text-ink-2">
-              Try another keyword or browse all categories.
+              {catalogCourses.length === 0
+                ? 'Instructor courses will appear here once they are published.'
+                : 'Try another keyword or browse all categories.'}
             </p>
             <Link
               href="/courses"

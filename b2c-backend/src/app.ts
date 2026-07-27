@@ -32,6 +32,7 @@ import notificationRoutes from './modules/notifications/notification.routes';
 import adminRoutes from './modules/admin/admin.routes';
 import instructorRoutes from './modules/instructor/instructor.routes';
 import marketplaceRoutes from './modules/marketplace/marketplace.routes';
+import aiRoutes from './modules/ai-guidance/ai.routes';
 
 export const app = express();
 
@@ -99,6 +100,7 @@ app.use('/notifications', notificationRoutes);
 app.use('/admin', adminRoutes);
 app.use('/instructor', instructorRoutes);
 app.use('/marketplace', marketplaceRoutes);
+app.use('/ai', aiRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

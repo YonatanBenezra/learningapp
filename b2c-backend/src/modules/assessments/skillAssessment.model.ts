@@ -15,6 +15,7 @@ const skillAssessmentSchema = new Schema(
       index: true,
     },
     failureReason: { type: String, default: null },
+    aiModel: { type: String, default: null },
     generatedAt: { type: Date, default: Date.now },
     expiresAt: { type: Date, default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) },
   },

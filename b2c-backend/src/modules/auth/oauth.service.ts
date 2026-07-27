@@ -24,10 +24,14 @@ export async function upsertOAuthUser(profile: OAuthProfile) {
     user = await User.findOne({ email });
     if (user) {
       user.oauth = { provider: profile.provider, providerId: profile.providerId };
+      if (profile.name?.trim() && !user.name?.trim()) {
+        user.name = profile.name.trim();
+      }
       await user.save();
     } else {
       user = await User.create({
         email,
+        name: profile.name?.trim() ?? '',
         oauth: { provider: profile.provider, providerId: profile.providerId },
       });
       await getOrCreateSubscription(String(user._id));

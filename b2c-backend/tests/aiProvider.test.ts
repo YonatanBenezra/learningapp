@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import Anthropic from '@anthropic-ai/sdk';
-import { extractJson, wrapError } from '../src/modules/ai-guidance/provider';
+import { extractJson, wrapError, ProviderHttpError } from '../src/modules/ai-guidance/provider';
 import { AiError } from '../src/modules/ai-guidance/ai.error';
 
 describe('extractJson', () => {
@@ -32,25 +31,28 @@ describe('extractJson', () => {
 describe('wrapError classification', () => {
   const retryable = (err: unknown): boolean => wrapError(err).retryable;
 
-  it('marks connection/timeout errors retryable (the timeout path)', () => {
-    expect(retryable(new Anthropic.APIConnectionError({ message: 'timed out' }))).toBe(true);
+  it('marks timeout/abort errors retryable', () => {
+    expect(retryable(Object.assign(new Error('timed out'), { name: 'AbortError' }))).toBe(true);
   });
 
   it('marks rate-limit (429) retryable', () => {
-    const err = new Anthropic.RateLimitError(429, { type: 'error', error: {} }, 'rate', undefined);
-    expect(retryable(err)).toBe(true);
+    expect(retryable(new ProviderHttpError('rate limited', 429))).toBe(true);
   });
 
   it('marks 5xx server errors retryable', () => {
-    expect(retryable(new Anthropic.APIError(503, undefined, 'overloaded', undefined))).toBe(true);
+    expect(retryable(new ProviderHttpError('overloaded', 503))).toBe(true);
   });
 
   it('marks 4xx client errors non-retryable', () => {
-    expect(retryable(new Anthropic.APIError(400, undefined, 'bad request', undefined))).toBe(false);
+    expect(retryable(new ProviderHttpError('bad request', 400))).toBe(false);
   });
 
   it('marks unknown (non-API) errors non-retryable', () => {
     expect(retryable(new Error('boom'))).toBe(false);
+  });
+
+  it('marks fetch network failures retryable', () => {
+    expect(retryable(new Error('fetch failed'))).toBe(true);
   });
 
   it('passes an existing AiError through unchanged', () => {

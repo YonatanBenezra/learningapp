@@ -31,6 +31,7 @@ export interface CreateCourseInput {
   level: CourseLevel;
   visualsPreferred?: boolean;
   dailyNotification?: boolean;
+  aiModel?: string | null;
 }
 
 // 202 Accepted — returns the course in `generating` status; poll getCourse for readiness.
