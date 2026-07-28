@@ -11,6 +11,13 @@ const HOP_BY_HOP = new Set([
   'upgrade',
 ]);
 
+/** Headers that describe the upstream wire encoding — must drop when re-buffering the body. */
+const UPSTREAM_BODY_HEADERS = new Set([
+  'content-encoding',
+  'content-length',
+  'transfer-encoding',
+]);
+
 function backendBaseUrl(): string {
   return (process.env.BACKEND_URL ?? 'http://localhost:4000').trim().replace(/\/$/, '');
 }
@@ -66,7 +73,9 @@ async function proxy(req: NextRequest, context: { params: Promise<{ path: string
 
   upstream.headers.forEach((value, key) => {
     const lower = key.toLowerCase();
-    if (lower === 'set-cookie' || HOP_BY_HOP.has(lower)) return;
+    if (lower === 'set-cookie' || HOP_BY_HOP.has(lower) || UPSTREAM_BODY_HEADERS.has(lower)) {
+      return;
+    }
     responseHeaders.set(key, value);
   });
 
@@ -88,7 +97,11 @@ async function proxy(req: NextRequest, context: { params: Promise<{ path: string
     });
   }
 
-  return new NextResponse(upstream.body, {
+  // Buffer body — streaming upstream.body is unreliable on Vercel serverless and
+  // forwarding content-encoding breaks when fetch already decompressed the payload.
+  const body = req.method === 'HEAD' ? null : await upstream.arrayBuffer();
+
+  return new NextResponse(body, {
     status: upstream.status,
     statusText: upstream.statusText,
     headers: responseHeaders,
@@ -96,6 +109,7 @@ async function proxy(req: NextRequest, context: { params: Promise<{ path: string
 }
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export const GET = proxy;
 export const POST = proxy;
