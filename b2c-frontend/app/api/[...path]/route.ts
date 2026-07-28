@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:4000';
-
 const HOP_BY_HOP = new Set([
   'connection',
   'keep-alive',
@@ -13,9 +11,23 @@ const HOP_BY_HOP = new Set([
   'upgrade',
 ]);
 
+function backendBaseUrl(): string {
+  return (process.env.BACKEND_URL ?? 'http://localhost:4000').trim().replace(/\/$/, '');
+}
+
+/** Strip Domain= from upstream cookies so they bind to the frontend host. */
+function normalizeSetCookie(header: string): string {
+  return header
+    .split(';')
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0 && !/^domain=/i.test(part))
+    .join('; ');
+}
+
 async function proxy(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
-  const target = `${BACKEND_URL}/${path.join('/')}${req.nextUrl.search}`;
+  const backend = backendBaseUrl();
+  const target = `${backend}/${path.join('/')}${req.nextUrl.search}`;
 
   const headers = new Headers();
   req.headers.forEach((value, key) => {
@@ -28,13 +40,28 @@ async function proxy(req: NextRequest, context: { params: Promise<{ path: string
     method: req.method,
     headers,
     redirect: 'manual',
+    cache: 'no-store',
   };
 
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     init.body = await req.arrayBuffer();
   }
 
-  const upstream = await fetch(target, init);
+  let upstream: Response;
+  try {
+    upstream = await fetch(target, init);
+  } catch {
+    return NextResponse.json(
+      {
+        error: 'Backend unreachable from frontend proxy',
+        backendUrlConfigured: Boolean(process.env.BACKEND_URL?.trim()),
+        hint:
+          'On the FRONTEND host: BACKEND_URL=https://learningapp-iw8r.onrender.com and NEXT_PUBLIC_API_URL=/api. Redeploy after env changes.',
+      },
+      { status: 502 },
+    );
+  }
+
   const responseHeaders = new Headers();
 
   upstream.headers.forEach((value, key) => {
@@ -51,7 +78,7 @@ async function proxy(req: NextRequest, context: { params: Promise<{ path: string
         : [];
 
   for (const cookie of setCookies) {
-    responseHeaders.append('Set-Cookie', cookie);
+    responseHeaders.append('Set-Cookie', normalizeSetCookie(cookie));
   }
 
   if (upstream.status === 204 || upstream.status === 205) {
@@ -67,6 +94,8 @@ async function proxy(req: NextRequest, context: { params: Promise<{ path: string
     headers: responseHeaders,
   });
 }
+
+export const dynamic = 'force-dynamic';
 
 export const GET = proxy;
 export const POST = proxy;

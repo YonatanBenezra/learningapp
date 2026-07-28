@@ -25,14 +25,15 @@ npm run worker       # BullMQ workers (separate terminal)
 1. Copy `.env.example` → `.env.local`:
 
 ```bash
-NEXT_PUBLIC_API_URL=https://your-api.example.com
+NEXT_PUBLIC_API_URL=/api
+BACKEND_URL=http://localhost:4000
 ```
 
 2. Local dev:
 
 ```bash
 npm install
-npm run dev          # :3000
+npm run dev          # :3000 — ensure backend is on :4000
 ```
 
 3. Production build:
@@ -46,8 +47,8 @@ npm run start
 
 ```bash
 cd b2c-frontend
-docker build --build-arg NEXT_PUBLIC_API_URL=https://your-api.example.com -t bina-b2c-web .
-docker run -p 3000:3000 bina-b2c-web
+docker build --build-arg NEXT_PUBLIC_API_URL=/api -t bina-b2c-web .
+docker run -p 3000:3000 -e BACKEND_URL=https://your-backend.onrender.com bina-b2c-web
 ```
 
 ## Render / Vercel
@@ -60,12 +61,22 @@ docker run -p 3000:3000 bina-b2c-web
 | MongoDB | MongoDB Atlas |
 | Redis | Upstash or Render Redis |
 
-**Frontend env on host:**
-- `NEXT_PUBLIC_API_URL` → backend public URL
+**Frontend env (on the FRONTEND service only):**
 
-**Backend env on host:**
-- `CORS_ORIGIN` → frontend URL
+| Variable | When | Value |
+|----------|------|--------|
+| `NEXT_PUBLIC_API_URL` | Build + runtime | `/api` |
+| `BACKEND_URL` | Runtime only | `https://your-backend.onrender.com` |
+
+After deploy, open `https://your-frontend-domain/api/health` — `backendUrlConfigured` and `ok` must both be `true`.
+
+**Backend env (on the BACKEND service):**
+
+- `AUTH_COOKIE_PATH=/api`
+- `CORS_ORIGIN` → frontend URL (e.g. `https://your-frontend.onrender.com`)
 - `MONGO_URI`, `REDIS_URL`, `AI_PROVIDER_API_KEY`, JWT secrets, Stripe keys
+
+Do **not** set `NEXT_PUBLIC_API_URL` to the backend URL — login cookies use path `/api` and will break.
 
 ## Health checks
 
