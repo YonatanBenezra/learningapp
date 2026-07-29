@@ -72,7 +72,7 @@ interface NavGroup {
 
 const learnerNavGroups: NavGroup[] = [
   {
-    title: "OVERVIEW",
+    title: "Overview",
     items: [
       { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
       { labelKey: "nav.courses", href: "/my-courses", icon: BookOpen },
@@ -81,7 +81,7 @@ const learnerNavGroups: NavGroup[] = [
     ],
   },
   {
-    title: "LEARNING",
+    title: "Learning",
     items: [
       { labelKey: "nav.quizzes", href: "/quizzes", icon: ClipboardList },
       { labelKey: "nav.networkLab", href: "/network-lab", icon: Network },
@@ -90,7 +90,7 @@ const learnerNavGroups: NavGroup[] = [
     ],
   },
   {
-    title: "ACCOUNT",
+    title: "Account",
     items: [
       { labelKey: "nav.settings", href: "/settings", icon: Settings },
       { labelKey: "nav.upgrade", href: "/upgrade", icon: Crown },
@@ -100,12 +100,12 @@ const learnerNavGroups: NavGroup[] = [
 ];
 
 const accountSettingsGroup: NavGroup = {
-  title: "ACCOUNT",
+  title: "Account",
   items: [{ labelKey: "nav.settings", href: "/settings", icon: Settings }],
 };
 
 const adminGroup: NavGroup = {
-  title: "ADMIN PANEL",
+  title: "Admin",
   items: [
     { labelKey: "nav.dashboard", href: "/admin/metrics", icon: LayoutDashboard },
     { labelKey: "nav.adminCosts", href: "/admin/costs", icon: DollarSign },
@@ -114,7 +114,7 @@ const adminGroup: NavGroup = {
 };
 
 const instructorGroup: NavGroup = {
-  title: "INSTRUCTOR",
+  title: "Instructor",
   items: [
     { labelKey: "nav.instructorDashboard", href: "/instructor/dashboard", icon: LayoutDashboard },
     { labelKey: "nav.instructorCourses", href: "/instructor/courses", icon: BookOpen },
@@ -163,14 +163,19 @@ function SidebarNavItem({
       href={item.href}
       title={collapsed ? label : undefined}
       className={cn(
-        "flex items-center rounded-lg text-[15px] font-medium transition-colors duration-200",
-        collapsed ? "justify-center px-0 py-3" : "gap-3 px-4 py-2.5",
+        "group flex items-center text-sm font-medium transition-colors duration-200",
+        collapsed ? "justify-center rounded-xl px-0 py-2.5" : "gap-3 rounded-xl px-3 py-2.5",
         active
           ? "bg-primary-soft text-primary"
           : "text-ink-2 hover:bg-bg-soft hover:text-ink",
       )}
     >
-      <item.icon className="size-[18px] shrink-0 stroke-[1.75]" />
+      <item.icon
+        className={cn(
+          "size-[18px] shrink-0 stroke-[1.75]",
+          active ? "text-primary" : "text-ink-3 group-hover:text-ink-2",
+        )}
+      />
       {!collapsed && <span className="flex-1 truncate">{label}</span>}
     </Link>
   );
@@ -197,13 +202,11 @@ function SidebarGroupSection({
   const groupHrefs = group.items.map((item) => resolveNavItemHref(item, role).href);
 
   return (
-    <div className={collapsed ? "px-2" : "px-5"}>
+    <div className={collapsed ? "px-2" : "px-4"}>
       {!collapsed && (
-        <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-          {group.title}
-        </p>
+        <p className="mb-2 px-3 text-xs font-medium text-ink-3">{group.title}</p>
       )}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-0.5">
         {group.items.map((item) => {
           const resolved = resolveNavItemHref(item, role);
           const active = isNavItemActive(pathname, resolved.href, groupHrefs);
@@ -224,14 +227,14 @@ function SidebarGroupSection({
 
 function BrandLogo({ collapsed, homeHref }: { collapsed: boolean; homeHref: string }) {
   return (
-    <Link href={homeHref} className="flex items-center gap-3">
-      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary-2 shadow-[var(--shadow-primary)]">
-        <GraduationCap className="size-5 text-primary-ink" strokeWidth={2} />
+    <Link href={homeHref} className="flex items-center gap-2.5">
+      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+        <Sparkles className="size-5" />
       </span>
       {!collapsed && (
-        <span className="text-[22px] font-bold tracking-tight">
+        <span className="font-heading text-xl font-semibold tracking-tight text-ink">
           <span className="text-primary">AI</span>
-          <span className="text-ink">Study</span>
+          Study
         </span>
       )}
     </Link>
@@ -250,12 +253,12 @@ export function Sidebar() {
 
   const renderContent = (isCollapsed: boolean) => (
     <div className="flex h-full flex-col bg-bg-elev">
-      <div className={cn("border-b border-line py-5", isCollapsed ? "px-3" : "px-5")}>
+      <div className={cn("border-b border-line py-4", isCollapsed ? "px-3" : "px-4")}>
         <BrandLogo collapsed={isCollapsed} homeHref={homeHref} />
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-4">
-        <div className="flex flex-col gap-5">
+      <nav className="flex-1 overflow-y-auto py-4" aria-label="Dashboard navigation">
+        <div className="flex flex-col gap-6">
           {groups.map((group) => (
             <SidebarGroupSection
               key={group.title}
@@ -267,24 +270,35 @@ export function Sidebar() {
         </div>
       </nav>
 
-      {!isCollapsed && showUpgradeCta && (
-        <div className="border-t border-line px-5 py-5">
-          <Link
-            href="/upgrade"
-            className="flex h-11 w-full items-center justify-center rounded-xl bg-primary text-sm font-semibold text-primary-ink shadow-[var(--shadow-primary)] transition hover:bg-primary-dark"
-          >
-            Purchase now
-          </Link>
+      {showUpgradeCta && (
+        <div className={cn("border-t border-line", isCollapsed ? "px-2 py-3" : "px-4 py-4")}>
+          {isCollapsed ? (
+            <Link
+              href="/upgrade"
+              title={t("nav.upgrade")}
+              className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary transition hover:bg-primary/10"
+            >
+              <Crown className="size-4" />
+            </Link>
+          ) : (
+            <Link
+              href="/upgrade"
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-primary text-sm font-semibold text-primary-ink transition hover:bg-primary-dark"
+            >
+              <Crown className="size-4" />
+              {t("nav.upgrade")}
+            </Link>
+          )}
         </div>
       )}
 
-      <div className="border-t border-line px-3 py-3">
+      <div className={cn("border-t border-line", isCollapsed ? "px-2 py-3" : "px-3 py-3")}>
         <button
           onClick={logout}
-          title={isCollapsed ? "Logout" : undefined}
+          title={isCollapsed ? t("nav.logout") : undefined}
           className={cn(
-            "flex w-full items-center rounded-xl text-[15px] font-medium text-ink-2 transition hover:bg-bg-soft hover:text-ink",
-            isCollapsed ? "justify-center py-3" : "gap-3 px-4 py-2.5",
+            "flex w-full items-center rounded-xl text-sm font-medium text-ink-2 transition hover:bg-bg-soft hover:text-ink",
+            isCollapsed ? "justify-center py-2.5" : "gap-3 px-3 py-2.5",
           )}
         >
           <LogOut className="size-[18px] shrink-0" />
@@ -315,7 +329,7 @@ export function Sidebar() {
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: "spring", damping: 28, stiffness: 220 }}
-            className="fixed inset-y-0 left-0 z-50 flex w-[270px] flex-col border-r border-line lg:hidden"
+            className="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-line shadow-card lg:hidden"
           >
             {renderContent(false)}
           </motion.aside>
@@ -324,8 +338,8 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-30 hidden flex-col border-r border-line transition-[width] duration-300 lg:flex",
-          collapsed ? "w-[72px]" : "w-[270px]",
+          "fixed inset-y-0 left-0 z-30 hidden flex-col border-r border-line bg-bg-elev transition-[width] duration-300 lg:flex",
+          collapsed ? "w-[72px]" : "w-[260px]",
         )}
       >
         {renderContent(collapsed)}

@@ -52,9 +52,9 @@ async function signup(email = 'sub@example.com') {
   return { token: cookies.access, userId: res.body.user.id as string };
 }
 
-const courseInput = (topic: string) => ({
+const courseInput = (suffix: string) => ({
   category: 'Cyber',
-  topics: [topic],
+  topics: ['topic-a', 'topic-b', 'topic-c', 'topic-d', `topic-${suffix}`],
   level: 'beginner' as const,
 });
 

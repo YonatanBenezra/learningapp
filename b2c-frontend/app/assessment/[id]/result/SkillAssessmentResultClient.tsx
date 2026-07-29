@@ -85,9 +85,9 @@ function ResultContent({ id }: { id: string }) {
 
   if (!assessment) {
     return (
-      <Container className="max-w-[1240px] py-20">
+      <Container className="max-w-6xl py-20">
         <div className="mx-auto max-w-lg rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <h1 className="text-2xl font-semibold text-ink">Assessment not found</h1>
+          <h1 className="text-2xl font-bold text-ink">Assessment not found</h1>
         </div>
       </Container>
     );
@@ -95,16 +95,16 @@ function ResultContent({ id }: { id: string }) {
 
   if (resultError || !submission) {
     return (
-      <Container className="max-w-[1240px] py-20">
+      <Container className="max-w-6xl py-20">
         <div className="mx-auto max-w-lg rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <h1 className="text-2xl font-semibold text-ink">Results not available</h1>
-          <p className="mt-2 text-sm text-ink-2">
+          <h1 className="text-2xl font-bold text-ink">Results not available</h1>
+          <p className="mt-2 text-sm leading-6 text-ink-2">
             Complete the assessment and sign in to view your private results.
           </p>
           <button
             type="button"
             onClick={() => router.push(`/assessment/${id}`)}
-            className="mt-6 inline-flex h-11 items-center rounded-xl bg-primary px-6 text-sm font-semibold text-white hover:bg-primary-dark"
+            className="mt-6 inline-flex h-11 items-center rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-primary-dark"
           >
             Return to assessment
           </button>

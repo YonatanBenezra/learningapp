@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, Bookmark, BookOpen, Users } from 'lucide-react';
+import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { cn } from '@/src/lib/utils';
 
 export type CatalogCourse = {
@@ -32,12 +33,14 @@ interface CourseCatalogCardProps {
   course: CatalogCourse;
   bookmarked?: boolean;
   onToggleBookmark?: () => void;
+  enrolled?: boolean;
 }
 
 export function CourseCatalogCard({
   course,
   bookmarked = false,
   onToggleBookmark,
+  enrolled = false,
 }: CourseCatalogCardProps) {
   return (
     <article className="overflow-hidden rounded-lg border border-line bg-bg-elev shadow-card transition-shadow hover:shadow-lift">
@@ -98,10 +101,15 @@ export function CourseCatalogCard({
         </div>
 
         <Link
-          href={`/courses/${course.id}`}
-          className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#6C757D] text-sm font-semibold text-white transition-colors hover:bg-[#5a6268] dark:bg-ink-3 dark:hover:bg-ink-2"
+          href={enrolled ? learnerCoursePath(course.id) : `/courses/${course.id}`}
+          className={cn(
+            'mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold text-white transition-colors',
+            enrolled
+              ? 'bg-primary hover:bg-primary-dark'
+              : 'bg-[#6C757D] hover:bg-[#5a6268] dark:bg-ink-3 dark:hover:bg-ink-2',
+          )}
         >
-          Preview This Course
+          {enrolled ? 'Continue learning' : 'Preview This Course'}
           <ArrowRight className="size-4" />
         </Link>
       </div>

@@ -83,23 +83,25 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
           setSearch('');
         }}
         className={cn(
-          'flex items-center gap-1.5 rounded-full text-sm font-medium transition-all duration-200',
-          compact ? 'px-2 py-1.5' : 'gap-2 px-3 py-2',
+          'flex items-center gap-1.5 rounded-xl border text-sm font-medium transition-all duration-200',
+          compact ? 'size-9 justify-center border-line px-0 py-0' : 'gap-2 border-transparent px-3 py-2',
           open
-            ? 'bg-bg-soft text-ink'
-            : 'text-ink-2 hover:bg-bg-soft hover:text-ink',
+            ? 'border-line bg-bg-soft text-ink'
+            : 'text-ink-2 hover:border-line hover:bg-bg-soft hover:text-ink',
         )}
         aria-label="Select language"
         aria-expanded={open}
       >
-        <Globe className="size-5 shrink-0" />
-        <span className="hidden lg:inline">{current.name}</span>
-        <ChevronDown
-          className={cn(
-            'size-3.5 shrink-0 transition-transform duration-200',
-            open && 'rotate-180',
-          )}
-        />
+        <Globe className={cn('shrink-0', compact ? 'size-[18px]' : 'size-5')} />
+        {!compact && <span className="hidden lg:inline">{current.name}</span>}
+        {!compact && (
+          <ChevronDown
+            className={cn(
+              'size-3.5 shrink-0 transition-transform duration-200',
+              open && 'rotate-180',
+            )}
+          />
+        )}
       </button>
 
       <AnimatePresence>
@@ -109,7 +111,7 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="absolute right-0 top-full z-50 mt-2 w-[240px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-[var(--shadow-elevated)]"
+            className="absolute right-0 top-full z-50 mt-2 w-[240px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card"
           >
             <div className="border-b border-line p-2">
               <div className="relative">

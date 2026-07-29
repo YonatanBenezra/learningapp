@@ -45,7 +45,17 @@ export function useSignup() {
       setUser(data.user);
       setSessionReady(true);
       invalidateAssessmentQueries(queryClient);
-      navigateAfterAuth(router, '/create-course');
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect');
+      if (redirect?.startsWith('/')) {
+        router.push(redirect);
+        return;
+      }
+      if (data.user.role === 'user') {
+        router.push('/assessment/start');
+        return;
+      }
+      navigateAfterAuth(router, defaultDashboardPath(data.user.role));
     },
   });
 }

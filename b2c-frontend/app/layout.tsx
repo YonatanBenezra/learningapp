@@ -30,7 +30,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${outfit.variable} ${geistMono.variable} h-full font-sans`}
     >
-      <body className="min-h-full bg-bg text-ink flex flex-col">
+      <body className="flex min-h-dvh flex-col bg-bg text-ink">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

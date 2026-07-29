@@ -54,69 +54,69 @@ function difficultyVariant(difficulty: string): 'good' | 'warn' | 'bad' | 'outli
 
 export function NetworkSimulatorLab({
   starterState,
+  scenario: scenarioProp,
   value,
   onChange,
   readOnly = false,
 }: {
-  starterState: unknown;
+  starterState?: unknown;
+  scenario?: NetworkScenario;
   value: ScenarioLabSubmission | null;
   onChange: (data: ScenarioLabSubmission) => void;
   readOnly?: boolean;
 }) {
-  const [scenario, setScenario] = useState<NetworkScenario | null>(null);
+  const selfLoaded = scenarioProp === undefined;
+  const [embeddedScenario, setEmbeddedScenario] = useState<NetworkScenario | null>(null);
+  const [embeddedLoading, setEmbeddedLoading] = useState(selfLoaded);
+  const [embeddedError, setEmbeddedError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>(value?.answers ?? {});
   const [localResult, setLocalResult] = useState<ScenarioSubmitResult | null>(
     value?.localResult ?? null,
   );
-  const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filterQuery, setFilterQuery] = useState('');
   const [selectedHost, setSelectedHost] = useState<string | null>(null);
-  const [visibleCount, setVisibleCount] = useState(0);
-  const [capturing, setCapturing] = useState(true);
+
+  const scenario = scenarioProp ?? embeddedScenario;
+  const loading = scenarioProp ? false : embeddedLoading;
 
   useEffect(() => {
+    if (scenarioProp || !selfLoaded) return;
+
     let cancelled = false;
     async function load() {
-      setLoading(true);
-      setError(null);
+      setEmbeddedLoading(true);
+      setEmbeddedError(null);
       try {
         const scenarios = await listNetworkScenarios();
         const id = scenarioIdFromStarter(starterState, scenarios[0]?.id ?? 'port-scan');
         const data = await getNetworkScenario(id);
-        if (!cancelled) {
-          setScenario(data);
-          setVisibleCount(0);
-          setCapturing(true);
-        }
+        if (!cancelled) setEmbeddedScenario(data);
       } catch {
-        if (!cancelled) setError('Could not load network scenario.');
+        if (!cancelled) setEmbeddedError('Could not load network scenario.');
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setEmbeddedLoading(false);
       }
     }
     void load();
-  }, [starterState]);
+    return () => {
+      cancelled = true;
+    };
+  }, [starterState, scenarioProp, selfLoaded]);
+
+  useEffect(() => {
+    setAnswers(value?.answers ?? {});
+    setLocalResult(value?.localResult ?? null);
+    setFilterQuery('');
+    setSelectedHost(null);
+    setError(null);
+  }, [scenario?.id]);
 
   const allFlows = useMemo(
     () => (scenario ? parseNetworkFlowLines(scenario.pcapSummary) : []),
     [scenario],
   );
-
-  useEffect(() => {
-    if (!scenario || allFlows.length === 0) return;
-    setVisibleCount(0);
-    setCapturing(true);
-    const timers = allFlows.map((_, index) =>
-      window.setTimeout(() => setVisibleCount(index + 1), 450 + index * 420),
-    );
-    const doneTimer = window.setTimeout(() => setCapturing(false), 450 + allFlows.length * 420 + 200);
-    return () => {
-      timers.forEach(clearTimeout);
-      clearTimeout(doneTimer);
-    };
-  }, [scenario, allFlows]);
 
   const hosts = useMemo(() => collectHosts(allFlows), [allFlows]);
 
@@ -130,14 +130,14 @@ export function NetworkSimulatorLab({
   }, [allFlows]);
 
   const filteredFlows = useMemo(() => {
-    let flows = allFlows.slice(0, visibleCount);
+    let flows = allFlows;
     if (selectedHost) {
       flows = flows.filter(
         (flow) => flow.source === selectedHost || flow.destination === selectedHost,
       );
     }
     return filterNetworkFlows(flows, filterQuery);
-  }, [allFlows, visibleCount, selectedHost, filterQuery]);
+  }, [allFlows, selectedHost, filterQuery]);
 
   useEffect(() => {
     if (scenario) onChange({ scenarioId: scenario.id, answers, localResult });
@@ -163,15 +163,19 @@ export function NetworkSimulatorLab({
 
   if (loading) {
     return (
-      <div className="flex items-center gap-3 rounded-lg border border-[#2d2d2d] bg-[#1e1e1e] p-8 text-sm text-[#cccccc]">
-        <Loader2 className="size-5 animate-spin text-[#007F8E]" />
-        Initializing network capture interface…
+      <div className="flex min-h-[420px] items-center justify-center gap-3 bg-[#1e1e1e] p-8 text-sm text-[#cccccc]">
+        <Loader2 className="size-5 animate-spin text-primary" />
+        Loading network scenario…
       </div>
     );
   }
 
-  if (error && !scenario) {
-    return <p className="text-sm text-bad">{error}</p>;
+  if (embeddedError && !scenario) {
+    return (
+      <div className="bg-bg-elev p-8 text-center">
+        <p className="text-sm text-bad">{embeddedError}</p>
+      </div>
+    );
   }
 
   if (!scenario) return null;
@@ -179,17 +183,17 @@ export function NetworkSimulatorLab({
   const resultByQuestion = new Map(localResult?.results.map((r) => [r.questionId, r]) ?? []);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-[#2d2d2d] bg-[#1e1e1e]">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2d2d2d] bg-[#252526] px-4 py-3">
+    <div className="overflow-hidden bg-[#1e1e1e]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2d2d2d] bg-[#252526] px-4 py-3 sm:px-5">
         <div className="flex items-center gap-3">
           <span className="grid size-9 place-items-center rounded-lg border border-[#007F8E]/30 bg-[#007F8E]/10 text-[#4ec9b0]">
             <Network className="size-4" />
           </span>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#858585]">
-              Network simulator
-            </p>
             <p className="text-sm font-semibold text-[#cccccc]">{scenario.title}</p>
+            <p className="mt-0.5 text-xs text-[#858585]">
+              {allFlows.length} flows · Packet capture simulator
+            </p>
           </div>
         </div>
         <Badge variant={difficultyVariant(scenario.difficulty)} className="capitalize">
@@ -198,12 +202,9 @@ export function NetworkSimulatorLab({
       </div>
 
       <div className="space-y-4 p-4 sm:p-5">
-        <div className="rounded-lg border border-[#2d2d2d] bg-[#252526] p-4">
-          <p className="text-sm font-medium text-[#cccccc]">{scenario.title}</p>
-          <p className="mt-1 text-sm leading-6 text-[#858585]">{scenario.description}</p>
-        </div>
+        <p className="text-sm leading-6 text-[#858585]">{scenario.description}</p>
 
-        <NetworkCaptureBanner capturing={capturing} flowCount={visibleCount} />
+        <NetworkCaptureBanner capturing={false} flowCount={allFlows.length} />
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <div className="relative flex-1">
@@ -229,7 +230,7 @@ export function NetworkSimulatorLab({
               onSelectHost={setSelectedHost}
               flowCounts={flowCounts}
             />
-            <NetworkFlowStats flows={allFlows.slice(0, visibleCount)} />
+            <NetworkFlowStats flows={allFlows} />
           </div>
 
           <NetworkFlowViewer
@@ -241,20 +242,15 @@ export function NetworkSimulatorLab({
         </div>
 
         <div className="rounded-lg border border-[#2d2d2d] bg-[#252526] p-4 sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#858585]">
-            Raw flow summary
-          </p>
+          <p className="text-sm font-medium text-[#cccccc]">Raw flow summary</p>
           <pre className="mt-3 max-h-40 overflow-auto rounded-lg border border-[#2d2d2d] bg-[#0d1117] p-3 font-mono text-[12px] leading-6 text-[#e6edf3]">
-            {scenario.pcapSummary.slice(0, visibleCount).join('\n')}
-            {capturing ? '\n… capture running' : ''}
+            {scenario.pcapSummary.join('\n')}
           </pre>
         </div>
 
-        <div className="rounded-lg border border-line bg-bg-elev p-4 sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">
-            Analysis worksheet
-          </p>
-          <p className="mt-1 text-sm text-ink-2">
+        <div className="rounded-xl border border-line bg-bg p-4 sm:p-5">
+          <h2 className="text-base font-semibold text-ink">Analysis worksheet</h2>
+          <p className="mt-1 text-sm leading-6 text-ink-2">
             Review the flow table, identify suspicious hosts and techniques, then submit your
             findings.
           </p>
@@ -306,7 +302,11 @@ export function NetworkSimulatorLab({
 
           {!readOnly ? (
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <Button onClick={() => void checkAnswers()} disabled={checking}>
+              <Button
+                className="rounded-full px-5"
+                onClick={() => void checkAnswers()}
+                disabled={checking}
+              >
                 {checking ? <Loader2 className="size-4 animate-spin" /> : 'Validate analysis'}
               </Button>
               {localResult ? (

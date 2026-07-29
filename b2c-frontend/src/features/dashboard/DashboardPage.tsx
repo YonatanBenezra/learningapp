@@ -1,14 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronRight, Clock, Flame, GraduationCap, Plus, Sparkles, Target, Trophy } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  ClipboardList,
+  Clock,
+  Flame,
+  GraduationCap,
+  Plus,
+  Sparkles,
+  Target,
+  Trophy,
+} from 'lucide-react';
 import { TRIAL_PERIOD_MONTHS } from '@/src/constants/pricing';
 import { useMe } from '@/src/features/auth';
 import { useCourses } from '@/src/features/courses';
 import { useMyAchievements } from '@/src/features/gamification';
 import { useSubscription } from '@/src/features/subscription';
 import { useTranslation } from '@/src/i18n';
+import type { MessageKey } from '@/src/i18n';
 import type { Course } from '@/src/domain/course';
+import { getUserDisplayName } from '@/src/lib/userDisplay';
 import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import {
@@ -17,6 +30,13 @@ import {
   RecentCoursesPanel,
   StudySummaryCard,
 } from './DashboardAnalytics';
+
+function greetingKey(): MessageKey {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'dashboard.greetingMorning';
+  if (hour < 17) return 'dashboard.greetingAfternoon';
+  return 'dashboard.greetingEvening';
+}
 
 function computeCourseStats(courses: Course[]) {
   const ready = courses.filter((course) => course.status === 'ready');
@@ -30,38 +50,54 @@ function computeCourseStats(courses: Course[]) {
   return { ready: ready.length, completed, inProgress, avgProgress };
 }
 
-function DashboardHeader() {
+function DashboardHeader({ name }: { name: string }) {
+  const { t } = useTranslation();
+
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <h1 className="text-2xl font-bold text-ink">Dashboard</h1>
-      <nav className="flex items-center gap-1.5 text-sm text-ink-3">
-        <Link href="/dashboard" className="transition hover:text-primary">
-          <span className="text-primary">AI</span>
-          <span className="text-ink">Study</span>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="max-w-2xl">
+        <p className="text-sm font-medium text-ink-2">{t(greetingKey())}</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{name}</h1>
+        <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">{t('dashboard.subtitle')}</p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Link href="/create-course">
+          <Button size="lg" className="rounded-full px-5">
+            <Plus className="size-4" />
+            {t('common.newCourse')}
+          </Button>
         </Link>
-        <ChevronRight className="size-4" />
-        <span className="font-medium text-ink">Dashboard</span>
-      </nav>
+        <Link href="/assessments">
+          <Button size="lg" variant="soft" className="rounded-full px-5">
+            <ClipboardList className="size-4" />
+            {t('nav.assessments')}
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
 
 function DashboardSkeleton() {
   return (
-    <div className="w-full space-y-6 p-4 sm:p-6 lg:p-8">
-      <Skeleton className="h-8 w-48" />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="w-full space-y-6 p-4 sm:p-6 lg:p-8 xl:px-10">
+      <div className="space-y-3">
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-9 w-56" />
+        <Skeleton className="h-5 w-full max-w-xl" />
+      </div>
+      <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-[88px] rounded-xl" />
+          <Skeleton key={i} className="h-[88px] rounded-none bg-bg-elev" />
         ))}
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
-        <Skeleton className="h-[360px] rounded-xl" />
-        <Skeleton className="h-[360px] rounded-xl" />
+        <Skeleton className="h-[360px] rounded-2xl" />
+        <Skeleton className="h-[360px] rounded-2xl" />
       </div>
       <div className="grid gap-6 lg:grid-cols-12">
-        <Skeleton className="h-[420px] rounded-xl lg:col-span-4" />
-        <Skeleton className="h-[420px] rounded-xl lg:col-span-8" />
+        <Skeleton className="h-[420px] rounded-2xl lg:col-span-4" />
+        <Skeleton className="h-[420px] rounded-2xl lg:col-span-8" />
       </div>
     </div>
   );
@@ -80,6 +116,7 @@ export function DashboardPage() {
   if (loading) return <DashboardSkeleton />;
 
   const user = meQ.data?.user;
+  const displayName = getUserDisplayName(user);
   const courses = coursesQ.data?.courses ?? [];
   const achievements = achievementsQ.data;
   const tier = subscriptionQ.data?.subscription.tier ?? user?.tier ?? 'free';
@@ -93,10 +130,10 @@ export function DashboardPage() {
   if (coursesQ.isError || !user) {
     return (
       <div className={shellClass}>
-        <DashboardHeader />
-        <div className="rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-soft">
+        <DashboardHeader name={displayName} />
+        <div className="rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
           <p className="text-ink-2">{t('dashboard.loadError')}</p>
-          <Button variant="soft" className="mt-4" onClick={() => coursesQ.refetch()}>
+          <Button variant="soft" className="mt-4 rounded-full px-5" onClick={() => coursesQ.refetch()}>
             {t('common.retry')}
           </Button>
         </div>
@@ -107,19 +144,20 @@ export function DashboardPage() {
   if (courses.length === 0) {
     return (
       <div className={shellClass}>
-        <DashboardHeader />
+        <DashboardHeader name={displayName} />
 
-        <div className="rounded-2xl border border-dashed border-line-2 bg-bg-elev p-12 text-center shadow-soft">
-          <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-primary-soft text-primary">
+        <div className="rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card sm:p-12">
+          <div className="mx-auto grid size-14 place-items-center rounded-full border border-line bg-bg-soft text-primary">
             <Sparkles className="size-7" />
           </div>
-          <h2 className="mt-4 text-xl font-bold text-ink">{t('dashboard.createFirstTitle')}</h2>
-          <p className="mx-auto mt-2 max-w-[42ch] text-sm text-ink-2">
+          <h2 className="mt-5 text-xl font-bold text-ink sm:text-2xl">{t('dashboard.createFirstTitle')}</h2>
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-7 text-ink-2">
             {t('dashboard.createFirstBody')}
           </p>
           <Link href="/create-course" className="mt-6 inline-block">
-            <Button size="lg">
-              <Plus className="size-4" /> {t('dashboard.startLearning')}
+            <Button size="lg" className="rounded-full px-6">
+              <Plus className="size-4" />
+              {t('dashboard.startLearning')}
             </Button>
           </Link>
         </div>
@@ -129,24 +167,26 @@ export function DashboardPage() {
 
   return (
     <div className={shellClass}>
-      <DashboardHeader />
+      <DashboardHeader name={displayName} />
 
       {!isPremium && subscription?.requiresPayment ? (
-        <div className="rounded-2xl border border-bad/20 bg-bg-elev px-5 py-4 shadow-soft sm:flex sm:items-center sm:justify-between sm:gap-4">
+        <div className="flex flex-col gap-4 rounded-2xl border border-bad/20 bg-bg-elev px-5 py-4 shadow-card sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
             <p className="font-semibold text-ink">{t('dashboard.trialEndedTitle')}</p>
-            <p className="mt-1 text-sm text-ink-2">{t('dashboard.trialEndedBody')}</p>
+            <p className="mt-1 text-sm leading-6 text-ink-2">{t('dashboard.trialEndedBody')}</p>
           </div>
-          <Link href="/upgrade" className="mt-3 inline-block sm:mt-0">
-            <Button>{t('dashboard.subscribeNow')}</Button>
+          <Link href="/upgrade" className="shrink-0">
+            <Button className="rounded-full px-5">{t('dashboard.subscribeNow')}</Button>
           </Link>
         </div>
       ) : null}
 
       {!isPremium && subscription?.trialActive ? (
-        <div className="flex flex-col gap-3 rounded-2xl border border-primary/15 bg-bg-elev px-5 py-4 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 rounded-2xl border border-primary/20 bg-bg-elev px-5 py-4 shadow-card sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-start gap-3">
-            <Clock className="mt-0.5 size-5 shrink-0 text-primary" />
+            <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-primary/20 bg-primary-soft text-primary">
+              <Clock className="size-5" />
+            </span>
             <div>
               <p className="font-semibold text-ink">
                 {t('dashboard.trialDaysLeft', {
@@ -154,39 +194,41 @@ export function DashboardPage() {
                   months: String(TRIAL_PERIOD_MONTHS),
                 })}
               </p>
-              <p className="mt-1 text-sm text-ink-2">{t('dashboard.trialPremiumNote')}</p>
+              <p className="mt-1 text-sm leading-6 text-ink-2">{t('dashboard.trialPremiumNote')}</p>
             </div>
           </div>
-          <Link href="/upgrade">
-            <Button variant="soft">{t('dashboard.viewPlans')}</Button>
+          <Link href="/upgrade" className="shrink-0">
+            <Button variant="soft" className="rounded-full px-5">
+              {t('dashboard.viewPlans')}
+            </Button>
           </Link>
         </div>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
         <StudySummaryCard
           label="Courses"
           value={String(courseStats.ready)}
           icon={GraduationCap}
-          iconBg="bg-primary-soft text-primary"
+          iconClass="text-primary"
         />
         <StudySummaryCard
           label="Progress"
           value={`${courseStats.avgProgress}%`}
           icon={Target}
-          iconBg="bg-secondary-soft text-secondary"
+          iconClass="text-secondary"
         />
         <StudySummaryCard
           label="Achievements"
           value={`${achievements?.earnedCount ?? 0}`}
           icon={Trophy}
-          iconBg="bg-good-soft text-good"
+          iconClass="text-good"
         />
         <StudySummaryCard
           label="Streak"
           value={String(streak)}
           icon={Flame}
-          iconBg="bg-tint-blue text-primary"
+          iconClass="text-primary"
         />
       </div>
 
@@ -198,6 +240,28 @@ export function DashboardPage() {
         </div>
         <div className="lg:col-span-8">
           <DashboardActivityTable />
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-line bg-bg-soft shadow-card">
+        <div className="flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6">
+          <div className="max-w-xl">
+            <div className="flex items-center gap-2 text-sm font-medium text-ink">
+              <BookOpen className="size-4 text-primary" />
+              {t('dashboard.continueLearning')}
+            </div>
+            <p className="mt-2 text-sm leading-6 text-ink-2">
+              {courseStats.inProgress > 0
+                ? `${courseStats.inProgress} course${courseStats.inProgress === 1 ? '' : 's'} in progress. Pick up where you left off.`
+                : t('dashboard.welcomeHub')}
+            </p>
+          </div>
+          <Link href="/my-courses" className="shrink-0">
+            <Button variant="soft" className="rounded-full px-5">
+              {t('dashboard.yourCourses')}
+              <ArrowRight className="size-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

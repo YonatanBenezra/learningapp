@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
-import { tierLimits } from '../../config/tiers';
+import { tierLimits, isUnlimitedLimit } from '../../config/tiers';
+import { MIN_COURSE_TOPICS } from './course.constants';
 import { Course } from './course.model';
 import { Module } from '../modules-content/module.model';
 import { Lesson } from '../lessons/lesson.model';
@@ -47,6 +48,17 @@ export async function createCourse(userId: string, input: CreateCourseInput) {
     throw new AppError(
       403,
       `${user.tier === 'free' ? 'Free' : user.tier === 'standard' ? 'Standard' : 'Your'} tier allows only ${activeLimit} active course${activeLimit === 1 ? '' : 's'}. Upgrade or archive one.`,
+    );
+  }
+
+  const topicLimit = tierLimits(user.tier).topicsPerCourse;
+  if (input.topics.length < MIN_COURSE_TOPICS) {
+    throw new AppError(400, `Add at least ${MIN_COURSE_TOPICS} topics to create a course.`);
+  }
+  if (!isUnlimitedLimit(topicLimit) && input.topics.length > topicLimit) {
+    throw new AppError(
+      403,
+      `${user.tier === 'free' ? 'Free' : 'Standard'} tier allows up to ${topicLimit} topics per course. Upgrade for more.`,
     );
   }
 

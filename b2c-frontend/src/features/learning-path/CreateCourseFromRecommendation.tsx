@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { cn } from '@/src/lib/utils';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { useAuthStore } from '@/src/store/authStore';
 import { useCreateCourse } from '@/src/features/courses';
@@ -12,24 +13,32 @@ import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { TRIAL_PERIOD_MONTHS } from '@/src/constants/pricing';
 import type { LearningPathPrefill } from './learningPathRecommendation';
 
-export function CreateCourseFromRecommendation({ prefill }: { prefill: LearningPathPrefill }) {
+export function CreateCourseFromRecommendation({
+  prefill,
+  align = 'start',
+}: {
+  prefill: LearningPathPrefill;
+  align?: 'start' | 'end';
+}) {
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const create = useCreateCourse();
   const [error, setError] = useState<string | null>(null);
 
+  const alignClass = align === 'end' ? 'sm:justify-end' : '';
+
   if (!isAuthenticated) {
     const redirect = encodeURIComponent('/create-course?auto=1');
     return (
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className={cn('flex shrink-0 flex-col gap-3 sm:flex-row', alignClass)}>
         <Link href={`/signup?redirect=${redirect}`}>
-          <Button size="lg" className="w-full bg-primary hover:bg-primary-dark sm:w-auto">
+          <Button size="lg" className="w-full rounded-full bg-primary hover:bg-primary-dark sm:w-auto">
             <Sparkles className="size-4" />
             Sign up free — {TRIAL_PERIOD_MONTHS} months
           </Button>
         </Link>
         <Link href={`/login?redirect=${redirect}`}>
-          <Button size="lg" variant="soft" className="w-full sm:w-auto">
+          <Button size="lg" variant="soft" className="w-full rounded-full sm:w-auto">
             Log in to generate course
           </Button>
         </Link>
@@ -63,10 +72,10 @@ export function CreateCourseFromRecommendation({ prefill }: { prefill: LearningP
   }
 
   return (
-    <div>
+    <div className={cn('shrink-0', alignClass && `flex ${alignClass}`)}>
       <Button
         size="lg"
-        className="bg-primary hover:bg-primary-dark"
+        className="bg-primary hover:bg-primary-dark rounded-full px-6"
         onClick={generateCourse}
         disabled={create.isPending}
       >

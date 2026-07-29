@@ -6,6 +6,13 @@ export function activeCourseLimitForTier(tier: Tier): number | null {
   return typeof value === 'number' ? value : null;
 }
 
+export const MIN_COURSE_TOPICS = 5;
+
+export function topicLimitForTier(tier: Tier): number | null {
+  if (tier === 'free') return 6;
+  return null;
+}
+
 export function assessmentLimitForTier(tier: Tier): number | null {
   const value = TIER_LIMITS[tier].assessments;
   return typeof value === 'number' ? value : null;

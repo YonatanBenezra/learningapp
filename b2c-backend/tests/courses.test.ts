@@ -20,7 +20,19 @@ import type { GeneratedCourse } from '../src/modules/courses/course.generator';
 import type { GeneratedLessonContent } from '../src/modules/courses/lesson.generator';
 
 const TEST_DB = 'mongodb://127.0.0.1:27017/b2c_test_courses';
-const config = { category: 'Cybersecurity', topics: ['fundamentals'], level: 'beginner' as const };
+const VALID_TOPICS = [
+  'fundamentals',
+  'network security',
+  'threat modeling',
+  'incident response',
+  'cryptography',
+] as const;
+
+const config = {
+  category: 'Cybersecurity',
+  topics: [...VALID_TOPICS],
+  level: 'beginner' as const,
+};
 
 const fakeTree: GeneratedCourse = {
   title: 'Intro to Cybersecurity',
@@ -159,6 +171,29 @@ describe('POST /courses', () => {
       .set('Authorization', `Bearer ${token}`)
       .send({ category: 'X', topics: [], level: 'wizard' });
     expect(res.status).toBe(400);
+  });
+
+  it('rejects fewer than 5 topics (400)', async () => {
+    const { token } = await signup();
+    const res = await request(app)
+      .post('/courses')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ category: 'Cybersecurity', topics: ['one', 'two'], level: 'beginner' });
+    expect(res.status).toBe(400);
+  });
+
+  it('rejects more than 6 topics on the free tier (403)', async () => {
+    const { token } = await signup();
+    const res = await request(app)
+      .post('/courses')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        category: 'Cybersecurity',
+        topics: ['one', 'two', 'three', 'four', 'five', 'six', 'seven'],
+        level: 'beginner',
+      });
+    expect(res.status).toBe(403);
+    expect(res.body.error).toMatch(/6 topics/i);
   });
 
   it('enforces the free-tier 1-active-course limit', async () => {

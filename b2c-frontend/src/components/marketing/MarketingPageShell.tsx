@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
 export function MarketingPageShell({ children }: { children: ReactNode }) {
-  return <div className="min-h-screen bg-bg font-sans text-ink">{children}</div>;
+  return (
+    <div className="flex flex-1 flex-col bg-bg font-sans text-ink">{children}</div>
+  );
 }

@@ -10,7 +10,11 @@ import { Container } from './Container';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import type { MarketplaceCourse } from '@/src/domain/marketplace';
 import { useMarketplaceCourses } from '@/src/features/marketplace';
+import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
+import { useCourses } from '@/src/features/courses';
+import { useAuthStore } from '@/src/store/authStore';
 import { getUserDisplayName } from '@/src/lib/userDisplay';
+import { resolveCategoryTitle, CATEGORY_TITLES } from '@/src/components/marketing/categoryCounts';
 import { cn } from '@/src/lib/utils';
 
 type ViewMode = 'grid' | 'list';
@@ -47,7 +51,18 @@ function buildCoursesUrl(params: { q?: string; category?: string }) {
 export function CoursesCatalogPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const hydrated = useAuthHydrated();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const user = useAuthStore((state) => state.user);
+  const isLearner = !user?.role || user.role === 'user';
   const coursesQ = useMarketplaceCourses();
+  const myCoursesQ = useCourses({
+    enabled: hydrated && isAuthenticated && isLearner,
+  });
+  const enrolledCourseIds = useMemo(
+    () => new Set((myCoursesQ.data?.courses ?? []).map((course) => course.id)),
+    [myCoursesQ.data?.courses],
+  );
   const query = searchParams.get('q')?.trim() ?? '';
   const categoryParam = searchParams.get('category');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -65,18 +80,27 @@ export function CoursesCatalogPage() {
   );
 
   const categoryFilters = useMemo(() => {
-    const categories = [...new Set(catalogCourses.map((course) => course.category))].sort();
-    return ['All Categories', ...categories] as CourseCategory[];
+    const withCourses = new Set<string>();
+    for (const course of catalogCourses) {
+      withCourses.add(resolveCategoryTitle(course.category) ?? course.category);
+    }
+    const ordered = CATEGORY_TITLES.filter((title) => withCourses.has(title));
+    const extras = [...withCourses].filter((title) => !CATEGORY_TITLES.includes(title)).sort();
+    return ['All Categories', ...ordered, ...extras] as CourseCategory[];
   }, [catalogCourses]);
 
   const activeFilter: CourseCategory =
-    categoryParam && categoryFilters.includes(categoryParam) ? categoryParam : 'All Categories';
+    categoryParam &&
+    (categoryFilters.includes(categoryParam) || CATEGORY_TITLES.includes(categoryParam))
+      ? categoryParam
+      : 'All Categories';
 
   const filteredCourses = useMemo(() => {
     const normalizedQuery = query.toLowerCase();
     return catalogCourses.filter((course) => {
+      const courseCategory = resolveCategoryTitle(course.category) ?? course.category;
       const matchesCategory =
-        activeFilter === 'All Categories' || course.category === activeFilter;
+        activeFilter === 'All Categories' || courseCategory === activeFilter;
       if (!matchesCategory) return false;
       if (!normalizedQuery) return true;
 
@@ -109,8 +133,8 @@ export function CoursesCatalogPage() {
   }
 
   return (
-    <section className="bg-bg py-10 lg:py-14">
-      <Container>
+    <section className="flex min-h-full flex-1 flex-col bg-bg py-10 lg:py-14">
+      <Container className="flex flex-1 flex-col">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
             <div className="inline-flex w-fit items-center rounded-full border border-line bg-bg-elev p-1 shadow-soft">
@@ -209,6 +233,7 @@ export function CoursesCatalogPage() {
           </div>
         ) : null}
 
+        <div className="mt-8 flex flex-1 flex-col">
         {coursesQ.isLoading ? (
           <div
             className={cn(
@@ -266,12 +291,14 @@ export function CoursesCatalogPage() {
               <CourseCatalogCard
                 key={course.id}
                 course={course}
+                enrolled={enrolledCourseIds.has(course.id)}
                 bookmarked={bookmarks.has(course.id)}
                 onToggleBookmark={() => toggleBookmark(course.id)}
               />
             ))}
           </div>
         )}
+        </div>
       </Container>
     </section>
   );

@@ -59,10 +59,10 @@ function shortId(id: string) {
 }
 
 function scoreRank(score: number) {
-  if (score >= 90) return 'First';
-  if (score >= 75) return 'Second';
-  if (score >= 60) return 'Third';
-  return 'Fourth';
+  if (score >= 90) return 'Excellent';
+  if (score >= 75) return 'Strong';
+  if (score >= 60) return 'Good';
+  return 'Needs review';
 }
 
 function buildCourseProgressData(courses: Course[]) {
@@ -111,7 +111,7 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-line bg-bg-elev px-3 py-2 shadow-soft">
+    <div className="rounded-xl border border-line bg-bg-elev px-3 py-2 shadow-card">
       <p className="mb-1 text-xs font-semibold text-ink">{label}</p>
       {payload.map((entry) => (
         <p key={entry.name} className="text-xs text-ink-2">
@@ -122,14 +122,23 @@ function ChartTooltip({
   );
 }
 
+function PanelHeader({ title, description }: { title: string; description?: string }) {
+  return (
+    <div className="border-b border-line px-5 py-4 sm:px-6">
+      <h3 className="text-base font-bold text-ink sm:text-lg">{title}</h3>
+      {description ? <p className="mt-1 text-sm text-ink-2">{description}</p> : null}
+    </div>
+  );
+}
+
 function CourseProgressChart({ courses }: { courses: Course[] }) {
   const palette = useChartPalette();
   const data = buildCourseProgressData(courses);
 
   return (
-    <section className="rounded-2xl border border-line bg-bg-elev p-5 shadow-soft">
-      <h3 className="text-lg font-bold text-ink">Learning Performance</h3>
-      <div className="mt-5 h-[300px]">
+    <section className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
+      <PanelHeader title="Learning performance" description="Weekly progress against your targets" />
+      <div className="h-[280px] px-2 py-4 sm:px-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={palette.grid} vertical={false} />
@@ -180,9 +189,9 @@ function LearningOverviewChart({
   const data = buildMonthlyOverview(quizzes, exams);
 
   return (
-    <section className="rounded-2xl border border-line bg-bg-elev p-5 shadow-soft">
-      <h3 className="text-lg font-bold text-ink">Learning Overview</h3>
-      <div className="mt-5 h-[300px]">
+    <section className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
+      <PanelHeader title="Learning overview" description="Monthly attempts and average scores" />
+      <div className="h-[280px] px-2 py-4 sm:px-4">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={palette.grid} vertical={false} />
@@ -234,14 +243,14 @@ function LearningOverviewChart({
 function ChartsSkeleton() {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <Skeleton className="h-[360px] rounded-xl" />
-      <Skeleton className="h-[360px] rounded-xl" />
+      <Skeleton className="h-[340px] rounded-2xl" />
+      <Skeleton className="h-[340px] rounded-2xl" />
     </div>
   );
 }
 
 function TableSkeleton() {
-  return <Skeleton className="h-[420px] rounded-xl" />;
+  return <Skeleton className="h-[420px] rounded-2xl" />;
 }
 
 export function DashboardChartsRow({ courses }: { courses: Course[] }) {
@@ -271,12 +280,18 @@ export function DashboardActivityTable() {
   const activity = buildActivity(quizzesQ.data ?? [], examsQ.data ?? []);
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-soft">
+    <section className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
+      <PanelHeader
+        title={t('dashboard.recentActivity')}
+        description={t('dashboard.analytics')}
+      />
+
       {(quizzesQ.isError || examsQ.isError) && (
-        <div className="flex justify-end border-b border-line px-5 py-3">
+        <div className="flex justify-end border-b border-line px-5 py-3 sm:px-6">
           <Button
             variant="soft"
             size="sm"
+            className="rounded-full"
             onClick={() => {
               void quizzesQ.refetch();
               void examsQ.refetch();
@@ -288,41 +303,57 @@ export function DashboardActivityTable() {
       )}
 
       {activity.length === 0 ? (
-        <p className="px-5 py-10 text-center text-sm text-ink-3">{t('dashboard.noActivity')}</p>
+        <p className="px-5 py-12 text-center text-sm leading-6 text-ink-2 sm:px-6">
+          {t('dashboard.noActivity')}
+        </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[680px] text-left text-sm">
             <thead>
-              <tr className="border-b border-line text-xs text-ink-3">
-                <th className="px-5 py-4 font-medium">Assessment</th>
-                <th className="px-5 py-4 font-medium">ID</th>
-                <th className="px-5 py-4 font-medium">Type</th>
-                <th className="px-5 py-4 font-medium">Score</th>
-                <th className="px-5 py-4 font-medium">Rank</th>
-                <th className="px-5 py-4 font-medium">Action</th>
+              <tr className="border-b border-line bg-bg-soft text-xs font-medium text-ink-3">
+                <th className="px-5 py-3.5 sm:px-6">Assessment</th>
+                <th className="px-5 py-3.5 sm:px-6">ID</th>
+                <th className="px-5 py-3.5 sm:px-6">Type</th>
+                <th className="px-5 py-3.5 sm:px-6">Score</th>
+                <th className="px-5 py-3.5 sm:px-6">Result</th>
+                <th className="px-5 py-3.5 sm:px-6">Action</th>
               </tr>
             </thead>
             <tbody>
-              {activity.map((entry) => {
+              {activity.map((entry, index) => {
                 const title =
                   entry.kind === 'quiz' ? entry.item.lessonTitle : entry.item.scopeTitle;
                 const label = entry.kind === 'quiz' ? 'Quiz' : 'Exam';
                 return (
-                  <tr key={`${entry.kind}-${entry.item.id}`} className="border-b border-line">
-                    <td className="px-5 py-4">
+                  <tr
+                    key={`${entry.kind}-${entry.item.id}`}
+                    className={cn(
+                      'border-b border-line last:border-b-0',
+                      index % 2 === 1 && 'bg-bg-soft/40',
+                    )}
+                  >
+                    <td className="px-5 py-4 sm:px-6">
                       <div className="flex items-center gap-3">
                         <Avatar name={title} className="size-9 text-xs" />
                         <span className="font-medium text-ink">{title}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-ink-3">{shortId(entry.item.id)}</td>
-                    <td className="px-5 py-4 text-ink-2">{label}</td>
-                    <td className="px-5 py-4 font-medium text-ink">{entry.item.score}%</td>
-                    <td className="px-5 py-4 text-ink-2">{scoreRank(entry.item.score)}</td>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-4 font-mono text-xs text-ink-3 sm:px-6">
+                      {shortId(entry.item.id)}
+                    </td>
+                    <td className="px-5 py-4 sm:px-6">
+                      <span className="rounded-full border border-line bg-bg-soft px-2.5 py-0.5 text-xs font-medium text-ink-2">
+                        {label}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 font-semibold tabular-nums text-ink sm:px-6">
+                      {entry.item.score}%
+                    </td>
+                    <td className="px-5 py-4 text-ink-2 sm:px-6">{scoreRank(entry.item.score)}</td>
+                    <td className="px-5 py-4 sm:px-6">
                       <button
                         type="button"
-                        className="grid size-8 place-items-center rounded-full border border-line text-ink-3 transition hover:bg-bg-soft hover:text-primary"
+                        className="grid size-8 place-items-center rounded-xl border border-line text-ink-3 transition hover:border-line-2 hover:bg-bg-soft hover:text-primary"
                         aria-label="More actions"
                       >
                         <MoreHorizontal className="size-4" />
@@ -340,14 +371,17 @@ export function DashboardActivityTable() {
 }
 
 export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
+  const { t } = useTranslation();
   const preview = courses.slice(0, 6);
 
   return (
-    <section className="h-full rounded-2xl border border-line bg-bg-elev p-5 shadow-soft">
-      <div className="flex items-start justify-between gap-3">
+    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4 sm:px-6">
         <div>
-          <h3 className="text-lg font-bold text-ink">Recent Courses</h3>
-          <p className="mt-1 text-sm text-ink-3">You have {courses.length} courses</p>
+          <h3 className="text-base font-bold text-ink sm:text-lg">{t('dashboard.yourCourses')}</h3>
+          <p className="mt-1 text-sm text-ink-2">
+            {courses.length} course{courses.length === 1 ? '' : 's'} in your library
+          </p>
         </div>
         <Link
           href="/create-course"
@@ -358,20 +392,28 @@ export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
         </Link>
       </div>
 
-      <div className="mt-5">
+      <div className="flex-1 px-2 sm:px-3">
         {preview.map((course) => (
           <div
             key={course.id}
-            className="flex items-center gap-3 border-b border-line py-4 last:border-b-0"
+            className="flex items-center gap-3 border-b border-line px-2 py-4 last:border-b-0 sm:px-3"
           >
             <Avatar name={course.title} className="size-10 text-xs" />
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium text-ink">{course.title}</p>
-              <p className="text-xs text-ink-3">{course.category}</p>
+              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-line">
+                <div
+                  className="h-full rounded-full bg-primary transition-all"
+                  style={{ width: `${course.progressPercent}%` }}
+                />
+              </div>
+              <p className="mt-1 text-xs text-ink-3">
+                {course.category} · {course.progressPercent}%
+              </p>
             </div>
             <Link
               href={learnerCoursePath(course.id)}
-              className="grid size-8 shrink-0 place-items-center rounded-full border border-line text-ink-3 transition hover:bg-primary-soft hover:text-primary"
+              className="grid size-8 shrink-0 place-items-center rounded-xl border border-line text-ink-3 transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary"
             >
               <ArrowRight className="size-4" />
             </Link>
@@ -380,13 +422,15 @@ export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
       </div>
 
       {courses.length > 6 ? (
-        <Link
-          href="/my-courses"
-          className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark"
-        >
-          View all courses
-          <ChevronRight className="size-4" />
-        </Link>
+        <div className="border-t border-line px-5 py-3 sm:px-6">
+          <Link
+            href="/my-courses"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark"
+          >
+            {t('dashboard.viewAll')}
+            <ChevronRight className="size-4" />
+          </Link>
+        </div>
       ) : null}
     </section>
   );
@@ -396,21 +440,21 @@ export function StudySummaryCard({
   label,
   value,
   icon: Icon,
-  iconBg,
+  iconClass,
 }: {
   label: string;
   value: string;
   icon: React.ElementType;
-  iconBg: string;
+  iconClass?: string;
 }) {
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-line bg-bg-elev px-5 py-4 shadow-soft">
-      <div className={cn('grid size-[52px] shrink-0 place-items-center rounded-full', iconBg)}>
-        <Icon className="size-5" strokeWidth={1.75} />
-      </div>
+    <div className="flex items-center gap-4 bg-bg-elev px-5 py-4 sm:px-6">
+      <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-line bg-bg-soft">
+        <Icon className={cn('size-[18px]', iconClass ?? 'text-primary')} strokeWidth={1.75} />
+      </span>
       <div>
-        <p className="text-sm text-ink-3">{label}</p>
-        <p className="text-[26px] font-bold leading-tight text-ink">{value}</p>
+        <p className="text-xs font-medium text-ink-3">{label}</p>
+        <p className="mt-0.5 text-2xl font-bold tabular-nums tracking-tight text-ink">{value}</p>
       </div>
     </div>
   );

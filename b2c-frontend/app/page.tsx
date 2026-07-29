@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Navbar } from '@/src/components/marketing/Navbar';
 import { Hero } from '@/src/components/marketing/Hero';
 import { Categories } from '@/src/components/marketing/Categories';
@@ -8,7 +9,9 @@ import { MarketingPageShell } from '@/src/components/marketing/MarketingPageShel
 export default function LandingPage() {
   return (
     <MarketingPageShell>
-      <LandingAssessmentPrompt />
+      <Suspense fallback={null}>
+        <LandingAssessmentPrompt />
+      </Suspense>
       <Navbar />
       <main>
         <Hero />

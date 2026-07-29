@@ -12,71 +12,62 @@ import {
 
 export const NAV_LINKS = [
   { label: 'Home', href: '#top' },
-  { label: 'Course', href: '/courses' },
-  { label: 'pricing', href: '/pricing' },
-  { label: 'contact', href: '/contact' },
-  { label: 'Assessment', href: '/assessments' },
+  { label: 'Courses', href: '/courses' },
+  { label: 'Assessments', href: '/assessments' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Contact', href: '/contact' },
 ] as const;
 
 export const CATEGORIES: {
   title: string;
-  courses: number;
   icon: LucideIcon;
   iconBg: string;
   iconColor: string;
 }[] = [
   {
     title: 'Programming',
-    courses: 14,
     icon: Code2,
     iconBg: 'bg-primary-soft',
     iconColor: 'text-primary',
   },
   {
     title: 'Artificial Intelligence',
-    courses: 14,
     icon: Brain,
     iconBg: 'bg-tint-lav',
     iconColor: 'text-[#7C3AED]',
   },
   {
     title: 'Cyber Security',
-    courses: 14,
     icon: ShieldCheck,
     iconBg: 'bg-tint-mint',
     iconColor: 'text-good',
   },
   {
     title: 'Networking',
-    courses: 14,
     icon: Network,
     iconBg: 'bg-tint-blue',
     iconColor: 'text-[#2563EB]',
   },
   {
     title: 'Data Science',
-    courses: 14,
     icon: BarChart3,
     iconBg: 'bg-tint-peach',
     iconColor: 'text-secondary',
   },
   {
     title: 'Health & Fitness',
-    courses: 14,
     icon: Dumbbell,
     iconBg: 'bg-tint-pink',
     iconColor: 'text-[#DB2777]',
   },
   {
     title: 'Security',
-    courses: 14,
     icon: Shield,
     iconBg: 'bg-bg-soft',
     iconColor: 'text-primary-deep',
   },
   {
     title: 'General',
-    courses: 14,
     icon: LayoutGrid,
     iconBg: 'bg-tint-lime',
     iconColor: 'text-[#65A30D]',
@@ -336,5 +327,5 @@ export const FOOTER_CONTACT: {
 export const FOOTER_LINKS = {
   quick: ['Home', 'About Us', 'Courses', 'FAQs', 'Contact', 'Live Class'],
   support: ['Became Partners', 'Privacy & Policy', 'Term & Condition', 'Refund Policy', 'Live Workshop', 'Chose Career'],
-  courses: ['Website Design', 'Digital marketing', 'Product Design', 'Web Development', 'App Development', 'Many More'],
+  categories: CATEGORIES.slice(0, 6).map((category) => category.title),
 } as const;

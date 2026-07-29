@@ -15,18 +15,17 @@ import {
   Hash,
   Layers3,
   Loader2,
-  Mail,
   Share2,
   Sparkles,
   UserRound,
 } from 'lucide-react';
 import type { MarketplaceCourseDetailResponse } from '@/src/domain/marketplace';
 import { Container } from '@/src/components/marketing/Container';
-import { Badge } from '@/src/components/ui/badge';
-import { Button } from '@/src/components/ui/button';
+import { Button, buttonClasses } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
 import { learnerCoursePath, marketplaceCoursePath } from '@/src/features/auth/learnerRoutes';
+import { useCourse } from '@/src/features/courses';
 import { useAuthStore } from '@/src/store/authStore';
 import { usePurchaseMarketplaceCourse } from '@/src/features/marketplace';
 import { ApiError } from '@/src/infrastructure/apiClient';
@@ -38,7 +37,7 @@ type DetailTab = 'overview' | 'curriculum' | 'instructor';
 
 function MarketplaceCourseDetailSkeleton() {
   return (
-    <div className="bg-bg-soft pb-16">
+    <div className="bg-bg pb-16">
       <Container className="py-6 lg:py-8">
         <nav aria-hidden="true" className="flex flex-wrap items-center gap-1.5">
           <Skeleton className="h-4 w-12" />
@@ -97,7 +96,7 @@ function MarketplaceCourseDetailSkeleton() {
             </div>
           </div>
 
-          <aside className="xl:sticky xl:top-24">
+          <aside className="xl:sticky xl:top-20">
             <div className="rounded-lg border border-line bg-bg-elev p-5 shadow-card sm:p-6">
               <div className="flex flex-wrap items-end gap-3">
                 <Skeleton className="h-9 w-28" />
@@ -214,28 +213,30 @@ export function MarketplaceCourseDetailPage({
 }: {
   data: MarketplaceCourseDetailResponse;
 }) {
+  const { course, modules } = data;
   const router = useRouter();
   const hydrated = useAuthHydrated();
+  const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const isInstructor = user?.role === 'instructor';
+  const isCourseOwner =
+    user?.email?.toLowerCase() === course.instructorEmail.toLowerCase();
   const purchase = usePurchaseMarketplaceCourse();
+  const accessQ = useCourse(course.id, { enabled: hydrated && isAuthenticated });
+  const hasLearnerAccess = Boolean(accessQ.data?.course);
+  const accessLoading = isAuthenticated && accessQ.isLoading;
   const [activeTab, setActiveTab] = useState<DetailTab>('overview');
   const [openModules, setOpenModules] = useState<Set<string>>(
-    () => new Set(data.modules.slice(0, 1).map((module) => module.id)),
+    () => new Set(modules.slice(0, 1).map((module) => module.id)),
   );
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
-  const { course, modules } = data;
   const instructor = getUserDisplayName(
     { name: course.instructorName, email: course.instructorEmail },
     { fallback: 'Instructor' },
   );
   const lessonTotal = course.lessonCount || moduleLessonCount(modules);
   const moduleTotal = modules.length;
-  const listPriceCents = Math.round(course.priceCents * 1.5);
-  const discount =
-    listPriceCents > course.priceCents
-      ? Math.round(((listPriceCents - course.priceCents) / listPriceCents) * 100)
-      : 0;
 
   function toggleModule(moduleId: string) {
     setOpenModules((current) => {
@@ -278,10 +279,11 @@ export function MarketplaceCourseDetailPage({
       return;
     }
     void navigator.clipboard?.writeText(window.location.href);
+    toast.success('Course link copied to clipboard');
   }
 
   return (
-    <div className="bg-bg-soft pb-16">
+    <div className="bg-bg pb-16">
       <Container className="py-6 lg:py-8">
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
           <Link href="/" className="transition hover:text-primary">
@@ -297,10 +299,10 @@ export function MarketplaceCourseDetailPage({
 
         <div className="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">
           <div className="min-w-0">
-            <div className="rounded-lg border border-line bg-bg-elev p-5 sm:p-6">
-              <Badge variant="primary" className="rounded-md uppercase tracking-wide">
+            <div className="rounded-lg border border-line bg-bg-elev p-5 shadow-card sm:p-6">
+              <span className="inline-flex rounded-md bg-primary-deep px-2.5 py-1 text-xs font-semibold text-white">
                 {course.category}
-              </Badge>
+              </span>
 
               <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:text-4xl">
                 {course.title}
@@ -379,7 +381,15 @@ export function MarketplaceCourseDetailPage({
                       </div>
 
                       <div className="mt-5 space-y-3">
-                        {modules.map((module, index) => {
+                        {modules.length === 0 ? (
+                          <div className="rounded-lg border border-dashed border-line-2 bg-bg-soft px-4 py-8 text-center">
+                            <p className="text-sm font-medium text-ink">Curriculum coming soon</p>
+                            <p className="mt-1 text-sm text-ink-2">
+                              Modules and lessons will appear here once published.
+                            </p>
+                          </div>
+                        ) : (
+                        modules.map((module, index) => {
                           const open = openModules.has(module.id);
                           return (
                             <div key={module.id} className="overflow-hidden rounded-lg border border-line">
@@ -423,7 +433,8 @@ export function MarketplaceCourseDetailPage({
                               ) : null}
                             </div>
                           );
-                        })}
+                        })
+                        )}
                       </div>
                     </div>
                   ) : null}
@@ -439,17 +450,13 @@ export function MarketplaceCourseDetailPage({
                       </span>
                       <div className="min-w-0">
                         <h2 className="text-lg font-bold text-ink">{instructor}</h2>
-                        <p className="mt-1 text-sm text-ink-2">Marketplace instructor</p>
-                        <p className="mt-4 text-sm leading-7 text-ink-2">
-                          Creates structured courses with AI-assisted curriculum design, practical
-                          modules, and learner-focused lesson paths.
+                        <p className="mt-1 text-sm text-ink-2">
+                          {course.category} instructor on AIStudy
                         </p>
-                        {course.instructorEmail ? (
-                          <p className="mt-4 inline-flex items-center gap-2 text-sm text-ink-2">
-                            <Mail className="size-4 text-ink-3" />
-                            {course.instructorEmail}
-                          </p>
-                        ) : null}
+                        <p className="mt-4 text-sm leading-7 text-ink-2">
+                          Delivers structured learning paths with practical modules, guided lessons,
+                          and assessments designed for real-world skill building.
+                        </p>
                       </div>
                     </div>
                   ) : null}
@@ -458,31 +465,71 @@ export function MarketplaceCourseDetailPage({
             </div>
           </div>
 
-          <aside className="xl:sticky xl:top-24">
+          <aside className="xl:sticky xl:top-20">
             <div className="rounded-lg border border-line bg-bg-elev p-5 shadow-card sm:p-6">
-              <div className="flex flex-wrap items-end gap-3">
-                  <p className="text-3xl font-bold text-primary">
-                    {formatPrice(course.priceCents, course.currency)}
-                  </p>
-                  {discount > 0 ? (
-                    <>
-                      <p className="text-base text-ink-3 line-through">
-                        {formatPrice(listPriceCents, course.currency)}
-                      </p>
-                      <Badge variant="default" className="rounded-md border-0 bg-secondary text-white">
-                        {discount}% OFF
-                      </Badge>
-                    </>
-                  ) : null}
-                </div>
+              <div>
+                <p className="text-3xl font-bold text-primary">
+                  {formatPrice(course.priceCents, course.currency)}
+                </p>
+                <p className="mt-1 text-sm text-ink-2">
+                  {isInstructor
+                    ? isCourseOwner
+                      ? 'Your published marketplace course'
+                      : 'Listed for learners on AIStudy'
+                    : 'One-time payment · Lifetime access'}
+                </p>
+              </div>
 
+              {isInstructor ? (
+                isCourseOwner ? (
+                  <Link
+                    href={`/instructor/courses/${course.id}`}
+                    className={buttonClasses({
+                      size: 'lg',
+                      className: 'mt-5 h-12 w-full rounded-full text-base font-semibold',
+                    })}
+                  >
+                    Manage this course
+                    <ChevronsRight className="size-5" />
+                  </Link>
+                ) : (
+                  <div className="mt-5 rounded-2xl border border-line bg-bg-soft p-4 text-center">
+                    <p className="text-sm font-semibold text-ink">Instructor account</p>
+                    <p className="mt-1 text-xs leading-5 text-ink-2">
+                      Marketplace enrollment is for learners only. Create and manage your own courses
+                      from the instructor dashboard.
+                    </p>
+                    <Link
+                      href="/instructor/courses"
+                      className={buttonClasses({
+                        variant: 'soft',
+                        size: 'md',
+                        className: 'mt-4 w-full rounded-full',
+                      })}
+                    >
+                      Go to instructor courses
+                    </Link>
+                  </div>
+                )
+              ) : hasLearnerAccess ? (
+                <Link
+                  href={learnerCoursePath(course.id)}
+                  className={buttonClasses({
+                    size: 'lg',
+                    className: 'mt-5 h-12 w-full rounded-full text-base font-semibold',
+                  })}
+                >
+                  Continue learning
+                  <ChevronsRight className="size-5" />
+                </Link>
+              ) : (
                 <Button
                   type="button"
-                  className="mt-5 h-12 w-full rounded-lg text-base font-semibold"
+                  className="mt-5 h-12 w-full rounded-full text-base font-semibold"
                   onClick={handleEnroll}
-                  disabled={purchase.isPending}
+                  disabled={purchase.isPending || accessLoading}
                 >
-                  {purchase.isPending ? (
+                  {purchase.isPending || accessLoading ? (
                     <Loader2 className="size-5 animate-spin" />
                   ) : (
                     <>
@@ -491,6 +538,7 @@ export function MarketplaceCourseDetailPage({
                     </>
                   )}
                 </Button>
+              )}
 
                 {purchaseError ? (
                   <p className="mt-3 text-sm text-bad">{purchaseError}</p>

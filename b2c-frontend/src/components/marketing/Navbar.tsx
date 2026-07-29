@@ -2,60 +2,59 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, Search, UserRound, X } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Menu, Search, Sparkles, X } from 'lucide-react';
 import { LanguageSelector } from '@/src/components/layout/LanguageSelector';
 import { ThemeToggle } from '@/src/components/ui/theme-toggle';
 import { NavbarAuthLinks, NavbarUserMenu } from '@/src/components/marketing/NavbarUserMenu';
 import { NavbarSearchOverlay } from '@/src/components/marketing/NavbarSearchOverlay';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
-import { myCoursesPath } from '@/src/features/auth/learnerRoutes';
 import { useAuthStore } from '@/src/store/authStore';
+import { cn } from '@/src/lib/utils';
 import { NAV_LINKS } from './data';
 import { Container } from './Container';
 
-function FiStudyLogo() {
+function AIStudyLogo() {
   return (
-    <Link href="/" className="relative inline-flex shrink-0 flex-col leading-none text-primary" aria-label="FiStudy Home">
-      <span className="text-[34px] font-bold tracking-[-0.02em]">
-        <span className="text-primary">AI</span>
-        <span className="text-ink">Study</span>
+    <Link
+      href="/"
+      className="inline-flex shrink-0 items-center gap-2.5"
+      aria-label="AIStudy home"
+    >
+      <span className="grid size-10 place-items-center rounded-lg bg-primary-soft text-primary">
+        <Sparkles className="size-5" />
       </span>
-      <svg
-        className="absolute -bottom-1 left-[34px] h-[10px] w-[72px]"
-        viewBox="0 0 72 10"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M2 8C18 2 34 1 70 6"
-          stroke="currentColor"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
-      </svg>
+      <span className="font-heading text-2xl font-semibold tracking-tight text-ink">
+        <span className="text-primary">AI</span>
+        Study
+      </span>
     </Link>
   );
 }
 
-function NavDivider() {
-  return <span className="hidden h-10 w-px bg-line-2 lg:block" aria-hidden="true" />;
+function navLinkClass(active: boolean) {
+  return cn(
+    'rounded-lg px-3.5 py-2.5 text-base font-medium transition-colors',
+    active
+      ? 'bg-primary-soft text-primary'
+      : 'text-ink-2 hover:bg-bg-soft hover:text-ink',
+  );
 }
 
 export function Navbar() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const hydrated = useAuthHydrated();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
-  const user = useAuthStore((s) => s.user);
   const showUserMenu = hydrated && isAuthenticated;
-  const navLinks = NAV_LINKS.map((link) => {
-    if (link.href !== '/courses') return link;
-    const isLearner = !user?.role || user.role === 'user';
-    if (showUserMenu && isLearner) {
-      return { ...link, label: 'My Courses', href: myCoursesPath() };
-    }
-    return link;
-  });
+
+  const navLinks = NAV_LINKS;
+
+  const isActive = (href: string) => {
+    if (href === '#top') return pathname === '/';
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   const openSearch = () => {
     setMobileOpen(false);
@@ -66,64 +65,58 @@ export function Navbar() {
     <>
       <NavbarSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      <header className="sticky top-0 z-50 border-b border-line/50 bg-[var(--marketing-nav)] backdrop-blur-md backdrop-saturate-150">
-        <Container className="flex h-[88px] items-center gap-6">
-          <FiStudyLogo />
+      <header className="sticky top-0 z-50 border-b border-line/80 bg-white/90 backdrop-blur-md dark:bg-[#151C2C]/90">
+        <Container className="flex h-[80px] items-center gap-4">
+          <AIStudyLogo />
+
+          <nav
+            className="ml-8 hidden flex-1 items-center gap-1 lg:flex"
+            aria-label="Main navigation"
+          >
+            {navLinks.map((link) =>
+              link.href.startsWith('/') ? (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={navLinkClass(isActive(link.href))}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className={navLinkClass(isActive(link.href))}
+                >
+                  {link.label}
+                </a>
+              ),
+            )}
+          </nav>
 
           <div className="ml-auto hidden items-center gap-2 lg:flex">
-            <nav className="mr-4 flex items-center gap-6 xl:mr-6 xl:gap-8" aria-label="Main navigation">
-              {navLinks.map((link) =>
-                link.href.startsWith('/') ? (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="text-[16px] font-medium capitalize text-ink transition-colors hover:text-primary xl:text-[18px]"
-                  >
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="text-[16px] font-medium capitalize text-ink transition-colors hover:text-primary xl:text-[18px]"
-                  >
-                    {link.label}
-                  </a>
-                ),
-              )}
-            </nav>
-
-            <NavDivider />
-
             <button
               type="button"
               aria-label="Search"
               aria-expanded={searchOpen}
               onClick={openSearch}
-              className="text-primary transition-colors hover:text-primary-dark"
+              className="grid size-10 place-items-center rounded-lg border border-transparent text-ink-2 transition-colors hover:border-line hover:bg-bg-soft hover:text-primary"
             >
-              <Search className="size-[22px]" strokeWidth={2} />
+              <Search className="size-[18px]" strokeWidth={2} />
             </button>
 
-            <NavDivider />
-
             <LanguageSelector compact />
-
-            <NavDivider />
-
             <ThemeToggle />
-
-            <NavDivider />
 
             {showUserMenu ? <NavbarUserMenu /> : <NavbarAuthLinks />}
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="ml-auto flex items-center gap-2 lg:hidden">
             <button
               type="button"
               aria-label="Search"
               onClick={openSearch}
-              className="grid size-10 place-items-center text-primary"
+              className="grid size-10 place-items-center rounded-lg text-ink-2 hover:bg-bg-soft hover:text-primary"
             >
               <Search className="size-5" />
             </button>
@@ -131,7 +124,7 @@ export function Navbar() {
               type="button"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setMobileOpen((v) => !v)}
-              className="grid size-10 place-items-center rounded-lg border border-line text-ink-2"
+              className="grid size-10 place-items-center rounded-lg border border-line text-ink-2 hover:bg-bg-soft"
             >
               {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -140,35 +133,37 @@ export function Navbar() {
 
         {mobileOpen ? (
           <nav className="border-t border-line bg-bg-elev px-4 py-4 lg:hidden">
-            {navLinks.map((link) =>
-              link.href.startsWith('/') ? (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block border-b border-bg-soft py-3 text-[15px] font-medium capitalize text-ink"
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block border-b border-bg-soft py-3 text-[15px] font-medium capitalize text-ink"
-                >
-                  {link.label}
-                </a>
-              ),
-            )}
+            <div className="space-y-1">
+              {navLinks.map((link) =>
+                link.href.startsWith('/') ? (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(navLinkClass(isActive(link.href)), 'block')}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(navLinkClass(isActive(link.href)), 'block')}
+                  >
+                    {link.label}
+                  </a>
+                ),
+              )}
+            </div>
 
             <button
               type="button"
               onClick={openSearch}
-              className="mt-4 flex w-full items-center gap-3 rounded-xl border border-line bg-bg-soft px-4 py-3 text-left text-sm font-medium text-ink-2"
+              className="mt-4 flex w-full items-center gap-3 rounded-lg border border-line bg-bg-soft px-4 py-3 text-left text-base font-medium text-ink-2"
             >
               <Search className="size-4 text-primary" />
-              Search courses, categories, pages…
+              Search courses, pages…
             </button>
 
             <div className="mt-5 space-y-4 border-t border-line pt-5">
@@ -179,15 +174,7 @@ export function Navbar() {
               {showUserMenu ? (
                 <NavbarUserMenu compact />
               ) : (
-                <Link href="/login" className="flex items-center gap-3">
-                  <span className="grid size-10 place-items-center rounded-full border border-line-2">
-                    <UserRound className="size-5" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-bold text-ink">Sign in</span>
-                    <span className="block text-xs text-ink-3">Register</span>
-                  </span>
-                </Link>
+                <NavbarAuthLinks compact onNavigate={() => setMobileOpen(false)} />
               )}
             </div>
           </nav>

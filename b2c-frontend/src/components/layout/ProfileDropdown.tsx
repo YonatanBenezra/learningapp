@@ -65,12 +65,12 @@ export function ProfileDropdown() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2.5 rounded-xl py-1 pl-1 pr-2 transition-colors hover:bg-bg-soft"
+        className="flex items-center gap-2 rounded-full border border-line py-1 pl-1 pr-2.5 transition-colors hover:border-line-2 hover:bg-bg-soft"
         aria-expanded={open}
         aria-haspopup="true"
       >
-        <Avatar {...getUserAvatarProps(user)} className="size-9" />
-        <span className="hidden max-w-[120px] truncate text-sm font-medium text-ink sm:block">
+        <Avatar {...getUserAvatarProps(user)} className="size-8" />
+        <span className="hidden max-w-[120px] truncate text-sm font-medium text-ink md:block">
           {getUserDisplayName(user, { compact: true })}
         </span>
       </button>
@@ -82,7 +82,7 @@ export function ProfileDropdown() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="absolute right-0 top-full z-50 mt-2 w-[240px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-[var(--shadow-elevated)]"
+            className="absolute right-0 top-full z-50 mt-2 w-[240px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card"
           >
             {/* User info header */}
             <div className="border-b border-line px-4 py-3.5">

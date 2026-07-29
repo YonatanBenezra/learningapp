@@ -1,7 +1,7 @@
 import { cn } from '@/src/lib/utils';
 
 interface SectionHeadingProps {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   description?: string;
   align?: 'left' | 'center';
@@ -23,10 +23,12 @@ export function SectionHeading({
         className,
       )}
     >
-      <span className="inline-flex items-center rounded-full bg-primary-soft px-4 py-1.5 text-sm font-semibold text-primary">
-        {eyebrow}
-      </span>
-      <h2 className="mt-4 text-[32px] font-bold leading-[1.2] tracking-tight text-ink sm:text-[40px] lg:text-[44px]">
+      {eyebrow ? (
+        <span className="inline-flex items-center rounded-full bg-primary-soft px-4 py-1.5 text-sm font-semibold text-primary">
+          {eyebrow}
+        </span>
+      ) : null}
+      <h2 className={cn('text-[32px] font-bold leading-[1.2] tracking-tight text-ink sm:text-[40px] lg:text-[44px]', eyebrow && 'mt-4')}>
         {title}
       </h2>
       {description ? (

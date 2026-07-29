@@ -33,7 +33,11 @@ export function NavbarSearchOverlay({ open, onClose }: NavbarSearchOverlayProps)
       if (event.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = '';
+    };
   }, [open, onClose]);
 
   function navigateTo(href: string) {
@@ -57,69 +61,85 @@ export function NavbarSearchOverlay({ open, onClose }: NavbarSearchOverlayProps)
 
   return (
     <div
-      className="fixed inset-x-0 top-0 z-[60] bg-primary shadow-[var(--shadow-primary)]"
+      className="fixed inset-0 z-[60] flex flex-col bg-bg"
       role="dialog"
       aria-modal="true"
       aria-label="Search"
     >
-      <Container className="py-4 sm:py-5">
-        <form onSubmit={handleSubmit} className="flex items-stretch gap-3">
-          <div className="relative mx-auto flex w-full max-w-[920px] flex-1 items-stretch">
-            <span className="grid w-14 shrink-0 place-items-center bg-ink text-white">
-              <Search className="size-5" strokeWidth={2} />
-            </span>
-            <input
-              ref={inputRef}
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search courses, categories, or pages…"
-              className="h-14 flex-1 bg-bg-elev px-4 text-[15px] text-ink outline-none placeholder:text-ink-2"
-              autoComplete="off"
-            />
-          </div>
-          <button
-            type="button"
-            aria-label="Close search"
-            onClick={onClose}
-            className="grid size-12 shrink-0 place-items-center bg-primary-dark/70 text-white transition-colors hover:bg-primary-dark sm:size-14"
-          >
-            <X className="size-5" strokeWidth={2.5} />
-          </button>
-        </form>
+      <div className="shrink-0 border-b border-line bg-bg-elev/95 backdrop-blur-md">
+        <Container className="py-4 sm:py-5">
+          <form onSubmit={handleSubmit} className="flex items-center gap-3">
+            <div className="relative flex flex-1 items-center">
+              <Search
+                className="pointer-events-none absolute left-4 size-5 text-ink-3"
+                strokeWidth={2}
+              />
+              <input
+                ref={inputRef}
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search courses, categories, or pages…"
+                className="h-14 w-full rounded-lg border border-line bg-bg-soft pl-12 pr-4 text-base text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/15"
+                autoComplete="off"
+              />
+            </div>
 
-        {trimmedQuery && results.length > 0 ? (
-          <ul className="mx-auto mt-3 w-full max-w-[920px] overflow-hidden rounded-xl border border-line/70 bg-bg-elev/95 shadow-lg">
-            {results.map((item, index) => (
-              <li key={item.id} className="border-b border-line/70 last:border-b-0">
-                <button
-                  type="button"
-                  onClick={() => navigateTo(item.href)}
-                  className={cn(
-                    'flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-bg-soft',
-                    index === 0 && 'bg-primary/[0.03]',
-                  )}
-                >
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
-                    <BookOpen className="size-4" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-ink">
-                      {item.label}
+            <button
+              type="button"
+              aria-label="Close search"
+              onClick={onClose}
+              className="grid size-12 shrink-0 place-items-center rounded-lg border border-line bg-bg-elev text-ink-2 transition-colors hover:border-primary/30 hover:bg-bg-soft hover:text-primary sm:size-14"
+            >
+              <X className="size-5" strokeWidth={2} />
+            </button>
+          </form>
+        </Container>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <Container className="py-4 sm:py-6">
+          {trimmedQuery && results.length > 0 ? (
+            <ul className="overflow-hidden rounded-lg border border-line bg-bg-elev shadow-soft">
+              {results.map((item, index) => (
+                <li key={item.id} className="border-b border-line last:border-b-0">
+                  <button
+                    type="button"
+                    onClick={() => navigateTo(item.href)}
+                    className={cn(
+                      'flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-bg-soft',
+                      index === 0 && 'bg-primary-soft/40',
+                    )}
+                  >
+                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                      <BookOpen className="size-4" />
                     </span>
-                    {item.description ? (
-                      <span className="block truncate text-xs text-ink-3">
-                        {item.description}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-base font-semibold text-ink">
+                        {item.label}
                       </span>
-                    ) : null}
-                  </span>
-                  <ArrowRight className="size-4 shrink-0 text-ink-3" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </Container>
+                      {item.description ? (
+                        <span className="block truncate text-sm text-ink-3">
+                          {item.description}
+                        </span>
+                      ) : null}
+                    </span>
+                    <ArrowRight className="size-4 shrink-0 text-ink-3" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : trimmedQuery ? (
+            <p className="rounded-lg border border-dashed border-line bg-bg-soft px-4 py-3 text-sm text-ink-2">
+              No quick matches. Press Enter to search courses for &ldquo;{trimmedQuery}&rdquo;.
+            </p>
+          ) : (
+            <p className="text-sm text-ink-3">
+              Type to search pages, courses, and categories.
+            </p>
+          )}
+        </Container>
+      </div>
     </div>
   );
 }

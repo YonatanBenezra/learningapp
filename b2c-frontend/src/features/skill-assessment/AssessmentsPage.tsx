@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
 import {
   ArrowRight,
   CalendarDays,
@@ -18,7 +17,6 @@ import {
 } from '@/src/constants/tierLimits';
 import { cn } from '@/src/lib/utils';
 import type { SkillAssessmentQuota, SkillAssessmentSummary } from '@/src/domain/assessment';
-import { CreateAssessmentDialog } from '@/src/features/skill-assessment/CreateAssessmentDialog';
 import { AssessmentsListSkeleton } from '@/src/features/skill-assessment/SkillAssessmentSkeletons';
 import { useMySkillAssessments } from '@/src/features/skill-assessment/useSkillAssessment';
 
@@ -78,27 +76,38 @@ function AssessmentLimitNotice({ quota }: { quota: SkillAssessmentQuota }) {
 
 function CreateAssessmentButton({
   atLimit,
-  onClick,
   className,
   size = 'lg',
   label = 'Create assessment',
 }: {
   atLimit: boolean;
-  onClick: () => void;
   className?: string;
   size?: 'lg' | 'md';
   label?: string;
 }) {
+  if (atLimit) {
+    return (
+      <Button
+        size={size}
+        className={cn('rounded-full bg-primary hover:bg-primary-dark', className)}
+        disabled
+      >
+        <Plus className="size-4" />
+        {label}
+      </Button>
+    );
+  }
+
   return (
-    <Button
-      size={size}
-      className={cn('rounded-lg bg-primary hover:bg-primary-dark', className)}
-      onClick={onClick}
-      disabled={atLimit}
-    >
-      <Plus className="size-4" />
-      {label}
-    </Button>
+    <Link href="/assessment/start">
+      <Button
+        size={size}
+        className={cn('rounded-full bg-primary hover:bg-primary-dark', className)}
+      >
+        <Plus className="size-4" />
+        {label}
+      </Button>
+    </Link>
   );
 }
 
@@ -179,19 +188,13 @@ function AssessmentCard({ item }: { item: SkillAssessmentSummary }) {
 
 export function AssessmentsPage() {
   const { data, isLoading, isError, refetch } = useMySkillAssessments();
-  const [createOpen, setCreateOpen] = useState(false);
 
   const quota = data?.quota;
   const assessments = data?.assessments ?? [];
   const atLimit = isAssessmentQuotaExhausted(quota);
 
   if (isLoading) {
-    return (
-      <>
-        <AssessmentsListSkeleton />
-        <CreateAssessmentDialog open={createOpen} onClose={() => setCreateOpen(false)} />
-      </>
-    );
+    return <AssessmentsListSkeleton />;
   }
 
   return (
@@ -217,7 +220,7 @@ export function AssessmentsPage() {
 
                 <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
                   {quota ? <QuotaBadge quota={quota} /> : null}
-                  <CreateAssessmentButton atLimit={atLimit} onClick={() => setCreateOpen(true)} />
+                  <CreateAssessmentButton atLimit={atLimit} />
                 </div>
               </div>
 
@@ -250,7 +253,6 @@ export function AssessmentsPage() {
               <div className="mt-6 flex flex-col items-center gap-4">
                 <CreateAssessmentButton
                   atLimit={atLimit}
-                  onClick={() => setCreateOpen(true)}
                   label="Create your first assessment"
                 />
               </div>
@@ -264,12 +266,6 @@ export function AssessmentsPage() {
           )}
         </Container>
       </div>
-
-      <CreateAssessmentDialog
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        quota={quota}
-      />
     </>
   );
 }

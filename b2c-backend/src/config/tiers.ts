@@ -9,6 +9,7 @@ export const TIER_LIMITS = {
   free: {
     activeAssessments: 5,
     activeCourses: 5,
+    topicsPerCourse: 6,
     courseGenerationsPerDay: 5,
     exerciseGenerationsPerDay: 20,
     quizGenerationsPerMonth: 20,
@@ -18,6 +19,7 @@ export const TIER_LIMITS = {
   standard: {
     activeAssessments: 20,
     activeCourses: 20,
+    topicsPerCourse: Number.POSITIVE_INFINITY,
     courseGenerationsPerDay: 20,
     exerciseGenerationsPerDay: 50,
     quizGenerationsPerMonth: 50,
@@ -27,6 +29,7 @@ export const TIER_LIMITS = {
   premium: {
     activeAssessments: Number.POSITIVE_INFINITY,
     activeCourses: Number.POSITIVE_INFINITY,
+    topicsPerCourse: Number.POSITIVE_INFINITY,
     courseGenerationsPerDay: Number.POSITIVE_INFINITY,
     exerciseGenerationsPerDay: Number.POSITIVE_INFINITY,
     quizGenerationsPerMonth: Number.POSITIVE_INFINITY,

@@ -1,25 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import {
-  ASSESSMENT_SEEN_KEY,
-} from '@/src/features/skill-assessment/skillAssessmentApi';
-import { CreateAssessmentDialog } from '@/src/features/skill-assessment/CreateAssessmentDialog';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ASSESSMENT_SEEN_KEY } from '@/src/features/skill-assessment/skillAssessmentApi';
 
+/** Sends first-time visitors to the dedicated assessment start page. */
 export function AssessmentModal() {
-  const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
+    const forceOpen = searchParams.get('assessment') === '1';
     const seen = localStorage.getItem(ASSESSMENT_SEEN_KEY);
-    if (!seen) setOpen(true);
-  }, []);
+    if (forceOpen || !seen) {
+      router.replace('/assessment/start');
+    }
+  }, [searchParams, router]);
 
-  function dismiss() {
-    localStorage.setItem(ASSESSMENT_SEEN_KEY, '1');
-    setOpen(false);
-  }
-
-  return <CreateAssessmentDialog open={open} onClose={dismiss} />;
+  return null;
 }
 
 export default AssessmentModal;

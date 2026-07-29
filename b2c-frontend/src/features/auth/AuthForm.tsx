@@ -15,12 +15,14 @@ import {
   Check,
   ChevronDown,
   Search,
+  Sparkles,
 } from 'lucide-react';
 import { useLogin, useSignup } from './useAuth';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { useTranslation } from '@/src/i18n';
 import { PasswordStrength } from './PasswordStrength';
 import { AuthIllustration } from './AuthIllustration';
+import { Spinner } from '@/src/components/ui/spinner';
 
 const GOOGLE_ENABLED = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,6 +32,20 @@ function authSwitchHref(mode: 'login' | 'signup') {
   const redirect = new URLSearchParams(window.location.search).get('redirect');
   const base = mode === 'login' ? '/login' : '/signup';
   return redirect ? `${base}?redirect=${encodeURIComponent(redirect)}` : base;
+}
+
+function AuthLogo() {
+  return (
+    <Link href="/" className="inline-flex items-center gap-2.5" aria-label="AIStudy home">
+      <span className="grid size-10 place-items-center rounded-lg bg-primary-soft text-primary">
+        <Sparkles className="size-5" />
+      </span>
+      <span className="font-heading text-xl font-semibold tracking-tight text-ink">
+        <span className="text-primary">AI</span>
+        Study
+      </span>
+    </Link>
+  );
 }
 
 export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
@@ -74,25 +90,23 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
   }
 
   const inputBase =
-    'h-[52px] w-full rounded-lg border bg-white px-3 text-sm text-ink outline-none placeholder:text-ink-3 transition-colors duration-200 dark:bg-bg-soft dark:text-ink';
+    'h-12 w-full rounded-xl border bg-bg-elev px-3 text-sm text-ink outline-none placeholder:text-ink-3 transition-colors duration-200';
   const inputIdle = 'border-line hover:border-line-2';
-  const inputFocus = 'border-primary ring-1 ring-primary/20';
+  const inputFocus = 'border-primary ring-2 ring-primary/15';
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-primary-soft/40 p-4 sm:p-6 lg:p-8">
-      <div className="flex w-full max-w-[1280px] overflow-hidden rounded-2xl border border-line bg-white dark:bg-bg-soft">
-        {/* ──────── Left Side: Form ──────── */}
+    <div className="flex min-h-dvh w-full items-center justify-center bg-bg p-4 sm:p-6 lg:p-8">
+      <div className="flex w-full max-w-[1180px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-lift">
         <div className="flex w-full flex-col p-8 sm:w-[55%] sm:p-10 lg:p-12">
-          {/* Top nav */}
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-8 flex items-center justify-between gap-4">
             <Link
               href="/"
-              className="flex size-9 items-center justify-center rounded-lg border border-line text-ink-3 transition-colors hover:border-line-2 hover:text-ink-2"
-              aria-label="Go back"
+              className="flex size-10 items-center justify-center rounded-xl border border-line text-ink-3 transition-colors hover:border-line-2 hover:bg-bg-soft hover:text-ink"
+              aria-label="Back to home"
             >
               <ArrowLeft className="size-4" />
             </Link>
-            <p className="text-sm text-ink-2">
+            <p className="text-right text-sm text-ink-2">
               {isSignup ? t('auth.alreadyHaveAccount') + ' ' : t('auth.noAccount') + ' '}
               <Link
                 href={switchHref}
@@ -103,30 +117,21 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
             </p>
           </div>
 
-          {/* Logo */}
-          <div className="mb-8 flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-lg bg-primary text-[17px] font-bold text-white">
-              B
-            </span>
-            <span className="text-lg font-bold text-ink dark:text-white">Bina B2C</span>
-          </div>
+          <AuthLogo />
 
-          {/* Heading */}
-          <div className="mb-7">
-            <h1 className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl dark:text-white">
+          <div className="mb-8 mt-8">
+            <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
               {isSignup ? t('auth.createAccount') : t('auth.welcomeBack')}
             </h1>
-            <p className="mt-2 text-sm text-ink-2">
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-2">
               {isSignup ? t('auth.signupSubtitle') : t('auth.loginSubtitle')}
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
-            {/* Full Name (signup only) */}
             {isSignup && (
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="fullName" className="text-sm font-medium text-ink-2 dark:text-ink-3">
+                <label htmlFor="fullName" className="text-sm font-medium text-ink-2">
                   Full Name
                 </label>
                 <div className="relative">
@@ -151,9 +156,8 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
               </div>
             )}
 
-            {/* Email */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="email" className="text-sm font-medium text-ink-2 dark:text-ink-3">
+              <label htmlFor="email" className="text-sm font-medium text-ink-2">
                 Email Address
               </label>
               <div className="relative">
@@ -177,9 +181,8 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
               </div>
             </div>
 
-            {/* Password */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="password" className="text-sm font-medium text-ink-2 dark:text-ink-3">
+              <label htmlFor="password" className="text-sm font-medium text-ink-2">
                 Password
               </label>
               <div className="relative">
@@ -222,61 +225,62 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
               )}
             </AnimatePresence>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="flex h-[52px] w-full items-center justify-center gap-2 rounded-lg bg-primary text-sm font-semibold text-white shadow-[var(--shadow-primary)] transition-all duration-200 hover:bg-primary-dark disabled:opacity-50"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary text-sm font-semibold text-white shadow-[var(--shadow-primary)] transition-all hover:bg-primary-dark disabled:opacity-50"
             >
-              {mutation.isPending
-                ? 'Please wait…'
-                : isSignup
-                  ? 'Sign Up'
-                  : 'Sign In'}
-              {!mutation.isPending && <ArrowRight className="size-4" />}
+              {mutation.isPending ? (
+                <>
+                  <Spinner className="size-4 text-white" />
+                  Please wait…
+                </>
+              ) : (
+                <>
+                  {isSignup ? 'Create account' : 'Sign in'}
+                  <ArrowRight className="size-4" />
+                </>
+              )}
             </button>
+
+            {isSignup ? (
+              <p className="text-center text-xs leading-relaxed text-ink-3">
+                By creating an account, you agree to our{' '}
+                <Link href="/contact" className="font-medium text-primary hover:text-primary-dark">
+                  Terms & Privacy Policy
+                </Link>
+                .
+              </p>
+            ) : null}
           </form>
 
-          {/* OR divider */}
-          <div className="my-5 flex items-center gap-4">
+          <div className="my-6 flex items-center gap-4">
             <span className="h-px flex-1 bg-line" />
-            <span className="text-xs font-medium uppercase tracking-wider text-ink-3">OR</span>
+            <span className="text-xs font-medium uppercase tracking-wider text-ink-3">Or continue with</span>
             <span className="h-px flex-1 bg-line" />
           </div>
 
-          {/* Social login */}
-          <div className="flex gap-3">
-            <button
-              type="button"
-              className="flex h-[52px] flex-1 items-center justify-center gap-2.5 rounded-lg border border-line bg-white text-sm font-medium text-ink-2 transition-colors hover:bg-bg-soft dark:bg-bg-soft dark:hover:bg-bg-lav"
-              onClick={() =>
-                GOOGLE_ENABLED
-                  ? setGoogleMsg('Google sign-in flow will connect here.')
-                  : setGoogleMsg('Google sign-in isn\'t configured yet — use email for now.')
-              }
-            >
-              <GoogleMark />
-              Google
-            </button>
-            <button
-              type="button"
-              className="flex h-[52px] flex-1 items-center justify-center gap-2.5 rounded-lg border border-line bg-white text-sm font-medium text-ink-2 transition-colors hover:bg-bg-soft dark:bg-bg-soft dark:hover:bg-bg-lav"
-            >
-              <FacebookMark />
-              Facebook
-            </button>
-          </div>
-          {googleMsg && (
+          <button
+            type="button"
+            className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-line bg-bg-soft text-sm font-medium text-ink-2 transition-colors hover:border-primary/30 hover:bg-bg hover:text-ink"
+            onClick={() =>
+              GOOGLE_ENABLED
+                ? setGoogleMsg('Google sign-in will be available soon.')
+                : setGoogleMsg('Google sign-in is not configured yet — use email for now.')
+            }
+          >
+            <GoogleMark />
+            Continue with Google
+          </button>
+          {googleMsg ? (
             <p className="mt-2.5 text-center text-xs text-ink-3">{googleMsg}</p>
-          )}
+          ) : null}
 
-          {/* Language selector */}
           <div className="mt-auto pt-8">
             <AuthLanguageSelector />
           </div>
         </div>
 
-        {/* ──────── Right Side: Illustration ──────── */}
         <div className="hidden w-[45%] lg:block">
           <AuthIllustration />
         </div>
@@ -292,17 +296,6 @@ function GoogleMark() {
       <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1 .7-2.4 1.2-4 1.2-3 0-5.6-2-6.6-4.8H1.4v3C3.4 21.4 7.4 24 12 24z" />
       <path fill="#FBBC05" d="M5.4 14.5a7.2 7.2 0 0 1 0-4.6v-3H1.4a12 12 0 0 0 0 10.6l4-3z" />
       <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.6 1.4 6.4l4 3C6.4 6.7 9 4.8 12 4.8z" />
-    </svg>
-  );
-}
-
-function FacebookMark() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-4" aria-hidden>
-      <path
-        fill="#1877F2"
-        d="M24 12c0-6.627-5.373-12-12-12S0 5.373 0 12c0 5.99 4.388 10.954 10.125 11.854V15.47H7.078V12h3.047V9.356c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874V12h3.328l-.532 3.47h-2.796v8.385C19.612 22.954 24 17.99 24 12z"
-      />
     </svg>
   );
 }
@@ -377,7 +370,7 @@ function AuthLanguageSelector() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
             transition={{ duration: 0.12 }}
-            className="absolute bottom-full left-0 z-50 mb-2 w-[220px] overflow-hidden rounded-lg border border-line bg-white"
+            className="absolute bottom-full left-0 z-50 mb-2 w-[220px] overflow-hidden rounded-xl border border-line bg-bg-elev shadow-lift"
           >
             <div className="border-b border-line p-2">
               <div className="relative">
@@ -388,7 +381,7 @@ function AuthLanguageSelector() {
                   placeholder="Search..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-8 w-full rounded-md border-0 bg-bg-soft pl-8 pr-2 text-xs text-ink outline-none placeholder:text-ink-3 focus:bg-bg-lav"
+                  className="h-8 w-full rounded-lg border-0 bg-bg-soft pl-8 pr-2 text-xs text-ink outline-none placeholder:text-ink-3 focus:ring-2 focus:ring-primary/15"
                 />
               </div>
             </div>

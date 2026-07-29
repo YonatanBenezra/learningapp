@@ -15,7 +15,9 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         <QueryProvider>
           <AuthSessionBootstrap />
           <AuthSessionSync />
-          {children}
+          <div className="flex min-h-dvh flex-1 flex-col">
+            {children}
+          </div>
           <PlatformChatBubbleGate />
           <AppToaster />
         </QueryProvider>

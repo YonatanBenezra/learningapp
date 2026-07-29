@@ -15,11 +15,17 @@ import {
   Clock,
   Cloud,
   Code2,
+  Cpu,
+  Database,
+  Globe,
   GraduationCap,
   Loader2,
   Network,
+  PenLine,
   ShieldCheck,
+  Smartphone,
   Sparkles,
+  Workflow,
   X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -35,7 +41,7 @@ import { readLearningPathPrefill } from '@/src/features/learning-path/learningPa
 import { AiModelField } from '@/src/features/ai/AiModelField';
 import { useMe } from '@/src/features/auth';
 import { useAuthStore } from '@/src/store/authStore';
-import { activeCourseLimitForTier } from '@/src/constants/tierLimits';
+import { activeCourseLimitForTier, MIN_COURSE_TOPICS, topicLimitForTier } from '@/src/constants/tierLimits';
 import { cn } from '@/src/lib/utils';
 
 const STEPS = [
@@ -44,7 +50,7 @@ const STEPS = [
   { id: 3, label: 'Review & generate', hint: 'Confirm and submit' },
 ] as const;
 
-const CATEGORIES: {
+const PRESET_SUBJECTS: {
   name: string;
   icon: LucideIcon;
   iconBg: string;
@@ -55,6 +61,12 @@ const CATEGORIES: {
     icon: ShieldCheck,
     iconBg: 'bg-tint-mint',
     iconColor: 'text-good',
+  },
+  {
+    name: 'Machine Learning',
+    icon: Cpu,
+    iconBg: 'bg-tint-lav',
+    iconColor: 'text-[#7C3AED]',
   },
   {
     name: 'Networking',
@@ -69,24 +81,50 @@ const CATEGORIES: {
     iconColor: 'text-primary',
   },
   {
-    name: 'Data',
+    name: 'Data Science',
     icon: BarChart3,
     iconBg: 'bg-tint-peach',
     iconColor: 'text-secondary',
   },
   {
-    name: 'AI',
+    name: 'Artificial Intelligence',
     icon: Brain,
     iconBg: 'bg-tint-lav',
     iconColor: 'text-[#7C3AED]',
   },
   {
-    name: 'Cloud',
+    name: 'Cloud Computing',
     icon: Cloud,
     iconBg: 'bg-tint-blue',
     iconColor: 'text-primary-deep',
   },
+  {
+    name: 'DevOps',
+    icon: Workflow,
+    iconBg: 'bg-tint-mint',
+    iconColor: 'text-good',
+  },
+  {
+    name: 'Web Development',
+    icon: Globe,
+    iconBg: 'bg-primary-soft',
+    iconColor: 'text-primary',
+  },
+  {
+    name: 'Database',
+    icon: Database,
+    iconBg: 'bg-tint-peach',
+    iconColor: 'text-secondary',
+  },
+  {
+    name: 'Mobile Development',
+    icon: Smartphone,
+    iconBg: 'bg-tint-blue',
+    iconColor: 'text-[#2563EB]',
+  },
 ];
+
+const PRESET_SUBJECT_NAMES = new Set(PRESET_SUBJECTS.map((subject) => subject.name));
 
 const LEVELS: { value: CourseLevel; title: string; desc: string; badge: string }[] = [
   {
@@ -132,6 +170,7 @@ export function CreateCourseWizard() {
   const { data: coursesData } = useCourses();
   const tier = useAuthStore((s) => s.user?.tier ?? 'free');
   const activeCourseLimit = activeCourseLimitForTier(tier);
+  const maxTopics = topicLimitForTier(tier);
 
   const activeCourseCount = useMemo(
     () => (coursesData?.courses ?? []).filter((c) => ACTIVE_STATUSES.has(c.status)).length,
@@ -145,7 +184,14 @@ export function CreateCourseWizard() {
   }, [meQ.data?.user.preferences.aiModel]);
 
   useEffect(() => {
-    if (!autoStart || autoTriggered || createdId || !level || !category.trim() || topics.length === 0) {
+    if (
+      !autoStart ||
+      autoTriggered ||
+      createdId ||
+      !level ||
+      !category.trim() ||
+      topics.length < MIN_COURSE_TOPICS
+    ) {
       return;
     }
     setAutoTriggered(true);
@@ -165,12 +211,18 @@ export function CreateCourseWizard() {
 
   function addTopic() {
     const t = topicInput.trim();
-    if (t && !topics.includes(t)) setTopics((prev) => [...prev, t]);
+    if (!t || topics.includes(t)) {
+      setTopicInput('');
+      return;
+    }
+    if (maxTopics !== null && topics.length >= maxTopics) return;
+    setTopics((prev) => [...prev, t]);
     setTopicInput('');
   }
 
   function submit() {
-    if (!level) return;
+    if (!level || topics.length < MIN_COURSE_TOPICS) return;
+    if (maxTopics !== null && topics.length > maxTopics) return;
     create.mutate(
       {
         category: category.trim(),
@@ -204,20 +256,31 @@ export function CreateCourseWizard() {
     );
   }
 
-  const canNext1 = category.trim().length > 0 && topics.length > 0;
+  const canNext1 =
+    category.trim().length > 0 &&
+    topics.length >= MIN_COURSE_TOPICS &&
+    (maxTopics === null || topics.length <= maxTopics);
   const progress = Math.round((step / STEPS.length) * 100);
   const errorMsg = create.error instanceof ApiError ? create.error.message : null;
 
   return (
     <CreateCoursePageShell>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <Link
-          href="/my-courses"
-          className="inline-flex items-center gap-1.5 text-sm text-ink-2 transition hover:text-primary"
-        >
-          <ArrowLeft className="size-4" /> My courses
-        </Link>
-        <StepTabs step={step} />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="max-w-2xl">
+          <Link
+            href="/my-courses"
+            className="mb-3 inline-flex items-center gap-1.5 text-sm text-ink-2 transition hover:text-primary"
+          >
+            <ArrowLeft className="size-4" /> My courses
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">Create course</h1>
+          <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">
+            Define your subject, topics, and skill level — AIStudy will generate a full learning path.
+          </p>
+        </div>
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-line bg-bg-soft text-primary">
+          <Sparkles className="size-5" />
+        </span>
       </div>
 
       {prefill ? (
@@ -242,12 +305,15 @@ export function CreateCourseWizard() {
         </NoticeBanner>
       ) : null}
 
-      <section className="mt-6 min-w-0 border border-line bg-bg-elev">
-        <div className="border-b border-line px-4 py-4 sm:px-6">
+      <section className="mt-6 min-w-0 overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
+        <div className="border-b border-line px-5 py-4 sm:px-6">
+          <div className="mb-4 flex justify-end">
+            <StepTabs step={step} />
+          </div>
           <StepProgress step={step} progress={progress} />
         </div>
 
-        <div className="px-4 py-6 sm:px-6 sm:py-8">
+        <div className="px-5 py-6 sm:px-6 sm:py-8">
             {step === 1 && (
               <StepSubjectTopics
                 category={category}
@@ -257,6 +323,9 @@ export function CreateCourseWizard() {
                 topicInput={topicInput}
                 setTopicInput={setTopicInput}
                 onAddTopic={addTopic}
+                minTopics={MIN_COURSE_TOPICS}
+                maxTopics={maxTopics}
+                tier={tier}
               />
             )}
 
@@ -279,9 +348,9 @@ export function CreateCourseWizard() {
             )}
           </div>
 
-        <div className="flex flex-col-reverse gap-3 border-t border-line bg-bg-soft px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="flex flex-col-reverse gap-3 border-t border-line bg-bg-soft px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           {step > 1 ? (
-            <Button variant="outline" onClick={() => setStep((s) => s - 1)}>
+            <Button variant="outline" className="rounded-full px-5" onClick={() => setStep((s) => s - 1)}>
               <ArrowLeft className="size-4" /> Back
             </Button>
           ) : (
@@ -292,7 +361,7 @@ export function CreateCourseWizard() {
             <Button
               disabled={step === 1 ? !canNext1 : !level}
               onClick={() => setStep((s) => s + 1)}
-              className="sm:min-w-40"
+              className="rounded-full px-5 sm:min-w-40"
             >
               Continue <ArrowRight className="size-4" />
             </Button>
@@ -301,7 +370,7 @@ export function CreateCourseWizard() {
               onClick={submit}
               loading={create.isPending}
               disabled={!level || atCourseLimit}
-              className="sm:min-w-48"
+              className="rounded-full px-5 sm:min-w-48"
             >
               <Sparkles className="size-4" /> Generate course
             </Button>
@@ -352,14 +421,14 @@ const COURSE_GENERATION_PHASES = [
 
 function GenerationProgressBar({ progress }: { progress: number }) {
   return (
-    <div className="mt-8">
+    <div className="mt-6">
       <div className="mb-2 flex items-center justify-between text-xs font-medium text-ink-3">
         <span>Generation progress</span>
         <span className="tabular-nums text-primary">{progress}%</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-line/70">
+      <div className="h-2 overflow-hidden rounded-full bg-line">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-primary to-primary-2 transition-[width] duration-700 ease-out"
+          className="h-full rounded-full bg-primary transition-[width] duration-700 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -368,40 +437,29 @@ function GenerationProgressBar({ progress }: { progress: number }) {
 }
 
 function GenerationHero({
-  eyebrow,
   title,
   description,
   progress,
 }: {
-  eyebrow: string;
   title: string;
   description: string;
   progress?: number;
 }) {
   return (
-    <div className="relative border-b border-line bg-gradient-to-br from-primary/[0.12] via-bg-elev to-bg-soft px-6 py-8 sm:px-10 sm:py-10 lg:px-12">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-16 -top-16 size-52 rounded-full bg-primary/10 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-20 left-1/4 size-40 rounded-full bg-primary/5 blur-3xl"
-      />
-
-      <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
-        <div className="min-w-0">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-            <Sparkles className="size-3" />
-            {eyebrow}
-          </span>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-2 sm:text-base">{description}</p>
+    <div className="border-b border-line px-5 py-6 sm:px-8 sm:py-8">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <p className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+            <Sparkles className="size-4" />
+            Course generation
+          </p>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-7 text-ink-2 sm:text-base">{description}</p>
           {typeof progress === 'number' ? <GenerationProgressBar progress={progress} /> : null}
         </div>
 
-        <div className="grid size-[4.5rem] shrink-0 place-items-center rounded-lg border border-primary/20 bg-bg-elev sm:size-20">
-          <Loader2 className="size-8 animate-spin text-primary sm:size-9" strokeWidth={2} />
+        <div className="grid size-14 shrink-0 place-items-center rounded-xl border border-line bg-bg-soft sm:size-16">
+          <Loader2 className="size-7 animate-spin text-primary sm:size-8" strokeWidth={2} />
         </div>
       </div>
     </div>
@@ -419,13 +477,13 @@ function GenerationPhaseList({ activePhase }: { activePhase: number }) {
           <li
             key={phase.label}
             className={cn(
-              'flex items-start gap-3 px-6 py-4 sm:px-8',
+              'flex items-start gap-3 px-5 py-4 sm:px-6',
               active && 'bg-primary/[0.04]',
             )}
           >
             <span
               className={cn(
-                'mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg border',
+                'mt-0.5 grid size-8 shrink-0 place-items-center rounded-xl border',
                 done && 'border-good/30 bg-good-soft text-good',
                 active && 'border-primary/30 bg-primary/10 text-primary',
                 !done && !active && 'border-line bg-bg-soft text-ink-3',
@@ -464,10 +522,8 @@ function GenerationExpectations({
   topics?: string[];
 }) {
   return (
-    <aside className="bg-bg-soft/60 px-6 py-6 sm:px-8 sm:py-7">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-3">
-        What we&apos;re building
-      </p>
+    <aside className="bg-bg-soft px-5 py-6 sm:px-6 sm:py-7">
+      <p className="text-sm font-medium text-ink">What we&apos;re building</p>
       <dl className="mt-4 space-y-4 text-sm">
         {courseTitle ? (
           <div>
@@ -537,7 +593,7 @@ function NoticeBanner({
   return (
     <div
       className={cn(
-        'mt-4 border px-4 py-3 text-sm sm:px-5',
+        'mt-6 rounded-xl border px-4 py-3.5 text-sm sm:px-5',
         tone === 'primary'
           ? 'border-primary/20 bg-primary-soft/30 text-ink-2'
           : 'border-warn/25 bg-warn-soft text-ink-2',
@@ -551,35 +607,31 @@ function NoticeBanner({
 
 function StepTabs({ step }: { step: number }) {
   return (
-    <div className="flex items-center gap-1 overflow-x-auto">
-      {STEPS.map((s, index) => {
+    <div className="flex items-center gap-1 overflow-x-auto rounded-full border border-line bg-bg-soft p-1">
+      {STEPS.map((s) => {
         const active = s.id === step;
         const done = s.id < step;
         return (
-          <div key={s.id} className="flex items-center">
+          <span
+            key={s.id}
+            className={cn(
+              'inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm',
+              active && 'bg-primary-soft text-primary',
+              done && !active && 'text-ink',
+              !active && !done && 'text-ink-3',
+            )}
+          >
             <span
               className={cn(
-                'inline-flex shrink-0 items-center gap-2 px-3 py-1.5 text-xs font-medium sm:text-sm',
-                active && 'text-primary',
-                done && !active && 'text-ink',
-                !active && !done && 'text-ink-3',
+                'grid size-5 place-items-center rounded-full text-[10px] font-semibold',
+                (active || done) && 'bg-primary text-white',
+                !active && !done && 'border border-line bg-bg-elev text-ink-3',
               )}
             >
-              <span
-                className={cn(
-                  'grid size-6 place-items-center rounded-full text-[11px] font-semibold',
-                  (active || done) && 'bg-primary text-white',
-                  !active && !done && 'border border-line bg-bg-soft text-ink-3',
-                )}
-              >
-                {done ? <Check className="size-3" strokeWidth={3} /> : s.id}
-              </span>
-              <span className="hidden sm:inline">{s.label}</span>
+              {done ? <Check className="size-3" strokeWidth={3} /> : s.id}
             </span>
-            {index < STEPS.length - 1 ? (
-              <span className="mx-1 hidden h-px w-6 bg-line sm:block" />
-            ) : null}
-          </div>
+            <span className="hidden sm:inline">{s.label}</span>
+          </span>
         );
       })}
     </div>
@@ -593,12 +645,12 @@ function StepProgress({ step, progress }: { step: number; progress: number }) {
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <span className="font-medium text-ink">{current.label}</span>
         <span className="text-ink-3">
-          Step {step}/{STEPS.length} · {progress}%
+          Step {step} of {STEPS.length} · {progress}%
         </span>
       </div>
-      <div className="h-1 overflow-hidden bg-line">
+      <div className="h-1.5 overflow-hidden rounded-full bg-line">
         <div
-          className="h-full bg-primary transition-all duration-300"
+          className="h-full rounded-full bg-primary transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -609,9 +661,9 @@ function StepProgress({ step, progress }: { step: number; progress: number }) {
 
 function StepHeading({ title, description }: { title: string; description: string }) {
   return (
-    <div className="mb-6 border-b border-line pb-4">
+    <div className="mb-6">
       <h2 className="text-lg font-semibold text-ink">{title}</h2>
-      <p className="mt-1 text-sm text-ink-2">{description}</p>
+      <p className="mt-1 text-sm leading-6 text-ink-2">{description}</p>
     </div>
   );
 }
@@ -624,6 +676,9 @@ function StepSubjectTopics({
   topicInput,
   setTopicInput,
   onAddTopic,
+  minTopics,
+  maxTopics,
+  tier,
 }: {
   category: string;
   setCategory: (v: string) => void;
@@ -632,39 +687,47 @@ function StepSubjectTopics({
   topicInput: string;
   setTopicInput: (v: string) => void;
   onAddTopic: () => void;
+  minTopics: number;
+  maxTopics: number | null;
+  tier: string;
 }) {
+  const [otherSelected, setOtherSelected] = useState(
+    () => category.length > 0 && !PRESET_SUBJECT_NAMES.has(category),
+  );
+
+  const atTopicMax = maxTopics !== null && topics.length >= maxTopics;
+  const belowTopicMin = topics.length < minTopics;
+  const topicsRemaining = Math.max(0, minTopics - topics.length);
+
+  function selectPreset(name: string) {
+    setOtherSelected(false);
+    setCategory(name);
+  }
+
+  function selectOther() {
+    setOtherSelected(true);
+    setCategory('');
+  }
+
   return (
     <div className="space-y-8">
       <StepHeading
         title="Subject area"
-        description="Select a primary subject or enter a custom category for your course."
+        description="Choose a popular subject or select Other to enter your own."
       />
 
       <div>
-        <Label htmlFor="category" className="text-sm font-medium text-ink">
-          Subject name
-        </Label>
-        <Input
-          id="category"
-          placeholder="e.g. Cybersecurity"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="mt-2"
-        />
-
-        <p className="mt-6 text-xs font-medium uppercase tracking-widest text-ink-3">
-          Popular subjects
-        </p>
+        <p className="text-sm font-medium text-ink-2">Popular subjects</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {CATEGORIES.map(({ name, icon: Icon, iconBg, iconColor }) => {
-            const selected = category === name;
+          {PRESET_SUBJECTS.map(({ name, icon: Icon, iconBg, iconColor }) => {
+            const selected = !otherSelected && category === name;
             return (
               <button
                 key={name}
                 type="button"
-                onClick={() => setCategory(name)}
+                onClick={() => selectPreset(name)}
                 className={cn(
-                  'flex items-center gap-3 border px-3 py-3 text-left text-sm transition-colors',
+                  'flex items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition-colors',
                   selected
                     ? 'border-primary bg-primary-soft/40'
                     : 'border-line bg-bg-soft hover:border-primary/30',
@@ -677,22 +740,74 @@ function StepSubjectTopics({
               </button>
             );
           })}
+
+          <button
+            type="button"
+            onClick={selectOther}
+            className={cn(
+              'flex items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition-colors',
+              otherSelected
+                ? 'border-primary bg-primary-soft/40'
+                : 'border-line bg-bg-soft hover:border-primary/30',
+            )}
+          >
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-bg-elev">
+              <PenLine className="size-4 text-ink-2" />
+            </span>
+            <span className="font-medium text-ink">Other</span>
+          </button>
         </div>
+
+        {otherSelected ? (
+          <div className="mt-4">
+            <Label htmlFor="custom-category" className="text-sm font-medium text-ink">
+              Custom subject
+            </Label>
+            <Input
+              id="custom-category"
+              placeholder="e.g. Ethical hacking, Blockchain, UI/UX design"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="mt-2"
+              autoFocus
+            />
+            <p className="mt-2 text-sm text-ink-3">Enter the subject area for your course.</p>
+          </div>
+        ) : null}
       </div>
 
       <div className="border-t border-line pt-8">
-        <Label htmlFor="topics" className="text-sm font-medium text-ink">
-          Topics
-        </Label>
-        <p className="mt-1 text-sm text-ink-2">
-          Add specific areas to cover. Press Enter after each topic.
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <Label htmlFor="topics" className="text-sm font-medium text-ink">
+              Topics
+            </Label>
+            <p className="mt-1 text-sm text-ink-2">
+              Add at least {minTopics} topics
+              {maxTopics !== null ? ` (up to ${maxTopics} on ${tier} plan)` : ''}. Press Enter after
+              each topic.
+            </p>
+          </div>
+          <span
+            className={cn(
+              'rounded-full border px-3 py-1 text-xs font-medium tabular-nums',
+              belowTopicMin && 'border-warn/30 bg-warn-soft text-warn',
+              !belowTopicMin && atTopicMax && 'border-primary/30 bg-primary-soft text-primary',
+              !belowTopicMin && !atTopicMax && 'border-line bg-bg-soft text-ink-2',
+            )}
+          >
+            {topics.length}
+            {maxTopics !== null ? ` / ${maxTopics}` : ''} topics
+          </span>
+        </div>
+
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <Input
             id="topics"
             placeholder="e.g. Network security fundamentals"
             value={topicInput}
             onChange={(e) => setTopicInput(e.target.value)}
+            disabled={atTopicMax}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
@@ -704,19 +819,31 @@ function StepSubjectTopics({
             type="button"
             variant="outline"
             onClick={onAddTopic}
-            disabled={!topicInput.trim()}
-            className="sm:min-w-24"
+            disabled={!topicInput.trim() || atTopicMax}
+            className="rounded-full px-5 sm:min-w-24"
           >
             Add
           </Button>
         </div>
+
+        {atTopicMax && maxTopics !== null ? (
+          <p className="mt-3 text-sm text-ink-2">
+            You&apos;ve reached the {maxTopics}-topic limit on the {tier} plan.{' '}
+            {tier === 'free' ? (
+              <Link href="/upgrade" className="font-medium text-primary hover:underline">
+                Upgrade your plan
+              </Link>
+            ) : null}{' '}
+            to add more topics.
+          </p>
+        ) : null}
 
         {topics.length > 0 ? (
           <div className="mt-4 flex flex-wrap gap-2">
             {topics.map((t) => (
               <span
                 key={t}
-                className="inline-flex items-center gap-2 border border-primary/20 bg-primary-soft px-3 py-1 text-sm text-primary"
+                className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-soft px-3 py-1 text-sm text-primary"
               >
                 {t}
                 <button
@@ -731,10 +858,17 @@ function StepSubjectTopics({
             ))}
           </div>
         ) : (
-          <p className="mt-4 border border-dashed border-line px-4 py-5 text-center text-sm text-ink-3">
-            Add at least one topic to continue.
+          <p className="mt-4 rounded-xl border border-dashed border-line px-4 py-5 text-center text-sm text-ink-3">
+            Add at least {minTopics} topics to continue.
           </p>
         )}
+
+        {topics.length > 0 && belowTopicMin ? (
+          <p className="mt-3 text-sm text-warn">
+            Add {topicsRemaining} more topic{topicsRemaining === 1 ? '' : 's'} to reach the minimum
+            of {minTopics}.
+          </p>
+        ) : null}
       </div>
     </div>
   );
@@ -762,7 +896,7 @@ function StepSkillLevel({
               type="button"
               onClick={() => setLevel(l.value)}
               className={cn(
-                'flex h-full flex-col border p-4 text-left transition-colors',
+                'flex h-full flex-col rounded-xl border p-4 text-left transition-colors',
                 selected
                   ? 'border-primary bg-primary-soft/40'
                   : 'border-line bg-bg-soft hover:border-primary/30',
@@ -777,7 +911,7 @@ function StepSkillLevel({
                 >
                   {selected ? <Check className="size-3" strokeWidth={3} /> : null}
                 </span>
-                <span className="text-[10px] font-medium uppercase tracking-wide text-ink-3">
+                <span className="rounded-full border border-line bg-bg-elev px-2 py-0.5 text-[10px] font-medium text-ink-3">
                   {l.badge}
                 </span>
               </div>
@@ -823,7 +957,7 @@ function StepReview({
         description="Confirm your selections and adjust optional learning preferences."
       />
 
-      <dl className="divide-y divide-line border border-line text-sm">
+      <dl className="divide-y divide-line overflow-hidden rounded-xl border border-line text-sm">
         <div className="grid gap-1 px-4 py-3 sm:grid-cols-[120px_1fr] sm:gap-4">
           <dt className="font-medium text-ink-3">Subject</dt>
           <dd className="text-ink">{category || '—'}</dd>
@@ -834,7 +968,7 @@ function StepReview({
             {topics.length ? (
               <div className="flex flex-wrap gap-2">
                 {topics.map((t) => (
-                  <span key={t} className="border border-line bg-bg-soft px-2 py-0.5 text-xs text-ink-2">
+                  <span key={t} className="rounded-full border border-line bg-bg-soft px-2.5 py-0.5 text-xs text-ink-2">
                     {t}
                   </span>
                 ))}
@@ -864,11 +998,11 @@ function StepReview({
           checked={dailyNotification}
           onChange={setDailyNotification}
         />
-        <AiModelField className="border border-line bg-bg-soft px-4 py-3" value={aiModel} onChange={setAiModel} compact />
+        <AiModelField className="rounded-xl border border-line bg-bg-soft px-4 py-3" value={aiModel} onChange={setAiModel} compact />
       </div>
 
       {errorMsg ? (
-        <p className="border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad" role="alert">
+        <p className="rounded-xl border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad" role="alert">
           {errorMsg}{' '}
           {is403 ? (
             <>
@@ -900,7 +1034,7 @@ function PreferenceCard({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 border border-line bg-bg-soft px-4 py-3">
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-line bg-bg-soft px-4 py-3">
       <div>
         <p className="font-medium text-ink">{title}</p>
         <p className="mt-0.5 text-sm text-ink-2">{description}</p>
@@ -920,8 +1054,8 @@ function StatusPanel({
   topicLabel?: string;
 }) {
   return (
-    <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-lg border border-line bg-bg-elev">
-      <GenerationHero eyebrow="Course generation" title={title} description={description} />
+    <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
+      <GenerationHero title={title} description={description} />
       <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
         <GenerationPhaseList activePhase={0} />
         <GenerationExpectations courseTitle={topicLabel} category={topicLabel} />
@@ -997,9 +1131,8 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-lg border border-line bg-bg-elev">
+    <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
       <GenerationHero
-        eyebrow="Course generation"
         title="Generating your course"
         description={
           course?.title
@@ -1034,10 +1167,10 @@ function StatusCard({
   actions: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-lg border border-line bg-bg-elev px-6 py-12 text-center sm:px-10">
+    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border border-line bg-bg-elev px-6 py-12 text-center shadow-card sm:px-10">
       <div
         className={cn(
-          'mx-auto grid size-16 place-items-center rounded-lg border',
+          'mx-auto grid size-16 place-items-center rounded-xl border',
           tone === 'warn'
             ? 'border-warn/30 bg-warn-soft text-warn'
             : 'border-bad/30 bg-bad-soft text-bad',
@@ -1047,7 +1180,7 @@ function StatusCard({
       </div>
       <h2 className="mt-6 text-2xl font-bold text-ink">{title}</h2>
       <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-ink-2">{description}</p>
-      <div className="mt-8 flex flex-wrap justify-center gap-3">{actions}</div>
+      <div className="mt-8 flex flex-wrap justify-center gap-3 [&_button]:rounded-full [&_button]:px-5">{actions}</div>
     </div>
   );
 }
