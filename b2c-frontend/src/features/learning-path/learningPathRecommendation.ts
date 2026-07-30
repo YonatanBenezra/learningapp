@@ -1,6 +1,7 @@
 import type { CourseLevel } from '@/src/domain/course';
 import type { SkillLevel } from '@/src/domain/assessment';
 import type { SkillTopic } from '@/src/features/skill-assessment/skillAssessmentApi';
+import { MIN_COURSE_TOPICS } from '@/src/constants/tierLimits';
 
 export const LEARNING_PATH_PREFILL_KEY = 'bina-learning-path-prefill';
 export const LEARNING_PATH_GOAL_KEY = 'bina-learning-path-goal';
@@ -60,6 +61,63 @@ export function mapTopicToCategory(topic: string, customTopic: string | null): s
   return TOPIC_TO_CATEGORY[topic as SkillTopic] ?? topic;
 }
 
+export function buildRecommendedTopics(input: {
+  topicLabel: string;
+  skillLevel: SkillLevel;
+}): string[] {
+  const { topicLabel, skillLevel } = input;
+
+  const byLevel: Record<SkillLevel, string[]> = {
+    Beginner: [
+      `${topicLabel} fundamentals`,
+      'Core concepts and terminology',
+      'Guided practice',
+      'Knowledge checks',
+    ],
+    Intermediate: [
+      `${topicLabel} in depth`,
+      'Hands-on labs',
+      'Real-world scenarios',
+      'Module assessments',
+    ],
+    Advanced: [
+      `${topicLabel} mastery`,
+      'Advanced lab scenarios',
+      'System design patterns',
+      'Capstone projects',
+    ],
+    Expert: [
+      `${topicLabel} specialization`,
+      'Expert-level case studies',
+      'Architecture and leadership scenarios',
+      'Research and innovation projects',
+    ],
+  };
+
+  const topics = [topicLabel, ...byLevel[skillLevel]];
+  const unique: string[] = [];
+  for (const topic of topics) {
+    const trimmed = topic.trim();
+    if (trimmed && !unique.includes(trimmed)) unique.push(trimmed);
+  }
+
+  while (unique.length < MIN_COURSE_TOPICS) {
+    unique.push(`${topicLabel} — module ${unique.length}`);
+  }
+
+  return unique;
+}
+
+/** Ensures API payloads always meet the backend minimum topic count. */
+export function ensureMinCourseTopics(
+  topics: string[],
+  fallback: { topicLabel: string; skillLevel: SkillLevel },
+): string[] {
+  const trimmed = topics.map((topic) => topic.trim()).filter(Boolean);
+  if (trimmed.length >= MIN_COURSE_TOPICS) return trimmed;
+  return buildRecommendedTopics(fallback);
+}
+
 export function buildTopicLabel(topic: string, customTopic: string | null): string {
   return topic === 'Other' && customTopic?.trim() ? customTopic.trim() : topic;
 }
@@ -82,7 +140,7 @@ export function buildLandingPathPrefill(input: {
     skillLevel: 'Beginner',
     courseLevel,
     category,
-    topics: [topicLabel],
+    topics: buildRecommendedTopics({ topicLabel, skillLevel: 'Beginner' }),
     goal: input.goal,
   };
 }
@@ -106,7 +164,7 @@ export function buildLearningPathPrefill(input: {
     skillLevel: input.skillLevel,
     courseLevel,
     category,
-    topics: [topicLabel],
+    topics: buildRecommendedTopics({ topicLabel, skillLevel: input.skillLevel }),
     goal: input.goal,
   };
 }

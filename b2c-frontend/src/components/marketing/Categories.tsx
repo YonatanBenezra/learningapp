@@ -56,7 +56,11 @@ export function Categories() {
   );
 
   return (
-    <section id="categories" className="border-t border-ink/[0.06] bg-bg py-16 dark:border-white/[0.08] lg:py-24">
+    <section
+      id="categories"
+      data-tour="tour-categories"
+      className="border-t border-ink/[0.06] bg-bg py-16 dark:border-white/[0.08] lg:py-24"
+    >
       <Container>
         <SectionHeading
           title="Explore learning paths by domain"

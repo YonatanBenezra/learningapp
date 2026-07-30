@@ -12,6 +12,7 @@ import { useCreateCourse } from '@/src/features/courses';
 import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { TRIAL_PERIOD_MONTHS } from '@/src/constants/pricing';
 import type { LearningPathPrefill } from './learningPathRecommendation';
+import { ensureMinCourseTopics } from './learningPathRecommendation';
 
 export function CreateCourseFromRecommendation({
   prefill,
@@ -46,12 +47,29 @@ export function CreateCourseFromRecommendation({
     );
   }
 
+  function formatCreateError(err: unknown): string {
+    if (err instanceof ApiError) {
+      if (err.status === 400 && err.details && typeof err.details === 'object') {
+        const fieldErrors = err.details as Record<string, string[] | undefined>;
+        const messages = Object.entries(fieldErrors).flatMap(([field, msgs]) =>
+          (msgs ?? []).map((message) => `${field}: ${message}`),
+        );
+        if (messages.length > 0) return messages.join(' · ');
+      }
+      return err.message;
+    }
+    return 'Could not generate your course. Please try again.';
+  }
+
   function generateCourse() {
     setError(null);
     create.mutate(
       {
         category: prefill.category,
-        topics: prefill.topics,
+        topics: ensureMinCourseTopics(prefill.topics, {
+          topicLabel: prefill.topicLabel,
+          skillLevel: prefill.skillLevel,
+        }),
         level: prefill.courseLevel,
         visualsPreferred: true,
         dailyNotification: false,
@@ -61,11 +79,7 @@ export function CreateCourseFromRecommendation({
           router.push(learnerCoursePath(data.course.id));
         },
         onError: (err) => {
-          if (err instanceof ApiError) {
-            setError(err.message);
-            return;
-          }
-          setError('Could not generate your course. Please try again.');
+          setError(formatCreateError(err));
         },
       },
     );

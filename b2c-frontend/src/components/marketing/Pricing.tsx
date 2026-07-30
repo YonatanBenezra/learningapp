@@ -157,7 +157,10 @@ function PricingPlans({ fullPage = false }: { fullPage?: boolean }) {
           </p>
         </div>
 
-        <div className="mx-auto mt-8 grid max-w-6xl gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <div
+          className="mx-auto mt-8 grid max-w-6xl gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
+          data-tour="tour-pricing-plans"
+        >
           {PLANS.map((plan) => (
             <PlanCard key={plan.id} plan={plan} href={planHref(plan.id)} cta={planCta(plan.id)} />
           ))}

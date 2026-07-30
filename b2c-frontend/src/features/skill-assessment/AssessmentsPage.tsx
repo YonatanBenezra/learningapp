@@ -10,6 +10,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { Tooltip } from '@/src/components/ui/tooltip';
 import { Container } from '@/src/components/marketing/Container';
 import {
   isAssessmentQuotaExhausted,
@@ -85,29 +86,36 @@ function CreateAssessmentButton({
   size?: 'lg' | 'md';
   label?: string;
 }) {
+  const disabledTip =
+    'Your plan assessment limit is reached. Upgrade or complete an existing assessment to create more.';
+  const activeTip = 'Start a new skill check and get a personalized course recommendation.';
+
   if (atLimit) {
     return (
-      <Button
-        size={size}
-        className={cn('rounded-full bg-primary hover:bg-primary-dark', className)}
-        disabled
-      >
-        <Plus className="size-4" />
-        {label}
-      </Button>
+      <Tooltip content={disabledTip} side="bottom">
+        <span className={cn('inline-flex', className)}>
+          <Button
+            size={size}
+            className="rounded-full bg-primary hover:bg-primary-dark"
+            disabled
+          >
+            <Plus className="size-4" />
+            {label}
+          </Button>
+        </span>
+      </Tooltip>
     );
   }
 
   return (
-    <Link href="/assessment/start">
-      <Button
-        size={size}
-        className={cn('rounded-full bg-primary hover:bg-primary-dark', className)}
-      >
-        <Plus className="size-4" />
-        {label}
-      </Button>
-    </Link>
+    <Tooltip content={activeTip} side="bottom">
+      <Link href="/assessment/start" className={cn('inline-flex', className)}>
+        <Button size={size} className="rounded-full bg-primary hover:bg-primary-dark">
+          <Plus className="size-4" />
+          {label}
+        </Button>
+      </Link>
+    </Tooltip>
   );
 }
 
@@ -163,23 +171,33 @@ function AssessmentCard({ item }: { item: SkillAssessmentSummary }) {
 
       <div className="mt-6">
         {completed ? (
-          <Link href={`/assessment/${item.id}/result`}>
-            <Button variant="soft" className="w-full rounded-lg sm:w-auto">
-              View results
-              <ArrowRight className="size-4" />
-            </Button>
-          </Link>
+          <Tooltip content="Review your score, skill level, and recommended learning path.">
+            <Link href={`/assessment/${item.id}/result`} className="inline-flex w-full sm:w-auto">
+              <Button variant="soft" className="w-full rounded-lg sm:w-auto">
+                View results
+                <ArrowRight className="size-4" />
+              </Button>
+            </Link>
+          </Tooltip>
         ) : failed ? (
           <p className="text-sm text-ink-2">
             {item.failureReason ?? 'Generation failed. Create a new assessment to try again.'}
           </p>
         ) : (
-          <Link href={`/assessment/${item.id}`}>
-            <Button className="w-full rounded-lg bg-primary hover:bg-primary-dark sm:w-auto">
-              {generating ? 'View progress' : 'Continue assessment'}
-              <ArrowRight className="size-4" />
-            </Button>
-          </Link>
+          <Tooltip
+            content={
+              generating
+                ? 'Questions are still being generated. Open to check progress.'
+                : 'Resume this assessment from where you left off.'
+            }
+          >
+            <Link href={`/assessment/${item.id}`} className="inline-flex w-full sm:w-auto">
+              <Button className="w-full rounded-lg bg-primary hover:bg-primary-dark sm:w-auto">
+                {generating ? 'View progress' : 'Continue assessment'}
+                <ArrowRight className="size-4" />
+              </Button>
+            </Link>
+          </Tooltip>
         )}
       </div>
     </article>
@@ -204,7 +222,7 @@ export function AssessmentsPage() {
           <div className="overflow-hidden rounded-lg border border-line bg-bg-elev shadow-soft">
             <div className="border-b border-line px-6 py-6 sm:px-8 sm:py-8">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                <div>
+                <div data-tour="tour-assessments-header">
                   <div className="inline-flex items-center gap-2 rounded-lg border border-primary/15 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
                     <Sparkles className="size-3.5" />
                     Skill assessments
@@ -218,7 +236,10 @@ export function AssessmentsPage() {
                   </p>
                 </div>
 
-                <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+                <div
+                  className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center"
+                  data-tour="tour-assessments-create"
+                >
                   {quota ? <QuotaBadge quota={quota} /> : null}
                   <CreateAssessmentButton atLimit={atLimit} />
                 </div>
@@ -236,9 +257,11 @@ export function AssessmentsPage() {
             <div className="mt-8 rounded-lg border border-line bg-bg-elev p-10 text-center shadow-soft">
               <p className="text-lg font-semibold text-ink">Could not load assessments</p>
               <p className="mt-2 text-sm text-ink-2">Please refresh and try again.</p>
-              <Button variant="soft" className="mt-4 rounded-lg" onClick={() => refetch()}>
-                Retry
-              </Button>
+              <Tooltip content="Reload your assessment list from the server.">
+                <Button variant="soft" className="mt-4 rounded-lg" onClick={() => refetch()}>
+                  Retry
+                </Button>
+              </Tooltip>
             </div>
           ) : assessments.length === 0 ? (
             <div className="mt-8 rounded-lg border border-dashed border-line bg-bg-elev p-12 text-center shadow-soft">

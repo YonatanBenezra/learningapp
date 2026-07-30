@@ -79,11 +79,26 @@ const LEVEL_COPY: Record<
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-function StatItem({ label, value }: { label: string; value: string }) {
+function StatItem({
+  label,
+  value,
+  numeric = true,
+}: {
+  label: string;
+  value: string;
+  numeric?: boolean;
+}) {
   return (
-    <div className="bg-bg-elev px-4 py-3.5 text-center">
+    <div className="min-w-0 bg-bg-elev px-3 py-3.5 text-center sm:px-4">
       <dt className="text-xs text-ink-3">{label}</dt>
-      <dd className="mt-1 text-xl font-semibold tabular-nums text-ink">{value}</dd>
+      <dd
+        className={cn(
+          'mt-1 font-semibold text-ink',
+          numeric ? 'text-xl tabular-nums' : 'text-base leading-tight sm:text-lg',
+        )}
+      >
+        {value}
+      </dd>
     </div>
   );
 }
@@ -126,10 +141,10 @@ export function SkillAssessmentResultView({
               </p>
             </div>
 
-            <dl className="grid min-w-[280px] grid-cols-3 gap-px overflow-hidden rounded-xl border border-line bg-line sm:min-w-[320px]">
+            <dl className="grid w-full max-w-md shrink-0 grid-cols-[1fr_1fr_1.35fr] gap-px overflow-hidden rounded-xl border border-line bg-line sm:min-w-[360px]">
               <StatItem label="Score" value={`${submission.score}%`} />
               <StatItem label="Correct" value={`${correctCount}/${results.length}`} />
-              <StatItem label="Level" value={submission.level} />
+              <StatItem label="Level" value={submission.level} numeric={false} />
             </dl>
           </div>
 

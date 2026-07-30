@@ -2,11 +2,10 @@
 
 import { usePathname } from 'next/navigation';
 import { PlatformChatBubble } from '@/src/components/marketing/PlatformChatBubble';
-
-const HIDDEN_PATHS = new Set(['/dashboard', '/login', '/signup']);
+import { MARKETING_TOUR_PATHS } from '@/src/features/marketing-tour/constants';
 
 export function PlatformChatBubbleGate() {
   const pathname = usePathname();
-  if (HIDDEN_PATHS.has(pathname)) return null;
+  if (!pathname || !MARKETING_TOUR_PATHS.has(pathname)) return null;
   return <PlatformChatBubble />;
 }

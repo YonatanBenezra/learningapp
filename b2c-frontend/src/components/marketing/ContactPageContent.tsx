@@ -205,7 +205,10 @@ export function ContactPageContent() {
           </aside>
 
           <div className="lg:col-span-8">
-            <div className="rounded-2xl border border-line bg-bg-elev p-6 shadow-lift sm:p-8">
+            <div
+              className="rounded-2xl border border-line bg-bg-elev p-6 shadow-lift sm:p-8"
+              data-tour="tour-contact-form"
+            >
               <div className="border-b border-line pb-5">
                 <h2 className="text-xl font-bold text-ink">Send a message</h2>
                 <p className="mt-1 text-sm text-ink-2">

@@ -9,13 +9,13 @@ import { FOOTER_SOCIAL_LINKS } from './SocialIcons';
 
 function FooterLogo() {
   return (
-    <Link href="#top" className="relative inline-flex flex-col leading-none" aria-label="AIStudy Home">
-      <span className="text-[34px] font-bold tracking-[-0.02em]">
+    <Link href="/" className="relative inline-flex flex-col leading-none" aria-label="AIStudy Home">
+      <span className="text-[28px] font-bold tracking-[-0.02em] sm:text-[34px]">
         <span className="text-primary">AI</span>
         <span className="text-ink">Study</span>
       </span>
       <svg
-        className="absolute -bottom-1 left-[34px] h-[10px] w-[72px] text-primary"
+        className="absolute -bottom-1 left-[28px] h-[10px] w-[72px] text-primary sm:left-[34px]"
         viewBox="0 0 72 10"
         fill="none"
         aria-hidden="true"
@@ -28,23 +28,23 @@ function FooterLogo() {
 
 function FooterWidgetTitle({ children }: { children: ReactNode }) {
   return (
-    <h4 className="relative mb-6 text-[22px] font-medium leading-6 text-ink after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-[52px] after:rounded-sm after:bg-primary after:content-['']">
+    <h4 className="relative mb-4 text-lg font-semibold leading-6 text-ink after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-10 after:rounded-sm after:bg-primary after:content-[''] sm:mb-6 sm:text-[22px] sm:font-medium sm:after:w-[52px]">
       {children}
     </h4>
   );
 }
 
-function FooterLinkList({ items, hrefPrefix }: { items: readonly string[]; hrefPrefix: string }) {
+function FooterLinkList({ items }: { items: readonly { label: string; href: string }[] }) {
   return (
-    <ul className="space-y-3">
+    <ul className="space-y-2.5 sm:space-y-3">
       {items.map((item) => (
-        <li key={item}>
+        <li key={item.label}>
           <Link
-            href={hrefPrefix}
-            className="inline-flex items-center gap-2 text-base font-medium text-ink-2 transition-colors hover:text-primary"
+            href={item.href}
+            className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 transition-colors hover:text-primary sm:text-base"
           >
             <Plus className="size-2.5 shrink-0 text-primary" strokeWidth={3} />
-            {item}
+            {item.label}
           </Link>
         </li>
       ))}
@@ -54,12 +54,12 @@ function FooterLinkList({ items, hrefPrefix }: { items: readonly string[]; hrefP
 
 function FooterCategoryList({ items }: { items: readonly string[] }) {
   return (
-    <ul className="space-y-3">
+    <ul className="space-y-2.5 sm:space-y-3">
       {items.map((item) => (
         <li key={item}>
           <Link
             href={`/courses?category=${encodeURIComponent(item)}`}
-            className="inline-flex items-center gap-2 text-base font-medium text-ink-2 transition-colors hover:text-primary"
+            className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 transition-colors hover:text-primary sm:text-base"
           >
             <Plus className="size-2.5 shrink-0 text-primary" strokeWidth={3} />
             {item}
@@ -73,7 +73,7 @@ function FooterCategoryList({ items }: { items: readonly string[] }) {
 function AppStoreBadge({ variant }: { variant: 'google' | 'apple' }) {
   const isGoogle = variant === 'google';
   return (
-    <span className="inline-flex h-12 min-w-[148px] flex-col justify-center rounded-lg border border-line bg-bg-elev px-4 py-2 transition-colors hover:border-primary/40">
+    <span className="inline-flex h-11 min-w-[132px] flex-col justify-center rounded-lg border border-line bg-bg-elev px-3.5 py-2 transition-colors hover:border-primary/40 sm:h-12 sm:min-w-[148px] sm:px-4">
       <span className="text-[10px] uppercase tracking-wide text-ink-3">
         {isGoogle ? 'Get it on' : 'Download on the'}
       </span>
@@ -103,51 +103,48 @@ export function Footer() {
   return (
     <footer id="contact" className="relative mt-auto shrink-0 bg-bg">
       <div className="relative overflow-hidden border-t border-ink/[0.06] dark:border-white/[0.05]">
-        <Container className="relative py-14 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-12 lg:gap-6">
-            <div className="lg:col-span-4">
+        <Container className="relative py-10 sm:py-12 lg:py-16">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-8 xl:gap-x-10">
+            <div className="col-span-2 lg:col-span-5">
               <FooterLogo />
-              <p className="mt-4 max-w-sm text-base leading-relaxed text-ink-2">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-2 sm:text-base">
+                Turn any topic into a full AI-built course — then practice in real, hands-on labs.
               </p>
 
-              <div className="mt-4 flex gap-3">
+              <div className="mt-5 flex flex-wrap gap-2.5 sm:gap-3">
                 {FOOTER_SOCIAL_LINKS.map(({ label, Icon }) => (
                   <Link
                     key={label}
-                    href="#contact"
+                    href="/contact"
                     aria-label={label}
-                    className="grid size-10 place-items-center rounded-full border border-line bg-bg-elev text-ink-2 transition-colors hover:border-primary hover:bg-primary hover:text-primary-ink"
+                    className="grid size-9 place-items-center rounded-full border border-line bg-bg-elev text-ink-2 transition-colors hover:border-primary hover:bg-primary hover:text-primary-ink sm:size-10"
                   >
                     <Icon className="size-4" />
                   </Link>
                 ))}
               </div>
 
-              <div className="mt-8">
-                <h4 className="text-[22px] font-medium leading-6 text-ink">Download Apps</h4>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <Link href="#contact" className="inline-block">
+              <div className="mt-6 sm:mt-8">
+                <h4 className="text-lg font-semibold text-ink sm:text-[22px] sm:font-medium">
+                  Download Apps
+                </h4>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link href="/contact" className="inline-block">
                     <AppStoreBadge variant="google" />
                   </Link>
-                  <Link href="#contact" className="inline-block">
+                  <Link href="/contact" className="inline-block">
                     <AppStoreBadge variant="apple" />
                   </Link>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-3 lg:pl-3">
+            <div className="min-w-0 lg:col-span-3 lg:pl-2 xl:pl-4">
               <FooterWidgetTitle>Quick Links</FooterWidgetTitle>
-              <FooterLinkList items={FOOTER_LINKS.quick} hrefPrefix="#top" />
+              <FooterLinkList items={FOOTER_LINKS.quick} />
             </div>
 
-            <div className="lg:col-span-3 lg:pl-3">
-              <FooterWidgetTitle>Support</FooterWidgetTitle>
-              <FooterLinkList items={FOOTER_LINKS.support} hrefPrefix="#contact" />
-            </div>
-
-            <div className="lg:col-span-2 lg:pl-3">
+            <div className="min-w-0 lg:col-span-4 lg:pl-2 xl:pl-4">
               <FooterWidgetTitle>Our Category</FooterWidgetTitle>
               <FooterCategoryList items={FOOTER_LINKS.categories} />
             </div>
@@ -155,18 +152,18 @@ export function Footer() {
         </Container>
 
         <div className="border-t border-ink/[0.06] bg-bg-soft dark:border-white/[0.05]">
-          <Container className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-base text-ink-2">
+          <Container className="flex flex-col items-center gap-4 py-5 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+            <p className="text-sm text-ink-2 sm:text-base">
               Copyright © {new Date().getFullYear()}{' '}
-              <Link href="#top" className="font-medium text-primary transition-colors hover:text-primary-dark">
+              <Link href="/" className="font-medium text-primary transition-colors hover:text-primary-dark">
                 AIStudy
               </Link>
               . All Rights Reserved
             </p>
-            <ul className="flex flex-wrap items-center gap-3">
+            <ul className="flex flex-wrap items-center justify-center gap-2 sm:justify-end sm:gap-3">
               {['Visa', 'Mastercard', 'Amex'].map((label) => (
                 <li key={label}>
-                  <Link href="#contact">
+                  <Link href="/contact">
                     <PaymentBadge label={label} />
                   </Link>
                 </li>
@@ -180,7 +177,7 @@ export function Footer() {
         type="button"
         aria-label="Go back to top"
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed right-0 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-3 bg-transparent px-2 py-4 transition-all lg:flex ${
+        className={`fixed right-2 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-3 bg-transparent px-2 py-4 transition-all sm:right-0 lg:flex ${
           showTop ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >

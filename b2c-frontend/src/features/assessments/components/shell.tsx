@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { AppLoader } from '@/src/components/ui/app-loader';
 import { Skeleton } from '@/src/components/ui/skeleton';
 
 export function AssessmentShell({ children }: { children: React.ReactNode }) {
@@ -11,12 +12,18 @@ export function AssessmentShell({ children }: { children: React.ReactNode }) {
 export function AssessmentLoading() {
   return (
     <AssessmentShell>
-      <Skeleton className="h-4 w-36" />
-      <Skeleton className="mt-8 h-8 w-64" />
-      <Skeleton className="mt-3 h-4 w-40" />
-      <Skeleton className="mt-10 h-px w-full" />
-      <Skeleton className="mt-8 h-24 w-full" />
-      <Skeleton className="mt-8 h-24 w-full" />
+      <div className="mx-auto max-w-3xl animate-fade-in">
+        <div className="flex flex-col items-center py-10 text-center sm:py-14">
+          <AppLoader size="lg" label="Loading assessment" description="Preparing your questions…" />
+        </div>
+
+        <div className="mt-4 space-y-4 rounded-2xl border border-line bg-bg-elev p-6 shadow-card">
+          <Skeleton className="h-4 w-36" shimmer />
+          <Skeleton className="h-8 w-full max-w-md" shimmer />
+          <Skeleton className="h-24 w-full" shimmer />
+          <Skeleton className="h-24 w-full" shimmer />
+        </div>
+      </div>
     </AssessmentShell>
   );
 }

@@ -462,6 +462,7 @@ export function PlatformChatBubble() {
 
       <motion.button
         type="button"
+        data-tour="tour-ask-bina"
         onClick={() => setOpen((v) => !v)}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}

@@ -2,6 +2,7 @@
 
 import { Sidebar, useSidebar } from './Sidebar';
 import { AdminTopbar } from './AdminTopbar';
+import { PageTransition } from '@/src/components/feedback/PageTransition';
 import { cn } from '@/src/lib/utils';
 
 // Lives inside <SidebarProvider>, so it can read `collapsed` and shift the main
@@ -19,7 +20,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       >
         <AdminTopbar />
-        <main className="flex-1 overflow-x-hidden">{children}</main>
+        <main className="flex-1 overflow-x-hidden">
+          <PageTransition>{children}</PageTransition>
+        </main>
       </div>
     </div>
   );

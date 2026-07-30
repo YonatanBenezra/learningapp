@@ -37,7 +37,7 @@ import { ApiError } from '@/src/infrastructure/apiClient';
 import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { useCreateCourse, useCourse, useCourses } from '@/src/features/courses';
 import type { CourseLevel } from '@/src/domain/course';
-import { readLearningPathPrefill } from '@/src/features/learning-path/learningPathRecommendation';
+import { readLearningPathPrefill, ensureMinCourseTopics } from '@/src/features/learning-path/learningPathRecommendation';
 import { AiModelField } from '@/src/features/ai/AiModelField';
 import { useMe } from '@/src/features/auth';
 import { useAuthStore } from '@/src/store/authStore';
@@ -156,7 +156,13 @@ export function CreateCourseWizard() {
 
   const [step, setStep] = useState(1);
   const [category, setCategory] = useState(prefill?.category ?? '');
-  const [topics, setTopics] = useState<string[]>(prefill?.topics ?? []);
+  const [topics, setTopics] = useState<string[]>(() => {
+    if (!prefill) return [];
+    return ensureMinCourseTopics(prefill.topics, {
+      topicLabel: prefill.topicLabel,
+      skillLevel: prefill.skillLevel,
+    });
+  });
   const [topicInput, setTopicInput] = useState('');
   const [level, setLevel] = useState<CourseLevel | null>(prefill?.courseLevel ?? null);
   const [visualsPreferred, setVisualsPreferred] = useState(true);

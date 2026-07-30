@@ -10,7 +10,7 @@ export function PricingFaq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="border-t border-line bg-bg pt-10 pb-14 sm:pb-16">
+    <section id="faq" className="border-t border-line bg-bg pt-10 pb-14 sm:pb-16">
       <Container>
         <div className="mx-auto mb-8 max-w-2xl text-center">
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">

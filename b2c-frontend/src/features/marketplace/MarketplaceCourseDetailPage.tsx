@@ -17,7 +17,6 @@ import {
   Loader2,
   Share2,
   Sparkles,
-  UserRound,
 } from 'lucide-react';
 import type { MarketplaceCourseDetailResponse } from '@/src/domain/marketplace';
 import { Container } from '@/src/components/marketing/Container';
@@ -30,10 +29,9 @@ import { useAuthStore } from '@/src/store/authStore';
 import { usePurchaseMarketplaceCourse } from '@/src/features/marketplace';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { toast } from '@/src/lib/toast';
-import { getUserDisplayName } from '@/src/lib/userDisplay';
 import { cn } from '@/src/lib/utils';
 
-type DetailTab = 'overview' | 'curriculum' | 'instructor';
+type DetailTab = 'overview' | 'curriculum';
 
 function MarketplaceCourseDetailSkeleton() {
   return (
@@ -67,7 +65,7 @@ function MarketplaceCourseDetailSkeleton() {
 
               <div className="mt-5 overflow-hidden rounded-lg border border-line">
                 <div className="flex border-b border-line">
-                  {Array.from({ length: 3 }).map((_, index) => (
+                  {Array.from({ length: 2 }).map((_, index) => (
                     <div key={index} className="flex min-w-[120px] flex-1 items-center justify-center gap-2 px-4 py-3.5">
                       <Skeleton className="size-4 rounded-sm" />
                       <Skeleton className="h-4 w-16" />
@@ -150,7 +148,6 @@ function moduleLessonCount(modules: MarketplaceCourseDetailResponse['modules']):
 const TABS: { id: DetailTab; label: string; icon: typeof BookOpen }[] = [
   { id: 'overview', label: 'Overview', icon: BookOpen },
   { id: 'curriculum', label: 'Curriculum', icon: Layers3 },
-  { id: 'instructor', label: 'Instructor', icon: UserRound },
 ];
 
 function MetaItem({
@@ -164,9 +161,9 @@ function MetaItem({
 }) {
   return (
     <div className="min-w-0">
-      <p className="text-xs font-medium uppercase tracking-wide text-ink-3">{label}</p>
-      <p className="mt-1 truncate text-sm font-semibold text-ink">{value}</p>
-      {sub ? <p className="mt-0.5 truncate text-xs text-ink-2">{sub}</p> : null}
+      <p className="text-sm font-medium text-ink-3">{label}</p>
+      <p className="mt-1 truncate text-base font-semibold text-ink sm:text-lg">{value}</p>
+      {sub ? <p className="mt-0.5 truncate text-sm text-ink-2">{sub}</p> : null}
     </div>
   );
 }
@@ -231,10 +228,6 @@ export function MarketplaceCourseDetailPage({
   );
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
-  const instructor = getUserDisplayName(
-    { name: course.instructorName, email: course.instructorEmail },
-    { fallback: 'Instructor' },
-  );
   const lessonTotal = course.lessonCount || moduleLessonCount(modules);
   const moduleTotal = modules.length;
 
@@ -300,16 +293,15 @@ export function MarketplaceCourseDetailPage({
         <div className="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">
           <div className="min-w-0">
             <div className="rounded-lg border border-line bg-bg-elev p-5 shadow-card sm:p-6">
-              <span className="inline-flex rounded-md bg-primary-deep px-2.5 py-1 text-xs font-semibold text-white">
+              <span className="inline-flex rounded-md bg-primary-deep px-2.5 py-1 text-sm font-semibold text-white">
                 {course.category}
               </span>
 
-              <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:text-4xl">
+              <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
                 {course.title}
               </h1>
 
-              <div className="mt-5 grid gap-4 border-y border-line py-5 sm:grid-cols-2 lg:grid-cols-4">
-                <MetaItem label="Instructor" value={instructor} sub="Course creator" />
+              <div className="mt-5 grid gap-4 border-y border-line py-5 sm:grid-cols-2 lg:grid-cols-3">
                 <MetaItem label="Students" value={String(course.enrollmentCount)} sub="Enrolled learners" />
                 <MetaItem label="Lessons" value={String(lessonTotal)} sub={`${moduleTotal} modules`} />
                 <MetaItem label="Level" value={formatLevel(course.level)} sub="Recommended skill" />
@@ -344,7 +336,7 @@ export function MarketplaceCourseDetailPage({
                     <div className="space-y-8">
                       <section>
                         <h2 className="text-lg font-bold text-ink">Course overview</h2>
-                        <p className="mt-3 text-sm leading-7 text-ink-2 sm:text-base">
+                        <p className="mt-3 text-base leading-7 text-ink-2 sm:text-lg">
                           {course.description ||
                             'A structured learning path with AI-generated modules, lessons, and practical exercises.'}
                         </p>
@@ -357,7 +349,7 @@ export function MarketplaceCourseDetailPage({
                             {course.topics.map((topic) => (
                               <li
                                 key={topic}
-                                className="flex items-start gap-2.5 rounded-lg border border-line bg-bg-soft px-3 py-2.5 text-sm leading-6 text-ink-2"
+                                className="flex items-start gap-2.5 rounded-lg border border-line bg-bg-soft px-3 py-2.5 text-base leading-7 text-ink-2 sm:text-lg"
                               >
                                 <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-good" />
                                 <span>{topic}</span>
@@ -374,7 +366,7 @@ export function MarketplaceCourseDetailPage({
                       <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
                           <h2 className="text-lg font-bold text-ink">Course curriculum</h2>
-                          <p className="mt-1 text-sm text-ink-2">
+                          <p className="mt-1 text-base text-ink-2 sm:text-lg">
                             {moduleTotal} modules · {lessonTotal} lessons
                           </p>
                         </div>
@@ -383,8 +375,8 @@ export function MarketplaceCourseDetailPage({
                       <div className="mt-5 space-y-3">
                         {modules.length === 0 ? (
                           <div className="rounded-lg border border-dashed border-line-2 bg-bg-soft px-4 py-8 text-center">
-                            <p className="text-sm font-medium text-ink">Curriculum coming soon</p>
-                            <p className="mt-1 text-sm text-ink-2">
+                            <p className="text-base font-medium text-ink sm:text-lg">Curriculum coming soon</p>
+                            <p className="mt-1 text-base text-ink-2 sm:text-lg">
                               Modules and lessons will appear here once published.
                             </p>
                           </div>
@@ -399,7 +391,7 @@ export function MarketplaceCourseDetailPage({
                                 className="flex w-full items-center justify-between gap-4 bg-bg-soft px-4 py-4 text-left transition hover:bg-bg"
                               >
                                 <div className="min-w-0">
-                                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-3">
+                                  <p className="text-sm font-semibold uppercase tracking-wide text-ink-3">
                                     Module {index + 1}
                                   </p>
                                   <p className="mt-1 font-semibold text-ink">{module.title}</p>
@@ -435,28 +427,6 @@ export function MarketplaceCourseDetailPage({
                           );
                         })
                         )}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {activeTab === 'instructor' ? (
-                    <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-                      <span className="grid size-16 shrink-0 place-items-center rounded-full bg-primary-soft text-lg font-bold text-primary ring-1 ring-line">
-                        {instructor
-                          .split(' ')
-                          .slice(0, 2)
-                          .map((part) => part[0]?.toUpperCase() ?? '')
-                          .join('')}
-                      </span>
-                      <div className="min-w-0">
-                        <h2 className="text-lg font-bold text-ink">{instructor}</h2>
-                        <p className="mt-1 text-sm text-ink-2">
-                          {course.category} instructor on AIStudy
-                        </p>
-                        <p className="mt-4 text-sm leading-7 text-ink-2">
-                          Delivers structured learning paths with practical modules, guided lessons,
-                          and assessments designed for real-world skill building.
-                        </p>
                       </div>
                     </div>
                   ) : null}

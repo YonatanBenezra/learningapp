@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { LayoutGrid, List, Search, SlidersHorizontal } from 'lucide-react';
+import { LayoutGrid, List, Search } from 'lucide-react';
 import type { CatalogCourse } from '@/src/components/marketing/CourseCatalogCard';
 import { CourseCatalogCard } from './CourseCatalogCard';
 import { Container } from './Container';
@@ -13,12 +13,28 @@ import { useMarketplaceCourses } from '@/src/features/marketplace';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
 import { useCourses } from '@/src/features/courses';
 import { useAuthStore } from '@/src/store/authStore';
-import { getUserDisplayName } from '@/src/lib/userDisplay';
 import { resolveCategoryTitle, CATEGORY_TITLES } from '@/src/components/marketing/categoryCounts';
+import { InfoTip, Tooltip } from '@/src/components/ui/tooltip';
 import { cn } from '@/src/lib/utils';
 
 type ViewMode = 'grid' | 'list';
 type CourseCategory = 'All Categories' | string;
+
+const CATEGORY_TOOLTIPS: Record<string, string> = {
+  'All Categories': 'Show every published course in the catalog.',
+  Programming: 'Software development, languages, and application building.',
+  'Artificial Intelligence': 'Machine learning, AI fundamentals, and intelligent systems.',
+  'Cyber Security': 'Security operations, threats, and defensive practices.',
+  Networking: 'Network design, protocols, and infrastructure.',
+  'Data Science': 'Analytics, data pipelines, and statistical modeling.',
+  'Health & Fitness': 'Wellness, training, and health-focused learning paths.',
+  Security: 'Physical and operational security topics.',
+  General: 'Cross-domain and introductory courses.',
+};
+
+function categoryTooltip(label: string): string {
+  return CATEGORY_TOOLTIPS[label] ?? `Browse ${label} courses in the catalog.`;
+}
 
 function toCatalogCourse(course: MarketplaceCourse): CatalogCourse {
   const price = course.priceCents / 100;
@@ -27,13 +43,9 @@ function toCatalogCourse(course: MarketplaceCourse): CatalogCourse {
     title: course.title,
     description: course.description.trim(),
     price,
-    instructor: getUserDisplayName(
-      { name: course.instructorName, email: course.instructorEmail },
-      { fallback: 'Instructor' },
-    ),
     lessons: course.lessonCount,
     students: course.enrollmentCount,
-    category: course.category,
+    category: resolveCategoryTitle(course.category) ?? course.category,
     level: course.level,
   };
 }
@@ -66,7 +78,6 @@ export function CoursesCatalogPage() {
   const query = searchParams.get('q')?.trim() ?? '';
   const categoryParam = searchParams.get('category');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [filterOpen, setFilterOpen] = useState(false);
   const [searchInput, setSearchInput] = useState(query);
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
 
@@ -80,13 +91,12 @@ export function CoursesCatalogPage() {
   );
 
   const categoryFilters = useMemo(() => {
-    const withCourses = new Set<string>();
+    const extras = new Set<string>();
     for (const course of catalogCourses) {
-      withCourses.add(resolveCategoryTitle(course.category) ?? course.category);
+      const title = resolveCategoryTitle(course.category) ?? course.category;
+      if (title && !CATEGORY_TITLES.includes(title)) extras.add(title);
     }
-    const ordered = CATEGORY_TITLES.filter((title) => withCourses.has(title));
-    const extras = [...withCourses].filter((title) => !CATEGORY_TITLES.includes(title)).sort();
-    return ['All Categories', ...ordered, ...extras] as CourseCategory[];
+    return ['All Categories', ...CATEGORY_TITLES, ...[...extras].sort()] as CourseCategory[];
   }, [catalogCourses]);
 
   const activeFilter: CourseCategory =
@@ -104,13 +114,7 @@ export function CoursesCatalogPage() {
       if (!matchesCategory) return false;
       if (!normalizedQuery) return true;
 
-      const haystack = [
-        course.title,
-        course.description,
-        course.instructor,
-        course.category,
-        course.level,
-      ]
+      const haystack = [course.title, course.description, course.category, course.level]
         .join(' ')
         .toLowerCase();
 
@@ -133,134 +137,158 @@ export function CoursesCatalogPage() {
   }
 
   return (
-    <section className="flex min-h-full flex-1 flex-col bg-bg py-10 lg:py-14">
+    <section className="flex min-h-full flex-1 flex-col bg-bg py-8 lg:py-10">
       <Container className="flex flex-1 flex-col">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-            <div className="inline-flex w-fit items-center rounded-full border border-line bg-bg-elev p-1 shadow-soft">
-              <button
-                type="button"
-                aria-pressed={viewMode === 'list'}
-                onClick={() => setViewMode('list')}
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors',
-                  viewMode === 'list'
-                    ? 'bg-primary-soft text-primary'
-                    : 'text-ink-2 hover:text-ink',
-                )}
-              >
-                <List className="size-4" />
-                List
-              </button>
-              <button
-                type="button"
-                aria-pressed={viewMode === 'grid'}
-                onClick={() => setViewMode('grid')}
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors',
-                  viewMode === 'grid'
-                    ? 'bg-primary-soft text-primary'
-                    : 'text-ink-2 hover:text-ink',
-                )}
-              >
-                <LayoutGrid className="size-4" />
-                Grid
-              </button>
-            </div>
-
-            <p className="text-base text-ink-2">
-              We Found{' '}
-              <span className="font-bold text-ink">{filteredCourses.length}</span> Courses Available
-              For you
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <form onSubmit={submitSearch} className="relative min-w-[280px] flex-1 sm:min-w-[360px]">
-              <input
-                type="search"
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="Search courses..."
-                className="h-12 w-full rounded-full border border-line bg-bg-elev py-2 pl-5 pr-12 text-sm text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/15"
-              />
-              <button
-                type="submit"
-                aria-label="Search courses"
-                className="absolute right-1.5 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full text-ink-3 transition hover:bg-bg-soft hover:text-primary"
-              >
-                <Search className="size-4" />
-              </button>
-            </form>
-
-            <button
-              type="button"
-              aria-expanded={filterOpen}
-              onClick={() => setFilterOpen((open) => !open)}
-              className={cn(
-                'inline-flex h-12 items-center justify-center gap-2 rounded-full border px-5 text-sm font-semibold transition-colors',
-                filterOpen
-                  ? 'border-primary bg-primary-soft text-primary'
-                  : 'border-line bg-bg-elev text-ink-2 hover:border-primary hover:text-primary',
-              )}
-            >
-              <SlidersHorizontal className="size-4" />
-              Filter
-            </button>
-          </div>
+        <div className="flex items-start gap-2 pb-2" data-tour="tour-course-catalog">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">Course catalog</h1>
+          <InfoTip
+            content="Browse published marketplace courses. Filter by category or search by title, topic, and level."
+            label="About course catalog"
+            side="bottom"
+            className="mt-3"
+          />
         </div>
 
-        {filterOpen ? (
-          <div className="mt-4 flex flex-wrap gap-2 rounded-2xl border border-line bg-bg-elev p-4 shadow-soft">
-            {categoryFilters.map((filter) => {
-              const active = activeFilter === filter;
-              const href = buildCoursesUrl({ q: query, category: filter });
-              return (
+        <div className="mt-6 flex flex-col gap-4 rounded-lg border border-line bg-bg-elev p-4 shadow-card xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+            <div className="inline-flex w-fit items-center rounded-md border border-line bg-bg-soft p-0.5">
+              <Tooltip content="Compact rows — best for scanning many courses.">
+                <button
+                  type="button"
+                  aria-pressed={viewMode === 'list'}
+                  onClick={() => setViewMode('list')}
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-[5px] px-3.5 py-2 text-base font-medium transition-colors',
+                    viewMode === 'list'
+                      ? 'bg-bg-elev text-ink shadow-xs'
+                      : 'text-ink-2 hover:text-ink',
+                  )}
+                >
+                  <List className="size-4" />
+                  List
+                </button>
+              </Tooltip>
+              <Tooltip content="Card layout with descriptions and course details.">
+                <button
+                  type="button"
+                  aria-pressed={viewMode === 'grid'}
+                  onClick={() => setViewMode('grid')}
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-[5px] px-3.5 py-2 text-base font-medium transition-colors',
+                    viewMode === 'grid'
+                      ? 'bg-bg-elev text-ink shadow-xs'
+                      : 'text-ink-2 hover:text-ink',
+                  )}
+                >
+                  <LayoutGrid className="size-4" />
+                  Grid
+                </button>
+              </Tooltip>
+            </div>
+
+            <Tooltip
+              content={
+                activeFilter === 'All Categories'
+                  ? 'Total courses currently shown in the catalog.'
+                  : `Courses filtered to ${activeFilter}.`
+              }
+            >
+              <p className="cursor-default text-base text-ink-2">
+              <span className="font-semibold tabular-nums text-ink">{filteredCourses.length}</span>{' '}
+              courses
+              {activeFilter !== 'All Categories' ? (
+                <>
+                  {' '}
+                  · <span className="text-ink">{activeFilter}</span>
+                </>
+              ) : null}
+              </p>
+            </Tooltip>
+          </div>
+
+          <Tooltip content="Search by course title, description, category, or skill level.">
+            <form onSubmit={submitSearch} className="relative w-full sm:max-w-md xl:w-[360px]">
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              placeholder="Search courses..."
+              className="h-11 w-full rounded-md border border-line bg-bg py-2 pl-3.5 pr-10 text-base text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/10"
+            />
+            <button
+              type="submit"
+              aria-label="Search courses"
+              className="absolute right-1 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-md text-ink-3 transition hover:bg-bg-soft hover:text-primary"
+            >
+              <Search className="size-4" />
+            </button>
+            </form>
+          </Tooltip>
+        </div>
+
+        <div
+          className="mt-4 flex flex-wrap gap-2 rounded-lg border border-line bg-bg-elev p-3 shadow-card"
+          data-tour="tour-course-filters"
+        >
+          {categoryFilters.map((filter) => {
+            const active = activeFilter === filter;
+            const href = buildCoursesUrl({ q: query, category: filter });
+            return (
+              <Tooltip key={filter} content={categoryTooltip(filter)}>
                 <Link
-                  key={filter}
                   href={href}
                   className={cn(
-                    'rounded-full px-4 py-2 text-sm font-semibold transition-colors',
+                    'rounded-md px-3.5 py-2 text-base font-medium transition-colors',
                     active
-                      ? 'bg-primary text-white shadow-[var(--shadow-primary)]'
-                      : 'border border-line bg-bg-soft text-ink-2 hover:border-primary hover:text-primary',
+                      ? 'bg-primary-deep text-white'
+                      : 'border border-line bg-bg-soft text-ink-2 hover:border-line-2 hover:text-ink',
                   )}
                 >
                   {filter}
                 </Link>
-              );
-            })}
-          </div>
-        ) : null}
+              </Tooltip>
+            );
+          })}
+        </div>
 
-        <div className="mt-8 flex flex-1 flex-col">
+        <div className="mt-6 flex flex-1 flex-col">
         {coursesQ.isLoading ? (
           <div
             className={cn(
-              'mt-8',
               viewMode === 'grid'
-                ? 'grid gap-8 md:grid-cols-2 xl:grid-cols-3'
-                : 'flex flex-col gap-6',
+                ? 'grid gap-5 md:grid-cols-2 xl:grid-cols-3'
+                : 'flex flex-col gap-3',
             )}
           >
             {Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-72 rounded-lg" />
+              <div
+                key={index}
+                className="overflow-hidden rounded-lg border border-line bg-bg-elev shadow-card"
+              >
+                <Skeleton className="h-11 w-full rounded-none" shimmer />
+                <div className="space-y-3 p-5">
+                  <Skeleton className="h-5 w-3/4" shimmer />
+                  <Skeleton className="h-4 w-full" shimmer />
+                  <Skeleton className="h-4 w-5/6" shimmer />
+                </div>
+                <Skeleton className="h-14 w-full rounded-none" shimmer />
+              </div>
             ))}
           </div>
         ) : coursesQ.isError ? (
-          <div className="mx-auto mt-10 max-w-lg rounded-3xl border border-dashed border-line-2 bg-bg-elev p-10 text-center">
+          <div className="mx-auto mt-10 max-w-lg rounded-lg border border-line bg-bg-elev p-10 text-center shadow-card">
             <p className="text-lg font-semibold text-ink">Could not load courses</p>
             <p className="mt-2 text-sm text-ink-2">Please refresh the page or try again later.</p>
             <button
               type="button"
               onClick={() => void coursesQ.refetch()}
-              className="mt-6 inline-flex h-11 items-center rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-primary-dark"
+              className="mt-6 inline-flex h-10 items-center rounded-md bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-dark"
             >
               Try again
             </button>
           </div>
         ) : filteredCourses.length === 0 ? (
-          <div className="mx-auto mt-10 max-w-lg rounded-3xl border border-dashed border-line-2 bg-bg-elev p-10 text-center">
+          <div className="mx-auto mt-10 max-w-lg rounded-lg border border-line bg-bg-elev p-10 text-center shadow-card">
             <p className="text-lg font-semibold text-ink">
               {catalogCourses.length === 0
                 ? 'No published courses yet'
@@ -273,7 +301,7 @@ export function CoursesCatalogPage() {
             </p>
             <Link
               href="/courses"
-              className="mt-6 inline-flex h-11 items-center rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-primary-dark"
+              className="mt-6 inline-flex h-10 items-center rounded-md bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-dark"
             >
               View all courses
             </Link>
@@ -281,16 +309,16 @@ export function CoursesCatalogPage() {
         ) : (
           <div
             className={cn(
-              'mt-8',
               viewMode === 'grid'
-                ? 'grid gap-8 md:grid-cols-2 xl:grid-cols-3'
-                : 'flex flex-col gap-6',
+                ? 'grid gap-5 md:grid-cols-2 xl:grid-cols-3'
+                : 'flex flex-col gap-3',
             )}
           >
             {filteredCourses.map((course) => (
               <CourseCatalogCard
                 key={course.id}
                 course={course}
+                variant={viewMode}
                 enrolled={enrolledCourseIds.has(course.id)}
                 bookmarked={bookmarks.has(course.id)}
                 onToggleBookmark={() => toggleBookmark(course.id)}

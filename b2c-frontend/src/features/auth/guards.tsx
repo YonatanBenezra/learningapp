@@ -2,14 +2,15 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { AppLoader } from '@/src/components/ui/app-loader';
 import { useAuthHydrated } from './useAuthHydrated';
 import { useAuthStore } from '@/src/store/authStore';
 import { defaultDashboardPath, isLearnerDashboardPath } from './dashboardRoutes';
 
 function FullScreen() {
   return (
-    <div className="flex min-h-[60vh] flex-1 items-center justify-center">
-      <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+    <div className="flex min-h-dvh flex-1 items-center justify-center bg-bg px-4">
+      <AppLoader size="lg" label="Loading your workspace" description="Checking your session…" />
     </div>
   );
 }

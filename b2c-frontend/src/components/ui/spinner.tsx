@@ -6,9 +6,12 @@ export function Spinner({ className }: { className?: string }) {
       role="status"
       aria-label="Loading"
       className={cn(
-        'inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent',
+        'relative inline-block size-4',
         className,
       )}
-    />
+    >
+      <span className="absolute inset-0 rounded-full border-2 border-primary/20" />
+      <span className="absolute inset-0 animate-app-loader-spin rounded-full border-2 border-transparent border-t-primary" />
+    </span>
   );
 }

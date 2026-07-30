@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Bookmark, BookOpen, Users } from 'lucide-react';
+import { ArrowRight, Bookmark, BookOpen, Clock, Users } from 'lucide-react';
 import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
+import { Tooltip } from '@/src/components/ui/tooltip';
 import { cn } from '@/src/lib/utils';
 
 export type CatalogCourse = {
@@ -10,23 +11,22 @@ export type CatalogCourse = {
   title: string;
   description: string;
   price: number;
-  instructor: string;
   lessons: number;
   students: number;
   category: string;
   level: string;
 };
 
-function instructorInitials(name: string): string {
-  return name
-    .split(' ')
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? '')
-    .join('');
-}
-
 function formatLevel(level: string): string {
   return level.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function levelTooltip(level: string): string {
+  const normalized = level.toLowerCase();
+  if (normalized === 'beginner') return 'Foundational topics for new learners.';
+  if (normalized === 'intermediate') return 'Assumes basic knowledge and builds applied skills.';
+  if (normalized === 'advanced') return 'In-depth content for experienced learners.';
+  return `${formatLevel(level)} difficulty level.`;
 }
 
 interface CourseCatalogCardProps {
@@ -34,6 +34,7 @@ interface CourseCatalogCardProps {
   bookmarked?: boolean;
   onToggleBookmark?: () => void;
   enrolled?: boolean;
+  variant?: 'grid' | 'list';
 }
 
 export function CourseCatalogCard({
@@ -41,77 +42,156 @@ export function CourseCatalogCard({
   bookmarked = false,
   onToggleBookmark,
   enrolled = false,
+  variant = 'grid',
 }: CourseCatalogCardProps) {
+  const href = enrolled ? learnerCoursePath(course.id) : `/courses/${course.id}`;
+  const ctaLabel = enrolled ? 'Continue' : 'View course';
+
+  const meta = (
+    <>
+      <Tooltip content="Total structured lessons in this course.">
+        <span className="inline-flex cursor-default items-center gap-1.5">
+          <BookOpen className="size-4 text-ink-3" />
+          {course.lessons} lessons
+        </span>
+      </Tooltip>
+      <Tooltip content="Learners currently enrolled in this course.">
+        <span className="inline-flex cursor-default items-center gap-1.5">
+          <Users className="size-4 text-ink-3" />
+          {course.students} enrolled
+        </span>
+      </Tooltip>
+      <Tooltip content="Study at your own pace with lifetime access after enrollment.">
+        <span className="inline-flex cursor-default items-center gap-1.5">
+          <Clock className="size-4 text-ink-3" />
+          Self-paced
+        </span>
+      </Tooltip>
+    </>
+  );
+
+  if (variant === 'list') {
+    return (
+      <article className="relative overflow-hidden rounded-lg border border-line bg-bg-elev shadow-card transition-colors hover:z-20 hover:border-line-2">
+        <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink-3">
+              <span>{course.category}</span>
+              <span aria-hidden="true">·</span>
+              <Tooltip content={levelTooltip(course.level)}>
+                <span className="cursor-default">{formatLevel(course.level)}</span>
+              </Tooltip>
+            </div>
+            <h3 className="mt-2 text-lg font-semibold text-ink sm:text-xl">{course.title}</h3>
+            {course.description ? (
+              <p className="mt-1 line-clamp-2 text-base leading-7 text-ink-2">{course.description}</p>
+            ) : null}
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-2">{meta}</div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-3 border-t border-line pt-4 sm:border-t-0 sm:pt-0">
+            <Tooltip content="One-time marketplace price in USD.">
+              <div className="min-w-[72px] cursor-default text-right">
+                <p className="text-xs font-medium uppercase tracking-wide text-ink-3">Price</p>
+                <p className="text-xl font-semibold tabular-nums text-ink">${course.price.toFixed(2)}</p>
+              </div>
+            </Tooltip>
+            <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark to find this course quickly.'}>
+              <button
+              type="button"
+              aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark course'}
+              aria-pressed={bookmarked}
+              onClick={onToggleBookmark}
+              className="grid size-9 place-items-center rounded-md border border-line bg-bg-soft text-ink-2 transition hover:border-line-2 hover:text-ink"
+            >
+              <Bookmark className={cn('size-4', bookmarked && 'fill-primary text-primary')} />
+              </button>
+            </Tooltip>
+            <Tooltip content={enrolled ? 'Open your enrolled course workspace.' : 'View full course details and enroll.'}>
+              <Link
+              href={href}
+              className={cn(
+                'inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors',
+                enrolled
+                  ? 'bg-primary text-white hover:bg-primary-dark'
+                  : 'border border-line bg-bg-soft text-ink hover:border-primary hover:text-primary',
+              )}
+            >
+              {ctaLabel}
+              <ArrowRight className="size-4" />
+              </Link>
+            </Tooltip>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   return (
-    <article className="overflow-hidden rounded-lg border border-line bg-bg-elev shadow-card transition-shadow hover:shadow-lift">
-      <div className="flex flex-col p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-3">
-          <span className="rounded-md bg-primary-deep px-2.5 py-1 text-xs font-semibold text-white">
-            {course.category}
-          </span>
-          <button
+    <article className="relative flex h-full flex-col overflow-hidden rounded-lg border border-line bg-bg-elev shadow-card transition-colors hover:z-20 hover:border-line-2">
+      <div className="border-b border-line bg-bg-soft px-4 py-3 sm:px-5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold uppercase tracking-wide text-ink-3">
+            <span>{course.category}</span>
+            <span aria-hidden="true" className="hidden sm:inline">
+              ·
+            </span>
+            <Tooltip content={levelTooltip(course.level)}>
+              <span className="cursor-default">{formatLevel(course.level)}</span>
+            </Tooltip>
+          </div>
+          <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark to find this course quickly.'}>
+            <button
             type="button"
             aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark course'}
             aria-pressed={bookmarked}
             onClick={onToggleBookmark}
-            className="grid size-9 shrink-0 place-items-center rounded-full border border-line bg-bg-soft text-ink-2 transition hover:border-primary hover:text-primary"
+            className="grid size-8 place-items-center rounded-md border border-line bg-bg-elev text-ink-2 transition hover:border-line-2 hover:text-ink"
           >
-            <Bookmark className={cn('size-4', bookmarked && 'fill-primary text-primary')} />
+            <Bookmark className={cn('size-3.5', bookmarked && 'fill-primary text-primary')} />
           </button>
+          </Tooltip>
         </div>
+      </div>
 
-        <div className="mt-4 flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-bg-soft text-xs font-semibold text-ink-2 ring-1 ring-line">
-              {instructorInitials(course.instructor)}
-            </span>
-            <span className="truncate text-sm text-ink-2">{course.instructor}</span>
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <Tooltip content={course.description || 'Open course details to see the full curriculum.'}>
+          <h3 className="line-clamp-2 cursor-default text-lg font-semibold leading-snug text-ink sm:text-xl">
+            {course.title}
+          </h3>
+        </Tooltip>
+        {course.description ? (
+          <p className="mt-2 line-clamp-3 flex-1 text-base leading-7 text-ink-2">{course.description}</p>
+        ) : (
+          <div className="flex-1" />
+        )}
+
+        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t border-line pt-4 text-sm text-ink-2">
+          {meta}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-3 border-t border-line bg-bg-soft px-4 py-3 sm:px-5">
+        <Tooltip content="One-time marketplace price in USD.">
+          <div className="cursor-default">
+            <p className="text-xs font-medium uppercase tracking-wide text-ink-3">Price</p>
+            <p className="text-xl font-semibold tabular-nums text-ink">${course.price.toFixed(2)}</p>
           </div>
-          <div className="shrink-0 text-right leading-tight">
-            <span className="block text-base font-bold text-primary">
-              ${course.price.toFixed(2)}
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-4 border-b border-line pb-3">
-          <h3 className="line-clamp-2 text-lg font-bold leading-snug text-ink">{course.title}</h3>
-
-          {course.description ? (
-            <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-ink-2">
-              {course.description}
-            </p>
-          ) : null}
-        </div>
-
-        <p className="mt-3 text-xs font-medium uppercase tracking-wide text-ink-3">
-          {formatLevel(course.level)}
-        </p>
-
-        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-ink-2">
-          <span className="inline-flex items-center gap-1.5">
-            <BookOpen className="size-4 text-ink-3" />
-            {course.lessons} Lessons
-          </span>
-          <span className="hidden h-4 w-px bg-line sm:block" aria-hidden />
-          <span className="inline-flex items-center gap-1.5">
-            <Users className="size-4 text-ink-3" />
-            {course.students} Students
-          </span>
-        </div>
-
-        <Link
-          href={enrolled ? learnerCoursePath(course.id) : `/courses/${course.id}`}
+        </Tooltip>
+        <Tooltip content={enrolled ? 'Open your enrolled course workspace.' : 'View full course details and enroll.'}>
+          <Link
+          href={href}
           className={cn(
-            'mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold text-white transition-colors',
+            'inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors',
             enrolled
-              ? 'bg-primary hover:bg-primary-dark'
-              : 'bg-[#6C757D] hover:bg-[#5a6268] dark:bg-ink-3 dark:hover:bg-ink-2',
+              ? 'bg-primary text-white hover:bg-primary-dark'
+              : 'border border-line bg-bg-elev text-ink hover:border-primary hover:text-primary',
           )}
         >
-          {enrolled ? 'Continue learning' : 'Preview This Course'}
+          {ctaLabel}
           <ArrowRight className="size-4" />
-        </Link>
+          </Link>
+        </Tooltip>
       </div>
     </article>
   );

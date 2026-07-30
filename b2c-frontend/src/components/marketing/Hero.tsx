@@ -134,7 +134,7 @@ export function Hero() {
       <HeroBackdrop />
 
       <Container className="relative grid items-center gap-12 py-14 lg:grid-cols-2 lg:gap-16 lg:py-20">
-        <div className="max-w-xl">
+        <div className="max-w-xl" data-tour="tour-hero">
           <p className="inline-flex items-center gap-2 rounded-full border border-line bg-bg-elev px-4 py-1.5 text-sm font-medium text-ink-2">
             <Sparkles className="size-4 text-primary" />
             AI-powered learning platform
@@ -150,7 +150,10 @@ export function Hero() {
             environments — from programming sandboxes to network and security labs.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div
+            className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+            data-tour="tour-hero-actions"
+          >
             <Link href="/signup" className={buttonClasses({ size: 'lg', className: 'rounded-lg' })}>
               Start free
               <ArrowRight className="size-4" />

@@ -324,8 +324,15 @@ export const FOOTER_CONTACT: {
   },
 ];
 
+export const FOOTER_QUICK_LINKS = [
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/#categories' },
+  { label: 'Courses', href: '/courses' },
+  { label: 'FAQs', href: '/#faq' },
+  { label: 'Contact', href: '/contact' },
+] as const;
+
 export const FOOTER_LINKS = {
-  quick: ['Home', 'About Us', 'Courses', 'FAQs', 'Contact', 'Live Class'],
-  support: ['Became Partners', 'Privacy & Policy', 'Term & Condition', 'Refund Policy', 'Live Workshop', 'Chose Career'],
+  quick: FOOTER_QUICK_LINKS,
   categories: CATEGORIES.slice(0, 6).map((category) => category.title),
 } as const;

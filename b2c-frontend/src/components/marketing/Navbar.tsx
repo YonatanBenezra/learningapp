@@ -41,6 +41,45 @@ function navLinkClass(active: boolean) {
   );
 }
 
+function navTourId(href: string): string {
+  if (href === '#top') return 'tour-nav-home';
+  return `tour-nav-${href.slice(1)}`;
+}
+
+function NavLink({
+  link,
+  active,
+  className,
+  onNavigate,
+}: {
+  link: (typeof NAV_LINKS)[number];
+  active: boolean;
+  className?: string;
+  onNavigate?: () => void;
+}) {
+  const tourId = navTourId(link.href);
+  const classes = cn(navLinkClass(active), className);
+
+  if (link.href.startsWith('/')) {
+    return (
+      <Link
+        href={link.href}
+        data-tour={tourId}
+        onClick={onNavigate}
+        className={classes}
+      >
+        {link.label}
+      </Link>
+    );
+  }
+
+  return (
+    <a href={link.href} data-tour={tourId} onClick={onNavigate} className={classes}>
+      {link.label}
+    </a>
+  );
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -73,25 +112,9 @@ export function Navbar() {
             className="ml-8 hidden flex-1 items-center gap-1 lg:flex"
             aria-label="Main navigation"
           >
-            {navLinks.map((link) =>
-              link.href.startsWith('/') ? (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={navLinkClass(isActive(link.href))}
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className={navLinkClass(isActive(link.href))}
-                >
-                  {link.label}
-                </a>
-              ),
-            )}
+            {navLinks.map((link) => (
+              <NavLink key={link.label} link={link} active={isActive(link.href)} />
+            ))}
           </nav>
 
           <div className="ml-auto hidden items-center gap-2 lg:flex">
@@ -134,27 +157,15 @@ export function Navbar() {
         {mobileOpen ? (
           <nav className="border-t border-line bg-bg-elev px-4 py-4 lg:hidden">
             <div className="space-y-1">
-              {navLinks.map((link) =>
-                link.href.startsWith('/') ? (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={cn(navLinkClass(isActive(link.href)), 'block')}
-                  >
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={cn(navLinkClass(isActive(link.href)), 'block')}
-                  >
-                    {link.label}
-                  </a>
-                ),
-              )}
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.label}
+                  link={link}
+                  active={isActive(link.href)}
+                  className="block"
+                  onNavigate={() => setMobileOpen(false)}
+                />
+              ))}
             </div>
 
             <button
