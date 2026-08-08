@@ -48,6 +48,15 @@ export interface Messages {
     logout: string;
     admin: string;
     adminMetrics: string;
+    adminActivity: string;
+    adminUsers: string;
+    adminSubscriptions: string;
+    adminAssessments: string;
+    adminMarketplace: string;
+    adminFlags: string;
+    adminAchievements: string;
+    adminNotifications: string;
+    adminSystem: string;
     adminCosts: string;
     adminContent: string;
     instructor: string;

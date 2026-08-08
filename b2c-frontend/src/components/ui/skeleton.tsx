@@ -9,9 +9,9 @@ export function Skeleton({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-lg bg-line',
+        'relative overflow-hidden rounded-md bg-bg-soft',
         shimmer
-          ? 'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent dark:before:via-white/10'
+          ? 'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-ink/[0.07] before:to-transparent'
           : 'animate-pulse',
         className,
       )}

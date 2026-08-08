@@ -19,6 +19,11 @@ import {
   Sparkles,
   Crown,
   DollarSign,
+  Flag,
+  Server,
+  Store,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { useLogout, useMe } from "@/src/features/auth";
@@ -107,9 +112,18 @@ const accountSettingsGroup: NavGroup = {
 const adminGroup: NavGroup = {
   title: "Admin",
   items: [
-    { labelKey: "nav.dashboard", href: "/admin/metrics", icon: LayoutDashboard },
-    { labelKey: "nav.adminCosts", href: "/admin/costs", icon: DollarSign },
+    { labelKey: "nav.adminMetrics", href: "/admin/metrics", icon: LayoutDashboard },
+    { labelKey: "nav.adminActivity", href: "/admin/activity", icon: TrendingUp },
+    { labelKey: "nav.adminUsers", href: "/admin/users", icon: Users },
+    { labelKey: "nav.adminSubscriptions", href: "/admin/subscriptions", icon: Crown },
+    { labelKey: "nav.adminAssessments", href: "/admin/assessments", icon: ClipboardList },
+    { labelKey: "nav.adminMarketplace", href: "/admin/marketplace", icon: Store },
     { labelKey: "nav.adminContent", href: "/admin/content", icon: Shield },
+    { labelKey: "nav.adminFlags", href: "/admin/flags", icon: Flag },
+    { labelKey: "nav.adminAchievements", href: "/admin/achievements", icon: Award },
+    { labelKey: "nav.adminNotifications", href: "/admin/notifications", icon: Bell },
+    { labelKey: "nav.adminCosts", href: "/admin/costs", icon: DollarSign },
+    { labelKey: "nav.adminSystem", href: "/admin/system", icon: Server },
   ],
 };
 

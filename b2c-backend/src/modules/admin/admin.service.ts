@@ -11,9 +11,15 @@ import { ExerciseSubmission } from '../exercises/submission.model';
 import { AiUsage } from '../ai-guidance/aiUsage.model';
 import { Achievement } from '../gamification/achievement.model';
 import { ContentFlag } from './contentFlag.model';
+import { Subscription } from '../subscriptions/subscription.model';
+import { SkillAssessment } from '../assessments/skillAssessment.model';
+import { SkillAssessmentSubmission } from '../assessments/skillAssessmentSubmission.model';
+import { CourseEnrollment } from '../instructor/courseEnrollment.model';
+import { UserLessonProgress } from '../progress/progress.model';
+import { Notification } from '../notifications/notification.model';
 import { AppError } from '../../common/errors/AppError';
 import type { Role } from '../../common/types';
-import { courseGenerationQueue } from '../../jobs/queue';
+import { courseGenerationQueue, skillAssessmentGenerationQueue } from '../../jobs/queue';
 import { generateQuiz, type QuizGenerator } from '../assessments/quiz.service';
 import { generateExercise, type ExerciseGenerator } from '../exercises/exercise.service';
 
@@ -220,4 +226,514 @@ export async function setUserRole(userId: string, role: Role) {
   const user = await User.findByIdAndUpdate(userId, { $set: { role } }, { new: true });
   if (!user) throw new AppError(404, 'User not found');
   return user;
+}
+
+function paginate(page?: number, limit?: number) {
+  const safePage = Math.max(1, Number.isFinite(page) ? Number(page) : 1);
+  const safeLimit = Math.min(100, Math.max(1, Number.isFinite(limit) ? Number(limit) : 20));
+  return { page: safePage, limit: safeLimit, skip: (safePage - 1) * safeLimit };
+}
+
+export async function listUsers(
+  opts: { page?: number; limit?: number; search?: string; role?: Role; tier?: string } = {},
+) {
+  const { page, limit, skip } = paginate(opts.page, opts.limit);
+  const filter: Record<string, unknown> = {};
+  if (opts.role) filter.role = opts.role;
+  if (opts.tier) filter.tier = opts.tier;
+  if (opts.search?.trim()) {
+    const q = opts.search.trim();
+    filter.$or = [
+      { email: { $regex: q, $options: 'i' } },
+      { name: { $regex: q, $options: 'i' } },
+    ];
+  }
+
+  const [items, total] = await Promise.all([
+    User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    User.countDocuments(filter),
+  ]);
+
+  return { items, total, page, limit };
+}
+
+export async function getSubscriptionDashboard() {
+  const now = new Date();
+  const inSevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  const [byTier, byStatus, subscriptionRecords, trialsExpiringSoon, paidActive] = await Promise.all([
+    User.aggregate([
+      { $match: { deletedAt: null } },
+      { $group: { _id: '$tier', count: { $sum: 1 } } },
+    ]),
+    Subscription.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+    Subscription.countDocuments({}),
+    Subscription.countDocuments({
+      trialEndsAt: { $gte: now, $lte: inSevenDays },
+      tier: 'free',
+    }),
+    Subscription.countDocuments({
+      tier: { $in: ['standard', 'premium'] },
+      status: 'active',
+    }),
+  ]);
+
+  const tierCounts: Record<string, number> = {};
+  for (const row of byTier) tierCounts[row._id] = row.count;
+
+  const statusCounts: Record<string, number> = {};
+  for (const row of byStatus) statusCounts[row._id] = row.count;
+
+  return {
+    usersByTier: {
+      free: tierCounts.free ?? 0,
+      standard: tierCounts.standard ?? 0,
+      premium: tierCounts.premium ?? 0,
+    },
+    subscriptionsByStatus: statusCounts,
+    totalSubscriptionRecords: subscriptionRecords,
+    paidActiveSubscriptions: paidActive,
+    trialsExpiringSoon,
+  };
+}
+
+export async function getAssessmentDashboard() {
+  const [total, byStatus, byTopic, submissions, byLevel] = await Promise.all([
+    SkillAssessment.countDocuments({}),
+    SkillAssessment.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+    SkillAssessment.aggregate([
+      { $group: { _id: '$topic', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 10 },
+    ]),
+    SkillAssessmentSubmission.countDocuments({}),
+    SkillAssessmentSubmission.aggregate([
+      { $group: { _id: '$level', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+    ]),
+  ]);
+
+  const statusCounts: Record<string, number> = {};
+  for (const row of byStatus) statusCounts[row._id] = row.count;
+
+  return {
+    totalAssessments: total,
+    byStatus: statusCounts,
+    byTopic: byTopic.map((row) => ({ topic: row._id, count: row.count })),
+    completedSubmissions: submissions,
+    byLevel: byLevel.map((row) => ({ level: row._id, count: row.count })),
+  };
+}
+
+function displayCreatorName(name?: string | null, email?: string | null) {
+  const trimmed = name?.trim();
+  if (trimmed) return trimmed;
+  if (email) return email.split('@')[0] ?? email;
+  return 'Unknown creator';
+}
+
+const MARKETPLACE_COURSE_SELECT =
+  'title description category level status kind enrollmentCount revenueCents priceCents currency isPublished userId createdAt updatedAt';
+
+async function mapMarketplaceCourseSummaries(
+  courses: Array<{ userId: unknown; _id: unknown; [key: string]: unknown }>,
+) {
+  const creatorIds = [...new Set(courses.map((course) => String(course.userId)))];
+  const creators = creatorIds.length
+    ? await User.find({ _id: { $in: creatorIds } })
+        .select('email name')
+        .lean()
+    : [];
+  const creatorById = new Map(
+    creators.map((user) => [
+      String(user._id),
+      {
+        email: (user.email as string) ?? '',
+        name: displayCreatorName(user.name as string | undefined, user.email as string | undefined),
+      },
+    ]),
+  );
+
+  return courses.map((course) => {
+    const creator = creatorById.get(String(course.userId));
+    return {
+      id: String(course._id),
+      title: course.title as string,
+      description: (course.description as string) ?? '',
+      category: course.category as string,
+      level: course.level as string,
+      status: course.status as string,
+      enrollmentCount: (course.enrollmentCount as number) ?? 0,
+      revenueCents: (course.revenueCents as number) ?? 0,
+      priceCents: (course.priceCents as number) ?? 0,
+      currency: (course.currency as string) ?? 'USD',
+      isPublished: (course.isPublished as boolean) ?? false,
+      creatorId: String(course.userId),
+      creatorName: creator?.name ?? 'Unknown creator',
+      creatorEmail: creator?.email ?? '',
+      kind: (course.kind as 'personal' | 'marketplace') ?? 'personal',
+      createdAt: course.createdAt,
+    };
+  });
+}
+
+export async function getMarketplaceDashboard() {
+  const [
+    publishedCourses,
+    totalCourses,
+    marketplaceCourses,
+    totalEnrollments,
+    revenueAgg,
+    coursesRaw,
+    failedCourses,
+    generatingCourses,
+    instructors,
+  ] = await Promise.all([
+    Course.countDocuments({ kind: 'marketplace', isPublished: true }),
+    Course.countDocuments({}),
+    Course.countDocuments({ kind: 'marketplace' }),
+    CourseEnrollment.countDocuments({ status: 'completed' }),
+    CourseEnrollment.aggregate([
+      { $match: { status: 'completed' } },
+      { $group: { _id: null, totalCents: { $sum: '$amountCents' } } },
+    ]),
+    Course.find({})
+      .sort({ updatedAt: -1 })
+      .limit(500)
+      .select(MARKETPLACE_COURSE_SELECT)
+      .lean(),
+    Course.countDocuments({ status: 'failed' }),
+    Course.countDocuments({ status: 'generating' }),
+    User.countDocuments({ role: 'instructor', deletedAt: null }),
+  ]);
+
+  const courses = await mapMarketplaceCourseSummaries(coursesRaw);
+
+  return {
+    publishedCourses,
+    totalCourses,
+    marketplaceCourses,
+    totalEnrollments,
+    totalRevenueCents: revenueAgg[0]?.totalCents ?? 0,
+    instructors,
+    failedCourses,
+    generatingCourses,
+    courses,
+  };
+}
+
+export async function getMarketplaceCourseDetail(courseId: string) {
+  const doc = await Course.findById(courseId).lean();
+  if (!doc) throw new AppError(404, 'Course not found');
+
+  const [lessonCount, moduleCount, instructor, modules, enrollmentStats, recentSales] =
+    await Promise.all([
+      Lesson.countDocuments({ courseId: doc._id }),
+      Module.countDocuments({ courseId: doc._id }),
+      User.findById(doc.userId).select('email name role').lean(),
+      Module.find({ courseId: doc._id }).sort({ order: 1 }).lean(),
+      CourseEnrollment.aggregate<{ _id: null; count: number; revenueCents: number }>([
+        { $match: { courseId: doc._id, status: 'completed' } },
+        { $group: { _id: null, count: { $sum: 1 }, revenueCents: { $sum: '$amountCents' } } },
+      ]),
+      CourseEnrollment.find({ courseId: doc._id, status: 'completed' })
+        .sort({ purchasedAt: -1 })
+        .limit(8)
+        .select('studentEmail amountCents currency purchasedAt')
+        .lean(),
+    ]);
+
+  const moduleIds = modules.map((moduleDoc) => moduleDoc._id);
+  const lessons =
+    moduleIds.length > 0
+      ? await Lesson.find({ moduleId: { $in: moduleIds } })
+          .sort({ order: 1 })
+          .select('moduleId title order')
+          .lean()
+      : [];
+
+  const lessonsByModule = new Map<string, { id: string; title: string; order: number }[]>();
+  for (const lesson of lessons) {
+    const key = String(lesson.moduleId);
+    const bucket = lessonsByModule.get(key) ?? [];
+    bucket.push({
+      id: String(lesson._id),
+      title: lesson.title as string,
+      order: lesson.order as number,
+    });
+    lessonsByModule.set(key, bucket);
+  }
+
+  const stats = enrollmentStats[0];
+
+  return {
+    course: {
+      id: String(doc._id),
+      title: doc.title as string,
+      description: (doc.description as string) ?? '',
+      category: doc.category as string,
+      level: doc.level as string,
+      topics: (doc.topics as string[]) ?? [],
+      status: doc.status as string,
+      kind: (doc.kind as 'personal' | 'marketplace') ?? 'personal',
+      isPublished: (doc.isPublished as boolean) ?? false,
+      priceCents: (doc.priceCents as number) ?? 0,
+      currency: (doc.currency as string) ?? 'USD',
+      slug: (doc.slug as string) ?? null,
+      enrollmentCount: (doc.enrollmentCount as number) ?? 0,
+      revenueCents: (doc.revenueCents as number) ?? 0,
+      lessonCount,
+      moduleCount,
+      failureReason: (doc.failureReason as string) ?? null,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+      generatedAt: doc.generatedAt ?? null,
+      creator: {
+        id: String(doc.userId),
+        name: displayCreatorName(
+          instructor?.name as string | undefined,
+          instructor?.email as string | undefined,
+        ),
+        email: (instructor?.email as string) ?? '',
+        role: (instructor?.role as string) ?? 'instructor',
+      },
+    },
+    modules: modules.map((moduleDoc) => ({
+      id: String(moduleDoc._id),
+      title: moduleDoc.title as string,
+      domain: moduleDoc.domain as string,
+      order: moduleDoc.order as number,
+      lessons: lessonsByModule.get(String(moduleDoc._id)) ?? [],
+    })),
+    stats: {
+      completedEnrollments: stats?.count ?? 0,
+      recordedRevenueCents: stats?.revenueCents ?? 0,
+    },
+    recentSales: recentSales.map((sale) => ({
+      studentEmail: sale.studentEmail as string,
+      amountCents: sale.amountCents as number,
+      currency: (sale.currency as string) ?? 'USD',
+      purchasedAt: sale.purchasedAt as Date,
+    })),
+  };
+}
+
+async function queueCounts(name: 'course' | 'skill') {
+  try {
+    const queue =
+      name === 'course' ? courseGenerationQueue() : skillAssessmentGenerationQueue();
+    return queue.getJobCounts('waiting', 'active', 'failed', 'delayed');
+  } catch {
+    return { waiting: 0, active: 0, failed: 0, delayed: 0, unavailable: true as const };
+  }
+}
+
+export async function getSystemDashboard() {
+  const [
+    openFlags,
+    failedCourses,
+    failedMarketplaceCourses,
+    failedPersonalCourses,
+    generatingCourses,
+    generatingMarketplaceCourses,
+    failedAssessments,
+    courseQueue,
+    skillQueue,
+  ] = await Promise.all([
+    ContentFlag.countDocuments({ status: 'open' }),
+    Course.countDocuments({ status: 'failed' }),
+    Course.countDocuments({ kind: 'marketplace', status: 'failed' }),
+    Course.countDocuments({ kind: 'personal', status: 'failed' }),
+    Course.countDocuments({ status: 'generating' }),
+    Course.countDocuments({ kind: 'marketplace', status: 'generating' }),
+    SkillAssessment.countDocuments({ status: 'failed' }),
+    queueCounts('course'),
+    queueCounts('skill'),
+  ]);
+
+  return {
+    openFlags,
+    failedCourses,
+    failedMarketplaceCourses,
+    failedPersonalCourses,
+    generatingCourses,
+    generatingMarketplaceCourses,
+    failedAssessments,
+    queues: {
+      courseGeneration: courseQueue,
+      skillAssessmentGeneration: skillQueue,
+    },
+    labsNote: 'Lab executions are ephemeral — error rates are emitted via logs at run time.',
+  };
+}
+
+export async function getActivityDashboard() {
+  const now = new Date();
+  const days7 = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const days30 = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const days14 = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+
+  const dailyGroup = {
+    $group: {
+      _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+      count: { $sum: 1 },
+    },
+  };
+
+  const [
+    signups7d,
+    signups30d,
+    activeUsers,
+    lessonCompletions,
+    quizSubs7d,
+    examSubs7d,
+    exerciseSubs7d,
+    totalQuizSubmissions,
+    totalExamSubmissions,
+    totalExerciseSubmissions,
+    signupsByDay,
+    quizByDay,
+    examByDay,
+    exerciseByDay,
+  ] = await Promise.all([
+    User.countDocuments({ createdAt: { $gte: days7 }, deletedAt: null }),
+    User.countDocuments({ createdAt: { $gte: days30 }, deletedAt: null }),
+    User.countDocuments({ deletedAt: null }),
+    UserLessonProgress.countDocuments({ status: 'completed' }),
+    QuizSubmission.countDocuments({ createdAt: { $gte: days7 } }),
+    ExamSubmission.countDocuments({ createdAt: { $gte: days7 } }),
+    ExerciseSubmission.countDocuments({ createdAt: { $gte: days7 } }),
+    QuizSubmission.countDocuments({}),
+    ExamSubmission.countDocuments({}),
+    ExerciseSubmission.countDocuments({}),
+    User.aggregate([
+      { $match: { createdAt: { $gte: days14 }, deletedAt: null } },
+      dailyGroup,
+      { $sort: { _id: 1 } },
+    ]),
+    QuizSubmission.aggregate([
+      { $match: { createdAt: { $gte: days14 } } },
+      dailyGroup,
+      { $sort: { _id: 1 } },
+    ]),
+    ExamSubmission.aggregate([
+      { $match: { createdAt: { $gte: days14 } } },
+      dailyGroup,
+      { $sort: { _id: 1 } },
+    ]),
+    ExerciseSubmission.aggregate([
+      { $match: { createdAt: { $gte: days14 } } },
+      dailyGroup,
+      { $sort: { _id: 1 } },
+    ]),
+  ]);
+
+  const learningMap = new Map<string, { quiz: number; exam: number; exercises: number }>();
+  for (const row of quizByDay) {
+    const entry = learningMap.get(row._id) ?? { quiz: 0, exam: 0, exercises: 0 };
+    entry.quiz = row.count;
+    learningMap.set(row._id, entry);
+  }
+  for (const row of examByDay) {
+    const entry = learningMap.get(row._id) ?? { quiz: 0, exam: 0, exercises: 0 };
+    entry.exam = row.count;
+    learningMap.set(row._id, entry);
+  }
+  for (const row of exerciseByDay) {
+    const entry = learningMap.get(row._id) ?? { quiz: 0, exam: 0, exercises: 0 };
+    entry.exercises = row.count;
+    learningMap.set(row._id, entry);
+  }
+
+  const learningActivityByDay = [...learningMap.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, counts]) => ({
+      date,
+      quiz: counts.quiz,
+      exam: counts.exam,
+      exercises: counts.exercises,
+      total: counts.quiz + counts.exam + counts.exercises,
+    }));
+
+  const signups14dTotal = signupsByDay.reduce((sum, row) => sum + row.count, 0);
+  const peakSignupDay = signupsByDay.reduce<{ date: string | null; count: number }>(
+    (best, row) => (row.count > best.count ? { date: row._id, count: row.count } : best),
+    { date: null, count: 0 },
+  );
+
+  return {
+    generatedAt: now.toISOString(),
+    signups7d,
+    signups30d,
+    activeUsers,
+    lessonCompletions,
+    quizSubmissions7d: quizSubs7d,
+    examSubmissions7d: examSubs7d,
+    exerciseSubmissions7d: exerciseSubs7d,
+    learningEvents7d: quizSubs7d + examSubs7d + exerciseSubs7d,
+    totalQuizSubmissions,
+    totalExamSubmissions,
+    totalExerciseSubmissions,
+    signups14dTotal,
+    avgDailySignups7d: signups7d ? signups7d / 7 : 0,
+    peakSignupDay: peakSignupDay.date,
+    peakSignupCount: peakSignupDay.count,
+    signupsByDay: signupsByDay.map((row) => ({ date: row._id, count: row.count })),
+    learningActivityByDay,
+  };
+}
+
+export async function listAchievements() {
+  return Achievement.find().sort({ createdAt: -1 });
+}
+
+export async function listAdminNotifications(opts: { page?: number; limit?: number } = {}) {
+  const { page, limit, skip } = paginate(opts.page, opts.limit);
+  const [items, total, byType] = await Promise.all([
+    Notification.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+    Notification.countDocuments({}),
+    Notification.aggregate([
+      {
+        $group: {
+          _id: '$type',
+          total: { $sum: 1 },
+          sent: { $sum: { $cond: [{ $eq: ['$status', 'sent'] }, 1, 0] } },
+          failed: { $sum: { $cond: [{ $eq: ['$status', 'failed'] }, 1, 0] } },
+        },
+      },
+      { $sort: { total: -1 } },
+    ]),
+  ]);
+
+  return {
+    items,
+    total,
+    page,
+    limit,
+    byType: byType.map((row) => ({
+      type: row._id,
+      total: row.total,
+      sent: row.sent,
+      failed: row.failed,
+    })),
+  };
+}
+
+export async function broadcastNotification(input: { title: string; body: string }) {
+  const users = await User.find({ deletedAt: null }).select('_id');
+  const now = new Date();
+  if (!users.length) return { recipients: 0 };
+
+  await Notification.insertMany(
+    users.map((user) => ({
+      userId: user._id,
+      type: 'admin-broadcast',
+      channel: 'email',
+      status: 'sent',
+      sentAt: now,
+      payload: { subject: input.title, body: input.body },
+    })),
+  );
+
+  return { recipients: users.length };
 }
