@@ -101,7 +101,7 @@ function HeroPlatformPreview() {
         <HeroTerminalDemo />
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {['Quizzes', 'Exams', 'Progress tracking', 'Achievements'].map((item) => (
+          {['Quizzes', 'Exams', 'Achievements', 'Progress tracking',].map((item) => (
             <span
               key={item}
               className="rounded-full border border-line bg-bg-soft px-3 py-1 text-xs font-medium text-ink-2"

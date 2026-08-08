@@ -335,9 +335,12 @@ function displayCreatorName(name?: string | null, email?: string | null) {
 const MARKETPLACE_COURSE_SELECT =
   'title description category level status kind enrollmentCount revenueCents priceCents currency isPublished userId createdAt updatedAt';
 
-async function mapMarketplaceCourseSummaries(
-  courses: Array<{ userId: unknown; _id: unknown; [key: string]: unknown }>,
-) {
+type MarketplaceCourseDoc = Record<string, unknown> & {
+  _id?: unknown;
+  userId?: unknown;
+};
+
+async function mapMarketplaceCourseSummaries(courses: MarketplaceCourseDoc[]) {
   const creatorIds = [...new Set(courses.map((course) => String(course.userId)))];
   const creators = creatorIds.length
     ? await User.find({ _id: { $in: creatorIds } })

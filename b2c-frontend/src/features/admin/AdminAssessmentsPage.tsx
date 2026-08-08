@@ -100,7 +100,7 @@ function buildStatusRows(data: AssessmentDashboard) {
 
 function buildLevelRows(data: AssessmentDashboard) {
   const map = new Map(data.byLevel.map((row) => [row.level, row.count]));
-  const rows = LEVEL_ORDER.map((level) => ({
+  const rows: { level: string; count: number }[] = LEVEL_ORDER.map((level) => ({
     level,
     count: map.get(level) ?? 0,
   }));
