@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 export const NAV_LINKS = [
-  { label: 'Home', href: '#top' },
+  { label: 'Home', href: '/' },
   { label: 'Courses', href: '/courses' },
   { label: 'Assessments', href: '/assessments' },
   { label: 'Pricing', href: '/pricing' },

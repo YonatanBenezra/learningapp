@@ -26,6 +26,7 @@ import {
   Users,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
+import { BrandWordmark } from "@/src/components/ui/brand-wordmark";
 import { useLogout, useMe } from "@/src/features/auth";
 import { defaultDashboardPath } from "@/src/features/auth/dashboardRoutes";
 import { useTranslation } from "@/src/i18n";
@@ -247,8 +248,7 @@ function BrandLogo({ collapsed, homeHref }: { collapsed: boolean; homeHref: stri
       </span>
       {!collapsed && (
         <span className="font-heading text-xl font-semibold tracking-tight text-ink">
-          <span className="text-primary">AI</span>
-          Study
+          <BrandWordmark size="md" className="font-semibold" />
         </span>
       )}
     </Link>

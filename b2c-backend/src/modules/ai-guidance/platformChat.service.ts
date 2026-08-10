@@ -17,7 +17,7 @@ export async function replyToPlatformChat(
   const transcript = formatTranscript(messages);
   const result = await getAiClient().complete({
     system: PLATFORM_ASSISTANT_SYSTEM,
-    prompt: `${transcript}\n\nReply to the visitor's latest message. Stay on-topic about the Bina/AIStudy platform. Be concise unless they ask for detail.`,
+    prompt: `${transcript}\n\nReply to the visitor's latest message. Stay on-topic about the LabPath platform. Be concise unless they ask for detail.`,
     useCase: 'platform-chat',
     model: resolved,
     maxTokens: 700,

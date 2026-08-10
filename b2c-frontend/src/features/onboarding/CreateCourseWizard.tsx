@@ -281,7 +281,7 @@ export function CreateCourseWizard() {
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">Create course</h1>
           <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">
-            Define your subject, topics, and skill level — AIStudy will generate a full learning path.
+            Define your subject, topics, and skill level — LabPath will generate a full learning path.
           </p>
         </div>
         <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-line bg-bg-soft text-primary">
@@ -1142,8 +1142,8 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
         title="Generating your course"
         description={
           course?.title
-            ? `AIStudy is building "${course.title}" with modules, lessons, quizzes, and exams. You will be redirected automatically when it is ready.`
-            : 'AIStudy is building modules, lessons, quizzes, and exams. This typically takes 10–15 seconds.'
+            ? `LabPath is building "${course.title}" with modules, lessons, quizzes, and exams. You will be redirected automatically when it is ready.`
+            : 'LabPath is building modules, lessons, quizzes, and exams. This typically takes 10–15 seconds.'
         }
         progress={progress}
       />

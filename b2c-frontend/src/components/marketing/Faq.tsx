@@ -8,8 +8,8 @@ import { cn } from '@/src/lib/utils';
 
 const FAQ_ITEMS = [
   {
-    q: 'How does AIStudy build a course?',
-    a: 'You choose a subject, skill level, and topics. AIStudy generates a structured course with modules, lessons, quizzes, and exams — usually in about 10–15 seconds.',
+    q: 'How does LabPath build a course?',
+    a: 'You choose a subject, skill level, and topics. LabPath generates a structured course with modules, lessons, quizzes, and exams — usually in about 10–15 seconds.',
   },
   {
     q: 'Are the labs real or just videos?',

@@ -19,6 +19,7 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
+import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
 import { Progress } from '@/src/components/ui/progress';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import type { Exercise, ExerciseSubmission } from '@/src/domain/exercise';
@@ -202,8 +203,7 @@ export function ExerciseView({
           </Link>
           <nav className="mt-3 flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
             <Link href="/dashboard" className="transition hover:text-primary">
-              <span className="text-primary">AI</span>
-              <span className="text-ink">Study</span>
+              <BrandWordmark size="sm" className="font-semibold" />
             </Link>
             <ChevronRight className="size-4" />
             <Link href={`/lesson/${lessonId}`} className="line-clamp-1 transition hover:text-primary">

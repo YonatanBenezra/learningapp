@@ -55,7 +55,7 @@ function ContactForm() {
         </span>
         <h3 className="mt-6 text-xl font-bold text-ink sm:text-2xl">Message sent successfully</h3>
         <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-2">
-          Thank you for contacting AIStudy. A member of our support team will respond within one
+          Thank you for contacting LabPath. A member of our support team will respond within one
           business day.
         </p>
         <Button type="button" variant="soft" className="mt-8" onClick={() => setSent(false)}>
@@ -226,7 +226,7 @@ export function ContactPageContent() {
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-                New to AIStudy
+                New to LabPath
               </p>
               <h2 className="mt-2 text-xl font-bold text-ink sm:text-2xl">
                 Start learning with a personalized AI course

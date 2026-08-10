@@ -445,7 +445,7 @@ export function MarketplaceCourseDetailPage({
                   {isInstructor
                     ? isCourseOwner
                       ? 'Your published marketplace course'
-                      : 'Listed for learners on AIStudy'
+                      : 'Listed for learners on LabPath'
                     : 'One-time payment · Lifetime access'}
                 </p>
               </div>

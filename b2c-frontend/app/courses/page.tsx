@@ -5,9 +5,9 @@ import { CoursesCatalogPage } from '@/src/components/marketing/CoursesCatalogPag
 import { CoursesCatalogSkeleton } from '@/src/components/feedback/CoursesCatalogSkeleton';
 
 export const metadata: Metadata = {
-  title: 'Courses | AIStudy',
+  title: 'Courses | LabPath',
   description:
-    'Browse the AIStudy course catalog across programming, cyber security, networking, data science, and more.',
+    'Browse the LabPath course catalog across programming, cyber security, networking, data science, and more.',
 };
 
 export default function CoursesPage() {

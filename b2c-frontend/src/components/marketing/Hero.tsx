@@ -53,7 +53,7 @@ function HeroPlatformPreview() {
               <Sparkles className="size-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-ink">AIStudy Workspace</p>
+              <p className="text-sm font-semibold text-ink">LabPath Workspace</p>
               <p className="text-xs text-ink-3">Personalized learning path</p>
             </div>
           </div>
@@ -101,7 +101,7 @@ function HeroPlatformPreview() {
         <HeroTerminalDemo />
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {['Quizzes', 'Exams', 'Achievements', 'Progress tracking',].map((item) => (
+          {['Quizzes', 'Exams', 'Achievements', 'Progress tracking'].map((item) => (
             <span
               key={item}
               className="rounded-full border border-line bg-bg-soft px-3 py-1 text-xs font-medium text-ink-2"
@@ -127,10 +127,7 @@ function HeroPlatformPreview() {
 
 export function Hero() {
   return (
-    <section
-      id="top"
-      className="relative overflow-hidden bg-[var(--marketing-hero)]"
-    >
+    <section id="top" className="relative overflow-hidden bg-[var(--marketing-hero)]">
       <HeroBackdrop />
 
       <Container className="relative grid items-center gap-12 py-14 lg:grid-cols-2 lg:gap-16 lg:py-20">

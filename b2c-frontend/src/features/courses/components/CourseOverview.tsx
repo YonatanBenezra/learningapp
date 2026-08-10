@@ -6,6 +6,7 @@ import { ArrowLeft, ChevronRight, Loader2, X } from 'lucide-react';
 import { useCourse } from '@/src/features/courses';
 import { CoursePlayer } from '@/src/features/courses/components/CoursePlayer';
 import { Button } from '@/src/components/ui/button';
+import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
 import { Skeleton } from '@/src/components/ui/skeleton';
 
 export function CourseOverview({ courseId }: { courseId: string }) {
@@ -105,8 +106,7 @@ function PageNav({ title }: { title: string }) {
       </Link>
       <nav className="mt-3 flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
         <Link href="/dashboard" className="transition hover:text-primary">
-          <span className="text-primary">AI</span>
-          <span className="text-ink">Study</span>
+          <BrandWordmark size="sm" className="font-semibold" />
         </Link>
         <ChevronRight className="size-4" />
         <Link href="/my-courses" className="transition hover:text-primary">

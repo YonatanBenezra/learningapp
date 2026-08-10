@@ -24,6 +24,7 @@ import {
 } from '@/src/features/courses/components/CourseLessonPanel';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
+import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
 import { Progress } from '@/src/components/ui/progress';
 import { Skeleton } from '@/src/components/ui/skeleton';
 
@@ -149,8 +150,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
             </Link>
             <nav className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-ink-3 sm:text-sm">
               <Link href="/dashboard" className="transition hover:text-primary">
-                <span className="text-primary">AI</span>
-                <span className="text-ink">Study</span>
+                <BrandWordmark size="sm" className="font-semibold" />
               </Link>
               <ChevronRight className="size-3.5" />
               <Link href="/my-courses" className="transition hover:text-primary">

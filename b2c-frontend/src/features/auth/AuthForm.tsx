@@ -22,6 +22,8 @@ import { ApiError } from '@/src/infrastructure/apiClient';
 import { useTranslation } from '@/src/i18n';
 import { PasswordStrength } from './PasswordStrength';
 import { AuthIllustration } from './AuthIllustration';
+import { APP_NAME } from '@/src/lib/brand';
+import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
 import { Spinner } from '@/src/components/ui/spinner';
 
 const GOOGLE_ENABLED = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
@@ -36,14 +38,11 @@ function authSwitchHref(mode: 'login' | 'signup') {
 
 function AuthLogo() {
   return (
-    <Link href="/" className="inline-flex items-center gap-2.5" aria-label="AIStudy home">
+    <Link href="/" className="inline-flex items-center gap-2.5" aria-label={`${APP_NAME} home`}>
       <span className="grid size-10 place-items-center rounded-lg bg-primary-soft text-primary">
         <Sparkles className="size-5" />
       </span>
-      <span className="font-heading text-xl font-semibold tracking-tight text-ink">
-        <span className="text-primary">AI</span>
-        Study
-      </span>
+      <BrandWordmark size="md" className="font-semibold" />
     </Link>
   );
 }

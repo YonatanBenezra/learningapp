@@ -50,7 +50,7 @@ const WELCOME: Record<ChatMode, ChatMessage> = {
   agent: {
     role: 'assistant',
     content:
-      "Agent mode helps you explore learning paths and next steps on AIStudy. Tell me your goal and I'll guide you.",
+      "Agent mode helps you explore learning paths and next steps on LabPath. Tell me your goal and I'll guide you.",
   },
 };
 

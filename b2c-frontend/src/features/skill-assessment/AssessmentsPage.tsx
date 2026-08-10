@@ -10,7 +10,6 @@ import {
   Trophy,
 } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
-import { Tooltip } from '@/src/components/ui/tooltip';
 import { Container } from '@/src/components/marketing/Container';
 import {
   isAssessmentQuotaExhausted,
@@ -86,36 +85,28 @@ function CreateAssessmentButton({
   size?: 'lg' | 'md';
   label?: string;
 }) {
-  const disabledTip =
-    'Your plan assessment limit is reached. Upgrade or complete an existing assessment to create more.';
-  const activeTip = 'Start a new skill check and get a personalized course recommendation.';
-
   if (atLimit) {
     return (
-      <Tooltip content={disabledTip} side="bottom">
-        <span className={cn('inline-flex', className)}>
-          <Button
-            size={size}
-            className="rounded-full bg-primary hover:bg-primary-dark"
-            disabled
-          >
-            <Plus className="size-4" />
-            {label}
-          </Button>
-        </span>
-      </Tooltip>
+      <span className={cn('inline-flex', className)}>
+        <Button
+          size={size}
+          className="rounded-full bg-primary hover:bg-primary-dark"
+          disabled
+        >
+          <Plus className="size-4" />
+          {label}
+        </Button>
+      </span>
     );
   }
 
   return (
-    <Tooltip content={activeTip} side="bottom">
-      <Link href="/assessment/start" className={cn('inline-flex', className)}>
-        <Button size={size} className="rounded-full bg-primary hover:bg-primary-dark">
-          <Plus className="size-4" />
-          {label}
-        </Button>
-      </Link>
-    </Tooltip>
+    <Link href="/assessment/start" className={cn('inline-flex', className)}>
+      <Button size={size} className="rounded-full bg-primary hover:bg-primary-dark">
+        <Plus className="size-4" />
+        {label}
+      </Button>
+    </Link>
   );
 }
 
@@ -171,33 +162,23 @@ function AssessmentCard({ item }: { item: SkillAssessmentSummary }) {
 
       <div className="mt-6">
         {completed ? (
-          <Tooltip content="Review your score, skill level, and recommended learning path.">
-            <Link href={`/assessment/${item.id}/result`} className="inline-flex w-full sm:w-auto">
-              <Button variant="soft" className="w-full rounded-lg sm:w-auto">
-                View results
-                <ArrowRight className="size-4" />
-              </Button>
-            </Link>
-          </Tooltip>
+          <Link href={`/assessment/${item.id}/result`} className="inline-flex w-full sm:w-auto">
+            <Button variant="soft" className="w-full rounded-lg sm:w-auto">
+              View results
+              <ArrowRight className="size-4" />
+            </Button>
+          </Link>
         ) : failed ? (
           <p className="text-sm text-ink-2">
             {item.failureReason ?? 'Generation failed. Create a new assessment to try again.'}
           </p>
         ) : (
-          <Tooltip
-            content={
-              generating
-                ? 'Questions are still being generated. Open to check progress.'
-                : 'Resume this assessment from where you left off.'
-            }
-          >
-            <Link href={`/assessment/${item.id}`} className="inline-flex w-full sm:w-auto">
-              <Button className="w-full rounded-lg bg-primary hover:bg-primary-dark sm:w-auto">
-                {generating ? 'View progress' : 'Continue assessment'}
-                <ArrowRight className="size-4" />
-              </Button>
-            </Link>
-          </Tooltip>
+          <Link href={`/assessment/${item.id}`} className="inline-flex w-full sm:w-auto">
+            <Button className="w-full rounded-lg bg-primary hover:bg-primary-dark sm:w-auto">
+              {generating ? 'View progress' : 'Continue assessment'}
+              <ArrowRight className="size-4" />
+            </Button>
+          </Link>
         )}
       </div>
     </article>
@@ -257,11 +238,9 @@ export function AssessmentsPage() {
             <div className="mt-8 rounded-lg border border-line bg-bg-elev p-10 text-center shadow-soft">
               <p className="text-lg font-semibold text-ink">Could not load assessments</p>
               <p className="mt-2 text-sm text-ink-2">Please refresh and try again.</p>
-              <Tooltip content="Reload your assessment list from the server.">
-                <Button variant="soft" className="mt-4 rounded-lg" onClick={() => refetch()}>
-                  Retry
-                </Button>
-              </Tooltip>
+              <Button variant="soft" className="mt-4 rounded-lg" onClick={() => refetch()}>
+                Retry
+              </Button>
             </div>
           ) : assessments.length === 0 ? (
             <div className="mt-8 rounded-lg border border-dashed border-line bg-bg-elev p-12 text-center shadow-soft">

@@ -3,7 +3,7 @@ import { CourseOverview } from '@/src/features/courses/components/CourseOverview
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Course | AIStudy',
+    title: 'Course | LabPath',
     description: 'Continue learning with modules, lessons, and progress tracking.',
   };
 }

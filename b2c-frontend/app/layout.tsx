@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/src/providers";
+import { APP_METADATA_TITLE, APP_TAGLINE } from "@/src/lib/brand";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -16,9 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bina B2C — Learn, Lab, Level up",
+  title: APP_METADATA_TITLE,
   description:
-    "Turn any topic into a full AI-built course — then practice in real, hands-on labs.",
+    `${APP_TAGLINE} — turn any topic into a full AI-built course, then practice in real, hands-on labs.`,
 };
 
 export default function RootLayout({

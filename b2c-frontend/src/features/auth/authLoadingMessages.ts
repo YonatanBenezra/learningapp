@@ -100,7 +100,7 @@ export function getRouteLoadingMessage(pathname: string): LoadingMessage {
     };
   }
   return {
-    label: 'Loading AIStudy',
+    label: 'Loading LabPath',
     description: 'Getting things ready for you…',
   };
 }

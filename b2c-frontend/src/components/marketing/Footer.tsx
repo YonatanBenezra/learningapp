@@ -6,14 +6,13 @@ import { Plus } from 'lucide-react';
 import { FOOTER_LINKS } from './data';
 import { Container } from './Container';
 import { FOOTER_SOCIAL_LINKS } from './SocialIcons';
+import { APP_NAME } from '@/src/lib/brand';
+import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
 
 function FooterLogo() {
   return (
-    <Link href="/" className="relative inline-flex flex-col leading-none" aria-label="AIStudy Home">
-      <span className="text-[28px] font-bold tracking-[-0.02em] sm:text-[34px]">
-        <span className="text-primary">AI</span>
-        <span className="text-ink">Study</span>
-      </span>
+    <Link href="/" className="relative inline-flex flex-col leading-none" aria-label={`${APP_NAME} home`}>
+      <BrandWordmark size="xl" />
       <svg
         className="absolute -bottom-1 left-[28px] h-[10px] w-[72px] text-primary sm:left-[34px]"
         viewBox="0 0 72 10"
@@ -156,7 +155,7 @@ export function Footer() {
             <p className="text-sm text-ink-2 sm:text-base">
               Copyright © {new Date().getFullYear()}{' '}
               <Link href="/" className="font-medium text-primary transition-colors hover:text-primary-dark">
-                AIStudy
+                {APP_NAME}
               </Link>
               . All Rights Reserved
             </p>

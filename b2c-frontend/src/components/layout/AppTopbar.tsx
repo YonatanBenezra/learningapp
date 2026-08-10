@@ -8,6 +8,7 @@ import { useLogout } from '@/src/features/auth';
 import { Avatar } from '@/src/components/ui/avatar';
 import { Button } from '@/src/components/ui/button';
 import { ThemeToggle } from '@/src/components/ui/theme-toggle';
+import { APP_NAME } from '@/src/lib/brand';
 import { cn } from '@/src/lib/utils';
 import { getUserAvatarProps } from '@/src/lib/userDisplay';
 
@@ -27,10 +28,10 @@ export function AppTopbar() {
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
         <div className="flex items-center gap-8">
           <Link href="/dashboard" className="flex items-center gap-2.5 font-extrabold tracking-tight">
-            <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-ink">
-              B
+            <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-ink text-sm font-bold">
+              L
             </span>
-            Bina B2C
+            {APP_NAME}
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
             {nav.map((n) => {

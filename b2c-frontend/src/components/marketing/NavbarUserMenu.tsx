@@ -27,7 +27,7 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
   if (!hydrated) {
     return (
       <div
-        className={cn('animate-pulse rounded-lg bg-line/60', compact ? 'h-11 w-full' : 'h-10 w-28')}
+        className={cn('animate-pulse rounded-full bg-line/60', compact ? 'h-11 w-full' : 'h-9 w-28')}
         aria-hidden="true"
       />
     );
@@ -43,25 +43,25 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
 
   if (compact) {
     return (
-      <div className="space-y-3 border-t border-line pt-5">
-        <div className="flex items-center gap-3 rounded-lg border border-line bg-bg-soft px-3 py-3">
-          <Avatar {...avatar} className="size-10" />
+      <div className="space-y-3">
+        <div className="flex items-center gap-3 rounded-xl border border-line bg-bg-soft/80 px-3 py-3">
+          <Avatar {...avatar} className="size-10 ring-2 ring-primary/15" />
           <div className="min-w-0">
-            <p className="truncate text-base font-semibold text-ink">{name}</p>
-            <p className="text-sm font-medium text-primary">{tierLabel(user.tier)}</p>
+            <p className="truncate text-sm font-semibold text-ink">{name}</p>
+            <p className="text-xs font-medium text-primary">{tierLabel(user.tier)}</p>
           </div>
         </div>
-        <div className="grid gap-1">
+        <div className="grid gap-0.5">
           <Link
             href={dashboardHref}
-            className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-base font-medium text-ink hover:bg-bg-soft"
+            className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-bg-soft"
           >
             <LayoutDashboard className="size-4 text-ink-3" />
             Dashboard
           </Link>
           <Link
             href="/settings"
-            className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-base font-medium text-ink hover:bg-bg-soft"
+            className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-bg-soft"
           >
             <Settings className="size-4 text-ink-3" />
             Settings
@@ -69,7 +69,7 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
           <button
             type="button"
             onClick={() => logout()}
-            className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-base font-medium text-bad hover:bg-bad/5"
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-bad transition-colors hover:bg-bad/5"
           >
             <LogOut className="size-4" />
             Log out
@@ -80,18 +80,16 @@ export function NavbarUserMenu({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className="flex items-center gap-3 border-l border-line pl-3">
-      <Link
-        href={dashboardHref}
-        className="flex items-center gap-2.5 rounded-lg py-1 pl-1 pr-2 transition-colors hover:bg-bg-soft"
-      >
-        <Avatar {...avatar} className="size-9" />
-        <span className="hidden max-w-[120px] flex-col leading-tight xl:flex">
-          <span className="truncate text-base font-semibold text-ink">{name}</span>
-          <span className="text-xs font-medium text-ink-3">{tierLabel(user.tier)}</span>
-        </span>
-      </Link>
-    </div>
+    <Link
+      href={dashboardHref}
+      className="inline-flex items-center gap-2 rounded-full border border-line/80 bg-bg-soft/70 py-1 pl-1 pr-3 transition-colors hover:border-line-2 hover:bg-bg-soft"
+    >
+      <Avatar {...avatar} className="size-8 ring-2 ring-primary/10" />
+      <span className="hidden max-w-[120px] flex-col leading-tight xl:flex">
+        <span className="truncate text-sm font-semibold text-ink">{name}</span>
+        <span className="text-[11px] font-medium text-ink-3">{tierLabel(user.tier)}</span>
+      </span>
+    </Link>
   );
 }
 
@@ -113,14 +111,21 @@ export function NavbarAuthLinks({
         <Link
           href="/login"
           onClick={onNavigate}
-          className={buttonClasses({ variant: 'outline', size: 'md', className: 'w-full rounded-lg bg-bg-elev text-base' })}
+          className={buttonClasses({
+            variant: 'outline',
+            size: 'md',
+            className: 'w-full rounded-xl bg-bg-elev text-sm',
+          })}
         >
           Log in
         </Link>
         <Link
           href="/signup"
           onClick={onNavigate}
-          className={buttonClasses({ size: 'md', className: 'w-full rounded-lg text-base' })}
+          className={buttonClasses({
+            size: 'md',
+            className: 'w-full rounded-xl text-sm shadow-primary',
+          })}
         >
           Start free
         </Link>
@@ -129,14 +134,24 @@ export function NavbarAuthLinks({
   }
 
   return (
-    <div className="flex items-center gap-2 border-l border-line pl-3">
+    <div className="flex items-center gap-2">
       <Link
         href="/login"
-        className={buttonClasses({ variant: 'ghost', size: 'md', className: 'rounded-lg text-base' })}
+        className={buttonClasses({
+          variant: 'ghost',
+          size: 'sm',
+          className: 'rounded-lg px-3 text-sm font-medium',
+        })}
       >
         Log in
       </Link>
-      <Link href="/signup" className={buttonClasses({ size: 'md', className: 'rounded-lg text-base' })}>
+      <Link
+        href="/signup"
+        className={buttonClasses({
+          size: 'sm',
+          className: 'rounded-lg px-4 text-sm shadow-primary',
+        })}
+      >
         Start free
       </Link>
     </div>

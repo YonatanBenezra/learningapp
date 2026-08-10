@@ -25,7 +25,7 @@ const envSchema = z
     OPENROUTER_API_KEY: z.string().default(''),
     OPENROUTER_MODEL: z.string().default('anthropic/claude-sonnet-4'),
     OPENROUTER_APP_URL: z.string().default('http://localhost:3000'),
-    OPENROUTER_APP_NAME: z.string().default('Bina B2C'),
+    OPENROUTER_APP_NAME: z.string().default('LabPath'),
 
     SANDBOX_EXECUTION_PROVIDER: z
       .enum(['docker-local', 'firecracker', 'third-party'])

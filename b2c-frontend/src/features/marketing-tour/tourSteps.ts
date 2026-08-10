@@ -2,7 +2,7 @@ import type { DriveStep } from 'driver.js';
 
 const WELCOME_STEP: DriveStep = {
   popover: {
-    title: 'Welcome to AIStudy',
+    title: 'Welcome to LabPath',
     description:
       'This one-time tour highlights the main areas of the platform — courses, assessments, pricing, and how to get help.',
   },
@@ -80,7 +80,7 @@ const HOME_TOUR_STEPS: DriveStep[] = [
     popover: {
       title: 'Your learning hub',
       description:
-        'AIStudy combines AI-generated courses, hands-on labs, quizzes, and exams in one workspace.',
+        'LabPath combines AI-generated courses, hands-on labs, quizzes, and exams in one workspace.',
       side: 'right',
       align: 'start',
     },

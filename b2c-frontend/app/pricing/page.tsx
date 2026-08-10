@@ -7,7 +7,7 @@ import { PricingFaq } from '@/src/components/marketing/PricingFaq';
 import { MarketingPageShell } from '@/src/components/marketing/MarketingPageShell';
 
 export const metadata: Metadata = {
-  title: 'Pricing | AIStudy',
+  title: 'Pricing | LabPath',
   description:
     'Compare Free, Standard, and Premium membership plans for AI-generated courses, labs, and assessments.',
 };

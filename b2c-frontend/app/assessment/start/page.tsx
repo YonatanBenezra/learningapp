@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { StartAssessmentPage } from '@/src/features/skill-assessment/CreateAssessmentFlow';
 
 export const metadata: Metadata = {
-  title: 'Start assessment | AIStudy',
+  title: 'Start assessment | LabPath',
   description: 'Choose your subject and learning goal to begin a personalized skill assessment.',
 };
 

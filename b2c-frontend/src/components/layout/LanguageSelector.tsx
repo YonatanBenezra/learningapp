@@ -27,7 +27,13 @@ const languages: Language[] = [
   { code: 'ja', name: 'Japanese', nativeName: '日本語', flag: '🇯🇵' },
 ];
 
-export function LanguageSelector({ compact = false }: { compact?: boolean }) {
+export function LanguageSelector({
+  compact = false,
+  className,
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
   const { locale, setLocale } = useTranslation();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -88,6 +94,7 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
           open
             ? 'border-line bg-bg-soft text-ink'
             : 'text-ink-2 hover:border-line hover:bg-bg-soft hover:text-ink',
+          className,
         )}
         aria-label="Select language"
         aria-expanded={open}

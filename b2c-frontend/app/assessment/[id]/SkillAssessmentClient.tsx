@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { ClipboardList } from 'lucide-react';
 import { Container } from '@/src/components/marketing/Container';
+import { Button } from '@/src/components/ui/button';
 import { PaginatedSkillAssessment } from '@/src/features/skill-assessment/PaginatedSkillAssessment';
 import {
   AssessmentFailedPanel,
@@ -44,12 +47,27 @@ export default function SkillAssessmentPage({ id }: { id: string }) {
 
   if (isError || !assessment) {
     return (
-      <Container className="max-w-[1240px] py-20">
-        <div className="mx-auto max-w-lg rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <h1 className="text-2xl font-semibold text-ink">Assessment not found</h1>
-          <p className="mt-2 text-sm text-ink-2">
-            This assessment may have expired or been removed.
-          </p>
+      <Container className="max-w-[1240px] py-16 lg:py-20">
+        <div className="mx-auto max-w-lg overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
+          <div className="border-b border-line bg-bg-soft/50 px-8 py-10 text-center">
+            <div className="mx-auto grid size-14 place-items-center rounded-2xl border border-line bg-bg-elev text-ink-3">
+              <ClipboardList className="size-7" />
+            </div>
+            <h1 className="mt-5 text-2xl font-bold text-ink">Assessment not found</h1>
+            <p className="mt-2 text-sm leading-6 text-ink-2">
+              This assessment may have expired or been removed.
+            </p>
+          </div>
+          <div className="flex justify-center gap-3 px-8 py-6">
+            <Link href="/assessments">
+              <Button variant="outline" className="rounded-xl">
+                Back to assessments
+              </Button>
+            </Link>
+            <Link href="/assessment/start">
+              <Button className="rounded-xl">Create new assessment</Button>
+            </Link>
+          </div>
         </div>
       </Container>
     );

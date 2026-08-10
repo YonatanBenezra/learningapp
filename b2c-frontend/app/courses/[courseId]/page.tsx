@@ -28,13 +28,13 @@ export async function generateMetadata({
 
   if (title) {
     return {
-      title: `${title} | AIStudy`,
+      title: `${title} | LabPath`,
       description: `Explore ${title} — curriculum, instructor details, and enrollment options.`,
     };
   }
 
   return {
-    title: 'Course | AIStudy',
+    title: 'Course | LabPath',
     description: 'Explore course details, curriculum, and enrollment options.',
   };
 }
