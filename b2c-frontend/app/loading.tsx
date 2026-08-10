@@ -1,5 +1,5 @@
-import { PageLoader } from '@/src/components/ui/page-loader';
+import { DynamicPageLoader } from '@/src/components/feedback/DynamicPageLoader';
 
 export default function Loading() {
-  return <PageLoader label="Loading AIStudy" description="Getting things ready for you…" />;
+  return <DynamicPageLoader />;
 }

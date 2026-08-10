@@ -23,11 +23,13 @@ export function useLogin() {
   const queryClient = useQueryClient();
   const setUser = useAuthStore((s) => s.setUser);
   const setSessionReady = useAuthStore((s) => s.setSessionReady);
+  const setBootstrapPhase = useAuthStore((s) => s.setBootstrapPhase);
   return useMutation({
     mutationFn: authApi.login,
     onSuccess: (data) => {
       setUser(data.user);
       setSessionReady(true);
+      setBootstrapPhase('loading-profile');
       invalidateAssessmentQueries(queryClient);
       navigateAfterAuth(router, defaultDashboardPath(data.user.role));
     },
@@ -39,11 +41,13 @@ export function useSignup() {
   const queryClient = useQueryClient();
   const setUser = useAuthStore((s) => s.setUser);
   const setSessionReady = useAuthStore((s) => s.setSessionReady);
+  const setBootstrapPhase = useAuthStore((s) => s.setBootstrapPhase);
   return useMutation({
     mutationFn: authApi.signup,
     onSuccess: (data) => {
       setUser(data.user);
       setSessionReady(true);
+      setBootstrapPhase('loading-profile');
       invalidateAssessmentQueries(queryClient);
       const params = new URLSearchParams(window.location.search);
       const redirect = params.get('redirect');
@@ -65,11 +69,13 @@ export function useGoogleLogin() {
   const queryClient = useQueryClient();
   const setUser = useAuthStore((s) => s.setUser);
   const setSessionReady = useAuthStore((s) => s.setSessionReady);
+  const setBootstrapPhase = useAuthStore((s) => s.setBootstrapPhase);
   return useMutation({
     mutationFn: authApi.loginWithGoogle,
     onSuccess: (data) => {
       setUser(data.user);
       setSessionReady(true);
+      setBootstrapPhase('loading-profile');
       invalidateAssessmentQueries(queryClient);
       navigateAfterAuth(router, defaultDashboardPath(data.user.role));
     },

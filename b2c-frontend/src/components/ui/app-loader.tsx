@@ -44,9 +44,15 @@ export function AppLoader({
         </span>
       </div>
       {label ? (
-        <div className="max-w-xs space-y-1">
-          <p className="text-sm font-semibold text-ink">{label}</p>
-          {description ? <p className="text-xs leading-5 text-ink-2">{description}</p> : null}
+        <div className="max-w-xs space-y-1" aria-live="polite">
+          <p key={label} className="text-sm font-semibold text-ink transition-opacity duration-150">
+            {label}
+          </p>
+          {description ? (
+            <p key={description} className="text-xs leading-5 text-ink-2 transition-opacity duration-150">
+              {description}
+            </p>
+          ) : null}
         </div>
       ) : null}
     </div>
@@ -54,7 +60,7 @@ export function AppLoader({
 
   if (fullScreen) {
     return (
-      <div className="flex min-h-[50vh] flex-1 items-center justify-center px-4 py-16 animate-fade-in">
+      <div className="flex min-h-[50vh] flex-1 items-center justify-center px-4 py-16">
         {loader}
       </div>
     );

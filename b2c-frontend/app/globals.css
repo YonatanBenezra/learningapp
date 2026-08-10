@@ -221,6 +221,16 @@
 }
 
 /* ============ Base Styles ============ */
+html {
+  scrollbar-gutter: stable;
+}
+
+@supports not (scrollbar-gutter: stable) {
+  html {
+    overflow-y: scroll;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--ink);

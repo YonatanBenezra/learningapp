@@ -13,6 +13,7 @@ export function AuthSessionBootstrap() {
   const started = useRef(false);
   const setUser = useAuthStore((s) => s.setUser);
   const setSessionReady = useAuthStore((s) => s.setSessionReady);
+  const setBootstrapPhase = useAuthStore((s) => s.setBootstrapPhase);
   const clear = useAuthStore((s) => s.clear);
 
   useEffect(() => {
@@ -20,15 +21,19 @@ export function AuthSessionBootstrap() {
     started.current = true;
 
     void (async () => {
+      setBootstrapPhase('checking-session');
       try {
         const session = await authApi.getSession();
         setUser(session.user);
+        if (session.user) setBootstrapPhase('loading-profile');
       } catch {
+        setBootstrapPhase('refreshing-session');
         try {
           const refreshed = await refreshSession();
           if (refreshed) {
             const session = await authApi.getSession();
             setUser(session.user);
+            if (session.user) setBootstrapPhase('loading-profile');
           } else {
             clear();
           }
@@ -37,9 +42,12 @@ export function AuthSessionBootstrap() {
         }
       } finally {
         setSessionReady(true);
+        if (!useAuthStore.getState().user) {
+          setBootstrapPhase('ready');
+        }
       }
     })();
-  }, [setUser, setSessionReady, clear]);
+  }, [setUser, setSessionReady, setBootstrapPhase, clear]);
 
   return null;
 }
@@ -51,6 +59,7 @@ export function useMe() {
   const sessionReady = useAuthStore((s) => s.sessionReady);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const setUser = useAuthStore((s) => s.setUser);
+  const setBootstrapPhase = useAuthStore((s) => s.setBootstrapPhase);
 
   const query = useQuery({
     queryKey: ['me'],
@@ -59,6 +68,17 @@ export function useMe() {
     staleTime: 60_000,
     refetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    if (!sessionReady || !isAuthenticated) return;
+    if (query.isFetching) {
+      setBootstrapPhase('loading-profile');
+      return;
+    }
+    if (query.isSuccess || query.isError) {
+      setBootstrapPhase('ready');
+    }
+  }, [sessionReady, isAuthenticated, query.isFetching, query.isSuccess, query.isError, setBootstrapPhase]);
 
   useEffect(() => {
     const user = query.data?.user;

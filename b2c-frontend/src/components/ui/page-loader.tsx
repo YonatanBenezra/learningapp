@@ -14,7 +14,7 @@ export function PageLoader({
 }) {
   return (
     <div
-      className={cn('flex flex-1 items-center justify-center bg-bg px-4 py-16 animate-fade-in', className)}
+      className={cn('flex flex-1 items-center justify-center bg-bg px-4 py-16', className)}
       style={{ minHeight }}
     >
       <AppLoader size="lg" label={label} description={description} />

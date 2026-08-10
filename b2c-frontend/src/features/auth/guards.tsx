@@ -2,18 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { AppLoader } from '@/src/components/ui/app-loader';
+import { AuthWorkspaceLoader } from './AuthWorkspaceLoader';
 import { useAuthHydrated } from './useAuthHydrated';
 import { useAuthStore } from '@/src/store/authStore';
 import { defaultDashboardPath, isLearnerDashboardPath } from './dashboardRoutes';
-
-function FullScreen() {
-  return (
-    <div className="flex min-h-dvh flex-1 items-center justify-center bg-bg px-4">
-      <AppLoader size="lg" label="Loading your workspace" description="Checking your session…" />
-    </div>
-  );
-}
 
 export function RequireAuth({
   children,
@@ -25,13 +17,16 @@ export function RequireAuth({
   const router = useRouter();
   const hydrated = useAuthHydrated();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
+  const bootstrapPhase = useAuthStore((s) => s.bootstrapPhase);
 
   useEffect(() => {
     if (hydrated && !isAuthenticated) router.replace(redirectTo);
   }, [hydrated, isAuthenticated, router, redirectTo]);
 
-  if (!hydrated) return <FullScreen />;
-  if (!isAuthenticated) return null;
+  if (!hydrated || (isAuthenticated && bootstrapPhase === 'loading-profile')) {
+    return <AuthWorkspaceLoader />;
+  }
+  if (!isAuthenticated) return <AuthWorkspaceLoader redirecting />;
   return <>{children}</>;
 }
 
@@ -39,6 +34,7 @@ export function RequireAdmin({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const hydrated = useAuthHydrated();
   const user = useAuthStore((s) => s.user);
+  const bootstrapPhase = useAuthStore((s) => s.bootstrapPhase);
 
   useEffect(() => {
     if (hydrated && user && user.role !== 'admin') {
@@ -46,9 +42,9 @@ export function RequireAdmin({ children }: { children: React.ReactNode }) {
     }
   }, [hydrated, user, router]);
 
-  if (!hydrated) return <FullScreen />;
-  if (!user) return null;
-  if (user.role !== 'admin') return null;
+  if (!hydrated || (user && bootstrapPhase === 'loading-profile')) return <AuthWorkspaceLoader />;
+  if (!user) return <AuthWorkspaceLoader redirecting />;
+  if (user.role !== 'admin') return <AuthWorkspaceLoader redirecting />;
   return <>{children}</>;
 }
 
@@ -60,6 +56,7 @@ export function RequireInstructor({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const hydrated = useAuthHydrated();
   const user = useAuthStore((s) => s.user);
+  const bootstrapPhase = useAuthStore((s) => s.bootstrapPhase);
 
   useEffect(() => {
     if (hydrated && user && !isInstructorRole(user.role)) {
@@ -67,9 +64,9 @@ export function RequireInstructor({ children }: { children: React.ReactNode }) {
     }
   }, [hydrated, user, router]);
 
-  if (!hydrated) return <FullScreen />;
-  if (!user) return null;
-  if (!isInstructorRole(user.role)) return null;
+  if (!hydrated || (user && bootstrapPhase === 'loading-profile')) return <AuthWorkspaceLoader />;
+  if (!user) return <AuthWorkspaceLoader redirecting />;
+  if (!isInstructorRole(user.role)) return <AuthWorkspaceLoader redirecting />;
   return <>{children}</>;
 }
 
@@ -78,15 +75,16 @@ export function RequireLearnerDashboard({ children }: { children: React.ReactNod
   const hydrated = useAuthHydrated();
   const user = useAuthStore((s) => s.user);
   const learnerHome = isLearnerDashboardPath(user?.role);
+  const bootstrapPhase = useAuthStore((s) => s.bootstrapPhase);
 
   useEffect(() => {
     if (!hydrated || !user || learnerHome) return;
     router.replace(defaultDashboardPath(user.role));
   }, [hydrated, user, learnerHome, router]);
 
-  if (!hydrated) return <FullScreen />;
-  if (!user) return null;
-  if (!learnerHome) return null;
+  if (!hydrated || (user && bootstrapPhase === 'loading-profile')) return <AuthWorkspaceLoader />;
+  if (!user) return <AuthWorkspaceLoader redirecting />;
+  if (!learnerHome) return <AuthWorkspaceLoader redirecting />;
   return <>{children}</>;
 }
 

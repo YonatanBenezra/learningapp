@@ -1,11 +1,14 @@
 import { create } from 'zustand';
 import type { User } from '@/src/domain/user';
+import type { AuthBootstrapPhase } from '@/src/features/auth/authLoadingMessages';
 
 interface AuthState {
   user: User | null;
   sessionReady: boolean;
+  bootstrapPhase: AuthBootstrapPhase;
   setUser: (user: User | null) => void;
   setSessionReady: (ready: boolean) => void;
+  setBootstrapPhase: (phase: AuthBootstrapPhase) => void;
   clear: () => void;
   isAuthenticated: () => boolean;
 }
@@ -14,8 +17,10 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()((set, get) => ({
   user: null,
   sessionReady: false,
+  bootstrapPhase: 'starting',
   setUser: (user) => set({ user }),
   setSessionReady: (sessionReady) => set({ sessionReady }),
-  clear: () => set({ user: null, sessionReady: true }),
+  setBootstrapPhase: (bootstrapPhase) => set({ bootstrapPhase }),
+  clear: () => set({ user: null, sessionReady: true, bootstrapPhase: 'ready' }),
   isAuthenticated: () => Boolean(get().user),
 }));

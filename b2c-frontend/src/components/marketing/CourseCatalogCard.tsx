@@ -21,14 +21,6 @@ function formatLevel(level: string): string {
   return level.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function levelTooltip(level: string): string {
-  const normalized = level.toLowerCase();
-  if (normalized === 'beginner') return 'Foundational topics for new learners.';
-  if (normalized === 'intermediate') return 'Assumes basic knowledge and builds applied skills.';
-  if (normalized === 'advanced') return 'In-depth content for experienced learners.';
-  return `${formatLevel(level)} difficulty level.`;
-}
-
 interface CourseCatalogCardProps {
   course: CatalogCourse;
   bookmarked?: boolean;
@@ -49,24 +41,18 @@ export function CourseCatalogCard({
 
   const meta = (
     <>
-      <Tooltip content="Total structured lessons in this course.">
-        <span className="inline-flex cursor-default items-center gap-1.5">
-          <BookOpen className="size-4 text-ink-3" />
-          {course.lessons} lessons
-        </span>
-      </Tooltip>
-      <Tooltip content="Learners currently enrolled in this course.">
-        <span className="inline-flex cursor-default items-center gap-1.5">
-          <Users className="size-4 text-ink-3" />
-          {course.students} enrolled
-        </span>
-      </Tooltip>
-      <Tooltip content="Study at your own pace with lifetime access after enrollment.">
-        <span className="inline-flex cursor-default items-center gap-1.5">
-          <Clock className="size-4 text-ink-3" />
-          Self-paced
-        </span>
-      </Tooltip>
+      <span className="inline-flex items-center gap-1.5">
+        <BookOpen className="size-4 text-ink-3" />
+        {course.lessons} lessons
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <Users className="size-4 text-ink-3" />
+        {course.students} enrolled
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <Clock className="size-4 text-ink-3" />
+        Self-paced
+      </span>
     </>
   );
 
@@ -78,9 +64,7 @@ export function CourseCatalogCard({
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink-3">
               <span>{course.category}</span>
               <span aria-hidden="true">·</span>
-              <Tooltip content={levelTooltip(course.level)}>
-                <span className="cursor-default">{formatLevel(course.level)}</span>
-              </Tooltip>
+              <span>{formatLevel(course.level)}</span>
             </div>
             <h3 className="mt-2 text-lg font-semibold text-ink sm:text-xl">{course.title}</h3>
             {course.description ? (
@@ -90,35 +74,33 @@ export function CourseCatalogCard({
           </div>
 
           <div className="flex shrink-0 items-center gap-3 border-t border-line pt-4 sm:border-t-0 sm:pt-0">
-            <Tooltip content="One-time marketplace price in USD.">
-              <div className="min-w-[72px] cursor-default text-right">
-                <p className="text-xs font-medium uppercase tracking-wide text-ink-3">Price</p>
-                <p className="text-xl font-semibold tabular-nums text-ink">${course.price.toFixed(2)}</p>
-              </div>
-            </Tooltip>
+            <div className="min-w-[72px] text-right">
+              <p className="text-xs font-medium uppercase tracking-wide text-ink-3">Price</p>
+              <p className="text-xl font-semibold tabular-nums text-ink">${course.price.toFixed(2)}</p>
+            </div>
             <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark to find this course quickly.'}>
               <button
-              type="button"
-              aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark course'}
-              aria-pressed={bookmarked}
-              onClick={onToggleBookmark}
-              className="grid size-9 place-items-center rounded-md border border-line bg-bg-soft text-ink-2 transition hover:border-line-2 hover:text-ink"
-            >
-              <Bookmark className={cn('size-4', bookmarked && 'fill-primary text-primary')} />
+                type="button"
+                aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark course'}
+                aria-pressed={bookmarked}
+                onClick={onToggleBookmark}
+                className="grid size-9 place-items-center rounded-md border border-line bg-bg-soft text-ink-2 transition hover:border-line-2 hover:text-ink"
+              >
+                <Bookmark className={cn('size-4', bookmarked && 'fill-primary text-primary')} />
               </button>
             </Tooltip>
             <Tooltip content={enrolled ? 'Open your enrolled course workspace.' : 'View full course details and enroll.'}>
               <Link
-              href={href}
-              className={cn(
-                'inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors',
-                enrolled
-                  ? 'bg-primary text-white hover:bg-primary-dark'
-                  : 'border border-line bg-bg-soft text-ink hover:border-primary hover:text-primary',
-              )}
-            >
-              {ctaLabel}
-              <ArrowRight className="size-4" />
+                href={href}
+                className={cn(
+                  'inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors',
+                  enrolled
+                    ? 'bg-primary text-white hover:bg-primary-dark'
+                    : 'border border-line bg-bg-soft text-ink hover:border-primary hover:text-primary',
+                )}
+              >
+                {ctaLabel}
+                <ArrowRight className="size-4" />
               </Link>
             </Tooltip>
           </div>
@@ -136,30 +118,24 @@ export function CourseCatalogCard({
             <span aria-hidden="true" className="hidden sm:inline">
               ·
             </span>
-            <Tooltip content={levelTooltip(course.level)}>
-              <span className="cursor-default">{formatLevel(course.level)}</span>
-            </Tooltip>
+            <span>{formatLevel(course.level)}</span>
           </div>
           <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark to find this course quickly.'}>
             <button
-            type="button"
-            aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark course'}
-            aria-pressed={bookmarked}
-            onClick={onToggleBookmark}
-            className="grid size-8 place-items-center rounded-md border border-line bg-bg-elev text-ink-2 transition hover:border-line-2 hover:text-ink"
-          >
-            <Bookmark className={cn('size-3.5', bookmarked && 'fill-primary text-primary')} />
-          </button>
+              type="button"
+              aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark course'}
+              aria-pressed={bookmarked}
+              onClick={onToggleBookmark}
+              className="grid size-8 place-items-center rounded-md border border-line bg-bg-elev text-ink-2 transition hover:border-line-2 hover:text-ink"
+            >
+              <Bookmark className={cn('size-3.5', bookmarked && 'fill-primary text-primary')} />
+            </button>
           </Tooltip>
         </div>
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <Tooltip content={course.description || 'Open course details to see the full curriculum.'}>
-          <h3 className="line-clamp-2 cursor-default text-lg font-semibold leading-snug text-ink sm:text-xl">
-            {course.title}
-          </h3>
-        </Tooltip>
+        <h3 className="line-clamp-2 text-lg font-semibold leading-snug text-ink sm:text-xl">{course.title}</h3>
         {course.description ? (
           <p className="mt-2 line-clamp-3 flex-1 text-base leading-7 text-ink-2">{course.description}</p>
         ) : (
@@ -172,24 +148,22 @@ export function CourseCatalogCard({
       </div>
 
       <div className="flex items-center justify-between gap-3 border-t border-line bg-bg-soft px-4 py-3 sm:px-5">
-        <Tooltip content="One-time marketplace price in USD.">
-          <div className="cursor-default">
-            <p className="text-xs font-medium uppercase tracking-wide text-ink-3">Price</p>
-            <p className="text-xl font-semibold tabular-nums text-ink">${course.price.toFixed(2)}</p>
-          </div>
-        </Tooltip>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-ink-3">Price</p>
+          <p className="text-xl font-semibold tabular-nums text-ink">${course.price.toFixed(2)}</p>
+        </div>
         <Tooltip content={enrolled ? 'Open your enrolled course workspace.' : 'View full course details and enroll.'}>
           <Link
-          href={href}
-          className={cn(
-            'inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors',
-            enrolled
-              ? 'bg-primary text-white hover:bg-primary-dark'
-              : 'border border-line bg-bg-elev text-ink hover:border-primary hover:text-primary',
-          )}
-        >
-          {ctaLabel}
-          <ArrowRight className="size-4" />
+            href={href}
+            className={cn(
+              'inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 text-base font-semibold transition-colors',
+              enrolled
+                ? 'bg-primary text-white hover:bg-primary-dark'
+                : 'border border-line bg-bg-elev text-ink hover:border-primary hover:text-primary',
+            )}
+          >
+            {ctaLabel}
+            <ArrowRight className="size-4" />
           </Link>
         </Tooltip>
       </div>

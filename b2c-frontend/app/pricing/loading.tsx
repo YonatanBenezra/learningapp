@@ -1,6 +1,6 @@
 import { Navbar } from '@/src/components/marketing/Navbar';
 import { Footer } from '@/src/components/marketing/Footer';
-import { PageLoader } from '@/src/components/ui/page-loader';
+import { DynamicPageLoader } from '@/src/components/feedback/DynamicPageLoader';
 import { MarketingPageShell } from '@/src/components/marketing/MarketingPageShell';
 
 export default function Loading() {
@@ -8,7 +8,7 @@ export default function Loading() {
     <MarketingPageShell>
       <Navbar />
       <main>
-        <PageLoader label="Loading pricing" description="Comparing plans and features…" minHeight="50vh" />
+        <DynamicPageLoader minHeight="50vh" />
       </main>
       <Footer />
     </MarketingPageShell>

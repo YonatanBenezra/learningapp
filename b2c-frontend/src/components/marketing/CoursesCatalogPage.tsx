@@ -20,22 +20,6 @@ import { cn } from '@/src/lib/utils';
 type ViewMode = 'grid' | 'list';
 type CourseCategory = 'All Categories' | string;
 
-const CATEGORY_TOOLTIPS: Record<string, string> = {
-  'All Categories': 'Show every published course in the catalog.',
-  Programming: 'Software development, languages, and application building.',
-  'Artificial Intelligence': 'Machine learning, AI fundamentals, and intelligent systems.',
-  'Cyber Security': 'Security operations, threats, and defensive practices.',
-  Networking: 'Network design, protocols, and infrastructure.',
-  'Data Science': 'Analytics, data pipelines, and statistical modeling.',
-  'Health & Fitness': 'Wellness, training, and health-focused learning paths.',
-  Security: 'Physical and operational security topics.',
-  General: 'Cross-domain and introductory courses.',
-};
-
-function categoryTooltip(label: string): string {
-  return CATEGORY_TOOLTIPS[label] ?? `Browse ${label} courses in the catalog.`;
-}
-
 function toCatalogCourse(course: MarketplaceCourse): CatalogCourse {
   const price = course.priceCents / 100;
   return {
@@ -152,48 +136,37 @@ export function CoursesCatalogPage() {
         <div className="mt-6 flex flex-col gap-4 rounded-lg border border-line bg-bg-elev p-4 shadow-card xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
             <div className="inline-flex w-fit items-center rounded-md border border-line bg-bg-soft p-0.5">
-              <Tooltip content="Compact rows — best for scanning many courses.">
-                <button
-                  type="button"
-                  aria-pressed={viewMode === 'list'}
-                  onClick={() => setViewMode('list')}
-                  className={cn(
-                    'inline-flex items-center gap-2 rounded-[5px] px-3.5 py-2 text-base font-medium transition-colors',
-                    viewMode === 'list'
-                      ? 'bg-bg-elev text-ink shadow-xs'
-                      : 'text-ink-2 hover:text-ink',
-                  )}
-                >
-                  <List className="size-4" />
-                  List
-                </button>
-              </Tooltip>
-              <Tooltip content="Card layout with descriptions and course details.">
-                <button
-                  type="button"
-                  aria-pressed={viewMode === 'grid'}
-                  onClick={() => setViewMode('grid')}
-                  className={cn(
-                    'inline-flex items-center gap-2 rounded-[5px] px-3.5 py-2 text-base font-medium transition-colors',
-                    viewMode === 'grid'
-                      ? 'bg-bg-elev text-ink shadow-xs'
-                      : 'text-ink-2 hover:text-ink',
-                  )}
-                >
-                  <LayoutGrid className="size-4" />
-                  Grid
-                </button>
-              </Tooltip>
+              <button
+                type="button"
+                aria-pressed={viewMode === 'list'}
+                onClick={() => setViewMode('list')}
+                className={cn(
+                  'inline-flex items-center gap-2 rounded-[5px] px-3.5 py-2 text-base font-medium transition-colors',
+                  viewMode === 'list'
+                    ? 'bg-bg-elev text-ink shadow-xs'
+                    : 'text-ink-2 hover:text-ink',
+                )}
+              >
+                <List className="size-4" />
+                List
+              </button>
+              <button
+                type="button"
+                aria-pressed={viewMode === 'grid'}
+                onClick={() => setViewMode('grid')}
+                className={cn(
+                  'inline-flex items-center gap-2 rounded-[5px] px-3.5 py-2 text-base font-medium transition-colors',
+                  viewMode === 'grid'
+                    ? 'bg-bg-elev text-ink shadow-xs'
+                    : 'text-ink-2 hover:text-ink',
+                )}
+              >
+                <LayoutGrid className="size-4" />
+                Grid
+              </button>
             </div>
 
-            <Tooltip
-              content={
-                activeFilter === 'All Categories'
-                  ? 'Total courses currently shown in the catalog.'
-                  : `Courses filtered to ${activeFilter}.`
-              }
-            >
-              <p className="cursor-default text-base text-ink-2">
+            <p className="text-base text-ink-2">
               <span className="font-semibold tabular-nums text-ink">{filteredCourses.length}</span>{' '}
               courses
               {activeFilter !== 'All Categories' ? (
@@ -202,12 +175,10 @@ export function CoursesCatalogPage() {
                   · <span className="text-ink">{activeFilter}</span>
                 </>
               ) : null}
-              </p>
-            </Tooltip>
+            </p>
           </div>
 
-          <Tooltip content="Search by course title, description, category, or skill level.">
-            <form onSubmit={submitSearch} className="relative w-full sm:max-w-md xl:w-[360px]">
+          <form onSubmit={submitSearch} className="relative w-full sm:max-w-md xl:w-[360px]">
             <input
               type="search"
               value={searchInput}
@@ -215,15 +186,16 @@ export function CoursesCatalogPage() {
               placeholder="Search courses..."
               className="h-11 w-full rounded-md border border-line bg-bg py-2 pl-3.5 pr-10 text-base text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
-            <button
-              type="submit"
-              aria-label="Search courses"
-              className="absolute right-1 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-md text-ink-3 transition hover:bg-bg-soft hover:text-primary"
-            >
-              <Search className="size-4" />
-            </button>
-            </form>
-          </Tooltip>
+            <Tooltip content="Search by course title, description, category, or skill level.">
+              <button
+                type="submit"
+                aria-label="Search courses"
+                className="absolute right-1 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-md text-ink-3 transition hover:bg-bg-soft hover:text-primary"
+              >
+                <Search className="size-4" />
+              </button>
+            </Tooltip>
+          </form>
         </div>
 
         <div
@@ -234,19 +206,18 @@ export function CoursesCatalogPage() {
             const active = activeFilter === filter;
             const href = buildCoursesUrl({ q: query, category: filter });
             return (
-              <Tooltip key={filter} content={categoryTooltip(filter)}>
-                <Link
-                  href={href}
-                  className={cn(
-                    'rounded-md px-3.5 py-2 text-base font-medium transition-colors',
-                    active
-                      ? 'bg-primary-deep text-white'
-                      : 'border border-line bg-bg-soft text-ink-2 hover:border-line-2 hover:text-ink',
-                  )}
-                >
-                  {filter}
-                </Link>
-              </Tooltip>
+              <Link
+                key={filter}
+                href={href}
+                className={cn(
+                  'rounded-md px-3.5 py-2 text-base font-medium transition-colors',
+                  active
+                    ? 'bg-primary-deep text-white'
+                    : 'border border-line bg-bg-soft text-ink-2 hover:border-line-2 hover:text-ink',
+                )}
+              >
+                {filter}
+              </Link>
             );
           })}
         </div>
