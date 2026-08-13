@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -10,20 +12,22 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { buttonClasses } from '@/src/components/ui/button';
+import { useTranslation, useIsRtl } from '@/src/i18n';
 import { Container } from './Container';
 import { HeroTerminalDemo } from './HeroTerminalDemo';
 
-const TRUST_POINTS = [
-  'Free tier available',
-  'No credit card required',
-  'Hands-on labs included',
+const DOMAINS = [
+  { labelKey: 'marketing.domainProgramming' as const, icon: Code2 },
+  { labelKey: 'marketing.domainCyberSecurity' as const, icon: ShieldCheck },
+  { labelKey: 'marketing.domainNetworking' as const, icon: Network },
+  { labelKey: 'marketing.domainAiData' as const, icon: Sparkles },
 ] as const;
 
-const DOMAINS = [
-  { label: 'Programming', icon: Code2 },
-  { label: 'Cyber Security', icon: ShieldCheck },
-  { label: 'Networking', icon: Network },
-  { label: 'AI & Data', icon: Sparkles },
+const PREVIEW_TAGS = [
+  'marketing.tagQuizzes',
+  'marketing.tagExams',
+  'marketing.tagAchievements',
+  'marketing.tagProgress',
 ] as const;
 
 function HeroBackdrop() {
@@ -44,6 +48,8 @@ function HeroBackdrop() {
 }
 
 function HeroPlatformPreview() {
+  const { t } = useTranslation();
+
   return (
     <div className="relative mx-auto w-full max-w-[540px] lg:mx-0 lg:ml-auto">
       <div className="rounded-lg border border-line bg-[var(--marketing-card)] p-5 shadow-soft sm:p-6">
@@ -53,13 +59,13 @@ function HeroPlatformPreview() {
               <Sparkles className="size-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-ink">LabPath Workspace</p>
-              <p className="text-xs text-ink-3">Personalized learning path</p>
+              <p className="text-sm font-semibold text-ink">{t('marketing.workspaceTitle')}</p>
+              <p className="text-xs text-ink-3">{t('marketing.workspaceSubtitle')}</p>
             </div>
           </div>
           <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-bg-soft px-3 py-1 text-xs font-medium text-ink-2">
             <span className="size-1.5 rounded-full bg-good" />
-            Active session
+            {t('marketing.activeSession')}
           </span>
         </div>
 
@@ -67,31 +73,33 @@ function HeroPlatformPreview() {
           <div className="rounded-lg border border-line bg-bg p-4 dark:bg-bg-soft">
             <div className="flex items-center gap-2 text-primary">
               <ClipboardCheck className="size-4" />
-              <p className="text-xs font-semibold uppercase tracking-wide">Skill assessment</p>
+              <p className="text-xs font-semibold uppercase tracking-wide">
+                {t('marketing.skillAssessmentLabel')}
+              </p>
             </div>
-            <p className="mt-3 text-2xl font-semibold text-ink">Intermediate</p>
-            <p className="mt-1 text-sm text-ink-2">Matched to your current level</p>
+            <p className="mt-3 text-2xl font-semibold text-ink">{t('marketing.levelIntermediate')}</p>
+            <p className="mt-1 text-sm text-ink-2">{t('marketing.matchedLevel')}</p>
             <div className="mt-4 h-2 overflow-hidden rounded-full bg-line">
               <div className="h-full w-[82%] rounded-full bg-primary" />
             </div>
-            <p className="mt-2 text-xs text-ink-3">82% readiness score</p>
+            <p className="mt-2 text-xs text-ink-3">{t('marketing.readinessScore')}</p>
           </div>
 
           <div className="rounded-lg border border-line bg-bg p-4 dark:bg-bg-soft">
             <div className="flex items-center gap-2 text-primary">
               <BookOpen className="size-4" />
-              <p className="text-xs font-semibold uppercase tracking-wide">AI course</p>
+              <p className="text-xs font-semibold uppercase tracking-wide">{t('marketing.aiCourseLabel')}</p>
             </div>
             <p className="mt-3 text-sm font-semibold leading-snug text-ink">
-              Network Security Fundamentals
+              {t('marketing.sampleCourseTitle')}
             </p>
             <dl className="mt-4 grid grid-cols-2 gap-3">
               <div>
-                <dt className="text-xs text-ink-3">Modules</dt>
+                <dt className="text-xs text-ink-3">{t('marketing.modules')}</dt>
                 <dd className="text-lg font-semibold text-ink">4</dd>
               </div>
               <div>
-                <dt className="text-xs text-ink-3">Lessons</dt>
+                <dt className="text-xs text-ink-3">{t('marketing.lessons')}</dt>
                 <dd className="text-lg font-semibold text-ink">23</dd>
               </div>
             </dl>
@@ -101,23 +109,23 @@ function HeroPlatformPreview() {
         <HeroTerminalDemo />
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {['Quizzes', 'Exams', 'Achievements', 'Progress tracking'].map((item) => (
+          {PREVIEW_TAGS.map((key) => (
             <span
-              key={item}
+              key={key}
               className="rounded-full border border-line bg-bg-soft px-3 py-1 text-xs font-medium text-ink-2"
             >
-              {item}
+              {t(key)}
             </span>
           ))}
         </div>
 
         <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-line bg-bg-soft px-4 py-3">
           <div>
-            <p className="text-xs font-medium text-ink-3">Learning format</p>
-            <p className="mt-0.5 text-sm font-semibold text-ink">Courses · Labs · Assessments</p>
+            <p className="text-xs font-medium text-ink-3">{t('marketing.learningFormat')}</p>
+            <p className="mt-0.5 text-sm font-semibold text-ink">{t('marketing.learningFormatValue')}</p>
           </div>
           <span className="hidden rounded-lg bg-primary-soft px-3 py-1.5 text-xs font-semibold text-primary sm:inline">
-            All-in-one platform
+            {t('marketing.allInOnePlatform')}
           </span>
         </div>
       </div>
@@ -126,6 +134,15 @@ function HeroPlatformPreview() {
 }
 
 export function Hero() {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
+
+  const trustPoints = [
+    t('marketing.trustFreeTier'),
+    t('marketing.trustNoCard'),
+    t('marketing.trustLabs'),
+  ] as const;
+
   return (
     <section id="top" className="relative overflow-hidden bg-[var(--marketing-hero)]">
       <HeroBackdrop />
@@ -134,17 +151,16 @@ export function Hero() {
         <div className="max-w-xl" data-tour="tour-hero">
           <p className="inline-flex items-center gap-2 rounded-full border border-line bg-bg-elev px-4 py-1.5 text-sm font-medium text-ink-2">
             <Sparkles className="size-4 text-primary" />
-            AI-powered learning platform
+            {t('marketing.heroBadge')}
           </p>
 
           <h1 className="mt-6 font-heading text-[2.25rem] font-semibold leading-[1.12] tracking-tight text-ink sm:text-[2.75rem] lg:text-[3.25rem]">
-            Build skills with AI courses and{' '}
-            <span className="text-primary">hands-on labs</span>
+            {t('marketing.heroTitle')}{' '}
+            <span className="text-primary">{t('marketing.heroTitleHighlight')}</span>
           </h1>
 
           <p className="mt-5 max-w-lg text-base leading-relaxed text-ink-2 sm:text-lg">
-            Take a skill assessment, get a personalized learning path, and practice in real
-            environments — from programming sandboxes to network and security labs.
+            {t('marketing.heroDescription')}
           </p>
 
           <div
@@ -152,8 +168,8 @@ export function Hero() {
             data-tour="tour-hero-actions"
           >
             <Link href="/signup" className={buttonClasses({ size: 'lg', className: 'rounded-lg' })}>
-              Start free
-              <ArrowRight className="size-4" />
+              {t('common.startFree')}
+              <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
             </Link>
             <Link
               href="/assessments"
@@ -163,12 +179,12 @@ export function Hero() {
                 className: 'rounded-lg bg-bg-elev',
               })}
             >
-              Take skill assessment
+              {t('marketing.takeSkillAssessment')}
             </Link>
           </div>
 
           <ul className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
-            {TRUST_POINTS.map((point) => (
+            {trustPoints.map((point) => (
               <li key={point} className="flex items-center gap-2 text-sm text-ink-2">
                 <CheckCircle2 className="size-4 shrink-0 text-good" />
                 {point}
@@ -177,13 +193,13 @@ export function Hero() {
           </ul>
 
           <div className="mt-8 flex flex-wrap gap-2">
-            {DOMAINS.map(({ label, icon: Icon }) => (
+            {DOMAINS.map(({ labelKey, icon: Icon }) => (
               <span
-                key={label}
+                key={labelKey}
                 className="inline-flex items-center gap-2 rounded-lg border border-line bg-bg-elev px-3 py-2 text-sm font-medium text-ink-2"
               >
                 <Icon className="size-4 text-primary" />
-                {label}
+                {t(labelKey)}
               </span>
             ))}
           </div>

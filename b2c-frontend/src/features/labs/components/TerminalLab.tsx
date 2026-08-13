@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Loader2, Terminal } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { useTranslation } from '@/src/i18n';
 import { runTerminalCommand } from '../labsApi';
 
 export interface TerminalHistoryEntry {
@@ -35,6 +36,7 @@ export function TerminalLab({
   onChange: (data: TerminalSubmission) => void;
   readOnly?: boolean;
 }) {
+  const { t } = useTranslation();
   const initial = parseStarter(starterState);
   const [cwd, setCwd] = useState(value?.cwd ?? initial.cwd);
   const [history, setHistory] = useState<TerminalHistoryEntry[]>(value?.history ?? []);
@@ -60,7 +62,7 @@ export function TerminalLab({
     } catch {
       setHistory((prev) => [
         ...prev,
-        { command: trimmed, output: 'Command failed.', error: true },
+        { command: trimmed, output: t('labs.commandFailed'), error: true },
       ]);
       setCommand('');
     } finally {
@@ -72,11 +74,11 @@ export function TerminalLab({
     <div className="overflow-hidden rounded-2xl border border-line bg-[#0F172A]">
       <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2 text-xs text-[#94A3B8]">
         <Terminal className="size-4" />
-        Terminal simulator · {cwd}
+        {t('labs.terminalSimulator', { cwd })}
       </div>
       <div className="max-h-72 overflow-y-auto p-4 font-mono text-sm leading-6 text-[#E2E8F0]">
         {history.length === 0 && (
-          <p className="text-[#94A3B8]">Try commands like ls, pwd, cat readme.txt, help</p>
+          <p className="text-[#94A3B8]">{t('labs.terminalHint')}</p>
         )}
         {history.map((entry, i) => (
           <div key={`${entry.command}-${i}`} className="mb-3">
@@ -98,11 +100,11 @@ export function TerminalLab({
                 void sendCommand();
               }
             }}
-            placeholder="Enter command…"
+            placeholder={t('labs.enterCommand')}
             className="flex-1 rounded-lg border border-white/10 bg-[#1E293B] px-3 py-2 font-mono text-sm text-white outline-none focus:border-primary"
           />
           <Button size="sm" onClick={() => void sendCommand()} disabled={running || !command.trim()}>
-            {running ? <Loader2 className="size-4 animate-spin" /> : 'Run'}
+            {running ? <Loader2 className="size-4 animate-spin" /> : t('labs.run')}
           </Button>
         </div>
       )}

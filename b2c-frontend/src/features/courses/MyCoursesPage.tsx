@@ -14,16 +14,19 @@ import {
 } from 'lucide-react';
 import { useCourses } from '@/src/features/courses';
 import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
-import {
-  CourseCard,
-  statusLabel,
-  statusVariant,
-} from '@/src/features/courses/components/CourseCard';
+import { CourseCard, statusVariant } from '@/src/features/courses/components/CourseCard';
 import type { Course } from '@/src/domain/course';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { cn } from '@/src/lib/utils';
+import {
+  useTranslation,
+  useIsRtl,
+  useCategoryLabel,
+  useCourseLevelLabel,
+  useCourseStatusLabel,
+} from '@/src/i18n';
 
 type FilterTab = 'all' | 'in-progress' | 'completed' | 'generating';
 type ViewMode = 'grid' | 'list';
@@ -42,27 +45,31 @@ function matchesFilter(course: Course, filter: FilterTab) {
 }
 
 function PageHeader({ courseCount }: { courseCount?: number }) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="max-w-2xl">
-        <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">My courses</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{t('courses.title')}</h1>
         <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">
           {courseCount !== undefined
-            ? `${courseCount} course${courseCount === 1 ? '' : 's'} in your library`
-            : 'Manage, continue, and track your AI-generated learning paths.'}
+            ? courseCount === 1
+              ? t('dashboard.coursesInLibraryOne')
+              : t('dashboard.coursesInLibraryMany', { count: String(courseCount) })
+            : t('courses.subtitle')}
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
         <Link href="/courses">
           <Button size="lg" variant="soft" className="rounded-full px-5">
             <BookOpen className="size-4" />
-            Browse courses
+            {t('common.browseCourses')}
           </Button>
         </Link>
         <Link href="/create-course">
           <Button size="lg" className="rounded-full px-5">
             <Plus className="size-4" />
-            New course
+            {t('common.newCourse')}
           </Button>
         </Link>
       </div>
@@ -80,6 +87,7 @@ function CourseToolbar({
   onViewChange,
   resultCount,
   totalCount,
+  filterTabs,
 }: {
   search: string;
   onSearchChange: (value: string) => void;
@@ -90,12 +98,15 @@ function CourseToolbar({
   onViewChange: (view: ViewMode) => void;
   resultCount: number;
   totalCount: number;
+  filterTabs: { id: FilterTab; label: string }[];
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-4">
       <form onSubmit={onSearchSubmit} className="relative max-w-xl">
         <label htmlFor="course-search" className="sr-only">
-          Search courses
+          {t('courses.searchLabel')}
         </label>
         <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
         <input
@@ -103,7 +114,7 @@ function CourseToolbar({
           type="search"
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Search courses by title, category, or topic"
+          placeholder={t('courses.searchPlaceholder')}
           className="h-11 w-full rounded-xl border border-line bg-bg-elev pl-10 pr-4 text-sm text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/10"
         />
       </form>
@@ -112,7 +123,7 @@ function CourseToolbar({
         <div
           className="flex gap-1 overflow-x-auto pb-1 sm:gap-2"
           role="tablist"
-          aria-label="Filter courses"
+          aria-label={t('courses.filterAria')}
         >
           {filterTabs.map((tab) => (
             <button
@@ -136,8 +147,13 @@ function CourseToolbar({
         <div className="flex items-center justify-between gap-3 sm:justify-end">
           <p className="text-sm text-ink-2">
             {resultCount === totalCount
-              ? `${totalCount} course${totalCount === 1 ? '' : 's'}`
-              : `${resultCount} of ${totalCount}`}
+              ? totalCount === 1
+                ? t('courses.countOne')
+                : t('courses.countMany', { count: String(totalCount) })
+              : t('courses.countOf', {
+                  shown: String(resultCount),
+                  total: String(totalCount),
+                })}
           </p>
           <div className="flex rounded-lg border border-line p-0.5">
             <button
@@ -147,7 +163,7 @@ function CourseToolbar({
                 'grid size-9 place-items-center rounded-md transition',
                 view === 'grid' ? 'bg-bg-soft text-primary' : 'text-ink-3 hover:text-ink-2',
               )}
-              aria-label="Grid view"
+              aria-label={t('courses.gridView')}
               aria-pressed={view === 'grid'}
             >
               <LayoutGrid className="size-4" />
@@ -159,13 +175,57 @@ function CourseToolbar({
                 'grid size-9 place-items-center rounded-md transition',
                 view === 'list' ? 'bg-bg-soft text-primary' : 'text-ink-3 hover:text-ink-2',
               )}
-              aria-label="List view"
+              aria-label={t('courses.listView')}
               aria-pressed={view === 'list'}
             >
               <List className="size-4" />
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CourseListRow({ course }: { course: Course }) {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
+  const categoryLabel = useCategoryLabel(course.category);
+  const levelLabel = useCourseLevelLabel(course.level);
+  const status = useCourseStatusLabel(course.status);
+
+  return (
+    <div className="flex flex-col gap-3 px-5 py-4 sm:grid sm:grid-cols-[minmax(0,1.6fr)_140px_120px_120px_72px] sm:items-center sm:gap-4 sm:px-6">
+      <div className="min-w-0">
+        <Link
+          href={learnerCoursePath(course.id)}
+          className="font-medium text-ink transition hover:text-primary"
+        >
+          {course.title}
+        </Link>
+        <p className="mt-1 text-xs text-ink-3">
+          {t('courses.levelSuffix', { level: levelLabel })}
+        </p>
+      </div>
+      <p className="text-sm text-ink-2">{categoryLabel}</p>
+      <div>
+        <Badge variant={statusVariant[course.status]} className="capitalize">
+          {status}
+        </Badge>
+      </div>
+      <div>
+        <p className="text-sm font-semibold tabular-nums text-ink">{course.progressPercent}%</p>
+        <div className="mt-1.5 hidden sm:block">
+          <ProgressMini value={course.progressPercent} />
+        </div>
+      </div>
+      <div className="sm:text-right">
+        <Link
+          href={learnerCoursePath(course.id)}
+          className="inline-grid size-8 place-items-center rounded-xl border border-line bg-bg-soft text-ink-3 transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary"
+        >
+          <ChevronRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+        </Link>
       </div>
     </div>
   );
@@ -189,20 +249,25 @@ function PageSkeleton() {
   );
 }
 
-const filterTabs: { id: FilterTab; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'in-progress', label: 'In progress' },
-  { id: 'completed', label: 'Completed' },
-  { id: 'generating', label: 'Generating' },
-];
-
 export function MyCoursesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
   const queryParam = searchParams.get('q')?.trim() ?? '';
   const [search, setSearch] = useState(queryParam);
   const [filter, setFilter] = useState<FilterTab>('all');
   const [view, setView] = useState<ViewMode>('grid');
+
+  const filterTabs = useMemo(
+    () =>
+      [
+        { id: 'all' as const, label: t('courses.filterAll') },
+        { id: 'in-progress' as const, label: t('courses.filterInProgress') },
+        { id: 'completed' as const, label: t('courses.filterCompleted') },
+        { id: 'generating' as const, label: t('courses.filterGenerating') },
+      ] as const,
+    [t],
+  );
 
   const { data, isLoading, isError, refetch } = useCourses();
   const courses = data?.courses ?? [];
@@ -239,9 +304,9 @@ export function MyCoursesPage() {
       <div className={shellClass}>
         <PageHeader />
         <div className="rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <p className="text-ink-2">Unable to load your course catalog.</p>
+          <p className="text-ink-2">{t('courses.loadError')}</p>
           <Button variant="soft" className="mt-4 rounded-full px-5" onClick={() => refetch()}>
-            Retry
+            {t('common.retry')}
           </Button>
         </div>
       </div>
@@ -256,21 +321,18 @@ export function MyCoursesPage() {
           <div className="mx-auto grid size-14 place-items-center rounded-full border border-line bg-bg-soft text-primary">
             <Sparkles className="size-7" />
           </div>
-          <h2 className="mt-5 text-xl font-bold text-ink sm:text-2xl">No courses yet</h2>
-          <p className="mx-auto mt-2 max-w-lg text-sm leading-7 text-ink-2">
-            Create your own AI course or browse the marketplace to enroll in instructor-led
-            courses.
-          </p>
+          <h2 className="mt-5 text-xl font-bold text-ink sm:text-2xl">{t('courses.empty')}</h2>
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-7 text-ink-2">{t('courses.emptyBody')}</p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link href="/courses">
               <Button size="lg" variant="soft" className="rounded-full px-6">
-                Browse courses
+                {t('common.browseCourses')}
               </Button>
             </Link>
             <Link href="/create-course">
               <Button size="lg" className="rounded-full px-6">
                 <Plus className="size-4" />
-                Create course
+                {t('dashboard.createCourse')}
               </Button>
             </Link>
           </div>
@@ -293,6 +355,7 @@ export function MyCoursesPage() {
         onViewChange={setView}
         resultCount={filteredCourses.length}
         totalCount={courses.length}
+        filterTabs={[...filterTabs]}
       />
 
       {filteredCourses.length === 0 ? (
@@ -300,11 +363,11 @@ export function MyCoursesPage() {
           <div className="mx-auto grid size-12 place-items-center rounded-full border border-line bg-bg-soft text-ink-3">
             <Search className="size-5" />
           </div>
-          <h2 className="mt-4 text-lg font-bold text-ink">No matching courses</h2>
+          <h2 className="mt-4 text-lg font-bold text-ink">{t('courses.noMatchTitle')}</h2>
           <p className="mx-auto mt-2 max-w-lg text-sm leading-7 text-ink-2">
             {search.trim()
-              ? `No results for “${search.trim()}”. Adjust your search or filter criteria.`
-              : 'No courses match the selected filter.'}
+              ? t('courses.noMatchSearch', { query: search.trim() })
+              : t('courses.noMatchFilter')}
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button
@@ -316,12 +379,12 @@ export function MyCoursesPage() {
                 router.replace('/my-courses');
               }}
             >
-              Reset filters
+              {t('courses.resetFilters')}
             </Button>
             <Link href="/create-course">
               <Button className="rounded-full px-5">
                 <Plus className="size-4" />
-                Create course
+                {t('dashboard.createCourse')}
               </Button>
             </Link>
           </div>
@@ -335,52 +398,16 @@ export function MyCoursesPage() {
       ) : (
         <div className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
           <div className="hidden border-b border-line bg-bg-soft px-5 py-3 text-xs font-medium text-ink-3 sm:grid sm:grid-cols-[minmax(0,1.6fr)_140px_120px_120px_72px] sm:gap-4 sm:px-6">
-            <span>Course title</span>
-            <span>Category</span>
-            <span>Status</span>
-            <span>Completion</span>
-            <span className="text-right">Action</span>
+            <span>{t('courses.tableCourseTitle')}</span>
+            <span>{t('courses.tableCategory')}</span>
+            <span>{t('courses.tableStatus')}</span>
+            <span>{t('courses.tableCompletion')}</span>
+            <span className="text-right">{t('courses.tableAction')}</span>
           </div>
           <div className="divide-y divide-line">
             {filteredCourses.map((course, index) => (
-              <div
-                key={course.id}
-                className={cn(
-                  'flex flex-col gap-3 px-5 py-4 sm:grid sm:grid-cols-[minmax(0,1.6fr)_140px_120px_120px_72px] sm:items-center sm:gap-4 sm:px-6',
-                  index % 2 === 1 && 'bg-bg-soft/40',
-                )}
-              >
-                <div className="min-w-0">
-                  <Link
-                    href={learnerCoursePath(course.id)}
-                    className="font-medium text-ink transition hover:text-primary"
-                  >
-                    {course.title}
-                  </Link>
-                  <p className="mt-1 text-xs capitalize text-ink-3">{course.level} level</p>
-                </div>
-                <p className="text-sm text-ink-2">{course.category}</p>
-                <div>
-                  <Badge variant={statusVariant[course.status]} className="capitalize">
-                    {statusLabel[course.status]}
-                  </Badge>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold tabular-nums text-ink">
-                    {course.progressPercent}%
-                  </p>
-                  <div className="mt-1.5 hidden sm:block">
-                    <ProgressMini value={course.progressPercent} />
-                  </div>
-                </div>
-                <div className="sm:text-right">
-                  <Link
-                    href={learnerCoursePath(course.id)}
-                    className="inline-grid size-8 place-items-center rounded-xl border border-line bg-bg-soft text-ink-3 transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary"
-                  >
-                    <ChevronRight className="size-4" />
-                  </Link>
-                </div>
+              <div key={course.id} className={cn(index % 2 === 1 && 'bg-bg-soft/40')}>
+                <CourseListRow course={course} />
               </div>
             ))}
           </div>

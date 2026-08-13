@@ -8,8 +8,10 @@ import { CoursePlayer } from '@/src/features/courses/components/CoursePlayer';
 import { Button } from '@/src/components/ui/button';
 import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
 import { Skeleton } from '@/src/components/ui/skeleton';
+import { useIsRtl, useTranslation } from '@/src/i18n';
 
 export function CourseOverview({ courseId }: { courseId: string }) {
+  const { t } = useTranslation();
   const courseQ = useCourse(courseId);
   const course = courseQ.data?.course;
   const status = course?.status;
@@ -26,14 +28,12 @@ export function CourseOverview({ courseId }: { courseId: string }) {
   if (courseQ.isError || !course) {
     return (
       <Shell>
-        <PageNav title="Course not found" />
+        <PageNav title={t('player.courseNotFound')} />
         <div className="mt-6 rounded-xl border border-line bg-bg-elev p-10 text-center shadow-soft">
-          <h1 className="text-xl font-bold text-ink">Course not found</h1>
-          <p className="mt-2 text-sm text-ink-2">
-            The requested course may have been removed or the link is invalid.
-          </p>
+          <h1 className="text-xl font-bold text-ink">{t('player.courseNotFound')}</h1>
+          <p className="mt-2 text-sm text-ink-2">{t('player.courseNotFoundDesc')}</p>
           <Link href="/my-courses" className="mt-6 inline-block">
-            <Button variant="soft">Return to course list</Button>
+            <Button variant="soft">{t('player.returnToCourseList')}</Button>
           </Link>
         </div>
       </Shell>
@@ -48,11 +48,8 @@ export function CourseOverview({ courseId }: { courseId: string }) {
           <div className="mx-auto grid size-14 place-items-center rounded-xl border border-line bg-primary-soft text-primary">
             <Loader2 className="size-7 animate-spin" />
           </div>
-          <h1 className="mt-4 text-xl font-bold text-ink">Course generation in progress</h1>
-          <p className="mx-auto mt-2 max-w-[42ch] text-sm text-ink-2">
-            Modules, lessons, quizzes, and labs are being prepared. This page will refresh
-            automatically when complete.
-          </p>
+          <h1 className="mt-4 text-xl font-bold text-ink">{t('player.genInProgress')}</h1>
+          <p className="mx-auto mt-2 max-w-[42ch] text-sm text-ink-2">{t('player.genInProgressDesc')}</p>
         </div>
       </Shell>
     );
@@ -66,12 +63,12 @@ export function CourseOverview({ courseId }: { courseId: string }) {
           <div className="mx-auto grid size-14 place-items-center rounded-xl border border-bad/20 bg-bad-soft text-bad">
             <X className="size-7" strokeWidth={2.4} />
           </div>
-          <h1 className="mt-4 text-xl font-bold text-ink">Course generation failed</h1>
+          <h1 className="mt-4 text-xl font-bold text-ink">{t('player.genFailed')}</h1>
           <p className="mx-auto mt-2 max-w-[42ch] text-sm text-ink-2">
-            {course.failureReason ?? 'An error occurred while building this course.'}
+            {course.failureReason ?? t('player.genFailedDefault')}
           </p>
           <Link href="/create-course" className="mt-6 inline-block">
-            <Button>Create new course</Button>
+            <Button>{t('player.createNewCourse')}</Button>
           </Link>
         </div>
       </Shell>
@@ -96,23 +93,26 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 function PageNav({ title }: { title: string }) {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
+
   return (
     <div className="border-b border-line pb-5">
       <Link
         href="/my-courses"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition hover:text-primary"
       >
-        <ArrowLeft className="size-4" /> Back to course list
+        <ArrowLeft className="size-4" /> {t('player.backToCourseList')}
       </Link>
       <nav className="mt-3 flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
         <Link href="/dashboard" className="transition hover:text-primary">
           <BrandWordmark size="sm" className="font-semibold" />
         </Link>
-        <ChevronRight className="size-4" />
+        <ChevronRight className={`size-4${isRtl ? ' rotate-180' : ''}`} />
         <Link href="/my-courses" className="transition hover:text-primary">
-          My Courses
+          {t('player.myCourses')}
         </Link>
-        <ChevronRight className="size-4" />
+        <ChevronRight className={`size-4${isRtl ? ' rotate-180' : ''}`} />
         <span className="line-clamp-1 font-medium text-ink">{title}</span>
       </nav>
     </div>

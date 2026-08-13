@@ -5,15 +5,13 @@ import { AlertCircle, ArrowLeft, Clock, Loader2, Sparkles } from 'lucide-react';
 import { Container } from '@/src/components/marketing/Container';
 import { Button } from '@/src/components/ui/button';
 import { cn } from '@/src/lib/utils';
-
-const GENERATION_PHASES = [
-  'Analyzing your subject area',
-  'Drafting skill-level questions',
-  'Balancing difficulty across topics',
-  'Finalizing your 10-question assessment',
-];
+import { useTranslation, useGenerationPhases, useIsRtl } from '@/src/i18n';
 
 export function AssessmentGeneratingPanel({ topicLabel }: { topicLabel: string }) {
+  const { t } = useTranslation();
+  const phases = useGenerationPhases();
+  const isRtl = useIsRtl();
+
   return (
     <div className="min-h-[calc(100dvh-4rem)] bg-bg pb-20 pt-6 lg:pt-8">
       <Container>
@@ -22,29 +20,27 @@ export function AssessmentGeneratingPanel({ topicLabel }: { topicLabel: string }
             href="/assessments"
             className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 transition-colors hover:text-primary"
           >
-            <ArrowLeft className="size-4" />
-            Back to assessments
+            <ArrowLeft className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+            {t('marketing.assessBackToAssessments')}
           </Link>
 
           <header className="mt-5 max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
               <Sparkles className="size-3.5" />
-              Generating
+              {t('marketing.assessGeneratingBadge')}
             </div>
             <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-              Preparing your assessment
+              {t('marketing.assessGeneratingTitle')}
             </h1>
             <p className="mt-2 text-sm leading-6 text-ink-2 sm:text-base">
-              We are generating 10 questions for{' '}
-              <span className="font-medium text-ink">{topicLabel}</span>. This usually completes
-              within a few seconds.
+              {t('marketing.assessGeneratingDesc', { topic: topicLabel })}
             </p>
           </header>
 
           <div className="mt-6 overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
             <div className="border-b border-line bg-bg-soft/50 px-6 py-5 sm:px-8">
               <div className="flex items-center justify-between gap-4">
-                <p className="text-sm font-medium text-ink">Generation in progress</p>
+                <p className="text-sm font-medium text-ink">{t('marketing.assessGenInProgress')}</p>
                 <Loader2 className="size-5 shrink-0 animate-spin text-primary" strokeWidth={2} />
               </div>
               <div className="mt-4 h-2 overflow-hidden rounded-full bg-line">
@@ -54,7 +50,7 @@ export function AssessmentGeneratingPanel({ topicLabel }: { topicLabel: string }
 
             <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
               <ul className="divide-y divide-line border-b border-line lg:border-b-0 lg:border-r">
-                {GENERATION_PHASES.map((label, index) => (
+                {phases.map((label, index) => (
                   <li key={label} className="flex items-center gap-3 px-6 py-4 text-sm sm:px-8">
                     <span
                       className={cn(
@@ -78,27 +74,27 @@ export function AssessmentGeneratingPanel({ topicLabel }: { topicLabel: string }
               </ul>
 
               <aside className="px-6 py-6 sm:px-8 sm:py-8">
-                <p className="text-sm font-semibold text-ink">What to expect</p>
+                <p className="text-sm font-semibold text-ink">{t('marketing.assessWhatToExpect')}</p>
                 <dl className="mt-4 space-y-4 text-sm">
                   <div>
-                    <dt className="text-ink-3">Subject</dt>
+                    <dt className="text-ink-3">{t('marketing.summarySubject')}</dt>
                     <dd className="mt-1 font-medium text-ink">{topicLabel}</dd>
                   </div>
                   <div>
-                    <dt className="text-ink-3">Format</dt>
-                    <dd className="mt-1 text-ink-2">10 multiple-choice questions</dd>
+                    <dt className="text-ink-3">{t('marketing.summaryFormat')}</dt>
+                    <dd className="mt-1 text-ink-2">{t('marketing.assessFormatMcq')}</dd>
                   </div>
                   <div>
-                    <dt className="text-ink-3">Duration</dt>
+                    <dt className="text-ink-3">{t('marketing.assessDurationLabel')}</dt>
                     <dd className="mt-1 flex items-center gap-1.5 text-ink-2">
                       <Clock className="size-3.5 text-primary" />
-                      About 5 minutes
+                      {t('marketing.assessDurationAbout')}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-ink-3">After completion</dt>
+                    <dt className="text-ink-3">{t('marketing.summaryAfter')}</dt>
                     <dd className="mt-1 leading-6 text-ink-2">
-                      Your skill level and a personalized course recommendation.
+                      {t('marketing.assessAfterCompletionShort')}
                     </dd>
                   </div>
                 </dl>
@@ -118,6 +114,8 @@ export function AssessmentFailedPanel({
   topicLabel: string;
   reason?: string | null;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-[calc(100dvh-4rem)] bg-bg pb-20 pt-6 lg:pt-8">
       <Container>
@@ -128,20 +126,22 @@ export function AssessmentFailedPanel({
                 <AlertCircle className="size-7" strokeWidth={1.8} />
               </div>
               <h1 className="mt-5 text-2xl font-bold text-ink sm:text-3xl">
-                Could not generate assessment
+                {t('marketing.assessFailedTitle')}
               </h1>
               <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-ink-2 sm:text-base">
-                {reason ?? 'Something went wrong while building your questions.'}
+                {reason ?? t('marketing.assessFailedDefault')}
               </p>
-              <p className="mt-2 text-sm text-ink-3">Subject: {topicLabel}</p>
+              <p className="mt-2 text-sm text-ink-3">
+                {t('marketing.assessSubjectLabel', { topic: topicLabel })}
+              </p>
             </div>
             <div className="flex flex-wrap justify-center gap-3 px-6 py-6 sm:px-10">
               <Link href="/assessment/start">
-                <Button className="rounded-xl">Try again</Button>
+                <Button className="rounded-xl">{t('marketing.assessTryAgain')}</Button>
               </Link>
               <Link href="/assessments">
                 <Button variant="outline" className="rounded-xl">
-                  Back to assessments
+                  {t('marketing.assessBackToAssessments')}
                 </Button>
               </Link>
             </div>

@@ -1,9 +1,14 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { CLASS_DAYS } from './data';
+import { useTranslation, useClassDays } from '@/src/i18n';
 import { Container } from './Container';
 
 export function ClassDaySection() {
+  const { t } = useTranslation();
+  const classDays = useClassDays();
+
   return (
     <section className="py-16 lg:py-20">
       <Container>
@@ -11,8 +16,7 @@ export function ClassDaySection() {
           <div className="relative overflow-hidden rounded-[24px] bg-[linear-gradient(135deg,#EDE9FE,#DBEAFE)] p-8 lg:p-10">
             <div className="absolute -right-8 -top-8 size-32 rounded-full bg-secondary/20 blur-2xl" />
             <blockquote className="relative text-lg leading-relaxed text-[#334155] sm:text-xl">
-              &ldquo;It is a long established fact that a reader will be distracted by the readable
-              content of a page when looking at its layout.&rdquo;
+              &ldquo;{t('marketing.classDayQuote')}&rdquo;
             </blockquote>
             <div className="relative mt-8 flex items-center gap-4">
               <Image
@@ -24,15 +28,15 @@ export function ClassDaySection() {
               />
               <div>
                 <p className="text-lg font-bold text-ink">Alisa Oliva</p>
-                <p className="text-sm text-ink-2">Web Designer</p>
+                <p className="text-sm text-ink-2">{t('marketing.roleWebDesigner')}</p>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-[28px] font-bold text-ink">Our Class Day</h3>
+            <h3 className="text-[28px] font-bold text-ink">{t('marketing.ourClassDay')}</h3>
             <ul className="mt-6 space-y-3">
-              {CLASS_DAYS.map(({ day, time }) => (
+              {classDays.map(({ day, time }) => (
                 <li
                   key={day}
                   className="flex items-center justify-between rounded-xl border border-line bg-bg-soft px-4 py-3"
@@ -46,7 +50,7 @@ export function ClassDaySection() {
               href="/signup"
               className="mt-8 inline-flex h-12 items-center rounded-xl bg-secondary px-7 text-sm font-semibold text-white shadow-[var(--shadow-accent)] transition-colors hover:bg-secondary-2"
             >
-              Book Free Class
+              {t('marketing.bookFreeClass')}
             </Link>
           </div>
         </div>

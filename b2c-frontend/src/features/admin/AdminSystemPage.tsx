@@ -360,7 +360,7 @@ export function AdminSystemPage() {
             onClick={() => dataQ.refetch()}
           >
             <RefreshCw className="size-3.5" />
-            Refresh
+            {t('adminCommon.refresh')}
           </Button>
         </div>
       </div>
@@ -474,7 +474,7 @@ export function AdminSystemPage() {
                       <th className="px-5 py-3 font-semibold sm:px-6">Area</th>
                       <th className="px-5 py-3 font-semibold sm:px-6">Metric</th>
                       <th className="px-5 py-3 font-semibold sm:px-6">Count</th>
-                      <th className="px-5 py-3 font-semibold sm:px-6">Status</th>
+                      <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colStatus')}</th>
                       <th className="px-5 py-3 font-semibold sm:px-6">Action</th>
                     </tr>
                   </thead>

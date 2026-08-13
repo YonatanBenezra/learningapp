@@ -71,12 +71,23 @@ export interface Messages {
   auth: StringMap;
   dashboard: StringMap;
   courses: StringMap;
+  subscription: StringMap;
+  createCourse: StringMap;
   assessments: StringMap;
   settings: StringMap;
+  profile: StringMap;
+  profileMenu: StringMap;
+  notifications: StringMap;
+  player: StringMap;
+  assessmentRunner: StringMap;
+  exercises: StringMap;
+  marketplace: StringMap;
+  labs: StringMap;
   achievements: StringMap;
   admin: StringMap;
-  instructor: StringMap & {
-    newCourse: string;
-  };
+  adminCommon: StringMap;
+  instructor: StringMap;
+  authExtra: StringMap;
+  navbarExtra: StringMap;
   marketing: StringMap;
 }

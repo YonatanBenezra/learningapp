@@ -18,7 +18,7 @@ import { useMe } from '@/src/features/auth';
 import { useCourses } from '@/src/features/courses';
 import { useMyAchievements } from '@/src/features/gamification';
 import { useSubscription } from '@/src/features/subscription';
-import { useTranslation } from '@/src/i18n';
+import { useTranslation, useIsRtl } from '@/src/i18n';
 import type { MessageKey } from '@/src/i18n';
 import type { Course } from '@/src/domain/course';
 import { getUserDisplayName } from '@/src/lib/userDisplay';
@@ -105,6 +105,7 @@ function DashboardSkeleton() {
 
 export function DashboardPage() {
   const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const meQ = useMe();
   const coursesQ = useCourses();
   const achievementsQ = useMyAchievements();
@@ -207,25 +208,25 @@ export function DashboardPage() {
 
       <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
         <StudySummaryCard
-          label="Courses"
+          label={t('dashboard.statCourses')}
           value={String(courseStats.ready)}
           icon={GraduationCap}
           iconClass="text-primary"
         />
         <StudySummaryCard
-          label="Progress"
+          label={t('dashboard.statProgress')}
           value={`${courseStats.avgProgress}%`}
           icon={Target}
           iconClass="text-secondary"
         />
         <StudySummaryCard
-          label="Achievements"
+          label={t('dashboard.statAchievements')}
           value={`${achievements?.earnedCount ?? 0}`}
           icon={Trophy}
           iconClass="text-good"
         />
         <StudySummaryCard
-          label="Streak"
+          label={t('dashboard.statStreak')}
           value={String(streak)}
           icon={Flame}
           iconClass="text-primary"
@@ -252,14 +253,18 @@ export function DashboardPage() {
             </div>
             <p className="mt-2 text-sm leading-6 text-ink-2">
               {courseStats.inProgress > 0
-                ? `${courseStats.inProgress} course${courseStats.inProgress === 1 ? '' : 's'} in progress. Pick up where you left off.`
+                ? courseStats.inProgress === 1
+                  ? t('dashboard.coursesInProgressOne')
+                  : t('dashboard.coursesInProgressMany', {
+                      count: String(courseStats.inProgress),
+                    })
                 : t('dashboard.welcomeHub')}
             </p>
           </div>
           <Link href="/my-courses" className="shrink-0">
             <Button variant="soft" className="rounded-full px-5">
               {t('dashboard.yourCourses')}
-              <ArrowRight className="size-4" />
+              <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
             </Button>
           </Link>
         </div>

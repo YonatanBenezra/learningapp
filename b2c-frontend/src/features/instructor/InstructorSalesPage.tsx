@@ -26,6 +26,7 @@ import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { formatMoney, type InstructorSale } from '@/src/domain/instructor';
 import { useInstructorSales } from '@/src/features/instructor/useInstructor';
+import { useTranslation } from '@/src/i18n';
 import { useTheme } from '@/src/providers';
 import { cn } from '@/src/lib/utils';
 
@@ -178,14 +179,15 @@ function SalesPageSkeleton() {
   );
 }
 
-const STATUS_FILTERS: { id: StatusFilter; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'completed', label: 'Completed' },
-  { id: 'pending', label: 'Pending' },
-  { id: 'refunded', label: 'Refunded' },
+const STATUS_FILTER_KEYS: { id: StatusFilter; key: 'filterAll' | 'statusCompleted' | 'statusPending' | 'statusRefunded' }[] = [
+  { id: 'all', key: 'filterAll' },
+  { id: 'completed', key: 'statusCompleted' },
+  { id: 'pending', key: 'statusPending' },
+  { id: 'refunded', key: 'statusRefunded' },
 ];
 
 export function InstructorSalesPage() {
+  const { t } = useTranslation();
   const palette = useChartPalette();
   const { data, isLoading, isError, refetch } = useInstructorSales();
   const sales = data?.sales ?? [];
@@ -219,10 +221,10 @@ export function InstructorSalesPage() {
     return (
       <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg p-4 sm:p-6 lg:p-8">
         <div className="rounded-lg border border-line bg-bg-elev p-10 text-center shadow-soft">
-          <p className="text-lg font-semibold text-ink">Could not load sales data.</p>
-          <p className="mt-2 text-sm text-ink-2">Check your connection and try again.</p>
+          <p className="text-lg font-semibold text-ink">{t('instructor.loadSalesError')}</p>
+          <p className="mt-2 text-sm text-ink-2">{t('instructor.checkConnection')}</p>
           <Button variant="soft" className="mt-4 rounded-lg" onClick={() => refetch()}>
-            Retry
+            {t('common.retry')}
           </Button>
         </div>
       </div>
@@ -235,28 +237,25 @@ export function InstructorSalesPage() {
         <section className="rounded-lg border border-line bg-bg-elev p-6 shadow-soft sm:p-8">
           <nav className="flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
             <Link href="/instructor/dashboard" className="transition hover:text-primary">
-              Instructor hub
+              {t('instructor.hub')}
             </Link>
             <ChevronRight className="size-3.5" />
-            <span className="font-medium text-ink">Sales</span>
+            <span className="font-medium text-ink">{t('instructor.recentSales')}</span>
           </nav>
 
           <div className="mt-5 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
-                Revenue
+                {t('instructor.revenueLabel')}
               </p>
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-                Sales & transactions
+                {t('instructor.salesPageTitle')}
               </h1>
-              <p className="mt-3 text-base leading-7 text-ink-2">
-                Track enrollments, payment status, and earnings from your marketplace courses in
-                one place.
-              </p>
+              <p className="mt-3 text-base leading-7 text-ink-2">{t('instructor.salesPageDesc')}</p>
             </div>
             <Link href="/instructor/courses">
               <Button variant="soft" className="rounded-lg">
-                Manage courses
+                {t('instructor.manageCourses')}
                 <ArrowUpRight className="size-4" />
               </Button>
             </Link>
@@ -265,30 +264,30 @@ export function InstructorSalesPage() {
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
-            label="Total revenue"
+            label={t('instructor.totalRevenue')}
             value={formatMoney(stats.totalRevenueCents)}
-            hint="From completed sales"
+            hint={t('instructor.fromCompletedSales')}
             icon={DollarSign}
             accent="primary"
           />
           <StatCard
-            label="Total transactions"
+            label={t('instructor.totalTransactions')}
             value={String(stats.totalSales)}
-            hint={`${stats.completedCount} completed`}
+            hint={t('instructor.completedCountHint', { count: String(stats.completedCount) })}
             icon={ShoppingBag}
             accent="secondary"
           />
           <StatCard
-            label="Average order"
+            label={t('instructor.hintAvgOrder')}
             value={formatMoney(stats.avgSaleCents)}
-            hint="Per completed sale"
+            hint={t('instructor.perCompletedSale')}
             icon={TrendingUp}
             accent="good"
           />
           <StatCard
-            label="Reporting period"
-            value={chartData.length > 0 ? `${chartData.length} days` : '—'}
-            hint="Recent daily activity"
+            label={t('instructor.reportingPeriod')}
+            value={chartData.length > 0 ? t('instructor.daysCount', { count: String(chartData.length) }) : '—'}
+            hint={t('instructor.recentDailyActivity')}
             icon={Receipt}
             accent="warn"
           />
@@ -298,22 +297,20 @@ export function InstructorSalesPage() {
           <section className="rounded-lg border border-line bg-bg-elev p-5 shadow-soft sm:p-6 xl:col-span-2">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 className="text-lg font-bold text-ink">Revenue trend</h2>
-                <p className="mt-1 text-sm text-ink-2">Completed sales over the last two weeks</p>
+                <h2 className="text-lg font-bold text-ink">{t('instructor.revenueTrend')}</h2>
+                <p className="mt-1 text-sm text-ink-2">{t('instructor.revenueTrendDesc')}</p>
               </div>
               <span className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-bg-soft px-3 py-1.5 text-xs font-medium text-ink-2">
                 <BarChart3 className="size-3.5 text-primary" />
-                Daily totals
+                {t('instructor.dailyTotals')}
               </span>
             </div>
 
             {chartData.length === 0 ? (
               <div className="mt-8 flex min-h-[280px] flex-col items-center justify-center rounded-lg border border-dashed border-line-2 bg-bg-soft/40 px-6 text-center">
                 <BarChart3 className="size-10 text-ink-3" />
-                <p className="mt-4 font-semibold text-ink">No revenue data yet</p>
-                <p className="mt-2 max-w-sm text-sm text-ink-2">
-                  Publish a priced course and your completed sales will appear here.
-                </p>
+                <p className="mt-4 font-semibold text-ink">{t('instructor.noRevenueData')}</p>
+                <p className="mt-2 max-w-sm text-sm text-ink-2">{t('instructor.noRevenueDataHint')}</p>
               </div>
             ) : (
               <div className="mt-6 h-[280px] w-full">
@@ -341,14 +338,14 @@ export function InstructorSalesPage() {
           </section>
 
           <section className="rounded-lg border border-line bg-bg-elev p-5 shadow-soft sm:p-6">
-            <h2 className="text-lg font-bold text-ink">Summary</h2>
-            <p className="mt-1 text-sm text-ink-2">Current sales breakdown</p>
+            <h2 className="text-lg font-bold text-ink">{t('instructor.summary')}</h2>
+            <p className="mt-1 text-sm text-ink-2">{t('instructor.salesBreakdown')}</p>
             <dl className="mt-5 space-y-4">
               {(
                 [
-                  ['Completed', sales.filter((sale) => sale.status === 'completed').length],
-                  ['Pending', sales.filter((sale) => sale.status === 'pending').length],
-                  ['Refunded', sales.filter((sale) => sale.status === 'refunded').length],
+                  [t('instructor.statusCompleted'), sales.filter((sale) => sale.status === 'completed').length],
+                  [t('instructor.statusPending'), sales.filter((sale) => sale.status === 'pending').length],
+                  [t('instructor.statusRefunded'), sales.filter((sale) => sale.status === 'refunded').length],
                 ] as const
               ).map(([label, count]) => (
                 <div
@@ -362,8 +359,7 @@ export function InstructorSalesPage() {
             </dl>
 
             <div className="mt-6 rounded-lg border border-primary/20 bg-primary-soft/30 p-4 text-sm leading-6 text-ink-2">
-              Revenue totals include completed transactions only. Pending and refunded orders are
-              listed separately in the transaction table.
+              {t('instructor.revenueTotalsNote')}
             </div>
           </section>
         </div>
@@ -372,9 +368,12 @@ export function InstructorSalesPage() {
           <div className="border-b border-line px-5 py-5 sm:px-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h2 className="text-lg font-bold text-ink">Transaction history</h2>
+                <h2 className="text-lg font-bold text-ink">{t('instructor.transactionHistory')}</h2>
                 <p className="mt-1 text-sm text-ink-2">
-                  {filteredSales.length} of {sales.length} records shown
+                  {t('instructor.recordsShown', {
+                    shown: String(filteredSales.length),
+                    total: String(sales.length),
+                  })}
                 </p>
               </div>
 
@@ -385,13 +384,13 @@ export function InstructorSalesPage() {
                     type="search"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Search course or student..."
+                    placeholder={t('instructor.searchPlaceholder')}
                     className="h-10 w-full rounded-lg border border-line-2 bg-bg py-2 pl-9 pr-3 text-sm text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/15"
                   />
                 </div>
 
                 <div className="inline-flex flex-wrap gap-1 rounded-lg border border-line bg-bg-soft p-1">
-                  {STATUS_FILTERS.map((filter) => (
+                  {STATUS_FILTER_KEYS.map((filter) => (
                     <button
                       key={filter.id}
                       type="button"
@@ -403,7 +402,7 @@ export function InstructorSalesPage() {
                           : 'text-ink-2 hover:text-ink',
                       )}
                     >
-                      {filter.label}
+                      {t(`instructor.${filter.key}`)}
                     </button>
                   ))}
                 </div>
@@ -416,31 +415,28 @@ export function InstructorSalesPage() {
               <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-primary-soft text-primary">
                 <ShoppingBag className="size-7" />
               </div>
-              <p className="mt-4 text-lg font-semibold text-ink">No sales recorded yet</p>
-              <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">
-                When learners purchase your published courses, each enrollment and payment will
-                appear in this ledger.
-              </p>
+              <p className="mt-4 text-lg font-semibold text-ink">{t('instructor.noSalesRecorded')}</p>
+              <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">{t('instructor.salesEmptyLedgerHint')}</p>
               <Link href="/instructor/courses/new" className="mt-6 inline-block">
                 <Button className="rounded-lg bg-primary hover:bg-primary-dark">
-                  Create a course
+                  {t('instructor.createCourseBtn')}
                 </Button>
               </Link>
             </div>
           ) : filteredSales.length === 0 ? (
             <div className="px-6 py-16 text-center text-sm text-ink-2">
-              No transactions match your search or filter.
+              {t('instructor.noTransactionsMatch')}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-left text-sm">
                 <thead className="border-b border-line bg-bg-soft text-ink-3">
                   <tr>
-                    <th className="px-5 py-3.5 font-semibold sm:px-6">Course</th>
-                    <th className="px-5 py-3.5 font-semibold sm:px-6">Student</th>
-                    <th className="px-5 py-3.5 font-semibold sm:px-6">Amount</th>
-                    <th className="px-5 py-3.5 font-semibold sm:px-6">Status</th>
-                    <th className="px-5 py-3.5 font-semibold sm:px-6">Date</th>
+                    <th className="px-5 py-3.5 font-semibold sm:px-6">{t('instructor.colCourse')}</th>
+                    <th className="px-5 py-3.5 font-semibold sm:px-6">{t('instructor.colStudent')}</th>
+                    <th className="px-5 py-3.5 font-semibold sm:px-6">{t('instructor.colAmount')}</th>
+                    <th className="px-5 py-3.5 font-semibold sm:px-6">{t('instructor.colStatus')}</th>
+                    <th className="px-5 py-3.5 font-semibold sm:px-6">{t('instructor.colDate')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -456,9 +452,9 @@ export function InstructorSalesPage() {
                           </span>
                           <div className="min-w-0">
                             <p className="truncate font-semibold text-ink">
-                              {sale.courseTitle ?? 'Course'}
+                              {sale.courseTitle ?? t('instructor.course')}
                             </p>
-                            <p className="mt-0.5 text-xs text-ink-3">Marketplace enrollment</p>
+                            <p className="mt-0.5 text-xs text-ink-3">{t('instructor.marketplaceEnrollment')}</p>
                           </div>
                         </div>
                       </td>

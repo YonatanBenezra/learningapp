@@ -17,16 +17,31 @@ import { useAuthStore } from '@/src/store/authStore';
 import { useLogout } from '@/src/features/auth';
 import { Avatar } from '@/src/components/ui/avatar';
 import { getUserAvatarProps, getUserDisplayName } from '@/src/lib/userDisplay';
+import { useTranslation, useIsRtl } from '@/src/i18n';
+import { cn } from '@/src/lib/utils';
+import type { Messages } from '@/src/i18n/types';
+
+type ProfileMenuItemId = keyof Messages['profileMenu'];
 
 interface ProfileMenuItem {
-  label: string;
+  id: Exclude<ProfileMenuItemId, 'logout' | 'openMenu'>;
   icon: React.ElementType;
-  href?: string;
-  onClick?: () => void;
-  destructive?: boolean;
+  href: string;
 }
 
+const menuItems: ProfileMenuItem[] = [
+  { id: 'myProfile', icon: User, href: '/profile' },
+  { id: 'accountSettings', icon: Settings, href: '/settings' },
+  { id: 'billing', icon: CreditCard, href: '/billing' },
+  { id: 'notifications', icon: Bell, href: '/notifications' },
+  { id: 'appearance', icon: Palette, href: '/settings' },
+  { id: 'language', icon: Globe, href: '/settings' },
+  { id: 'helpCenter', icon: LifeBuoy, href: '/support' },
+];
+
 export function ProfileDropdown() {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
   const [open, setOpen] = useState(false);
@@ -51,23 +66,15 @@ export function ProfileDropdown() {
     return () => document.removeEventListener('keydown', handleKey);
   }, [open]);
 
-  const menuItems: ProfileMenuItem[] = [
-    { label: 'My Profile', icon: User, href: '/profile' },
-    { label: 'Account Settings', icon: Settings, href: '/settings' },
-    { label: 'Billing', icon: CreditCard, href: '/billing' },
-    { label: 'Notifications', icon: Bell, href: '/notifications' },
-    { label: 'Appearance', icon: Palette, href: '/settings' },
-    { label: 'Language', icon: Globe, href: '/settings' },
-    { label: 'Help Center', icon: LifeBuoy, href: '/support' },
-  ];
-
   return (
     <div ref={ref} className="relative">
       <button
+        type="button"
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 rounded-full border border-line py-1 pl-1 pr-2.5 transition-colors hover:border-line-2 hover:bg-bg-soft"
         aria-expanded={open}
         aria-haspopup="true"
+        aria-label={t('profileMenu.openMenu')}
       >
         <Avatar {...getUserAvatarProps(user)} className="size-8" />
         <span className="hidden max-w-[120px] truncate text-sm font-medium text-ink md:block">
@@ -82,32 +89,36 @@ export function ProfileDropdown() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="absolute right-0 top-full z-50 mt-2 w-[240px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card"
+            className="absolute end-0 top-full z-50 mt-2 w-[240px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card"
           >
-            {/* User info header */}
             <div className="border-b border-line px-4 py-3.5">
               <p className="text-sm font-semibold text-ink">{getUserDisplayName(user)}</p>
               <p className="mt-0.5 text-xs text-ink-3">{user?.email ?? ''}</p>
             </div>
 
-            {/* Menu items */}
             <div className="p-1.5">
               {menuItems.map((item) => (
                 <a
-                  key={item.label}
-                  href={item.href ?? '#'}
+                  key={item.id}
+                  href={item.href}
                   onClick={() => setOpen(false)}
                   className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-2 transition-all duration-150 hover:bg-bg-soft hover:text-ink"
                 >
                   <item.icon className="size-4 shrink-0 text-ink-3 group-hover:text-ink-2" />
-                  <span className="flex-1">{item.label}</span>
-                  <ChevronRight className="size-3.5 shrink-0 text-ink-3/50 opacity-0 transition-opacity group-hover:opacity-100" />
+                  <span className="flex-1">{t(`profileMenu.${item.id}`)}</span>
+                  <ChevronRight
+                    className={cn(
+                      'size-3.5 shrink-0 text-ink-3/50 opacity-0 transition-opacity group-hover:opacity-100',
+                      isRtl && 'rtl-flip',
+                    )}
+                  />
                 </a>
               ))}
 
               <div className="my-1.5 h-px bg-line" />
 
               <button
+                type="button"
                 onClick={() => {
                   setOpen(false);
                   logout();
@@ -115,7 +126,7 @@ export function ProfileDropdown() {
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-bad transition-all duration-150 hover:bg-bad-soft"
               >
                 <LogOut className="size-4 shrink-0" />
-                <span>Logout</span>
+                <span>{t('profileMenu.logout')}</span>
               </button>
             </div>
           </motion.div>

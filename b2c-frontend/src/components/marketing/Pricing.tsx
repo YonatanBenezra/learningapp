@@ -2,68 +2,30 @@
 
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
-import {
-  FREE_PLAN_FEATURES,
-  PREMIUM_PLAN_FEATURES,
-  PREMIUM_PRICE_USD,
-  STANDARD_PLAN_FEATURES,
-  STANDARD_PRICE_USD,
-  TRIAL_PERIOD_MONTHS,
-} from '@/src/constants/pricing';
+import { TRIAL_PERIOD_MONTHS } from '@/src/constants/pricing';
 import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
 import { defaultDashboardPath } from '@/src/features/auth/dashboardRoutes';
 import { useAuthStore } from '@/src/store/authStore';
 import { Container } from './Container';
 import { cn } from '@/src/lib/utils';
+import { useTranslation, usePricingPlans, useIsRtl } from '@/src/i18n';
 
 type PlanId = 'free' | 'standard' | 'premium';
 
-type PlanConfig = {
-  id: PlanId;
-  name: string;
-  subtitle: string;
-  price: number;
-  period: string;
-  features: readonly string[];
-  featured?: boolean;
-};
-
-const PLANS: PlanConfig[] = [
-  {
-    id: 'free',
-    name: 'Free',
-    subtitle: 'Start with a 3-month trial',
-    price: 0,
-    period: 'trial period',
-    features: FREE_PLAN_FEATURES,
-  },
-  {
-    id: 'standard',
-    name: 'Standard',
-    subtitle: 'For regular learners',
-    price: STANDARD_PRICE_USD,
-    period: 'month',
-    features: STANDARD_PLAN_FEATURES,
-    featured: true,
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    subtitle: 'For power learners and teams',
-    price: PREMIUM_PRICE_USD,
-    period: 'month',
-    features: PREMIUM_PLAN_FEATURES,
-  },
-];
+type PlanConfig = ReturnType<typeof usePricingPlans>[number];
 
 function PlanCard({
   plan,
   href,
   cta,
+  recommendedLabel,
+  isRtl,
 }: {
   plan: PlanConfig;
   href: string;
   cta: string;
+  recommendedLabel: string;
+  isRtl: boolean;
 }) {
   const isFeatured = plan.featured;
 
@@ -76,7 +38,7 @@ function PlanCard({
     >
       {isFeatured ? (
         <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-primary/20 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
-          Recommended
+          {recommendedLabel}
         </span>
       ) : null}
 
@@ -113,13 +75,16 @@ function PlanCard({
         )}
       >
         {cta}
-        <ArrowRight className="size-4" />
+        <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
       </Link>
     </article>
   );
 }
 
 function PricingPlans({ fullPage = false }: { fullPage?: boolean }) {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
+  const plans = usePricingPlans();
   const hydrated = useAuthHydrated();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const userRole = useAuthStore((s) => s.user?.role);
@@ -130,9 +95,13 @@ function PricingPlans({ fullPage = false }: { fullPage?: boolean }) {
   }
 
   function planCta(id: PlanId) {
-    if (id === 'free') return hydrated && isAuthenticated ? 'Go to dashboard' : 'Get started free';
-    if (id === 'standard') return hydrated && isAuthenticated ? 'Current plan' : 'Choose Standard';
-    return hydrated && isAuthenticated ? 'Upgrade to Premium' : 'Choose Premium';
+    if (id === 'free') {
+      return hydrated && isAuthenticated ? t('marketing.ctaGoDashboard') : t('marketing.ctaGetStartedFree');
+    }
+    if (id === 'standard') {
+      return hydrated && isAuthenticated ? t('marketing.ctaCurrentPlan') : t('marketing.ctaChooseStandard');
+    }
+    return hydrated && isAuthenticated ? t('marketing.ctaUpgradePremium') : t('marketing.ctaChoosePremium');
   }
 
   return (
@@ -144,16 +113,15 @@ function PricingPlans({ fullPage = false }: { fullPage?: boolean }) {
         <div className="mx-auto max-w-3xl text-center">
           {fullPage ? (
             <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-              Membership plans
+              {t('marketing.membershipPlans')}
             </h1>
           ) : (
             <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-              Membership plans
+              {t('marketing.membershipPlans')}
             </h2>
           )}
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-ink-2 sm:text-base">
-            Start with a {TRIAL_PERIOD_MONTHS}-month free trial. Upgrade to Standard or Premium when
-            you need more assessments, courses, and practice capacity.
+            {t('marketing.pricingIntro', { months: String(TRIAL_PERIOD_MONTHS) })}
           </p>
         </div>
 
@@ -161,8 +129,15 @@ function PricingPlans({ fullPage = false }: { fullPage?: boolean }) {
           className="mx-auto mt-8 grid max-w-6xl gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
           data-tour="tour-pricing-plans"
         >
-          {PLANS.map((plan) => (
-            <PlanCard key={plan.id} plan={plan} href={planHref(plan.id)} cta={planCta(plan.id)} />
+          {plans.map((plan) => (
+            <PlanCard
+              key={plan.id}
+              plan={plan}
+              href={planHref(plan.id)}
+              cta={planCta(plan.id)}
+              recommendedLabel={t('marketing.recommended')}
+              isRtl={isRtl}
+            />
           ))}
         </div>
       </Container>

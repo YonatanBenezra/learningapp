@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Network } from 'lucide-react';
 import { Badge } from '@/src/components/ui/badge';
 import { Skeleton } from '@/src/components/ui/skeleton';
+import { useTranslation } from '@/src/i18n';
 import {
   NetworkSimulatorLab,
   type ScenarioLabSubmission,
@@ -41,6 +42,7 @@ function SimulatorSkeleton() {
 }
 
 export function NetworkLabPage() {
+  const { t } = useTranslation();
   const scenariosQ = useQuery({
     queryKey: ['network-scenarios'],
     queryFn: listNetworkScenarios,
@@ -49,10 +51,7 @@ export function NetworkLabPage() {
   const [scenarioId, setScenarioId] = useState<string | null>(null);
   const [submission, setSubmission] = useState<ScenarioLabSubmission | null>(null);
 
-  const activeScenarioId = useMemo(() => {
-    if (scenarioId) return scenarioId;
-    return scenariosQ.data?.[0]?.id ?? null;
-  }, [scenarioId, scenariosQ.data]);
+  const activeScenarioId = scenarioId ?? scenariosQ.data?.[0]?.id ?? null;
 
   const scenarioQ = useQuery({
     queryKey: ['network-scenario', activeScenarioId],
@@ -72,11 +71,8 @@ export function NetworkLabPage() {
     <div className="w-full space-y-6 p-4 sm:p-6 lg:p-8 xl:px-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-3xl">
-          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">Network lab</h1>
-          <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">
-            Investigate flow captures, filter suspicious traffic, and validate your analysis in
-            realistic practice scenarios.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{t('labs.title')}</h1>
+          <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">{t('labs.subtitle')}</p>
         </div>
         <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-line bg-bg-soft text-primary">
           <Network className="size-5" />
@@ -94,16 +90,16 @@ export function NetworkLabPage() {
         </div>
       ) : scenariosQ.isError ? (
         <div className="rounded-2xl border border-line bg-bg-elev p-8 text-center shadow-card">
-          <p className="text-sm text-ink-2">Unable to load network scenarios.</p>
+          <p className="text-sm text-ink-2">{t('labs.loadScenariosError')}</p>
         </div>
       ) : (
         <>
           <div className="space-y-3">
-            <p className="text-sm font-medium text-ink-2">Scenarios</p>
+            <p className="text-sm font-medium text-ink-2">{t('labs.scenarios')}</p>
             <div
               className="flex flex-wrap gap-2"
               role="tablist"
-              aria-label="Network lab scenarios"
+              aria-label={t('labs.scenariosAria')}
             >
               {(scenariosQ.data ?? []).map((scenario) => (
                 <button
@@ -120,10 +116,7 @@ export function NetworkLabPage() {
                   )}
                 >
                   <span className="text-sm font-medium">{scenario.title}</span>
-                  <Badge
-                    variant={difficultyVariant(scenario.difficulty)}
-                    className="capitalize"
-                  >
+                  <Badge variant={difficultyVariant(scenario.difficulty)} className="capitalize">
                     {scenario.difficulty}
                   </Badge>
                 </button>
@@ -131,7 +124,7 @@ export function NetworkLabPage() {
             </div>
             {activeScenario ? (
               <p className="text-sm text-ink-3">
-                Selected: <span className="font-medium text-ink-2">{activeScenario.title}</span>
+                {t('labs.selected', { title: activeScenario.title })}
               </p>
             ) : null}
           </div>
@@ -140,7 +133,7 @@ export function NetworkLabPage() {
             <SimulatorSkeleton />
           ) : scenarioQ.isError ? (
             <div className="rounded-2xl border border-line bg-bg-elev p-8 text-center shadow-card">
-              <p className="text-sm text-ink-2">Could not load this scenario. Try another one.</p>
+              <p className="text-sm text-ink-2">{t('labs.loadScenarioError')}</p>
             </div>
           ) : scenarioQ.data ? (
             <div className="overflow-hidden rounded-2xl border border-line shadow-card">

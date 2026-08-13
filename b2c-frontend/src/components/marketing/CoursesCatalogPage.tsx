@@ -16,9 +16,11 @@ import { useAuthStore } from '@/src/store/authStore';
 import { resolveCategoryTitle, CATEGORY_TITLES } from '@/src/components/marketing/categoryCounts';
 import { InfoTip, Tooltip } from '@/src/components/ui/tooltip';
 import { cn } from '@/src/lib/utils';
+import { useTranslation, useCategoryLabel } from '@/src/i18n';
 
 type ViewMode = 'grid' | 'list';
-type CourseCategory = 'All Categories' | string;
+const ALL_CATEGORIES = 'All Categories';
+type CourseCategory = typeof ALL_CATEGORIES | string;
 
 function toCatalogCourse(course: MarketplaceCourse): CatalogCourse {
   const price = course.priceCents / 100;
@@ -37,16 +39,48 @@ function toCatalogCourse(course: MarketplaceCourse): CatalogCourse {
 function buildCoursesUrl(params: { q?: string; category?: string }) {
   const search = new URLSearchParams();
   if (params.q?.trim()) search.set('q', params.q.trim());
-  if (params.category && params.category !== 'All Categories') {
+  if (params.category && params.category !== ALL_CATEGORIES) {
     search.set('category', params.category);
   }
   const query = search.toString();
   return query ? `/courses?${query}` : '/courses';
 }
 
+function CategoryFilterLabel({ filter }: { filter: CourseCategory }) {
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel(filter);
+  if (filter === ALL_CATEGORIES) return t('marketing.allCategories');
+  return categoryLabel;
+}
+
+function CategoryFilterPill({
+  filter,
+  active,
+  href,
+}: {
+  filter: CourseCategory;
+  active: boolean;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        'rounded-md px-3.5 py-2 text-base font-medium transition-colors',
+        active
+          ? 'bg-primary-deep text-white'
+          : 'border border-line bg-bg-soft text-ink-2 hover:border-line-2 hover:text-ink',
+      )}
+    >
+      <CategoryFilterLabel filter={filter} />
+    </Link>
+  );
+}
+
 export function CoursesCatalogPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
   const hydrated = useAuthHydrated();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
   const user = useAuthStore((state) => state.user);
@@ -80,21 +114,21 @@ export function CoursesCatalogPage() {
       const title = resolveCategoryTitle(course.category) ?? course.category;
       if (title && !CATEGORY_TITLES.includes(title)) extras.add(title);
     }
-    return ['All Categories', ...CATEGORY_TITLES, ...[...extras].sort()] as CourseCategory[];
+    return [ALL_CATEGORIES, ...CATEGORY_TITLES, ...[...extras].sort()] as CourseCategory[];
   }, [catalogCourses]);
 
   const activeFilter: CourseCategory =
     categoryParam &&
     (categoryFilters.includes(categoryParam) || CATEGORY_TITLES.includes(categoryParam))
       ? categoryParam
-      : 'All Categories';
+      : ALL_CATEGORIES;
 
   const filteredCourses = useMemo(() => {
     const normalizedQuery = query.toLowerCase();
     return catalogCourses.filter((course) => {
       const courseCategory = resolveCategoryTitle(course.category) ?? course.category;
       const matchesCategory =
-        activeFilter === 'All Categories' || courseCategory === activeFilter;
+        activeFilter === ALL_CATEGORIES || courseCategory === activeFilter;
       if (!matchesCategory) return false;
       if (!normalizedQuery) return true;
 
@@ -124,10 +158,12 @@ export function CoursesCatalogPage() {
     <section className="flex min-h-full flex-1 flex-col bg-bg py-8 lg:py-10">
       <Container className="flex flex-1 flex-col">
         <div className="flex items-start gap-2 pb-2" data-tour="tour-course-catalog">
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">Course catalog</h1>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+            {t('marketing.catalogTitle')}
+          </h1>
           <InfoTip
-            content="Browse published marketplace courses. Filter by category or search by title, topic, and level."
-            label="About course catalog"
+            content={t('marketing.catalogTip')}
+            label={t('marketing.catalogTipLabel')}
             side="bottom"
             className="mt-3"
           />
@@ -148,7 +184,7 @@ export function CoursesCatalogPage() {
                 )}
               >
                 <List className="size-4" />
-                List
+                {t('marketing.viewList')}
               </button>
               <button
                 type="button"
@@ -162,17 +198,16 @@ export function CoursesCatalogPage() {
                 )}
               >
                 <LayoutGrid className="size-4" />
-                Grid
+                {t('marketing.viewGrid')}
               </button>
             </div>
 
             <p className="text-base text-ink-2">
-              <span className="font-semibold tabular-nums text-ink">{filteredCourses.length}</span>{' '}
-              courses
-              {activeFilter !== 'All Categories' ? (
+              {t('marketing.coursesCount', { count: String(filteredCourses.length) })}
+              {activeFilter !== ALL_CATEGORIES ? (
                 <>
                   {' '}
-                  · <span className="text-ink">{activeFilter}</span>
+                  · <CategoryFilterLabel filter={activeFilter} />
                 </>
               ) : null}
             </p>
@@ -183,13 +218,13 @@ export function CoursesCatalogPage() {
               type="search"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Search courses..."
+              placeholder={t('marketing.searchCourses')}
               className="h-11 w-full rounded-md border border-line bg-bg py-2 pl-3.5 pr-10 text-base text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
-            <Tooltip content="Search by course title, description, category, or skill level.">
+            <Tooltip content={t('marketing.searchCoursesTip')}>
               <button
                 type="submit"
-                aria-label="Search courses"
+                aria-label={t('marketing.searchCoursesAria')}
                 className="absolute right-1 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-md text-ink-3 transition hover:bg-bg-soft hover:text-primary"
               >
                 <Search className="size-4" />
@@ -206,18 +241,7 @@ export function CoursesCatalogPage() {
             const active = activeFilter === filter;
             const href = buildCoursesUrl({ q: query, category: filter });
             return (
-              <Link
-                key={filter}
-                href={href}
-                className={cn(
-                  'rounded-md px-3.5 py-2 text-base font-medium transition-colors',
-                  active
-                    ? 'bg-primary-deep text-white'
-                    : 'border border-line bg-bg-soft text-ink-2 hover:border-line-2 hover:text-ink',
-                )}
-              >
-                {filter}
-              </Link>
+              <CategoryFilterPill key={filter} filter={filter} active={active} href={href} />
             );
           })}
         </div>
@@ -248,33 +272,33 @@ export function CoursesCatalogPage() {
           </div>
         ) : coursesQ.isError ? (
           <div className="mx-auto mt-10 max-w-lg rounded-lg border border-line bg-bg-elev p-10 text-center shadow-card">
-            <p className="text-lg font-semibold text-ink">Could not load courses</p>
-            <p className="mt-2 text-sm text-ink-2">Please refresh the page or try again later.</p>
+            <p className="text-lg font-semibold text-ink">{t('marketing.loadCoursesError')}</p>
+            <p className="mt-2 text-sm text-ink-2">{t('marketing.loadCoursesErrorHint')}</p>
             <button
               type="button"
               onClick={() => void coursesQ.refetch()}
               className="mt-6 inline-flex h-10 items-center rounded-md bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-dark"
             >
-              Try again
+              {t('marketing.tryAgain')}
             </button>
           </div>
         ) : filteredCourses.length === 0 ? (
           <div className="mx-auto mt-10 max-w-lg rounded-lg border border-line bg-bg-elev p-10 text-center shadow-card">
             <p className="text-lg font-semibold text-ink">
               {catalogCourses.length === 0
-                ? 'No published courses yet'
-                : 'No courses match your search'}
+                ? t('marketing.noPublishedCourses')
+                : t('marketing.noSearchResults')}
             </p>
             <p className="mt-2 text-sm text-ink-2">
               {catalogCourses.length === 0
-                ? 'Instructor courses will appear here once they are published.'
-                : 'Try another keyword or browse all categories.'}
+                ? t('marketing.noPublishedHint')
+                : t('marketing.noSearchHint')}
             </p>
             <Link
               href="/courses"
               className="mt-6 inline-flex h-10 items-center rounded-md bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-dark"
             >
-              View all courses
+              {t('marketing.viewAllCourses')}
             </Link>
           </div>
         ) : (

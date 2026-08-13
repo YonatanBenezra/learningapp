@@ -13,6 +13,7 @@ import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { cn } from '@/src/lib/utils';
+import { useTranslation } from '@/src/i18n';
 import {
   getNetworkScenario,
   listNetworkScenarios,
@@ -65,6 +66,7 @@ export function NetworkSimulatorLab({
   onChange: (data: ScenarioLabSubmission) => void;
   readOnly?: boolean;
 }) {
+  const { t } = useTranslation();
   const selfLoaded = scenarioProp === undefined;
   const [embeddedScenario, setEmbeddedScenario] = useState<NetworkScenario | null>(null);
   const [embeddedLoading, setEmbeddedLoading] = useState(selfLoaded);
@@ -94,7 +96,7 @@ export function NetworkSimulatorLab({
         const data = await getNetworkScenario(id);
         if (!cancelled) setEmbeddedScenario(data);
       } catch {
-        if (!cancelled) setEmbeddedError('Could not load network scenario.');
+        if (!cancelled) setEmbeddedError(t('labs.loadNetworkError'));
       } finally {
         if (!cancelled) setEmbeddedLoading(false);
       }
@@ -155,7 +157,7 @@ export function NetworkSimulatorLab({
       const result = await submitNetworkScenario(scenario.id, payload);
       setLocalResult(result);
     } catch {
-      setError('Could not check answers. Premium subscription may be required.');
+      setError(t('labs.checkAnswersPremium'));
     } finally {
       setChecking(false);
     }
@@ -165,7 +167,7 @@ export function NetworkSimulatorLab({
     return (
       <div className="flex min-h-[420px] items-center justify-center gap-3 bg-[#1e1e1e] p-8 text-sm text-[#cccccc]">
         <Loader2 className="size-5 animate-spin text-primary" />
-        Loading network scenario…
+        {t('labs.loadingNetwork')}
       </div>
     );
   }
@@ -192,7 +194,7 @@ export function NetworkSimulatorLab({
           <div>
             <p className="text-sm font-semibold text-[#cccccc]">{scenario.title}</p>
             <p className="mt-0.5 text-xs text-[#858585]">
-              {allFlows.length} flows · Packet capture simulator
+              {t('labs.flowsCapture', { count: String(allFlows.length) })}
             </p>
           </div>
         </div>
@@ -212,13 +214,13 @@ export function NetworkSimulatorLab({
             <Input
               value={filterQuery}
               onChange={(e) => setFilterQuery(e.target.value)}
-              placeholder="Filter flows: host 10.0.0.5 · port 22 · SYN"
+              placeholder={t('labs.filterPlaceholder')}
               className="h-10 border-[#2d2d2d] bg-[#252526] pl-9 font-mono text-xs text-[#cccccc] placeholder:text-[#6e7681]"
             />
           </div>
           <div className="flex items-center gap-2 text-[11px] text-[#858585]">
             <Filter className="size-3.5" />
-            BPF-style filters supported
+            {t('labs.bpfSupported')}
           </div>
         </div>
 
@@ -242,18 +244,15 @@ export function NetworkSimulatorLab({
         </div>
 
         <div className="rounded-lg border border-[#2d2d2d] bg-[#252526] p-4 sm:p-5">
-          <p className="text-sm font-medium text-[#cccccc]">Raw flow summary</p>
+          <p className="text-sm font-medium text-[#cccccc]">{t('labs.rawFlowSummary')}</p>
           <pre className="mt-3 max-h-40 overflow-auto rounded-lg border border-[#2d2d2d] bg-[#0d1117] p-3 font-mono text-[12px] leading-6 text-[#e6edf3]">
             {scenario.pcapSummary.join('\n')}
           </pre>
         </div>
 
         <div className="rounded-xl border border-line bg-bg p-4 sm:p-5">
-          <h2 className="text-base font-semibold text-ink">Analysis worksheet</h2>
-          <p className="mt-1 text-sm leading-6 text-ink-2">
-            Review the flow table, identify suspicious hosts and techniques, then submit your
-            findings.
-          </p>
+          <h2 className="text-base font-semibold text-ink">{t('labs.analysisWorksheet')}</h2>
+          <p className="mt-1 text-sm leading-6 text-ink-2">{t('labs.analysisWorksheetDesc')}</p>
 
           <div className="mt-5 space-y-4">
             {scenario.questions.map((q, index) => {
@@ -286,11 +285,11 @@ export function NetworkSimulatorLab({
                     >
                       {result.correct ? (
                         <>
-                          <CheckCircle2 className="size-3.5" /> Correct
+                          <CheckCircle2 className="size-3.5" /> {t('assessmentRunner.correct')}
                         </>
                       ) : (
                         <>
-                          <XCircle className="size-3.5" /> Incorrect — review the flow table
+                          <XCircle className="size-3.5" /> {t('labs.reviewFlowTable')}
                         </>
                       )}
                     </p>
@@ -307,13 +306,15 @@ export function NetworkSimulatorLab({
                 onClick={() => void checkAnswers()}
                 disabled={checking}
               >
-                {checking ? <Loader2 className="size-4 animate-spin" /> : 'Validate analysis'}
+                {checking ? <Loader2 className="size-4 animate-spin" /> : t('labs.validateAnalysis')}
               </Button>
               {localResult ? (
                 <p className="text-sm text-ink-2">
-                  Score:{' '}
-                  <span className="font-semibold text-ink">{localResult.score}%</span> (
-                  {localResult.correct}/{localResult.total} correct)
+                  {t('labs.scorePercent', {
+                    score: String(localResult.score),
+                    correct: String(localResult.correct),
+                    total: String(localResult.total),
+                  })}
                 </p>
               ) : null}
             </div>

@@ -19,7 +19,7 @@ import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { Avatar } from '@/src/components/ui/avatar';
 import { useMyExams, useMyQuizzes } from '@/src/features/assessments/useAssessments';
-import { useTranslation } from '@/src/i18n';
+import { useTranslation, useIsRtl, useCategoryLabel } from '@/src/i18n';
 import { useTheme } from '@/src/providers';
 import { cn } from '@/src/lib/utils';
 import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
@@ -58,16 +58,36 @@ function shortId(id: string) {
   return id.length > 10 ? `${id.slice(0, 8)}…` : id;
 }
 
-function scoreRank(score: number) {
-  if (score >= 90) return 'Excellent';
-  if (score >= 75) return 'Strong';
-  if (score >= 60) return 'Good';
-  return 'Needs review';
+function useLocaleTag(locale: string) {
+  if (locale === 'he') return 'he-IL';
+  if (locale === 'bn') return 'bn-BD';
+  return 'en-US';
 }
 
-function buildCourseProgressData(courses: Course[]) {
+function useWeekdayShortLabels() {
+  const { locale } = useTranslation();
+  const formatter = new Intl.DateTimeFormat(useLocaleTag(locale), { weekday: 'short' });
+  return Array.from({ length: 7 }, (_, i) => formatter.format(new Date(2024, 0, 1 + i)));
+}
+
+function useMonthShortLabels() {
+  const { locale } = useTranslation();
+  const formatter = new Intl.DateTimeFormat(useLocaleTag(locale), { month: 'short' });
+  return Array.from({ length: 12 }, (_, i) => formatter.format(new Date(2024, i, 1)));
+}
+
+function useScoreRankLabel() {
+  const { t } = useTranslation();
+  return (score: number) => {
+    if (score >= 90) return t('dashboard.scoreExcellent');
+    if (score >= 75) return t('dashboard.scoreStrong');
+    if (score >= 60) return t('dashboard.scoreGood');
+    return t('dashboard.scoreNeedsReview');
+  };
+}
+
+function buildCourseProgressData(courses: Course[], labels: string[]) {
   const ready = courses.filter((course) => course.status === 'ready').slice(0, 7);
-  const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   return labels.map((name, index) => {
     const course = ready[index % Math.max(ready.length, 1)];
@@ -80,8 +100,11 @@ function buildCourseProgressData(courses: Course[]) {
   });
 }
 
-function buildMonthlyOverview(quizzes: QuizHistoryItem[], exams: ExamHistoryItem[]) {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function buildMonthlyOverview(
+  quizzes: QuizHistoryItem[],
+  exams: ExamHistoryItem[],
+  months: string[],
+) {
   const counts = new Array(12).fill(0);
   const scores = new Array(12).fill(0);
   const scoreCounts = new Array(12).fill(0);
@@ -132,12 +155,17 @@ function PanelHeader({ title, description }: { title: string; description?: stri
 }
 
 function CourseProgressChart({ courses }: { courses: Course[] }) {
+  const { t } = useTranslation();
   const palette = useChartPalette();
-  const data = buildCourseProgressData(courses);
+  const weekdayLabels = useWeekdayShortLabels();
+  const data = buildCourseProgressData(courses, weekdayLabels);
 
   return (
     <section className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
-      <PanelHeader title="Learning performance" description="Weekly progress against your targets" />
+      <PanelHeader
+        title={t('dashboard.chartLearningPerformance')}
+        description={t('dashboard.chartLearningPerformanceDesc')}
+      />
       <div className="h-[280px] px-2 py-4 sm:px-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
@@ -158,7 +186,7 @@ function CourseProgressChart({ courses }: { courses: Course[] }) {
             <Line
               type="monotone"
               dataKey="progress"
-              name="Progress"
+              name={t('dashboard.chartProgress')}
               stroke={palette.progress}
               strokeWidth={2.5}
               dot={false}
@@ -166,7 +194,7 @@ function CourseProgressChart({ courses }: { courses: Course[] }) {
             <Line
               type="monotone"
               dataKey="target"
-              name="Target"
+              name={t('dashboard.chartTarget')}
               stroke={palette.target}
               strokeWidth={2.5}
               dot={false}
@@ -185,12 +213,17 @@ function LearningOverviewChart({
   quizzes: QuizHistoryItem[];
   exams: ExamHistoryItem[];
 }) {
+  const { t } = useTranslation();
   const palette = useChartPalette();
-  const data = buildMonthlyOverview(quizzes, exams);
+  const monthLabels = useMonthShortLabels();
+  const data = buildMonthlyOverview(quizzes, exams, monthLabels);
 
   return (
     <section className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
-      <PanelHeader title="Learning overview" description="Monthly attempts and average scores" />
+      <PanelHeader
+        title={t('dashboard.chartLearningOverview')}
+        description={t('dashboard.chartLearningOverviewDesc')}
+      />
       <div className="h-[280px] px-2 py-4 sm:px-4">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
@@ -219,7 +252,7 @@ function LearningOverviewChart({
             <Bar
               yAxisId="left"
               dataKey="attempts"
-              name="Attempts"
+              name={t('dashboard.chartAttempts')}
               fill={palette.bar}
               radius={[4, 4, 0, 0]}
               barSize={16}
@@ -228,7 +261,7 @@ function LearningOverviewChart({
               yAxisId="right"
               type="monotone"
               dataKey="average"
-              name="Average score"
+              name={t('dashboard.chartAverageScore')}
               stroke={palette.average}
               strokeWidth={2.5}
               dot={false}
@@ -272,6 +305,7 @@ export function DashboardChartsRow({ courses }: { courses: Course[] }) {
 
 export function DashboardActivityTable() {
   const { t } = useTranslation();
+  const scoreRank = useScoreRankLabel();
   const quizzesQ = useMyQuizzes();
   const examsQ = useMyExams();
 
@@ -311,19 +345,20 @@ export function DashboardActivityTable() {
           <table className="w-full min-w-[680px] text-left text-sm">
             <thead>
               <tr className="border-b border-line bg-bg-soft text-xs font-medium text-ink-3">
-                <th className="px-5 py-3.5 sm:px-6">Assessment</th>
-                <th className="px-5 py-3.5 sm:px-6">ID</th>
-                <th className="px-5 py-3.5 sm:px-6">Type</th>
-                <th className="px-5 py-3.5 sm:px-6">Score</th>
-                <th className="px-5 py-3.5 sm:px-6">Result</th>
-                <th className="px-5 py-3.5 sm:px-6">Action</th>
+                <th className="px-5 py-3.5 sm:px-6">{t('dashboard.tableAssessment')}</th>
+                <th className="px-5 py-3.5 sm:px-6">{t('dashboard.tableId')}</th>
+                <th className="px-5 py-3.5 sm:px-6">{t('dashboard.tableType')}</th>
+                <th className="px-5 py-3.5 sm:px-6">{t('dashboard.tableScore')}</th>
+                <th className="px-5 py-3.5 sm:px-6">{t('dashboard.tableResult')}</th>
+                <th className="px-5 py-3.5 sm:px-6">{t('dashboard.tableAction')}</th>
               </tr>
             </thead>
             <tbody>
               {activity.map((entry, index) => {
                 const title =
                   entry.kind === 'quiz' ? entry.item.lessonTitle : entry.item.scopeTitle;
-                const label = entry.kind === 'quiz' ? 'Quiz' : 'Exam';
+                const label =
+                  entry.kind === 'quiz' ? t('dashboard.typeQuiz') : t('dashboard.typeExam');
                 return (
                   <tr
                     key={`${entry.kind}-${entry.item.id}`}
@@ -354,7 +389,7 @@ export function DashboardActivityTable() {
                       <button
                         type="button"
                         className="grid size-8 place-items-center rounded-xl border border-line text-ink-3 transition hover:border-line-2 hover:bg-bg-soft hover:text-primary"
-                        aria-label="More actions"
+                        aria-label={t('dashboard.moreActions')}
                       >
                         <MoreHorizontal className="size-4" />
                       </button>
@@ -370,8 +405,43 @@ export function DashboardActivityTable() {
   );
 }
 
+function CoursePreviewRow({
+  course,
+  isRtl,
+}: {
+  course: Course;
+  isRtl: boolean;
+}) {
+  const categoryLabel = useCategoryLabel(course.category);
+
+  return (
+    <div className="flex items-center gap-3 border-b border-line px-2 py-4 last:border-b-0 sm:px-3">
+      <Avatar name={course.title} className="size-10 text-xs" />
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-medium text-ink">{course.title}</p>
+        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-line">
+          <div
+            className="h-full rounded-full bg-primary transition-all"
+            style={{ width: `${course.progressPercent}%` }}
+          />
+        </div>
+        <p className="mt-1 text-xs text-ink-3">
+          {categoryLabel} · {course.progressPercent}%
+        </p>
+      </div>
+      <Link
+        href={learnerCoursePath(course.id)}
+        className="grid size-8 shrink-0 place-items-center rounded-xl border border-line text-ink-3 transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary"
+      >
+        <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+      </Link>
+    </div>
+  );
+}
+
 export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
   const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const preview = courses.slice(0, 6);
 
   return (
@@ -380,13 +450,15 @@ export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
         <div>
           <h3 className="text-base font-bold text-ink sm:text-lg">{t('dashboard.yourCourses')}</h3>
           <p className="mt-1 text-sm text-ink-2">
-            {courses.length} course{courses.length === 1 ? '' : 's'} in your library
+            {courses.length === 1
+              ? t('dashboard.coursesInLibraryOne')
+              : t('dashboard.coursesInLibraryMany', { count: String(courses.length) })}
           </p>
         </div>
         <Link
           href="/create-course"
           className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-primary-ink transition hover:bg-primary-dark"
-          aria-label="Create course"
+          aria-label={t('dashboard.createCourse')}
         >
           <Plus className="size-4" />
         </Link>
@@ -394,30 +466,7 @@ export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
 
       <div className="flex-1 px-2 sm:px-3">
         {preview.map((course) => (
-          <div
-            key={course.id}
-            className="flex items-center gap-3 border-b border-line px-2 py-4 last:border-b-0 sm:px-3"
-          >
-            <Avatar name={course.title} className="size-10 text-xs" />
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-medium text-ink">{course.title}</p>
-              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-line">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${course.progressPercent}%` }}
-                />
-              </div>
-              <p className="mt-1 text-xs text-ink-3">
-                {course.category} · {course.progressPercent}%
-              </p>
-            </div>
-            <Link
-              href={learnerCoursePath(course.id)}
-              className="grid size-8 shrink-0 place-items-center rounded-xl border border-line text-ink-3 transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary"
-            >
-              <ArrowRight className="size-4" />
-            </Link>
-          </div>
+          <CoursePreviewRow key={course.id} course={course} isRtl={isRtl} />
         ))}
       </div>
 
@@ -428,7 +477,7 @@ export function RecentCoursesPanel({ courses }: { courses: Course[] }) {
             className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark"
           >
             {t('dashboard.viewAll')}
-            <ChevronRight className="size-4" />
+            <ChevronRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
           </Link>
         </div>
       ) : null}

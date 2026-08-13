@@ -8,9 +8,11 @@ import '@xyflow/react/dist/style.css';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
 import { useCourseStructure } from '@/src/features/courses';
+import { useTranslation } from '@/src/i18n';
 import { buildCourseFlowGraph } from '@/src/features/courses/courseFlowLayout';
 
 export default function CourseFlowGraph({ courseId }: { courseId: string }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const { data, isLoading } = useCourseStructure(courseId);
   const status = data?.course.status;
@@ -18,11 +20,11 @@ export default function CourseFlowGraph({ courseId }: { courseId: string }) {
   const { nodes, edges } = useMemo(
     () =>
       buildCourseFlowGraph({
-        courseTitle: data?.course.title ?? 'Course',
+        courseTitle: data?.course.title ?? t('player.course'),
         modules: data?.modules ?? [],
         lessonHref: (lessonId) => `/lesson/${lessonId}`,
       }),
-    [data],
+    [data, t],
   );
 
   const onNodeClick = useCallback(
@@ -44,12 +46,12 @@ export default function CourseFlowGraph({ courseId }: { courseId: string }) {
   if (status && status !== 'ready' && status !== 'completed') {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-        <p className="text-ink-2">This course isn&rsquo;t ready to explore yet.</p>
+        <p className="text-ink-2">{t('player.courseNotReady')}</p>
         <Link
           href={learnerCoursePath(courseId)}
           className="text-sm font-semibold text-primary hover:underline"
         >
-          Back to course
+          {t('player.backToCourse')}
         </Link>
       </div>
     );
@@ -61,7 +63,7 @@ export default function CourseFlowGraph({ courseId }: { courseId: string }) {
         href={learnerCoursePath(courseId)}
         className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-lg border border-line bg-bg-elev px-3 py-2 text-sm font-medium text-ink hover:text-primary"
       >
-        <ArrowLeft className="size-4" /> Course
+        <ArrowLeft className="size-4" /> {t('player.course')}
       </Link>
       <ReactFlow
         nodes={nodes}

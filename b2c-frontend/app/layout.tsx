@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Outfit } from "next/font/google";
+import { Geist_Mono, Noto_Sans_Hebrew, Outfit } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/src/providers";
 import { APP_METADATA_TITLE, APP_TAGLINE } from "@/src/lib/brand";
@@ -8,6 +8,13 @@ const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const notoSansHebrew = Noto_Sans_Hebrew({
+  variable: "--font-noto-hebrew",
+  subsets: ["hebrew"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -29,7 +36,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${outfit.variable} ${geistMono.variable} h-full font-sans`}
+      className={`${outfit.variable} ${geistMono.variable} ${notoSansHebrew.variable} h-full font-sans`}
     >
       <body className="flex min-h-dvh flex-col bg-bg text-ink">
         <AppProviders>{children}</AppProviders>

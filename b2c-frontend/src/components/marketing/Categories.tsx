@@ -6,8 +6,14 @@ import { ArrowRight } from 'lucide-react';
 import { CATEGORIES } from './data';
 import { Container } from './Container';
 import { SectionHeading } from './SectionHeading';
-import { buildCategoryCounts, formatCourseCount } from './categoryCounts';
+import { buildCategoryCounts } from './categoryCounts';
 import { useMarketplaceCourses } from '@/src/features/marketplace';
+import {
+  useTranslation,
+  useCategoryLabel,
+  useFormatCourseCount,
+  useIsRtl,
+} from '@/src/i18n';
 
 function categoryHref(title: string) {
   return `/courses?category=${encodeURIComponent(title)}`;
@@ -20,6 +26,11 @@ function CategoryCard({
   iconBg,
   iconColor,
 }: (typeof CATEGORIES)[number] & { courseCount: number | undefined }) {
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel(title);
+  const formatCourseCount = useFormatCourseCount();
+  const isRtl = useIsRtl();
+
   return (
     <article className="group flex h-full flex-col rounded-lg border border-line bg-bg-elev p-5 transition-colors hover:border-primary/25 hover:bg-bg-soft">
       <span
@@ -30,7 +41,7 @@ function CategoryCard({
 
       <h3 className="mt-5 text-lg font-semibold leading-snug text-ink">
         <Link href={categoryHref(title)} className="transition-colors hover:text-primary">
-          {title}
+          {categoryLabel}
         </Link>
       </h3>
 
@@ -40,14 +51,18 @@ function CategoryCard({
         href={categoryHref(title)}
         className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
       >
-        Browse courses
-        <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+        {t('marketing.browseCourses')}
+        <ArrowRight
+          className={`size-4 transition-transform group-hover:translate-x-0.5${isRtl ? ' rtl-flip' : ''}`}
+        />
       </Link>
     </article>
   );
 }
 
 export function Categories() {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const { data, isLoading } = useMarketplaceCourses();
 
   const countsByCategory = useMemo(
@@ -63,8 +78,8 @@ export function Categories() {
     >
       <Container>
         <SectionHeading
-          title="Explore learning paths by domain"
-          description="Programming, AI, cyber security, networking, and more — take a skill assessment or browse courses in each category."
+          title={t('marketing.categoriesTitle')}
+          description={t('marketing.categoriesDescription')}
           className="mb-12 lg:mb-14"
         />
 
@@ -83,8 +98,8 @@ export function Categories() {
             href="/courses"
             className="inline-flex items-center gap-2 rounded-lg border border-line bg-bg-elev px-5 py-2.5 text-base font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
           >
-            View all courses
-            <ArrowRight className="size-4" />
+            {t('marketing.viewAllCourses')}
+            <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
           </Link>
         </div>
       </Container>

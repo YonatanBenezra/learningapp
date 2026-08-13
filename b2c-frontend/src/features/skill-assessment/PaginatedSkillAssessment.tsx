@@ -18,6 +18,7 @@ import { Container } from '@/src/components/marketing/Container';
 import { useAuthStore } from '@/src/store/authStore';
 import type { AssessmentQuestion, SubmittedAnswer } from '@/src/domain/assessment';
 import { pendingAnswersKey } from './skillAssessmentApi';
+import { useTranslation, useIsRtl } from '@/src/i18n';
 
 const PAGE_SIZE = 2;
 const OPTION_LABELS = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -36,6 +37,8 @@ export function PaginatedSkillAssessment({
   onSubmit: (answers: SubmittedAnswer[]) => void;
 }) {
   const router = useRouter();
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
@@ -84,10 +87,10 @@ export function PaginatedSkillAssessment({
   const footerHint = pageAnswered
     ? isLastPage
       ? allAnswered
-        ? 'All questions answered. Submit to view your results.'
-        : 'Complete every question before submitting.'
-      : 'This section is complete. Continue to the next part.'
-    : 'Select one answer for each question in this section.';
+        ? t('marketing.assessHintSubmitReady')
+        : t('marketing.assessHintCompleteAll')
+      : t('marketing.assessHintSectionComplete')
+    : t('marketing.assessHintSelectAnswer');
 
   return (
     <div className="min-h-[calc(100dvh-4rem)] bg-bg pb-28 pt-6 lg:pt-8">
@@ -97,8 +100,8 @@ export function PaginatedSkillAssessment({
             href="/assessments"
             className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 transition-colors hover:text-primary"
           >
-            <ArrowLeft className="size-4" />
-            Back to assessments
+            <ArrowLeft className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+            {t('marketing.assessBackToAssessments')}
           </Link>
 
           <header className="mt-5 overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
@@ -107,31 +110,36 @@ export function PaginatedSkillAssessment({
                 <div className="max-w-2xl">
                   <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
                     <Sparkles className="size-3.5" />
-                    Skill assessment
+                    {t('marketing.assessTakeBadge')}
                   </div>
                   <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
                     {topicLabel}
                   </h1>
                   <p className="mt-2 text-sm leading-6 text-ink-2 sm:text-base">
-                    Answer all {questions.length} questions to receive your skill level and course
-                    recommendation.
+                    {t('marketing.assessTakeIntro', { count: String(questions.length) })}
                   </p>
                 </div>
 
                 <dl className="grid min-w-full grid-cols-3 gap-3 sm:min-w-[320px] sm:gap-4">
-                  <MetricCard label="Questions" value={String(questions.length)} />
-                  <MetricCard label="Answered" value={String(answeredCount)} accent />
-                  <MetricCard label="Progress" value={`${progressPercent}%`} />
+                  <MetricCard label={t('marketing.assessMetricQuestions')} value={String(questions.length)} />
+                  <MetricCard label={t('marketing.assessMetricAnswered')} value={String(answeredCount)} accent />
+                  <MetricCard label={t('marketing.assessMetricProgress')} value={`${progressPercent}%`} />
                 </dl>
               </div>
 
               <div className="mt-6">
                 <div className="mb-2 flex items-center justify-between text-xs font-medium text-ink-2 sm:text-sm">
                   <span>
-                    Section {page + 1} of {totalPages}
+                    {t('marketing.assessSectionOf', {
+                      current: String(page + 1),
+                      total: String(totalPages),
+                    })}
                   </span>
                   <span className="tabular-nums">
-                    {answeredCount}/{questions.length} complete
+                    {t('marketing.assessCompleteCount', {
+                      answered: String(answeredCount),
+                      total: String(questions.length),
+                    })}
                   </span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-line">
@@ -161,7 +169,7 @@ export function PaginatedSkillAssessment({
                       step > page && 'cursor-not-allowed opacity-45',
                     )}
                   >
-                    Section {step + 1}
+                    {t('marketing.assessSectionN', { n: String(step + 1) })}
                     {done && !active ? <Check className="size-3.5" /> : null}
                   </button>
                 );
@@ -173,7 +181,7 @@ export function PaginatedSkillAssessment({
             <aside className="hidden lg:block">
               <div className="sticky top-24 rounded-2xl border border-line bg-bg-elev p-4 shadow-card">
                 <p className="text-xs font-semibold uppercase tracking-wider text-ink-3">
-                  Question map
+                  {t('marketing.assessQuestionMap')}
                 </p>
                 <div className="mt-3 grid grid-cols-5 gap-2">
                   {questions.map((_, index) => {
@@ -204,7 +212,7 @@ export function PaginatedSkillAssessment({
                 </div>
                 <p className="mt-4 flex items-center gap-2 text-xs text-ink-3">
                   <ClipboardList className="size-3.5" />
-                  {PAGE_SIZE} questions per section
+                  {t('marketing.assessQuestionsPerSection', { count: String(PAGE_SIZE) })}
                 </p>
               </div>
             </aside>
@@ -224,7 +232,7 @@ export function PaginatedSkillAssessment({
                   >
                     <div className="border-b border-line bg-bg-soft/40 px-5 py-4 sm:px-6">
                       <p className="text-xs font-semibold uppercase tracking-wider text-primary">
-                        Question {i + 1}
+                        {t('marketing.assessQuestionN', { n: String(i + 1) })}
                       </p>
                       <h2 className="mt-2 text-lg font-semibold leading-8 text-ink sm:text-xl">
                         {q.question}
@@ -233,7 +241,7 @@ export function PaginatedSkillAssessment({
 
                     {q.options ? (
                       <fieldset className="px-5 py-5 sm:px-6 sm:py-6">
-                        <legend className="sr-only">Select one answer</legend>
+                        <legend className="sr-only">{t('marketing.assessSelectOneAnswer')}</legend>
                         <div className="flex flex-col gap-2.5">
                           {q.options.map((opt, optIndex) => {
                             const selected = answers[i] === opt;
@@ -299,8 +307,8 @@ export function PaginatedSkillAssessment({
                 disabled={page === 0 || submitting}
                 className="rounded-xl px-5"
               >
-                <ArrowLeft className="size-4" />
-                Previous
+                <ArrowLeft className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+                {t('marketing.assessPrevious')}
               </Button>
 
               <Button
@@ -313,9 +321,9 @@ export function PaginatedSkillAssessment({
                 ) : isLastPage ? (
                   <Send className="size-4" />
                 ) : (
-                  <ArrowRight className="size-4" />
+                  <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
                 )}
-                {isLastPage ? 'Submit assessment' : 'Continue'}
+                {isLastPage ? t('marketing.assessSubmit') : t('marketing.assessContinue')}
               </Button>
             </div>
           </div>

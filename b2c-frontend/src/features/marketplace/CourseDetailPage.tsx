@@ -12,6 +12,7 @@ import {
 } from '@/src/features/marketplace/MarketplaceCourseDetailPage';
 import { useMarketplaceCourse } from '@/src/features/marketplace';
 import { ApiError } from '@/src/infrastructure/apiClient';
+import { useTranslation } from '@/src/i18n';
 
 function CourseDetailLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -26,6 +27,7 @@ function CourseDetailLayout({ children }: { children: React.ReactNode }) {
 }
 
 export function CourseDetailPage({ courseId }: { courseId: string }) {
+  const { t } = useTranslation();
   const hydrated = useAuthHydrated();
   const marketplaceQ = useMarketplaceCourse(courseId, { enabled: hydrated });
 
@@ -52,8 +54,8 @@ export function CourseDetailPage({ courseId }: { courseId: string }) {
     return (
       <CourseDetailLayout>
         <div className="px-4 py-20 text-center sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold text-ink">Could not load course</h1>
-          <p className="mt-2 text-sm text-ink-2">Please try again in a moment.</p>
+          <h1 className="text-2xl font-bold text-ink">{t('marketplace.loadError')}</h1>
+          <p className="mt-2 text-sm text-ink-2">{t('marketplace.loadErrorHint')}</p>
         </div>
       </CourseDetailLayout>
     );
@@ -62,12 +64,10 @@ export function CourseDetailPage({ courseId }: { courseId: string }) {
   return (
     <CourseDetailLayout>
       <div className="px-4 py-20 text-center sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold text-ink">Course not found</h1>
-        <p className="mt-2 text-sm text-ink-2">
-          This course may be unavailable or you may not have access yet.
-        </p>
+        <h1 className="text-2xl font-bold text-ink">{t('marketplace.notFound')}</h1>
+        <p className="mt-2 text-sm text-ink-2">{t('marketplace.notFoundDesc')}</p>
         <Link href={marketplaceCatalogPath()} className="mt-6 inline-block">
-          <Button variant="soft">Browse courses</Button>
+          <Button variant="soft">{t('marketplace.browseCourses')}</Button>
         </Link>
       </div>
     </CourseDetailLayout>

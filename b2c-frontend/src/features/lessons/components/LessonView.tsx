@@ -25,6 +25,7 @@ import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { ApiError } from '@/src/infrastructure/apiClient';
+import { useTranslation } from '@/src/i18n';
 import { LessonContentBody } from '@/src/features/lessons/components/LessonContentBody';
 import {
   LessonContentEditor,
@@ -41,6 +42,7 @@ function prettyKey(key: string): string {
 }
 
 export function LessonView({ lessonId }: { lessonId: string }) {
+  const { t } = useTranslation();
   const lessonQ = useLesson(lessonId);
   const courseId = lessonQ.data?.lesson.courseId ?? null;
   const instructorCourseId = lessonQ.data?.instructorCourseId ?? null;
@@ -88,7 +90,9 @@ export function LessonView({ lessonId }: { lessonId: string }) {
       ? learnerCoursePath(courseId)
       : myCoursesPath();
 
-  const backLabel = canEditContent ? 'Back to course editor' : (nav.moduleTitle ?? 'Back to course');
+  const backLabel = canEditContent
+    ? t('player.backToCourseEditor')
+    : (nav.moduleTitle ?? t('player.backToCourse'));
 
   if (lessonQ.isLoading) {
     return (
@@ -104,11 +108,11 @@ export function LessonView({ lessonId }: { lessonId: string }) {
     return (
       <Shell>
         <Link href="/my-courses" className="text-sm font-medium text-ink-2 hover:text-primary">
-          <ArrowLeft className="mr-1 inline size-4" /> All courses
+          <ArrowLeft className="mr-1 inline size-4" /> {t('player.allCourses')}
         </Link>
         <div className="mt-8 rounded-lg border border-line bg-bg-elev p-10 text-center">
-          <h1 className="text-xl font-bold">Lesson not found</h1>
-          <p className="mt-2 text-sm text-ink-2">It may have been removed, or the link is wrong.</p>
+          <h1 className="text-xl font-bold">{t('player.lessonNotFound')}</h1>
+          <p className="mt-2 text-sm text-ink-2">{t('player.linkWrong')}</p>
         </div>
       </Shell>
     );
@@ -149,7 +153,7 @@ export function LessonView({ lessonId }: { lessonId: string }) {
         },
         onError: (error) =>
           setEditError(
-            error instanceof ApiError ? error.message : 'Could not save lesson content.',
+            error instanceof ApiError ? error.message : t('player.saveLessonError'),
           ),
       },
     );
@@ -177,7 +181,7 @@ export function LessonView({ lessonId }: { lessonId: string }) {
             }}
           >
             <Pencil className="size-4" />
-            {isEditing ? 'Preview' : 'Edit content'}
+            {isEditing ? t('player.preview') : t('player.editContent')}
           </Button>
         ) : null}
       </div>
@@ -186,16 +190,19 @@ export function LessonView({ lessonId }: { lessonId: string }) {
         <div className="border-b border-line bg-gradient-to-r from-primary/[0.08] via-transparent to-transparent px-6 py-5 sm:px-8">
           <div className="flex flex-wrap items-center gap-2">
             {canEditContent ? (
-              <Badge variant="primary">Instructor preview</Badge>
+              <Badge variant="primary">{t('player.instructorPreview')}</Badge>
             ) : null}
             {nav.position ? (
               <Badge variant="default">
-                Lesson {nav.position.n} of {nav.position.total}
+                {t('player.lessonOf', {
+                  current: String(nav.position.n),
+                  total: String(nav.position.total),
+                })}
               </Badge>
             ) : null}
             {isCompleted ? (
               <span className="inline-flex items-center gap-1 text-xs font-semibold text-good">
-                <CheckCircle2 className="size-4" /> Completed
+                <CheckCircle2 className="size-4" /> {t('player.completed')}
               </span>
             ) : null}
             {labMeta ? <Badge variant="default">{labMeta.label}</Badge> : null}
@@ -216,24 +223,26 @@ export function LessonView({ lessonId }: { lessonId: string }) {
       {justCompleted ? (
         <div className="mt-6 rounded-lg border border-good/40 bg-good-soft p-5">
           <div className="flex items-center gap-2 font-semibold text-good">
-            <CheckCircle2 className="size-5" /> Lesson complete!
+            <CheckCircle2 className="size-5" /> {t('player.lessonComplete')}
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
             {justCompleted.streak ? (
               <span className="text-ink-2">
-                🔥 <span className="font-semibold text-ink">{justCompleted.streak.current}-day</span>{' '}
-                streak
+                🔥{' '}
+                <span className="font-semibold text-ink">
+                  {t('player.dayStreak', { count: String(justCompleted.streak.current) })}
+                </span>
               </span>
             ) : null}
             <span className="text-ink-2">
-              Course progress:{' '}
+              {t('player.courseProgress')}{' '}
               <span className="font-semibold text-ink">{justCompleted.course.progressPercent}%</span>
             </span>
           </div>
           {justCompleted.achievements.length > 0 ? (
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                <Trophy className="size-4" /> Unlocked:
+                <Trophy className="size-4" /> {t('player.unlocked')}
               </span>
               {justCompleted.achievements.map((a) => (
                 <Badge key={a} variant="primary">
@@ -262,9 +271,7 @@ export function LessonView({ lessonId }: { lessonId: string }) {
           <LessonContentBody
             content={lesson.content}
             emptyMessage={
-              canEditContent
-                ? 'No content yet. Click Edit content to add sections and key takeaways.'
-                : "This lesson doesn't have written content yet."
+              canEditContent ? t('player.noContentYet') : t('player.noWrittenContent')
             }
           />
         )}
@@ -275,17 +282,15 @@ export function LessonView({ lessonId }: { lessonId: string }) {
           {!canEditContent ? (
             <>
               <div className="mt-10 border-t border-line pt-8">
-                <p className="text-sm font-medium text-ink-2">
-                  Finished reading? Optionally test your understanding or practice hands-on.
-                </p>
+                <p className="text-sm font-medium text-ink-2">{t('player.finishedReading')}</p>
               </div>
 
               <div className="mt-6 grid gap-4 lg:grid-cols-2">
                 <div className="rounded-lg border border-line bg-bg-soft p-5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <h3 className="font-semibold text-ink">Test yourself</h3>
-                      <p className="text-sm text-ink-2">Generate an AI quiz from this lesson.</p>
+                      <h3 className="font-semibold text-ink">{t('player.testYourself')}</h3>
+                      <p className="text-sm text-ink-2">{t('player.generateQuiz')}</p>
                     </div>
                     <Button
                       variant="soft"
@@ -302,15 +307,12 @@ export function LessonView({ lessonId }: { lessonId: string }) {
                       ) : (
                         <ClipboardList className="size-4" />
                       )}
-                      Take a quiz
+                      {t('player.takeAQuiz')}
                     </Button>
                   </div>
                   {quizGen.isError ? (
                     <p className="mt-3 text-sm text-bad">
-                      {formatGenerationError(
-                        quizGen.error,
-                        'Could not generate a quiz right now. Please try again.',
-                      )}
+                      {formatGenerationError(quizGen.error, t('player.generateQuizRetry'))}
                     </p>
                   ) : null}
                 </div>
@@ -318,11 +320,11 @@ export function LessonView({ lessonId }: { lessonId: string }) {
                 <div className="rounded-lg border border-line bg-bg-soft p-5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <h3 className="font-semibold text-ink">Hands-on practice</h3>
+                      <h3 className="font-semibold text-ink">{t('player.handsOnPractice')}</h3>
                       <p className="text-sm text-ink-2">
                         {labMeta
-                          ? `Generate an AI exercise in the ${labMeta.label.toLowerCase()}.`
-                          : 'Generate an AI exercise for this lesson.'}
+                          ? t('player.generateExerciseLab', { lab: labMeta.label.toLowerCase() })
+                          : t('player.generateExercise')}
                       </p>
                     </div>
                     <Button
@@ -341,24 +343,19 @@ export function LessonView({ lessonId }: { lessonId: string }) {
                       ) : (
                         <Wrench className="size-4" />
                       )}
-                      Start exercise
+                      {t('player.startExercise')}
                     </Button>
                   </div>
                   {exerciseGen.isError ? (
                     <p className="mt-3 text-sm text-bad">
-                      {formatGenerationError(
-                        exerciseGen.error,
-                        'Could not generate an exercise right now. Please try again.',
-                      )}
+                      {formatGenerationError(exerciseGen.error, t('player.generateExerciseRetry'))}
                     </p>
                   ) : null}
                 </div>
               </div>
 
               {completeFailed ? (
-                <p className="mt-6 text-sm text-bad">
-                  Could not save your progress. Please try again.
-                </p>
+                <p className="mt-6 text-sm text-bad">{t('player.saveProgressError')}</p>
               ) : null}
             </>
           ) : null}
@@ -367,7 +364,7 @@ export function LessonView({ lessonId }: { lessonId: string }) {
             {nav.prev ? (
               <Link href={`/lesson/${nav.prev.id}`}>
                 <Button variant="ghost" size="sm" className="rounded-lg">
-                  <ArrowLeft className="size-4" /> Previous
+                  <ArrowLeft className="size-4" /> {t('player.previous')}
                 </Button>
               </Link>
             ) : (
@@ -386,13 +383,13 @@ export function LessonView({ lessonId }: { lessonId: string }) {
                   ) : (
                     <Check className="size-4" />
                   )}
-                  Mark as complete
+                  {t('player.markComplete')}
                 </Button>
               ) : null}
               {nav.next ? (
                 <Link href={`/lesson/${nav.next.id}`}>
                   <Button variant={done ? 'primary' : 'soft'} className="rounded-lg">
-                    Next lesson <ArrowRight className="size-4" />
+                    {t('player.nextLesson')} <ArrowRight className="size-4" />
                   </Button>
                 </Link>
               ) : (
@@ -400,7 +397,7 @@ export function LessonView({ lessonId }: { lessonId: string }) {
                 courseId && (
                   <Link href={backHref}>
                     <Button variant="primary" className="rounded-lg">
-                      Back to course
+                      {t('player.backToCourse')}
                     </Button>
                   </Link>
                 )

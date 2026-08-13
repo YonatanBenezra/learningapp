@@ -25,6 +25,15 @@ export const GUEST_SESSION_KEY = 'bina-guest-session-id';
 export const ASSESSMENT_SEEN_KEY = 'bina-skill-assessment-seen';
 export const pendingAnswersKey = (id: string) => `bina-skill-assessment-pending-${id}`;
 
+export function markAssessmentPromptSeen() {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(ASSESSMENT_SEEN_KEY, '1');
+  } catch {
+    /* ignore */
+  }
+}
+
 export function getGuestSessionId(): string {
   if (typeof window === 'undefined') return '';
   let id = localStorage.getItem(GUEST_SESSION_KEY);

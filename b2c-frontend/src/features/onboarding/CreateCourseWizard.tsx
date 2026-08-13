@@ -43,12 +43,17 @@ import { useMe } from '@/src/features/auth';
 import { useAuthStore } from '@/src/store/authStore';
 import { activeCourseLimitForTier, MIN_COURSE_TOPICS, topicLimitForTier } from '@/src/constants/tierLimits';
 import { cn } from '@/src/lib/utils';
-
-const STEPS = [
-  { id: 1, label: 'Subject & topics', hint: 'Define your learning focus' },
-  { id: 2, label: 'Skill level', hint: 'Set course difficulty' },
-  { id: 3, label: 'Review & generate', hint: 'Confirm and submit' },
-] as const;
+import {
+  useTranslation,
+  useIsRtl,
+  useCreateCourseSteps,
+  useCreateCourseLevels,
+  useCreateCoursePhases,
+  useCreateCourseSubjectLabel,
+  useSkillLevelCopy,
+  useCourseLevelLabel,
+  useCategoryLabel,
+} from '@/src/i18n';
 
 const PRESET_SUBJECTS: {
   name: string;
@@ -126,33 +131,18 @@ const PRESET_SUBJECTS: {
 
 const PRESET_SUBJECT_NAMES = new Set(PRESET_SUBJECTS.map((subject) => subject.name));
 
-const LEVELS: { value: CourseLevel; title: string; desc: string; badge: string }[] = [
-  {
-    value: 'beginner',
-    title: 'Beginner',
-    desc: 'Foundational concepts with guided progression.',
-    badge: 'Starter track',
-  },
-  {
-    value: 'intermediate',
-    title: 'Intermediate',
-    desc: 'Build on existing knowledge with applied modules.',
-    badge: 'Professional track',
-  },
-  {
-    value: 'advanced',
-    title: 'Advanced',
-    desc: 'In-depth coverage for experienced learners.',
-    badge: 'Expert track',
-  },
-];
-
 const ACTIVE_STATUSES = new Set(['generating', 'ready', 'completed']);
+
+type WizardStep = ReturnType<typeof useCreateCourseSteps>[number];
 
 export function CreateCourseWizard() {
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
+  const steps = useCreateCourseSteps();
   const autoStart = searchParams.get('auto') === '1';
   const prefill = readLearningPathPrefill();
+  const skillLevelCopy = useSkillLevelCopy(prefill?.skillLevel ?? 'Beginner');
 
   const [step, setStep] = useState(1);
   const [category, setCategory] = useState(prefill?.category ?? '');
@@ -254,8 +244,11 @@ export function CreateCourseWizard() {
     return (
       <CreateCoursePageShell centered>
         <StatusPanel
-          title="Creating your personalized course"
-          description={`${prefill.topicLabel} · ${prefill.skillLevel} track — generating modules from your assessment results.`}
+          title={t('subscription.creatingPersonalized')}
+          description={t('subscription.autoStartDesc', {
+            topic: prefill.topicLabel,
+            level: skillLevelCopy.level,
+          })}
           topicLabel={prefill.topicLabel}
         />
       </CreateCoursePageShell>
@@ -266,7 +259,7 @@ export function CreateCourseWizard() {
     category.trim().length > 0 &&
     topics.length >= MIN_COURSE_TOPICS &&
     (maxTopics === null || topics.length <= maxTopics);
-  const progress = Math.round((step / STEPS.length) * 100);
+  const progress = Math.round((step / steps.length) * 100);
   const errorMsg = create.error instanceof ApiError ? create.error.message : null;
 
   return (
@@ -277,12 +270,10 @@ export function CreateCourseWizard() {
             href="/my-courses"
             className="mb-3 inline-flex items-center gap-1.5 text-sm text-ink-2 transition hover:text-primary"
           >
-            <ArrowLeft className="size-4" /> My courses
+            <ArrowLeft className={isRtl ? 'size-4 rtl-flip' : 'size-4'} /> {t('createCourse.backToCourses')}
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">Create course</h1>
-          <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">
-            Define your subject, topics, and skill level — LabPath will generate a full learning path.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{t('createCourse.title')}</h1>
+          <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">{t('createCourse.subtitle')}</p>
         </div>
         <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-line bg-bg-soft text-primary">
           <Sparkles className="size-5" />
@@ -290,33 +281,36 @@ export function CreateCourseWizard() {
       </div>
 
       {prefill ? (
-        <NoticeBanner tone="primary" title="Based on your skill assessment">
-          {prefill.topicLabel} · {prefill.skillLevel} — course details have been pre-filled. Review
-          and adjust before generating.
+        <NoticeBanner tone="primary" title={t('createCourse.prefillTitle')}>
+          {t('createCourse.prefillBody', {
+            topic: prefill.topicLabel,
+            level: skillLevelCopy.level,
+          })}
         </NoticeBanner>
       ) : null}
 
       {atCourseLimit ? (
-        <NoticeBanner tone="warn" title="Active course limit reached">
-          Your {tier} plan allows {activeCourseLimit ?? 'unlimited'} active course
-          {activeCourseLimit === 1 ? '' : 's'}.{' '}
+        <NoticeBanner tone="warn" title={t('createCourse.limitTitle')}>
+          {activeCourseLimit === 1
+            ? t('createCourse.limitIntroOne', { tier })
+            : t('createCourse.limitIntroMany', { tier, limit: String(activeCourseLimit ?? '') })}{' '}
           <Link href="/my-courses" className="font-semibold text-primary hover:underline">
-            Manage existing courses
+            {t('createCourse.manageCourses')}
           </Link>{' '}
-          or{' '}
+          {t('createCourse.limitOr')}{' '}
           <Link href="/upgrade" className="font-semibold text-primary hover:underline">
-            upgrade your plan
+            {t('createCourse.upgradePlan')}
           </Link>{' '}
-          to create another.
+          {t('createCourse.limitOutro')}
         </NoticeBanner>
       ) : null}
 
       <section className="mt-6 min-w-0 overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
         <div className="border-b border-line px-5 py-4 sm:px-6">
           <div className="mb-4 flex justify-end">
-            <StepTabs step={step} />
+            <StepTabs step={step} steps={steps} />
           </div>
-          <StepProgress step={step} progress={progress} />
+          <StepProgress step={step} progress={progress} steps={steps} />
         </div>
 
         <div className="px-5 py-6 sm:px-6 sm:py-8">
@@ -357,7 +351,7 @@ export function CreateCourseWizard() {
         <div className="flex flex-col-reverse gap-3 border-t border-line bg-bg-soft px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           {step > 1 ? (
             <Button variant="outline" className="rounded-full px-5" onClick={() => setStep((s) => s - 1)}>
-              <ArrowLeft className="size-4" /> Back
+              <ArrowLeft className={isRtl ? 'size-4 rtl-flip' : 'size-4'} /> {t('createCourse.back')}
             </Button>
           ) : (
             <div className="hidden sm:block" />
@@ -369,7 +363,7 @@ export function CreateCourseWizard() {
               onClick={() => setStep((s) => s + 1)}
               className="rounded-full px-5 sm:min-w-40"
             >
-              Continue <ArrowRight className="size-4" />
+              {t('createCourse.continue')} <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
             </Button>
           ) : (
             <Button
@@ -378,7 +372,7 @@ export function CreateCourseWizard() {
               disabled={!level || atCourseLimit}
               className="rounded-full px-5 sm:min-w-48"
             >
-              <Sparkles className="size-4" /> Generate course
+              <Sparkles className="size-4" /> {t('createCourse.generate')}
             </Button>
           )}
         </div>
@@ -406,30 +400,12 @@ function CreateCoursePageShell({
   );
 }
 
-const COURSE_GENERATION_PHASES = [
-  {
-    label: 'Structuring modules',
-    detail: 'Organizing topics into a clear learning path',
-  },
-  {
-    label: 'Writing lesson content',
-    detail: 'Generating explanations, examples, and summaries',
-  },
-  {
-    label: 'Preparing quizzes and assessments',
-    detail: 'Building knowledge checks for each module',
-  },
-  {
-    label: 'Finalizing course structure',
-    detail: 'Linking lessons, labs, exams, and progress tracking',
-  },
-] as const;
-
 function GenerationProgressBar({ progress }: { progress: number }) {
+  const { t } = useTranslation();
   return (
     <div className="mt-6">
       <div className="mb-2 flex items-center justify-between text-xs font-medium text-ink-3">
-        <span>Generation progress</span>
+        <span>{t('createCourse.genProgress')}</span>
         <span className="tabular-nums text-primary">{progress}%</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-line">
@@ -451,13 +427,14 @@ function GenerationHero({
   description: string;
   progress?: number;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="border-b border-line px-5 py-6 sm:px-8 sm:py-8">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
           <p className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
             <Sparkles className="size-4" />
-            Course generation
+            {t('createCourse.genBadge')}
           </p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{title}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-7 text-ink-2 sm:text-base">{description}</p>
@@ -473,9 +450,10 @@ function GenerationHero({
 }
 
 function GenerationPhaseList({ activePhase }: { activePhase: number }) {
+  const phases = useCreateCoursePhases();
   return (
     <ul className="divide-y divide-line border-b border-line lg:border-b-0 lg:border-r">
-      {COURSE_GENERATION_PHASES.map((phase, index) => {
+      {phases.map((phase, index) => {
         const done = index < activePhase;
         const active = index === activePhase;
 
@@ -527,31 +505,35 @@ function GenerationExpectations({
   level?: string;
   topics?: string[];
 }) {
+  const { t } = useTranslation();
+  const levelLabel = useCourseLevelLabel((level ?? 'beginner') as CourseLevel);
+  const categoryLabel = useCategoryLabel(category ?? '');
+
   return (
     <aside className="bg-bg-soft px-5 py-6 sm:px-6 sm:py-7">
-      <p className="text-sm font-medium text-ink">What we&apos;re building</p>
+      <p className="text-sm font-medium text-ink">{t('createCourse.buildingTitle')}</p>
       <dl className="mt-4 space-y-4 text-sm">
         {courseTitle ? (
           <div>
-            <dt className="text-ink-3">Course</dt>
+            <dt className="text-ink-3">{t('createCourse.buildingCourse')}</dt>
             <dd className="mt-1 font-medium text-ink">{courseTitle}</dd>
           </div>
         ) : null}
         {category ? (
           <div>
-            <dt className="text-ink-3">Subject</dt>
-            <dd className="mt-1 font-medium text-ink">{category}</dd>
+            <dt className="text-ink-3">{t('createCourse.buildingSubject')}</dt>
+            <dd className="mt-1 font-medium text-ink">{categoryLabel || category}</dd>
           </div>
         ) : null}
         {level ? (
           <div>
-            <dt className="text-ink-3">Skill level</dt>
-            <dd className="mt-1 capitalize text-ink-2">{level}</dd>
+            <dt className="text-ink-3">{t('createCourse.buildingSkillLevel')}</dt>
+            <dd className="mt-1 text-ink-2">{levelLabel}</dd>
           </div>
         ) : null}
         {topics && topics.length > 0 ? (
           <div>
-            <dt className="text-ink-3">Topics</dt>
+            <dt className="text-ink-3">{t('createCourse.buildingTopics')}</dt>
             <dd className="mt-2 flex flex-wrap gap-2">
               {topics.slice(0, 4).map((topic) => (
                 <span
@@ -565,20 +547,20 @@ function GenerationExpectations({
           </div>
         ) : null}
         <div>
-          <dt className="text-ink-3">Estimated time</dt>
+          <dt className="text-ink-3">{t('createCourse.buildingEstimated')}</dt>
           <dd className="mt-1 flex items-center gap-1.5 text-ink-2">
             <Clock className="size-3.5 text-primary" />
-            About 10–15 seconds
+            {t('createCourse.buildingEstimatedValue')}
           </dd>
         </div>
         <div>
-          <dt className="text-ink-3">Includes</dt>
+          <dt className="text-ink-3">{t('createCourse.buildingIncludes')}</dt>
           <dd className="mt-2 space-y-2 text-ink-2">
             <span className="flex items-center gap-2">
-              <BookOpen className="size-3.5 shrink-0 text-primary" /> Structured modules & lessons
+              <BookOpen className="size-3.5 shrink-0 text-primary" /> {t('createCourse.buildingModules')}
             </span>
             <span className="flex items-center gap-2">
-              <GraduationCap className="size-3.5 shrink-0 text-primary" /> Quizzes and final exam
+              <GraduationCap className="size-3.5 shrink-0 text-primary" /> {t('createCourse.buildingQuizzes')}
             </span>
           </dd>
         </div>
@@ -611,10 +593,10 @@ function NoticeBanner({
   );
 }
 
-function StepTabs({ step }: { step: number }) {
+function StepTabs({ step, steps }: { step: number; steps: WizardStep[] }) {
   return (
     <div className="flex items-center gap-1 overflow-x-auto rounded-full border border-line bg-bg-soft p-1">
-      {STEPS.map((s) => {
+      {steps.map((s) => {
         const active = s.id === step;
         const done = s.id < step;
         return (
@@ -644,14 +626,27 @@ function StepTabs({ step }: { step: number }) {
   );
 }
 
-function StepProgress({ step, progress }: { step: number; progress: number }) {
-  const current = STEPS[step - 1];
+function StepProgress({
+  step,
+  progress,
+  steps,
+}: {
+  step: number;
+  progress: number;
+  steps: WizardStep[];
+}) {
+  const { t } = useTranslation();
+  const current = steps[step - 1];
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <span className="font-medium text-ink">{current.label}</span>
         <span className="text-ink-3">
-          Step {step} of {STEPS.length} · {progress}%
+          {t('createCourse.stepProgress', {
+            step: String(step),
+            total: String(steps.length),
+            progress: String(progress),
+          })}
         </span>
       </div>
       <div className="h-1.5 overflow-hidden rounded-full bg-line">
@@ -671,6 +666,40 @@ function StepHeading({ title, description }: { title: string; description: strin
       <h2 className="text-lg font-semibold text-ink">{title}</h2>
       <p className="mt-1 text-sm leading-6 text-ink-2">{description}</p>
     </div>
+  );
+}
+
+function PresetSubjectButton({
+  name,
+  icon: Icon,
+  iconBg,
+  iconColor,
+  selected,
+  onSelect,
+}: {
+  name: string;
+  icon: LucideIcon;
+  iconBg: string;
+  iconColor: string;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const label = useCreateCourseSubjectLabel(name);
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={cn(
+        'flex items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition-colors',
+        selected ? 'border-primary bg-primary-soft/40' : 'border-line bg-bg-soft hover:border-primary/30',
+      )}
+    >
+      <span className={cn('grid size-9 shrink-0 place-items-center rounded-lg', iconBg)}>
+        <Icon className={cn('size-4', iconColor)} />
+      </span>
+      <span className="font-medium text-ink">{label}</span>
+    </button>
   );
 }
 
@@ -697,6 +726,7 @@ function StepSubjectTopics({
   maxTopics: number | null;
   tier: string;
 }) {
+  const { t } = useTranslation();
   const [otherSelected, setOtherSelected] = useState(
     () => category.length > 0 && !PRESET_SUBJECT_NAMES.has(category),
   );
@@ -718,34 +748,24 @@ function StepSubjectTopics({
   return (
     <div className="space-y-8">
       <StepHeading
-        title="Subject area"
-        description="Choose a popular subject or select Other to enter your own."
+        title={t('createCourse.subjectTitle')}
+        description={t('createCourse.subjectDesc')}
       />
 
       <div>
-        <p className="text-sm font-medium text-ink-2">Popular subjects</p>
+        <p className="text-sm font-medium text-ink-2">{t('createCourse.popularSubjects')}</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {PRESET_SUBJECTS.map(({ name, icon: Icon, iconBg, iconColor }) => {
-            const selected = !otherSelected && category === name;
-            return (
-              <button
-                key={name}
-                type="button"
-                onClick={() => selectPreset(name)}
-                className={cn(
-                  'flex items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition-colors',
-                  selected
-                    ? 'border-primary bg-primary-soft/40'
-                    : 'border-line bg-bg-soft hover:border-primary/30',
-                )}
-              >
-                <span className={cn('grid size-9 shrink-0 place-items-center rounded-lg', iconBg)}>
-                  <Icon className={cn('size-4', iconColor)} />
-                </span>
-                <span className="font-medium text-ink">{name}</span>
-              </button>
-            );
-          })}
+          {PRESET_SUBJECTS.map(({ name, icon: Icon, iconBg, iconColor }) => (
+            <PresetSubjectButton
+              key={name}
+              name={name}
+              icon={Icon}
+              iconBg={iconBg}
+              iconColor={iconColor}
+              selected={!otherSelected && category === name}
+              onSelect={() => selectPreset(name)}
+            />
+          ))}
 
           <button
             type="button"
@@ -760,24 +780,24 @@ function StepSubjectTopics({
             <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-bg-elev">
               <PenLine className="size-4 text-ink-2" />
             </span>
-            <span className="font-medium text-ink">Other</span>
+            <span className="font-medium text-ink">{t('createCourse.other')}</span>
           </button>
         </div>
 
         {otherSelected ? (
           <div className="mt-4">
             <Label htmlFor="custom-category" className="text-sm font-medium text-ink">
-              Custom subject
+              {t('createCourse.customSubject')}
             </Label>
             <Input
               id="custom-category"
-              placeholder="e.g. Ethical hacking, Blockchain, UI/UX design"
+              placeholder={t('createCourse.customSubjectPlaceholder')}
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="mt-2"
               autoFocus
             />
-            <p className="mt-2 text-sm text-ink-3">Enter the subject area for your course.</p>
+            <p className="mt-2 text-sm text-ink-3">{t('createCourse.customSubjectHint')}</p>
           </div>
         ) : null}
       </div>
@@ -786,12 +806,16 @@ function StepSubjectTopics({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <Label htmlFor="topics" className="text-sm font-medium text-ink">
-              Topics
+              {t('createCourse.topics')}
             </Label>
             <p className="mt-1 text-sm text-ink-2">
-              Add at least {minTopics} topics
-              {maxTopics !== null ? ` (up to ${maxTopics} on ${tier} plan)` : ''}. Press Enter after
-              each topic.
+              {t('createCourse.topicsDesc', {
+                min: String(minTopics),
+                limit:
+                  maxTopics !== null
+                    ? t('createCourse.topicsLimit', { max: String(maxTopics), tier })
+                    : '',
+              })}
             </p>
           </div>
           <span
@@ -802,15 +826,17 @@ function StepSubjectTopics({
               !belowTopicMin && !atTopicMax && 'border-line bg-bg-soft text-ink-2',
             )}
           >
-            {topics.length}
-            {maxTopics !== null ? ` / ${maxTopics}` : ''} topics
+            {t('createCourse.topicsCount', {
+              count: String(topics.length),
+              max: maxTopics !== null ? t('createCourse.topicsMax', { max: String(maxTopics) }) : '',
+            })}
           </span>
         </div>
 
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <Input
             id="topics"
-            placeholder="e.g. Network security fundamentals"
+            placeholder={t('createCourse.topicPlaceholder')}
             value={topicInput}
             onChange={(e) => setTopicInput(e.target.value)}
             disabled={atTopicMax}
@@ -828,34 +854,31 @@ function StepSubjectTopics({
             disabled={!topicInput.trim() || atTopicMax}
             className="rounded-full px-5 sm:min-w-24"
           >
-            Add
+            {t('createCourse.addTopic')}
           </Button>
         </div>
 
         {atTopicMax && maxTopics !== null ? (
           <p className="mt-3 text-sm text-ink-2">
-            You&apos;ve reached the {maxTopics}-topic limit on the {tier} plan.{' '}
-            {tier === 'free' ? (
-              <Link href="/upgrade" className="font-medium text-primary hover:underline">
-                Upgrade your plan
-              </Link>
-            ) : null}{' '}
-            to add more topics.
+            {t('createCourse.topicLimitReached', {
+              max: String(maxTopics),
+              tier,
+            })}
           </p>
         ) : null}
 
         {topics.length > 0 ? (
           <div className="mt-4 flex flex-wrap gap-2">
-            {topics.map((t) => (
+            {topics.map((topic) => (
               <span
-                key={t}
+                key={topic}
                 className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-soft px-3 py-1 text-sm text-primary"
               >
-                {t}
+                {topic}
                 <button
                   type="button"
-                  onClick={() => setTopics((prev) => prev.filter((x) => x !== t))}
-                  aria-label={`Remove ${t}`}
+                  onClick={() => setTopics((prev) => prev.filter((x) => x !== topic))}
+                  aria-label={t('createCourse.removeTopic', { topic })}
                   className="text-primary/70 hover:text-primary"
                 >
                   <X className="size-3.5" />
@@ -865,14 +888,17 @@ function StepSubjectTopics({
           </div>
         ) : (
           <p className="mt-4 rounded-xl border border-dashed border-line px-4 py-5 text-center text-sm text-ink-3">
-            Add at least {minTopics} topics to continue.
+            {t('createCourse.topicsMinEmpty', { min: String(minTopics) })}
           </p>
         )}
 
         {topics.length > 0 && belowTopicMin ? (
           <p className="mt-3 text-sm text-warn">
-            Add {topicsRemaining} more topic{topicsRemaining === 1 ? '' : 's'} to reach the minimum
-            of {minTopics}.
+            {t('createCourse.topicsMinRemaining', {
+              remaining: String(topicsRemaining),
+              plural: topicsRemaining === 1 ? '' : 's',
+              min: String(minTopics),
+            })}
           </p>
         ) : null}
       </div>
@@ -887,14 +913,14 @@ function StepSkillLevel({
   level: CourseLevel | null;
   setLevel: (v: CourseLevel) => void;
 }) {
+  const { t } = useTranslation();
+  const levels = useCreateCourseLevels();
+
   return (
     <div>
-      <StepHeading
-        title="Skill level"
-        description="Choose the difficulty that best matches your current experience."
-      />
+      <StepHeading title={t('createCourse.skillTitle')} description={t('createCourse.skillDesc')} />
       <div className="grid gap-3 sm:grid-cols-3">
-        {LEVELS.map((l) => {
+        {levels.map((l) => {
           const selected = level === l.value;
           return (
             <button
@@ -956,20 +982,21 @@ function StepReview({
   errorMsg: string | null;
   is403: boolean;
 }) {
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel(category);
+  const levelLabel = level ? useCourseLevelLabel(level) : '—';
+
   return (
     <div className="space-y-8">
-      <StepHeading
-        title="Review configuration"
-        description="Confirm your selections and adjust optional learning preferences."
-      />
+      <StepHeading title={t('createCourse.reviewTitle')} description={t('createCourse.reviewDesc')} />
 
       <dl className="divide-y divide-line overflow-hidden rounded-xl border border-line text-sm">
         <div className="grid gap-1 px-4 py-3 sm:grid-cols-[120px_1fr] sm:gap-4">
-          <dt className="font-medium text-ink-3">Subject</dt>
-          <dd className="text-ink">{category || '—'}</dd>
+          <dt className="font-medium text-ink-3">{t('createCourse.reviewSubject')}</dt>
+          <dd className="text-ink">{category ? categoryLabel : '—'}</dd>
         </div>
         <div className="grid gap-1 px-4 py-3 sm:grid-cols-[120px_1fr] sm:gap-4">
-          <dt className="font-medium text-ink-3">Topics</dt>
+          <dt className="font-medium text-ink-3">{t('createCourse.reviewTopics')}</dt>
           <dd>
             {topics.length ? (
               <div className="flex flex-wrap gap-2">
@@ -985,22 +1012,22 @@ function StepReview({
           </dd>
         </div>
         <div className="grid gap-1 px-4 py-3 sm:grid-cols-[120px_1fr] sm:gap-4">
-          <dt className="font-medium text-ink-3">Skill level</dt>
-          <dd className="capitalize text-ink">{level ?? '—'}</dd>
+          <dt className="font-medium text-ink-3">{t('createCourse.reviewSkillLevel')}</dt>
+          <dd className="text-ink">{levelLabel}</dd>
         </div>
       </dl>
 
       <div className="space-y-3 border-t border-line pt-6">
-        <p className="text-sm font-medium text-ink">Preferences</p>
+        <p className="text-sm font-medium text-ink">{t('createCourse.preferences')}</p>
         <PreferenceCard
-          title="Visual lesson content"
-          description="Include diagrams and structured visuals where applicable."
+          title={t('createCourse.visualContent')}
+          description={t('createCourse.visualContentDesc')}
           checked={visualsPreferred}
           onChange={setVisualsPreferred}
         />
         <PreferenceCard
-          title="Daily learning reminder"
-          description="Receive a notification to maintain your learning streak."
+          title={t('createCourse.dailyReminder')}
+          description={t('createCourse.dailyReminderDesc')}
           checked={dailyNotification}
           onChange={setDailyNotification}
         />
@@ -1013,11 +1040,11 @@ function StepReview({
           {is403 ? (
             <>
               <Link href="/my-courses" className="font-semibold underline">
-                View your courses
+                {t('createCourse.viewCourses')}
               </Link>{' '}
-              or{' '}
+              {t('createCourse.limitOr')}{' '}
               <Link href="/upgrade" className="font-semibold underline">
-                upgrade
+                {t('createCourse.upgradeLink')}
               </Link>
               .
             </>
@@ -1072,6 +1099,8 @@ function StatusPanel({
 
 function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
   const router = useRouter();
+  const { t } = useTranslation();
+  const phases = useCreateCoursePhases();
   const { data, isError, refetch } = useCourse(id);
   const status = data?.course.status;
   const course = data?.course;
@@ -1093,22 +1122,19 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
     return () => timers.forEach(clearTimeout);
   }, [status, id]);
 
-  const progress = Math.min(
-    95,
-    Math.round(((activePhase + 1) / COURSE_GENERATION_PHASES.length) * 100),
-  );
+  const progress = Math.min(95, Math.round(((activePhase + 1) / phases.length) * 100));
 
   if (isError && !status) {
     return (
       <StatusCard
         tone="warn"
-        title="Connection interrupted"
-        description="We could not verify the course generation status. Your course may still be processing."
+        title={t('createCourse.connectionInterrupted')}
+        description={t('createCourse.connectionInterruptedDesc')}
         actions={
           <>
-            <Button onClick={() => refetch()}>Retry</Button>
+            <Button onClick={() => refetch()}>{t('common.retry')}</Button>
             <Link href="/my-courses">
-              <Button variant="outline">My courses</Button>
+              <Button variant="outline">{t('createCourse.backToCourses')}</Button>
             </Link>
           </>
         }
@@ -1120,15 +1146,13 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
     return (
       <StatusCard
         tone="bad"
-        title="Generation failed"
-        description={
-          course?.failureReason ?? 'Something went wrong while building your course.'
-        }
+        title={t('createCourse.generationFailed')}
+        description={course?.failureReason ?? t('createCourse.generationFailedDefault')}
         actions={
           <>
-            <Button onClick={onRetry}>Try again</Button>
+            <Button onClick={onRetry}>{t('createCourse.tryAgain')}</Button>
             <Link href="/my-courses">
-              <Button variant="outline">My courses</Button>
+              <Button variant="outline">{t('createCourse.backToCourses')}</Button>
             </Link>
           </>
         }
@@ -1139,11 +1163,11 @@ function GeneratingPanel({ id, onRetry }: { id: string; onRetry: () => void }) {
   return (
     <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
       <GenerationHero
-        title="Generating your course"
+        title={t('createCourse.generatingTitle')}
         description={
           course?.title
-            ? `LabPath is building "${course.title}" with modules, lessons, quizzes, and exams. You will be redirected automatically when it is ready.`
-            : 'LabPath is building modules, lessons, quizzes, and exams. This typically takes 10–15 seconds.'
+            ? t('createCourse.generatingDescNamed', { title: course.title })
+            : t('createCourse.generatingDesc')
         }
         progress={progress}
       />

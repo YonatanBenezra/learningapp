@@ -146,7 +146,7 @@ export function AdminCostsPage() {
             onClick={() => costsQ.refetch()}
           >
             <RefreshCw className="size-3.5" />
-            Refresh
+            {t('adminCommon.refresh')}
           </Button>
         </div>
       </div>

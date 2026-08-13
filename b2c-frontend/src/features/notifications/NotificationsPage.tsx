@@ -9,13 +9,13 @@ import { Skeleton } from '@/src/components/ui/skeleton';
 import { useTranslation } from '@/src/i18n';
 import type { AppNotification } from './notificationsApi';
 import {
-  channelLabel,
-  formatNotificationDate,
-  notificationBody,
   notificationTimestamp,
-  notificationTitle,
-  statusLabel,
   statusVariant,
+  useChannelLabel,
+  useFormatNotificationDate,
+  useNotificationBody,
+  useNotificationTitle,
+  useStatusLabel,
 } from './notificationDisplay';
 import { useNotifications } from './useNotifications';
 
@@ -28,6 +28,11 @@ function typeIcon(type: string): LucideIcon {
 function NotificationRow({ item }: { item: AppNotification }) {
   const Icon = typeIcon(item.type);
   const timestamp = notificationTimestamp(item);
+  const notificationTitle = useNotificationTitle();
+  const notificationBody = useNotificationBody();
+  const formatNotificationDate = useFormatNotificationDate();
+  const statusLabel = useStatusLabel();
+  const channelLabel = useChannelLabel();
 
   return (
     <article className="flex gap-4 border-b border-line px-5 py-4 last:border-b-0 sm:px-6">
@@ -76,8 +81,10 @@ export function NotificationsPage() {
           </h1>
           <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">
             {notifications.length > 0
-              ? `${notifications.length} notification${notifications.length === 1 ? '' : 's'} in your history`
-              : 'Reminders and updates from your learning activity appear here.'}
+              ? notifications.length === 1
+                ? t('notifications.historyCountOne')
+                : t('notifications.historyCountMany', { count: String(notifications.length) })
+              : t('notifications.subtitle')}
           </p>
         </div>
         <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-line bg-bg-soft text-primary">
@@ -88,7 +95,7 @@ export function NotificationsPage() {
       <section className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
         {isError ? (
           <div className="px-5 py-14 text-center sm:px-6">
-            <p className="text-sm text-ink-2">Could not load notifications.</p>
+            <p className="text-sm text-ink-2">{t('notifications.loadError')}</p>
             <Button variant="soft" className="mt-4 rounded-full px-5" onClick={() => refetch()}>
               {t('common.retry')}
             </Button>
@@ -98,14 +105,12 @@ export function NotificationsPage() {
         {!isError && notifications.length === 0 ? (
           <div className="px-5 py-14 text-center sm:px-6">
             <Bell className="mx-auto size-8 text-ink-3" />
-            <p className="mt-4 text-sm leading-6 text-ink-2">No notifications yet.</p>
-            <p className="mt-2 text-sm text-ink-3">
-              Enable daily reminders in settings to receive learning nudges by email.
-            </p>
+            <p className="mt-4 text-sm leading-6 text-ink-2">{t('notifications.empty')}</p>
+            <p className="mt-2 text-sm text-ink-3">{t('notifications.emptyHint')}</p>
             <Link href="/settings" className="mt-5 inline-block">
               <Button variant="soft" className="rounded-full px-5">
                 <Settings className="size-4" />
-                Notification settings
+                {t('notifications.settingsLink')}
               </Button>
             </Link>
           </div>
@@ -114,7 +119,9 @@ export function NotificationsPage() {
         {!isError && notifications.length > 0 ? (
           <>
             <div className="border-b border-line px-5 py-4 sm:px-6">
-              <p className="text-sm text-ink-2">Showing your latest {notifications.length} notifications</p>
+              <p className="text-sm text-ink-2">
+                {t('notifications.showingLatest', { count: String(notifications.length) })}
+              </p>
             </div>
             <div>{notifications.map((item) => (
               <NotificationRow key={item.id} item={item} />

@@ -132,7 +132,7 @@ export function AdminNotificationsPage() {
             onClick={() => notificationsQ.refetch()}
           >
             <RefreshCw className="size-3.5" />
-            Refresh
+            {t('adminCommon.refresh')}
           </Button>
         </div>
       </div>
@@ -278,7 +278,7 @@ export function AdminNotificationsPage() {
                     <th className="px-5 py-3 font-semibold sm:px-6">Type</th>
                     <th className="px-5 py-3 font-semibold sm:px-6">Subject</th>
                     <th className="px-5 py-3 font-semibold sm:px-6">Channel</th>
-                    <th className="px-5 py-3 font-semibold sm:px-6">Status</th>
+                    <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colStatus')}</th>
                     <th className="px-5 py-3 font-semibold sm:px-6">Timestamp</th>
                   </tr>
                 </thead>

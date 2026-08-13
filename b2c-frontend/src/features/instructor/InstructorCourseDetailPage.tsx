@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { useTranslation } from '@/src/i18n';
 import { Button } from '@/src/components/ui/button';
 import { Spinner } from '@/src/components/ui/spinner';
 import { formatMoney } from '@/src/domain/instructor';
@@ -15,6 +16,7 @@ import {
 } from '@/src/features/instructor/useInstructor';
 
 export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
+  const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useInstructorCourse(courseId);
   const update = useUpdateInstructorCourse(courseId);
   const publish = usePublishInstructorCourse(courseId);
@@ -45,9 +47,9 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
   if (isError || !course) {
     return (
       <div className="rounded-lg border border-line bg-bg-elev p-10 text-center">
-        <p className="font-semibold text-ink">Course not found.</p>
+        <p className="font-semibold text-ink">{t('instructor.courseNotFound')}</p>
         <Link href="/instructor/courses" className="mt-4 inline-block text-primary hover:underline">
-          Back to courses
+          {t('instructor.backToCourses')}
         </Link>
       </div>
     );
@@ -67,7 +69,7 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
       { title: title.trim(), description: description.trim(), priceCents },
       {
         onSuccess: () => setMessage('Course updated.'),
-        onError: () => setError('Could not save changes.'),
+        onError: () => setError(t('instructor.saveChangesError')),
       },
     );
   }
@@ -81,7 +83,7 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
       onSuccess: () =>
         setMessage(course.isPublished ? 'Course unpublished.' : 'Course published for sale.'),
       onError: (err) =>
-        setError(err instanceof Error ? err.message : 'Could not update publish status.'),
+        setError(err instanceof Error ? err.message : t('instructor.publishStatusError')),
     });
   }
 
@@ -202,7 +204,7 @@ export function InstructorCourseDetailPage({ courseId }: { courseId: string }) {
           <div className="flex flex-wrap gap-3">
             <Button type="submit" disabled={busy} variant="soft" className="rounded-lg">
               {update.isPending ? <Loader2 className="size-4 animate-spin" /> : null}
-              Save changes
+              {t('instructor.saveChanges')}
             </Button>
             <Button
               type="button"

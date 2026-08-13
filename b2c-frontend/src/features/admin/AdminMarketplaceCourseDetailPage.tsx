@@ -212,7 +212,7 @@ export function AdminMarketplaceCourseDetailPage({ courseId }: { courseId: strin
               onClick={() => dataQ.refetch()}
             >
               <RefreshCw className="size-3.5" />
-              Refresh
+              {t('adminCommon.refresh')}
             </Button>
             <Link
               href={`/courses/${course.id}`}

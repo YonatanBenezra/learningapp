@@ -2,20 +2,24 @@
 
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-
-interface Rule {
-  label: string;
-  test: (pw: string) => boolean;
-}
-
-const rules: Rule[] = [
-  { label: 'Minimum 8 characters', test: (pw) => pw.length >= 8 },
-  { label: 'At least one number', test: (pw) => /\d/.test(pw) },
-  { label: 'Uppercase & lowercase letters', test: (pw) => /[a-z]/.test(pw) && /[A-Z]/.test(pw) },
-  { label: 'One special character', test: (pw) => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pw) },
-];
+import { useTranslation } from '@/src/i18n';
 
 export function PasswordStrength({ password }: { password: string }) {
+  const { t } = useTranslation();
+
+  const rules = [
+    { label: t('authExtra.passwordMin8'), test: (pw: string) => pw.length >= 8 },
+    { label: t('authExtra.passwordNumber'), test: (pw: string) => /\d/.test(pw) },
+    {
+      label: t('authExtra.passwordCase'),
+      test: (pw: string) => /[a-z]/.test(pw) && /[A-Z]/.test(pw),
+    },
+    {
+      label: t('authExtra.passwordSpecial'),
+      test: (pw: string) => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pw),
+    },
+  ];
+
   if (!password) return null;
 
   const passed = rules.map((r) => r.test(password));

@@ -27,6 +27,7 @@ import { Button } from '@/src/components/ui/button';
 import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
 import { Progress } from '@/src/components/ui/progress';
 import { Skeleton } from '@/src/components/ui/skeleton';
+import { useIsRtl, useTranslation } from '@/src/i18n';
 
 interface CoursePlayerProps {
   courseId: string;
@@ -34,6 +35,8 @@ interface CoursePlayerProps {
 }
 
 export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -128,9 +131,9 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
     return (
       <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center p-6">
         <div className="rounded-xl border border-line bg-bg-elev p-8 text-center shadow-soft">
-          <p className="text-ink-2">Unable to load course structure.</p>
+          <p className="text-ink-2">{t('player.loadStructureError')}</p>
           <Button variant="soft" className="mt-4" onClick={() => structureQ.refetch()}>
-            Retry
+            {t('common.retry')}
           </Button>
         </div>
       </div>
@@ -146,17 +149,17 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
               href="/my-courses"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition hover:text-primary"
             >
-              <ArrowLeft className="size-4" /> Back to course list
+              <ArrowLeft className="size-4" /> {t('player.backToCourseList')}
             </Link>
             <nav className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-ink-3 sm:text-sm">
               <Link href="/dashboard" className="transition hover:text-primary">
                 <BrandWordmark size="sm" className="font-semibold" />
               </Link>
-              <ChevronRight className="size-3.5" />
+              <ChevronRight className={`size-3.5${isRtl ? ' rotate-180' : ''}`} />
               <Link href="/my-courses" className="transition hover:text-primary">
-                My Courses
+                {t('player.myCourses')}
               </Link>
-              <ChevronRight className="size-3.5" />
+              <ChevronRight className={`size-3.5${isRtl ? ' rotate-180' : ''}`} />
               <span className="line-clamp-1 font-medium text-ink">{course.title}</span>
             </nav>
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -170,7 +173,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
           <div className="w-full max-w-xs">
             <div className="mb-2 flex items-center justify-between text-xs">
               <span className="font-semibold uppercase tracking-[0.08em] text-ink-3">
-                Progress
+                {t('player.progress')}
               </span>
               <span className="font-semibold tabular-nums text-ink">
                 {justCompleted?.course.progressPercent ?? course.progressPercent}%
@@ -180,7 +183,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
             <div className="mt-3 flex flex-wrap gap-2">
               <Link href={learnerCourseStructurePath(courseId)}>
                 <Button variant="soft" size="sm">
-                  <Network className="size-4" /> Diagram
+                  <Network className="size-4" /> {t('player.diagram')}
                 </Button>
               </Link>
               <Button
@@ -199,7 +202,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
                 ) : (
                   <GraduationCap className="size-4" />
                 )}
-                Final exam
+                {t('player.finalExam')}
               </Button>
             </div>
           </div>
@@ -240,7 +243,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
               <div>
                 {nav.prev ? (
                   <Button variant="ghost" size="sm" onClick={() => selectLesson(nav.prev!.id)}>
-                    <ArrowLeft className="size-4" /> Previous
+                    <ArrowLeft className="size-4" /> {t('player.previous')}
                   </Button>
                 ) : (
                   <span />
@@ -258,12 +261,12 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
                     ) : (
                       <Check className="size-4" />
                     )}
-                    Mark as complete
+                    {t('player.markComplete')}
                   </Button>
                 ) : null}
 
                 {!activeLessonId && firstLessonId ? (
-                  <Button onClick={() => selectLesson(firstLessonId)}>Start first lesson</Button>
+                  <Button onClick={() => selectLesson(firstLessonId)}>{t('player.startFirstLesson')}</Button>
                 ) : null}
 
                 {nav.next ? (
@@ -271,12 +274,12 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
                     variant={lessonCompleted ? 'primary' : 'soft'}
                     onClick={() => selectLesson(nav.next!.id)}
                   >
-                    Next lesson
+                    {t('player.nextLesson')}
                     <ArrowRight className="size-4" />
                   </Button>
                 ) : lessonCompleted && !nav.next ? (
                   <Button variant="soft" onClick={() => selectLesson(null)}>
-                    Back to overview
+                    {t('player.backToOverview')}
                   </Button>
                 ) : null}
               </div>
@@ -284,7 +287,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
 
             {completeMut.isError && completeMut.variables === activeLessonId ? (
               <p className="mt-3 w-full text-sm text-bad">
-                Could not save progress. Please try again.
+                {t('player.saveProgressError')}
               </p>
             ) : null}
           </footer>
@@ -314,24 +317,23 @@ function CourseIntroPanel({
   lessonCount: number;
   onStart: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex items-center justify-center p-6 sm:p-8">
       <div className="max-w-2xl text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-          Course overview
+          {t('player.courseOverview')}
         </p>
         <h2 className="mt-3 text-2xl font-bold text-ink">{course.title}</h2>
         <p className="mt-2 text-sm text-ink-2">{course.category}</p>
         {course.topics.length > 0 ? (
           <p className="mt-4 text-sm leading-6 text-ink-3">{course.topics.join(' · ')}</p>
         ) : null}
-        <p className="mt-6 text-sm text-ink-2">
-          Select a module on the right, then choose a lesson to begin. Your content will appear
-          here.
-        </p>
+        <p className="mt-6 text-sm text-ink-2">{t('player.selectModuleHint')}</p>
         {lessonCount > 0 ? (
           <Button className="mt-6" onClick={onStart}>
-            Start first lesson
+            {t('player.startFirstLesson')}
           </Button>
         ) : null}
       </div>

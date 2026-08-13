@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Container } from './Container';
-import { PRICING_FAQ } from '@/src/constants/pricing';
 import { cn } from '@/src/lib/utils';
+import { useTranslation, usePricingFaqItems } from '@/src/i18n';
 
 export function PricingFaq() {
+  const { t } = useTranslation();
+  const faqItems = usePricingFaqItems();
   const [open, setOpen] = useState<number | null>(0);
 
   return (
@@ -14,15 +16,15 @@ export function PricingFaq() {
       <Container>
         <div className="mx-auto mb-8 max-w-2xl text-center">
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Frequently asked questions
+            {t('marketing.pricingFaqTitle')}
           </h2>
           <p className="mt-2 text-sm leading-7 text-ink-2 sm:text-base">
-            Common questions about trials, billing, and plan limits.
+            {t('marketing.pricingFaqIntro')}
           </p>
         </div>
 
         <div className="mx-auto flex max-w-3xl flex-col gap-3">
-          {PRICING_FAQ.map((item, index) => {
+          {faqItems.map((item, index) => {
             const isOpen = open === index;
             return (
               <div

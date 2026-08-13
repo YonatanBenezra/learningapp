@@ -91,6 +91,8 @@ export function AdminPageHeader({
   updatedAt?: string;
   onRefresh?: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-4 border-b border-line pb-6 lg:flex-row lg:items-end lg:justify-between">
       <div>
@@ -102,12 +104,14 @@ export function AdminPageHeader({
       </div>
       <div className="flex flex-wrap items-center gap-3">
         {updatedAt ? (
-          <p className="text-sm text-ink-3">Updated {new Date(updatedAt).toLocaleString()}</p>
+          <p className="text-sm text-ink-3">
+            {t('adminCommon.updated', { date: new Date(updatedAt).toLocaleString() })}
+          </p>
         ) : null}
         {onRefresh ? (
           <Button variant="soft" size="sm" className="rounded-lg" onClick={onRefresh}>
             <RefreshCw className="size-4" />
-            Refresh
+            {t('adminCommon.refresh')}
           </Button>
         ) : null}
       </div>

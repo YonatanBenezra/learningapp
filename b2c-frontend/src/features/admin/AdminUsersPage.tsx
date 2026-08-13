@@ -87,6 +87,7 @@ function UserRow({
   onRoleChange: (role: Role) => void;
   pending: boolean;
 }) {
+  const { t } = useTranslation();
   const deleted = Boolean(user.deletedAt);
 
   return (
@@ -101,7 +102,7 @@ function UserRow({
           <p className={cn('font-medium text-ink', deleted && 'line-through opacity-70')}>
             {user.email}
           </p>
-          <p className="mt-0.5 text-sm text-ink-3">{user.name?.trim() || 'No display name'}</p>
+          <p className="mt-0.5 text-sm text-ink-3">{user.name?.trim() || t('adminCommon.noDisplayName')}</p>
         </div>
       </td>
       <td className="px-5 py-4 sm:px-6">
@@ -114,9 +115,9 @@ function UserRow({
       </td>
       <td className="px-5 py-4 sm:px-6">
         {deleted ? (
-          <Badge variant="bad">Deleted</Badge>
+          <Badge variant="bad">{t('adminCommon.deleted')}</Badge>
         ) : (
-          <Badge variant="good">Active</Badge>
+          <Badge variant="good">{t('adminCommon.active')}</Badge>
         )}
       </td>
       <td className="px-5 py-4 text-sm tabular-nums text-ink-2 sm:px-6">
@@ -221,12 +222,12 @@ export function AdminUsersPage() {
   const { data } = usersQ;
 
   const roleOptions: { value: Role | 'all'; label: string }[] = [
-    { value: 'all', label: 'All roles' },
+    { value: 'all', label: t('adminCommon.allRoles') },
     ...ROLES.map((role) => ({ value: role, label: role })),
   ];
 
   const tierOptions: { value: (typeof TIERS)[number] | 'all'; label: string }[] = [
-    { value: 'all', label: 'All tiers' },
+    { value: 'all', label: t('adminCommon.allTiers') },
     ...TIERS.map((tier) => ({ value: tier, label: tier })),
   ];
 
@@ -252,7 +253,7 @@ export function AdminUsersPage() {
             onClick={() => usersQ.refetch()}
           >
             <RefreshCw className="size-3.5" />
-            Refresh
+            {t('adminCommon.refresh')}
           </Button>
         </div>
       </div>
@@ -281,14 +282,14 @@ export function AdminUsersPage() {
               <Input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search by email or name… (Enter)"
+                placeholder={t('adminCommon.searchEnter')}
                 className="rounded-md border-line bg-bg-soft pl-9"
               />
             </form>
 
             <div className="flex flex-wrap items-end gap-3">
               <FilterSelect
-                label="Role"
+                label={t('adminCommon.colRole')}
                 value={roleFilter}
                 onChange={(value) => {
                   setRoleFilter(value);
@@ -297,7 +298,7 @@ export function AdminUsersPage() {
                 options={roleOptions}
               />
               <FilterSelect
-                label="Tier"
+                label={t('adminCommon.colTier')}
                 value={tierFilter}
                 onChange={(value) => {
                   setTierFilter(value);
@@ -324,12 +325,12 @@ export function AdminUsersPage() {
             <table className="w-full min-w-[880px] text-left text-sm">
               <thead>
                 <tr className="border-b border-line bg-bg-soft text-[11px] uppercase tracking-[0.14em] text-ink-3">
-                  <th className="px-5 py-3 font-semibold sm:px-6">User</th>
-                  <th className="px-5 py-3 font-semibold sm:px-6">Role</th>
-                  <th className="px-5 py-3 font-semibold sm:px-6">Tier</th>
-                  <th className="px-5 py-3 font-semibold sm:px-6">Status</th>
-                  <th className="px-5 py-3 font-semibold sm:px-6">Joined</th>
-                  <th className="px-5 py-3 font-semibold sm:px-6">Set role</th>
+                  <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colUser')}</th>
+                  <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colRole')}</th>
+                  <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colTier')}</th>
+                  <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colStatus')}</th>
+                  <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colJoined')}</th>
+                  <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colSetRole')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -348,7 +349,7 @@ export function AdminUsersPage() {
                 ) : (
                   <tr>
                     <td colSpan={6} className="px-6 py-16 text-center text-ink-3">
-                      No users match your search or filters.
+                      {t('adminCommon.noMatchFilter')}
                     </td>
                   </tr>
                 )}

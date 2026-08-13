@@ -3,18 +3,25 @@ import { LOCALE_STORAGE_KEY } from './types';
 import { messages as en } from './messages/en';
 import { messages as bn } from './messages/bn';
 import { messages as he } from './messages/he';
+import { messages as de } from './messages/de';
+import { messages as zh } from './messages/zh';
+import { messages as es } from './messages/es';
+import { messages as ar } from './messages/ar';
+import { messages as hi } from './messages/hi';
+import { messages as fr } from './messages/fr';
+import { messages as ja } from './messages/ja';
 
 const catalog: Record<Locale, Messages> = {
   en,
   bn,
   he,
-  de: en,
-  zh: en,
-  es: en,
-  fr: en,
-  ar: en,
-  hi: en,
-  ja: en,
+  de,
+  zh,
+  es,
+  fr: fr,
+  ar: ar,
+  hi: hi,
+  ja: ja,
 };
 
 export function getMessages(locale: Locale): Messages {
@@ -27,11 +34,24 @@ export type MessageKey =
   | `auth.${keyof Messages['auth']}`
   | `dashboard.${keyof Messages['dashboard']}`
   | `courses.${keyof Messages['courses']}`
+  | `subscription.${keyof Messages['subscription']}`
+  | `createCourse.${keyof Messages['createCourse']}`
   | `assessments.${keyof Messages['assessments']}`
   | `settings.${keyof Messages['settings']}`
+  | `profile.${keyof Messages['profile']}`
+  | `profileMenu.${keyof Messages['profileMenu']}`
+  | `notifications.${keyof Messages['notifications']}`
+  | `player.${keyof Messages['player']}`
+  | `assessmentRunner.${keyof Messages['assessmentRunner']}`
+  | `exercises.${keyof Messages['exercises']}`
+  | `marketplace.${keyof Messages['marketplace']}`
+  | `labs.${keyof Messages['labs']}`
   | `achievements.${keyof Messages['achievements']}`
   | `admin.${keyof Messages['admin']}`
+  | `adminCommon.${keyof Messages['adminCommon']}`
   | `instructor.${keyof Messages['instructor']}`
+  | `authExtra.${keyof Messages['authExtra']}`
+  | `navbarExtra.${keyof Messages['navbarExtra']}`
   | `marketing.${keyof Messages['marketing']}`;
 
 export function translate(locale: Locale, key: MessageKey, vars?: Record<string, string>): string {
@@ -64,6 +84,26 @@ export function detectLocale(): Locale {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (tz === 'Asia/Dhaka') return 'bn';
     if (tz === 'Asia/Jerusalem') return 'he';
+    if (tz === 'Europe/Berlin') return 'de';
+    if (tz === 'Asia/Shanghai' || tz === 'Asia/Chongqing' || tz === 'Asia/Hong_Kong') return 'zh';
+    if (
+      tz === 'Europe/Madrid' ||
+      tz === 'America/Mexico_City' ||
+      tz === 'America/Bogota' ||
+      tz === 'America/Argentina/Buenos_Aires'
+    )
+      return 'es';
+    if (
+      tz === 'Asia/Riyadh' ||
+      tz === 'Asia/Dubai' ||
+      tz === 'Africa/Cairo' ||
+      tz === 'Asia/Baghdad' ||
+      tz === 'Asia/Kuwait'
+    )
+      return 'ar';
+    if (tz === 'Asia/Kolkata') return 'hi';
+    if (tz === 'Asia/Tokyo') return 'ja';
+    if (tz === 'Europe/Paris' || tz === 'Europe/Brussels' || tz === 'America/Montreal') return 'fr';
   } catch {
     /* ignore */
   }

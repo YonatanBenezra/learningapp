@@ -206,7 +206,7 @@ export function AdminSubscriptionsPage() {
             onClick={() => subsQ.refetch()}
           >
             <RefreshCw className="size-3.5" />
-            Refresh
+            {t('adminCommon.refresh')}
           </Button>
         </div>
       </div>
@@ -361,7 +361,7 @@ export function AdminSubscriptionsPage() {
               <table className="w-full min-w-[420px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-line bg-bg-soft text-[11px] uppercase tracking-[0.14em] text-ink-3">
-                    <th className="px-5 py-3 font-semibold sm:px-6">Status</th>
+                    <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colStatus')}</th>
                     <th className="px-5 py-3 font-semibold sm:px-6">Records</th>
                     <th className="px-5 py-3 font-semibold sm:px-6">Share</th>
                   </tr>

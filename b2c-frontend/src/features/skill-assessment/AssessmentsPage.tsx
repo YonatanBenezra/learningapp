@@ -19,23 +19,20 @@ import { cn } from '@/src/lib/utils';
 import type { SkillAssessmentQuota, SkillAssessmentSummary } from '@/src/domain/assessment';
 import { AssessmentsListSkeleton } from '@/src/features/skill-assessment/SkillAssessmentSkeletons';
 import { useMySkillAssessments } from '@/src/features/skill-assessment/useSkillAssessment';
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(value));
-}
+import { useTranslation, useLocaleDateFormatter, useIsRtl } from '@/src/i18n';
 
 function QuotaBadge({ quota }: { quota: SkillAssessmentQuota }) {
+  const { t } = useTranslation();
   const tierLabel = tierPlanLabel(quota.tier);
   if (quota.limit === null) {
     return (
       <div className="rounded-lg border border-line bg-bg-soft px-4 py-3 text-sm text-ink-2">
         <span className="font-semibold text-ink">{tierLabel}</span>
         <span className="mx-2 text-ink-3">·</span>
-        <span>{quota.used} assessments · Unlimited plan</span>
+        <span>
+          {t('marketing.assessmentsUsed', { used: String(quota.used) })} ·{' '}
+          {t('marketing.unlimitedPlan')}
+        </span>
       </div>
     );
   }
@@ -45,30 +42,40 @@ function QuotaBadge({ quota }: { quota: SkillAssessmentQuota }) {
       <span className="font-semibold text-ink">{tierLabel}</span>
       <span className="mx-2 text-ink-3">·</span>
       <span>
-        <span className="font-semibold text-ink">{quota.used}</span> / {quota.limit} assessments
-        used
+        {t('marketing.assessmentsUsedOf', {
+          used: String(quota.used),
+          limit: String(quota.limit),
+        })}
       </span>
     </div>
   );
 }
 
 function AssessmentLimitNotice({ quota }: { quota: SkillAssessmentQuota }) {
+  const { t } = useTranslation();
   const tierLabel = tierPlanLabel(quota.tier);
   const limit = quota.limit ?? 0;
+  const body = t('marketing.assessmentLimitBody', {
+    tier: tierLabel,
+    limit: String(limit),
+  });
+  const upgrade = t('marketing.upgradePlan');
+  const [before, after] = body.includes(upgrade)
+    ? [body.slice(0, body.indexOf(upgrade)), body.slice(body.indexOf(upgrade) + upgrade.length)]
+    : [body, ''];
 
   return (
     <div
       role="alert"
       className="rounded-lg border border-bad/35 bg-bad-soft px-4 py-3 text-sm text-bad"
     >
-      <p className="font-semibold">Assessment limit reached</p>
+      <p className="font-semibold">{t('marketing.assessmentLimitReached')}</p>
       <p className="mt-1 leading-6 text-bad/95">
-        Your {tierLabel} plan includes {limit} active assessments and you have used all {limit}.
-        Complete an existing assessment, wait for one to expire, or{' '}
+        {before}
         <Link href="/upgrade" className="font-semibold underline underline-offset-2">
-          upgrade your plan
-        </Link>{' '}
-        to create more.
+          {upgrade}
+        </Link>
+        {after}
       </p>
     </div>
   );
@@ -78,12 +85,12 @@ function CreateAssessmentButton({
   atLimit,
   className,
   size = 'lg',
-  label = 'Create assessment',
+  label,
 }: {
   atLimit: boolean;
   className?: string;
   size?: 'lg' | 'md';
-  label?: string;
+  label: string;
 }) {
   if (atLimit) {
     return (
@@ -111,6 +118,9 @@ function CreateAssessmentButton({
 }
 
 function AssessmentCard({ item }: { item: SkillAssessmentSummary }) {
+  const { t } = useTranslation();
+  const formatDate = useLocaleDateFormatter();
+  const isRtl = useIsRtl();
   const completed = item.status === 'completed';
   const generating = item.generationStatus === 'generating';
   const failed = item.generationStatus === 'failed';
@@ -134,19 +144,19 @@ function AssessmentCard({ item }: { item: SkillAssessmentSummary }) {
           )}
         >
           {completed
-            ? 'Completed'
+            ? t('marketing.statusCompleted')
             : generating
-              ? 'Generating'
+              ? t('marketing.statusGenerating')
               : failed
-                ? 'Failed'
-                : 'In progress'}
+                ? t('marketing.statusFailed')
+                : t('marketing.statusInProgress')}
         </span>
       </div>
 
       <div className="mt-5 flex flex-wrap gap-3 text-sm text-ink-2">
         <span className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1">
           <ClipboardList className="size-4 text-primary" />
-          {item.questionCount} questions
+          {t('marketing.questionsCount', { count: String(item.questionCount) })}
         </span>
         <span className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1">
           <CalendarDays className="size-4 text-primary" />
@@ -164,19 +174,19 @@ function AssessmentCard({ item }: { item: SkillAssessmentSummary }) {
         {completed ? (
           <Link href={`/assessment/${item.id}/result`} className="inline-flex w-full sm:w-auto">
             <Button variant="soft" className="w-full rounded-lg sm:w-auto">
-              View results
-              <ArrowRight className="size-4" />
+              {t('marketing.viewResults')}
+              <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
             </Button>
           </Link>
         ) : failed ? (
           <p className="text-sm text-ink-2">
-            {item.failureReason ?? 'Generation failed. Create a new assessment to try again.'}
+            {item.failureReason ?? t('marketing.generationFailed')}
           </p>
         ) : (
           <Link href={`/assessment/${item.id}`} className="inline-flex w-full sm:w-auto">
             <Button className="w-full rounded-lg bg-primary hover:bg-primary-dark sm:w-auto">
-              {generating ? 'View progress' : 'Continue assessment'}
-              <ArrowRight className="size-4" />
+              {generating ? t('marketing.viewProgress') : t('marketing.continueAssessment')}
+              <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
             </Button>
           </Link>
         )}
@@ -186,6 +196,7 @@ function AssessmentCard({ item }: { item: SkillAssessmentSummary }) {
 }
 
 export function AssessmentsPage() {
+  const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useMySkillAssessments();
 
   const quota = data?.quota;
@@ -206,14 +217,13 @@ export function AssessmentsPage() {
                 <div data-tour="tour-assessments-header">
                   <div className="inline-flex items-center gap-2 rounded-lg border border-primary/15 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
                     <Sparkles className="size-3.5" />
-                    Skill assessments
+                    {t('marketing.skillAssessmentsBadge')}
                   </div>
                   <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-                    Your assessments
+                    {t('marketing.yourAssessments')}
                   </h1>
                   <p className="mt-2 max-w-2xl text-base text-ink-2">
-                    Track your progress, continue unfinished tests, and review your skill levels.
-                    Assessment limits depend on your plan tier.
+                    {t('marketing.assessmentsIntro')}
                   </p>
                 </div>
 
@@ -222,7 +232,10 @@ export function AssessmentsPage() {
                   data-tour="tour-assessments-create"
                 >
                   {quota ? <QuotaBadge quota={quota} /> : null}
-                  <CreateAssessmentButton atLimit={atLimit} />
+                  <CreateAssessmentButton
+                    atLimit={atLimit}
+                    label={t('marketing.createAssessment')}
+                  />
                 </div>
               </div>
 
@@ -236,10 +249,10 @@ export function AssessmentsPage() {
 
           {isError ? (
             <div className="mt-8 rounded-lg border border-line bg-bg-elev p-10 text-center shadow-soft">
-              <p className="text-lg font-semibold text-ink">Could not load assessments</p>
-              <p className="mt-2 text-sm text-ink-2">Please refresh and try again.</p>
+              <p className="text-lg font-semibold text-ink">{t('marketing.loadAssessmentsError')}</p>
+              <p className="mt-2 text-sm text-ink-2">{t('marketing.loadAssessmentsErrorHint')}</p>
               <Button variant="soft" className="mt-4 rounded-lg" onClick={() => refetch()}>
-                Retry
+                {t('marketing.tryAgain')}
               </Button>
             </div>
           ) : assessments.length === 0 ? (
@@ -247,15 +260,14 @@ export function AssessmentsPage() {
               <div className="mx-auto grid size-16 place-items-center rounded-lg bg-primary-soft text-primary">
                 <ClipboardList className="size-8" />
               </div>
-              <h2 className="mt-5 text-2xl font-bold text-ink">No assessments yet</h2>
+              <h2 className="mt-5 text-2xl font-bold text-ink">{t('marketing.noAssessmentsYet')}</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">
-                Start your first skill check to discover your level and get personalized learning
-                recommendations.
+                {t('marketing.noAssessmentsHint')}
               </p>
               <div className="mt-6 flex flex-col items-center gap-4">
                 <CreateAssessmentButton
                   atLimit={atLimit}
-                  label="Create your first assessment"
+                  label={t('marketing.createFirstAssessment')}
                 />
               </div>
             </div>

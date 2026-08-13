@@ -328,7 +328,7 @@ export const FOOTER_QUICK_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/#categories' },
   { label: 'Courses', href: '/courses' },
-  { label: 'FAQs', href: '/#faq' },
+  { label: 'FAQs', href: '/pricing' },
   { label: 'Contact', href: '/contact' },
 ] as const;
 

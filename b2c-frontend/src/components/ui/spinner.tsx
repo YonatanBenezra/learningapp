@@ -10,8 +10,8 @@ export function Spinner({ className }: { className?: string }) {
         className,
       )}
     >
-      <span className="absolute inset-0 rounded-full border-2 border-primary/20" />
-      <span className="absolute inset-0 animate-app-loader-spin rounded-full border-2 border-transparent border-t-primary" />
+      <span className="absolute inset-0 rounded-full border-4 border-primary/15" />
+      <span className="absolute inset-0 animate-app-loader-spin rounded-full border-4 border-transparent border-t-primary" />
     </span>
   );
 }

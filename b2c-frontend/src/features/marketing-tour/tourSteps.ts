@@ -105,16 +105,6 @@ const HOME_TOUR_STEPS: DriveStep[] = [
       align: 'center',
     },
   },
-  {
-    element: '[data-tour="tour-faq"]',
-    popover: {
-      title: 'Common questions',
-      description:
-        'Learn how AI courses are built, what labs include, and how the free trial works.',
-      side: 'top',
-      align: 'center',
-    },
-  },
   ASK_BINA_STEP,
 ];
 

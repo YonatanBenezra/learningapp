@@ -10,6 +10,7 @@ import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { ApiError } from '@/src/infrastructure/apiClient';
+import { useTranslation } from '@/src/i18n';
 import { useUpdateProfile, useUploadProfileAvatar } from './useSettings';
 import { getUserDisplayName } from '@/src/lib/userDisplay';
 
@@ -26,6 +27,7 @@ function ProfileSkeleton() {
 }
 
 export function ProfilePage() {
+  const { t } = useTranslation();
   const meQ = useMe();
   const updateProfile = useUpdateProfile();
   const uploadAvatar = useUploadProfileAvatar();
@@ -55,9 +57,9 @@ export function ProfilePage() {
     return (
       <div className="mx-auto w-full max-w-6xl p-4 sm:p-6 lg:p-8">
         <div className="rounded-lg border border-line bg-bg-elev p-10 text-center">
-          <p className="text-ink-2">Could not load your profile.</p>
+          <p className="text-ink-2">{t('profile.loadError')}</p>
           <Button variant="soft" className="mt-4" onClick={() => meQ.refetch()}>
-            Retry
+            {t('common.retry')}
           </Button>
         </div>
       </div>
@@ -96,7 +98,7 @@ export function ProfilePage() {
       },
       onError: (error) =>
         setUploadError(
-          error instanceof ApiError ? error.message : 'Could not upload profile photo.',
+          error instanceof ApiError ? error.message : t('profile.uploadError'),
         ),
     });
   }
@@ -105,7 +107,7 @@ export function ProfilePage() {
     updateProfile.error instanceof ApiError
       ? updateProfile.error.message
       : updateProfile.error
-        ? 'Could not save profile.'
+        ? t('profile.saveError')
         : null;
 
   return (
@@ -116,12 +118,12 @@ export function ProfilePage() {
             <UserRound className="size-5" />
           </span>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">My Profile</h1>
-            <p className="mt-1 text-sm text-ink-2">Update your public profile information.</p>
+            <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{t('profile.title')}</h1>
+            <p className="mt-1 text-sm text-ink-2">{t('profile.subtitle')}</p>
           </div>
         </div>
         <Link href="/settings" className="text-sm font-medium text-primary hover:underline">
-          Account settings
+          {t('profile.accountSettings')}
         </Link>
       </div>
 
@@ -138,7 +140,7 @@ export function ProfilePage() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadAvatar.isPending}
                 className="absolute -bottom-1 -right-1 grid size-9 place-items-center rounded-full border border-line bg-bg-elev text-ink-2 shadow-soft transition hover:border-primary hover:text-primary disabled:opacity-60"
-                aria-label="Upload profile photo"
+                aria-label={t('profile.uploadPhoto')}
               >
                 {uploadAvatar.isPending ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -163,7 +165,7 @@ export function ProfilePage() {
                   {profession.trim()}
                 </p>
               ) : null}
-              <p className="mt-3 text-xs text-ink-3">JPG, PNG, WEBP, or GIF · max 5 MB · hosted on Cloudinary</p>
+              <p className="mt-3 text-xs text-ink-3">{t('profile.photoHint')}</p>
             </div>
           </div>
         </div>
@@ -171,55 +173,55 @@ export function ProfilePage() {
         <div className="space-y-5 p-6 sm:p-8">
           <div className="grid gap-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <Label htmlFor="name">Full name</Label>
+              <Label htmlFor="name">{t('profile.fullName')}</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="Your name"
+                placeholder={t('profile.fullNamePlaceholder')}
                 className="mt-2"
                 maxLength={120}
               />
             </div>
 
             <div>
-              <Label htmlFor="profession">Profession</Label>
+              <Label htmlFor="profession">{t('profile.profession')}</Label>
               <Input
                 id="profession"
                 value={profession}
                 onChange={(event) => setProfession(event.target.value)}
-                placeholder="e.g. Software Engineer"
+                placeholder={t('profile.professionPlaceholder')}
                 className="mt-2"
                 maxLength={120}
               />
             </div>
 
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('profile.email')}</Label>
               <Input id="email" value={user.email} readOnly className="mt-2 bg-bg-soft" />
             </div>
 
             <div className="sm:col-span-2">
-              <Label htmlFor="address">Address</Label>
+              <Label htmlFor="address">{t('profile.address')}</Label>
               <textarea
                 id="address"
                 value={address}
                 onChange={(event) => setAddress(event.target.value)}
                 rows={3}
-                placeholder="City, country"
+                placeholder={t('profile.addressPlaceholder')}
                 className={textareaClassName}
                 maxLength={500}
               />
             </div>
 
             <div className="sm:col-span-2">
-              <Label htmlFor="experience">Experience</Label>
+              <Label htmlFor="experience">{t('profile.experience')}</Label>
               <textarea
                 id="experience"
                 value={experience}
                 onChange={(event) => setExperience(event.target.value)}
                 rows={4}
-                placeholder="Brief summary of your experience, skills, or background"
+                placeholder={t('profile.experiencePlaceholder')}
                 className={textareaClassName}
                 maxLength={2000}
               />
@@ -229,7 +231,7 @@ export function ProfilePage() {
           {uploadError ? <p className="text-sm text-bad">{uploadError}</p> : null}
           {errorMessage ? <p className="text-sm text-bad">{errorMessage}</p> : null}
           {saved && !updateProfile.isPending ? (
-            <p className="text-sm font-medium text-good">Profile saved successfully.</p>
+            <p className="text-sm font-medium text-good">{t('profile.saved')}</p>
           ) : null}
 
           <div className="flex flex-wrap items-center gap-3 border-t border-line pt-5">
@@ -239,7 +241,7 @@ export function ProfilePage() {
               ) : (
                 <Save className="size-4" />
               )}
-              Save profile
+              {t('profile.saveProfile')}
             </Button>
             {address.trim() ? (
               <p className="inline-flex items-center gap-1.5 text-sm text-ink-2">

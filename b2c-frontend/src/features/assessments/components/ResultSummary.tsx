@@ -5,6 +5,7 @@ import { ArrowLeft, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import type { AssessmentQuestion, AssessmentSubmission } from '@/src/domain/assessment';
 import { cn } from '@/src/lib/utils';
+import { useTranslation } from '@/src/i18n';
 
 function scoreClass(score: number): string {
   if (score >= 70) return 'text-good';
@@ -33,6 +34,7 @@ export function ResultSummary({
   onRetake?: () => void;
   retaking?: boolean;
 }) {
+  const { t } = useTranslation();
   const results = [...submission.results].sort((a, b) => a.questionIndex - b.questionIndex);
   const correctCount = results.filter((r) => r.correct).length;
 
@@ -46,14 +48,19 @@ export function ResultSummary({
       </Link>
 
       <header className="mt-6 border-b border-line pb-6">
-        <p className="text-xs font-medium uppercase tracking-widest text-ink-3">{eyebrow} result</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-ink-3">
+          {t('assessmentRunner.result', { type: eyebrow })}
+        </p>
         <h1 className="mt-2 text-2xl font-semibold text-ink">{title}</h1>
         <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
           <p className={cn('text-4xl font-semibold tabular-nums', scoreClass(submission.score))}>
             {submission.score}%
           </p>
           <p className="text-sm text-ink-2">
-            {correctCount} of {results.length} correct
+            {t('assessmentRunner.correctOfTotal', {
+              correct: String(correctCount),
+              total: String(results.length),
+            })}
           </p>
         </div>
       </header>
@@ -66,7 +73,7 @@ export function ResultSummary({
             <section key={r.questionIndex} className="py-6 first:pt-0 last:pb-0">
               <div className="flex items-start justify-between gap-4">
                 <p className="text-xs font-medium uppercase tracking-widest text-ink-3">
-                  Question {r.questionIndex + 1}
+                  {t('assessmentRunner.questionN', { n: String(r.questionIndex + 1) })}
                 </p>
                 <span
                   className={cn(
@@ -74,26 +81,26 @@ export function ResultSummary({
                     r.correct ? 'text-good' : 'text-bad',
                   )}
                 >
-                  {r.correct ? 'Correct' : 'Incorrect'}
+                  {r.correct ? t('assessmentRunner.correct') : t('assessmentRunner.incorrect')}
                 </span>
               </div>
               <p className="mt-2 text-base font-medium leading-7 text-ink">
-                {q?.question ?? 'Question'}
+                {q?.question ?? t('assessmentRunner.question')}
               </p>
               <dl className="mt-4 space-y-2 border border-line bg-bg-soft px-4 py-3 text-sm">
                 <div>
-                  <dt className="inline font-medium text-ink">Your answer: </dt>
+                  <dt className="inline font-medium text-ink">{t('assessmentRunner.yourAnswer')} </dt>
                   <dd className="inline text-ink-2">{given || '—'}</dd>
                 </div>
                 {!r.correct ? (
                   <div>
-                    <dt className="inline font-medium text-ink">Correct answer: </dt>
+                    <dt className="inline font-medium text-ink">{t('assessmentRunner.correctAnswer')} </dt>
                     <dd className="inline text-ink-2">{r.correctAnswer}</dd>
                   </div>
                 ) : null}
                 {r.feedback ? (
                   <div>
-                    <dt className="font-medium text-ink">Feedback</dt>
+                    <dt className="font-medium text-ink">{t('assessmentRunner.feedback')}</dt>
                     <dd className="mt-1 text-ink-3">{r.feedback}</dd>
                   </div>
                 ) : null}
@@ -108,12 +115,12 @@ export function ResultSummary({
           <Button variant="outline">{backLabel}</Button>
         </Link>
         <Link href="/quizzes">
-          <Button variant="soft">Quiz history</Button>
+          <Button variant="soft">{t('assessmentRunner.quizHistory')}</Button>
         </Link>
         {onRetake ? (
           <Button onClick={onRetake} disabled={retaking}>
             {retaking ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
-            Try another quiz
+            {t('assessmentRunner.tryAnotherQuiz')}
           </Button>
         ) : null}
       </div>

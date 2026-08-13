@@ -2,15 +2,21 @@
 
 import Image from 'next/image';
 import { Quote } from 'lucide-react';
+import { useTranslation } from '@/src/i18n';
 import { TESTIMONIALS } from './data';
 import { Container } from './Container';
 import { SectionHeading } from './SectionHeading';
 
 export function TestimonialsSection() {
+  const { t } = useTranslation();
+
   return (
     <section id="testimonials" className="overflow-hidden bg-bg-soft py-16 lg:py-24">
       <Container>
-        <SectionHeading eyebrow="Testimonial" title="What Our Students Say" />
+        <SectionHeading
+          eyebrow={t('marketing.testimonialEyebrow')}
+          title={t('marketing.testimonialTitle')}
+        />
       </Container>
 
       <div className="mt-12 flex gap-6 overflow-x-auto px-4 pb-4 sm:px-6 lg:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -31,7 +37,7 @@ export function TestimonialsSection() {
               />
               <div>
                 <p className="font-bold text-ink">{item.name}</p>
-                <p className="text-sm text-ink-2">{item.role}</p>
+                <p className="text-sm text-ink-2">{t('marketing.roleTechSpecialist')}</p>
               </div>
             </div>
           </article>

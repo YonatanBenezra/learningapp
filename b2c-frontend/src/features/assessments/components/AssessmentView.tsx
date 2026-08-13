@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { useTranslation } from '@/src/i18n';
 import { Button } from '@/src/components/ui/button';
 import { ResultSummary } from './ResultSummary';
 import type {
@@ -43,6 +44,7 @@ export function AssessmentView({
   onRetake?: () => void;
   retaking?: boolean;
 }) {
+  const { t } = useTranslation();
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const setAnswer = (i: number, val: string) => setAnswers((prev) => ({ ...prev, [i]: val }));
 
@@ -82,7 +84,10 @@ export function AssessmentView({
         <h1 className="mt-2 text-2xl font-semibold text-ink">{title}</h1>
         {subtitle ? <p className="mt-2 max-w-3xl text-sm text-ink-2">{subtitle}</p> : null}
         <p className="mt-4 text-sm text-ink-3">
-          {questions.length} questions · {answeredCount} answered
+          {t('assessmentRunner.questionsAnswered', {
+            total: String(questions.length),
+            answered: String(answeredCount),
+          })}
         </p>
       </header>
 
@@ -90,7 +95,7 @@ export function AssessmentView({
         {questions.map((q, i) => (
           <section key={i} className="py-8 first:pt-0 last:pb-0">
             <p className="text-xs font-medium uppercase tracking-widest text-ink-3">
-              Question {i + 1}
+              {t('assessmentRunner.questionN', { n: String(i + 1) })}
             </p>
             <h2 className="mt-2 text-base font-medium leading-7 text-ink">{q.question}</h2>
 
@@ -128,7 +133,7 @@ export function AssessmentView({
               <textarea
                 value={answers[i] ?? ''}
                 onChange={(e) => setAnswer(i, e.target.value)}
-                placeholder="Write your answer here."
+                placeholder={t('assessmentRunner.writeAnswerPlaceholder')}
                 className="mt-5 min-h-28 w-full border border-line bg-bg-elev px-3 py-2.5 text-sm text-ink outline-none transition placeholder:text-ink-3 focus:border-primary"
               />
             )}
@@ -145,8 +150,8 @@ export function AssessmentView({
       <div className="mt-8 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-ink-3">
           {allAnswered
-            ? 'All questions answered.'
-            : `Answer all ${questions.length} questions before submitting.`}
+            ? t('assessmentRunner.allAnswered')
+            : t('assessmentRunner.answerAllBeforeSubmit', { count: String(questions.length) })}
         </p>
         <Button onClick={submit} disabled={submitting || !allAnswered} className="sm:min-w-40">
           {submitting ? <Loader2 className="size-4 animate-spin" /> : null}

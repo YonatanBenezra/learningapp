@@ -2,24 +2,27 @@ import { Suspense } from 'react';
 import { Navbar } from '@/src/components/marketing/Navbar';
 import { Hero } from '@/src/components/marketing/Hero';
 import { Categories } from '@/src/components/marketing/Categories';
-import { Faq } from '@/src/components/marketing/Faq';
 import { Footer } from '@/src/components/marketing/Footer';
 import { LandingAssessmentPrompt } from '@/src/components/marketing/LandingAssessmentPrompt';
+import { LenisSmoothScroll } from '@/src/components/marketing/LenisSmoothScroll';
 import { MarketingPageShell } from '@/src/components/marketing/MarketingPageShell';
 
 export default function LandingPage() {
   return (
     <MarketingPageShell>
-      <Suspense fallback={null}>
-        <LandingAssessmentPrompt />
-      </Suspense>
-      <Navbar />
-      <main>
-        <Hero />
-        <Categories />
-        <Faq />
-      </main>
-      <Footer />
+      <LenisSmoothScroll>
+        <Suspense fallback={null}>
+          <LandingAssessmentPrompt />
+        </Suspense>
+        <main>
+          <div className="relative">
+            <Navbar />
+            <Hero />
+          </div>
+          <Categories />
+        </main>
+        <Footer />
+      </LenisSmoothScroll>
     </MarketingPageShell>
   );
 }

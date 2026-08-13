@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Loader2, Pencil, X } from 'lucide-react';
+import { useTranslation } from '@/src/i18n';
 import { Button } from '@/src/components/ui/button';
 
 export function EditStructureTitleDialog({
@@ -21,6 +22,7 @@ export function EditStructureTitleDialog({
   isSaving?: boolean;
   error?: string | null;
 }) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState(initialTitle);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export function EditStructureTitleDialog({
     <div className="fixed inset-0 z-[100] flex items-end justify-center p-0 sm:items-center sm:p-6">
       <button
         type="button"
-        aria-label="Close"
+        aria-label={t('common.cancel')}
         className="absolute inset-0 bg-ink/50 backdrop-blur-[2px]"
         onClick={isSaving ? undefined : onClose}
         disabled={isSaving}
@@ -67,14 +69,16 @@ export function EditStructureTitleDialog({
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                  Edit {kind}
+                  {t('instructor.editKind', {
+                    kind: kind === 'module' ? t('instructor.kindModule') : t('instructor.kindLesson'),
+                  })}
                 </p>
-                <h2 className="mt-1 text-xl font-semibold text-ink">Update title</h2>
+                <h2 className="mt-1 text-xl font-semibold text-ink">{t('instructor.updateTitle')}</h2>
               </div>
             </div>
             <button
               type="button"
-              aria-label="Close dialog"
+              aria-label={t('common.cancel')}
               onClick={onClose}
               disabled={isSaving}
               className="grid size-10 shrink-0 place-items-center rounded-lg border border-line text-ink-3 transition hover:bg-bg-soft hover:text-ink disabled:opacity-50"
@@ -94,7 +98,7 @@ export function EditStructureTitleDialog({
           }}
         >
           <label htmlFor="structure-title" className="mb-2 block text-sm font-medium text-ink">
-            Title
+            {t('instructor.title')}
           </label>
           <input
             id="structure-title"
@@ -112,11 +116,11 @@ export function EditStructureTitleDialog({
 
           <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <Button type="button" variant="soft" className="rounded-lg" onClick={onClose} disabled={isSaving}>
-              Cancel
+              {t('instructor.cancel')}
             </Button>
             <Button type="submit" className="rounded-lg bg-primary" disabled={isSaving || !title.trim()}>
               {isSaving ? <Loader2 className="size-4 animate-spin" /> : null}
-              Save title
+              {t('instructor.saveTitle')}
             </Button>
           </div>
         </form>

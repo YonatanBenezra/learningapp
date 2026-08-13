@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, Search, Sparkles, X } from 'lucide-react';
 import { LanguageSelector } from '@/src/components/layout/LanguageSelector';
 import { ThemeToggle } from '@/src/components/ui/theme-toggle';
@@ -13,8 +14,10 @@ import { useAuthStore } from '@/src/store/authStore';
 import { cn } from '@/src/lib/utils';
 import { APP_NAME } from '@/src/lib/brand';
 import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
-import { NAV_LINKS } from './data';
+import { useTranslation, useMarketingNavLinks } from '@/src/i18n';
 import { Container } from './Container';
+
+type NavLinkItem = ReturnType<typeof useMarketingNavLinks>[number];
 
 function LabPathLogo() {
   return (
@@ -49,17 +52,32 @@ function NavLink({
   className,
   onNavigate,
   pathname,
+  variant = 'desktop',
 }: {
-  link: (typeof NAV_LINKS)[number];
+  link: NavLinkItem;
   active: boolean;
   className?: string;
   onNavigate?: () => void;
   pathname: string;
+  variant?: 'desktop' | 'drawer';
 }) {
   const tourId = navTourId(link.href);
-  const classes = cn(navLinkClass(active), className);
+  const isDrawer = variant === 'drawer';
+  const classes = cn(
+    isDrawer
+      ? cn(
+          'flex items-center rounded-xl px-3 py-2 text-sm font-medium transition-colors',
+          active
+            ? 'bg-primary-soft text-primary'
+            : 'text-ink-2 hover:bg-bg-soft hover:text-ink',
+        )
+      : navLinkClass(active),
+    className,
+  );
 
-  const content = (
+  const content = isDrawer ? (
+    link.label
+  ) : (
     <>
       {link.label}
       {active ? (
@@ -132,13 +150,13 @@ function IconButton({
 
 export function Navbar() {
   const pathname = usePathname();
+  const { t } = useTranslation();
+  const navLinks = useMarketingNavLinks();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const hydrated = useAuthHydrated();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const showUserMenu = hydrated && isAuthenticated;
-
-  const navLinks = NAV_LINKS;
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -149,6 +167,26 @@ export function Navbar() {
     setMobileOpen(false);
     setSearchOpen(true);
   };
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function handleKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setMobileOpen(false);
+    }
+    document.addEventListener('keydown', handleKey);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, [mobileOpen]);
 
   return (
     <>
@@ -194,54 +232,91 @@ export function Navbar() {
             </button>
           </div>
         </Container>
+      </header>
 
+      <AnimatePresence>
         {mobileOpen ? (
           <>
-            <button
+            <motion.button
               type="button"
               aria-label="Close menu"
-              className="fixed inset-0 top-16 z-40 bg-ink/15 backdrop-blur-[1px] lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[60] bg-ink/20 backdrop-blur-[2px] lg:hidden"
               onClick={() => setMobileOpen(false)}
             />
-            <nav className="relative z-50 border-t border-line/80 bg-bg-elev/95 px-4 py-4 shadow-card backdrop-blur-xl lg:hidden">
-              <div className="space-y-0.5">
-                {navLinks.map((link) => (
-                  <NavLink
-                    key={link.label}
-                    link={link}
-                    active={isActive(link.href)}
-                    pathname={pathname}
-                    className="block rounded-lg px-3 py-2.5"
-                    onNavigate={() => setMobileOpen(false)}
-                  />
-                ))}
+            <motion.aside
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 320 }}
+              className="fixed inset-y-0 right-0 z-[70] flex w-[min(100vw-2rem,300px)] flex-col border-l border-line bg-bg-elev shadow-[0_0_40px_color-mix(in_srgb,var(--ink)_12%,transparent)] lg:hidden"
+              aria-label="Mobile navigation"
+            >
+              <div className="flex shrink-0 items-center justify-between border-b border-line/80 bg-gradient-to-r from-primary/[0.04] to-transparent px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-primary to-primary-2 text-primary-ink shadow-sm">
+                    <Sparkles className="size-3.5" />
+                  </span>
+                  <BrandWordmark size="sm" className="font-semibold" />
+                </div>
+                <button
+                  type="button"
+                  aria-label="Close menu"
+                  onClick={() => setMobileOpen(false)}
+                  className="grid size-8 place-items-center rounded-full text-ink-3 transition-colors hover:bg-bg-soft hover:text-ink"
+                >
+                  <X className="size-4" />
+                </button>
               </div>
 
-              <button
-                type="button"
-                onClick={openSearch}
-                className="mt-3 flex w-full items-center gap-3 rounded-xl border border-line bg-bg-soft/80 px-4 py-3 text-left text-sm font-medium text-ink-2 transition-colors hover:border-line-2 hover:text-ink"
-              >
-                <Search className="size-4 text-primary" />
-                Search courses, pages…
-              </button>
+              <div className="flex-1 overflow-y-auto px-3 py-3">
+                <nav aria-label="Main navigation">
+                  <ul className="space-y-1">
+                    {navLinks.map((link) => (
+                      <li key={link.label}>
+                        <NavLink
+                          link={link}
+                          active={isActive(link.href)}
+                          pathname={pathname}
+                          variant="drawer"
+                          onNavigate={() => setMobileOpen(false)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
 
-              <div className="mt-5 space-y-4 border-t border-line/80 pt-5">
-                <UtilityCluster className="w-fit">
-                  <LanguageSelector compact className="rounded-full border-0 bg-transparent hover:bg-bg-elev" />
-                  <ThemeToggle className="size-9 rounded-full border-0 bg-transparent hover:bg-bg-elev" />
-                </UtilityCluster>
+                <button
+                  type="button"
+                  onClick={openSearch}
+                  className="mt-3 flex w-full items-center gap-2.5 rounded-xl border border-line/80 bg-bg-soft/60 px-3 py-2.5 text-left text-sm text-ink-2 transition-colors hover:border-line hover:bg-bg-soft hover:text-ink"
+                >
+                  <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                    <Search className="size-3.5" />
+                  </span>
+                  <span className="truncate">{t('marketing.searchPagesPlaceholder')}</span>
+                </button>
 
-                {showUserMenu ? (
-                  <NavbarUserMenu compact />
-                ) : (
-                  <NavbarAuthLinks compact onNavigate={() => setMobileOpen(false)} />
-                )}
+                <div className="mt-4 space-y-3 border-t border-line/80 pt-3">
+                  <div className="flex items-center gap-2">
+                    <LanguageSelector compact layout="drawer" className="min-w-0 flex-1" />
+                    <ThemeToggle className="size-9 shrink-0 rounded-xl border border-line/80 bg-bg-elev/80" />
+                  </div>
+
+                  {showUserMenu ? (
+                    <NavbarUserMenu compact drawer />
+                  ) : (
+                    <NavbarAuthLinks compact drawer onNavigate={() => setMobileOpen(false)} />
+                  )}
+                </div>
               </div>
-            </nav>
+            </motion.aside>
           </>
         ) : null}
-      </header>
+      </AnimatePresence>
     </>
   );
 }

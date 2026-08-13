@@ -2,12 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import { ApiError } from '@/src/infrastructure/apiClient';
+import { useTranslation } from '@/src/i18n';
 import { learnerCoursePath, myCoursesPath } from '@/src/features/auth/learnerRoutes';
 import { useExam, useGenerateExam, useSubmitExam } from '../useAssessments';
 import { AssessmentView } from './AssessmentView';
 import { AssessmentShell, AssessmentError, AssessmentLoading } from './shell';
 
 export function ExamRunner({ examId }: { examId: string }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const examQ = useExam(examId);
   const submitMut = useSubmitExam(examId);
@@ -15,21 +17,28 @@ export function ExamRunner({ examId }: { examId: string }) {
 
   if (examQ.isLoading) return <AssessmentLoading />;
   if (examQ.isError || !examQ.data)
-    return <AssessmentError backHref={myCoursesPath()} backLabel="Courses" label="Exam not found" />;
+    return (
+      <AssessmentError
+        backHref={myCoursesPath()}
+        backLabel={t('assessmentRunner.courses')}
+        label={t('assessmentRunner.examNotFound')}
+      />
+    );
 
   const exam = examQ.data;
-  // Course exams can return to their course; module exams (scopeId is a module id)
-  // fall back to the course list.
   const backHref = exam.scope === 'course' ? learnerCoursePath(exam.scopeId) : myCoursesPath();
-  const backLabel = exam.scope === 'course' ? 'Back to course' : 'Courses';
+  const backLabel =
+    exam.scope === 'course' ? t('player.backToCourse') : t('assessmentRunner.courses');
+  const examTitle =
+    exam.scope === 'course' ? t('assessmentRunner.courseExam') : t('assessmentRunner.moduleExam');
 
   return (
     <AssessmentShell>
       <AssessmentView
-        eyebrow={exam.scope === 'course' ? 'Course exam' : 'Module exam'}
-        submitLabel="Submit exam"
-        title={exam.scope === 'course' ? 'Course exam' : 'Module exam'}
-        subtitle="Answer every question, then submit for grading."
+        eyebrow={examTitle}
+        submitLabel={t('assessmentRunner.submitExam')}
+        title={examTitle}
+        subtitle={t('assessmentRunner.examInstructions')}
         questions={exam.questions}
         submission={submitMut.data ?? null}
         submitting={submitMut.isPending}
@@ -37,7 +46,7 @@ export function ExamRunner({ examId }: { examId: string }) {
           submitMut.isError
             ? submitMut.error instanceof ApiError
               ? submitMut.error.message
-              : 'Could not submit your answers. Please try again.'
+              : t('assessments.submitError')
             : null
         }
         onSubmit={(answers) => submitMut.mutate(answers)}

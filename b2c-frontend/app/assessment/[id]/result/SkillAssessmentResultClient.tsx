@@ -21,13 +21,11 @@ import {
   useSubmitSkillAssessment,
 } from '@/src/features/skill-assessment/useSkillAssessment';
 import type { SubmittedAnswer } from '@/src/domain/assessment';
-
-function topicLabel(topic: string, customTopic: string | null) {
-  return topic === 'Other' && customTopic ? customTopic : topic;
-}
+import { useTranslation, useAssessmentTopicLabel } from '@/src/i18n';
 
 function ResultContent({ id }: { id: string }) {
   const router = useRouter();
+  const { t } = useTranslation();
   const submit = useSubmitSkillAssessment(id);
   const { data: assessment, isLoading: loadingAssessment } = useSkillAssessment(id);
   const {
@@ -37,6 +35,10 @@ function ResultContent({ id }: { id: string }) {
     refetch,
   } = useSkillAssessmentResult(id, !submit.isPending);
   const [pendingDone, setPendingDone] = useState(false);
+  const displayTopic = useAssessmentTopicLabel(
+    assessment?.topic ?? '',
+    assessment?.customTopic ?? null,
+  );
 
   useEffect(() => {
     if (pendingDone || submit.isPending || submit.isSuccess) return;
@@ -87,7 +89,7 @@ function ResultContent({ id }: { id: string }) {
     return (
       <Container className="max-w-6xl py-20">
         <div className="mx-auto max-w-lg rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <h1 className="text-2xl font-bold text-ink">Assessment not found</h1>
+          <h1 className="text-2xl font-bold text-ink">{t('marketing.assessNotFoundTitle')}</h1>
         </div>
       </Container>
     );
@@ -97,16 +99,16 @@ function ResultContent({ id }: { id: string }) {
     return (
       <Container className="max-w-6xl py-20">
         <div className="mx-auto max-w-lg rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <h1 className="text-2xl font-bold text-ink">Results not available</h1>
+          <h1 className="text-2xl font-bold text-ink">{t('marketing.assessResultsUnavailable')}</h1>
           <p className="mt-2 text-sm leading-6 text-ink-2">
-            Complete the assessment and sign in to view your private results.
+            {t('marketing.assessResultsUnavailableDesc')}
           </p>
           <button
             type="button"
             onClick={() => router.push(`/assessment/${id}`)}
             className="mt-6 inline-flex h-11 items-center rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-primary-dark"
           >
-            Return to assessment
+            {t('marketing.assessReturnToAssessment')}
           </button>
         </div>
       </Container>
@@ -119,7 +121,7 @@ function ResultContent({ id }: { id: string }) {
 
   return (
     <SkillAssessmentResultView
-      topicLabel={topicLabel(assessment.topic, assessment.customTopic)}
+      topicLabel={displayTopic}
       questions={assessment.questions}
       submission={submission}
       answers={answersMap}

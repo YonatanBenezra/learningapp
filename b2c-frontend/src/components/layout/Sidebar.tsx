@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, createContext, useContext, useCallback } from "react";
+import { useState, createContext, useContext, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -72,13 +72,13 @@ interface NavItem {
 }
 
 interface NavGroup {
-  title: string;
+  titleKey: MessageKey;
   items: NavItem[];
 }
 
 const learnerNavGroups: NavGroup[] = [
   {
-    title: "Overview",
+    titleKey: "nav.groupOverview",
     items: [
       { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
       { labelKey: "nav.courses", href: "/my-courses", icon: BookOpen },
@@ -87,7 +87,7 @@ const learnerNavGroups: NavGroup[] = [
     ],
   },
   {
-    title: "Learning",
+    titleKey: "nav.groupLearning",
     items: [
       { labelKey: "nav.quizzes", href: "/quizzes", icon: ClipboardList },
       { labelKey: "nav.networkLab", href: "/network-lab", icon: Network },
@@ -96,7 +96,7 @@ const learnerNavGroups: NavGroup[] = [
     ],
   },
   {
-    title: "Account",
+    titleKey: "nav.groupAccount",
     items: [
       { labelKey: "nav.settings", href: "/settings", icon: Settings },
       { labelKey: "nav.upgrade", href: "/upgrade", icon: Crown },
@@ -106,12 +106,12 @@ const learnerNavGroups: NavGroup[] = [
 ];
 
 const accountSettingsGroup: NavGroup = {
-  title: "Account",
+  titleKey: "nav.groupAccount",
   items: [{ labelKey: "nav.settings", href: "/settings", icon: Settings }],
 };
 
 const adminGroup: NavGroup = {
-  title: "Admin",
+  titleKey: "nav.groupAdmin",
   items: [
     { labelKey: "nav.adminMetrics", href: "/admin/metrics", icon: LayoutDashboard },
     { labelKey: "nav.adminActivity", href: "/admin/activity", icon: TrendingUp },
@@ -129,7 +129,7 @@ const adminGroup: NavGroup = {
 };
 
 const instructorGroup: NavGroup = {
-  title: "Instructor",
+  titleKey: "nav.groupInstructor",
   items: [
     { labelKey: "nav.instructorDashboard", href: "/instructor/dashboard", icon: LayoutDashboard },
     { labelKey: "nav.instructorCourses", href: "/instructor/courses", icon: BookOpen },
@@ -167,16 +167,19 @@ function SidebarNavItem({
   active,
   collapsed,
   label,
+  onNavigate,
 }: {
   item: NavItem;
   active: boolean;
   collapsed: boolean;
   label: string;
+  onNavigate?: () => void;
 }) {
   return (
     <Link
       href={item.href}
       title={collapsed ? label : undefined}
+      onClick={onNavigate}
       className={cn(
         "group flex items-center text-sm font-medium transition-colors duration-200",
         collapsed ? "justify-center rounded-xl px-0 py-2.5" : "gap-3 rounded-xl px-3 py-2.5",
@@ -207,10 +210,12 @@ function SidebarGroupSection({
   group,
   collapsed,
   role,
+  onNavigate,
 }: {
   group: NavGroup;
   collapsed: boolean;
   role?: string | null;
+  onNavigate?: () => void;
 }) {
   const pathname = usePathname();
   const { t } = useTranslation();
@@ -219,7 +224,7 @@ function SidebarGroupSection({
   return (
     <div className={collapsed ? "px-2" : "px-4"}>
       {!collapsed && (
-        <p className="mb-2 px-3 text-xs font-medium text-ink-3">{group.title}</p>
+        <p className="mb-2 px-3 text-xs font-medium text-ink-3">{t(group.titleKey)}</p>
       )}
       <div className="flex flex-col gap-0.5">
         {group.items.map((item) => {
@@ -232,6 +237,7 @@ function SidebarGroupSection({
               active={active}
               collapsed={collapsed}
               label={t(item.labelKey)}
+              onNavigate={onNavigate}
             />
           );
         })}
@@ -265,7 +271,7 @@ export function Sidebar() {
   const groups = sidebarGroupsForRole(role);
   const showUpgradeCta = !role || role === "user";
 
-  const renderContent = (isCollapsed: boolean) => (
+  const renderContent = (isCollapsed: boolean, onNavigate?: () => void) => (
     <div className="flex h-full flex-col bg-bg-elev">
       <div className={cn("border-b border-line py-4", isCollapsed ? "px-3" : "px-4")}>
         <BrandLogo collapsed={isCollapsed} homeHref={homeHref} />
@@ -275,10 +281,11 @@ export function Sidebar() {
         <div className="flex flex-col gap-6">
           {groups.map((group) => (
             <SidebarGroupSection
-              key={group.title}
+              key={group.titleKey}
               group={group}
               collapsed={isCollapsed}
               role={role}
+              onNavigate={onNavigate}
             />
           ))}
         </div>
@@ -290,6 +297,7 @@ export function Sidebar() {
             <Link
               href="/upgrade"
               title={t("nav.upgrade")}
+              onClick={onNavigate}
               className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary transition hover:bg-primary/10"
             >
               <Crown className="size-4" />
@@ -297,6 +305,7 @@ export function Sidebar() {
           ) : (
             <Link
               href="/upgrade"
+              onClick={onNavigate}
               className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-primary text-sm font-semibold text-primary-ink transition hover:bg-primary-dark"
             >
               <Crown className="size-4" />
@@ -322,6 +331,15 @@ export function Sidebar() {
     </div>
   );
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
   return (
     <>
       <AnimatePresence>
@@ -339,13 +357,13 @@ export function Sidebar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.aside
-            initial={{ x: -280 }}
+            initial={{ x: 280 }}
             animate={{ x: 0 }}
-            exit={{ x: -280 }}
+            exit={{ x: 280 }}
             transition={{ type: "spring", damping: 28, stiffness: 220 }}
-            className="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-line shadow-card lg:hidden"
+            className="fixed inset-y-0 right-0 z-50 flex w-[min(100vw-2.5rem,280px)] flex-col border-l border-line bg-bg-elev shadow-card lg:hidden"
           >
-            {renderContent(false)}
+            {renderContent(false, closeMobile)}
           </motion.aside>
         )}
       </AnimatePresence>

@@ -4,6 +4,7 @@ import { memo } from 'react';
 import Link from 'next/link';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { GripVertical, Pencil, Trash2 } from 'lucide-react';
+import { useTranslation } from '@/src/i18n';
 import { cn } from '@/src/lib/utils';
 import { useStructureFlowActions } from '@/src/features/instructor/StructureFlowActionsContext';
 
@@ -16,6 +17,7 @@ export type StructureNodeData = {
 };
 
 function StructureFlowNodeComponent({ data, selected }: NodeProps) {
+  const { t } = useTranslation();
   const nodeData = data as StructureNodeData;
   const { editable, onEdit, onDelete } = useStructureFlowActions();
   const isModule = nodeData.kind === 'module';
@@ -55,7 +57,7 @@ function StructureFlowNodeComponent({ data, selected }: NodeProps) {
         <div className="nodrag nopan mt-2 flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
           <button
             type="button"
-            aria-label="Edit title"
+            aria-label={t('instructor.editTitle')}
             onClick={(event) => {
               event.stopPropagation();
               onEdit(nodeData.kind, nodeData.entityId, plainTitle);
@@ -66,7 +68,7 @@ function StructureFlowNodeComponent({ data, selected }: NodeProps) {
           </button>
           <button
             type="button"
-            aria-label="Delete"
+            aria-label={t('instructor.deleteItem')}
             onClick={(event) => {
               event.stopPropagation();
               onDelete(nodeData.kind, nodeData.entityId, plainTitle);

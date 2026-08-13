@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { ChevronRight, Plus } from 'lucide-react';
+import { useTranslation } from '@/src/i18n';
 import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { ApiError } from '@/src/infrastructure/apiClient';
@@ -63,6 +64,7 @@ function InstructorCoursesSkeleton() {
 }
 
 export function InstructorCoursesPage() {
+  const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useInstructorCourses();
   const deleteCourse = useDeleteInstructorCourse();
   const [courseToDelete, setCourseToDelete] = useState<InstructorCourse | null>(null);
@@ -77,9 +79,9 @@ export function InstructorCoursesPage() {
     return (
       <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg p-4 sm:p-6 lg:p-8">
         <div className="rounded-lg border border-line bg-bg-elev p-10 text-center shadow-soft">
-          <p className="font-semibold text-ink">Could not load your courses.</p>
+          <p className="font-semibold text-ink">{t('instructor.loadCoursesError')}</p>
           <Button variant="soft" className="mt-4 rounded-lg" onClick={() => refetch()}>
-            Retry
+            {t('common.retry')}
           </Button>
         </div>
       </div>
@@ -111,7 +113,7 @@ export function InstructorCoursesPage() {
           setDeleteError(err.message);
           return;
         }
-        setDeleteError('Could not delete this course.');
+        setDeleteError(t('instructor.deleteCourseError'));
       },
     });
   }
@@ -123,28 +125,26 @@ export function InstructorCoursesPage() {
           <section className="rounded-lg border border-line bg-bg-elev p-6 shadow-soft sm:p-8">
             <nav className="flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
               <Link href="/instructor/dashboard" className="transition hover:text-primary">
-                Instructor hub
+                {t('instructor.hub')}
               </Link>
               <ChevronRight className="size-3.5" />
-              <span className="font-medium text-ink">My courses</span>
+              <span className="font-medium text-ink">{t('instructor.myCourses')}</span>
             </nav>
 
             <div className="mt-5 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               <div className="max-w-2xl">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
-                  Marketplace
+                  {t('instructor.marketplace')}
                 </p>
                 <h1 className="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-                  My courses
+                  {t('instructor.myCourses')}
                 </h1>
-                <p className="mt-3 text-base leading-7 text-ink-2">
-                  Create, publish, and manage the courses you sell to learners.
-                </p>
+                <p className="mt-3 text-base leading-7 text-ink-2">{t('instructor.coursesPageDesc')}</p>
               </div>
               <Link href="/instructor/courses/new">
                 <Button className="rounded-lg bg-primary hover:bg-primary-dark">
                   <Plus className="size-4" />
-                  Create course
+                  {t('instructor.createCourse')}
                 </Button>
               </Link>
             </div>
@@ -152,13 +152,11 @@ export function InstructorCoursesPage() {
 
           {courses.length === 0 ? (
             <div className="rounded-lg border border-dashed border-line-2 bg-bg-elev p-12 text-center shadow-soft">
-              <p className="text-lg font-semibold text-ink">No instructor courses yet</p>
-              <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">
-                Create your first course, set a price, and publish it for learners to buy.
-              </p>
+              <p className="text-lg font-semibold text-ink">{t('instructor.noCoursesYet')}</p>
+              <p className="mx-auto mt-2 max-w-md text-sm text-ink-2">{t('instructor.noCoursesHint')}</p>
               <Link href="/instructor/courses/new" className="mt-6 inline-block">
                 <Button className="rounded-lg bg-primary hover:bg-primary-dark">
-                  Create your first course
+                  {t('instructor.createFirstCourse')}
                 </Button>
               </Link>
             </div>

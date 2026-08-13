@@ -48,10 +48,3 @@ export function buildCategoryCounts(courses: { category: string }[]): Map<string
 
   return counts;
 }
-
-export function formatCourseCount(count: number | undefined): string {
-  if (count === undefined) return 'Loading courses…';
-  if (count === 0) return 'No courses yet';
-  if (count === 1) return '1 course available';
-  return `${count} courses available`;
-}

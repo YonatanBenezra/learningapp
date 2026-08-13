@@ -12,6 +12,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { BookOpen, CheckCircle2, GripHorizontal, Loader2, Sparkles } from 'lucide-react';
+import { useTranslation } from '@/src/i18n';
 import { cn } from '@/src/lib/utils';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { useCourseStructure } from '@/src/features/courses';
@@ -160,6 +161,7 @@ export function CourseGenerationFlowPanel({
   isGenerating: boolean;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const editable = !isGenerating;
   const { data, isLoading, isFetching } = useCourseStructure(courseId, {
@@ -293,7 +295,7 @@ export function CourseGenerationFlowPanel({
         const currentOrder = orderFromModules(modules);
         if (!ordersEqual(nextOrder, currentOrder)) {
           reorderStructure.mutate(nextOrder, {
-            onError: () => setStructureError('Could not save the new order.'),
+            onError: () => setStructureError(t('instructor.saveOrderError')),
           });
         }
         return snapped;
@@ -338,7 +340,7 @@ export function CourseGenerationFlowPanel({
         ) : (
           <div className="inline-flex items-center gap-2 rounded-lg border border-good/20 bg-good-soft px-3 py-2 text-sm font-medium text-good">
             <CheckCircle2 className="size-4" />
-            Generation complete
+            {t('instructor.generationComplete')}
           </div>
         )}
       </div>
@@ -386,7 +388,7 @@ export function CourseGenerationFlowPanel({
           <div className="flex items-center gap-2">
             <Sparkles className="size-4 text-primary" />
             <h4 className="text-sm font-semibold text-ink">
-              {isGenerating ? 'Generation activity' : 'Recent changes'}
+              {isGenerating ? t('instructor.generationActivity') : t('instructor.recentChanges')}
             </h4>
           </div>
 
@@ -448,7 +450,7 @@ export function CourseGenerationFlowPanel({
               {
                 onSuccess: () => setEditTarget(null),
                 onError: (error) =>
-                  setStructureError(mutationErrorMessage(error, 'Could not update the title.')),
+                  setStructureError(mutationErrorMessage(error, t('instructor.updateTitleError'))),
               },
             );
             return;
@@ -483,7 +485,7 @@ export function CourseGenerationFlowPanel({
           mutation.mutate(deleteTarget.id, {
             onSuccess: () => setDeleteTarget(null),
             onError: (error) =>
-              setStructureError(mutationErrorMessage(error, 'Could not delete this item.')),
+              setStructureError(mutationErrorMessage(error, t('instructor.deleteItemError'))),
           });
         }}
       />

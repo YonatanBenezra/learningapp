@@ -30,6 +30,7 @@ import { usePurchaseMarketplaceCourse } from '@/src/features/marketplace';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { toast } from '@/src/lib/toast';
 import { cn } from '@/src/lib/utils';
+import { useIsRtl, useTranslation } from '@/src/i18n';
 
 type DetailTab = 'overview' | 'curriculum';
 
@@ -145,9 +146,9 @@ function moduleLessonCount(modules: MarketplaceCourseDetailResponse['modules']):
   return modules.reduce((total, module) => total + module.lessons.length, 0);
 }
 
-const TABS: { id: DetailTab; label: string; icon: typeof BookOpen }[] = [
-  { id: 'overview', label: 'Overview', icon: BookOpen },
-  { id: 'curriculum', label: 'Curriculum', icon: Layers3 },
+const TABS: { id: DetailTab; labelKey: 'marketplace.tabOverview' | 'marketplace.tabCurriculum'; icon: typeof BookOpen }[] = [
+  { id: 'overview', labelKey: 'marketplace.tabOverview', icon: BookOpen },
+  { id: 'curriculum', labelKey: 'marketplace.tabCurriculum', icon: Layers3 },
 ];
 
 function MetaItem({
@@ -177,17 +178,19 @@ function SidebarIncludes({
   moduleTotal: number;
   level: string;
 }) {
+  const { t } = useTranslation();
+
   const items = [
-    { icon: BookOpen, label: 'Lessons', value: String(lessonTotal) },
-    { icon: Hash, label: 'Modules', value: String(moduleTotal) },
-    { icon: Clock3, label: 'Access', value: 'Lifetime' },
-    { icon: BarChart3, label: 'Skill level', value: formatLevel(level) },
-    { icon: Award, label: 'Certificate', value: 'On completion' },
+    { icon: BookOpen, label: t('marketplace.includesLessons'), value: String(lessonTotal) },
+    { icon: Hash, label: t('marketplace.includesModules'), value: String(moduleTotal) },
+    { icon: Clock3, label: t('marketplace.includesAccess'), value: t('marketplace.lifetime') },
+    { icon: BarChart3, label: t('marketplace.skillLevel'), value: formatLevel(level) },
+    { icon: Award, label: t('marketplace.certificate'), value: t('marketplace.onCompletion') },
   ];
 
   return (
     <div className="mt-6 border-t border-line pt-5">
-      <h3 className="text-sm font-semibold text-ink">This course includes</h3>
+      <h3 className="text-sm font-semibold text-ink">{t('marketplace.courseIncludes')}</h3>
       <ul className="mt-4 divide-y divide-line">
         {items.map((item) => (
           <li key={item.label} className="flex items-center justify-between gap-3 py-3 text-sm">
@@ -210,6 +213,8 @@ export function MarketplaceCourseDetailPage({
 }: {
   data: MarketplaceCourseDetailResponse;
 }) {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const { course, modules } = data;
   const router = useRouter();
   const hydrated = useAuthHydrated();
@@ -250,12 +255,12 @@ export function MarketplaceCourseDetailPage({
     setPurchaseError(null);
     purchase.mutate(course.id, {
       onSuccess: () => {
-        toast.success(`Enrolled in "${course.title}". Find it in My Courses.`);
+        toast.success(t('marketplace.enrolledToast', { title: course.title }));
         router.push(learnerCoursePath(course.id));
       },
       onError: (error) => {
         const message =
-          error instanceof ApiError ? error.message : 'Could not complete enrollment.';
+          error instanceof ApiError ? error.message : t('marketplace.enrollError');
         setPurchaseError(message);
         toast.error(message);
       },
@@ -272,7 +277,7 @@ export function MarketplaceCourseDetailPage({
       return;
     }
     void navigator.clipboard?.writeText(window.location.href);
-    toast.success('Course link copied to clipboard');
+    toast.success(t('marketplace.linkCopied'));
   }
 
   return (
@@ -280,13 +285,13 @@ export function MarketplaceCourseDetailPage({
       <Container className="py-6 lg:py-8">
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
           <Link href="/" className="transition hover:text-primary">
-            Home
+            {t('marketplace.home')}
           </Link>
-          <ChevronRight className="size-3.5" />
+          <ChevronRight className={`size-3.5${isRtl ? ' rotate-180' : ''}`} />
           <Link href="/courses" className="transition hover:text-primary">
-            Courses
+            {t('marketplace.courses')}
           </Link>
-          <ChevronRight className="size-3.5" />
+          <ChevronRight className={`size-3.5${isRtl ? ' rotate-180' : ''}`} />
           <span className="line-clamp-1 font-medium text-ink-2">{course.title}</span>
         </nav>
 
@@ -302,9 +307,9 @@ export function MarketplaceCourseDetailPage({
               </h1>
 
               <div className="mt-5 grid gap-4 border-y border-line py-5 sm:grid-cols-2 lg:grid-cols-3">
-                <MetaItem label="Students" value={String(course.enrollmentCount)} sub="Enrolled learners" />
-                <MetaItem label="Lessons" value={String(lessonTotal)} sub={`${moduleTotal} modules`} />
-                <MetaItem label="Level" value={formatLevel(course.level)} sub="Recommended skill" />
+                <MetaItem label={t('marketplace.students')} value={String(course.enrollmentCount)} sub={t('marketplace.enrolledLearners')} />
+                <MetaItem label={t('marketplace.includesLessons')} value={String(lessonTotal)} sub={`${moduleTotal} ${t('marketplace.includesModules').toLowerCase()}`} />
+                <MetaItem label={t('marketplace.level')} value={formatLevel(course.level)} sub={t('marketplace.recommendedSkill')} />
               </div>
 
               <div className="mt-5 overflow-hidden rounded-lg border border-line">
@@ -325,7 +330,7 @@ export function MarketplaceCourseDetailPage({
                         )}
                       >
                         <Icon className="size-4" />
-                        {tab.label}
+                        {t(tab.labelKey)}
                       </button>
                     );
                   })}
@@ -335,16 +340,15 @@ export function MarketplaceCourseDetailPage({
                   {activeTab === 'overview' ? (
                     <div className="space-y-8">
                       <section>
-                        <h2 className="text-lg font-bold text-ink">Course overview</h2>
+                        <h2 className="text-lg font-bold text-ink">{t('marketplace.courseOverview')}</h2>
                         <p className="mt-3 text-base leading-7 text-ink-2 sm:text-lg">
-                          {course.description ||
-                            'A structured learning path with AI-generated modules, lessons, and practical exercises.'}
+                          {course.description || t('marketplace.defaultDescription')}
                         </p>
                       </section>
 
                       {course.topics.length > 0 ? (
                         <section>
-                          <h2 className="text-lg font-bold text-ink">What you&apos;ll learn</h2>
+                          <h2 className="text-lg font-bold text-ink">{t('marketplace.whatYouLearn')}</h2>
                           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                             {course.topics.map((topic) => (
                               <li
@@ -365,9 +369,12 @@ export function MarketplaceCourseDetailPage({
                     <div>
                       <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
-                          <h2 className="text-lg font-bold text-ink">Course curriculum</h2>
+                          <h2 className="text-lg font-bold text-ink">{t('marketplace.courseCurriculum')}</h2>
                           <p className="mt-1 text-base text-ink-2 sm:text-lg">
-                            {moduleTotal} modules · {lessonTotal} lessons
+                            {t('marketplace.modulesLessons', {
+                              modules: String(moduleTotal),
+                              lessons: String(lessonTotal),
+                            })}
                           </p>
                         </div>
                       </div>
@@ -375,9 +382,9 @@ export function MarketplaceCourseDetailPage({
                       <div className="mt-5 space-y-3">
                         {modules.length === 0 ? (
                           <div className="rounded-lg border border-dashed border-line-2 bg-bg-soft px-4 py-8 text-center">
-                            <p className="text-base font-medium text-ink sm:text-lg">Curriculum coming soon</p>
+                            <p className="text-base font-medium text-ink sm:text-lg">{t('marketplace.curriculumComingSoon')}</p>
                             <p className="mt-1 text-base text-ink-2 sm:text-lg">
-                              Modules and lessons will appear here once published.
+                              {t('marketplace.curriculumComingSoonDesc')}
                             </p>
                           </div>
                         ) : (
@@ -392,12 +399,15 @@ export function MarketplaceCourseDetailPage({
                               >
                                 <div className="min-w-0">
                                   <p className="text-sm font-semibold uppercase tracking-wide text-ink-3">
-                                    Module {index + 1}
+                                    {t('marketplace.moduleN', { n: String(index + 1) })}
                                   </p>
                                   <p className="mt-1 font-semibold text-ink">{module.title}</p>
                                   <p className="mt-1 text-sm text-ink-2">
-                                    {module.lessons.length} lesson
-                                    {module.lessons.length === 1 ? '' : 's'}
+                                    {module.lessons.length === 1
+                                      ? t('marketplace.lessonCountOne')
+                                      : t('marketplace.lessonCountMany', {
+                                          count: String(module.lessons.length),
+                                        })}
                                   </p>
                                 </div>
                                 <ChevronDown
@@ -444,9 +454,9 @@ export function MarketplaceCourseDetailPage({
                 <p className="mt-1 text-sm text-ink-2">
                   {isInstructor
                     ? isCourseOwner
-                      ? 'Your published marketplace course'
-                      : 'Listed for learners on LabPath'
-                    : 'One-time payment · Lifetime access'}
+                      ? t('marketplace.yourPublishedCourse')
+                      : t('marketplace.listedForLearners')
+                    : t('marketplace.oneTimePayment')}
                 </p>
               </div>
 
@@ -459,16 +469,13 @@ export function MarketplaceCourseDetailPage({
                       className: 'mt-5 h-12 w-full rounded-full text-base font-semibold',
                     })}
                   >
-                    Manage this course
+                    {t('marketplace.manageCourse')}
                     <ChevronsRight className="size-5" />
                   </Link>
                 ) : (
                   <div className="mt-5 rounded-2xl border border-line bg-bg-soft p-4 text-center">
-                    <p className="text-sm font-semibold text-ink">Instructor account</p>
-                    <p className="mt-1 text-xs leading-5 text-ink-2">
-                      Marketplace enrollment is for learners only. Create and manage your own courses
-                      from the instructor dashboard.
-                    </p>
+                    <p className="text-sm font-semibold text-ink">{t('marketplace.instructorAccount')}</p>
+                    <p className="mt-1 text-xs leading-5 text-ink-2">{t('marketplace.enrollmentLearnersOnly')}</p>
                     <Link
                       href="/instructor/courses"
                       className={buttonClasses({
@@ -477,7 +484,7 @@ export function MarketplaceCourseDetailPage({
                         className: 'mt-4 w-full rounded-full',
                       })}
                     >
-                      Go to instructor courses
+                      {t('marketplace.goToInstructorCourses')}
                     </Link>
                   </div>
                 )
@@ -489,7 +496,7 @@ export function MarketplaceCourseDetailPage({
                     className: 'mt-5 h-12 w-full rounded-full text-base font-semibold',
                   })}
                 >
-                  Continue learning
+                  {t('marketplace.continueLearning')}
                   <ChevronsRight className="size-5" />
                 </Link>
               ) : (
@@ -503,7 +510,7 @@ export function MarketplaceCourseDetailPage({
                     <Loader2 className="size-5 animate-spin" />
                   ) : (
                     <>
-                      {isAuthenticated ? 'Enroll now' : 'Sign up to enroll'}
+                      {isAuthenticated ? t('marketplace.enrollNow') : t('marketplace.signUpToEnroll')}
                       <ChevronsRight className="size-5" />
                     </>
                   )}
@@ -515,12 +522,12 @@ export function MarketplaceCourseDetailPage({
                 ) : null}
 
                 <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4">
-                  <span className="text-sm font-medium text-ink-2">Share course</span>
+                  <span className="text-sm font-medium text-ink-2">{t('marketplace.shareCourse')}</span>
                   <button
                     type="button"
                     onClick={handleShare}
                     className="inline-flex size-9 items-center justify-center rounded-full border border-line text-ink-2 transition hover:border-primary hover:text-primary"
-                    aria-label="Share course"
+                    aria-label={t('marketplace.shareCourse')}
                   >
                     <Share2 className="size-4" />
                   </button>
@@ -534,7 +541,7 @@ export function MarketplaceCourseDetailPage({
 
                 <div className="mt-5 flex items-start gap-2 rounded-lg bg-primary-soft/50 p-4 text-sm text-ink-2">
                   <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" />
-                  AI-built curriculum with quizzes, exercises, and structured lesson flow.
+                  {t('marketplace.aiBuiltCurriculum')}
                 </div>
             </div>
           </aside>

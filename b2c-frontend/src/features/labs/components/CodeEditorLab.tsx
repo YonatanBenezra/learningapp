@@ -12,6 +12,7 @@ import {
 import { MonacoCodeEditor } from '@/src/components/ui/MonacoCodeEditor';
 import { Button } from '@/src/components/ui/button';
 import { cn } from '@/src/lib/utils';
+import { useTranslation } from '@/src/i18n';
 import { executeCode, type CodeLanguage, type SandboxResult } from '../labsApi';
 
 export interface CodeEditorSubmission {
@@ -20,10 +21,10 @@ export interface CodeEditorSubmission {
   lastRun?: SandboxResult | null;
 }
 
-const LANGUAGES: { id: CodeLanguage; label: string; monaco: string }[] = [
-  { id: 'javascript', label: 'JavaScript', monaco: 'javascript' },
-  { id: 'python', label: 'Python', monaco: 'python' },
-  { id: 'shell', label: 'Shell', monaco: 'shell' },
+const LANGUAGES: { id: CodeLanguage; labelKey: 'labs.langJavaScript' | 'labs.langPython' | 'labs.langShell'; monaco: string }[] = [
+  { id: 'javascript', labelKey: 'labs.langJavaScript', monaco: 'javascript' },
+  { id: 'python', labelKey: 'labs.langPython', monaco: 'python' },
+  { id: 'shell', labelKey: 'labs.langShell', monaco: 'shell' },
 ];
 
 function parseStarter(starterState: unknown): { language: CodeLanguage; code: string } {
@@ -59,6 +60,7 @@ export function CodeEditorLab({
   onChange: (data: CodeEditorSubmission) => void;
   readOnly?: boolean;
 }) {
+  const { t } = useTranslation();
   const initial = parseStarter(starterState);
   const [language, setLanguage] = useState<CodeLanguage>(value?.language ?? initial.language);
   const [code, setCode] = useState(value?.code ?? initial.code);
@@ -83,7 +85,7 @@ export function CodeEditorLab({
       const result = await executeCode({ language, code });
       setLastRun(result);
     } catch {
-      setRunError('Could not run code. Check your sandbox limits or try again.');
+      setRunError(t('labs.runCodeError'));
     } finally {
       setRunning(false);
     }
@@ -99,15 +101,15 @@ export function CodeEditorLab({
     editorRef.current = editorInstance;
     editorInstance.addAction({
       id: 'run-code',
-      label: 'Run Code',
+      label: t('labs.runCodeAction'),
       keybindings: [2048 | 3], // Ctrl/Cmd + Enter
       run: () => runCodeRef.current(),
     });
     editorInstance.focus();
-  }, []);
+  }, [t]);
 
   const lineCount = code.split('\n').length;
-  const outputText = lastRun ? lastRun.stdout || lastRun.stderr || '(no output)' : '';
+  const outputText = lastRun ? lastRun.stdout || lastRun.stderr || t('labs.noOutput') : '';
   const hasOutput = Boolean(runError || lastRun);
 
   return (
@@ -129,12 +131,12 @@ export function CodeEditorLab({
                   readOnly && language !== item.id && 'opacity-50',
                 )}
               >
-                {item.label}
+                {t(item.labelKey)}
               </button>
             ))}
           </div>
           <span className="hidden text-[11px] text-[#858585] sm:inline">
-            {lineCount} {lineCount === 1 ? 'line' : 'lines'}
+            {lineCount === 1 ? t('labs.lineOne') : t('labs.linesMany', { count: String(lineCount) })}
           </span>
         </div>
 
@@ -150,11 +152,11 @@ export function CodeEditorLab({
             ) : (
               <Play className="size-3.5 fill-current" />
             )}
-            Run code
-            <span className="hidden text-[10px] font-normal opacity-70 sm:inline">Ctrl+Enter</span>
+            {t('labs.runCode')}
+            <span className="hidden text-[10px] font-normal opacity-70 sm:inline">{t('labs.ctrlEnter')}</span>
           </Button>
         ) : (
-          <span className="text-xs text-[#858585]">Read-only mode</span>
+          <span className="text-xs text-[#858585]">{t('labs.readOnlyMode')}</span>
         )}
       </div>
 
@@ -177,7 +179,7 @@ export function CodeEditorLab({
         >
           <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-[#cccccc]">
             <TerminalSquare className="size-3.5 text-[#007F8E]" />
-            Output
+            {t('labs.output')}
           </span>
           <span className="flex items-center gap-3 text-[11px] text-[#858585]">
             {lastRun ? (
@@ -189,11 +191,11 @@ export function CodeEditorLab({
                       lastRun.exitCode === 0 ? 'text-[#4ec9b0]' : 'text-[#f48771]',
                     )}
                   />
-                  exit {lastRun.exitCode ?? '—'}
+                  {t('labs.exitCode', { code: String(lastRun.exitCode ?? '—') })}
                 </span>
                 <span>{formatDuration(lastRun.durationMs)}</span>
-                {lastRun.timedOut ? <span>timed out</span> : null}
-                {lastRun.oom ? <span>oom</span> : null}
+                {lastRun.timedOut ? <span>{t('labs.timedOut')}</span> : null}
+                {lastRun.oom ? <span>{t('labs.oom')}</span> : null}
               </>
             ) : null}
             <ChevronDown
@@ -212,7 +214,7 @@ export function CodeEditorLab({
               </pre>
             ) : (
               <p className="font-mono text-sm text-[#6e7681]">
-                Run your code to see stdout and stderr here.
+                {t('labs.runCodeHint')}
               </p>
             )}
           </div>

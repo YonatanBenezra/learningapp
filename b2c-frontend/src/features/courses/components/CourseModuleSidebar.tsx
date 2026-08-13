@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronRight, Circle, CircleCheck } from 'lucide-react';
 import type { StructureModule } from '@/src/features/courses/coursesApi';
+import { useIsRtl, useTranslation } from '@/src/i18n';
 import { cn } from '@/src/lib/utils';
 
 interface CourseModuleSidebarProps {
@@ -21,18 +22,21 @@ export function CourseModuleSidebar({
   onToggleModule,
   onSelectLesson,
 }: CourseModuleSidebarProps) {
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
+
   return (
     <aside className="flex h-full min-h-0 w-full flex-col border-b border-line bg-bg-elev lg:w-[360px] lg:border-b-0 lg:border-l">
       <div className="shrink-0 border-b border-line px-4 py-4">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-          Course content
+          {t('player.courseContent')}
         </p>
-        <h2 className="mt-1 text-sm font-semibold text-ink">Modules</h2>
+        <h2 className="mt-1 text-sm font-semibold text-ink">{t('player.modules')}</h2>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-2">
         {modules.length === 0 ? (
-          <p className="px-2 py-4 text-sm text-ink-3">No modules available yet.</p>
+          <p className="px-2 py-4 text-sm text-ink-3">{t('player.noModules')}</p>
         ) : (
           <div className="space-y-1">
             {modules.map((module, index) => {
@@ -55,13 +59,13 @@ export function CourseModuleSidebar({
                         {module.title}
                       </span>
                       <span className="mt-0.5 block text-[11px] text-ink-3">
-                        {module.lessonCount} lessons
+                        {t('player.lessonCount', { count: String(module.lessonCount) })}
                       </span>
                     </span>
                     {expanded ? (
                       <ChevronDown className="size-4 shrink-0 text-ink-3" />
                     ) : (
-                      <ChevronRight className="size-4 shrink-0 text-ink-3" />
+                      <ChevronRight className={`size-4 shrink-0 text-ink-3${isRtl ? ' rotate-180' : ''}`} />
                     )}
                   </button>
 

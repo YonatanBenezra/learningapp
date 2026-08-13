@@ -19,6 +19,7 @@ import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { ApiError } from '@/src/infrastructure/apiClient';
+import { useTranslation } from '@/src/i18n';
 
 function formatGenerationError(err: unknown, fallback: string): string {
   if (err instanceof ApiError) return err.message;
@@ -42,6 +43,7 @@ export function CourseLessonPanel({
   moduleDomain,
   position,
 }: CourseLessonPanelProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const lessonQ = useLesson(lessonId);
   const { mutate: startLesson } = useStartLesson();
@@ -73,8 +75,8 @@ export function CourseLessonPanel({
     return (
       <div className="flex items-center justify-center p-6">
         <div className="rounded-xl border border-line bg-bg-soft p-8 text-center">
-          <p className="font-medium text-ink">Unable to load this lesson.</p>
-          <p className="mt-1 text-sm text-ink-2">Select another item from the module list.</p>
+          <p className="font-medium text-ink">{t('player.loadLessonError')}</p>
+          <p className="mt-1 text-sm text-ink-2">{t('player.selectAnotherItem')}</p>
         </div>
       </div>
     );
@@ -95,12 +97,12 @@ export function CourseLessonPanel({
           ) : null}
           {position ? (
             <Badge variant="default">
-              Lesson {position.n} of {position.total}
+              {t('player.lessonOf', { current: String(position.n), total: String(position.total) })}
             </Badge>
           ) : null}
           {isCompleted ? (
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-good">
-              <CheckCircle2 className="size-4" /> Completed
+              <CheckCircle2 className="size-4" /> {t('player.completed')}
             </span>
           ) : null}
           {labMeta ? <Badge variant="default">{labMeta.label}</Badge> : null}
@@ -115,15 +117,13 @@ export function CourseLessonPanel({
         </article>
 
         <div className="mt-10 border-t border-line pt-8">
-          <p className="text-sm font-medium text-ink-2">
-            Finished reading? Optionally test your understanding or practice hands-on.
-          </p>
+          <p className="text-sm font-medium text-ink-2">{t('player.finishedReading')}</p>
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-line bg-bg-soft p-4">
-            <h3 className="font-semibold text-ink">Lesson quiz</h3>
-            <p className="mt-1 text-sm text-ink-2">Generate an AI quiz from this lesson.</p>
+            <h3 className="font-semibold text-ink">{t('player.lessonQuiz')}</h3>
+            <p className="mt-1 text-sm text-ink-2">{t('player.generateQuiz')}</p>
             <Button
               variant="soft"
               size="sm"
@@ -140,21 +140,21 @@ export function CourseLessonPanel({
               ) : (
                 <ClipboardList className="size-4" />
               )}
-              Take quiz
+              {t('player.takeQuiz')}
             </Button>
             {quizGen.isError ? (
               <p className="mt-2 text-xs text-bad">
-                {formatGenerationError(quizGen.error, 'Could not generate quiz.')}
+                {formatGenerationError(quizGen.error, t('player.generateQuizError'))}
               </p>
             ) : null}
           </div>
 
           <div className="rounded-xl border border-line bg-bg-soft p-4">
-            <h3 className="font-semibold text-ink">Hands-on practice</h3>
+            <h3 className="font-semibold text-ink">{t('player.handsOnPractice')}</h3>
             <p className="mt-1 text-sm text-ink-2">
               {labMeta
-                ? `Generate an exercise in the ${labMeta.label.toLowerCase()}.`
-                : 'Generate an AI exercise for this lesson.'}
+                ? t('player.generateExerciseLab', { lab: labMeta.label.toLowerCase() })
+                : t('player.generateExercise')}
             </p>
             <Button
               variant="soft"
@@ -173,11 +173,11 @@ export function CourseLessonPanel({
               ) : (
                 <Wrench className="size-4" />
               )}
-              Start exercise
+              {t('player.startExercise')}
             </Button>
             {exerciseGen.isError ? (
               <p className="mt-2 text-xs text-bad">
-                {formatGenerationError(exerciseGen.error, 'Could not generate exercise.')}
+                {formatGenerationError(exerciseGen.error, t('player.generateExerciseError'))}
               </p>
             ) : null}
           </div>
@@ -196,19 +196,24 @@ export function CourseCompletionBanner({
   courseProgressPercent: number;
   achievements: string[];
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="border-b border-good/30 bg-good-soft px-5 py-4 sm:px-6 lg:px-8">
       <div className="flex w-full flex-wrap items-center gap-x-6 gap-y-2">
         <span className="inline-flex items-center gap-2 font-semibold text-good">
-          <CheckCircle2 className="size-5" /> Lesson marked complete
+          <CheckCircle2 className="size-5" /> {t('player.lessonMarkedComplete')}
         </span>
         {streak ? (
           <span className="text-sm text-ink-2">
-            Streak: <span className="font-semibold text-ink">{streak.current} days</span>
+            {t('player.streak')}{' '}
+            <span className="font-semibold text-ink">
+              {t('player.streakDays', { count: String(streak.current) })}
+            </span>
           </span>
         ) : null}
         <span className="text-sm text-ink-2">
-          Course progress:{' '}
+          {t('player.courseProgress')}{' '}
           <span className="font-semibold text-ink">{courseProgressPercent}%</span>
         </span>
         {achievements.length > 0 ? (

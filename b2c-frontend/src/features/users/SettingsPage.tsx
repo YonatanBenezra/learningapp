@@ -16,7 +16,8 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useMe } from '@/src/features/auth';
 import { ApiError } from '@/src/infrastructure/apiClient';
-import { useTranslation } from '@/src/i18n';
+import { useIsRtl, useTranslation } from '@/src/i18n';
+import type { Tier } from '@/src/domain/user';
 import { LanguageSelector } from '@/src/components/layout/LanguageSelector';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
@@ -46,10 +47,16 @@ const TIMEZONES = [
 const selectClassName =
   'mt-2 w-full rounded-lg border border-line-2 bg-bg px-4 py-3 text-sm text-ink outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20';
 
-function mutationMessage(error: unknown) {
+function mutationMessage(error: unknown, fallback: string) {
   if (error instanceof ApiError) return error.message;
   if (error instanceof Error) return error.message;
-  return 'Something went wrong. Please try again.';
+  return fallback;
+}
+
+function tierLabel(t: ReturnType<typeof useTranslation>['t'], tier: Tier) {
+  if (tier === 'premium') return t('profile.tierPremium');
+  if (tier === 'standard') return t('profile.tierStandard');
+  return t('profile.tierFree');
 }
 
 function SettingsSkeleton() {
@@ -120,6 +127,7 @@ function PreferenceRow({
 
 export function SettingsPage() {
   const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const meQ = useMe();
   const updateMut = useUpdatePreferences();
   const exportMut = useExportUserData();
@@ -154,7 +162,7 @@ export function SettingsPage() {
         <div className="mx-auto max-w-6xl rounded-lg border border-line bg-bg-elev p-10 text-center shadow-soft">
           <p className="text-lg font-semibold text-ink">{t('settings.loadError')}</p>
           <Button variant="soft" className="mt-4 rounded-lg" onClick={() => meQ.refetch()}>
-            Retry
+            {t('common.retry')}
           </Button>
         </div>
       </div>
@@ -163,7 +171,7 @@ export function SettingsPage() {
 
   const user = meQ.data.user;
   const saveDisabled = updateMut.isPending;
-  const tierLabel = user.tier.charAt(0).toUpperCase() + user.tier.slice(1);
+  const planLabel = tierLabel(t, user.tier);
 
   return (
     <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg">
@@ -171,9 +179,9 @@ export function SettingsPage() {
         <section className="rounded-lg border border-line bg-bg-elev p-6 shadow-soft sm:p-8">
           <nav className="flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
             <Link href="/dashboard" className="transition hover:text-primary">
-              Dashboard
+              {t('nav.dashboard')}
             </Link>
-            <ChevronRight className="size-3.5" />
+            <ChevronRight className={`size-3.5${isRtl ? ' rotate-180' : ''}`} />
             <span className="font-medium text-ink">{t('settings.title')}</span>
           </nav>
 
@@ -184,7 +192,7 @@ export function SettingsPage() {
               </span>
               <div className="max-w-2xl">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
-                  Account
+                  {t('settings.account')}
                 </p>
                 <h1 className="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
                   {t('settings.title')}
@@ -195,7 +203,7 @@ export function SettingsPage() {
             <Link href="/profile">
               <Button variant="soft" className="rounded-lg">
                 <UserRound className="size-4" />
-                Edit profile
+                {t('settings.editProfile')}
               </Button>
             </Link>
           </div>
@@ -204,39 +212,39 @@ export function SettingsPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <SectionCard
             title={t('settings.profile')}
-            description="Your account details and current plan."
+            description={t('settings.accountDesc')}
             icon={UserRound}
           >
             <div className="space-y-4">
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('settings.email')}</Label>
                 <Input id="email" value={user.email} readOnly className="mt-2 bg-bg-soft" />
               </div>
               <div>
-                <Label htmlFor="tier">Plan</Label>
+                <Label htmlFor="tier">{t('settings.plan')}</Label>
                 <div className="mt-2 flex items-center gap-3">
                   <Input
                     id="tier"
-                    value={tierLabel}
+                    value={planLabel}
                     readOnly
                     className="bg-bg-soft capitalize"
                   />
                   <Badge variant={user.tier === 'premium' ? 'primary' : 'outline'}>
-                    {tierLabel}
+                    {planLabel}
                   </Badge>
                 </div>
               </div>
               {user.tier !== 'premium' ? (
                 <Link href="/upgrade" className="inline-block text-sm font-medium text-primary hover:underline">
-                  View upgrade options
+                  {t('settings.viewUpgrade')}
                 </Link>
               ) : null}
             </div>
           </SectionCard>
 
           <SectionCard
-            title="Regional"
-            description="Language and timezone preferences."
+            title={t('settings.regional')}
+            description={t('settings.regionalDesc')}
             icon={Globe}
           >
             <div className="space-y-4">
@@ -309,7 +317,7 @@ export function SettingsPage() {
           </div>
 
           {updateMut.isError ? (
-            <p className="mt-4 text-sm text-bad">{mutationMessage(updateMut.error)}</p>
+            <p className="mt-4 text-sm text-bad">{mutationMessage(updateMut.error, t('settings.mutationError'))}</p>
           ) : null}
           {updateMut.isSuccess ? (
             <p className="mt-4 text-sm font-medium text-good">{t('settings.saved')}</p>
@@ -347,7 +355,7 @@ export function SettingsPage() {
               {exportMut.isPending ? t('common.loading') : t('settings.exportData')}
             </Button>
             {exportMut.isError ? (
-              <p className="mt-3 text-sm text-bad">{mutationMessage(exportMut.error)}</p>
+              <p className="mt-3 text-sm text-bad">{mutationMessage(exportMut.error, t('settings.mutationError'))}</p>
             ) : null}
           </SectionCard>
 
@@ -386,7 +394,7 @@ export function SettingsPage() {
                         disabled={deleteMut.isPending || deletePhrase !== 'DELETE'}
                         onClick={() => deleteMut.mutate()}
                       >
-                        {deleteMut.isPending ? 'Deleting…' : 'Confirm delete'}
+                        {deleteMut.isPending ? t('settings.deleting') : t('settings.confirmDelete')}
                       </Button>
                       <Button
                         variant="ghost"
@@ -396,11 +404,11 @@ export function SettingsPage() {
                           setDeletePhrase('');
                         }}
                       >
-                        Cancel
+                        {t('common.cancel')}
                       </Button>
                     </div>
                     {deleteMut.isError ? (
-                      <p className="text-sm text-bad">{mutationMessage(deleteMut.error)}</p>
+                      <p className="text-sm text-bad">{mutationMessage(deleteMut.error, t('settings.mutationError'))}</p>
                     ) : null}
                   </div>
                 )}
@@ -411,7 +419,7 @@ export function SettingsPage() {
 
         <div className="flex items-start gap-3 rounded-lg border border-line bg-bg-elev px-4 py-4 text-sm text-ink-2 shadow-soft">
           <Bell className="mt-0.5 size-4 shrink-0 text-primary" />
-          Daily reminders and notification history are managed from your account preferences above.
+          {t('notifications.footerNote')}
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Loader2, ShieldAlert } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { useTranslation } from '@/src/i18n';
 import {
   getSocScenario,
   listSocScenarios,
@@ -36,6 +37,7 @@ export function SocSimulatorLab({
   onChange: (data: ScenarioLabSubmission) => void;
   readOnly?: boolean;
 }) {
+  const { t } = useTranslation();
   const [scenario, setScenario] = useState<SocScenario | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>(value?.answers ?? {});
   const [localResult, setLocalResult] = useState<ScenarioSubmitResult | null>(
@@ -59,7 +61,7 @@ export function SocSimulatorLab({
           onChange({ scenarioId: id, answers, localResult });
         }
       } catch {
-        if (!cancelled) setError('Could not load SOC scenario.');
+        if (!cancelled) setError(t('labs.loadSocError'));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -87,7 +89,7 @@ export function SocSimulatorLab({
       const result = await submitSocScenario(scenario.id, payload);
       setLocalResult(result);
     } catch {
-      setError('Could not check answers. Premium subscription may be required.');
+      setError(t('labs.checkAnswersPremium'));
     } finally {
       setChecking(false);
     }
@@ -96,7 +98,7 @@ export function SocSimulatorLab({
   if (loading) {
     return (
       <div className="flex items-center gap-2 rounded-2xl border border-line bg-bg-soft p-8 text-sm text-ink-2">
-        <Loader2 className="size-4 animate-spin" /> Loading SOC scenario…
+        <Loader2 className="size-4 animate-spin" /> {t('labs.loadingSoc')}
       </div>
     );
   }
@@ -119,7 +121,7 @@ export function SocSimulatorLab({
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl border border-line bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">Alerts</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">{t('labs.alerts')}</p>
           <div className="mt-3 space-y-2">
             {scenario.alerts.map((alert) => (
               <div key={alert.id} className="rounded-xl border border-line/80 bg-[#FCFCFC] p-3 text-sm">
@@ -134,7 +136,7 @@ export function SocSimulatorLab({
         </div>
 
         <div className="rounded-2xl border border-line bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">Logs</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">{t('labs.logs')}</p>
           <pre className="mt-3 max-h-56 overflow-auto rounded-xl bg-[#0F172A] p-3 font-mono text-xs leading-6 text-[#E2E8F0]">
             {scenario.logs.join('\n')}
           </pre>
@@ -142,7 +144,7 @@ export function SocSimulatorLab({
       </div>
 
       <div className="rounded-2xl border border-line bg-white p-5">
-        <p className="text-sm font-semibold text-ink">Investigation questions</p>
+        <p className="text-sm font-semibold text-ink">{t('labs.investigationQuestions')}</p>
         <div className="mt-4 space-y-4">
           {scenario.questions.map((q) => (
             <div key={q.id}>
@@ -163,14 +165,17 @@ export function SocSimulatorLab({
 
         {!readOnly && (
           <Button className="mt-5" variant="soft" onClick={() => void checkAnswers()} disabled={checking}>
-            {checking ? <Loader2 className="size-4 animate-spin" /> : 'Check locally'}
+            {checking ? <Loader2 className="size-4 animate-spin" /> : t('labs.checkLocally')}
           </Button>
         )}
 
         {localResult && (
           <p className="mt-4 text-sm text-ink-2">
-            Local score: <span className="font-semibold text-ink">{localResult.score}%</span> (
-            {localResult.correct}/{localResult.total} correct)
+            {t('labs.localScore', {
+              score: String(localResult.score),
+              correct: String(localResult.correct),
+              total: String(localResult.total),
+            })}
           </p>
         )}
         {error && <p className="mt-3 text-sm text-bad">{error}</p>}

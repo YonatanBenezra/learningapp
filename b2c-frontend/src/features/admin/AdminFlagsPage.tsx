@@ -252,7 +252,7 @@ export function AdminFlagsPage() {
             onClick={() => flagsQ.refetch()}
           >
             <RefreshCw className="size-3.5" />
-            Refresh
+            {t('adminCommon.refresh')}
           </Button>
         </div>
       </div>
@@ -310,7 +310,7 @@ export function AdminFlagsPage() {
                   <th className="px-5 py-3 font-semibold sm:px-6">Type</th>
                   <th className="px-5 py-3 font-semibold sm:px-6">Content ID</th>
                   <th className="px-5 py-3 font-semibold sm:px-6">Reason</th>
-                  <th className="px-5 py-3 font-semibold sm:px-6">Status</th>
+                  <th className="px-5 py-3 font-semibold sm:px-6">{t('adminCommon.colStatus')}</th>
                   <th className="px-5 py-3 font-semibold sm:px-6">Flagged</th>
                   <th className="px-5 py-3 font-semibold sm:px-6">Resolved</th>
                   <th className="px-5 py-3 font-semibold sm:px-6">Actions</th>

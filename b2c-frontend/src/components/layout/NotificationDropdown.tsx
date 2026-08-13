@@ -7,14 +7,14 @@ import { Bell, ChevronRight, Flame, Mail, Settings } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
-import { useTranslation } from '@/src/i18n';
+import { useIsRtl, useTranslation } from '@/src/i18n';
 import { cn } from '@/src/lib/utils';
 import type { AppNotification } from '@/src/features/notifications/notificationsApi';
 import {
-  formatRelativeTime,
-  notificationBody,
   notificationTimestamp,
-  notificationTitle,
+  useFormatRelativeTime,
+  useNotificationBody,
+  useNotificationTitle,
 } from '@/src/features/notifications/notificationDisplay';
 import { useNotifications } from '@/src/features/notifications/useNotifications';
 
@@ -28,6 +28,9 @@ function typeIcon(type: string): LucideIcon {
 
 function DropdownItem({ item, onNavigate }: { item: AppNotification; onNavigate: () => void }) {
   const Icon = typeIcon(item.type);
+  const notificationTitle = useNotificationTitle();
+  const notificationBody = useNotificationBody();
+  const formatRelativeTime = useFormatRelativeTime();
 
   return (
     <Link
@@ -67,6 +70,7 @@ function DropdownSkeleton() {
 
 export function NotificationDropdown() {
   const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const { data, isLoading, isError, refetch } = useNotifications();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -130,15 +134,15 @@ export function NotificationDropdown() {
                 <p className="text-sm font-semibold text-ink">{t('nav.notifications')}</p>
                 <p className="text-xs text-ink-3">
                   {unreadCount > 0
-                    ? `${unreadCount} in your history`
-                    : 'No notifications yet'}
+                    ? t('notifications.inHistory', { count: String(unreadCount) })
+                    : t('notifications.empty')}
                 </p>
               </div>
               <Link
                 href="/settings"
                 onClick={() => setOpen(false)}
                 className="grid size-8 place-items-center rounded-lg border border-line text-ink-3 transition hover:bg-bg-soft hover:text-ink"
-                aria-label="Notification settings"
+                aria-label={t('notifications.settingsLink')}
               >
                 <Settings className="size-4" />
               </Link>
@@ -148,7 +152,7 @@ export function NotificationDropdown() {
 
             {isError ? (
               <div className="px-4 py-8 text-center">
-                <p className="text-sm text-ink-2">Could not load notifications.</p>
+                <p className="text-sm text-ink-2">{t('notifications.loadError')}</p>
                 <Button
                   variant="soft"
                   size="sm"
@@ -163,10 +167,8 @@ export function NotificationDropdown() {
             {!isLoading && !isError && preview.length === 0 ? (
               <div className="px-4 py-8 text-center">
                 <Bell className="mx-auto size-7 text-ink-3" />
-                <p className="mt-3 text-sm text-ink-2">You&apos;re all caught up.</p>
-                <p className="mt-1 text-xs text-ink-3">
-                  Daily reminders and activity updates will show up here.
-                </p>
+                <p className="mt-3 text-sm text-ink-2">{t('notifications.allCaughtUp')}</p>
+                <p className="mt-1 text-xs text-ink-3">{t('notifications.emptyDropdownHint')}</p>
               </div>
             ) : null}
 
@@ -185,7 +187,7 @@ export function NotificationDropdown() {
                 className="flex items-center justify-center gap-1 rounded-xl px-3 py-2.5 text-sm font-medium text-primary transition hover:bg-primary-soft"
               >
                 {t('common.viewAll')}
-                <ChevronRight className="size-4" />
+                <ChevronRight className={`size-4${isRtl ? ' rotate-180' : ''}`} />
               </Link>
             </div>
           </motion.div>

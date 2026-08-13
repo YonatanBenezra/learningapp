@@ -3,19 +3,21 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { BookOpen, Clock3, Radio } from 'lucide-react';
+import { useTranslation } from '@/src/i18n';
 import { LIVE_CLASSES, TESTIMONIALS } from './data';
 import { Container } from './Container';
 import { SectionHeading } from './SectionHeading';
 
 export function JoinLiveSection() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
 
   return (
     <section className="bg-white py-16 lg:py-24">
       <Container>
         <SectionHeading
-          eyebrow="Join Live"
-          title="Join Our live Class, Start Your Online Journey"
+          eyebrow={t('marketing.joinLiveEyebrow')}
+          title={t('marketing.joinLiveTitle')}
         />
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
@@ -36,7 +38,7 @@ export function JoinLiveSection() {
                   <div className="flex flex-wrap gap-3 text-xs font-medium text-ink-2">
                     <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1">
                       <BookOpen className="size-3.5" />
-                      {item.lessons} Lesson
+                      {t('marketing.lessonSingular', { count: String(item.lessons) })}
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1">
                       <Clock3 className="size-3.5" />
@@ -52,13 +54,9 @@ export function JoinLiveSection() {
           <div className="rounded-[24px] border border-line bg-bg-soft p-6 lg:p-8">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
               <Radio className="size-3.5" />
-              LIVE - 01:30:56
+              {t('marketing.liveTimer')}
             </div>
-            <p className="text-base leading-relaxed text-ink-2">
-              It has survived not only five centuries, but also the leap into electronic typesetting,
-              remaining essentially unchanged. It was popularised in the 1960s with the release of
-              Letraset sheets containing Lorem Ipsum passages.
-            </p>
+            <p className="text-base leading-relaxed text-ink-2">{t('marketing.joinLiveBody')}</p>
             <div className="mt-8 flex items-center gap-4">
               <Image
                 src={TESTIMONIALS[activeTab]?.avatar ?? TESTIMONIALS[0].avatar}
@@ -71,9 +69,7 @@ export function JoinLiveSection() {
                 <p className="font-bold text-ink">
                   {TESTIMONIALS[activeTab]?.name ?? TESTIMONIALS[0].name}
                 </p>
-                <p className="text-sm text-ink-2">
-                  {TESTIMONIALS[activeTab]?.role ?? TESTIMONIALS[0].role}
-                </p>
+                <p className="text-sm text-ink-2">{t('marketing.roleTechSpecialist')}</p>
               </div>
             </div>
           </div>

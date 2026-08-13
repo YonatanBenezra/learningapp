@@ -26,12 +26,13 @@ import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { cn } from '@/src/lib/utils';
 import { formatMoney } from '@/src/domain/instructor';
+import { useTranslation } from '@/src/i18n';
 import { useCreateInstructorCourse } from '@/src/features/instructor/useInstructor';
 
 const STEPS = [
-  { id: 1, label: 'Course details', hint: 'Title and description' },
-  { id: 2, label: 'Curriculum focus', hint: 'Category, topics, and level' },
-  { id: 3, label: 'Pricing & launch', hint: 'Set price and review' },
+  { id: 1, labelKey: 'instructor.stepCourseDetails' as const, hintKey: 'instructor.stepCourseDetailsHint' as const },
+  { id: 2, labelKey: 'instructor.stepCurriculum' as const, hintKey: 'instructor.stepCurriculumHint' as const },
+  { id: 3, labelKey: 'instructor.stepPricing' as const, hintKey: 'instructor.stepPricingHint' as const },
 ] as const;
 
 const CATEGORIES: {
@@ -73,14 +74,18 @@ const LEVELS: {
 ];
 
 function StepProgress({ step, progress }: { step: number; progress: number }) {
+  const { t } = useTranslation();
+  const current = STEPS[step - 1];
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-ink">
-            Step {step} of {STEPS.length} — {STEPS[step - 1].label}
+            {t('instructor.stepOf', { step: String(step), total: String(STEPS.length) })} —{' '}
+            {t(current.labelKey)}
           </p>
-          <p className="mt-1 text-sm text-ink-2">{STEPS[step - 1].hint}</p>
+          <p className="mt-1 text-sm text-ink-2">{t(current.hintKey)}</p>
         </div>
         <span className="text-sm font-semibold text-primary">{progress}%</span>
       </div>
@@ -107,7 +112,7 @@ function StepProgress({ step, progress }: { step: number; progress: number }) {
                 {done ? <Check className="size-3.5" strokeWidth={3} /> : item.id}
               </span>
               <span className={cn('text-sm', active || done ? 'font-medium text-ink' : 'text-ink-3')}>
-                {item.label}
+                {t(item.labelKey)}
               </span>
             </div>
           );
@@ -118,6 +123,7 @@ function StepProgress({ step, progress }: { step: number; progress: number }) {
 }
 
 export function CreateInstructorCoursePage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const create = useCreateInstructorCourse();
 

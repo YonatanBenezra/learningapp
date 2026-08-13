@@ -37,8 +37,13 @@ function authSwitchHref(mode: 'login' | 'signup') {
 }
 
 function AuthLogo() {
+  const { t } = useTranslation();
   return (
-    <Link href="/" className="inline-flex items-center gap-2.5" aria-label={`${APP_NAME} home`}>
+    <Link
+      href="/"
+      className="inline-flex items-center gap-2.5"
+      aria-label={t('authExtra.homeAria', { appName: APP_NAME })}
+    >
       <span className="grid size-10 place-items-center rounded-lg bg-primary-soft text-primary">
         <Sparkles className="size-5" />
       </span>
@@ -101,7 +106,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
             <Link
               href="/"
               className="flex size-10 items-center justify-center rounded-xl border border-line text-ink-3 transition-colors hover:border-line-2 hover:bg-bg-soft hover:text-ink"
-              aria-label="Back to home"
+              aria-label={t('authExtra.backToHome')}
             >
               <ArrowLeft className="size-4" />
             </Link>
@@ -131,7 +136,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
             {isSignup && (
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="fullName" className="text-sm font-medium text-ink-2">
-                  Full Name
+                  {t('auth.fullName')}
                 </label>
                 <div className="relative">
                   <User className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
@@ -139,7 +144,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
                     id="fullName"
                     type="text"
                     autoComplete="name"
-                    placeholder="John Doe"
+                    placeholder={t('authExtra.namePlaceholder')}
                     className={`${inputBase} pl-10 pr-10 ${focusedField === 'fullName' ? inputFocus : inputIdle}`}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
@@ -157,7 +162,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="email" className="text-sm font-medium text-ink-2">
-                Email Address
+                {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
@@ -165,7 +170,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
                   id="email"
                   type="email"
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder={t('authExtra.emailPlaceholder')}
                   className={`${inputBase} pl-10 pr-10 ${focusedField === 'email' ? inputFocus : inputIdle}`}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -182,7 +187,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="password" className="text-sm font-medium text-ink-2">
-                Password
+                {t('auth.password')}
               </label>
               <div className="relative">
                 <Lock className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
@@ -190,7 +195,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete={isSignup ? 'new-password' : 'current-password'}
-                  placeholder={isSignup ? 'At least 8 characters' : 'Your password'}
+                  placeholder={
+                    isSignup ? t('authExtra.passwordPlaceholderSignup') : t('authExtra.passwordPlaceholderLogin')
+                  }
                   className={`${inputBase} pl-10 pr-10 ${focusedField === 'password' ? inputFocus : inputIdle}`}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -200,7 +207,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 transition-colors hover:text-ink-2"
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -232,11 +239,11 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
               {mutation.isPending ? (
                 <>
                   <Spinner className="size-4 text-white" />
-                  Please wait…
+                  {t('authExtra.pleaseWait')}
                 </>
               ) : (
                 <>
-                  {isSignup ? 'Create account' : 'Sign in'}
+                  {isSignup ? t('authExtra.createAccount') : t('authExtra.signIn')}
                   <ArrowRight className="size-4" />
                 </>
               )}
@@ -244,9 +251,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
 
             {isSignup ? (
               <p className="text-center text-xs leading-relaxed text-ink-3">
-                By creating an account, you agree to our{' '}
+                {t('authExtra.termsPrefix')}{' '}
                 <Link href="/contact" className="font-medium text-primary hover:text-primary-dark">
-                  Terms & Privacy Policy
+                  {t('authExtra.termsLink')}
                 </Link>
                 .
               </p>
@@ -255,7 +262,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
 
           <div className="my-6 flex items-center gap-4">
             <span className="h-px flex-1 bg-line" />
-            <span className="text-xs font-medium uppercase tracking-wider text-ink-3">Or continue with</span>
+            <span className="text-xs font-medium uppercase tracking-wider text-ink-3">
+              {t('authExtra.orContinueWith')}
+            </span>
             <span className="h-px flex-1 bg-line" />
           </div>
 
@@ -264,12 +273,12 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
             className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-line bg-bg-soft text-sm font-medium text-ink-2 transition-colors hover:border-primary/30 hover:bg-bg hover:text-ink"
             onClick={() =>
               GOOGLE_ENABLED
-                ? setGoogleMsg('Google sign-in will be available soon.')
-                : setGoogleMsg('Google sign-in is not configured yet — use email for now.')
+                ? setGoogleMsg(t('authExtra.googleSoon'))
+                : setGoogleMsg(t('authExtra.googleNotConfigured'))
             }
           >
             <GoogleMark />
-            Continue with Google
+            {t('authExtra.continueGoogle')}
           </button>
           {googleMsg ? (
             <p className="mt-2.5 text-center text-xs text-ink-3">{googleMsg}</p>
@@ -300,20 +309,20 @@ function GoogleMark() {
 }
 
 const LANGUAGES = [
-  { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
-  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', flag: '🇧🇩' },
-  { code: 'he', name: 'Hebrew', nativeName: 'עברית', flag: '🇮🇱' },
-  { code: 'de', name: 'German', nativeName: 'Deutsch', flag: '🇩🇪' },
-  { code: 'zh', name: 'Chinese', nativeName: '中文', flag: '🇨🇳' },
-  { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷' },
-  { code: 'ar', name: 'Arabic', nativeName: 'العربية', flag: '🇸🇦' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'ja', name: 'Japanese', nativeName: '日本語', flag: '🇯🇵' },
+  { code: 'en', nameKey: 'authExtra.langEnglish' as const, nativeName: 'English', flag: '🇺🇸' },
+  { code: 'bn', nameKey: 'authExtra.langBengali' as const, nativeName: 'বাংলা', flag: '🇧🇩' },
+  { code: 'he', nameKey: 'authExtra.langHebrew' as const, nativeName: 'עברית', flag: '🇮🇱' },
+  { code: 'de', nameKey: 'authExtra.langGerman' as const, nativeName: 'Deutsch', flag: '🇩🇪' },
+  { code: 'zh', nameKey: 'authExtra.langChinese' as const, nativeName: '中文', flag: '🇨🇳' },
+  { code: 'es', nameKey: 'authExtra.langSpanish' as const, nativeName: 'Español', flag: '🇪🇸' },
+  { code: 'fr', nameKey: 'authExtra.langFrench' as const, nativeName: 'Français', flag: '🇫🇷' },
+  { code: 'ar', nameKey: 'authExtra.langArabic' as const, nativeName: 'العربية', flag: '🇸🇦' },
+  { code: 'hi', nameKey: 'authExtra.langHindi' as const, nativeName: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'ja', nameKey: 'authExtra.langJapanese' as const, nativeName: '日本語', flag: '🇯🇵' },
 ];
 
 function AuthLanguageSelector() {
-  const { locale, setLocale } = useTranslation();
+  const { locale, setLocale, t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);
@@ -323,7 +332,7 @@ function AuthLanguageSelector() {
 
   const filtered = LANGUAGES.filter(
     (l) =>
-      l.name.toLowerCase().includes(search.toLowerCase()) ||
+      t(l.nameKey).toLowerCase().includes(search.toLowerCase()) ||
       l.nativeName.toLowerCase().includes(search.toLowerCase()),
   );
 
@@ -377,7 +386,7 @@ function AuthLanguageSelector() {
                 <input
                   ref={searchRef}
                   type="text"
-                  placeholder="Search..."
+                  placeholder={t('authExtra.searchLanguage')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="h-8 w-full rounded-lg border-0 bg-bg-soft pl-8 pr-2 text-xs text-ink outline-none placeholder:text-ink-3 focus:ring-2 focus:ring-primary/15"
@@ -386,7 +395,7 @@ function AuthLanguageSelector() {
             </div>
             <div className="max-h-[240px] overflow-y-auto p-1">
               {filtered.length === 0 ? (
-                <div className="py-4 text-center text-xs text-ink-3">No results</div>
+                <div className="py-4 text-center text-xs text-ink-3">{t('authExtra.noResults')}</div>
               ) : (
                 filtered.map((lang) => (
                   <button
@@ -404,7 +413,7 @@ function AuthLanguageSelector() {
                     }`}
                   >
                     <span className="text-sm">{lang.flag}</span>
-                    <span className="flex-1 font-medium">{lang.name}</span>
+                    <span className="flex-1 font-medium">{t(lang.nameKey)}</span>
                     {lang.code === locale && <Check className="size-3.5 text-primary" />}
                   </button>
                 ))

@@ -84,17 +84,17 @@ function AlertChip({
   );
 }
 
-const QUICK_LINKS = [
-  { href: '/admin/users', label: 'Users', icon: Users },
-  { href: '/admin/subscriptions', label: 'Subscriptions', icon: Crown },
-  { href: '/admin/assessments', label: 'Assessments', icon: ClipboardList },
-  { href: '/admin/marketplace', label: 'Marketplace', icon: Store },
-  { href: '/admin/content', label: 'Moderation', icon: Shield },
-  { href: '/admin/flags', label: 'Flags', icon: Flag },
-  { href: '/admin/costs', label: 'AI costs', icon: DollarSign },
-  { href: '/admin/system', label: 'System', icon: Server },
-  { href: '/admin/notifications', label: 'Notifications', icon: Bell },
-  { href: '/admin/activity', label: 'Activity', icon: TrendingUp },
+const QUICK_LINK_KEYS = [
+  { href: '/admin/users', key: 'navUsers' as const, icon: Users },
+  { href: '/admin/subscriptions', key: 'navSubscriptions' as const, icon: Crown },
+  { href: '/admin/assessments', key: 'navAssessments' as const, icon: ClipboardList },
+  { href: '/admin/marketplace', key: 'navMarketplace' as const, icon: Store },
+  { href: '/admin/content', key: 'navModeration' as const, icon: Shield },
+  { href: '/admin/flags', key: 'navFlags' as const, icon: Flag },
+  { href: '/admin/costs', key: 'navAiCosts' as const, icon: DollarSign },
+  { href: '/admin/system', key: 'navSystem' as const, icon: Server },
+  { href: '/admin/notifications', key: 'navNotifications' as const, icon: Bell },
+  { href: '/admin/activity', key: 'navActivity' as const, icon: TrendingUp },
 ] as const;
 
 export function AdminMetricsPage() {
@@ -135,9 +135,9 @@ export function AdminMetricsPage() {
 
   const tierChart = subs
     ? [
-        { name: 'Free', value: subs.usersByTier.free },
-        { name: 'Standard', value: subs.usersByTier.standard },
-        { name: 'Premium', value: subs.usersByTier.premium },
+        { name: t('adminCommon.tierFree'), value: subs.usersByTier.free },
+        { name: t('adminCommon.tierStandard'), value: subs.usersByTier.standard },
+        { name: t('adminCommon.tierPremium'), value: subs.usersByTier.premium },
       ]
     : [];
 
@@ -202,28 +202,28 @@ export function AdminMetricsPage() {
         {/* KPI grid */}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <AdminMetricCard
-            label="Active users"
+            label={t('adminCommon.metricsActiveUsers')}
             value={data.users.active.toLocaleString()}
             hint={`${data.users.premium} premium · ${data.users.total} total accounts`}
             icon={Users}
             accent="primary"
           />
           <AdminMetricCard
-            label="New signups (7d)"
+            label={t('adminCommon.metricsNewSignups')}
             value={(activity?.signups7d ?? 0).toLocaleString()}
             hint={`${activity?.signups30d ?? 0} in the last 30 days`}
             icon={TrendingUp}
             accent="good"
           />
           <AdminMetricCard
-            label="Courses"
+            label={t('adminCommon.metricsCoursePipeline')}
             value={data.courses.total.toLocaleString()}
             hint={`Success ${pct(data.courses.generationSuccessRate)} · Failed ${pct(data.courses.generationFailureRate)}`}
             icon={BookOpen}
             accent="primary"
           />
           <AdminMetricCard
-            label="Marketplace revenue"
+            label={t('adminCommon.metricsRevenue')}
             value={marketplace ? formatUsd(marketplace.totalRevenueCents) : '—'}
             hint={
               marketplace
@@ -234,14 +234,14 @@ export function AdminMetricsPage() {
             accent="secondary"
           />
           <AdminMetricCard
-            label="Skill assessments"
+            label={t('adminCommon.metricsAssessmentsLabel')}
             value={(assessments?.totalAssessments ?? 0).toLocaleString()}
             hint={`${assessments?.completedSubmissions ?? 0} completed submissions`}
             icon={ClipboardList}
             accent="primary"
           />
           <AdminMetricCard
-            label="Learning activity"
+            label={t('adminCommon.activityLearning')}
             value={(
               data.assessments.quizSubmissions + data.assessments.examSubmissions
             ).toLocaleString()}
@@ -250,7 +250,7 @@ export function AdminMetricsPage() {
             accent="good"
           />
           <AdminMetricCard
-            label="Paid subscriptions"
+            label={t('adminCommon.metricsPaidMembersLabel')}
             value={(subs?.paidActiveSubscriptions ?? 0).toLocaleString()}
             hint={
               subs
@@ -272,8 +272,8 @@ export function AdminMetricsPage() {
         {/* Charts */}
         <div className="grid gap-4 xl:grid-cols-12">
           <AdminPanel
-            title="User signups"
-            description="Daily registrations over the last 14 days"
+            title={t('adminCommon.activitySignups')}
+            description={t('adminCommon.activityDailyActivity')}
             className="xl:col-span-7"
           >
             <div className="h-72">
@@ -294,15 +294,15 @@ export function AdminMetricsPage() {
                 </ResponsiveContainer>
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-ink-3">
-                  No signup data for this period.
+                  {t('adminCommon.noSignupData')}
                 </div>
               )}
             </div>
           </AdminPanel>
 
           <AdminPanel
-            title="Membership tiers"
-            description="Active users by plan tier"
+            title={t('adminCommon.metricsMembershipTiers')}
+            description={t('adminCommon.metricsMembershipTiersDesc')}
             className="xl:col-span-5"
           >
             <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
@@ -327,7 +327,7 @@ export function AdminMetricsPage() {
                   </ResponsiveContainer>
                 ) : (
                   <div className="flex h-full items-center justify-center text-sm text-ink-3">
-                    No tier data available.
+                    {t('adminCommon.noTierData')}
                   </div>
                 )}
               </div>
@@ -346,7 +346,7 @@ export function AdminMetricsPage() {
                 ))}
                 {subs ? (
                   <div className="border-t border-line pt-3 text-sm text-ink-3">
-                    {subs.trialsExpiringSoon} trials expiring within 7 days
+                    {t('adminCommon.trialsExpiringSoon', { count: String(subs.trialsExpiringSoon) })}
                   </div>
                 ) : null}
               </dl>
@@ -356,7 +356,7 @@ export function AdminMetricsPage() {
 
         {/* Breakdown row */}
         <div className="grid gap-4 lg:grid-cols-3">
-          <AdminPanel title="Course pipeline" description="Generation status across all courses">
+          <AdminPanel title={t('adminCommon.metricsCoursePipeline')} description={t('adminCommon.metricsCoursePipelineDesc')}>
             <div className="h-48">
               {courseStatusChart.length ? (
                 <ResponsiveContainer width="100%" height="100%">
@@ -379,39 +379,39 @@ export function AdminMetricsPage() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-sm text-ink-3">No course records yet.</p>
+                <p className="text-sm text-ink-3">{t('adminCommon.noRecords')}</p>
               )}
             </div>
           </AdminPanel>
 
-          <AdminPanel title="Assessments & exercises" description="Submission and grading summary">
+          <AdminPanel title={t('adminCommon.metricsAssessments')} description={t('adminCommon.metricsAssessmentsDesc')}>
             <dl className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Skill assessments</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsSkillAssessments')}</dt>
                 <dd className="font-semibold text-ink">
                   {assessments?.totalAssessments ?? '—'}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Assessment submissions</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsAssessmentSubmissions')}</dt>
                 <dd className="font-semibold text-ink">
                   {assessments?.completedSubmissions ?? '—'}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Exercise submissions</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsExerciseSubmissions')}</dt>
                 <dd className="font-semibold text-ink">{data.exercises.submissions}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Graded exercises</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsGradedExercises')}</dt>
                 <dd className="font-semibold text-ink">{data.exercises.graded}</dd>
               </div>
               <div className="flex items-center justify-between border-t border-line pt-3">
-                <dt className="text-ink-2">Exercise completion</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsExerciseCompletion')}</dt>
                 <dd className="font-semibold text-primary">{pct(data.exercises.completionRate)}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Lessons completed</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsLessonsCompleted')}</dt>
                 <dd className="font-semibold text-ink">
                   {activity?.lessonCompletions.toLocaleString() ?? '—'}
                 </dd>
@@ -419,29 +419,29 @@ export function AdminMetricsPage() {
             </dl>
           </AdminPanel>
 
-          <AdminPanel title="Operations" description="Queues, flags, and platform notes">
+          <AdminPanel title={t('adminCommon.metricsOperations')} description={t('adminCommon.metricsOperationsDesc')}>
             <dl className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Open flags</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsOpenFlags')}</dt>
                 <dd className="font-semibold text-ink">{system?.openFlags ?? '—'}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Generating courses</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsGeneratingCourses')}</dt>
                 <dd className="font-semibold text-ink">{system?.generatingCourses ?? '—'}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Course queue waiting</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsCourseQueueWaiting')}</dt>
                 <dd className="font-semibold text-ink">
                   {system?.queues.courseGeneration.unavailable
-                    ? 'Unavailable'
+                    ? t('adminCommon.unavailable')
                     : system?.queues.courseGeneration.waiting ?? '—'}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-ink-2">Assessment queue waiting</dt>
+                <dt className="text-ink-2">{t('adminCommon.metricsAssessmentQueueWaiting')}</dt>
                 <dd className="font-semibold text-ink">
                   {system?.queues.skillAssessmentGeneration.unavailable
-                    ? 'Unavailable'
+                    ? t('adminCommon.unavailable')
                     : system?.queues.skillAssessmentGeneration.waiting ?? '—'}
                 </dd>
               </div>
@@ -453,9 +453,9 @@ export function AdminMetricsPage() {
         </div>
 
         {/* Quick links */}
-        <AdminPanel title="Admin sections" description="Navigate to detailed dashboards">
+        <AdminPanel title={t('adminCommon.metricsAdminSections')} description={t('adminCommon.metricsAdminSectionsDesc')}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {QUICK_LINKS.map(({ href, label, icon: Icon }) => (
+            {QUICK_LINK_KEYS.map(({ href, key, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
@@ -464,7 +464,7 @@ export function AdminMetricsPage() {
                 <span className="grid size-9 place-items-center rounded-lg border border-line bg-bg-elev text-primary transition-colors group-hover:border-primary/20 group-hover:bg-primary-soft">
                   <Icon className="size-4" />
                 </span>
-                <span className="flex-1">{label}</span>
+                <span className="flex-1">{t(`adminCommon.${key}`)}</span>
                 <ArrowRight className="size-4 text-ink-3 transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
               </Link>
             ))}

@@ -29,16 +29,19 @@ const languages: Language[] = [
 
 export function LanguageSelector({
   compact = false,
+  layout = 'dropdown',
   className,
 }: {
   compact?: boolean;
+  layout?: 'dropdown' | 'drawer';
   className?: string;
 }) {
-  const { locale, setLocale } = useTranslation();
+  const { locale, setLocale, t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const isDrawer = layout === 'drawer';
 
   const current = languages.find((l) => l.code === locale) ?? languages[0];
 
@@ -82,15 +85,20 @@ export function LanguageSelector({
   }, [open]);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className={cn('relative', isDrawer && 'w-full')}>
       <button
+        type="button"
         onClick={() => {
           setOpen(!open);
           setSearch('');
         }}
         className={cn(
-          'flex items-center gap-1.5 rounded-xl border text-sm font-medium transition-all duration-200',
-          compact ? 'size-9 justify-center border-line px-0 py-0' : 'gap-2 border-transparent px-3 py-2',
+          'flex items-center rounded-xl border text-sm font-medium transition-all duration-200',
+          isDrawer
+            ? 'h-9 w-full gap-2 border-line/80 bg-bg-elev/80 px-2.5'
+            : compact
+              ? 'size-9 justify-center gap-1.5 border-line px-0 py-0'
+              : 'gap-2 border-transparent px-3 py-2',
           open
             ? 'border-line bg-bg-soft text-ink'
             : 'text-ink-2 hover:border-line hover:bg-bg-soft hover:text-ink',
@@ -99,9 +107,20 @@ export function LanguageSelector({
         aria-label="Select language"
         aria-expanded={open}
       >
-        <Globe className={cn('shrink-0', compact ? 'size-[18px]' : 'size-5')} />
-        {!compact && <span className="hidden lg:inline">{current.name}</span>}
-        {!compact && (
+        <Globe className={cn('shrink-0', compact && !isDrawer ? 'size-[18px]' : 'size-4')} />
+        {isDrawer ? (
+          <>
+            <span className="min-w-0 flex-1 truncate text-left text-sm">{current.nativeName}</span>
+            <ChevronDown
+              className={cn(
+                'size-3.5 shrink-0 text-ink-3 transition-transform duration-200',
+                open && 'rotate-180',
+              )}
+            />
+          </>
+        ) : null}
+        {!compact && !isDrawer && <span className="hidden lg:inline">{current.name}</span>}
+        {!compact && !isDrawer && (
           <ChevronDown
             className={cn(
               'size-3.5 shrink-0 transition-transform duration-200',
@@ -114,11 +133,16 @@ export function LanguageSelector({
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            initial={{ opacity: 0, y: isDrawer ? -4 : 8, scale: isDrawer ? 1 : 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            exit={{ opacity: 0, y: isDrawer ? -4 : 8, scale: isDrawer ? 1 : 0.96 }}
             transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="absolute right-0 top-full z-50 mt-2 w-[240px] overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card"
+            className={cn(
+              'z-50 overflow-hidden rounded-xl border border-line bg-bg-elev shadow-card',
+              isDrawer
+                ? 'relative mt-2 w-full'
+                : 'absolute right-0 top-full mt-2 w-[240px] rounded-2xl',
+            )}
           >
             <div className="border-b border-line p-2">
               <div className="relative">
@@ -126,7 +150,7 @@ export function LanguageSelector({
                 <input
                   ref={searchRef}
                   type="text"
-                  placeholder="Search language..."
+                  placeholder={t('marketing.searchLanguage')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="h-9 w-full rounded-xl border-0 bg-bg-soft pl-9 pr-3 text-sm text-ink outline-none placeholder:text-ink-3 focus:bg-bg-lav"
@@ -134,9 +158,12 @@ export function LanguageSelector({
               </div>
             </div>
 
-            <div className="max-h-[280px] overflow-y-auto p-1.5">
+            <div
+              className="max-h-[220px] overflow-y-auto overscroll-contain p-1.5"
+              data-lenis-prevent
+            >
               {filtered.length === 0 ? (
-                <div className="py-6 text-center text-sm text-ink-3">No languages found</div>
+                <div className="py-6 text-center text-sm text-ink-3">{t('marketing.noLanguagesFound')}</div>
               ) : (
                 filtered.map((lang) => {
                   const isSelected = lang.code === locale;

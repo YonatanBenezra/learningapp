@@ -25,52 +25,39 @@ import type {
   SkillLevel,
 } from '@/src/domain/assessment';
 import { cn } from '@/src/lib/utils';
+import {
+  useTranslation,
+  useSkillLevelCopy,
+  useGoalLabel,
+  useCategoryLabel,
+  useCourseLevelLabel,
+  useIsRtl,
+} from '@/src/i18n';
 
-const GOAL_LABELS: Record<NonNullable<LearningPathPrefill['goal']>, string> = {
-  career: 'Career growth',
-  hands_on: 'Hands-on practice',
-  certification: 'Certification prep',
-  exploring: 'Exploring options',
-};
-
-const LEVEL_COPY: Record<
+const LEVEL_STYLES: Record<
   SkillLevel,
   {
-    description: string;
-    track: string;
     accentClass: string;
     barClass: string;
     badgeClass: string;
   }
 > = {
   Beginner: {
-    description:
-      'You are establishing your foundation. A structured introductory course will help you build reliable core knowledge.',
-    track: 'Foundation track',
     accentClass: 'text-primary',
     barClass: 'bg-primary',
     badgeClass: 'border-primary/20 bg-primary-soft text-primary',
   },
   Intermediate: {
-    description:
-      'You demonstrate a solid base. Structured modules with practical exercises are the appropriate next step.',
-    track: 'Growth track',
     accentClass: 'text-primary',
     barClass: 'bg-primary',
     badgeClass: 'border-primary/20 bg-primary-soft text-primary',
   },
   Advanced: {
-    description:
-      'Your results indicate strong subject knowledge. Advanced labs and applied projects will extend your capability.',
-    track: 'Advanced track',
     accentClass: 'text-secondary',
     barClass: 'bg-secondary',
     badgeClass: 'border-secondary/20 bg-secondary-soft text-secondary',
   },
   Expert: {
-    description:
-      'Your performance reflects mastery at this level. Expert curriculum and specialized practice areas are recommended.',
-    track: 'Expert track',
     accentClass: 'text-good',
     barClass: 'bg-good',
     badgeClass: 'border-good/20 bg-good-soft text-good',
@@ -116,14 +103,19 @@ export function SkillAssessmentResultView({
   answers: Record<number, string>;
   prefill: LearningPathPrefill;
 }) {
-  const levelInfo = LEVEL_COPY[submission.level];
+  const { t } = useTranslation();
+  const isRtl = useIsRtl();
+  const levelCopy = useSkillLevelCopy(submission.level);
+  const levelStyles = LEVEL_STYLES[submission.level];
+  const categoryLabel = useCategoryLabel(prefill.category);
+  const courseLevelLabel = useCourseLevelLabel(prefill.courseLevel);
   const results = [...submission.results].sort((a, b) => a.questionIndex - b.questionIndex);
   const correctCount = results.filter((r) => r.correct).length;
   const incorrectCount = results.length - correctCount;
   const accuracyPercent = Math.round((correctCount / results.length) * 100);
   const pathSteps = getLearningPathSteps(prefill);
   const recommendedTitle = getRecommendedCourseTitle(prefill);
-  const goalLabel = prefill.goal ? GOAL_LABELS[prefill.goal] : null;
+  const goalLabel = useGoalLabel(prefill.goal);
 
   return (
     <div className="bg-bg pb-28 pt-10 lg:pt-12">
@@ -131,20 +123,22 @@ export function SkillAssessmentResultView({
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-sm font-medium text-ink-2">Assessment complete</p>
+              <p className="text-sm font-medium text-ink-2">{t('marketing.assessResultComplete')}</p>
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
                 {topicLabel}
               </h1>
               <p className="mt-3 text-base leading-7 text-ink-2">
-                Your responses have been evaluated. Review your skill level, recommended learning
-                path, and question-by-question breakdown below.
+                {t('marketing.assessResultIntro')}
               </p>
             </div>
 
             <dl className="grid w-full max-w-md shrink-0 grid-cols-[1fr_1fr_1.35fr] gap-px overflow-hidden rounded-xl border border-line bg-line sm:min-w-[360px]">
-              <StatItem label="Score" value={`${submission.score}%`} />
-              <StatItem label="Correct" value={`${correctCount}/${results.length}`} />
-              <StatItem label="Level" value={submission.level} numeric={false} />
+              <StatItem label={t('marketing.assessResultScore')} value={`${submission.score}%`} />
+              <StatItem
+                label={t('marketing.assessResultCorrect')}
+                value={`${correctCount}/${results.length}`}
+              />
+              <StatItem label={t('marketing.assessResultLevel')} value={levelCopy.level} numeric={false} />
             </dl>
           </div>
 
@@ -155,55 +149,58 @@ export function SkillAssessmentResultView({
                   <span
                     className={cn(
                       'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium',
-                      levelInfo.badgeClass,
+                      levelStyles.badgeClass,
                     )}
                   >
                     <GraduationCap className="size-3.5" />
-                    {levelInfo.track}
+                    {levelCopy.track}
                   </span>
                   {goalLabel ? (
                     <span className="rounded-full border border-line bg-bg-soft px-3 py-1 text-sm text-ink-2">
-                      Goal: {goalLabel}
+                      {t('marketing.assessResultGoal', { goal: goalLabel })}
                     </span>
                   ) : null}
                 </div>
 
-                <h2 className="mt-5 text-2xl font-bold text-ink">Skill level summary</h2>
+                <h2 className="mt-5 text-2xl font-bold text-ink">{t('marketing.assessResultSkillSummary')}</h2>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-2 sm:text-base">
-                  {levelInfo.description}
+                  {levelCopy.description}
                 </p>
 
                 <div className="mt-8 max-w-xl">
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="font-medium text-ink-2">Overall accuracy</span>
-                    <span className={cn('font-semibold tabular-nums', levelInfo.accentClass)}>
+                    <span className="font-medium text-ink-2">{t('marketing.assessResultOverallAccuracy')}</span>
+                    <span className={cn('font-semibold tabular-nums', levelStyles.accentClass)}>
                       {accuracyPercent}%
                     </span>
                   </div>
                   <div className="h-1 overflow-hidden rounded-full bg-line">
                     <div
-                      className={cn('h-full rounded-full transition-all', levelInfo.barClass)}
+                      className={cn('h-full rounded-full transition-all', levelStyles.barClass)}
                       style={{ width: `${submission.score}%` }}
                     />
                   </div>
                   <p className="mt-2 text-xs text-ink-3">
-                    {correctCount} answered correctly · {incorrectCount} to review
+                    {t('marketing.assessResultCorrectReview', {
+                      correct: String(correctCount),
+                      incorrect: String(incorrectCount),
+                    })}
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-col items-center justify-center border-t border-line bg-bg-soft px-6 py-10 lg:border-t-0">
-                <p className="text-sm font-medium text-ink-2">Final score</p>
+                <p className="text-sm font-medium text-ink-2">{t('marketing.assessResultFinalScore')}</p>
                 <p
                   className={cn(
                     'mt-3 text-5xl font-bold tabular-nums tracking-tight sm:text-6xl',
-                    levelInfo.accentClass,
+                    levelStyles.accentClass,
                   )}
                 >
                   {submission.score}%
                 </p>
-                <p className={cn('mt-2 text-lg font-semibold', levelInfo.accentClass)}>
-                  {submission.level}
+                <p className={cn('mt-2 text-lg font-semibold', levelStyles.accentClass)}>
+                  {levelCopy.level}
                 </p>
               </div>
             </div>
@@ -211,11 +208,14 @@ export function SkillAssessmentResultView({
 
           <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card">
             <div className="border-b border-line px-6 py-8 sm:px-10">
-              <h2 className="text-2xl font-bold text-ink sm:text-3xl">Recommended learning path</h2>
+              <h2 className="text-2xl font-bold text-ink sm:text-3xl">{t('marketing.assessResultRecommendedPath')}</h2>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-ink-2 sm:text-base">
-                Based on your {submission.score}% score, we recommend{' '}
-                <span className="font-medium text-ink">{recommendedTitle}</span> — a{' '}
-                {prefill.courseLevel}-level course in {prefill.category}.
+                {t('marketing.assessResultRecommendDesc', {
+                  score: String(submission.score),
+                  title: recommendedTitle,
+                  courseLevel: courseLevelLabel,
+                  category: categoryLabel,
+                })}
               </p>
             </div>
 
@@ -236,12 +236,13 @@ export function SkillAssessmentResultView({
                 <div className="max-w-xl">
                   <div className="flex items-center gap-2 text-sm font-medium text-ink">
                     <Sparkles className="size-4 text-primary" />
-                    Personalized course
+                    {t('marketing.assessResultPersonalizedCourse')}
                   </div>
                   <p className="mt-2 text-sm leading-6 text-ink-2">
-                    Generate a course tailored to your {submission.level.toLowerCase()} level in{' '}
-                    {prefill.category}. Your assessment results will inform module structure and
-                    difficulty.
+                    {t('marketing.assessResultPersonalizedDesc', {
+                      level: levelCopy.level,
+                      category: categoryLabel,
+                    })}
                   </p>
                 </div>
                 <CreateCourseFromRecommendation prefill={prefill} align="end" />
@@ -253,20 +254,20 @@ export function SkillAssessmentResultView({
             <div className="border-b border-line px-6 py-5 sm:px-8">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-ink sm:text-2xl">Question breakdown</h2>
+                  <h2 className="text-xl font-bold text-ink sm:text-2xl">{t('marketing.assessResultBreakdown')}</h2>
                   <p className="mt-1 text-sm text-ink-2">
-                    Review each response. Results are private to your account.
+                    {t('marketing.assessResultBreakdownDesc')}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 text-sm">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-good/20 bg-good-soft px-3 py-1 font-medium text-good">
                     <Check className="size-3.5" />
-                    {correctCount} correct
+                    {t('marketing.assessResultCorrectBadge', { count: String(correctCount) })}
                   </span>
                   {incorrectCount > 0 ? (
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-bad/20 bg-bad-soft px-3 py-1 font-medium text-bad">
                       <XCircle className="size-3.5" />
-                      {incorrectCount} to review
+                      {t('marketing.assessResultReviewBadge', { count: String(incorrectCount) })}
                     </span>
                   ) : null}
                 </div>
@@ -302,10 +303,13 @@ export function SkillAssessmentResultView({
                       </span>
                       <div className="min-w-0 flex-1">
                         <p className="text-xs font-medium text-ink-3">
-                          Question {r.questionIndex + 1} of {results.length}
+                          {t('marketing.assessResultQuestionOf', {
+                            current: String(r.questionIndex + 1),
+                            total: String(results.length),
+                          })}
                         </p>
                         <h3 className="mt-2 text-base font-semibold leading-7 text-ink sm:text-lg">
-                          {q?.question ?? 'Question'}
+                          {q?.question ?? t('marketing.assessResultQuestionFallback')}
                         </h3>
                       </div>
                     </div>
@@ -351,11 +355,12 @@ export function SkillAssessmentResultView({
                     ) : (
                       <div className="mt-4 space-y-2 rounded-lg border border-line bg-bg-soft p-4 text-sm">
                         <p className="text-ink-2">
-                          <span className="font-medium text-ink">Your answer:</span> {given || '—'}
+                          <span className="font-medium text-ink">{t('marketing.assessResultYourAnswer')}</span>{' '}
+                          {given || '—'}
                         </p>
                         {!r.correct ? (
                           <p className="text-ink-2">
-                            <span className="font-medium text-good">Correct answer:</span>{' '}
+                            <span className="font-medium text-good">{t('marketing.assessResultCorrectAnswer')}</span>{' '}
                             {r.correctAnswer}
                           </p>
                         ) : null}
@@ -379,25 +384,28 @@ export function SkillAssessmentResultView({
         <Container>
           <div className="mx-auto flex max-w-6xl flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-ink-2">
-              {submission.level} level confirmed · {recommendedTitle}
+              {t('marketing.assessResultFooter', {
+                level: levelCopy.level,
+                title: recommendedTitle,
+              })}
             </p>
             <div className="flex flex-wrap items-center gap-2 sm:justify-end">
               <Link href="/assessments">
                 <Button variant="outline" size="lg" className="rounded-full px-5">
                   <ClipboardList className="size-4" />
-                  All assessments
+                  {t('marketing.assessResultAllAssessments')}
                 </Button>
               </Link>
               <Link href="/dashboard">
                 <Button variant="soft" size="lg" className="rounded-full px-5">
                   <BookOpen className="size-4" />
-                  Dashboard
+                  {t('marketing.assessResultDashboard')}
                 </Button>
               </Link>
               <Link href="/create-course">
                 <Button size="lg" className="rounded-full px-6">
-                  Continue learning
-                  <ArrowRight className="size-4" />
+                  {t('marketing.assessResultContinueLearning')}
+                  <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
                 </Button>
               </Link>
             </div>

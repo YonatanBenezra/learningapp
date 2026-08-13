@@ -2,14 +2,16 @@
 
 import Link from 'next/link';
 import { ArrowRight, BookOpen, Loader2, Pencil, Trash2 } from 'lucide-react';
+import { useTranslation, useCourseLevelLabel, useCategoryLabel } from '@/src/i18n';
 import { cn } from '@/src/lib/utils';
 import { formatMoney, type InstructorCourse } from '@/src/domain/instructor';
 
-function statusLabel(status: string, isPublished: boolean) {
-  if (status === 'generating') return 'Generating';
-  if (status === 'failed') return 'Failed';
-  if (isPublished) return 'Published';
-  if (status === 'ready') return 'Draft';
+function useInstructorStatusLabel(status: string, isPublished: boolean) {
+  const { t } = useTranslation();
+  if (status === 'generating') return t('instructor.generating');
+  if (status === 'failed') return t('instructor.statusFailed');
+  if (isPublished) return t('instructor.published');
+  if (status === 'ready') return t('instructor.statusDraft');
   return status;
 }
 
@@ -28,6 +30,10 @@ interface InstructorCourseCardProps {
 }
 
 export function InstructorCourseCard({ course, onDelete, isDeleting }: InstructorCourseCardProps) {
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel(course.category);
+  const levelLabel = useCourseLevelLabel(course.level as 'beginner' | 'intermediate' | 'advanced');
+  const statusLabel = useInstructorStatusLabel(course.status, course.isPublished);
   const isGenerating = course.status === 'generating';
 
   return (
@@ -35,14 +41,14 @@ export function InstructorCourseCard({ course, onDelete, isDeleting }: Instructo
       <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 opacity-100 transition md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
         <Link
           href={`/instructor/courses/${course.id}`}
-          aria-label={`Edit ${course.title}`}
+          aria-label={t('instructor.editCourse', { title: course.title })}
           className="grid size-9 place-items-center rounded-lg border border-line bg-bg-elev text-ink-2 transition hover:border-primary/30 hover:text-primary"
         >
           <Pencil className="size-4" />
         </Link>
         <button
           type="button"
-          aria-label={`Delete ${course.title}`}
+          aria-label={t('instructor.deleteCourse', { title: course.title })}
           disabled={isDeleting}
           onClick={(event) => {
             event.preventDefault();
@@ -71,26 +77,26 @@ export function InstructorCourseCard({ course, onDelete, isDeleting }: Instructo
                 statusClass(course.status, course.isPublished),
               )}
             >
-              {statusLabel(course.status, course.isPublished)}
+              {statusLabel}
             </span>
           </div>
           <h3 className="mt-4 line-clamp-2 text-base font-semibold leading-snug text-ink group-hover:text-primary">
             {course.title}
           </h3>
           <p className="mt-1 text-xs uppercase tracking-wide text-ink-3">
-            {course.category} · {course.level}
+            {categoryLabel} · {levelLabel}
           </p>
         </div>
 
         <div className="flex flex-1 flex-col px-5 py-4">
           <p className="line-clamp-3 text-sm leading-6 text-ink-2">
-            {course.description || 'No description yet.'}
+            {course.description || t('instructor.noDescription')}
           </p>
 
           <dl className="mt-4 grid grid-cols-3 gap-3 text-sm">
             <div>
               <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-                Price
+                {t('instructor.price')}
               </dt>
               <dd className="mt-1 font-semibold text-ink">
                 {formatMoney(course.priceCents, course.currency)}
@@ -98,13 +104,13 @@ export function InstructorCourseCard({ course, onDelete, isDeleting }: Instructo
             </div>
             <div>
               <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-                Sales
+                {t('instructor.salesLabel')}
               </dt>
               <dd className="mt-1 font-semibold text-ink">{course.enrollmentCount}</dd>
             </div>
             <div>
               <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-                Revenue
+                {t('instructor.revenueLabel')}
               </dt>
               <dd className="mt-1 font-semibold text-ink">
                 {formatMoney(course.revenueCents, course.currency)}
@@ -114,7 +120,7 @@ export function InstructorCourseCard({ course, onDelete, isDeleting }: Instructo
         </div>
 
         <div className="flex items-center justify-between border-t border-line bg-bg-soft/50 px-5 py-3.5">
-          <span className="text-sm font-medium text-ink-2">Manage course</span>
+          <span className="text-sm font-medium text-ink-2">{t('instructor.manageCourse')}</span>
           <span className="grid size-8 place-items-center rounded-lg border border-line bg-bg-elev text-ink-3 transition group-hover:border-primary/20 group-hover:text-primary">
             <ArrowRight className="size-4" />
           </span>
