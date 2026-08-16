@@ -6,32 +6,26 @@ import type { CourseStatus } from '@/src/domain/course';
 import type { LearningGoal } from '@/src/features/learning-path/learningPathRecommendation';
 
 const CATEGORY_KEYS: Record<string, MessageKey> = {
-  Programming: 'marketing.catProgramming',
   'Artificial Intelligence': 'marketing.catArtificialIntelligence',
-  'Cyber Security': 'marketing.catCyberSecurity',
-  Networking: 'marketing.catNetworking',
+  'Machine Learning': 'marketing.catMachineLearning',
+  'Deep Learning': 'marketing.catDeepLearning',
   'Data Science': 'marketing.catDataScience',
-  'Health & Fitness': 'marketing.catHealthFitness',
-  Security: 'marketing.catSecurity',
-  General: 'marketing.catGeneral',
+  'Natural Language Processing': 'marketing.catNaturalLanguageProcessing',
+  'Computer Vision': 'marketing.catComputerVision',
+  'Generative AI': 'marketing.catGenerativeAI',
+  'Prompt Engineering': 'marketing.catPromptEngineering',
 };
 
-const TOPIC_KEYS: Record<string, MessageKey> = {
-  Programming: 'marketing.catProgramming',
-  'Artificial Intelligence': 'marketing.catArtificialIntelligence',
-  'Cyber Security': 'marketing.catCyberSecurity',
-  Networking: 'marketing.catNetworking',
-  'Data Science': 'marketing.catDataScience',
-  'Health & Fitness': 'marketing.catHealthFitness',
-  Security: 'marketing.catSecurity',
-  General: 'marketing.catGeneral',
-  Other: 'marketing.catGeneral',
-};
+const TOPIC_KEYS: Record<string, MessageKey> = CATEGORY_KEYS;
+
+export function categoryLabelFor(t: (key: MessageKey) => string, englishTitle: string) {
+  const key = CATEGORY_KEYS[englishTitle];
+  return key ? t(key) : englishTitle;
+}
 
 export function useCategoryLabel(englishTitle: string) {
   const { t } = useTranslation();
-  const key = CATEGORY_KEYS[englishTitle];
-  return key ? t(key) : englishTitle;
+  return categoryLabelFor(t, englishTitle);
 }
 
 export function useTopicLabel(topic: string) {
@@ -43,7 +37,6 @@ export function useTopicLabel(topic: string) {
 export function useMarketingNavLinks() {
   const { t } = useTranslation();
   return [
-    { label: t('nav.home'), href: '/' },
     { label: t('nav.courses'), href: '/courses' },
     { label: t('nav.assessments'), href: '/assessments' },
     { label: t('nav.pricing'), href: '/pricing' },
@@ -267,7 +260,7 @@ export function useSkillLevelCopy(level: SkillLevel) {
 
 export function useAssessmentTopicLabel(topic: string, customTopic: string | null) {
   const { t } = useTranslation();
-  if (topic === 'Other' && customTopic) return customTopic;
+  if (customTopic?.trim()) return customTopic.trim();
   const key = TOPIC_KEYS[topic];
   return key ? t(key) : topic;
 }
@@ -317,19 +310,7 @@ export function useCourseStatusLabel(status: CourseStatus) {
   return t(map[status]);
 }
 
-const CREATE_SUBJECT_KEYS: Record<string, MessageKey> = {
-  Cybersecurity: 'createCourse.subjectCybersecurity',
-  'Machine Learning': 'createCourse.subjectMachineLearning',
-  Networking: 'marketing.catNetworking',
-  Programming: 'marketing.catProgramming',
-  'Data Science': 'marketing.catDataScience',
-  'Artificial Intelligence': 'marketing.catArtificialIntelligence',
-  'Cloud Computing': 'createCourse.subjectCloudComputing',
-  DevOps: 'createCourse.subjectDevOps',
-  'Web Development': 'createCourse.subjectWebDevelopment',
-  Database: 'createCourse.subjectDatabase',
-  'Mobile Development': 'createCourse.subjectMobileDevelopment',
-};
+const CREATE_SUBJECT_KEYS: Record<string, MessageKey> = CATEGORY_KEYS;
 
 export function useCreateCourseSubjectLabel(name: string) {
   const { t } = useTranslation();
@@ -419,15 +400,21 @@ export function useMarketingStats() {
   ] as const;
 }
 
-export type PopularCourseFilter = 'All Categories' | 'Design' | 'Programming' | 'Marketing';
+export type PopularCourseFilter =
+  | 'All Categories'
+  | 'Artificial Intelligence'
+  | 'Machine Learning'
+  | 'Generative AI'
+  | 'Data Science';
 
 export function usePopularCoursesFilters() {
   const { t } = useTranslation();
   return [
     { value: 'All Categories' as const, label: t('marketing.allCategories') },
-    { value: 'Design' as const, label: t('marketing.filterDesign') },
-    { value: 'Programming' as const, label: t('marketing.filterProgramming') },
-    { value: 'Marketing' as const, label: t('marketing.filterMarketing') },
+    { value: 'Artificial Intelligence' as const, label: t('marketing.catArtificialIntelligence') },
+    { value: 'Machine Learning' as const, label: t('marketing.catMachineLearning') },
+    { value: 'Generative AI' as const, label: t('marketing.catGenerativeAI') },
+    { value: 'Data Science' as const, label: t('marketing.catDataScience') },
   ];
 }
 

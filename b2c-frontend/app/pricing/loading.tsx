@@ -7,7 +7,7 @@ export default function Loading() {
   return (
     <MarketingPageShell>
       <Navbar />
-      <main>
+      <main id="main-content">
         <DynamicPageLoader minHeight="50vh" />
       </main>
       <Footer />

@@ -1,18 +1,9 @@
+import { AI_SKILL_TOPICS, type AiSkillTopic } from '../../common/constants/aiCategories';
 import { TIER_LIMITS, tierLimits } from '../../config/tiers';
 
-export const SKILL_TOPICS = [
-  'Programming',
-  'Artificial Intelligence',
-  'Cyber Security',
-  'Networking',
-  'Data Science',
-  'Health & Fitness',
-  'Security',
-  'General',
-  'Other',
-] as const;
+export const SKILL_TOPICS = AI_SKILL_TOPICS;
 
-export type SkillTopic = (typeof SKILL_TOPICS)[number];
+export type SkillTopic = AiSkillTopic;
 
 export type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
 

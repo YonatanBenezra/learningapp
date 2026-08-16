@@ -7,11 +7,11 @@ export const marketingFr = {
   yes: 'Oui',
   dash: '—',
 
-  heroBadge: 'Plateforme d\'apprentissage propulsée par l\'IA',
-  heroTitle: 'Développez vos compétences avec des cours IA et des',
-  heroTitleHighlight: 'laboratoires pratiques',
+  heroBadge: 'Évaluation → cours personnel → labo en direct',
+  heroTitle: 'Connaissez votre niveau. Prenez le parcours. Pratiquez en',
+  heroTitleHighlight: 'labo.',
   heroDescription:
-    'Passez une évaluation de compétences, obtenez un parcours d\'apprentissage personnalisé et pratiquez dans des environnements réels — des bacs à sable de programmation aux laboratoires réseau et sécurité.',
+    'Passez une évaluation, recevez un cours IA adapté, et pratiquez dans de vrais laboratoires — du machine learning à l’IA générative.',
   takeSkillAssessment: 'Passer une évaluation de compétences',
   trustFreeTier: 'Offre gratuite disponible',
   trustNoCard: 'Aucune carte bancaire requise',
@@ -23,6 +23,9 @@ export const marketingFr = {
 
   workspaceTitle: 'Espace de travail LabPath',
   workspaceSubtitle: 'Parcours d\'apprentissage personnalisé',
+  heroStepAssess: 'Évaluer',
+  heroStepCourse: 'Cours',
+  heroStepLab: 'Labo',
   activeSession: 'Session active',
   skillAssessmentLabel: 'Évaluation de compétences',
   levelIntermediate: 'Intermédiaire',

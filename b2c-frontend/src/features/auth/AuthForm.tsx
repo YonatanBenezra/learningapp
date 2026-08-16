@@ -15,7 +15,6 @@ import {
   Check,
   ChevronDown,
   Search,
-  Sparkles,
 } from 'lucide-react';
 import { useLogin, useSignup } from './useAuth';
 import { ApiError } from '@/src/infrastructure/apiClient';
@@ -23,7 +22,7 @@ import { useTranslation } from '@/src/i18n';
 import { PasswordStrength } from './PasswordStrength';
 import { AuthIllustration } from './AuthIllustration';
 import { APP_NAME } from '@/src/lib/brand';
-import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
+import { BrandWordmark, LabPathMark } from '@/src/components/ui/brand-wordmark';
 import { Spinner } from '@/src/components/ui/spinner';
 
 const GOOGLE_ENABLED = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
@@ -44,9 +43,7 @@ function AuthLogo() {
       className="inline-flex items-center gap-2.5"
       aria-label={t('authExtra.homeAria', { appName: APP_NAME })}
     >
-      <span className="grid size-10 place-items-center rounded-lg bg-primary-soft text-primary">
-        <Sparkles className="size-5" />
-      </span>
+      <LabPathMark size="md" />
       <BrandWordmark size="md" className="font-semibold" />
     </Link>
   );

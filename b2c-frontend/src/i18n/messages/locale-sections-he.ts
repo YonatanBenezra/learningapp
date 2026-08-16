@@ -716,6 +716,13 @@ export const navbarExtraHe = {
   logIn: 'התחבר',
   getStarted: 'התחל',
   joinNow: 'הצטרף עכשיו',
+  skipToContent: 'דלג לתוכן',
+  openMenu: 'פתח תפריט',
+  closeMenu: 'סגור תפריט',
+  selectLanguage: 'בחר שפה',
+  toggleTheme: 'החלף ערכת נושא',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsHe = {
@@ -822,6 +829,7 @@ export const marketingSectionsHe = {
   toClose: 'לסגירה',
   resultTypePage: 'דף',
   resultTypeCategory: 'עיין בקטגוריה',
+  resultTypeCourse: 'קורס',
 
   chatWelcomeAsk: 'שלום — אני העוזר של פלטפורמת Bina. שאל על תמחור, קורסים או איך להתחיל.',
   chatWelcomeAgent: 'מצב Agent עוזר לך לחקור מסלולי למידה ולמצוא את הקורס המתאים ליעדים שלך.',

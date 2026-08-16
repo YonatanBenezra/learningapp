@@ -16,7 +16,7 @@ export default function PricingPage() {
   return (
     <MarketingPageShell>
       <Navbar />
-      <main>
+      <main id="main-content">
         <Pricing fullPage />
         <PricingComparison />
         <PricingFaq />

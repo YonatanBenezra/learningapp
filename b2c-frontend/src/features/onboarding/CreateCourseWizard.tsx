@@ -6,26 +6,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
-  BarChart3,
   BookOpen,
-  Brain,
   Check,
   CheckCircle2,
   Circle,
   Clock,
-  Cloud,
-  Code2,
-  Cpu,
-  Database,
-  Globe,
   GraduationCap,
   Loader2,
-  Network,
-  PenLine,
-  ShieldCheck,
-  Smartphone,
   Sparkles,
-  Workflow,
   X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -41,6 +29,7 @@ import { readLearningPathPrefill, ensureMinCourseTopics } from '@/src/features/l
 import { AiModelField } from '@/src/features/ai/AiModelField';
 import { useMe } from '@/src/features/auth';
 import { useAuthStore } from '@/src/store/authStore';
+import { AI_CATEGORY_OPTIONS } from '@/src/constants/aiCategories';
 import { activeCourseLimitForTier, MIN_COURSE_TOPICS, topicLimitForTier } from '@/src/constants/tierLimits';
 import { cn } from '@/src/lib/utils';
 import {
@@ -54,82 +43,6 @@ import {
   useCourseLevelLabel,
   useCategoryLabel,
 } from '@/src/i18n';
-
-const PRESET_SUBJECTS: {
-  name: string;
-  icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
-}[] = [
-  {
-    name: 'Cybersecurity',
-    icon: ShieldCheck,
-    iconBg: 'bg-tint-mint',
-    iconColor: 'text-good',
-  },
-  {
-    name: 'Machine Learning',
-    icon: Cpu,
-    iconBg: 'bg-tint-lav',
-    iconColor: 'text-[#7C3AED]',
-  },
-  {
-    name: 'Networking',
-    icon: Network,
-    iconBg: 'bg-tint-blue',
-    iconColor: 'text-[#2563EB]',
-  },
-  {
-    name: 'Programming',
-    icon: Code2,
-    iconBg: 'bg-primary-soft',
-    iconColor: 'text-primary',
-  },
-  {
-    name: 'Data Science',
-    icon: BarChart3,
-    iconBg: 'bg-tint-peach',
-    iconColor: 'text-secondary',
-  },
-  {
-    name: 'Artificial Intelligence',
-    icon: Brain,
-    iconBg: 'bg-tint-lav',
-    iconColor: 'text-[#7C3AED]',
-  },
-  {
-    name: 'Cloud Computing',
-    icon: Cloud,
-    iconBg: 'bg-tint-blue',
-    iconColor: 'text-primary-deep',
-  },
-  {
-    name: 'DevOps',
-    icon: Workflow,
-    iconBg: 'bg-tint-mint',
-    iconColor: 'text-good',
-  },
-  {
-    name: 'Web Development',
-    icon: Globe,
-    iconBg: 'bg-primary-soft',
-    iconColor: 'text-primary',
-  },
-  {
-    name: 'Database',
-    icon: Database,
-    iconBg: 'bg-tint-peach',
-    iconColor: 'text-secondary',
-  },
-  {
-    name: 'Mobile Development',
-    icon: Smartphone,
-    iconBg: 'bg-tint-blue',
-    iconColor: 'text-[#2563EB]',
-  },
-];
-
-const PRESET_SUBJECT_NAMES = new Set(PRESET_SUBJECTS.map((subject) => subject.name));
 
 const ACTIVE_STATUSES = new Set(['generating', 'ready', 'completed']);
 
@@ -727,23 +640,9 @@ function StepSubjectTopics({
   tier: string;
 }) {
   const { t } = useTranslation();
-  const [otherSelected, setOtherSelected] = useState(
-    () => category.length > 0 && !PRESET_SUBJECT_NAMES.has(category),
-  );
-
   const atTopicMax = maxTopics !== null && topics.length >= maxTopics;
   const belowTopicMin = topics.length < minTopics;
   const topicsRemaining = Math.max(0, minTopics - topics.length);
-
-  function selectPreset(name: string) {
-    setOtherSelected(false);
-    setCategory(name);
-  }
-
-  function selectOther() {
-    setOtherSelected(true);
-    setCategory('');
-  }
 
   return (
     <div className="space-y-8">
@@ -755,51 +654,18 @@ function StepSubjectTopics({
       <div>
         <p className="text-sm font-medium text-ink-2">{t('createCourse.popularSubjects')}</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {PRESET_SUBJECTS.map(({ name, icon: Icon, iconBg, iconColor }) => (
+          {AI_CATEGORY_OPTIONS.map(({ name, icon: Icon, iconBg, iconColor }) => (
             <PresetSubjectButton
               key={name}
               name={name}
               icon={Icon}
               iconBg={iconBg}
               iconColor={iconColor}
-              selected={!otherSelected && category === name}
-              onSelect={() => selectPreset(name)}
+              selected={category === name}
+              onSelect={() => setCategory(name)}
             />
           ))}
-
-          <button
-            type="button"
-            onClick={selectOther}
-            className={cn(
-              'flex items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition-colors',
-              otherSelected
-                ? 'border-primary bg-primary-soft/40'
-                : 'border-line bg-bg-soft hover:border-primary/30',
-            )}
-          >
-            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-bg-elev">
-              <PenLine className="size-4 text-ink-2" />
-            </span>
-            <span className="font-medium text-ink">{t('createCourse.other')}</span>
-          </button>
         </div>
-
-        {otherSelected ? (
-          <div className="mt-4">
-            <Label htmlFor="custom-category" className="text-sm font-medium text-ink">
-              {t('createCourse.customSubject')}
-            </Label>
-            <Input
-              id="custom-category"
-              placeholder={t('createCourse.customSubjectPlaceholder')}
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="mt-2"
-              autoFocus
-            />
-            <p className="mt-2 text-sm text-ink-3">{t('createCourse.customSubjectHint')}</p>
-          </div>
-        ) : null}
       </div>
 
       <div className="border-t border-line pt-8">

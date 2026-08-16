@@ -26,7 +26,7 @@ import {
   Users,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-import { BrandWordmark } from "@/src/components/ui/brand-wordmark";
+import { BrandWordmark, LabPathMark } from "@/src/components/ui/brand-wordmark";
 import { useLogout, useMe } from "@/src/features/auth";
 import { defaultDashboardPath } from "@/src/features/auth/dashboardRoutes";
 import { useTranslation } from "@/src/i18n";
@@ -249,13 +249,9 @@ function SidebarGroupSection({
 function BrandLogo({ collapsed, homeHref }: { collapsed: boolean; homeHref: string }) {
   return (
     <Link href={homeHref} className="flex items-center gap-2.5">
-      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
-        <Sparkles className="size-5" />
-      </span>
+      <LabPathMark size="md" className="shrink-0" />
       {!collapsed && (
-        <span className="font-heading text-xl font-semibold tracking-tight text-ink">
-          <BrandWordmark size="md" className="font-semibold" />
-        </span>
+        <BrandWordmark size="md" className="font-semibold" />
       )}
     </Link>
   );

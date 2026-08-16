@@ -1,26 +1,43 @@
-import { CATEGORIES } from './data';
+import { MARKETING_AI_CATEGORIES } from '@/src/constants/aiCategories';
+
+export const CATEGORIES = MARKETING_AI_CATEGORIES;
 
 export const CATEGORY_TITLES = CATEGORIES.map((category) => category.title);
 
 const ALIAS_TO_TITLE: Record<string, string> = {
-  programming: 'Programming',
-  'artificial intelligence': 'Artificial Intelligence',
   ai: 'Artificial Intelligence',
-  'machine learning': 'Artificial Intelligence',
-  'cyber security': 'Cyber Security',
-  cybersecurity: 'Cyber Security',
-  networking: 'Networking',
+  'artificial intelligence': 'Artificial Intelligence',
+  'machine learning': 'Machine Learning',
+  ml: 'Machine Learning',
+  'deep learning': 'Deep Learning',
+  dl: 'Deep Learning',
   'data science': 'Data Science',
   data: 'Data Science',
-  'health & fitness': 'Health & Fitness',
-  'health and fitness': 'Health & Fitness',
-  security: 'Security',
-  general: 'General',
-  'web development': 'Programming',
-  'mobile development': 'Programming',
-  devops: 'Networking',
-  'cloud computing': 'Networking',
+  nlp: 'Natural Language Processing',
+  'natural language processing': 'Natural Language Processing',
+  'computer vision': 'Computer Vision',
+  cv: 'Computer Vision',
+  'generative ai': 'Generative AI',
+  genai: 'Generative AI',
+  'prompt engineering': 'Prompt Engineering',
+  // Legacy non-AI categories map to closest AI track
+  programming: 'Prompt Engineering',
+  'web development': 'Prompt Engineering',
+  'mobile development': 'Prompt Engineering',
+  cybersecurity: 'Artificial Intelligence',
+  'cyber security': 'Artificial Intelligence',
+  networking: 'Artificial Intelligence',
+  devops: 'Artificial Intelligence',
+  'cloud computing': 'Generative AI',
+  cloud: 'Generative AI',
   database: 'Data Science',
+  business: 'Generative AI',
+  design: 'Computer Vision',
+  'health & fitness': 'Artificial Intelligence',
+  'health and fitness': 'Artificial Intelligence',
+  security: 'Artificial Intelligence',
+  general: 'Artificial Intelligence',
+  other: 'Artificial Intelligence',
 };
 
 export function resolveCategoryTitle(raw: string): string | null {

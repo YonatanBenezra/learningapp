@@ -716,6 +716,13 @@ export const navbarExtraEs = {
   logIn: 'Iniciar sesión',
   getStarted: 'Comenzar',
   joinNow: 'Unirse ahora',
+  skipToContent: 'Saltar al contenido',
+  openMenu: 'Abrir menú',
+  closeMenu: 'Cerrar menú',
+  selectLanguage: 'Seleccionar idioma',
+  toggleTheme: 'Cambiar tema',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsEs = {
@@ -822,6 +829,7 @@ export const marketingSectionsEs = {
   toClose: 'para cerrar',
   resultTypePage: 'Página',
   resultTypeCategory: 'Explorar categoría',
+  resultTypeCourse: 'Curso',
 
   chatWelcomeAsk: 'Hola — soy el asistente de la plataforma Bina. Pregunte sobre precios, cursos o cómo empezar.',
   chatWelcomeAgent: 'El modo agente le ayuda a explorar rutas de aprendizaje y encontrar el curso adecuado para sus objetivos.',

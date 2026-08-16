@@ -716,6 +716,13 @@ export const navbarExtraBn = {
   logIn: 'লগ ইন',
   getStarted: 'শুরু করুন',
   joinNow: 'এখনই যোগ দিন',
+  skipToContent: 'কন্টেন্টে যান',
+  openMenu: 'মেনু খুলুন',
+  closeMenu: 'মেনু বন্ধ করুন',
+  selectLanguage: 'ভাষা নির্বাচন',
+  toggleTheme: 'থিম বদলান',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsBn = {
@@ -822,6 +829,7 @@ export const marketingSectionsBn = {
   toClose: 'বন্ধ করতে',
   resultTypePage: 'পৃষ্ঠা',
   resultTypeCategory: 'ক্যাটাগরি ব্রাউজ',
+  resultTypeCourse: 'কোর্স',
 
   chatWelcomeAsk: 'হাই — আমি Bina প্ল্যাটফর্ম assistant। pricing, কোর্স বা শুরু করার বিষয়ে জিজ্ঞাসা করুন।',
   chatWelcomeAgent: 'Agent mode আপনাকে লার্নিং পাথ explore করতে এবং লক্ষ্য অনুযায়ী সঠিক কোর্স খুঁজতে সাহায্য করে।',

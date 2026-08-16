@@ -1,6 +1,7 @@
 import type { CourseLevel } from '@/src/domain/course';
 import type { SkillLevel } from '@/src/domain/assessment';
 import type { SkillTopic } from '@/src/features/skill-assessment/skillAssessmentApi';
+import { AI_CATEGORY_NAMES } from '@/src/constants/aiCategories';
 import { MIN_COURSE_TOPICS } from '@/src/constants/tierLimits';
 
 export const LEARNING_PATH_PREFILL_KEY = 'bina-learning-path-prefill';
@@ -29,17 +30,9 @@ export interface LearningPathStep {
   description: string;
 }
 
-const TOPIC_TO_CATEGORY: Record<SkillTopic, string> = {
-  Programming: 'Programming',
-  'Artificial Intelligence': 'AI',
-  'Cyber Security': 'Cybersecurity',
-  Networking: 'Networking',
-  'Data Science': 'Data',
-  'Health & Fitness': 'General',
-  Security: 'Cybersecurity',
-  General: 'General',
-  Other: 'General',
-};
+const TOPIC_TO_CATEGORY: Record<SkillTopic, string> = Object.fromEntries(
+  AI_CATEGORY_NAMES.map((name) => [name, name]),
+) as Record<SkillTopic, string>;
 
 const GOAL_LABELS: Record<LearningGoal, string> = {
   career: 'Career growth',
@@ -54,10 +47,7 @@ export function skillLevelToCourseLevel(level: SkillLevel): CourseLevel {
   return 'advanced';
 }
 
-export function mapTopicToCategory(topic: string, customTopic: string | null): string {
-  if (topic === 'Other' && customTopic?.trim()) {
-    return customTopic.trim();
-  }
+export function mapTopicToCategory(topic: string): string {
   return TOPIC_TO_CATEGORY[topic as SkillTopic] ?? topic;
 }
 
@@ -118,24 +108,23 @@ export function ensureMinCourseTopics(
   return buildRecommendedTopics(fallback);
 }
 
-export function buildTopicLabel(topic: string, customTopic: string | null): string {
-  return topic === 'Other' && customTopic?.trim() ? customTopic.trim() : topic;
+export function buildTopicLabel(topic: string): string {
+  return topic;
 }
 
 export function buildLandingPathPrefill(input: {
   topic: string;
-  customTopic: string | null;
   goal: LearningGoal;
   courseLevel?: CourseLevel;
 }): LearningPathPrefill {
-  const topicLabel = buildTopicLabel(input.topic, input.customTopic);
-  const category = mapTopicToCategory(input.topic, input.customTopic);
+  const topicLabel = buildTopicLabel(input.topic);
+  const category = mapTopicToCategory(input.topic);
   const courseLevel = input.courseLevel ?? 'beginner';
 
   return {
     assessmentId: 'landing',
     topic: input.topic,
-    customTopic: input.customTopic,
+    customTopic: null,
     topicLabel,
     skillLevel: 'Beginner',
     courseLevel,
@@ -152,14 +141,14 @@ export function buildLearningPathPrefill(input: {
   skillLevel: SkillLevel;
   goal?: LearningGoal;
 }): LearningPathPrefill {
-  const topicLabel = buildTopicLabel(input.topic, input.customTopic);
-  const category = mapTopicToCategory(input.topic, input.customTopic);
+  const topicLabel = buildTopicLabel(input.topic);
+  const category = mapTopicToCategory(input.topic);
   const courseLevel = skillLevelToCourseLevel(input.skillLevel);
 
   return {
     assessmentId: input.assessmentId,
     topic: input.topic,
-    customTopic: input.customTopic,
+    customTopic: null,
     topicLabel,
     skillLevel: input.skillLevel,
     courseLevel,
@@ -217,7 +206,7 @@ export function getLearningPathSteps(prefill: LearningPathPrefill): LearningPath
     },
     {
       title: 'Complex lab scenarios',
-      description: 'Tackle SOC, network, or coding challenges matched to your score.',
+      description: 'Tackle AI lab challenges matched to your score.',
     },
     {
       title: 'Course-wide assessment',

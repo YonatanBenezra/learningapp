@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <div className="flex min-h-dvh flex-col bg-bg font-sans text-ink">
       <Navbar />
-      <main className="flex min-h-0 flex-1 flex-col">
+      <main id="main-content" className="flex min-h-0 flex-1 flex-col">
         <CoursesCatalogSkeleton />
       </main>
     </div>

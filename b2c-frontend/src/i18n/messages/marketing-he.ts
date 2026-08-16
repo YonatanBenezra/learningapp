@@ -7,11 +7,11 @@ export const marketingHe = {
   yes: 'כן',
   dash: '—',
 
-  heroBadge: 'פלטפורמת למידה מבוססת AI',
-  heroTitle: 'בנה מיומנויות עם קורסי AI ו',
-  heroTitleHighlight: 'מעבדות מעשיות',
+  heroBadge: 'בדיקת מיומנות → קורס אישי → מעבדה חיה',
+  heroTitle: 'דעו את הרמה. קבלו את המסלול. תרגלו ב',
+  heroTitleHighlight: 'מעבדות.',
   heroDescription:
-    'בצע הערכת מיומנות, קבל מסלול למידה מותאם אישית, ותרגל בסביבות אמיתיות — מארגזי חול לתכנות ועד מעבדות רשת ואבטחה.',
+    'בצעו הערכת מיומנות, קבלו קורס AI מותאם, ותרגלו במעבדות אמיתיות — מלמידת מכונה ועד AI גנרטיבי.',
   takeSkillAssessment: 'בצע הערכת מיומנות',
   trustFreeTier: 'רמה חינמית זמינה',
   trustNoCard: 'לא נדרש כרטיס אשראי',
@@ -23,6 +23,9 @@ export const marketingHe = {
 
   workspaceTitle: 'LabPath Workspace',
   workspaceSubtitle: 'מסלול למידה מותאם אישית',
+  heroStepAssess: 'הערכה',
+  heroStepCourse: 'קורס',
+  heroStepLab: 'מעבדה',
   activeSession: 'סשן פעיל',
   skillAssessmentLabel: 'הערכת מיומנות',
   levelIntermediate: 'בינוני',

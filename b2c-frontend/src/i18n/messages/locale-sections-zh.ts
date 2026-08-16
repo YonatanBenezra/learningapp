@@ -716,6 +716,13 @@ export const navbarExtraZh = {
   logIn: '登录',
   getStarted: '开始使用',
   joinNow: '立即加入',
+  skipToContent: '跳到正文',
+  openMenu: '打开菜单',
+  closeMenu: '关闭菜单',
+  selectLanguage: '选择语言',
+  toggleTheme: '切换主题',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsZh = {
@@ -822,6 +829,7 @@ export const marketingSectionsZh = {
   toClose: '关闭',
   resultTypePage: '页面',
   resultTypeCategory: '浏览分类',
+  resultTypeCourse: '课程',
 
   chatWelcomeAsk: '您好——我是 Bina 平台助手。可咨询定价、课程或如何开始。',
   chatWelcomeAgent: 'Agent 模式帮助您探索学习路径并找到适合目标的课程。',

@@ -14,6 +14,7 @@ import { useAuthHydrated } from '@/src/features/auth/useAuthHydrated';
 import { useCourses } from '@/src/features/courses';
 import { useAuthStore } from '@/src/store/authStore';
 import { resolveCategoryTitle, CATEGORY_TITLES } from '@/src/components/marketing/categoryCounts';
+import { AI_CATEGORY_NAME_SET } from '@/src/constants/aiCategories';
 import { InfoTip, Tooltip } from '@/src/components/ui/tooltip';
 import { cn } from '@/src/lib/utils';
 import { useTranslation, useCategoryLabel } from '@/src/i18n';
@@ -112,14 +113,14 @@ export function CoursesCatalogPage() {
     const extras = new Set<string>();
     for (const course of catalogCourses) {
       const title = resolveCategoryTitle(course.category) ?? course.category;
-      if (title && !CATEGORY_TITLES.includes(title)) extras.add(title);
+      if (title && !AI_CATEGORY_NAME_SET.has(title)) extras.add(title);
     }
     return [ALL_CATEGORIES, ...CATEGORY_TITLES, ...[...extras].sort()] as CourseCategory[];
   }, [catalogCourses]);
 
   const activeFilter: CourseCategory =
     categoryParam &&
-    (categoryFilters.includes(categoryParam) || CATEGORY_TITLES.includes(categoryParam))
+    (categoryFilters.includes(categoryParam) || AI_CATEGORY_NAME_SET.has(categoryParam))
       ? categoryParam
       : ALL_CATEGORIES;
 

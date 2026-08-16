@@ -1,10 +1,11 @@
 import { z } from 'zod';
+import { aiCategorySchema } from '../../common/constants/aiCategories';
 
 export const createInstructorCourseSchema = z
   .object({
     title: z.string().min(3).max(200),
     description: z.string().min(10).max(5000),
-    category: z.string().min(1),
+    category: aiCategorySchema,
     topics: z.array(z.string().min(1)).min(1),
     level: z.enum(['beginner', 'intermediate', 'advanced']),
     priceCents: z.number().int().min(0),
@@ -18,7 +19,7 @@ export const updateInstructorCourseSchema = z
   .object({
     title: z.string().min(3).max(200).optional(),
     description: z.string().min(10).max(5000).optional(),
-    category: z.string().min(1).optional(),
+    category: aiCategorySchema.optional(),
     topics: z.array(z.string().min(1)).min(1).optional(),
     level: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
     priceCents: z.number().int().min(0).optional(),

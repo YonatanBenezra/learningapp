@@ -7,11 +7,11 @@ export const marketingBn = {
   yes: 'হ্যাঁ',
   dash: '—',
 
-  heroBadge: 'AI-চালিত লার্নিং প্ল্যাটফর্ম',
-  heroTitle: 'AI কোর্স ও',
-  heroTitleHighlight: 'হাতে-কলমে ল্যাব',
+  heroBadge: 'স্কিল চেক → ব্যক্তিগত কোর্স → লাইভ ল্যাব',
+  heroTitle: 'লেভেল জানুন। পাথ নিন। অনুশীলন করুন',
+  heroTitleHighlight: 'ল্যাবে।',
   heroDescription:
-    'স্কিল অ্যাসেসমেন্ট দিন, ব্যক্তিগত লার্নিং পাথ পান এবং প্রোগ্রামিং স্যান্ডবক্স থেকে নেটওয়ার্ক ও সিকিউরিটি ল্যাব পর্যন্ত বাস্তব পরিবেশে অনুশীলন করুন।',
+    'স্কিল অ্যাসেসমেন্ট দিন, ম্যাচ করা AI কোর্স পান, আর আসল ল্যাবে অনুশীলন করুন — মেশিন লার্নিং থেকে জেনারেটিভ AI পর্যন্ত।',
   takeSkillAssessment: 'স্কিল অ্যাসেসমেন্ট দিন',
   trustFreeTier: 'ফ্রি টিয়ার উপলব্ধ',
   trustNoCard: 'ক্রেডিট কার্ড লাগবে না',
@@ -23,6 +23,9 @@ export const marketingBn = {
 
   workspaceTitle: 'LabPath ওয়ার্কস্পেস',
   workspaceSubtitle: 'ব্যক্তিগত লার্নিং পাথ',
+  heroStepAssess: 'অ্যাসেস',
+  heroStepCourse: 'কোর্স',
+  heroStepLab: 'ল্যাব',
   activeSession: 'সক্রিয় সেশন',
   skillAssessmentLabel: 'স্কিল অ্যাসেসমেন্ট',
   levelIntermediate: 'ইন্টারমিডিয়েট',

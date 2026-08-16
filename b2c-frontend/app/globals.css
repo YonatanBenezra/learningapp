@@ -88,7 +88,7 @@
     rgba(255, 255, 255, 0.72) 82%,
     color-mix(in srgb, var(--primary-soft) 15%, transparent) 100%
   );
-  --marketing-hero: linear-gradient(282.57deg, #f1e4ff 0.89%, #f0fff7 54.81%, #ffebff 100%);
+  --marketing-hero: #f4fafb;
   --marketing-surface: #fcfcfc;
   --marketing-card: #ffffff;
   --marketing-card-shadow: 0 0 20px rgba(190, 190, 190, 0.38);
@@ -188,7 +188,7 @@
     rgba(21, 28, 44, 0.92) 82%,
     color-mix(in srgb, var(--primary-soft) 20%, transparent) 100%
   );
-  --marketing-hero: linear-gradient(282.57deg, #1a1528 0.89%, #152028 54.81%, #281528 100%);
+  --marketing-hero: #151c2c;
   --marketing-surface: var(--bg-soft);
   --marketing-card: var(--bg-elev);
   --marketing-card-shadow: 0 0 20px rgba(15, 23, 42, 0.45);

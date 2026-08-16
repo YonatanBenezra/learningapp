@@ -1,6 +1,6 @@
 export const marketingHi = {
   heroDescription:
-    'कौशल मूल्यांकन दें, व्यक्तिगत सीखने का मार्ग पाएँ और वास्तविक वातावरण में अभ्यास करें — प्रोग्रामिंग सैंडबॉक्स से नेटवर्क और सुरक्षा लैब तक।',
+    'कौशल मूल्यांकन दें, मैच किया AI कोर्स पाएँ, और असली लैब में अभ्यास करें — मशीन लर्निंग से जनरेटिव AI तक।',
   categoriesDescription:
     'प्रोग्रामिंग, AI, साइबर सुरक्षा, नेटवर्किंग और अधिक — कौशल मूल्यांकन दें या प्रत्येक श्रेणी में कोर्स ब्राउज़ करें।',
   catalogTip:
@@ -61,9 +61,9 @@ export const marketingHi = {
   allCategories: 'सभी श्रेणियाँ',
   yes: 'हाँ',
   dash: '—',
-  heroBadge: 'AI-संचालित सीखने का प्लेटफ़ॉर्म',
-  heroTitle: 'AI कोर्स और',
-  heroTitleHighlight: 'हाथों-हाथ लैब',
+  heroBadge: 'स्किल जाँच → व्यक्तिगत कोर्स → लाइव लैब',
+  heroTitle: 'अपना स्तर जानें। पथ लें। अभ्यास करें',
+  heroTitleHighlight: 'लैब में।',
   takeSkillAssessment: 'कौशल मूल्यांकन दें',
   trustFreeTier: 'मुफ़्त प्लान उपलब्ध',
   trustNoCard: 'क्रेडिट कार्ड आवश्यक नहीं',
@@ -74,6 +74,9 @@ export const marketingHi = {
   domainAiData: 'AI और डेटा',
   workspaceTitle: 'LabPath कार्यस्थान',
   workspaceSubtitle: 'व्यक्तिगत सीखने का मार्ग',
+  heroStepAssess: 'मूल्यांकन',
+  heroStepCourse: 'कोर्स',
+  heroStepLab: 'लैब',
   activeSession: 'सक्रिय सत्र',
   skillAssessmentLabel: 'कौशल मूल्यांकन',
   levelIntermediate: 'मध्यम',

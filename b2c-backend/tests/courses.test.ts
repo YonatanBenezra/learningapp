@@ -29,13 +29,13 @@ const VALID_TOPICS = [
 ] as const;
 
 const config = {
-  category: 'Cybersecurity',
+  category: 'Machine Learning',
   topics: [...VALID_TOPICS],
   level: 'beginner' as const,
 };
 
 const fakeTree: GeneratedCourse = {
-  title: 'Intro to Cybersecurity',
+  title: 'Intro to Machine Learning',
   modules: [
     {
       title: 'Foundations',
@@ -117,7 +117,7 @@ const generatingCourse = (userId: string, over: Record<string, unknown> = {}) =>
   Course.create({
     userId,
     title: 'Generating…',
-    category: 'Cybersecurity',
+    category: 'Machine Learning',
     topics: ['fundamentals'],
     level: 'beginner',
     status: 'generating',
@@ -178,7 +178,7 @@ describe('POST /courses', () => {
     const res = await request(app)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
-      .send({ category: 'Cybersecurity', topics: ['one', 'two'], level: 'beginner' });
+      .send({ category: 'Machine Learning', topics: ['one', 'two'], level: 'beginner' });
     expect(res.status).toBe(400);
   });
 
@@ -188,7 +188,7 @@ describe('POST /courses', () => {
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        category: 'Cybersecurity',
+        category: 'Machine Learning',
         topics: ['one', 'two', 'three', 'four', 'five', 'six', 'seven'],
         level: 'beginner',
       });
@@ -222,7 +222,7 @@ describe('runCourseGeneration (worker logic)', () => {
 
     const reloaded = await Course.findById(course._id);
     expect(reloaded!.status).toBe('ready');
-    expect(reloaded!.title).toBe('Intro to Cybersecurity');
+    expect(reloaded!.title).toBe('Intro to Machine Learning');
     expect(reloaded!.moduleOrder).toHaveLength(2);
     expect(await Module.countDocuments({ courseId: course._id })).toBe(2);
     expect(await Lesson.countDocuments()).toBe(3);

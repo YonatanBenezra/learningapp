@@ -20,9 +20,10 @@ export function PopularCourses() {
 
   function categoryLabel(category: string) {
     const map: Record<string, string> = {
-      Design: t('marketing.filterDesign'),
-      Programming: t('marketing.filterProgramming'),
-      Marketing: t('marketing.filterMarketing'),
+      'Artificial Intelligence': t('marketing.catArtificialIntelligence'),
+      'Machine Learning': t('marketing.catMachineLearning'),
+      'Generative AI': t('marketing.catGenerativeAI'),
+      'Data Science': t('marketing.catDataScience'),
     };
     return map[category] ?? category;
   }

@@ -9,16 +9,7 @@ export const generateSkillAssessmentSchema = z
     guestSessionId: z.string().uuid().optional(),
     aiModel: optionalAiModel,
   })
-  .strict()
-  .superRefine((data, ctx) => {
-    if (data.topic === 'Other' && !data.customTopic?.trim()) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'customTopic is required when topic is Other',
-        path: ['customTopic'],
-      });
-    }
-  });
+  .strict();
 
 export const submitSkillAssessmentSchema = z
   .object({

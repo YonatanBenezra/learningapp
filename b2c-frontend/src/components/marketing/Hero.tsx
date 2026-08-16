@@ -1,48 +1,45 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import Link from 'next/link';
-import {
-  ArrowRight,
-  BookOpen,
-  CheckCircle2,
-  ClipboardCheck,
-  Code2,
-  Network,
-  ShieldCheck,
-  Sparkles,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { buttonClasses } from '@/src/components/ui/button';
 import { useTranslation, useIsRtl } from '@/src/i18n';
 import { Container } from './Container';
 import { HeroTerminalDemo } from './HeroTerminalDemo';
 
-const DOMAINS = [
-  { labelKey: 'marketing.domainProgramming' as const, icon: Code2 },
-  { labelKey: 'marketing.domainCyberSecurity' as const, icon: ShieldCheck },
-  { labelKey: 'marketing.domainNetworking' as const, icon: Network },
-  { labelKey: 'marketing.domainAiData' as const, icon: Sparkles },
-] as const;
-
-const PREVIEW_TAGS = [
-  'marketing.tagQuizzes',
-  'marketing.tagExams',
-  'marketing.tagAchievements',
-  'marketing.tagProgress',
-] as const;
-
 function HeroBackdrop() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute -left-40 top-0 size-[520px] rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute -right-32 bottom-0 size-[480px] rounded-full bg-tint-blue/40 blur-3xl" />
-      <div
-        className="absolute inset-0 opacity-[0.35]"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, rgba(13,110,99,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(13,110,99,0.06) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
-        }}
-      />
+      <div className="absolute -left-32 top-10 size-[520px] rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute -right-20 bottom-0 size-[460px] rounded-full bg-primary/6 blur-3xl" />
+    </div>
+  );
+}
+
+function PathStep({
+  index,
+  title,
+  last = false,
+  children,
+}: {
+  index: string;
+  title: string;
+  last?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex gap-4">
+      <div className="flex w-9 shrink-0 flex-col items-center">
+        <span className="grid size-9 place-items-center rounded-full bg-primary-soft text-[11px] font-semibold tracking-wide text-primary">
+          {index}
+        </span>
+        {last ? null : <span className="mt-2 w-px flex-1 bg-line" />}
+      </div>
+      <div className={last ? 'min-w-0 flex-1' : 'min-w-0 flex-1 pb-8'}>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-3">{title}</p>
+        <div className="mt-3">{children}</div>
+      </div>
     </div>
   );
 }
@@ -51,82 +48,47 @@ function HeroPlatformPreview() {
   const { t } = useTranslation();
 
   return (
-    <div className="relative mx-auto w-full max-w-[540px] lg:mx-0 lg:ml-auto">
-      <div className="rounded-lg border border-line bg-[var(--marketing-card)] p-5 shadow-soft sm:p-6">
-        <div className="flex items-center justify-between gap-3 border-b border-line pb-4">
-          <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-lg bg-primary-soft text-primary">
-              <Sparkles className="size-5" />
-            </span>
-            <div>
-              <p className="text-sm font-semibold text-ink">{t('marketing.workspaceTitle')}</p>
-              <p className="text-xs text-ink-3">{t('marketing.workspaceSubtitle')}</p>
-            </div>
-          </div>
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-bg-soft px-3 py-1 text-xs font-medium text-ink-2">
+    <div className="relative mx-auto w-full max-w-[540px] lg:mx-0 lg:max-w-none">
+      <div className="flex min-h-[560px] flex-col overflow-hidden rounded-3xl border border-line bg-bg-elev lg:min-h-[640px]">
+        <div className="flex items-center gap-3 border-b border-line px-5 py-3.5">
+          <span className="flex gap-1.5" aria-hidden="true">
+            <span className="size-2.5 rounded-full bg-line-2" />
+            <span className="size-2.5 rounded-full bg-line-2" />
+            <span className="size-2.5 rounded-full bg-line-2" />
+          </span>
+          <p className="truncate text-sm font-medium text-ink">{t('marketing.workspaceTitle')}</p>
+          <span className="ms-auto inline-flex items-center gap-1.5 text-xs text-ink-3">
             <span className="size-1.5 rounded-full bg-good" />
             {t('marketing.activeSession')}
           </span>
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-lg border border-line bg-bg p-4 dark:bg-bg-soft">
-            <div className="flex items-center gap-2 text-primary">
-              <ClipboardCheck className="size-4" />
-              <p className="text-xs font-semibold uppercase tracking-wide">
-                {t('marketing.skillAssessmentLabel')}
-              </p>
-            </div>
-            <p className="mt-3 text-2xl font-semibold text-ink">{t('marketing.levelIntermediate')}</p>
+        <div className="flex flex-1 flex-col px-5 py-6 sm:px-7 sm:py-8">
+          <PathStep index="01" title={t('marketing.heroStepAssess')}>
+            <p className="text-3xl font-semibold tracking-tight text-ink">
+              {t('marketing.levelIntermediate')}
+            </p>
             <p className="mt-1 text-sm text-ink-2">{t('marketing.matchedLevel')}</p>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-line">
+            <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-line">
               <div className="h-full w-[82%] rounded-full bg-primary" />
             </div>
             <p className="mt-2 text-xs text-ink-3">{t('marketing.readinessScore')}</p>
-          </div>
+          </PathStep>
 
-          <div className="rounded-lg border border-line bg-bg p-4 dark:bg-bg-soft">
-            <div className="flex items-center gap-2 text-primary">
-              <BookOpen className="size-4" />
-              <p className="text-xs font-semibold uppercase tracking-wide">{t('marketing.aiCourseLabel')}</p>
-            </div>
-            <p className="mt-3 text-sm font-semibold leading-snug text-ink">
+          <PathStep index="02" title={t('marketing.heroStepCourse')}>
+            <p className="text-lg font-semibold leading-snug text-ink">
               {t('marketing.sampleCourseTitle')}
             </p>
-            <dl className="mt-4 grid grid-cols-2 gap-3">
-              <div>
-                <dt className="text-xs text-ink-3">{t('marketing.modules')}</dt>
-                <dd className="text-lg font-semibold text-ink">4</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-ink-3">{t('marketing.lessons')}</dt>
-                <dd className="text-lg font-semibold text-ink">23</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
+            <p className="mt-2 text-sm text-ink-2">
+              4 {t('marketing.modules')}
+              <span className="mx-2 text-ink-3/40">·</span>
+              23 {t('marketing.lessons')}
+            </p>
+          </PathStep>
 
-        <HeroTerminalDemo />
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {PREVIEW_TAGS.map((key) => (
-            <span
-              key={key}
-              className="rounded-full border border-line bg-bg-soft px-3 py-1 text-xs font-medium text-ink-2"
-            >
-              {t(key)}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-line bg-bg-soft px-4 py-3">
-          <div>
-            <p className="text-xs font-medium text-ink-3">{t('marketing.learningFormat')}</p>
-            <p className="mt-0.5 text-sm font-semibold text-ink">{t('marketing.learningFormatValue')}</p>
-          </div>
-          <span className="hidden rounded-lg bg-primary-soft px-3 py-1.5 text-xs font-semibold text-primary sm:inline">
-            {t('marketing.allInOnePlatform')}
-          </span>
+          <PathStep index="03" title={t('marketing.heroStepLab')} last>
+            <HeroTerminalDemo />
+          </PathStep>
         </div>
       </div>
     </div>
@@ -144,65 +106,58 @@ export function Hero() {
   ] as const;
 
   return (
-    <section id="top" className="relative overflow-hidden bg-[var(--marketing-hero)]">
+    <section
+      id="top"
+      className="relative -mt-16 flex min-h-[100svh] items-center overflow-hidden bg-[var(--marketing-hero)]"
+    >
       <HeroBackdrop />
 
-      <Container className="relative grid items-center gap-12 py-14 lg:grid-cols-2 lg:gap-16 lg:py-20">
+      <Container className="relative grid w-full items-center gap-14 py-28 lg:grid-cols-2 lg:gap-16 lg:py-32">
         <div className="max-w-xl" data-tour="tour-hero">
-          <p className="inline-flex items-center gap-2 rounded-full border border-line bg-bg-elev px-4 py-1.5 text-sm font-medium text-ink-2">
-            <Sparkles className="size-4 text-primary" />
+          <p className="inline-flex rounded-full border border-line bg-bg-elev px-3.5 py-1.5 text-sm font-medium text-ink-2">
             {t('marketing.heroBadge')}
           </p>
 
-          <h1 className="mt-6 font-heading text-[2.25rem] font-semibold leading-[1.12] tracking-tight text-ink sm:text-[2.75rem] lg:text-[3.25rem]">
+          <h1 className="mt-8 font-heading text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-ink sm:text-[2.9rem] lg:text-[3.4rem]">
             {t('marketing.heroTitle')}{' '}
             <span className="text-primary">{t('marketing.heroTitleHighlight')}</span>
           </h1>
 
-          <p className="mt-5 max-w-lg text-base leading-relaxed text-ink-2 sm:text-lg">
+          <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-2 sm:text-lg">
             {t('marketing.heroDescription')}
           </p>
 
           <div
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+            className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
             data-tour="tour-hero-actions"
           >
-            <Link href="/signup" className={buttonClasses({ size: 'lg', className: 'rounded-lg' })}>
-              {t('common.startFree')}
+            <Link
+              href="/assessments"
+              className={buttonClasses({ size: 'lg', className: 'rounded-full px-6' })}
+            >
+              {t('marketing.takeSkillAssessment')}
               <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
             </Link>
             <Link
-              href="/assessments"
+              href="/signup"
               className={buttonClasses({
-                variant: 'outline',
+                variant: 'ghost',
                 size: 'lg',
-                className: 'rounded-lg bg-bg-elev',
+                className: 'rounded-full px-5',
               })}
             >
-              {t('marketing.takeSkillAssessment')}
+              {t('common.startFree')}
             </Link>
           </div>
 
-          <ul className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
-            {trustPoints.map((point) => (
-              <li key={point} className="flex items-center gap-2 text-sm text-ink-2">
-                <CheckCircle2 className="size-4 shrink-0 text-good" />
+          <p className="mt-10 text-sm text-ink-3">
+            {trustPoints.map((point, index) => (
+              <span key={point}>
+                {index > 0 ? <span className="mx-2 text-ink-3/40">·</span> : null}
                 {point}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            {DOMAINS.map(({ labelKey, icon: Icon }) => (
-              <span
-                key={labelKey}
-                className="inline-flex items-center gap-2 rounded-lg border border-line bg-bg-elev px-3 py-2 text-sm font-medium text-ink-2"
-              >
-                <Icon className="size-4 text-primary" />
-                {t(labelKey)}
               </span>
             ))}
-          </div>
+          </p>
         </div>
 
         <HeroPlatformPreview />

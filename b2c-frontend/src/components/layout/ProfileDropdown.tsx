@@ -39,7 +39,7 @@ const menuItems: ProfileMenuItem[] = [
   { id: 'helpCenter', icon: LifeBuoy, href: '/support' },
 ];
 
-export function ProfileDropdown() {
+export function ProfileDropdown({ compact = false }: { compact?: boolean }) {
   const { t } = useTranslation();
   const isRtl = useIsRtl();
   const user = useAuthStore((s) => s.user);
@@ -71,15 +71,20 @@ export function ProfileDropdown() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-full border border-line py-1 pl-1 pr-2.5 transition-colors hover:border-line-2 hover:bg-bg-soft"
+        className={cn(
+          'flex items-center rounded-full border border-line transition-colors hover:border-line-2 hover:bg-bg-soft',
+          compact ? 'p-0.5' : 'gap-2 py-1 pl-1 pr-2.5',
+        )}
         aria-expanded={open}
         aria-haspopup="true"
         aria-label={t('profileMenu.openMenu')}
       >
         <Avatar {...getUserAvatarProps(user)} className="size-8" />
-        <span className="hidden max-w-[120px] truncate text-sm font-medium text-ink md:block">
-          {getUserDisplayName(user, { compact: true })}
-        </span>
+        {compact ? null : (
+          <span className="hidden max-w-[120px] truncate text-sm font-medium text-ink md:block">
+            {getUserDisplayName(user, { compact: true })}
+          </span>
+        )}
       </button>
 
       <AnimatePresence>

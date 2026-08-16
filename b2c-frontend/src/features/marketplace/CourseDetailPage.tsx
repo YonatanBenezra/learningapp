@@ -20,7 +20,7 @@ function CourseDetailLayout({ children }: { children: React.ReactNode }) {
       <div>
         <Navbar />
       </div>
-      <main className="min-h-0">{children}</main>
+      <main id="main-content" className="min-h-0">{children}</main>
       <Footer />
     </div>
   );

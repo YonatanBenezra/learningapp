@@ -7,11 +7,11 @@ export const marketingEs = {
   yes: 'Sí',
   dash: '—',
 
-  heroBadge: 'Plataforma de aprendizaje con IA',
-  heroTitle: 'Desarrolle competencias con cursos de IA y',
-  heroTitleHighlight: 'laboratorios prácticos',
+  heroBadge: 'Evaluación → curso personal → laboratorio en vivo',
+  heroTitle: 'Conozca su nivel. Obtenga la ruta. Practique en',
+  heroTitleHighlight: 'labs.',
   heroDescription:
-    'Realice una evaluación de competencias, obtenga una ruta de aprendizaje personalizada y practique en entornos reales — desde entornos de programación hasta laboratorios de redes y seguridad.',
+    'Haga una evaluación de competencias, reciba un curso de IA a su medida y practique en laboratorios reales — de machine learning a IA generativa.',
   takeSkillAssessment: 'Realizar evaluación de competencias',
   trustFreeTier: 'Plan gratuito disponible',
   trustNoCard: 'No se requiere tarjeta de crédito',
@@ -23,6 +23,9 @@ export const marketingEs = {
 
   workspaceTitle: 'Espacio de trabajo LabPath',
   workspaceSubtitle: 'Ruta de aprendizaje personalizada',
+  heroStepAssess: 'Evaluar',
+  heroStepCourse: 'Curso',
+  heroStepLab: 'Lab',
   activeSession: 'Sesión activa',
   skillAssessmentLabel: 'Evaluación de competencias',
   levelIntermediate: 'Intermedio',

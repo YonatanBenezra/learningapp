@@ -102,6 +102,7 @@ export const marketingSectionsEn = {
   toClose: 'to close',
   resultTypePage: 'Page',
   resultTypeCategory: 'Browse category',
+  resultTypeCourse: 'Course',
 
   chatWelcomeAsk: "Hi — I'm Bina's platform assistant. Ask about pricing, courses, or getting started.",
   chatWelcomeAgent: 'Agent mode helps you explore learning paths and find the right course for your goals.',

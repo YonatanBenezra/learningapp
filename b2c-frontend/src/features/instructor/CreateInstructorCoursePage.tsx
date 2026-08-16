@@ -6,26 +6,18 @@ import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
-  BarChart3,
-  Brain,
-  Briefcase,
   Check,
-  Cloud,
-  Code2,
   DollarSign,
   Loader2,
-  Network,
-  Palette,
-  ShieldCheck,
   Sparkles,
   X,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { cn } from '@/src/lib/utils';
 import { formatMoney } from '@/src/domain/instructor';
+import { AI_CATEGORY_OPTIONS } from '@/src/constants/aiCategories';
 import { useTranslation } from '@/src/i18n';
 import { useCreateInstructorCourse } from '@/src/features/instructor/useInstructor';
 
@@ -34,22 +26,6 @@ const STEPS = [
   { id: 2, labelKey: 'instructor.stepCurriculum' as const, hintKey: 'instructor.stepCurriculumHint' as const },
   { id: 3, labelKey: 'instructor.stepPricing' as const, hintKey: 'instructor.stepPricingHint' as const },
 ] as const;
-
-const CATEGORIES: {
-  name: string;
-  icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
-}[] = [
-  { name: 'Programming', icon: Code2, iconBg: 'bg-primary-soft', iconColor: 'text-primary' },
-  { name: 'Artificial Intelligence', icon: Brain, iconBg: 'bg-tint-lav', iconColor: 'text-[#7C3AED]' },
-  { name: 'Cyber Security', icon: ShieldCheck, iconBg: 'bg-tint-mint', iconColor: 'text-good' },
-  { name: 'Networking', icon: Network, iconBg: 'bg-tint-blue', iconColor: 'text-[#2563EB]' },
-  { name: 'Data Science', icon: BarChart3, iconBg: 'bg-tint-peach', iconColor: 'text-secondary' },
-  { name: 'Business', icon: Briefcase, iconBg: 'bg-bg-soft', iconColor: 'text-ink' },
-  { name: 'Design', icon: Palette, iconBg: 'bg-tint-pink', iconColor: 'text-[#DB2777]' },
-  { name: 'Cloud', icon: Cloud, iconBg: 'bg-tint-blue', iconColor: 'text-primary-deep' },
-];
 
 const LEVELS: {
   value: 'beginner' | 'intermediate' | 'advanced';
@@ -130,7 +106,7 @@ export function CreateInstructorCoursePage() {
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState(CATEGORIES[0].name);
+  const [category, setCategory] = useState(AI_CATEGORY_OPTIONS[0].name);
   const [topics, setTopics] = useState<string[]>([]);
   const [topicInput, setTopicInput] = useState('');
   const [level, setLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
@@ -261,7 +237,7 @@ export function CreateInstructorCoursePage() {
                   <h2 className="text-base font-semibold text-ink">Category</h2>
                   <p className="mt-1 text-sm text-ink-2">Pick the primary subject area.</p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {CATEGORIES.map((item) => {
+                    {AI_CATEGORY_OPTIONS.map((item) => {
                       const selected = category === item.name;
                       return (
                         <button

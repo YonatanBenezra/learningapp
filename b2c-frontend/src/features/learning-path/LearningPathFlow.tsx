@@ -59,25 +59,18 @@ export function LearningPathFlow() {
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const [step, setStep] = useState(1);
-  const [topic, setTopic] = useState<SkillTopic>('Programming');
-  const [customTopic, setCustomTopic] = useState('');
+  const [topic, setTopic] = useState<SkillTopic>('Artificial Intelligence');
   const [goal, setGoal] = useState<LearningGoal>('career');
   const [error, setError] = useState<string | null>(null);
 
-  const topicLabel =
-    topic === 'Other' && customTopic.trim() ? customTopic.trim() : topic;
+  const topicLabel = topic;
 
   function finishPath() {
     setError(null);
-    if (topic === 'Other' && !customTopic.trim()) {
-      setError('Please describe what you want to learn.');
-      return;
-    }
     saveLearningGoal(goal);
     saveLearningPathPrefill(
       buildLandingPathPrefill({
         topic,
-        customTopic: topic === 'Other' ? customTopic.trim() : null,
         goal,
       }),
     );
@@ -209,30 +202,11 @@ export function LearningPathFlow() {
                   ))}
                 </div>
 
-                {topic === 'Other' && (
-                  <div className="mt-5">
-                    <label
-                      htmlFor="lp-custom-topic"
-                      className="mb-2 block text-sm font-semibold text-ink"
-                    >
-                      Your topic
-                    </label>
-                    <input
-                      id="lp-custom-topic"
-                      value={customTopic}
-                      onChange={(e) => setCustomTopic(e.target.value)}
-                      placeholder="e.g. Cloud computing, UI design…"
-                      className="h-12 w-full rounded-xl border border-line bg-[#FAFBFC] px-4 text-sm outline-none transition focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10"
-                    />
-                  </div>
-                )}
-
                 <div className="mt-8 flex justify-end border-t border-line/60 pt-6">
                   <Button
                     size="lg"
                     className="min-w-[140px] rounded-xl"
                     onClick={() => setStep(2)}
-                    disabled={topic === 'Other' && !customTopic.trim()}
                   >
                     Continue <ArrowRight className="size-4" />
                   </Button>

@@ -7,11 +7,11 @@ export const marketingDe = {
   yes: 'Ja',
   dash: '—',
 
-  heroBadge: 'KI-gestützte Lernplattform',
-  heroTitle: 'Kompetenzen aufbauen mit KI-Kursen und',
-  heroTitleHighlight: 'praxisnahen Labs',
+  heroBadge: 'KI-Check → persönlicher Kurs → Live-Lab',
+  heroTitle: 'Kennen Sie Ihr Level. Holen Sie den Pfad. Üben Sie in',
+  heroTitleHighlight: 'Labs.',
   heroDescription:
-    'Absolvieren Sie eine Kompetenzbewertung, erhalten Sie einen personalisierten Lernpfad und üben Sie in echten Umgebungen — von Programmier-Sandboxen bis zu Netzwerk- und Sicherheitslabs.',
+    'Machen Sie eine Kompetenzbewertung, erhalten Sie einen passenden KI-Kurs und üben Sie in echten Labs — von Machine Learning bis Generative AI.',
   takeSkillAssessment: 'Kompetenzbewertung starten',
   trustFreeTier: 'Kostenloser Tarif verfügbar',
   trustNoCard: 'Keine Kreditkarte erforderlich',
@@ -23,6 +23,9 @@ export const marketingDe = {
 
   workspaceTitle: 'LabPath Arbeitsbereich',
   workspaceSubtitle: 'Personalisierter Lernpfad',
+  heroStepAssess: 'Bewerten',
+  heroStepCourse: 'Kurs',
+  heroStepLab: 'Lab',
   activeSession: 'Aktive Sitzung',
   skillAssessmentLabel: 'Kompetenzbewertung',
   levelIntermediate: 'Fortgeschritten',

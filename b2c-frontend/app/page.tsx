@@ -14,11 +14,9 @@ export default function LandingPage() {
         <Suspense fallback={null}>
           <LandingAssessmentPrompt />
         </Suspense>
-        <main>
-          <div className="relative">
-            <Navbar />
-            <Hero />
-          </div>
+        <Navbar />
+        <main id="main-content">
+          <Hero />
           <Categories />
         </main>
         <Footer />

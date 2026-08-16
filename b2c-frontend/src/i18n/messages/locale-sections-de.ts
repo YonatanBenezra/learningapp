@@ -716,6 +716,13 @@ export const navbarExtraDe = {
   logIn: 'Anmelden',
   getStarted: 'Loslegen',
   joinNow: 'Jetzt beitreten',
+  skipToContent: 'Zum Inhalt springen',
+  openMenu: 'Menü öffnen',
+  closeMenu: 'Menü schließen',
+  selectLanguage: 'Sprache wählen',
+  toggleTheme: 'Design wechseln',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsDe = {
@@ -822,6 +829,7 @@ export const marketingSectionsDe = {
   toClose: 'zum Schließen',
   resultTypePage: 'Seite',
   resultTypeCategory: 'Kategorie durchsuchen',
+  resultTypeCourse: 'Kurs',
 
   chatWelcomeAsk: 'Hallo — ich bin Binas Plattform-Assistent. Fragen Sie nach Preisen, Kursen oder dem Einstieg.',
   chatWelcomeAgent: 'Der Agent-Modus hilft Ihnen, Lernpfade zu erkunden und den passenden Kurs für Ihre Ziele zu finden.',

@@ -27,7 +27,7 @@ async function seedCourse(userId: string) {
   const course = await Course.create({
     userId,
     title: 'C',
-    category: 'Cybersecurity',
+    category: 'Machine Learning',
     topics: ['x'],
     level: 'beginner',
     status: 'ready',

@@ -716,6 +716,13 @@ export const navbarExtraAr = {
   logIn: 'تسجيل الدخول',
   getStarted: 'ابدأ',
   joinNow: 'انضم الآن',
+  skipToContent: 'تخطي إلى المحتوى',
+  openMenu: 'فتح القائمة',
+  closeMenu: 'إغلاق القائمة',
+  selectLanguage: 'اختر اللغة',
+  toggleTheme: 'تبديل المظهر',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsAr = {
@@ -822,6 +829,7 @@ export const marketingSectionsAr = {
   toClose: 'للإغلاق',
   resultTypePage: 'صفحة',
   resultTypeCategory: 'استكشاف الفئة',
+  resultTypeCourse: 'دورة',
 
   chatWelcomeAsk: 'مرحباً — أنا مساعد منصة Bina. اسأل عن الأسعار أو الدورات أو كيفية البدء.',
   chatWelcomeAgent: 'يساعدك وضع الوكيل على استكشاف مسارات التعلّم وإيجاد الدورة المناسبة لأهدافك.',

@@ -7,11 +7,11 @@ export const marketingZh = {
   yes: '是',
   dash: '—',
 
-  heroBadge: 'AI 驱动学习平台',
-  heroTitle: '通过 AI 课程与',
-  heroTitleHighlight: '动手实验',
+  heroBadge: '技能测评 → 专属课程 → 实操实验',
+  heroTitle: '了解水平。获得路径。在',
+  heroTitleHighlight: '实验中练习。',
   heroDescription:
-    '完成技能评估，获取个性化学习路径，并在真实环境中练习——从编程沙盒到网络与安全实验。',
+    '完成技能评估，获得匹配的 AI 课程，并在真实实验中练习——从机器学习到生成式 AI。',
   takeSkillAssessment: '开始技能评估',
   trustFreeTier: '提供免费套餐',
   trustNoCard: '无需信用卡',
@@ -23,6 +23,9 @@ export const marketingZh = {
 
   workspaceTitle: 'LabPath 工作区',
   workspaceSubtitle: '个性化学习路径',
+  heroStepAssess: '评估',
+  heroStepCourse: '课程',
+  heroStepLab: '实验',
   activeSession: '活跃会话',
   skillAssessmentLabel: '技能评估',
   levelIntermediate: '中级',

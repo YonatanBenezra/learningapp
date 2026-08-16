@@ -716,6 +716,13 @@ export const navbarExtraJa = {
   logIn: 'ログイン',
   getStarted: '始める',
   joinNow: '今すぐ参加',
+  skipToContent: 'コンテンツへスキップ',
+  openMenu: 'メニューを開く',
+  closeMenu: 'メニューを閉じる',
+  selectLanguage: '言語を選択',
+  toggleTheme: 'テーマを切り替え',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsJa = {
@@ -813,6 +820,7 @@ export const marketingSectionsJa = {
   toClose: 'で閉じる',
   resultTypePage: 'ページ',
   resultTypeCategory: 'カテゴリを閲覧',
+  resultTypeCourse: 'コース',
   chatWelcomeAsk: 'こんにちは — Binaプラットフォームアシスタントです。料金、コース、始め方についてお気軽にお尋ねください。',
   chatWelcomeAgent: 'エージェントモードは学習パスの探索と目標に合ったコース探しをサポートします。',
   chatAskMode: '質問モード',

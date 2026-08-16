@@ -9,3 +9,4 @@ export { Avatar } from './avatar';
 export { Progress } from './progress';
 export { Switch } from './switch';
 export { ThemeToggle } from './theme-toggle';
+export { BrandWordmark, LabPathMark } from './brand-wordmark';

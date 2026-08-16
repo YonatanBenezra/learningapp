@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import {
   ArrowRight,
+  Brain,
   Check,
-  Code2,
-  Network,
-  Shield,
-  Terminal,
+  Eye,
+  Languages,
+  Sparkles,
   X,
 } from 'lucide-react';
 import { buttonClasses } from '@/src/components/ui/button';
@@ -334,17 +334,17 @@ export function ProcessSection() {
 
 /* ---------- Domains ---------- */
 const domains = [
-  { icon: Shield, t: 'Cybersecurity', p: 'SOC triage, alert analysis, incident response.', grad: 'from-primary to-primary-2' },
-  { icon: Network, t: 'Networking', p: 'SIEM, packet capture, flow analysis.', grad: 'from-[#0fb5c9] to-[#5ed6e6]' },
-  { icon: Code2, t: 'Programming', p: 'Sandboxed code execution, real output.', grad: 'from-[#e1521f] to-[#f79b6b]' },
-  { icon: Terminal, t: 'Systems', p: 'Emulated terminal, safe command practice.', grad: 'from-good to-[#6fe0a6]' },
+  { icon: Brain, t: 'Machine Learning', p: 'Supervised and unsupervised models, evaluation, and deployment.', grad: 'from-primary to-primary-2' },
+  { icon: Sparkles, t: 'Generative AI', p: 'LLMs, diffusion models, and AI-assisted workflows.', grad: 'from-[#0fb5c9] to-[#5ed6e6]' },
+  { icon: Eye, t: 'Computer Vision', p: 'Image classification, detection, and visual AI pipelines.', grad: 'from-[#e1521f] to-[#f79b6b]' },
+  { icon: Languages, t: 'NLP', p: 'Text understanding, embeddings, and language models.', grad: 'from-good to-[#6fe0a6]' },
 ];
 
 export function DomainsSection() {
   return (
     <section id="domains" className="py-20">
       <Container>
-        <SectionHead eyebrow="Domains" title="Real results across every track." />
+        <SectionHead eyebrow="AI domains" title="Real results across every AI track." />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {domains.map((d) => (
             <div

@@ -6,18 +6,9 @@ import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
-  BarChart3,
-  Brain,
   Check,
   Clock,
-  Code2,
-  Dumbbell,
-  LayoutGrid,
   Loader2,
-  Network,
-  Shield,
-  ShieldCheck,
-  Sparkles,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Container } from '@/src/components/marketing/Container';
@@ -26,6 +17,7 @@ import { cn } from '@/src/lib/utils';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import type { SkillAssessmentQuota } from '@/src/domain/assessment';
 import { TRIAL_PERIOD_MONTHS } from '@/src/constants/pricing';
+import { AI_CATEGORY_OPTIONS } from '@/src/constants/aiCategories';
 import {
   isAssessmentQuotaExhausted,
   tierPlanLabel,
@@ -47,20 +39,12 @@ import {
   useIsRtl,
 } from '@/src/i18n';
 
-const TOPIC_META: Record<
-  SkillTopic,
-  { icon: LucideIcon; iconBg: string; iconColor: string }
-> = {
-  Programming: { icon: Code2, iconBg: 'bg-primary-soft', iconColor: 'text-primary' },
-  'Artificial Intelligence': { icon: Brain, iconBg: 'bg-tint-lav', iconColor: 'text-[#7C3AED]' },
-  'Cyber Security': { icon: ShieldCheck, iconBg: 'bg-tint-mint', iconColor: 'text-good' },
-  Networking: { icon: Network, iconBg: 'bg-tint-blue', iconColor: 'text-[#2563EB]' },
-  'Data Science': { icon: BarChart3, iconBg: 'bg-tint-peach', iconColor: 'text-secondary' },
-  'Health & Fitness': { icon: Dumbbell, iconBg: 'bg-tint-pink', iconColor: 'text-[#DB2777]' },
-  Security: { icon: Shield, iconBg: 'bg-bg-soft', iconColor: 'text-primary-deep' },
-  General: { icon: LayoutGrid, iconBg: 'bg-tint-lime', iconColor: 'text-[#65A30D]' },
-  Other: { icon: Sparkles, iconBg: 'bg-primary-soft', iconColor: 'text-primary' },
-};
+const TOPIC_META = Object.fromEntries(
+  AI_CATEGORY_OPTIONS.map(({ name, icon, iconBg, iconColor }) => [
+    name,
+    { icon, iconBg, iconColor },
+  ]),
+) as Record<SkillTopic, { icon: LucideIcon; iconBg: string; iconColor: string }>;
 
 function StepProgress({ step }: { step: 1 | 2 }) {
   const { t } = useTranslation();
@@ -97,23 +81,15 @@ export function CreateAssessmentFlow({
   const goals = useAssessmentGoals();
   const generate = useGenerateSkillAssessment();
   const [step, setStep] = useState<1 | 2>(1);
-  const [topic, setTopic] = useState<SkillTopic>('Programming');
-  const [customTopic, setCustomTopic] = useState('');
+  const [topic, setTopic] = useState<SkillTopic>('Artificial Intelligence');
   const [goal, setGoal] = useState<LearningGoal>('career');
   const [error, setError] = useState<string | null>(null);
 
   const atLimit = isAssessmentQuotaExhausted(quota);
-  const topicLabel =
-    topic === 'Other' && customTopic.trim() ? customTopic.trim() : topic;
-  const step1Valid = topic !== 'Other' || customTopic.trim().length > 0;
   const selectedGoal = goals.find((g) => g.value === goal);
 
   function goToStep2() {
     setError(null);
-    if (!step1Valid) {
-      setError(t('marketing.errorSubjectRequired'));
-      return;
-    }
     setStep(2);
   }
 
@@ -123,14 +99,9 @@ export function CreateAssessmentFlow({
       setError(t('marketing.errorLimitReached'));
       return;
     }
-    if (!step1Valid) {
-      setError(t('marketing.errorSubjectRequired'));
-      setStep(1);
-      return;
-    }
     saveLearningGoal(goal);
     generate.mutate(
-      { topic, customTopic: topic === 'Other' ? customTopic.trim() : undefined },
+      { topic },
       {
         onSuccess: (assessment) => {
           markAssessmentPromptSeen();
@@ -191,21 +162,6 @@ export function CreateAssessmentFlow({
                 })}
               </div>
             </fieldset>
-
-            {topic === 'Other' && (
-              <div>
-                <label htmlFor="custom-topic" className="mb-2 block text-sm font-medium text-ink">
-                  {t('marketing.customSubject')}
-                </label>
-                <input
-                  id="custom-topic"
-                  value={customTopic}
-                  onChange={(e) => setCustomTopic(e.target.value)}
-                  placeholder={t('marketing.customSubjectPlaceholder')}
-                  className="h-12 w-full rounded-xl border border-line bg-bg-elev px-4 text-sm text-ink outline-none transition placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/15"
-                />
-              </div>
-            )}
           </div>
         ) : (
           <div className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr] xl:items-start">
@@ -250,7 +206,7 @@ export function CreateAssessmentFlow({
                 <div>
                   <dt className="text-ink-3">{t('marketing.summarySubject')}</dt>
                   <dd className="mt-1 font-medium text-ink">
-                    <TopicSummaryLabel topic={topic} customTopic={customTopic} fallback={topicLabel} />
+                    <TopicSummaryLabel topic={topic} />
                   </dd>
                 </div>
                 <div>
@@ -297,7 +253,7 @@ export function CreateAssessmentFlow({
             <Button
               size="lg"
               onClick={goToStep2}
-              disabled={!step1Valid || atLimit}
+              disabled={atLimit}
               className="h-11 rounded-full px-6"
             >
               {t('common.continue')}
@@ -379,18 +335,9 @@ function TopicButton({
   );
 }
 
-function TopicSummaryLabel({
-  topic,
-  customTopic,
-  fallback,
-}: {
-  topic: SkillTopic;
-  customTopic: string;
-  fallback: string;
-}) {
+function TopicSummaryLabel({ topic }: { topic: SkillTopic }) {
   const label = useTopicLabel(topic);
-  if (topic === 'Other' && customTopic.trim()) return customTopic.trim();
-  return label || fallback;
+  return label || topic;
 }
 
 export function StartAssessmentPage() {

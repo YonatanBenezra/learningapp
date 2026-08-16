@@ -53,4 +53,11 @@ export const navbarExtraEn = {
   logIn: 'Log in',
   getStarted: 'Get started',
   joinNow: 'Join now',
+  skipToContent: 'Skip to content',
+  openMenu: 'Open menu',
+  closeMenu: 'Close menu',
+  selectLanguage: 'Select language',
+  toggleTheme: 'Toggle theme',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;

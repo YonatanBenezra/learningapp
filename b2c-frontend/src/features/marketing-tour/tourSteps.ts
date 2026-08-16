@@ -14,7 +14,7 @@ const NAV_ROUTE_STEPS: DriveStep[] = [
     popover: {
       title: 'Home',
       description:
-        'Return to the landing page for the hero, learning domains, categories, and FAQs.',
+        'The LabPath mark always takes you back to the landing page — assessments, courses, and labs.',
       side: 'bottom',
       align: 'start',
     },
@@ -80,7 +80,7 @@ const HOME_TOUR_STEPS: DriveStep[] = [
     popover: {
       title: 'Your learning hub',
       description:
-        'LabPath combines AI-generated courses, hands-on labs, quizzes, and exams in one workspace.',
+        'Take a skill assessment, get a matched course, and practice in live labs — all in one path.',
       side: 'right',
       align: 'start',
     },
@@ -90,7 +90,7 @@ const HOME_TOUR_STEPS: DriveStep[] = [
     popover: {
       title: 'Get started quickly',
       description:
-        'Create a free account or take a skill assessment to get a personalized learning path.',
+        'Start with a skill assessment for a matched path, or create a free account to explore.',
       side: 'top',
       align: 'start',
     },
@@ -126,7 +126,7 @@ const COURSES_TOUR_STEPS: DriveStep[] = [
     popover: {
       title: 'Filter by category',
       description:
-        'Switch between domains like Programming, AI, and Cyber Security to narrow the catalog.',
+        'Switch between AI categories like Machine Learning, Generative AI, and NLP to narrow the catalog.',
       side: 'bottom',
       align: 'start',
     },

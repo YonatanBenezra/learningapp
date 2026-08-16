@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUp, Sparkles } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { CATEGORIES } from './data';
 import { Container } from './Container';
 import { FOOTER_SOCIAL_LINKS } from './SocialIcons';
 import { APP_NAME } from '@/src/lib/brand';
-import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
+import { BrandWordmark, LabPathMark } from '@/src/components/ui/brand-wordmark';
 import { cn } from '@/src/lib/utils';
 import { useTranslation, useMarketingNavLinks, useCategoryLabel } from '@/src/i18n';
 
@@ -103,9 +103,7 @@ export function Footer() {
               className="inline-flex items-center gap-2.5"
               aria-label={`${APP_NAME} home`}
             >
-              <span className="grid size-9 place-items-center rounded-lg bg-primary text-primary-ink">
-                <Sparkles className="size-4" />
-              </span>
+              <LabPathMark size="md" />
               <BrandWordmark size="md" />
             </Link>
             <p className="mt-4 text-sm leading-7 text-ink-2 dark:text-white/65">

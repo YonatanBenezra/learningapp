@@ -104,7 +104,7 @@ export function LanguageSelector({
             : 'text-ink-2 hover:border-line hover:bg-bg-soft hover:text-ink',
           className,
         )}
-        aria-label="Select language"
+        aria-label={t('navbarExtra.selectLanguage')}
         aria-expanded={open}
       >
         <Globe className={cn('shrink-0', compact && !isDrawer ? 'size-[18px]' : 'size-4')} />

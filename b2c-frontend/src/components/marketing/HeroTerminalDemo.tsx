@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Terminal } from 'lucide-react';
 import { useMarketingTerminalDemo } from '@/src/i18n';
 
 export function HeroTerminalDemo() {
-  const { command, output, label } = useMarketingTerminalDemo();
+  const { command, output } = useMarketingTerminalDemo();
   const [typed, setTyped] = useState('');
   const [lines, setLines] = useState(0);
   const [cursor, setCursor] = useState(true);
@@ -38,7 +37,7 @@ export function HeroTerminalDemo() {
             clearInterval(lineTimer);
             setCursor(false);
           }
-        }, 450);
+        }, 380);
       }
     }, 45);
 
@@ -52,24 +51,15 @@ export function HeroTerminalDemo() {
   }, [command, output]);
 
   return (
-    <div className="mt-4 overflow-hidden rounded-lg border border-[#1E293B] bg-[#0F172A] p-4 text-[13px] leading-relaxed">
-      <div className="mb-3 flex items-center gap-2 text-slate-400">
-        <Terminal className="size-4" />
-        <span className="font-medium">{label}</span>
-      </div>
-      <p className="font-mono text-[12px]" style={{ color: 'var(--aivora-primary)' }}>
+    <div className="min-h-[148px] overflow-hidden rounded-2xl bg-primary-deep px-4 py-4 sm:min-h-[168px] sm:px-5 sm:py-5">
+      <p className="font-mono text-[13px] text-primary-2">
         $ {typed}
         {cursor ? (
-          <span
-            className="ml-0.5 inline-block w-2 animate-pulse"
-            style={{ backgroundColor: 'color-mix(in srgb, var(--aivora-primary) 80%, transparent)' }}
-          >
-            &nbsp;
-          </span>
+          <span className="ms-0.5 inline-block w-1.5 animate-pulse bg-primary-2">&nbsp;</span>
         ) : null}
       </p>
       {output.slice(0, lines).map((line) => (
-        <p key={line} className="font-mono text-[12px] text-slate-300">
+        <p key={line} className="mt-2 font-mono text-[13px] text-primary-ink/85">
           {line}
         </p>
       ))}

@@ -78,13 +78,13 @@ describe('skill assessment API', () => {
   it('lists predefined topics', async () => {
     const res = await request(app).get('/skill-assessments/topics');
     expect(res.status).toBe(200);
-    expect(res.body.topics).toContain('Programming');
-    expect(res.body.topics).toContain('Other');
+    expect(res.body.topics).toContain('Artificial Intelligence');
+    expect(res.body.topics).toContain('Generative AI');
   });
 
   it('generates a guest assessment and serves it without answers', async () => {
     const assessment = await generateSkillAssessment(
-      { topic: 'Programming', guestSessionId: crypto.randomUUID() },
+      { topic: 'Machine Learning', guestSessionId: crypto.randomUUID() },
       undefined,
       'free',
       fakeGen,
@@ -99,7 +99,7 @@ describe('skill assessment API', () => {
 
   it('requires auth to submit and returns level + score', async () => {
     const { token, userId } = await signup();
-    const assessment = await generateSkillAssessment({ topic: 'Networking' }, userId, 'free', fakeGen);
+    const assessment = await generateSkillAssessment({ topic: 'Natural Language Processing' }, userId, 'free', fakeGen);
 
     const unauth = await request(app)
       .post(`/skill-assessments/${assessment!.id}/submit`)
@@ -125,7 +125,7 @@ describe('skill assessment API', () => {
 
   it('rejects duplicate submission', async () => {
     const { userId } = await signup('dup@example.com');
-    const assessment = await generateSkillAssessment({ topic: 'General' }, userId, 'free', fakeGen);
+    const assessment = await generateSkillAssessment({ topic: 'Artificial Intelligence' }, userId, 'free', fakeGen);
     const stored = await SkillAssessment.findById(assessment!.id).lean();
     const answers = (stored?.questions ?? []).map((q, i) => ({
       questionIndex: i,
@@ -137,17 +137,17 @@ describe('skill assessment API', () => {
     });
   });
 
-  it('validates Other topic requires customTopic on generate', async () => {
+  it('rejects non-AI topics on generate', async () => {
     const res = await request(app)
       .post('/skill-assessments/generate')
-      .send({ topic: 'Other' });
+      .send({ topic: 'Programming' });
     expect(res.status).toBe(400);
   });
 
   it('lists guest assessments and enforces free-plan quota', async () => {
     const guestSessionId = crypto.randomUUID();
     for (let i = 0; i < 5; i += 1) {
-      await generateSkillAssessment({ topic: 'General', guestSessionId }, undefined, 'free', fakeGen);
+      await generateSkillAssessment({ topic: 'Artificial Intelligence', guestSessionId }, undefined, 'free', fakeGen);
     }
 
     const list = await request(app)
@@ -160,7 +160,7 @@ describe('skill assessment API', () => {
 
     const blocked = await request(app)
       .post('/skill-assessments/generate')
-      .send({ topic: 'Programming', guestSessionId });
+      .send({ topic: 'Machine Learning', guestSessionId });
     expect(blocked.status).toBe(429);
   });
 
@@ -176,9 +176,9 @@ describe('skill assessment API', () => {
     const { token, userId } = await signup('claim-list@example.com');
     const guestSessionId = crypto.randomUUID();
 
-    await generateSkillAssessment({ topic: 'Programming', guestSessionId }, undefined, 'free', fakeGen);
-    await generateSkillAssessment({ topic: 'Networking', guestSessionId }, undefined, 'free', fakeGen);
-    await generateSkillAssessment({ topic: 'General' }, userId, 'free', fakeGen);
+    await generateSkillAssessment({ topic: 'Machine Learning', guestSessionId }, undefined, 'free', fakeGen);
+    await generateSkillAssessment({ topic: 'Generative AI', guestSessionId }, undefined, 'free', fakeGen);
+    await generateSkillAssessment({ topic: 'Artificial Intelligence' }, userId, 'free', fakeGen);
 
     const list = await request(app)
       .get('/skill-assessments/mine')
@@ -199,7 +199,7 @@ describe('skill assessment API', () => {
     const { token, userId } = await signup('claimed@example.com');
     const guestSessionId = crypto.randomUUID();
     const assessment = await generateSkillAssessment(
-      { topic: 'Cyber Security', guestSessionId },
+      { topic: 'Computer Vision', guestSessionId },
       undefined,
       'free',
       fakeGen,
@@ -238,7 +238,7 @@ describe('full async flow (BullMQ)', () => {
         const guestSessionId = crypto.randomUUID();
         const create = await request(app)
           .post('/skill-assessments/generate')
-          .send({ topic: 'Programming', guestSessionId });
+          .send({ topic: 'Machine Learning', guestSessionId });
         expect(create.status).toBe(202);
         expect(create.body.assessment.status).toBe('generating');
         const id = create.body.assessment.id;

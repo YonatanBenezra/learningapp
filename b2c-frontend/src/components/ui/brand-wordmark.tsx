@@ -8,6 +8,32 @@ const sizes = {
   xl: 'text-[28px] font-bold sm:text-[34px]',
 } as const;
 
+const markSizes = {
+  sm: 'size-8 text-[11px]',
+  md: 'size-8 text-[11px] sm:size-9 sm:text-xs',
+} as const;
+
+export function LabPathMark({
+  size = 'md',
+  className,
+}: {
+  size?: keyof typeof markSizes;
+  className?: string;
+}) {
+  return (
+    <span
+      className={cn(
+        'grid place-items-center rounded-lg bg-primary font-bold tracking-tight text-primary-ink',
+        markSizes[size],
+        className,
+      )}
+      aria-hidden="true"
+    >
+      LP
+    </span>
+  );
+}
+
 export function BrandWordmark({
   size = 'md',
   className,

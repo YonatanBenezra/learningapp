@@ -732,6 +732,13 @@ export const navbarExtraHi = {
   logIn: 'लॉग इन',
   getStarted: 'शुरू करें',
   joinNow: 'अभी शामिल हों',
+  skipToContent: 'सामग्री पर जाएँ',
+  openMenu: 'मेनू खोलें',
+  closeMenu: 'मेनू बंद करें',
+  selectLanguage: 'भाषा चुनें',
+  toggleTheme: 'थीम बदलें',
+  searchShortcutMac: '⌘K',
+  searchShortcutWin: 'Ctrl+K',
 } as const;
 
 export const marketingSectionsHi = {
@@ -838,6 +845,7 @@ export const marketingSectionsHi = {
   toClose: 'बंद करने के लिए',
   resultTypePage: 'पृष्ठ',
   resultTypeCategory: 'श्रेणी ब्राउज़ करें',
+  resultTypeCourse: 'कोर्स',
   chatWelcomeAsk:
     'नमस्ते — मैं Bina का प्लेटफ़ॉर्म सहायक हूँ। मूल्य निर्धारण, कोर्स या शुरुआत के बारे में पूछें।',
   chatWelcomeAgent:

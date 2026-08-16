@@ -14,7 +14,7 @@ export function AssessmentSiteShell({ children }: { children: React.ReactNode })
           }}
         />
         <Navbar />
-        <main className="relative">{children}</main>
+        <main id="main-content" className="relative">{children}</main>
       </div>
     </MarketingPageShell>
   );

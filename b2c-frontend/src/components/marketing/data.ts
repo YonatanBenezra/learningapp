@@ -1,78 +1,14 @@
 import type { LucideIcon } from 'lucide-react';
-import {
-  BarChart3,
-  Brain,
-  Code2,
-  Dumbbell,
-  LayoutGrid,
-  Network,
-  Shield,
-  ShieldCheck,
-} from 'lucide-react';
+import { MARKETING_AI_CATEGORIES } from '@/src/constants/aiCategories';
 
 export const NAV_LINKS = [
-  { label: 'Home', href: '/' },
   { label: 'Courses', href: '/courses' },
   { label: 'Assessments', href: '/assessments' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Contact', href: '/contact' },
 ] as const;
 
-export const CATEGORIES: {
-  title: string;
-  icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
-}[] = [
-  {
-    title: 'Programming',
-    icon: Code2,
-    iconBg: 'bg-primary-soft',
-    iconColor: 'text-primary',
-  },
-  {
-    title: 'Artificial Intelligence',
-    icon: Brain,
-    iconBg: 'bg-tint-lav',
-    iconColor: 'text-[#7C3AED]',
-  },
-  {
-    title: 'Cyber Security',
-    icon: ShieldCheck,
-    iconBg: 'bg-tint-mint',
-    iconColor: 'text-good',
-  },
-  {
-    title: 'Networking',
-    icon: Network,
-    iconBg: 'bg-tint-blue',
-    iconColor: 'text-[#2563EB]',
-  },
-  {
-    title: 'Data Science',
-    icon: BarChart3,
-    iconBg: 'bg-tint-peach',
-    iconColor: 'text-secondary',
-  },
-  {
-    title: 'Health & Fitness',
-    icon: Dumbbell,
-    iconBg: 'bg-tint-pink',
-    iconColor: 'text-[#DB2777]',
-  },
-  {
-    title: 'Security',
-    icon: Shield,
-    iconBg: 'bg-bg-soft',
-    iconColor: 'text-primary-deep',
-  },
-  {
-    title: 'General',
-    icon: LayoutGrid,
-    iconBg: 'bg-tint-lime',
-    iconColor: 'text-[#65A30D]',
-  },
-];
+export const CATEGORIES = MARKETING_AI_CATEGORIES;
 
 export const CLASS_DAYS = [
   { day: 'Saturday', time: '10:00 - 16:00' },
@@ -82,13 +18,19 @@ export const CLASS_DAYS = [
   { day: 'Wednesday', time: '10:00 - 16:00' },
 ] as const;
 
-export type CourseCategory = 'All Categories' | 'Design' | 'Programming' | 'Marketing';
+export type CourseCategory =
+  | 'All Categories'
+  | 'Artificial Intelligence'
+  | 'Machine Learning'
+  | 'Generative AI'
+  | 'Data Science';
 
 export const COURSE_FILTERS: CourseCategory[] = [
   'All Categories',
-  'Design',
-  'Programming',
-  'Marketing',
+  'Artificial Intelligence',
+  'Machine Learning',
+  'Generative AI',
+  'Data Science',
 ];
 
 export const COURSES: {
@@ -121,7 +63,7 @@ export const COURSES: {
     lessons: 45,
     students: 50,
     duration: '620h, 55min',
-    category: 'Programming',
+    category: 'Artificial Intelligence',
     image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop',
     avatar: 'https://i.pravatar.cc/80?img=5',
   },
@@ -138,7 +80,7 @@ export const COURSES: {
     lessons: 20,
     students: 50,
     duration: '12h, 55min',
-    category: 'Design',
+    category: 'Generative AI',
     image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&h=400&fit=crop',
     avatar: 'https://i.pravatar.cc/80?img=12',
   },
@@ -155,7 +97,7 @@ export const COURSES: {
     lessons: 20,
     students: 50,
     duration: '620h, 55min',
-    category: 'Design',
+    category: 'Generative AI',
     image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop',
     avatar: 'https://i.pravatar.cc/80?img=33',
   },
@@ -172,7 +114,7 @@ export const COURSES: {
     lessons: 20,
     students: 50,
     duration: '156h, 55min',
-    category: 'Design',
+    category: 'Generative AI',
     image: 'https://images.unsplash.com/photo-1452587925148-ce544e77ae70?w=600&h=400&fit=crop',
     avatar: 'https://i.pravatar.cc/80?img=47',
   },
@@ -189,7 +131,7 @@ export const COURSES: {
     lessons: 20,
     students: 50,
     duration: '326h, 55min',
-    category: 'Marketing',
+    category: 'Machine Learning',
     image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&h=400&fit=crop',
     avatar: 'https://i.pravatar.cc/80?img=68',
   },
@@ -206,7 +148,7 @@ export const COURSES: {
     lessons: 20,
     students: 50,
     duration: '620h, 55min',
-    category: 'Marketing',
+    category: 'Machine Learning',
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
     avatar: 'https://i.pravatar.cc/80?img=15',
   },

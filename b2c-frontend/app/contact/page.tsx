@@ -14,7 +14,7 @@ export default function ContactPage() {
   return (
     <MarketingPageShell>
       <Navbar />
-      <main>
+      <main id="main-content">
         <ContactPageContent />
       </main>
       <Footer />

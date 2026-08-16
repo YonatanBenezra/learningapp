@@ -7,11 +7,11 @@ export const marketingAr = {
   yes: 'نعم',
   dash: '—',
 
-  heroBadge: 'منصة تعلّم مدعومة بالذكاء الاصطناعي',
-  heroTitle: 'طوّر مهاراتك مع دورات الذكاء الاصطناعي و',
-  heroTitleHighlight: 'المختبرات العملية',
+  heroBadge: 'تقييم مهارة → دورة شخصية → مختبر مباشر',
+  heroTitle: 'اعرف مستواك. احصل على المسار. تدرّب في',
+  heroTitleHighlight: 'المختبرات.',
   heroDescription:
-    'أجرِ تقييم مهارات، واحصل على مسار تعلّم مخصص، ومارس في بيئات حقيقية — من صناديق البرمجة إلى مختبرات الشبكات والأمن.',
+    'أجرِ تقييم مهارات، واحصل على دورة ذكاء اصطناعي مناسبة، وتدرّب في مختبرات حقيقية — من تعلم الآلة إلى الذكاء التوليدي.',
   takeSkillAssessment: 'ابدأ تقييم المهارات',
   trustFreeTier: 'خطة مجانية متاحة',
   trustNoCard: 'لا يلزم بطاقة ائتمان',
@@ -23,6 +23,9 @@ export const marketingAr = {
 
   workspaceTitle: 'مساحة عمل LabPath',
   workspaceSubtitle: 'مسار تعلّم مخصص',
+  heroStepAssess: 'قيّم',
+  heroStepCourse: 'دورة',
+  heroStepLab: 'مختبر',
   activeSession: 'جلسة نشطة',
   skillAssessmentLabel: 'تقييم المهارات',
   levelIntermediate: 'متوسط',

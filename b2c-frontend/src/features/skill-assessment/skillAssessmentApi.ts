@@ -1,3 +1,4 @@
+import { AI_CATEGORY_NAMES } from '@/src/constants/aiCategories';
 import { apiClient } from '@/src/infrastructure/apiClient';
 import type {
   SkillAssessment,
@@ -7,17 +8,7 @@ import type {
   SubmittedAnswer,
 } from '@/src/domain/assessment';
 
-export const SKILL_TOPICS = [
-  'Programming',
-  'Artificial Intelligence',
-  'Cyber Security',
-  'Networking',
-  'Data Science',
-  'Health & Fitness',
-  'Security',
-  'General',
-  'Other',
-] as const;
+export const SKILL_TOPICS = AI_CATEGORY_NAMES;
 
 export type SkillTopic = (typeof SKILL_TOPICS)[number];
 
@@ -56,7 +47,6 @@ export function listMySkillAssessments() {
 
 export function generateSkillAssessment(input: {
   topic: SkillTopic;
-  customTopic?: string;
   aiModel?: string | null;
 }) {
   return apiClient<{ assessment: SkillAssessment }>('/skill-assessments/generate', {
