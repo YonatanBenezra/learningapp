@@ -1,9 +1,11 @@
 'use client';
 
-import { BookOpen, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { BookOpen } from 'lucide-react';
 import type { LessonContent } from '@/src/features/lessons/lessonsApi';
 import { parseLessonContent } from '@/src/features/lessons/lessonContent';
 import { LessonVisualBlock } from '@/src/features/lessons/components/LessonVisualBlock';
+import { useTranslation } from '@/src/i18n';
 
 interface LessonContentBodyProps {
   content: LessonContent | null | undefined;
@@ -12,78 +14,93 @@ interface LessonContentBodyProps {
 
 export function LessonContentBody({
   content,
-  emptyMessage = 'This lesson does not have written content yet.',
+  emptyMessage,
 }: LessonContentBodyProps) {
+  const { t } = useTranslation();
   const parsed = parseLessonContent(content);
+  const empty = emptyMessage ?? t('player.noWrittenContent');
 
   if (!parsed.hasBody) {
     return (
-      <div className="rounded-lg border border-dashed border-line bg-bg-soft/60 px-6 py-12 text-center">
-        <BookOpen className="mx-auto size-8 text-ink-3" />
-        <p className="mt-4 text-sm leading-6 text-ink-2">{emptyMessage}</p>
+      <div className="rounded-md border border-dashed border-line/80 px-6 py-14 text-center">
+        <BookOpen className="mx-auto size-7 text-ink/35" strokeWidth={1.6} />
+        <p className="mt-4 text-sm leading-6 text-ink/55">{empty}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-14">
       {parsed.intro ? (
-        <div className="relative overflow-hidden rounded-lg border border-primary/20 bg-gradient-to-br from-primary-soft/80 to-bg-elev p-6 sm:p-7">
-          <div className="absolute -right-8 -top-8 size-32 rounded-full bg-primary/10 blur-2xl" />
-          <div className="relative flex items-start gap-3">
-            <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" />
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                Overview
-              </p>
-              <p className="mt-3 text-base leading-8 text-ink">{parsed.intro}</p>
-            </div>
-          </div>
-        </div>
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="font-heading text-lg font-medium leading-8 tracking-[-0.02em] text-ink sm:text-xl sm:leading-9"
+        >
+          {parsed.intro}
+        </motion.p>
       ) : null}
 
       {parsed.sections.map((section, sectionIndex) => (
-        <section
+        <motion.section
           key={`${section.title}-${sectionIndex}`}
-          className="rounded-lg border border-line bg-bg-soft/30 p-5 sm:p-6"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.04 * (sectionIndex + 1) }}
         >
-          <div className="mb-5 flex items-center gap-3">
-            <span className="grid size-8 place-items-center rounded-lg bg-primary-soft text-xs font-bold text-primary">
-              {sectionIndex + 1}
-            </span>
-            {section.title ? (
-              <h2 className="text-xl font-semibold tracking-tight text-ink">{section.title}</h2>
-            ) : null}
-          </div>
-
-          {section.visual ? <LessonVisualBlock visual={section.visual} /> : null}
-
-          {section.paragraphs.length > 0 ? (
-            <div className="mt-5 flex flex-col gap-5 text-base leading-8 text-ink-2">
-              {section.paragraphs.map((paragraph, paragraphIndex) => (
-                <p key={paragraphIndex} className="whitespace-pre-line">
-                  {paragraph}
-                </p>
-              ))}
+          {section.title ? (
+            <div className="flex gap-4 sm:gap-5">
+              <span className="font-heading text-3xl font-medium leading-none tabular-nums text-primary/80 sm:text-4xl">
+                {String(sectionIndex + 1).padStart(2, '0')}
+              </span>
+              <h2 className="font-heading text-[1.35rem] font-medium leading-snug tracking-[-0.02em] text-ink sm:text-[1.55rem]">
+                {section.title}
+              </h2>
             </div>
           ) : null}
-        </section>
+
+          {section.visual ? (
+            <div className={section.title ? 'mt-6' : undefined}>
+              <LessonVisualBlock visual={section.visual} />
+            </div>
+          ) : null}
+
+          {section.paragraphs.length > 0 ? (
+            <div className={section.title || section.visual ? 'mt-5' : undefined}>
+              <div className="flex flex-col gap-4 text-[15px] leading-8 text-ink/75 sm:text-base">
+                {section.paragraphs.map((paragraph, paragraphIndex) => (
+                  <p key={paragraphIndex} className="whitespace-pre-line">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </motion.section>
       ))}
 
       {parsed.keyPoints.length > 0 ? (
-        <section className="rounded-lg border border-line bg-bg-elev p-6 sm:p-7">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-ink-3">
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.08 }}
+          className="border-t border-line/70 pt-10"
+        >
+          <h2 className="font-heading text-[1.35rem] font-medium tracking-[-0.02em] text-ink">
             Key takeaways
           </h2>
-          <ul className="mt-5 space-y-3">
+          <ol className="mt-6 space-y-5">
             {parsed.keyPoints.map((point, index) => (
-              <li key={index} className="flex gap-3 text-base leading-7 text-ink-2">
-                <span className="mt-2 size-2 shrink-0 rounded-full bg-primary" />
-                <span>{point}</span>
+              <li key={index} className="flex gap-4">
+                <span className="font-heading w-8 shrink-0 text-lg font-medium tabular-nums text-primary/80">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <p className="pt-0.5 text-[15px] leading-7 text-ink/75 sm:text-base">{point}</p>
               </li>
             ))}
-          </ul>
-        </section>
+          </ol>
+        </motion.section>
       ) : null}
     </div>
   );

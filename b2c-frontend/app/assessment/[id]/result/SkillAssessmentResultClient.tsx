@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RequireAuth } from '@/src/features/auth/guards';
 import { Container } from '@/src/components/marketing/Container';
+import { buttonClasses } from '@/src/components/ui/button';
 import { SkillAssessmentResultView } from '@/src/features/skill-assessment/SkillAssessmentResultView';
 import { AssessmentResultSkeleton } from '@/src/features/skill-assessment/SkillAssessmentSkeletons';
 import {
@@ -87,31 +88,38 @@ function ResultContent({ id }: { id: string }) {
 
   if (!assessment) {
     return (
-      <Container className="max-w-6xl py-20">
-        <div className="mx-auto max-w-lg rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <h1 className="text-2xl font-bold text-ink">{t('marketing.assessNotFoundTitle')}</h1>
-        </div>
-      </Container>
+      <section className="flex min-h-full flex-1 flex-col bg-[var(--marketing-hero)] pt-6 pb-16 lg:pt-8 lg:pb-16">
+        <Container>
+          <div className="mx-auto mt-16 max-w-md text-center">
+            <p className="text-lg font-medium text-ink">{t('marketing.assessNotFoundTitle')}</p>
+          </div>
+        </Container>
+      </section>
     );
   }
 
   if (resultError || !submission) {
     return (
-      <Container className="max-w-6xl py-20">
-        <div className="mx-auto max-w-lg rounded-2xl border border-line bg-bg-elev p-10 text-center shadow-card">
-          <h1 className="text-2xl font-bold text-ink">{t('marketing.assessResultsUnavailable')}</h1>
-          <p className="mt-2 text-sm leading-6 text-ink-2">
-            {t('marketing.assessResultsUnavailableDesc')}
-          </p>
-          <button
-            type="button"
-            onClick={() => router.push(`/assessment/${id}`)}
-            className="mt-6 inline-flex h-11 items-center rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-primary-dark"
-          >
-            {t('marketing.assessReturnToAssessment')}
-          </button>
-        </div>
-      </Container>
+      <section className="flex min-h-full flex-1 flex-col bg-[var(--marketing-hero)] pt-6 pb-16 lg:pt-8 lg:pb-16">
+        <Container>
+          <div className="mx-auto mt-16 max-w-md text-center">
+            <p className="text-lg font-medium text-ink">{t('marketing.assessResultsUnavailable')}</p>
+            <p className="mt-2 text-sm leading-6 text-ink/65">
+              {t('marketing.assessResultsUnavailableDesc')}
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push(`/assessment/${id}`)}
+              className={buttonClasses({
+                size: 'lg',
+                className: 'mt-6 h-11 rounded-md px-5 text-sm font-medium shadow-none',
+              })}
+            >
+              {t('marketing.assessReturnToAssessment')}
+            </button>
+          </div>
+        </Container>
+      </section>
     );
   }
 

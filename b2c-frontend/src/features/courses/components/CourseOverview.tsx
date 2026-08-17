@@ -2,16 +2,20 @@
 
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { ArrowLeft, ChevronRight, Loader2, X } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useCourse } from '@/src/features/courses';
 import { CoursePlayer } from '@/src/features/courses/components/CoursePlayer';
-import { Button } from '@/src/components/ui/button';
-import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
+import {
+  CourseGeneratingPanel,
+  CourseGenerationFailedPanel,
+} from '@/src/features/courses/components/CourseGeneratingPanel';
+import { buttonClasses } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { useIsRtl, useTranslation } from '@/src/i18n';
 
 export function CourseOverview({ courseId }: { courseId: string }) {
   const { t } = useTranslation();
+  const isRtl = useIsRtl();
   const courseQ = useCourse(courseId);
   const course = courseQ.data?.course;
   const status = course?.status;
@@ -19,8 +23,22 @@ export function CourseOverview({ courseId }: { courseId: string }) {
   if (courseQ.isLoading) {
     return (
       <Shell>
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="mt-4 h-[520px] w-full rounded-xl" />
+        <Skeleton className="h-4 w-40" shimmer />
+        <div className="mx-auto mt-16 flex max-w-3xl flex-col items-center">
+          <Skeleton className="size-[148px] rounded-full sm:size-[168px]" shimmer />
+          <Skeleton className="mt-8 h-8 w-64" shimmer />
+          <Skeleton className="mt-3 h-4 w-48" shimmer />
+          <div className="mt-8 flex w-full max-w-2xl justify-between">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="size-8 rounded-full" shimmer />
+            ))}
+          </div>
+          <div className="mt-10 w-full space-y-2">
+            <Skeleton className="h-12 w-full rounded-md" shimmer />
+            <Skeleton className="h-12 w-full rounded-md" shimmer />
+            <Skeleton className="h-12 w-full rounded-md" shimmer />
+          </div>
+        </div>
       </Shell>
     );
   }
@@ -28,12 +46,24 @@ export function CourseOverview({ courseId }: { courseId: string }) {
   if (courseQ.isError || !course) {
     return (
       <Shell>
-        <PageNav title={t('player.courseNotFound')} />
-        <div className="mt-6 rounded-xl border border-line bg-bg-elev p-10 text-center shadow-soft">
-          <h1 className="text-xl font-bold text-ink">{t('player.courseNotFound')}</h1>
-          <p className="mt-2 text-sm text-ink-2">{t('player.courseNotFoundDesc')}</p>
-          <Link href="/my-courses" className="mt-6 inline-block">
-            <Button variant="soft">{t('player.returnToCourseList')}</Button>
+        <Link
+          href="/my-courses"
+          className="inline-flex items-center gap-2 text-sm font-medium text-ink/55 transition-colors hover:text-ink"
+        >
+          <ArrowLeft className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+          {t('player.backToCourseList')}
+        </Link>
+        <div className="mx-auto mt-16 max-w-md text-center">
+          <p className="text-lg font-medium text-ink">{t('player.courseNotFound')}</p>
+          <p className="mt-2 text-sm leading-6 text-ink/65">{t('player.courseNotFoundDesc')}</p>
+          <Link
+            href="/my-courses"
+            className={buttonClasses({
+              size: 'lg',
+              className: 'mt-6 h-11 rounded-md px-5 text-sm font-medium shadow-none',
+            })}
+          >
+            {t('player.returnToCourseList')}
           </Link>
         </div>
       </Shell>
@@ -43,14 +73,7 @@ export function CourseOverview({ courseId }: { courseId: string }) {
   if (status === 'generating') {
     return (
       <Shell>
-        <PageNav title={course.title} />
-        <div className="mt-6 rounded-xl border border-line bg-bg-elev p-10 text-center shadow-soft">
-          <div className="mx-auto grid size-14 place-items-center rounded-xl border border-line bg-primary-soft text-primary">
-            <Loader2 className="size-7 animate-spin" />
-          </div>
-          <h1 className="mt-4 text-xl font-bold text-ink">{t('player.genInProgress')}</h1>
-          <p className="mx-auto mt-2 max-w-[42ch] text-sm text-ink-2">{t('player.genInProgressDesc')}</p>
-        </div>
+        <CourseGeneratingPanel course={course} />
       </Shell>
     );
   }
@@ -58,19 +81,7 @@ export function CourseOverview({ courseId }: { courseId: string }) {
   if (status === 'failed') {
     return (
       <Shell>
-        <PageNav title={course.title} />
-        <div className="mt-6 rounded-xl border border-line bg-bg-elev p-10 text-center shadow-soft">
-          <div className="mx-auto grid size-14 place-items-center rounded-xl border border-bad/20 bg-bad-soft text-bad">
-            <X className="size-7" strokeWidth={2.4} />
-          </div>
-          <h1 className="mt-4 text-xl font-bold text-ink">{t('player.genFailed')}</h1>
-          <p className="mx-auto mt-2 max-w-[42ch] text-sm text-ink-2">
-            {course.failureReason ?? t('player.genFailedDefault')}
-          </p>
-          <Link href="/create-course" className="mt-6 inline-block">
-            <Button>{t('player.createNewCourse')}</Button>
-          </Link>
-        </div>
+        <CourseGenerationFailedPanel course={course} />
       </Shell>
     );
   }
@@ -90,31 +101,4 @@ export function CourseOverview({ courseId }: { courseId: string }) {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return <div className="w-full p-4 sm:p-6 lg:p-8 xl:px-10">{children}</div>;
-}
-
-function PageNav({ title }: { title: string }) {
-  const { t } = useTranslation();
-  const isRtl = useIsRtl();
-
-  return (
-    <div className="border-b border-line pb-5">
-      <Link
-        href="/my-courses"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition hover:text-primary"
-      >
-        <ArrowLeft className="size-4" /> {t('player.backToCourseList')}
-      </Link>
-      <nav className="mt-3 flex flex-wrap items-center gap-1.5 text-sm text-ink-3">
-        <Link href="/dashboard" className="transition hover:text-primary">
-          <BrandWordmark size="sm" className="font-semibold" />
-        </Link>
-        <ChevronRight className={`size-4${isRtl ? ' rotate-180' : ''}`} />
-        <Link href="/my-courses" className="transition hover:text-primary">
-          {t('player.myCourses')}
-        </Link>
-        <ChevronRight className={`size-4${isRtl ? ' rotate-180' : ''}`} />
-        <span className="line-clamp-1 font-medium text-ink">{title}</span>
-      </nav>
-    </div>
-  );
 }

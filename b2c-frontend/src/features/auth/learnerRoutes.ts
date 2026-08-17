@@ -7,6 +7,26 @@ export function learnerCoursePath(courseId: string): string {
   return `/my-courses/${courseId}`;
 }
 
+export function learnerLessonPath(courseId: string, lessonId: string): string {
+  return `${learnerCoursePath(courseId)}?lesson=${encodeURIComponent(lessonId)}`;
+}
+
+export function lessonPlayerBackHref({
+  lessonId,
+  courseId,
+  canEditContent,
+  instructorCourseId,
+}: {
+  lessonId: string;
+  courseId?: string | null;
+  canEditContent?: boolean;
+  instructorCourseId?: string | null;
+}): string {
+  if (canEditContent && instructorCourseId) return `/lesson/${lessonId}`;
+  if (courseId) return learnerLessonPath(courseId, lessonId);
+  return `/lesson/${lessonId}`;
+}
+
 export function learnerCourseStructurePath(courseId: string): string {
   return `/courses/${courseId}/structure`;
 }

@@ -44,6 +44,7 @@ export const marketingEn = {
   allInOnePlatform: 'All-in-one platform',
 
   categoriesTitle: 'Explore AI learning paths',
+  categoriesEyebrow: 'Fields of study',
   categoriesDescription:
     'Machine learning, deep learning, NLP, computer vision, generative AI, and more — take a skill assessment or browse courses in each AI category.',
   browseCourses: 'Browse courses',
@@ -61,6 +62,12 @@ export const marketingEn = {
   catComputerVision: 'Computer Vision',
   catGenerativeAI: 'Generative AI',
   catPromptEngineering: 'Prompt Engineering',
+  catLargeLanguageModels: 'Large Language Models',
+  catAiAgents: 'AI Agents',
+  catMlops: 'MLOps',
+  catReinforcementLearning: 'Reinforcement Learning',
+  catRobotics: 'Robotics',
+  catResponsibleAi: 'Responsible AI',
   catProgramming: 'Programming',
   catCyberSecurity: 'Cyber Security',
   catNetworking: 'Networking',
@@ -68,9 +75,18 @@ export const marketingEn = {
   catSecurity: 'Security',
   catGeneral: 'General',
 
-  catalogTitle: 'Course catalog',
+  catalogTitle: 'Courses',
+  catalogEyebrow: 'Catalogue',
   catalogTip:
     'Browse published marketplace courses. Filter by category or search by title, topic, and level.',
+  catalogAll: 'All',
+  catalogSort: 'Sort by',
+  catalogSortTitle: 'Title',
+  catalogSortPriceLow: 'Price: low to high',
+  catalogSortPriceHigh: 'Price: high to low',
+  catalogIncludes: 'Includes:',
+  catalogActive: 'Active',
+  catalogComplete: '{percent}% Complete',
   catalogTipLabel: 'About course catalog',
   viewList: 'List',
   viewGrid: 'Grid',
@@ -87,7 +103,7 @@ export const marketingEn = {
   noSearchHint: 'Try another keyword or browse all categories.',
 
   skillAssessmentsBadge: 'Skill assessments',
-  yourAssessments: 'Your assessments',
+  yourAssessments: 'Assessments',
   assessmentsIntro:
     'Track your progress, continue unfinished tests, and review your skill levels. Assessment limits depend on your plan tier.',
   createAssessment: 'Create assessment',

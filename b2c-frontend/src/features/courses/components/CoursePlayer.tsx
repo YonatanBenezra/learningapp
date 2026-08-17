@@ -1,16 +1,13 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   Check,
-  ChevronRight,
-  GraduationCap,
   Loader2,
-  Network,
 } from 'lucide-react';
 import type { Course } from '@/src/domain/course';
 import { useCourseStructure } from '@/src/features/courses';
@@ -22,12 +19,16 @@ import {
   CourseCompletionBanner,
   CourseLessonPanel,
 } from '@/src/features/courses/components/CourseLessonPanel';
-import { Badge } from '@/src/components/ui/badge';
-import { Button } from '@/src/components/ui/button';
-import { BrandWordmark } from '@/src/components/ui/brand-wordmark';
-import { Progress } from '@/src/components/ui/progress';
+import { buttonClasses } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
-import { useIsRtl, useTranslation } from '@/src/i18n';
+import { AI_CATEGORY_OPTIONS } from '@/src/constants/aiCategories';
+import { cn } from '@/src/lib/utils';
+import {
+  useIsRtl,
+  useTranslation,
+  useCategoryLabel,
+  useCourseLevelLabel,
+} from '@/src/i18n';
 
 interface CoursePlayerProps {
   courseId: string;
@@ -117,12 +118,9 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
 
   if (structureQ.isLoading) {
     return (
-      <div className="flex min-h-[calc(100dvh-4rem)] flex-col">
-        <Skeleton className="h-16 w-full rounded-none" />
-        <div className="flex flex-1">
-          <Skeleton className="flex-1 rounded-none" />
-          <Skeleton className="hidden w-[360px] rounded-none lg:block" />
-        </div>
+      <div className="flex h-[calc(100dvh-4rem)]">
+        <Skeleton className="h-full flex-1 rounded-none" shimmer />
+        <Skeleton className="hidden h-full w-[360px] rounded-none lg:block" shimmer />
       </div>
     );
   }
@@ -130,85 +128,25 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
   if (structureQ.isError) {
     return (
       <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center p-6">
-        <div className="rounded-xl border border-line bg-bg-elev p-8 text-center shadow-soft">
-          <p className="text-ink-2">{t('player.loadStructureError')}</p>
-          <Button variant="soft" className="mt-4" onClick={() => structureQ.refetch()}>
+        <div className="max-w-md text-center">
+          <p className="text-lg font-medium text-ink">{t('player.loadStructureError')}</p>
+          <button
+            type="button"
+            className={buttonClasses({
+              variant: 'outline',
+              className: 'mt-5 h-11 rounded-md bg-transparent px-5 text-sm font-medium',
+            })}
+            onClick={() => structureQ.refetch()}
+          >
             {t('common.retry')}
-          </Button>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-[calc(100dvh-4rem)] max-h-[calc(100dvh-4rem)] flex-col overflow-hidden">
-      <header className="shrink-0 border-b border-line bg-bg-elev px-4 py-4 sm:px-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="min-w-0">
-            <Link
-              href="/my-courses"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition hover:text-primary"
-            >
-              <ArrowLeft className="size-4" /> {t('player.backToCourseList')}
-            </Link>
-            <nav className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-ink-3 sm:text-sm">
-              <Link href="/dashboard" className="transition hover:text-primary">
-                <BrandWordmark size="sm" className="font-semibold" />
-              </Link>
-              <ChevronRight className={`size-3.5${isRtl ? ' rotate-180' : ''}`} />
-              <Link href="/my-courses" className="transition hover:text-primary">
-                {t('player.myCourses')}
-              </Link>
-              <ChevronRight className={`size-3.5${isRtl ? ' rotate-180' : ''}`} />
-              <span className="line-clamp-1 font-medium text-ink">{course.title}</span>
-            </nav>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <h1 className="text-lg font-bold text-ink sm:text-xl">{course.title}</h1>
-              <Badge variant="outline" className="capitalize">
-                {course.level}
-              </Badge>
-            </div>
-          </div>
-
-          <div className="w-full max-w-xs">
-            <div className="mb-2 flex items-center justify-between text-xs">
-              <span className="font-semibold uppercase tracking-[0.08em] text-ink-3">
-                {t('player.progress')}
-              </span>
-              <span className="font-semibold tabular-nums text-ink">
-                {justCompleted?.course.progressPercent ?? course.progressPercent}%
-              </span>
-            </div>
-            <Progress value={justCompleted?.course.progressPercent ?? course.progressPercent} />
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link href={learnerCourseStructurePath(courseId)}>
-                <Button variant="soft" size="sm">
-                  <Network className="size-4" /> {t('player.diagram')}
-                </Button>
-              </Link>
-              <Button
-                variant="soft"
-                size="sm"
-                onClick={() =>
-                  examGen.mutate(
-                    { scope: 'course', scopeId: courseId },
-                    { onSuccess: (exam) => router.push(`/exam/${exam.id}`) },
-                  )
-                }
-                disabled={examGen.isPending}
-              >
-                {examGen.isPending ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : (
-                  <GraduationCap className="size-4" />
-                )}
-                {t('player.finalExam')}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className="flex h-[calc(100dvh-4rem)] max-h-[calc(100dvh-4rem)] flex-col overflow-hidden bg-[var(--marketing-hero)]">
       {justCompleted ? (
         <div className="shrink-0">
           <CourseCompletionBanner
@@ -220,85 +158,109 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
       ) : null}
 
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
-        <section className="order-2 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden border-line lg:order-1 lg:border-r">
+        <section className="order-2 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:order-1">
           <div className="min-h-0 flex-1 overflow-y-auto">
             {activeLessonId ? (
-              <CourseLessonPanel
-                lessonId={activeLessonId}
-                moduleTitle={nav.moduleTitle}
-                moduleDomain={nav.moduleDomain}
-                position={nav.position}
-              />
+              <div className="min-h-full">
+                <CourseLessonPanel
+                  lessonId={activeLessonId}
+                  moduleTitle={nav.moduleTitle}
+                  moduleDomain={nav.moduleDomain}
+                  position={nav.position}
+                />
+                <div className="mx-auto w-full max-w-4xl px-5 pb-12 sm:px-8 lg:px-10">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line/70 pt-8">
+                    {nav.prev ? (
+                      <button
+                        type="button"
+                        onClick={() => selectLesson(nav.prev!.id)}
+                        className={buttonClasses({
+                          variant: 'outline',
+                          className: 'h-11 rounded-md bg-transparent px-5 text-sm font-medium',
+                        })}
+                      >
+                        <ArrowLeft className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+                        {t('player.previous')}
+                      </button>
+                    ) : (
+                      <span />
+                    )}
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      {!lessonCompleted ? (
+                        <button
+                          type="button"
+                          onClick={() => completeMut.mutate(activeLessonId)}
+                          disabled={completeMut.isPending}
+                          className={buttonClasses({
+                            variant: 'outline',
+                            className: 'h-11 rounded-md bg-transparent px-5 text-sm font-medium',
+                          })}
+                        >
+                          {completeMut.isPending ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <Check className="size-4" />
+                          )}
+                          {t('player.markComplete')}
+                        </button>
+                      ) : null}
+
+                      {nav.next ? (
+                        <button
+                          type="button"
+                          onClick={() => selectLesson(nav.next!.id)}
+                          className={buttonClasses({
+                            className: 'h-11 rounded-md px-5 text-sm font-medium shadow-none',
+                          })}
+                        >
+                          {t('player.nextLesson')}
+                          <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => selectLesson(null)}
+                          className={buttonClasses({
+                            variant: 'outline',
+                            className: 'h-11 rounded-md bg-transparent px-5 text-sm font-medium',
+                          })}
+                        >
+                          {t('player.backToOverview')}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  {completeMut.isError && completeMut.variables === activeLessonId ? (
+                    <p className="mt-3 text-sm text-bad">{t('player.saveProgressError')}</p>
+                  ) : null}
+                </div>
+              </div>
             ) : (
               <CourseIntroPanel
                 course={course}
+                moduleCount={modules.length}
                 lessonCount={flatLessons.length}
                 onStart={() => firstLessonId && selectLesson(firstLessonId)}
               />
             )}
           </div>
-
-          <footer className="shrink-0 border-t border-line bg-bg-elev px-4 py-4 sm:px-6 lg:px-8">
-            <div className="flex w-full flex-wrap items-center justify-between gap-3">
-              <div>
-                {nav.prev ? (
-                  <Button variant="ghost" size="sm" onClick={() => selectLesson(nav.prev!.id)}>
-                    <ArrowLeft className="size-4" /> {t('player.previous')}
-                  </Button>
-                ) : (
-                  <span />
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                {activeLessonId && !lessonCompleted ? (
-                  <Button
-                    onClick={() => completeMut.mutate(activeLessonId)}
-                    disabled={completeMut.isPending}
-                  >
-                    {completeMut.isPending ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : (
-                      <Check className="size-4" />
-                    )}
-                    {t('player.markComplete')}
-                  </Button>
-                ) : null}
-
-                {!activeLessonId && firstLessonId ? (
-                  <Button onClick={() => selectLesson(firstLessonId)}>{t('player.startFirstLesson')}</Button>
-                ) : null}
-
-                {nav.next ? (
-                  <Button
-                    variant={lessonCompleted ? 'primary' : 'soft'}
-                    onClick={() => selectLesson(nav.next!.id)}
-                  >
-                    {t('player.nextLesson')}
-                    <ArrowRight className="size-4" />
-                  </Button>
-                ) : lessonCompleted && !nav.next ? (
-                  <Button variant="soft" onClick={() => selectLesson(null)}>
-                    {t('player.backToOverview')}
-                  </Button>
-                ) : null}
-              </div>
-            </div>
-
-            {completeMut.isError && completeMut.variables === activeLessonId ? (
-              <p className="mt-3 w-full text-sm text-bad">
-                {t('player.saveProgressError')}
-              </p>
-            ) : null}
-          </footer>
         </section>
 
-        <div className="order-1 flex min-h-[280px] shrink-0 flex-col overflow-hidden lg:order-2 lg:h-full lg:w-[360px]">
+        <div className="order-1 flex min-h-[240px] shrink-0 flex-col overflow-hidden border-b border-line/70 bg-bg-elev/40 lg:order-2 lg:h-full lg:w-[360px] lg:border-b-0 lg:border-s">
           <CourseModuleSidebar
             modules={modules}
             activeLessonId={activeLessonId}
             expandedModuleId={expandedModuleId}
             completedLessonIds={completedLessonIds}
+            diagramHref={learnerCourseStructurePath(courseId)}
+            examPending={examGen.isPending}
+            onFinalExam={() =>
+              examGen.mutate(
+                { scope: 'course', scopeId: courseId },
+                { onSuccess: (exam) => router.push(`/exam/${exam.id}`) },
+              )
+            }
             onToggleModule={toggleModule}
             onSelectLesson={selectLesson}
           />
@@ -310,31 +272,73 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
 
 function CourseIntroPanel({
   course,
+  moduleCount,
   lessonCount,
   onStart,
 }: {
   course: Course;
+  moduleCount: number;
   lessonCount: number;
   onStart: () => void;
 }) {
   const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel(course.category);
+  const levelLabel = useCourseLevelLabel(course.level);
+  const category = AI_CATEGORY_OPTIONS.find((option) => option.name === course.category);
+  const Icon = category?.icon ?? BookOpen;
 
   return (
-    <div className="flex items-center justify-center p-6 sm:p-8">
-      <div className="max-w-2xl text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-          {t('player.courseOverview')}
+    <div className="flex min-h-full items-center justify-center px-6 py-12 sm:px-10">
+      <div className="w-full max-w-lg">
+        <span
+          className={cn(
+            'grid size-12 place-items-center rounded-md',
+            category?.iconBg ?? 'bg-primary-soft',
+          )}
+        >
+          <Icon className={cn('size-6', category?.iconColor ?? 'text-primary')} strokeWidth={1.75} />
+        </span>
+
+        <h2 className="mt-6 font-heading text-[1.85rem] font-medium leading-tight tracking-[-0.03em] text-ink sm:text-[2.15rem]">
+          {course.title}
+        </h2>
+        <p className="mt-3 text-sm text-ink/55">
+          {categoryLabel}
+          <span className="mx-1.5 text-ink/20">·</span>
+          {levelLabel}
+          <span className="mx-1.5 text-ink/20">·</span>
+          {t('player.modules')} {moduleCount}
+          <span className="mx-1.5 text-ink/20">·</span>
+          {t('player.lessonCount', { count: String(lessonCount) })}
         </p>
-        <h2 className="mt-3 text-2xl font-bold text-ink">{course.title}</h2>
-        <p className="mt-2 text-sm text-ink-2">{course.category}</p>
+
         {course.topics.length > 0 ? (
-          <p className="mt-4 text-sm leading-6 text-ink-3">{course.topics.join(' · ')}</p>
+          <div className="mt-5 flex flex-wrap gap-1.5">
+            {course.topics.slice(0, 6).map((topic) => (
+              <span
+                key={topic}
+                className="rounded-md bg-primary-soft px-2 py-0.5 text-xs font-medium text-primary"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
         ) : null}
-        <p className="mt-6 text-sm text-ink-2">{t('player.selectModuleHint')}</p>
+
+        <p className="mt-6 text-sm leading-6 text-ink/65">{t('player.selectModuleHint')}</p>
+
         {lessonCount > 0 ? (
-          <Button className="mt-6" onClick={onStart}>
+          <button
+            type="button"
+            onClick={onStart}
+            className={buttonClasses({
+              size: 'lg',
+              className: 'mt-8 h-11 rounded-md px-5 text-sm font-medium shadow-none',
+            })}
+          >
             {t('player.startFirstLesson')}
-          </Button>
+            <ArrowRight className="size-4" />
+          </button>
         ) : null}
       </div>
     </div>

@@ -94,7 +94,7 @@ export function Footer() {
   );
 
   return (
-    <footer id="contact" className="mt-auto shrink-0 border-t border-line bg-bg">
+    <footer id="contact" className="mt-auto shrink-0 border-t border-line/70 bg-[var(--marketing-hero)]">
       <Container className="py-14 lg:py-16">
         <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16 xl:gap-20">
           <div className="max-w-md shrink-0">

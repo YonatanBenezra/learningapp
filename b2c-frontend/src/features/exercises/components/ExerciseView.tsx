@@ -34,6 +34,7 @@ import {
 } from '@/src/features/labs';
 import { cn } from '@/src/lib/utils';
 import { useIsRtl, useTranslation } from '@/src/i18n';
+import { lessonPlayerBackHref } from '@/src/features/auth/learnerRoutes';
 import { useExerciseSubmission, useSubmitExercise } from '../useExercises';
 
 const LAB_ICONS: Record<LabKind, LucideIcon> = {
@@ -171,6 +172,12 @@ export function ExerciseView({
   const graded = submissionQ.data?.status === 'graded';
   const grading = submissionQ.data?.status === 'submitted' || submissionQ.data?.status === 'grading';
   const lessonTitle = lessonQ.data?.lesson.title ?? t('player.lesson');
+  const backHref = lessonPlayerBackHref({
+    lessonId,
+    courseId: lessonQ.data?.lesson.courseId,
+    canEditContent: lessonQ.data?.canEditContent,
+    instructorCourseId: lessonQ.data?.instructorCourseId,
+  });
 
   const labNode = useMemo(() => {
     const common = {
@@ -202,7 +209,7 @@ export function ExerciseView({
       <div className="mx-auto w-full max-w-6xl space-y-6 p-4 sm:p-6 lg:p-8">
         <div className="border-b border-line pb-5">
           <Link
-            href={`/lesson/${lessonId}`}
+            href={backHref}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition hover:text-primary"
           >
             <ArrowLeft className="size-4" /> {t('exercises.backToLesson')}
@@ -212,7 +219,7 @@ export function ExerciseView({
               <BrandWordmark size="sm" className="font-semibold" />
             </Link>
             <ChevronRight className={`size-4${isRtl ? ' rotate-180' : ''}`} />
-            <Link href={`/lesson/${lessonId}`} className="line-clamp-1 transition hover:text-primary">
+            <Link href={backHref} className="line-clamp-1 transition hover:text-primary">
               {lessonTitle}
             </Link>
             <ChevronRight className={`size-4${isRtl ? ' rotate-180' : ''}`} />
@@ -328,7 +335,7 @@ export function ExerciseView({
           </section>
         ) : (
           <div className="flex flex-wrap gap-3">
-            <Link href={`/lesson/${lessonId}`}>
+            <Link href={backHref}>
               <Button variant="soft">
                 <ArrowLeft className="size-4" /> {t('exercises.returnToLesson')}
               </Button>

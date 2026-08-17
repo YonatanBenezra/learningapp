@@ -9,6 +9,12 @@ export const AI_CATEGORY_NAMES = [
   'Computer Vision',
   'Generative AI',
   'Prompt Engineering',
+  'Large Language Models',
+  'AI Agents',
+  'MLOps',
+  'Reinforcement Learning',
+  'Robotics',
+  'Responsible AI',
 ] as const;
 
 export type AiCategoryName = (typeof AI_CATEGORY_NAMES)[number];

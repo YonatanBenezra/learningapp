@@ -126,7 +126,7 @@ const COURSES_TOUR_STEPS: DriveStep[] = [
     popover: {
       title: 'Filter by category',
       description:
-        'Switch between AI categories like Machine Learning, Generative AI, and NLP to narrow the catalog.',
+        'Switch categories from the dropdown to narrow the catalog by field of study.',
       side: 'bottom',
       align: 'start',
     },

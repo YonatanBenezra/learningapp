@@ -9,4 +9,10 @@ export const CATEGORIES = [
   'Computer Vision',
   'Generative AI',
   'Prompt Engineering',
+  'Large Language Models',
+  'AI Agents',
+  'MLOps',
+  'Reinforcement Learning',
+  'Robotics',
+  'Responsible AI',
 ] as const;

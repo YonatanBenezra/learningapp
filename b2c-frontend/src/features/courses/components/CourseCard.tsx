@@ -1,14 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Loader2 } from 'lucide-react';
-import { Badge, type BadgeProps } from '@/src/components/ui/badge';
+import { BookOpen, Loader2 } from 'lucide-react';
+import type { BadgeProps } from '@/src/components/ui/badge';
+import { buttonClasses } from '@/src/components/ui/button';
 import { Progress } from '@/src/components/ui/progress';
 import type { Course, CourseStatus } from '@/src/domain/course';
 import { learnerCoursePath } from '@/src/features/auth/learnerRoutes';
+import { AI_CATEGORY_OPTIONS } from '@/src/constants/aiCategories';
+import { cn } from '@/src/lib/utils';
 import {
   useTranslation,
-  useIsRtl,
   useCategoryLabel,
   useCourseLevelLabel,
   useCourseStatusLabel,
@@ -22,89 +24,123 @@ export const statusVariant: Record<CourseStatus, BadgeProps['variant']> = {
   archived: 'default',
 };
 
+function statusStyle(status: CourseStatus, progressPercent: number) {
+  if (status === 'generating') return 'bg-warn/15 text-warn';
+  if (status === 'failed') return 'bg-bad/15 text-bad';
+  if (status === 'completed' || progressPercent >= 100) return 'bg-good/15 text-good';
+  return 'bg-primary/15 text-primary';
+}
+
+function statusDot(status: CourseStatus, progressPercent: number) {
+  if (status === 'generating') return 'bg-warn';
+  if (status === 'failed') return 'bg-bad';
+  if (status === 'completed' || progressPercent >= 100) return 'bg-good';
+  return 'bg-primary';
+}
+
 export function CourseCard({ course }: { course: Course }) {
   const { t } = useTranslation();
-  const isRtl = useIsRtl();
   const categoryLabel = useCategoryLabel(course.category);
   const levelLabel = useCourseLevelLabel(course.level);
   const status = useCourseStatusLabel(course.status);
   const isGenerating = course.status === 'generating';
   const isFailed = course.status === 'failed';
+  const category = AI_CATEGORY_OPTIONS.find((option) => option.name === course.category);
+  const Icon = category?.icon ?? BookOpen;
+  const tags = (course.topics.length > 0 ? course.topics : [levelLabel]).slice(0, 4);
+  const progress = Math.max(0, Math.min(100, course.progressPercent));
+  const ctaLabel = isGenerating
+    ? t('courses.viewStatus')
+    : isFailed
+      ? t('courses.viewDetails')
+      : progress > 0 && progress < 100
+        ? t('dashboard.continueLearning')
+        : t('courses.openCourse');
 
   return (
-    <Link
-      href={learnerCoursePath(course.id)}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-card transition hover:border-primary/30"
-    >
-      <div className="border-b border-line px-5 py-4">
+    <article className="flex h-full flex-col rounded-md border border-line/80 bg-bg-elev/90 p-5 transition-colors hover:border-primary/35 hover:bg-bg-elev">
+      <Link href={learnerCoursePath(course.id)} className="flex h-full flex-col">
         <div className="flex items-start justify-between gap-3">
-          <div className="grid size-10 place-items-center rounded-lg border border-line bg-bg-soft text-primary">
-            <BookOpen className="size-4" strokeWidth={1.75} />
+          <div className="flex min-w-0 items-center gap-3">
+            <span
+              className={cn(
+                'grid size-10 shrink-0 place-items-center rounded-md',
+                category?.iconBg ?? 'bg-primary-soft',
+              )}
+            >
+              <Icon
+                className={cn('size-5', category?.iconColor ?? 'text-primary')}
+                strokeWidth={1.75}
+              />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium text-ink">{categoryLabel}</p>
+              <p className="mt-0.5 text-xs text-ink/45">{levelLabel}</p>
+            </div>
           </div>
-          <Badge variant={statusVariant[course.status]} className="capitalize">
+          <span
+            className={cn(
+              'inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium',
+              statusStyle(course.status, progress),
+            )}
+          >
+            {isGenerating ? (
+              <Loader2 className="size-3 animate-spin" />
+            ) : (
+              <span className={cn('size-1.5 rounded-full', statusDot(course.status, progress))} />
+            )}
             {status}
-          </Badge>
+          </span>
         </div>
-        <h3 className="mt-4 line-clamp-2 text-base font-semibold leading-snug text-ink group-hover:text-primary">
-          {course.title}
-        </h3>
-      </div>
 
-      <div className="flex flex-1 flex-col px-5 py-4">
-        <dl className="grid grid-cols-2 gap-3 text-sm">
-          <div>
-            <dt className="text-xs font-medium text-ink-3">{t('courses.category')}</dt>
-            <dd className="mt-1 font-medium text-ink-2">{categoryLabel}</dd>
-          </div>
-          <div>
-            <dt className="text-xs font-medium text-ink-3">{t('courses.level')}</dt>
-            <dd className="mt-1 font-medium text-ink-2">{levelLabel}</dd>
-          </div>
-        </dl>
+        <h3 className="mt-5 line-clamp-2 text-xl font-medium leading-snug text-ink">{course.title}</h3>
 
-        {course.topics.length > 0 ? (
-          <p className="mt-4 line-clamp-2 text-xs leading-5 text-ink-3">
-            {course.topics.slice(0, 4).join(' · ')}
-          </p>
+        {tags.length > 0 ? (
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md bg-primary-soft px-2 py-0.5 text-xs font-medium text-primary"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         ) : null}
 
-        <div className="mt-auto pt-5">
+        <div className="mt-auto pt-6">
           {isGenerating ? (
-            <div className="flex items-center gap-2 rounded-lg border border-warn/20 bg-warn-soft px-3 py-2.5 text-sm text-warn">
-              <Loader2 className="size-4 animate-spin" />
+            <p className="mb-4 flex items-center gap-2 text-sm text-ink/65">
+              <Loader2 className="size-4 animate-spin text-primary" />
               {t('courses.genInProgress')}
-            </div>
+            </p>
           ) : isFailed ? (
-            <p className="rounded-lg border border-bad/20 bg-bad-soft px-3 py-2.5 text-sm text-bad">
-              {t('courses.genFailed')}
+            <p className="mb-4 text-sm leading-6 text-bad">
+              {course.failureReason ?? t('courses.genFailed')}
             </p>
           ) : (
-            <>
-              <div className="mb-2 flex items-center justify-between text-xs">
-                <span className="font-medium text-ink-3">{t('courses.completion')}</span>
-                <span className="font-semibold tabular-nums text-ink">
-                  {course.progressPercent}%
-                </span>
-              </div>
-              <Progress value={course.progressPercent} className="h-1" />
-            </>
+            <div className="mb-4">
+              <p className="mb-1.5 text-xs font-medium text-ink">
+                {t('marketing.catalogComplete', { percent: String(progress) })}
+              </p>
+              <Progress value={progress} className="h-2 rounded-full bg-primary/20" />
+            </div>
           )}
+          <span
+            className={buttonClasses({
+              size: 'lg',
+              variant: isFailed ? 'outline' : 'primary',
+              className: cn(
+                'h-11 w-full rounded-md text-sm font-medium shadow-none',
+                isFailed && 'bg-transparent',
+              ),
+            })}
+          >
+            {ctaLabel}
+          </span>
         </div>
-      </div>
-
-      <div className="flex items-center justify-between border-t border-line px-5 py-3.5">
-        <span className="text-sm font-medium text-ink-2">
-          {isGenerating
-            ? t('courses.viewStatus')
-            : isFailed
-              ? t('courses.viewDetails')
-              : t('courses.openCourse')}
-        </span>
-        <span className="grid size-8 place-items-center rounded-xl border border-line bg-bg-soft text-ink-3 transition group-hover:border-primary/30 group-hover:bg-primary-soft group-hover:text-primary">
-          <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
-        </span>
-      </div>
-    </Link>
+      </Link>
+    </article>
   );
 }
 
@@ -112,24 +148,38 @@ export function CourseCardCompact({ course }: { course: Course }) {
   const { t } = useTranslation();
   const categoryLabel = useCategoryLabel(course.category);
   const status = useCourseStatusLabel(course.status);
+  const category = AI_CATEGORY_OPTIONS.find((option) => option.name === course.category);
+  const Icon = category?.icon ?? BookOpen;
+  const progress = Math.max(0, Math.min(100, course.progressPercent));
 
   return (
     <Link
       href={learnerCoursePath(course.id)}
-      className="flex items-center gap-4 rounded-xl border border-line bg-bg-elev px-4 py-3.5 transition hover:border-primary/30 hover:bg-bg-soft"
+      className="flex items-center gap-4 rounded-md border border-line/80 bg-bg-elev/90 px-4 py-3.5 transition-colors hover:border-primary/35 hover:bg-bg-elev"
     >
-      <div className="grid size-10 shrink-0 place-items-center rounded-lg border border-line bg-bg-soft text-primary">
-        <BookOpen className="size-4" />
-      </div>
+      <span
+        className={cn(
+          'grid size-10 shrink-0 place-items-center rounded-md',
+          category?.iconBg ?? 'bg-primary-soft',
+        )}
+      >
+        <Icon className={cn('size-5', category?.iconColor ?? 'text-primary')} strokeWidth={1.75} />
+      </span>
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium text-ink">{course.title}</p>
-        <p className="mt-0.5 text-xs text-ink-3">
-          {categoryLabel} · {t('courses.completeSuffix', { percent: String(course.progressPercent) })}
+        <p className="mt-0.5 text-xs text-ink/45">
+          {categoryLabel} · {t('courses.completeSuffix', { percent: String(progress) })}
         </p>
       </div>
-      <Badge variant={statusVariant[course.status]} className="capitalize">
+      <span
+        className={cn(
+          'inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium',
+          statusStyle(course.status, progress),
+        )}
+      >
+        <span className={cn('size-1.5 rounded-full', statusDot(course.status, progress))} />
         {status}
-      </Badge>
+      </span>
     </Link>
   );
 }

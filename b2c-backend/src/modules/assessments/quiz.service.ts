@@ -26,7 +26,7 @@ const defaultQuizGenerator: QuizGenerator = async ({ lessonTitle, lessonSummary,
   const result = await getAiClient().completeStructured(
     {
       system: QUIZ_SYSTEM_PROMPT,
-      prompt: buildQuizPrompt({ lessonTitle, lessonSummary }),
+      prompt: buildQuizPrompt({ lessonTitle, lessonSummary, questionCount: 10 }),
       useCase: 'quiz',
       userId,
     },

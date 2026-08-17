@@ -3,18 +3,16 @@
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight,
   CheckCircle2,
   Clock3,
   Mail,
   MapPin,
-  MessageSquare,
   Phone,
   Send,
 } from 'lucide-react';
 import { Container } from './Container';
 import { FOOTER_CONTACT } from './data';
-import { Button } from '@/src/components/ui/button';
+import { buttonClasses } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { cn } from '@/src/lib/utils';
@@ -27,9 +25,12 @@ const CONTACT_LABEL_KEYS: Record<string, MessageKey> = {
   'Our Address': 'marketing.contactAddressLabel',
 };
 
+const fieldClass =
+  'h-12 rounded-md border border-line/70 bg-transparent px-4 text-sm text-ink shadow-none outline-none transition placeholder:text-ink/35 hover:border-primary/40 focus:border-primary focus:ring-2 focus:ring-primary/10';
+
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
-    <Label className="mb-2 block text-sm font-semibold text-ink">
+    <Label className="mb-2 block text-[13px] font-medium text-ink/70">
       {children}
       {required ? <span className="text-bad"> *</span> : null}
     </Label>
@@ -52,17 +53,22 @@ function ContactForm() {
 
   if (sent) {
     return (
-      <div className="flex min-h-[420px] flex-col items-center justify-center rounded-2xl border border-line bg-bg-soft px-6 py-12 text-center">
-        <span className="grid size-14 place-items-center rounded-xl border border-good/20 bg-good-soft text-good">
-          <CheckCircle2 className="size-7" />
+      <div className="flex min-h-[360px] flex-col items-center justify-center px-2 py-10 text-center">
+        <span className="grid size-12 place-items-center rounded-md border border-good/25 bg-good-soft text-good">
+          <CheckCircle2 className="size-6" />
         </span>
-        <h3 className="mt-6 text-xl font-bold text-ink sm:text-2xl">{t('marketing.messageSent')}</h3>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-2">
-          {t('marketing.messageSentBody')}
-        </p>
-        <Button type="button" variant="soft" className="mt-8" onClick={() => setSent(false)}>
+        <h3 className="mt-5 font-heading text-xl font-medium text-ink">{t('marketing.messageSent')}</h3>
+        <p className="mt-2 max-w-md text-sm leading-6 text-ink/65">{t('marketing.messageSentBody')}</p>
+        <button
+          type="button"
+          className={buttonClasses({
+            variant: 'outline',
+            className: 'mt-8 h-11 rounded-md bg-transparent px-5 text-sm font-medium',
+          })}
+          onClick={() => setSent(false)}
+        >
           {t('marketing.sendAnother')}
-        </Button>
+        </button>
       </div>
     );
   }
@@ -77,6 +83,7 @@ function ContactForm() {
             placeholder={t('marketing.fullNamePlaceholder')}
             required
             autoComplete="name"
+            className={fieldClass}
           />
         </div>
         <div>
@@ -87,13 +94,19 @@ function ContactForm() {
             placeholder={t('marketing.emailPlaceholder')}
             required
             autoComplete="email"
+            className={fieldClass}
           />
         </div>
       </div>
 
       <div>
         <FieldLabel required>{t('marketing.subject')}</FieldLabel>
-        <Input name="subject" placeholder={t('marketing.subjectPlaceholder')} required />
+        <Input
+          name="subject"
+          placeholder={t('marketing.subjectPlaceholder')}
+          required
+          className={fieldClass}
+        />
       </div>
 
       <div>
@@ -104,18 +117,25 @@ function ContactForm() {
           rows={6}
           placeholder={t('marketing.messagePlaceholder')}
           className={cn(
-            'w-full resize-none rounded-xl border border-line bg-bg-elev px-3.5 py-3 text-sm text-ink outline-none transition',
-            'placeholder:text-ink-3 focus:border-primary focus:ring-2 focus:ring-primary/15',
+            'w-full resize-none rounded-md border border-line/70 bg-transparent px-4 py-3.5 text-sm text-ink shadow-none outline-none transition',
+            'placeholder:text-ink/35 hover:border-primary/40 focus:border-primary focus:ring-2 focus:ring-primary/10',
           )}
         />
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-ink-3">{t('marketing.requiredFields')}</p>
-        <Button type="submit" size="lg" disabled={submitting} className="sm:min-w-[180px]">
+      <div className="flex flex-col gap-3 border-t border-line/70 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs text-ink/45">{t('marketing.requiredFields')}</p>
+        <button
+          type="submit"
+          disabled={submitting}
+          className={buttonClasses({
+            size: 'lg',
+            className: 'h-11 rounded-md px-5 text-sm font-medium shadow-none sm:min-w-[180px]',
+          })}
+        >
           {submitting ? t('marketing.sending') : t('marketing.submitMessage')}
           <Send className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
-        </Button>
+        </button>
       </div>
     </form>
   );
@@ -126,38 +146,39 @@ function ContactDetails() {
   const icons = { mail: Mail, phone: Phone, location: MapPin } as const;
 
   return (
-    <div className="space-y-4">
+    <ul className="divide-y divide-line/70">
       {FOOTER_CONTACT.map((item) => {
         const Icon = icons[item.icon];
         const labelKey = CONTACT_LABEL_KEYS[item.label];
         const label = labelKey ? t(labelKey) : item.label.replace(':', '');
         const inner = (
-          <div className="flex gap-4 rounded-xl border border-line bg-bg-elev p-5 transition-colors hover:border-primary/30">
-            <span className="grid size-11 shrink-0 place-items-center rounded-lg border border-primary/15 bg-primary-soft text-primary">
-              <Icon className="size-5" />
-            </span>
+          <div className="flex items-start gap-3.5 py-5">
+            <Icon className="mt-0.5 size-4 shrink-0 text-primary" strokeWidth={1.75} />
             <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">{label}</p>
-              <p className="mt-1 break-words text-base font-semibold text-ink">{item.value}</p>
+              <p className="text-xs font-medium text-ink/45">{label}</p>
+              <p className="mt-1.5 break-words text-sm font-medium text-ink">{item.value}</p>
             </div>
           </div>
         );
 
-        return item.href ? (
-          <Link key={item.label} href={item.href} className="block">
-            {inner}
-          </Link>
-        ) : (
-          <div key={item.label}>{inner}</div>
+        return (
+          <li key={item.label}>
+            {item.href ? (
+              <Link href={item.href} className="block transition-colors hover:text-primary">
+                {inner}
+              </Link>
+            ) : (
+              inner
+            )}
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }
 
 export function ContactPageContent() {
   const { t } = useTranslation();
-  const isRtl = useIsRtl();
 
   const supportTopics = [
     t('marketing.helpTopic1'),
@@ -167,51 +188,42 @@ export function ContactPageContent() {
   ] as const;
 
   return (
-    <section className="bg-bg pb-16 pt-24 sm:pb-20 sm:pt-28">
+    <section className="bg-[var(--marketing-hero)] pt-4 pb-16 lg:pt-6 lg:pb-20">
       <Container>
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-            <MessageSquare className="size-3.5" />
-            {t('marketing.contactBadge')}
-          </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+        <header className="max-w-2xl">
+          <h1 className="font-heading text-[2rem] font-medium leading-[1.18] tracking-[-0.02em] text-ink sm:text-[2.45rem]">
             {t('marketing.contactTitle')}
           </h1>
-          <p className="mt-3 text-base leading-relaxed text-ink-2">{t('marketing.contactIntro')}</p>
-        </div>
+          <p className="mt-3 text-base leading-7 text-ink/70">{t('marketing.contactIntro')}</p>
+        </header>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-12 lg:gap-10">
-          <aside className="space-y-6 lg:col-span-4">
-            <div className="rounded-2xl border border-line bg-bg-elev p-5 shadow-card">
-              <div className="flex items-start gap-3">
-                <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
-                  <Clock3 className="size-5" />
+        <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-0">
+          <aside className="space-y-8 lg:col-span-4 lg:pe-10">
+            <div>
+              <p className="text-sm font-medium text-ink">{t('marketing.responseTime')}</p>
+              <p className="mt-1.5 flex items-center gap-2 text-sm text-ink/70">
+                <Clock3 className="size-4 text-primary" />
+                <span>
+                  <span className="font-medium text-ink">{t('marketing.within24Hours')}</span>
+                  <span className="text-ink/40"> · </span>
+                  {t('marketing.responseHours')}
                 </span>
-                <div>
-                  <p className="text-sm font-semibold text-ink">{t('marketing.responseTime')}</p>
-                  <p className="mt-1 text-2xl font-bold text-primary">{t('marketing.within24Hours')}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-2">
-                    {t('marketing.responseHours')}
-                  </p>
-                </div>
-              </div>
+              </p>
             </div>
 
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-ink-3">
-                {t('marketing.directContact')}
-              </h2>
-              <div className="mt-4">
+              <h2 className="text-sm font-medium text-ink">{t('marketing.directContact')}</h2>
+              <div className="mt-5">
                 <ContactDetails />
               </div>
             </div>
 
-            <div className="rounded-2xl border border-line bg-bg-soft p-5">
-              <h2 className="text-sm font-semibold text-ink">{t('marketing.howWeHelp')}</h2>
-              <ul className="mt-3 space-y-2.5">
+            <div>
+              <h2 className="text-sm font-medium text-ink">{t('marketing.howWeHelp')}</h2>
+              <ul className="mt-3 space-y-2">
                 {supportTopics.map((topic) => (
-                  <li key={topic} className="flex gap-2 text-sm leading-relaxed text-ink-2">
-                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <li key={topic} className="flex gap-2.5 text-sm leading-6 text-ink/70">
+                    <span className="mt-2.5 size-1 shrink-0 rounded-full bg-primary" />
                     {topic}
                   </li>
                 ))}
@@ -219,41 +231,17 @@ export function ContactPageContent() {
             </div>
           </aside>
 
-          <div className="lg:col-span-8">
-            <div
-              className="rounded-2xl border border-line bg-bg-elev p-6 shadow-lift sm:p-8"
-              data-tour="tour-contact-form"
-            >
-              <div className="border-b border-line pb-5">
-                <h2 className="text-xl font-bold text-ink">{t('marketing.sendMessage')}</h2>
-                <p className="mt-1 text-sm text-ink-2">{t('marketing.sendMessageHint')}</p>
-              </div>
-              <div className="pt-6">
-                <ContactForm />
-              </div>
+          <div
+            className="lg:col-span-8 lg:border-s lg:border-line/70 lg:ps-10 xl:ps-14"
+            data-tour="tour-contact-form"
+          >
+            <h2 className="font-heading text-xl font-medium tracking-[-0.02em] text-ink sm:text-[1.35rem]">
+              {t('marketing.sendMessage')}
+            </h2>
+            <p className="mt-1.5 text-sm leading-6 text-ink/65">{t('marketing.sendMessageHint')}</p>
+            <div className="mt-7">
+              <ContactForm />
             </div>
-          </div>
-        </div>
-
-        <div className="mt-12 rounded-2xl border border-line bg-bg-elev p-6 shadow-card sm:p-8">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-                {t('marketing.newToLabPath')}
-              </p>
-              <h2 className="mt-2 text-xl font-bold text-ink sm:text-2xl">
-                {t('marketing.ctaPersonalizedCourse')}
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-ink-2 sm:text-base">
-                {t('marketing.ctaPersonalizedDesc')}
-              </p>
-            </div>
-            <Link href="/signup" className="shrink-0">
-              <Button size="lg">
-                {t('marketing.createFreeAccount')}
-                <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
-              </Button>
-            </Link>
           </div>
         </div>
       </Container>

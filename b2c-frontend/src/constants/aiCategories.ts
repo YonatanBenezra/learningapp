@@ -1,12 +1,18 @@
 import type { LucideIcon } from 'lucide-react';
 import {
   BarChart3,
+  Bot,
   Brain,
+  CircuitBoard,
   Cpu,
   Eye,
   Languages,
   Layers,
+  MessageSquareText,
+  ServerCog,
+  ShieldCheck,
   Sparkles,
+  Target,
   Wand2,
 } from 'lucide-react';
 
@@ -19,6 +25,12 @@ export const AI_CATEGORY_NAMES = [
   'Computer Vision',
   'Generative AI',
   'Prompt Engineering',
+  'Large Language Models',
+  'AI Agents',
+  'MLOps',
+  'Reinforcement Learning',
+  'Robotics',
+  'Responsible AI',
 ] as const;
 
 export type AiCategoryName = (typeof AI_CATEGORY_NAMES)[number];
@@ -78,6 +90,42 @@ export const AI_CATEGORY_OPTIONS: AiCategoryOption[] = [
     icon: Wand2,
     iconBg: 'bg-tint-lime',
     iconColor: 'text-[#65A30D]',
+  },
+  {
+    name: 'Large Language Models',
+    icon: MessageSquareText,
+    iconBg: 'bg-tint-blue',
+    iconColor: 'text-[#0EA5E9]',
+  },
+  {
+    name: 'AI Agents',
+    icon: Bot,
+    iconBg: 'bg-tint-peach',
+    iconColor: 'text-[#EA580C]',
+  },
+  {
+    name: 'MLOps',
+    icon: ServerCog,
+    iconBg: 'bg-tint-lav',
+    iconColor: 'text-[#4F46E5]',
+  },
+  {
+    name: 'Reinforcement Learning',
+    icon: Target,
+    iconBg: 'bg-tint-lime',
+    iconColor: 'text-[#CA8A04]',
+  },
+  {
+    name: 'Robotics',
+    icon: CircuitBoard,
+    iconBg: 'bg-tint-mint',
+    iconColor: 'text-[#0D9488]',
+  },
+  {
+    name: 'Responsible AI',
+    icon: ShieldCheck,
+    iconBg: 'bg-tint-pink',
+    iconColor: 'text-[#E11D48]',
   },
 ];
 

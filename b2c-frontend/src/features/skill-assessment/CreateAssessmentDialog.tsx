@@ -46,7 +46,7 @@ export function CreateAssessmentDialog({
           type="button"
           aria-label="Close dialog"
           onClick={onClose}
-          className="absolute right-4 top-4 z-20 grid size-10 place-items-center rounded-full border border-line bg-bg-elev text-ink-3 shadow-soft transition hover:text-ink sm:right-6 sm:top-6"
+          className="absolute right-4 top-4 z-20 grid size-10 place-items-center rounded-md border border-line/80 bg-bg-elev text-ink/45 transition hover:text-ink sm:right-6 sm:top-6"
         >
           <X className="size-5" />
         </button>

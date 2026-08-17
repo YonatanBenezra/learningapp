@@ -14,6 +14,19 @@ const CATEGORY_KEYS: Record<string, MessageKey> = {
   'Computer Vision': 'marketing.catComputerVision',
   'Generative AI': 'marketing.catGenerativeAI',
   'Prompt Engineering': 'marketing.catPromptEngineering',
+  'Large Language Models': 'marketing.catLargeLanguageModels',
+  'AI Agents': 'marketing.catAiAgents',
+  MLOps: 'marketing.catMlops',
+  'Reinforcement Learning': 'marketing.catReinforcementLearning',
+  Robotics: 'marketing.catRobotics',
+  'Responsible AI': 'marketing.catResponsibleAi',
+  Programming: 'marketing.catProgramming',
+  Coding: 'marketing.catProgramming',
+  'Cyber Security': 'marketing.catCyberSecurity',
+  Cybersecurity: 'marketing.catCyberSecurity',
+  Networking: 'marketing.catNetworking',
+  Security: 'marketing.catSecurity',
+  General: 'marketing.catGeneral',
 };
 
 const TOPIC_KEYS: Record<string, MessageKey> = CATEGORY_KEYS;

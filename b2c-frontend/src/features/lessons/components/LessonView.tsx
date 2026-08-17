@@ -2,23 +2,18 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
   Check,
   CheckCircle2,
-  ClipboardList,
   Loader2,
   Pencil,
   Trophy,
-  Wrench,
 } from 'lucide-react';
 import { useLesson, useStartLesson, useCompleteLesson } from '@/src/features/lessons';
 import { learnerCoursePath, myCoursesPath } from '@/src/features/auth/learnerRoutes';
 import { useCourseStructure } from '@/src/features/courses';
-import { useGenerateQuiz } from '@/src/features/assessments';
-import { useGenerateExercise } from '@/src/features/exercises';
 import { useUpdateInstructorLessonContent } from '@/src/features/instructor/useInstructor';
 import { resolveLabForDomain } from '@/src/features/labs';
 import { Badge } from '@/src/components/ui/badge';
@@ -31,11 +26,7 @@ import {
   LessonContentEditor,
   type LessonContentDraft,
 } from '@/src/features/lessons/components/LessonContentEditor';
-
-function formatGenerationError(err: unknown, fallback: string): string {
-  if (err instanceof ApiError) return err.message;
-  return fallback;
-}
+import { LessonPracticeActions } from '@/src/features/lessons/components/LessonPracticeActions';
 
 function prettyKey(key: string): string {
   return key.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
@@ -50,11 +41,8 @@ export function LessonView({ lessonId }: { lessonId: string }) {
   const structureQ = useCourseStructure(courseId);
   const updateContent = useUpdateInstructorLessonContent(instructorCourseId ?? '');
 
-  const router = useRouter();
   const { mutate: startLesson } = useStartLesson();
   const completeMut = useCompleteLesson();
-  const quizGen = useGenerateQuiz();
-  const exerciseGen = useGenerateExercise();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
@@ -281,78 +269,11 @@ export function LessonView({ lessonId }: { lessonId: string }) {
         <>
           {!canEditContent ? (
             <>
-              <div className="mt-10 border-t border-line pt-8">
-                <p className="text-sm font-medium text-ink-2">{t('player.finishedReading')}</p>
-              </div>
-
-              <div className="mt-6 grid gap-4 lg:grid-cols-2">
-                <div className="rounded-lg border border-line bg-bg-soft p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h3 className="font-semibold text-ink">{t('player.testYourself')}</h3>
-                      <p className="text-sm text-ink-2">{t('player.generateQuiz')}</p>
-                    </div>
-                    <Button
-                      variant="soft"
-                      className="rounded-lg"
-                      onClick={() =>
-                        quizGen.mutate(lessonId, {
-                          onSuccess: (quiz) => router.push(`/lesson/${lessonId}/quiz/${quiz.id}`),
-                        })
-                      }
-                      disabled={quizGen.isPending}
-                    >
-                      {quizGen.isPending ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        <ClipboardList className="size-4" />
-                      )}
-                      {t('player.takeAQuiz')}
-                    </Button>
-                  </div>
-                  {quizGen.isError ? (
-                    <p className="mt-3 text-sm text-bad">
-                      {formatGenerationError(quizGen.error, t('player.generateQuizRetry'))}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className="rounded-lg border border-line bg-bg-soft p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h3 className="font-semibold text-ink">{t('player.handsOnPractice')}</h3>
-                      <p className="text-sm text-ink-2">
-                        {labMeta
-                          ? t('player.generateExerciseLab', { lab: labMeta.label.toLowerCase() })
-                          : t('player.generateExercise')}
-                      </p>
-                    </div>
-                    <Button
-                      variant="soft"
-                      className="rounded-lg"
-                      onClick={() =>
-                        exerciseGen.mutate(lessonId, {
-                          onSuccess: (exercise) =>
-                            router.push(`/lesson/${lessonId}/exercise/${exercise.id}`),
-                        })
-                      }
-                      disabled={exerciseGen.isPending}
-                    >
-                      {exerciseGen.isPending ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        <Wrench className="size-4" />
-                      )}
-                      {t('player.startExercise')}
-                    </Button>
-                  </div>
-                  {exerciseGen.isError ? (
-                    <p className="mt-3 text-sm text-bad">
-                      {formatGenerationError(exerciseGen.error, t('player.generateExerciseRetry'))}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
+              <LessonPracticeActions
+                lessonId={lessonId}
+                lessonTitle={lesson.title}
+                labLabel={labMeta?.label}
+              />
 
               {completeFailed ? (
                 <p className="mt-6 text-sm text-bad">{t('player.saveProgressError')}</p>

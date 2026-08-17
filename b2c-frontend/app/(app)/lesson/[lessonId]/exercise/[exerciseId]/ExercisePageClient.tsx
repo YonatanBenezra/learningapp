@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useExercise } from '@/src/features/exercises';
 import { ExerciseView } from '@/src/features/exercises/components/ExerciseView';
+import { useLesson } from '@/src/features/lessons';
+import { lessonPlayerBackHref } from '@/src/features/auth/learnerRoutes';
 import { Button } from '@/src/components/ui/button';
 import { Skeleton } from '@/src/components/ui/skeleton';
 
@@ -31,6 +33,13 @@ export default function ExercisePageClient({
   exerciseId: string;
 }) {
   const { data: exercise, isLoading, isError } = useExercise(exerciseId);
+  const lessonQ = useLesson(lessonId);
+  const backHref = lessonPlayerBackHref({
+    lessonId,
+    courseId: lessonQ.data?.lesson.courseId,
+    canEditContent: lessonQ.data?.canEditContent,
+    instructorCourseId: lessonQ.data?.instructorCourseId,
+  });
 
   if (isLoading) {
     return <ExercisePageSkeleton />;
@@ -41,7 +50,7 @@ export default function ExercisePageClient({
       <div className="min-h-full bg-gradient-to-b from-primary/[0.04] via-bg to-bg">
         <div className="mx-auto w-full max-w-6xl p-4 sm:p-6 lg:p-8">
           <Link
-            href={`/lesson/${lessonId}`}
+            href={backHref}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition hover:text-primary"
           >
             <ArrowLeft className="size-4" /> Back to lesson
@@ -51,7 +60,7 @@ export default function ExercisePageClient({
             <p className="mt-2 text-sm text-ink-2">
               It may have been removed, or the link is incorrect.
             </p>
-            <Link href={`/lesson/${lessonId}`} className="mt-6 inline-block">
+            <Link href={backHref} className="mt-6 inline-block">
               <Button variant="soft">Return to lesson</Button>
             </Link>
           </div>

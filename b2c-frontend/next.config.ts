@@ -4,6 +4,7 @@ const backendUrl = (process.env.BACKEND_URL ?? '').trim().replace(/\/$/, '');
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  transpilePackages: ['three'],
   // Bake BACKEND_URL at build time so Vercel serverless functions always have it
   // after a deploy (dashboard env vars are injected before `next build`).
   env: {

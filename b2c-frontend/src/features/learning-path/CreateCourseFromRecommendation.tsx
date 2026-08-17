@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Loader2, Sparkles } from 'lucide-react';
-import { Button } from '@/src/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { buttonClasses } from '@/src/components/ui/button';
 import { cn } from '@/src/lib/utils';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { useAuthStore } from '@/src/store/authStore';
@@ -32,16 +32,24 @@ export function CreateCourseFromRecommendation({
     const redirect = encodeURIComponent('/create-course?auto=1');
     return (
       <div className={cn('flex shrink-0 flex-col gap-3 sm:flex-row', alignClass)}>
-        <Link href={`/signup?redirect=${redirect}`}>
-          <Button size="lg" className="w-full rounded-full bg-primary hover:bg-primary-dark sm:w-auto">
-            <Sparkles className="size-4" />
-            Sign up free — {TRIAL_PERIOD_MONTHS} months
-          </Button>
+        <Link
+          href={`/signup?redirect=${redirect}`}
+          className={buttonClasses({
+            size: 'lg',
+            className: 'h-11 w-full rounded-md px-5 text-sm font-medium shadow-none sm:w-auto',
+          })}
+        >
+          Sign up free — {TRIAL_PERIOD_MONTHS} months
         </Link>
-        <Link href={`/login?redirect=${redirect}`}>
-          <Button size="lg" variant="soft" className="w-full rounded-full sm:w-auto">
-            Log in to generate course
-          </Button>
+        <Link
+          href={`/login?redirect=${redirect}`}
+          className={buttonClasses({
+            variant: 'outline',
+            size: 'lg',
+            className: 'h-11 w-full rounded-md bg-transparent px-5 text-sm font-medium sm:w-auto',
+          })}
+        >
+          Log in to generate course
         </Link>
       </div>
     );
@@ -86,25 +94,24 @@ export function CreateCourseFromRecommendation({
   }
 
   return (
-    <div className={cn('shrink-0', alignClass && `flex ${alignClass}`)}>
-      <Button
-        size="lg"
-        className="bg-primary hover:bg-primary-dark rounded-full px-6"
+    <div className={cn('shrink-0', alignClass && `flex flex-col ${alignClass}`)}>
+      <button
+        type="button"
+        className={buttonClasses({
+          size: 'lg',
+          className: 'h-11 rounded-md px-5 text-sm font-medium shadow-none',
+        })}
         onClick={generateCourse}
         disabled={create.isPending}
       >
-        {create.isPending ? (
-          <Loader2 className="size-4 animate-spin" />
-        ) : (
-          <Sparkles className="size-4" />
-        )}
+        {create.isPending ? <Loader2 className="size-4 animate-spin" /> : null}
         Generate my personalized course
-      </Button>
+      </button>
       {error && (
         <p className="mt-3 text-sm text-bad" role="alert">
           {error}{' '}
           {create.error instanceof ApiError && create.error.status === 403 && (
-            <Link href="/my-courses" className="font-semibold underline">
+            <Link href="/my-courses" className="font-medium underline underline-offset-2">
               View your courses
             </Link>
           )}

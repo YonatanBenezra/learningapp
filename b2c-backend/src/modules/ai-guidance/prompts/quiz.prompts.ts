@@ -14,7 +14,7 @@ export function buildQuizPrompt(input: QuizPromptInput): string {
   return [
     `Lesson: ${input.lessonTitle}`,
     `Lesson summary: ${input.lessonSummary}`,
-    `Number of questions: ${input.questionCount ?? 5}`,
+    `Number of questions: ${input.questionCount ?? 10}`,
     '',
     'Generate a mix of multiple-choice and short-answer questions.',
     'Return exactly this JSON shape:',

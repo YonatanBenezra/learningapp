@@ -44,6 +44,7 @@ export const marketingBn = {
   allInOnePlatform: 'অল-ইন-ওয়ান প্ল্যাটফর্ম',
 
   categoriesTitle: 'ডোমেইন অনুযায়ী লার্নিং পাথ অন্বেষণ করুন',
+  categoriesEyebrow: 'অধ্যয়নের ক্ষেত্র',
   categoriesDescription:
     'প্রোগ্রামিং, AI, সাইবার সিকিউরিটি, নেটওয়ার্কিং এবং আরও — প্রতিটি ক্যাটাগরিতে স্কিল অ্যাসেসমেন্ট দিন বা কোর্স ব্রাউজ করুন।',
   browseCourses: 'কোর্স ব্রাউজ করুন',
@@ -61,10 +62,25 @@ export const marketingBn = {
   catHealthFitness: 'স্বাস্থ্য ও ফিটনেস',
   catSecurity: 'সিকিউরিটি',
   catGeneral: 'সাধারণ',
+  catLargeLanguageModels: 'লার্জ ল্যাঙ্গুয়েজ মডেল',
+  catAiAgents: 'এআই এজেন্ট',
+  catMlops: 'MLOps',
+  catReinforcementLearning: 'রিইনফোর্সমেন্ট লার্নিং',
+  catRobotics: 'রোবোটিক্স',
+  catResponsibleAi: 'রেসপনসিবল এআই',
 
-  catalogTitle: 'কোর্স ক্যাটালগ',
+  catalogTitle: 'কোর্স',
+  catalogEyebrow: 'ক্যাটালগ',
   catalogTip:
     'প্রকাশিত মার্কেটপ্লেস কোর্স ব্রাউজ করুন। ক্যাটাগরি দিয়ে ফিল্টার করুন বা শিরোনাম, টপিক ও লেভেল দিয়ে খুঁজুন।',
+  catalogAll: 'সব',
+  catalogSort: 'সাজান',
+  catalogSortTitle: 'শিরোনাম',
+  catalogSortPriceLow: 'দাম: কম থেকে বেশি',
+  catalogSortPriceHigh: 'দাম: বেশি থেকে কম',
+  catalogIncludes: 'যা আছে:',
+  catalogActive: 'Active',
+  catalogComplete: '{percent}% সম্পন্ন',
   catalogTipLabel: 'কোর্স ক্যাটালগ সম্পর্কে',
   viewList: 'তালিকা',
   viewGrid: 'গ্রিড',
@@ -81,7 +97,7 @@ export const marketingBn = {
   noSearchHint: 'অন্য কীওয়ার্ড চেষ্টা করুন বা সব ক্যাটাগরি ব্রাউজ করুন।',
 
   skillAssessmentsBadge: 'স্কিল অ্যাসেসমেন্ট',
-  yourAssessments: 'আপনার অ্যাসেসমেন্ট',
+  yourAssessments: 'অ্যাসেসমেন্ট',
   assessmentsIntro:
     'আপনার অগ্রগতি ট্র্যাক করুন, অসমাপ্ত টেস্ট চালিয়ে যান এবং স্কিল লেভেল রিভিউ করুন। অ্যাসেসমেন্ট লিমিট আপনার প্ল্যান টিয়ারের উপর নির্ভর করে।',
   createAssessment: 'অ্যাসেসমেন্ট তৈরি করুন',

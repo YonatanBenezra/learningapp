@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { CATEGORIES } from './data';
 import { Container } from './Container';
-import { SectionHeading } from './SectionHeading';
 import { buildCategoryCounts } from './categoryCounts';
 import { useMarketplaceCourses } from '@/src/features/marketplace';
 import {
@@ -14,6 +13,7 @@ import {
   useFormatCourseCount,
   useIsRtl,
 } from '@/src/i18n';
+import { buttonClasses } from '@/src/components/ui/button';
 
 function categoryHref(title: string) {
   return `/courses?category=${encodeURIComponent(title)}`;
@@ -32,31 +32,25 @@ function CategoryCard({
   const isRtl = useIsRtl();
 
   return (
-    <article className="group flex h-full flex-col rounded-lg border border-line bg-bg-elev p-5 transition-colors hover:border-primary/25 hover:bg-bg-soft">
-      <span
-        className={`grid size-12 place-items-center rounded-lg ${iconBg} transition-transform group-hover:scale-105`}
-      >
-        <Icon className={`size-6 ${iconColor}`} strokeWidth={1.8} />
+    <Link
+      href={categoryHref(title)}
+      className="group flex h-full flex-col rounded-md border border-line/80 bg-bg-elev/90 p-6 transition-colors hover:border-primary/35 hover:bg-bg-elev"
+    >
+      <span className={`grid size-10 place-items-center rounded-md ${iconBg}`}>
+        <Icon className={`size-5 ${iconColor}`} strokeWidth={1.75} />
       </span>
 
-      <h3 className="mt-5 text-lg font-semibold leading-snug text-ink">
-        <Link href={categoryHref(title)} className="transition-colors hover:text-primary">
-          {categoryLabel}
-        </Link>
-      </h3>
+      <h3 className="mt-5 text-base font-medium leading-snug text-ink">{categoryLabel}</h3>
 
-      <p className="mt-2 text-sm text-ink-2">{formatCourseCount(courseCount)}</p>
+      <p className="mt-2 text-sm text-ink/65">{formatCourseCount(courseCount)}</p>
 
-      <Link
-        href={categoryHref(title)}
-        className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
-      >
+      <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-medium text-primary">
         {t('marketing.browseCourses')}
         <ArrowRight
           className={`size-4 transition-transform group-hover:translate-x-0.5${isRtl ? ' rtl-flip' : ''}`}
         />
-      </Link>
-    </article>
+      </span>
+    </Link>
   );
 }
 
@@ -74,16 +68,22 @@ export function Categories() {
     <section
       id="categories"
       data-tour="tour-categories"
-      className="border-t border-ink/[0.06] bg-bg py-16 dark:border-white/[0.08] lg:py-24"
+      className="bg-[var(--marketing-hero)] py-20 lg:py-28"
     >
       <Container>
-        <SectionHeading
-          title={t('marketing.categoriesTitle')}
-          description={t('marketing.categoriesDescription')}
-          className="mb-12 lg:mb-14"
-        />
+        <div className="mx-auto mb-12 max-w-2xl text-center lg:mb-16">
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-ink-2">
+            {t('marketing.categoriesEyebrow')}
+          </p>
+          <h2 className="mt-4 font-heading text-[1.85rem] font-medium leading-[1.2] tracking-[-0.02em] text-ink sm:text-[2.2rem] lg:text-[2.4rem]">
+            {t('marketing.categoriesTitle')}
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-ink/70">
+            {t('marketing.categoriesDescription')}
+          </p>
+        </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {CATEGORIES.map((category) => (
             <CategoryCard
               key={category.title}
@@ -93,10 +93,14 @@ export function Categories() {
           ))}
         </div>
 
-        <div className="mt-10 flex justify-center">
+        <div className="mt-12 flex justify-center">
           <Link
             href="/courses"
-            className="inline-flex items-center gap-2 rounded-lg border border-line bg-bg-elev px-5 py-2.5 text-base font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
+            className={buttonClasses({
+              variant: 'outline',
+              size: 'lg',
+              className: 'h-11 rounded-md bg-transparent px-5 text-sm font-medium',
+            })}
           >
             {t('marketing.viewAllCourses')}
             <ArrowRight className={isRtl ? 'size-4 rtl-flip' : 'size-4'} />
