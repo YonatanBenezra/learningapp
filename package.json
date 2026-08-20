@@ -1,0 +1,25 @@
+{
+  "name": "aieng-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI engineering practice platform — monorepo (web + API + shared packages)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev:api & npm run dev:web",
+    "dev:web": "npm run dev -w @aieng/web",
+    "dev:api": "npm run dev -w @aieng/api",
+    "build": "npm run build -w @aieng/shared && npm run build -w @aieng/api && npm run build -w @aieng/web",
+    "build:web": "npm run build -w @aieng/web",
+    "build:api": "npm run build -w @aieng/api",
+    "typecheck": "npm run build -w @aieng/shared && npm run typecheck -ws --if-present",
+    "lint": "npm run lint -ws --if-present",
+    "test": "npm run test -w @aieng/api",
+    "test:e2e": "npm run test:e2e -w @aieng/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

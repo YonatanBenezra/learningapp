@@ -1,4 +1,4 @@
-name: b2c-backend CI
+name: CI
 
 on:
   push:
@@ -7,13 +7,24 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  shared:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @aieng/shared
+      - run: npm run typecheck -w @aieng/shared
 
+  api:
+    needs: shared
+    runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: b2c-backend
-
+        working-directory: apps/api
     services:
       mongodb:
         image: mongo:7
@@ -23,23 +34,36 @@ jobs:
         image: redis:7
         ports:
           - 6379:6379
-
     env:
       NODE_ENV: test
-      MONGO_URI: mongodb://127.0.0.1:27017/b2c_ci
+      MONGO_URI: mongodb://127.0.0.1:27017/aieng_ci
       REDIS_URL: redis://127.0.0.1:6379
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: b2c-backend/package-lock.json
-
       - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run build
-      - run: npm test
+      - run: npm run build -w @aieng/shared
+      - run: npm run typecheck -w @aieng/api
+      - run: npm run lint -w @aieng/api
+      - run: npm run build -w @aieng/api
+      - run: npm run test -w @aieng/api
+
+  web:
+    needs: shared
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @aieng/shared
+      - run: npm run typecheck -w @aieng/web
+      - run: npm run lint -w @aieng/web

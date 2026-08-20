@@ -6,21 +6,23 @@
 - Claude API key (AI generation/grading)
 - Stripe keys (optional, for billing)
 
-## Backend (`b2c-backend`)
+## Backend (`apps/api`)
 
-1. Copy `.env.example` → `.env` and fill secrets.
+1. Copy `apps/api/.env.example` → `apps/api/.env` and fill secrets.
 2. Start API + workers:
 
 ```bash
-cd b2c-backend
 npm install
+npm run build -w @aieng/shared
+cd apps/api
 npm run dev          # API on :4000
-npm run worker       # BullMQ workers (separate terminal)
 ```
+
+Or from repo root: `npm run dev:api`
 
 3. Production: set `CORS_ORIGIN` to your frontend URL (e.g. `https://app.example.com`).
 
-## Frontend (`b2c-frontend`)
+## Frontend (`apps/web`)
 
 1. Copy `.env.example` → `.env.local`:
 
@@ -32,9 +34,12 @@ BACKEND_URL=http://localhost:4000
 2. Local dev:
 
 ```bash
+cd apps/web
 npm install
 npm run dev          # :3000 — ensure backend is on :4000
 ```
+
+Or from repo root: `npm run dev:web`
 
 3. Production build:
 
@@ -46,8 +51,8 @@ npm run start
 ### Docker (frontend)
 
 ```bash
-cd b2c-frontend
-docker build --build-arg NEXT_PUBLIC_API_URL=/api -t bina-b2c-web .
+cd apps/web
+docker build --build-arg NEXT_PUBLIC_API_URL=/api -t aieng-web .
 docker run -p 3000:3000 -e BACKEND_URL=https://your-backend.onrender.com bina-b2c-web
 ```
 
@@ -88,7 +93,7 @@ Do **not** set `NEXT_PUBLIC_API_URL` to the backend URL — login cookies use pa
 Smoke tests (no backend required):
 
 ```bash
-cd b2c-frontend
+cd apps/web
 npm run test:e2e
 ```
 
