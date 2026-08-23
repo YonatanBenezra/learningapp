@@ -35,6 +35,7 @@ import {
 } from './jobs/subscriptionSyncWorker';
 import { seedAchievements } from './modules/gamification/gamification.service';
 import { seedProblems } from './modules/problems/problem.service';
+import { seedSimulations } from './modules/simulations/simulation.service';
 import { bootstrapRoles } from './modules/users/bootstrapRoles';
 import { initSentry } from './common/observability/sentry';
 import { logger } from './common/utils/logger';
@@ -45,6 +46,7 @@ async function bootstrap(): Promise<void> {
   await ensureIndexes();
   await seedAchievements();
   await seedProblems();
+  await seedSimulations();
   await bootstrapRoles(env.bootstrapAdminEmails, env.bootstrapInstructorEmails);
 
   if (env.redisEnabled) {

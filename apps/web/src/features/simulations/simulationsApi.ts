@@ -1,0 +1,252 @@
+import { apiClient } from '@/src/infrastructure/apiClient';
+
+export type SimulationKind = 'prompt_lab' | 'vector_playground' | 'rag_pipeline' | 'guardrails';
+
+export interface SimulationPublic {
+  slug: string;
+  title: string;
+  topic: string;
+  difficulty: string;
+  kind: SimulationKind;
+  description: string;
+  taskPrompt: string;
+  sampleInput: string;
+  order: number;
+}
+
+export interface PromptLabRunResult {
+  output: string;
+  qualityScore: number;
+  hints: string[];
+  model?: string;
+  usage?: { inputTokens: number; outputTokens: number };
+  structural?: PromptLabStructuralAnalysis;
+}
+
+export interface PromptLabStructuralAnalysis {
+  validJson: boolean;
+  hasTitleKey: boolean;
+  hasSummaryKey: boolean;
+  markdownFree: boolean;
+  structuralScore: number;
+}
+
+export interface RubricBreakdownItem {
+  criterion: string;
+  score: number;
+  maxScore: number;
+  note: string;
+}
+
+export interface PromptLabSubmitResult extends SimulationSubmitResult {
+  submissionId: string;
+  rubricBreakdown: RubricBreakdownItem[];
+  structural: PromptLabStructuralAnalysis;
+}
+
+export interface PromptLabBootstrap {
+  starterPrompts: Array<{ id: string; label: string; prompt: string }>;
+  rubricCriteria: Array<{ id: string; label: string; maxScore: number }>;
+  defaultPrompt: string;
+}
+
+export interface VectorPlaygroundMatch {
+  id: string;
+  source: string;
+  text: string;
+  score: number;
+}
+
+export interface VectorPlaygroundRunResult {
+  matches: VectorPlaygroundMatch[];
+  hints: string[];
+  defaultQuery?: string;
+  embeddingModel?: string;
+  embeddingProvider?: 'openrouter' | 'local';
+  topK?: number;
+  topMatchId?: string;
+}
+
+export interface VectorPlaygroundSubmitResult extends SimulationSubmitResult {
+  submissionId: string;
+  topMatchId: string;
+  selectedChunkId: string;
+}
+
+export type RagChunkSize = 'small' | 'medium' | 'large';
+
+export interface RagPipelineChunkResult {
+  id: string;
+  text: string;
+  score: number;
+  retrieved: boolean;
+}
+
+export interface RagPipelineRunResult {
+  config: { chunkSize: RagChunkSize; topK: number; rerank: boolean };
+  chunks: RagPipelineChunkResult[];
+  retrievedContext: string;
+  answer: string;
+  grounded: boolean;
+  hints: string[];
+  defaultQuery?: string;
+}
+
+export type SimulationRunResult =
+  | PromptLabRunResult
+  | VectorPlaygroundRunResult
+  | RagPipelineRunResult
+  | GuardrailsRunResult;
+
+export interface SimulationSubmitResult {
+  passed: boolean;
+  score: number;
+  feedback: string;
+  output: string;
+}
+
+export interface VectorChunkPublic {
+  id: string;
+  source: string;
+  text: string;
+}
+
+export interface VectorPlaygroundBootstrap {
+  chunks: VectorChunkPublic[];
+  defaultQuery: string;
+  topKRange: { min: number; max: number; default: number };
+  sampleQueries: string[];
+}
+
+export interface RagPipelineBootstrap {
+  defaultQuery: string;
+  sourcePreview: string;
+  chunkSizeOptions: Array<{ value: RagChunkSize; label: string; chars: number }>;
+  topKRange: { min: number; max: number; default: number };
+  defaultConfig: { chunkSize: RagChunkSize; topK: number; rerank: boolean };
+}
+
+export interface GuardrailsConfig {
+  inputFilter: boolean;
+  safetySystemPrompt: boolean;
+  outputValidation: boolean;
+}
+
+export interface GuardrailsRunResult {
+  config: GuardrailsConfig;
+  userInput: string;
+  inputKind: 'safe' | 'jailbreak' | 'harmful';
+  status: 'allowed' | 'blocked_input' | 'refused' | 'blocked_output' | 'unsafe_output';
+  layer: 'none' | 'input_filter' | 'system_prompt' | 'output_validation';
+  mockOutput: string;
+  safe: boolean;
+  hints: string[];
+}
+
+export interface GuardrailsBootstrap {
+  defaultUserInput: string;
+  defaultConfig: GuardrailsConfig;
+  guardrailOptions: Array<{
+    key: keyof GuardrailsConfig;
+    label: string;
+    description: string;
+  }>;
+  testCases: Array<{ id: string; label: string; input: string }>;
+}
+
+export type SimulationBootstrap =
+  | VectorPlaygroundBootstrap
+  | RagPipelineBootstrap
+  | GuardrailsBootstrap
+  | PromptLabBootstrap
+  | null;
+
+export async function fetchSimulations(): Promise<SimulationPublic[]> {
+  const data = await apiClient<{ simulations: SimulationPublic[] }>('/simulations');
+  return data.simulations;
+}
+
+export async function fetchSimulation(slug: string): Promise<{
+  simulation: SimulationPublic;
+  bootstrap: SimulationBootstrap;
+}> {
+  return apiClient<{ simulation: SimulationPublic; bootstrap: SimulationBootstrap }>(`/simulations/${slug}`);
+}
+
+export async function runSimulation(
+  slug: string,
+  body: {
+    prompt?: string;
+    query?: string;
+    topK?: number;
+    chunkSize?: RagChunkSize;
+    rerank?: boolean;
+    userInput?: string;
+    inputFilter?: boolean;
+    safetySystemPrompt?: boolean;
+    outputValidation?: boolean;
+    modelOutput?: string;
+    guestSessionId?: string;
+  },
+): Promise<SimulationRunResult> {
+  const data = await apiClient<{ result: SimulationRunResult }>(`/simulations/${slug}/run`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  return data.result;
+}
+
+export async function submitSimulation(
+  slug: string,
+  body: {
+    prompt?: string;
+    query?: string;
+    selectedChunkId?: string;
+    chunkSize?: RagChunkSize;
+    topK?: number;
+    rerank?: boolean;
+    userInput?: string;
+    inputFilter?: boolean;
+    safetySystemPrompt?: boolean;
+    outputValidation?: boolean;
+    modelOutput?: string;
+    guestSessionId?: string;
+  },
+): Promise<SimulationSubmitResult | PromptLabSubmitResult | VectorPlaygroundSubmitResult> {
+  const data = await apiClient<{ result: SimulationSubmitResult }>(`/simulations/${slug}/submit`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  return data.result;
+}
+
+export function simulationKindLabel(kind: SimulationKind): string {
+  switch (kind) {
+    case 'prompt_lab':
+      return 'Prompt Lab';
+    case 'vector_playground':
+      return 'Vector Playground';
+    case 'rag_pipeline':
+      return 'RAG Pipeline';
+    case 'guardrails':
+      return 'Guardrails';
+    default:
+      return kind;
+  }
+}
+
+export function isPromptLabRunResult(result: SimulationRunResult): result is PromptLabRunResult {
+  return 'output' in result && 'qualityScore' in result;
+}
+
+export function isVectorPlaygroundRunResult(result: SimulationRunResult): result is VectorPlaygroundRunResult {
+  return 'matches' in result;
+}
+
+export function isRagPipelineRunResult(result: SimulationRunResult): result is RagPipelineRunResult {
+  return 'answer' in result && 'grounded' in result;
+}
+
+export function isGuardrailsRunResult(result: SimulationRunResult): result is GuardrailsRunResult {
+  return 'mockOutput' in result && 'safe' in result && 'inputKind' in result;
+}

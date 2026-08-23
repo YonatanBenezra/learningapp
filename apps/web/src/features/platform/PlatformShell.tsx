@@ -18,6 +18,11 @@ import { platformContainerClass } from './platformLayout';
 
 const NAV_ITEMS = [
   { href: '/problems', label: 'Problems', isActive: (path: string) => path === '/problems' || path.startsWith('/problems/') },
+  {
+    href: '/simulations',
+    label: 'Simulations',
+    isActive: (path: string) => path === '/simulations' || path.startsWith('/simulations/'),
+  },
   { href: '/contest', label: 'Contest', isActive: (path: string) => path.startsWith('/contest') },
 ] as const;
 
