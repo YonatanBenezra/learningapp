@@ -36,9 +36,11 @@ function statusLabel(status: GuardrailsRunResult['status']): string {
 export function GuardrailsSimulation({
   simulation,
   bootstrap,
+  embedded = false,
 }: {
   simulation: SimulationPublic;
   bootstrap: GuardrailsBootstrap;
+  embedded?: boolean;
 }) {
   const [userInput, setUserInput] = useState(bootstrap.defaultUserInput);
   const [config, setConfig] = useState<GuardrailsConfig>(bootstrap.defaultConfig);
@@ -84,19 +86,27 @@ export function GuardrailsSimulation({
   }
 
   return (
-    <div className={cn(platformContainerClass, 'flex-1 py-6')}>
-      <Link
-        href="/simulations"
-        className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 hover:text-ink"
-      >
-        <ArrowLeft className="size-4" />
-        All simulations
-      </Link>
+    <div className={cn(embedded ? 'p-4 sm:p-5' : cn(platformContainerClass, 'flex-1 py-6'))}>
+      {!embedded ? (
+        <Link
+          href="/simulations"
+          className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 hover:text-ink"
+        >
+          <ArrowLeft className="size-4" />
+          All simulations
+        </Link>
+      ) : null}
 
-      <header className="mt-4 mb-6 max-w-3xl">
+      <header className={cn('mb-6 max-w-3xl', embedded ? 'mt-0' : 'mt-4')}>
         <p className="text-xs font-medium uppercase tracking-wide text-primary">Guardrails</p>
-        <h1 className="mt-1 text-xl font-semibold text-ink">{simulation.title}</h1>
-        <p className="mt-2 text-sm leading-6 text-ink-2">{simulation.description}</p>
+        {!embedded ? (
+          <>
+            <h1 className="mt-1 text-xl font-semibold text-ink">{simulation.title}</h1>
+            <p className="mt-2 text-sm leading-6 text-ink-2">{simulation.description}</p>
+          </>
+        ) : (
+          <h3 className="mt-1 text-lg font-semibold text-ink">{simulation.title}</h3>
+        )}
       </header>
 
       <div className="grid gap-6 lg:grid-cols-2">

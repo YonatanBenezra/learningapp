@@ -21,9 +21,11 @@ import {
 export function RagPipelineSimulation({
   simulation,
   bootstrap,
+  embedded = false,
 }: {
   simulation: SimulationPublic;
   bootstrap: RagPipelineBootstrap;
+  embedded?: boolean;
 }) {
   const [query, setQuery] = useState(bootstrap.defaultQuery);
   const [chunkSize, setChunkSize] = useState<RagChunkSize>(bootstrap.defaultConfig.chunkSize);
@@ -67,19 +69,27 @@ export function RagPipelineSimulation({
   }
 
   return (
-    <div className={cn(platformContainerClass, 'flex-1 py-6')}>
-      <Link
-        href="/simulations"
-        className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 hover:text-ink"
-      >
-        <ArrowLeft className="size-4" />
-        All simulations
-      </Link>
+    <div className={cn(embedded ? 'p-4 sm:p-5' : cn(platformContainerClass, 'flex-1 py-6'))}>
+      {!embedded ? (
+        <Link
+          href="/simulations"
+          className="inline-flex items-center gap-2 text-sm font-medium text-ink-2 hover:text-ink"
+        >
+          <ArrowLeft className="size-4" />
+          All simulations
+        </Link>
+      ) : null}
 
-      <header className="mt-4 mb-6 max-w-3xl">
+      <header className={cn('mb-6 max-w-3xl', embedded ? 'mt-0' : 'mt-4')}>
         <p className="text-xs font-medium uppercase tracking-wide text-primary">RAG Pipeline</p>
-        <h1 className="mt-1 text-xl font-semibold text-ink">{simulation.title}</h1>
-        <p className="mt-2 text-sm leading-6 text-ink-2">{simulation.description}</p>
+        {!embedded ? (
+          <>
+            <h1 className="mt-1 text-xl font-semibold text-ink">{simulation.title}</h1>
+            <p className="mt-2 text-sm leading-6 text-ink-2">{simulation.description}</p>
+          </>
+        ) : (
+          <h3 className="mt-1 text-lg font-semibold text-ink">{simulation.title}</h3>
+        )}
       </header>
 
       <div className="grid gap-6 lg:grid-cols-2">

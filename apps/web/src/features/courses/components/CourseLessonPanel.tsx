@@ -3,10 +3,13 @@
 import { useEffect, useRef } from 'react';
 import { CheckCircle2, Trophy } from 'lucide-react';
 import { useLesson, useStartLesson } from '@/src/features/lessons';
+import { useGuidedLesson } from '@/src/features/courses/useGuidedCourses';
+import { useAuthStore } from '@/src/store/authStore';
 import { resolveLabForDomain } from '@/src/features/labs';
 import type { Domain } from '@/src/domain/course';
 import { LessonContentBody } from '@/src/features/lessons/components/LessonContentBody';
-import { LessonPracticeActions } from '@/src/features/lessons/components/LessonPracticeActions';
+import { LessonActivityPanel } from '@/src/features/lessons/components/LessonActivityPanel';
+import { parseLessonActivity } from '@/src/features/lessons/lessonActivity';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { useTranslation } from '@/src/i18n';
 
@@ -19,6 +22,7 @@ interface CourseLessonPanelProps {
   moduleTitle?: string | null;
   moduleDomain?: Domain | null;
   position?: { n: number; total: number } | null;
+  guided?: boolean;
 }
 
 export function CourseLessonPanel({
@@ -26,13 +30,18 @@ export function CourseLessonPanel({
   moduleTitle,
   moduleDomain,
   position,
+  guided = false,
 }: CourseLessonPanelProps) {
   const { t } = useTranslation();
-  const lessonQ = useLesson(lessonId);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
+  const learnerLessonQ = useLesson(guided ? null : lessonId);
+  const guidedLessonQ = useGuidedLesson(guided ? lessonId : null);
+  const lessonQ = guided ? guidedLessonQ : learnerLessonQ;
   const { mutate: startLesson } = useStartLesson();
   const startedFor = useRef<string | null>(null);
 
   useEffect(() => {
+    if (guided && !isAuthenticated) return;
     const data = lessonQ.data;
     if (!data) return;
     const status = data.progress?.status;
@@ -40,7 +49,7 @@ export function CourseLessonPanel({
     if (startedFor.current === lessonId) return;
     startedFor.current = lessonId;
     startLesson(lessonId);
-  }, [lessonQ.data, lessonId, startLesson]);
+  }, [guided, isAuthenticated, lessonQ.data, lessonId, startLesson]);
 
   if (lessonQ.isLoading) {
     return (
@@ -77,6 +86,7 @@ export function CourseLessonPanel({
   const { lesson, progress } = lessonQ.data;
   const isCompleted = progress?.status === 'completed';
   const labMeta = moduleDomain ? resolveLabForDomain(moduleDomain) : null;
+  const activity = parseLessonActivity(lesson.content);
 
   return (
     <div className="flex min-h-full flex-col p-5 sm:p-8 lg:px-10 lg:py-9">
@@ -111,11 +121,7 @@ export function CourseLessonPanel({
           <LessonContentBody content={lesson.content} />
         </article>
 
-        <LessonPracticeActions
-          lessonId={lessonId}
-          lessonTitle={lesson.title}
-          labLabel={labMeta?.label}
-        />
+        {activity ? <LessonActivityPanel activity={activity} /> : null}
       </div>
     </div>
   );

@@ -86,19 +86,32 @@ export async function getNextProblem(excludeSlugs: string[]): Promise<{ problem:
   return { problem: next ? toPublic(next) : null };
 }
 
-async function gradeMcq(problem: {
-  prompt: string;
-  type: string;
-  options?: string[] | null;
-  correctAnswer: string;
-}, answer: string) {
+async function gradeAnswer(
+  problem: {
+    prompt: string;
+    type: string;
+    options?: string[] | null;
+    correctAnswer: string;
+  },
+  answer: string,
+) {
+  const trimmed = answer.trim();
+  const matchesOption = (problem.options ?? []).some(
+    (option) => normalize(option) === normalize(trimmed),
+  );
+  const useShortAnswer =
+    problem.type === 'short_answer' ||
+    problem.type === 'prompt_design' ||
+    problem.type === 'code' ||
+    (problem.type === 'mcq' && trimmed.length > 0 && !matchesOption);
+
   const question: GeneratedQuestion = {
     question: problem.prompt,
-    type: problem.type === 'short_answer' ? 'short_answer' : 'mcq',
+    type: useShortAnswer ? 'short_answer' : 'mcq',
     options: problem.options ?? null,
     correctAnswer: problem.correctAnswer,
   };
-  const { score, results } = await gradeSubmission([question], [{ questionIndex: 0, answer }]);
+  const { score, results } = await gradeSubmission([question], [{ questionIndex: 0, answer: trimmed }]);
   const result = results[0];
   return {
     correct: result.correct,
@@ -129,7 +142,7 @@ export async function submitProblem(
     }
   }
 
-  const graded = await gradeMcq(problem, body.answer);
+  const graded = await gradeAnswer(problem, body.answer);
   const submissionId = body.clientSubmissionId ?? randomUUID();
 
   if (userId) {

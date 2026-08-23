@@ -12,6 +12,9 @@ const router = Router();
 
 router.use(authenticate);
 
+router.get('/curated', controller.listCurated);
+router.get('/curated/:slug', controller.getCuratedBySlug);
+
 router.post(
   '/',
   requirePlatformAccess,

@@ -58,9 +58,11 @@ function RubricCard({
 export function PromptLabSimulation({
   simulation,
   bootstrap,
+  embedded = false,
 }: {
   simulation: SimulationPublic;
   bootstrap: PromptLabBootstrap | null;
+  embedded?: boolean;
 }) {
   const defaultPrompt = bootstrap?.defaultPrompt ?? 'Summarize the product review below.';
   const [prompt, setPrompt] = useState(defaultPrompt);
@@ -124,63 +126,99 @@ export function PromptLabSimulation({
   }
 
   return (
-    <div className="relative flex min-h-full flex-1 flex-col bg-bg">
-      {/* Toolbar */}
-      <div className="sticky top-0 z-20 border-b border-line bg-bg-elev/95 backdrop-blur-sm dark:border-line-2">
-        <div className={cn(platformContainerClass, 'flex flex-wrap items-center gap-x-4 gap-y-3 py-3')}>
-          <div className="flex min-w-0 flex-1 items-center gap-2 text-sm">
-            <Link
-              href="/simulations"
-              className="inline-flex items-center gap-1.5 text-ink-3 transition-colors hover:text-ink"
-            >
-              <ArrowLeft className="size-4" />
-              Simulations
-            </Link>
-            <ChevronRight className="size-3.5 shrink-0 text-ink-3" />
-            <div className="min-w-0 truncate">
-              <span className="font-medium text-ink">{simulation.title}</span>
-              <span className="mx-2 text-ink-3">·</span>
-              <span className="text-ink-3">Prompt Lab</span>
+    <div className={cn('relative flex min-h-full flex-1 flex-col bg-bg', embedded && 'bg-transparent')}>
+      {!embedded ? (
+        <div className="sticky top-0 z-20 border-b border-line bg-bg-elev/95 backdrop-blur-sm dark:border-line-2">
+          <div className={cn(platformContainerClass, 'flex flex-wrap items-center gap-x-4 gap-y-3 py-3')}>
+            <div className="flex min-w-0 flex-1 items-center gap-2 text-sm">
+              <Link
+                href="/simulations"
+                className="inline-flex items-center gap-1.5 text-ink-3 transition-colors hover:text-ink"
+              >
+                <ArrowLeft className="size-4" />
+                Simulations
+              </Link>
+              <ChevronRight className="size-3.5 shrink-0 text-ink-3" />
+              <div className="min-w-0 truncate">
+                <span className="font-medium text-ink">{simulation.title}</span>
+                <span className="mx-2 text-ink-3">·</span>
+                <span className="text-ink-3">Prompt Lab</span>
+              </div>
+            </div>
+
+            {runResult?.model ? (
+              <span className="hidden rounded-md border border-line bg-bg-soft px-2.5 py-1 font-mono text-[11px] text-ink-2 lg:inline dark:border-line-2">
+                {runResult.model}
+              </span>
+            ) : null}
+
+            <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
+              <button
+                type="button"
+                onClick={() => void handleRun()}
+                disabled={running || submitting || !prompt.trim()}
+                className={buttonClasses({
+                  variant: 'outline',
+                  size: 'sm',
+                  className: 'h-9 flex-1 rounded-lg px-4 shadow-none sm:flex-none',
+                })}
+              >
+                {running ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
+                Run
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleSubmit()}
+                disabled={running || submitting || !prompt.trim()}
+                className={buttonClasses({
+                  size: 'sm',
+                  className: 'h-9 flex-1 rounded-lg px-4 shadow-none sm:flex-none',
+                })}
+              >
+                {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+                Submit
+              </button>
             </div>
           </div>
-
-          {runResult?.model ? (
-            <span className="hidden rounded-md border border-line bg-bg-soft px-2.5 py-1 font-mono text-[11px] text-ink-2 lg:inline dark:border-line-2">
-              {runResult.model}
-            </span>
-          ) : null}
-
-          <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
-            <button
-              type="button"
-              onClick={() => void handleRun()}
-              disabled={running || submitting || !prompt.trim()}
-              className={buttonClasses({
-                variant: 'outline',
-                size: 'sm',
-                className: 'h-9 flex-1 rounded-lg px-4 shadow-none sm:flex-none',
-              })}
-            >
-              {running ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-              Run
-            </button>
-            <button
-              type="button"
-              onClick={() => void handleSubmit()}
-              disabled={running || submitting || !prompt.trim()}
-              className={buttonClasses({
-                size: 'sm',
-                className: 'h-9 flex-1 rounded-lg px-4 shadow-none sm:flex-none',
-              })}
-            >
-              {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-              Submit
-            </button>
-          </div>
         </div>
-      </div>
+      ) : null}
 
-      <div className={cn(platformContainerClass, 'py-6')}>
+      <div className={cn(embedded ? 'p-4 sm:p-5' : platformContainerClass, !embedded && 'py-6')}>
+        {embedded ? (
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-line/70 pb-4 dark:border-line-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Prompt Lab</p>
+              <h3 className="mt-1 text-lg font-semibold text-ink">{simulation.title}</h3>
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => void handleRun()}
+                disabled={running || submitting || !prompt.trim()}
+                className={buttonClasses({
+                  variant: 'outline',
+                  size: 'sm',
+                  className: 'h-9 rounded-lg px-4 shadow-none',
+                })}
+              >
+                {running ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
+                Run
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleSubmit()}
+                disabled={running || submitting || !prompt.trim()}
+                className={buttonClasses({
+                  size: 'sm',
+                  className: 'h-9 rounded-lg px-4 shadow-none',
+                })}
+              >
+                {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+                Submit
+              </button>
+            </div>
+          </div>
+        ) : null}
         {/* Progress */}
         <div className="mb-6 flex items-center gap-2 sm:gap-0">
           {STEPS.map((label, index) => {

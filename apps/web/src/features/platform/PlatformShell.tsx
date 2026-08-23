@@ -23,6 +23,11 @@ const NAV_ITEMS = [
     label: 'Simulations',
     isActive: (path: string) => path === '/simulations' || path.startsWith('/simulations/'),
   },
+  {
+    href: '/guided-courses',
+    label: 'Courses',
+    isActive: (path: string) => path === '/guided-courses' || path.startsWith('/guided-courses/'),
+  },
   { href: '/contest', label: 'Contest', isActive: (path: string) => path.startsWith('/contest') },
 ] as const;
 
@@ -215,6 +220,12 @@ function PlatformFooter() {
         <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#666] dark:text-ink-2">
           <Link href="/problems" className="hover:text-ink">
             Problems
+          </Link>
+          <Link href="/simulations" className="hover:text-ink">
+            Simulations
+          </Link>
+          <Link href="/guided-courses" className="hover:text-ink">
+            Courses
           </Link>
           <Link href="/contest" className="hover:text-ink">
             Contest

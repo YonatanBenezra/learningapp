@@ -31,6 +31,26 @@ export async function resolveOwnedLesson(userId: string, lessonId: string) {
   return { lesson, course };
 }
 
+export async function getCuratedLessonPublic(lessonId: string, userId?: string) {
+  if (!Types.ObjectId.isValid(lessonId)) throw new AppError(404, 'Lesson not found');
+  const lesson = await Lesson.findById(lessonId);
+  if (!lesson) throw new AppError(404, 'Lesson not found');
+
+  const course = await findAccessibleCourse(userId ?? '', String(lesson.courseId));
+  if (!course?.platformCurated) throw new AppError(404, 'Lesson not found');
+
+  const progress = userId
+    ? await UserLessonProgress.findOne({ userId, lessonId })
+    : null;
+
+  return {
+    lesson,
+    progress,
+    canEditContent: false,
+    instructorCourseId: null,
+  };
+}
+
 export async function getLesson(userId: string, lessonId: string) {
   const { lesson, course } = await resolveOwnedLesson(userId, lessonId);
   const [progress, user] = await Promise.all([

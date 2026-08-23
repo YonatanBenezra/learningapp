@@ -146,19 +146,24 @@ function ProblemSolveContent({ slug }: { slug: string }) {
 
   return (
     <>
-      <div className="border-b border-line-2 bg-bg-soft/50">
-        <div className={cn(platformContainerClass, 'py-3')}>
+      <div className="border-b border-line/70 bg-bg-elev/80 backdrop-blur-sm dark:border-line-2">
+        <div className={cn(platformContainerClass, 'flex items-center justify-between gap-4 py-3')}>
           <Link
             href="/problems"
-            className="inline-flex items-center gap-1.5 text-sm text-ink-2 transition-colors hover:text-ink"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-2 transition-colors hover:text-ink"
           >
             <ArrowLeft className="size-4" />
             Problems
           </Link>
+          <p className="hidden truncate text-xs text-ink-3 sm:block">{problem.slug}</p>
         </div>
       </div>
-      <div className={cn(platformContainerClass, 'flex-1 py-8')}>
-        {error && <p className="mb-4 text-center text-sm text-bad">{error}</p>}
+      <div className={cn(platformContainerClass, 'flex-1 py-6 sm:py-8 lg:py-10')}>
+        {error ? (
+          <p className="mb-4 rounded-xl border border-bad/30 bg-bad-soft/40 px-4 py-3 text-sm text-bad">
+            {error}
+          </p>
+        ) : null}
         <ProblemView
           key={problem.slug}
           problem={problem}

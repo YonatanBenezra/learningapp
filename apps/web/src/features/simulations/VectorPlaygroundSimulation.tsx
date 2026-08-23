@@ -43,9 +43,11 @@ function ScoreMeter({ value, active }: { value: number; active?: boolean }) {
 export function VectorPlaygroundSimulation({
   simulation,
   bootstrap,
+  embedded = false,
 }: {
   simulation: SimulationPublic;
   bootstrap: VectorPlaygroundBootstrap;
+  embedded?: boolean;
 }) {
   const defaultTopK = bootstrap.topKRange?.default ?? 3;
   const topKOptions = useMemo(
@@ -107,20 +109,32 @@ export function VectorPlaygroundSimulation({
   }
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-bg pb-24 lg:pb-8">
-      <div className={cn(platformContainerClass, 'mx-auto w-full max-w-4xl py-6 lg:py-8')}>
-        <Link
-          href="/simulations"
-          className="inline-flex items-center gap-1.5 text-sm text-ink-2 transition-colors hover:text-ink"
-        >
-          <ArrowLeft className="size-4" />
-          Back to simulations
-        </Link>
+    <div className={cn('flex min-h-full flex-1 flex-col bg-bg', embedded ? 'pb-6' : 'pb-24 lg:pb-8')}>
+      <div
+        className={cn(
+          embedded ? 'w-full px-4 py-4 sm:px-5' : cn(platformContainerClass, 'mx-auto w-full max-w-4xl py-6 lg:py-8'),
+        )}
+      >
+        {!embedded ? (
+          <Link
+            href="/simulations"
+            className="inline-flex items-center gap-1.5 text-sm text-ink-2 transition-colors hover:text-ink"
+          >
+            <ArrowLeft className="size-4" />
+            Back to simulations
+          </Link>
+        ) : null}
 
-        <header className="mt-5 border-b border-line pb-6 dark:border-line-2">
+        <header className={cn('border-b border-line pb-6 dark:border-line-2', embedded ? 'mt-0' : 'mt-5')}>
           <p className="text-xs font-semibold uppercase tracking-wide text-primary">Vector Playground</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{simulation.title}</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-2">{simulation.description}</p>
+          {!embedded ? (
+            <>
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{simulation.title}</h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-2">{simulation.description}</p>
+            </>
+          ) : (
+            <h3 className="mt-1 text-lg font-semibold text-ink">{simulation.title}</h3>
+          )}
           <p className="mt-3 text-xs text-ink-3">
             {bootstrap.chunks.length} documents in index · cosine similarity ranking
             {runResult?.embeddingModel ? (

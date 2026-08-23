@@ -13,6 +13,14 @@ export async function findAccessibleCourse(userId: string, courseId: string) {
 
   if (String(course.userId) === userId) return course;
 
+  if (
+    course.platformCurated &&
+    course.isPublished &&
+    course.status === 'ready'
+  ) {
+    return course;
+  }
+
   const enrolled = await CourseEnrollment.exists({
     courseId: course._id,
     studentId: userId,
@@ -57,6 +65,12 @@ export async function withUserCourseProgress<
     _id?: unknown;
   },
 >(userId: string, course: T): Promise<T> {
+  if (course.platformCurated && course.isPublished && course.status === 'ready') {
+    const progressPercent = await computeUserCourseProgress(userId, course._id as Types.ObjectId);
+    const status = progressPercent >= 100 ? 'completed' : 'ready';
+    return { ...course, progressPercent, status };
+  }
+
   if (course.kind === 'marketplace' && !isCourseOwner(course, userId)) {
     const progressPercent = await computeUserCourseProgress(userId, course._id as Types.ObjectId);
     const status =

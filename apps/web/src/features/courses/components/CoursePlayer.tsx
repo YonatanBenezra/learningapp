@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,9 +12,11 @@ import {
 } from 'lucide-react';
 import type { Course } from '@/src/domain/course';
 import { useCourseStructure } from '@/src/features/courses';
+import { useGuidedCourseStructure, useGuidedLesson } from '@/src/features/courses/useGuidedCourses';
 import { learnerCourseStructurePath } from '@/src/features/auth/learnerRoutes';
 import { useCompleteLesson, useLesson } from '@/src/features/lessons';
 import { useGenerateExam } from '@/src/features/assessments';
+import { useAuthStore } from '@/src/store/authStore';
 import { CourseModuleSidebar } from '@/src/features/courses/components/CourseModuleSidebar';
 import {
   CourseCompletionBanner,
@@ -33,9 +36,10 @@ import {
 interface CoursePlayerProps {
   courseId: string;
   course: Course;
+  guided?: boolean;
 }
 
-export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
+export function CoursePlayer({ courseId, course, guided = false }: CoursePlayerProps) {
   const { t } = useTranslation();
   const isRtl = useIsRtl();
   const router = useRouter();
@@ -43,10 +47,17 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
   const searchParams = useSearchParams();
   const activeLessonId = searchParams.get('lesson');
 
-  const structureQ = useCourseStructure(courseId);
+  const learnerStructureQ = useCourseStructure(guided ? null : courseId);
+  const guidedStructureQ = useGuidedCourseStructure(guided ? courseId : null);
+  const structureQ = guided ? guidedStructureQ : learnerStructureQ;
+
+  const learnerLessonQ = useLesson(guided ? null : activeLessonId);
+  const guidedLessonQ = useGuidedLesson(guided ? activeLessonId : null);
+  const activeLessonQ = guided ? guidedLessonQ : learnerLessonQ;
+
   const completeMut = useCompleteLesson();
   const examGen = useGenerateExam();
-  const activeLessonQ = useLesson(activeLessonId);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
 
   const modules = structureQ.data?.modules ?? [];
   const flatLessons = useMemo(
@@ -167,6 +178,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
                   moduleTitle={nav.moduleTitle}
                   moduleDomain={nav.moduleDomain}
                   position={nav.position}
+                  guided={guided}
                 />
                 <div className="mx-auto w-full max-w-4xl px-5 pb-12 sm:px-8 lg:px-10">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line/70 pt-8">
@@ -187,7 +199,7 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
                     )}
 
                     <div className="flex flex-wrap items-center gap-2">
-                      {!lessonCompleted ? (
+                      {!lessonCompleted && (!guided || isAuthenticated) ? (
                         <button
                           type="button"
                           onClick={() => completeMut.mutate(activeLessonId)}
@@ -204,6 +216,18 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
                           )}
                           {t('player.markComplete')}
                         </button>
+                      ) : null}
+
+                      {guided && !isAuthenticated && !lessonCompleted ? (
+                        <Link
+                          href={`/login?redirect=${encodeURIComponent(`${pathname}?lesson=${activeLessonId}`)}`}
+                          className={buttonClasses({
+                            variant: 'outline',
+                            className: 'h-11 rounded-md bg-transparent px-5 text-sm font-medium',
+                          })}
+                        >
+                          Log in to save progress
+                        </Link>
                       ) : null}
 
                       {nav.next ? (
@@ -253,7 +277,8 @@ export function CoursePlayer({ courseId, course }: CoursePlayerProps) {
             activeLessonId={activeLessonId}
             expandedModuleId={expandedModuleId}
             completedLessonIds={completedLessonIds}
-            diagramHref={learnerCourseStructurePath(courseId)}
+            diagramHref={guided ? undefined : learnerCourseStructurePath(courseId)}
+            showFinalExam={!guided}
             examPending={examGen.isPending}
             onFinalExam={() =>
               examGen.mutate(

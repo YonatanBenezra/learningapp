@@ -3,6 +3,18 @@ export function myCoursesPath(): string {
   return '/my-courses';
 }
 
+export function guidedCoursesPath(): string {
+  return '/guided-courses';
+}
+
+export function guidedCoursePath(courseId: string): string {
+  return `/guided-courses/${courseId}`;
+}
+
+export function guidedCourseLessonPath(courseId: string, lessonId: string): string {
+  return `${guidedCoursePath(courseId)}?lesson=${encodeURIComponent(lessonId)}`;
+}
+
 export function learnerCoursePath(courseId: string): string {
   return `/my-courses/${courseId}`;
 }

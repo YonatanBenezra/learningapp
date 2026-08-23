@@ -13,7 +13,8 @@ interface CourseModuleSidebarProps {
   activeLessonId: string | null;
   expandedModuleId: string | null;
   completedLessonIds: Set<string>;
-  diagramHref: string;
+  diagramHref?: string;
+  showFinalExam?: boolean;
   examPending: boolean;
   onFinalExam: () => void;
   onToggleModule: (moduleId: string) => void;
@@ -29,6 +30,7 @@ export function CourseModuleSidebar({
   expandedModuleId,
   completedLessonIds,
   diagramHref,
+  showFinalExam = true,
   examPending,
   onFinalExam,
   onToggleModule,
@@ -46,36 +48,42 @@ export function CourseModuleSidebar({
   return (
     <aside className="flex h-full min-h-0 w-full flex-col">
       <div className="shrink-0 border-b border-line/70 px-3 py-2.5">
-        <div className="flex items-center gap-1">
-          <Link
-            href={diagramHref}
-            className={buttonClasses({
-              variant: 'ghost',
-              size: 'sm',
-              className: 'h-9 flex-1 rounded-md px-2 text-sm font-medium',
-            })}
-          >
-            <Network className="size-4" />
-            {t('player.diagram')}
-          </Link>
-          <button
-            type="button"
-            onClick={onFinalExam}
-            disabled={examPending}
-            className={buttonClasses({
-              variant: 'ghost',
-              size: 'sm',
-              className: 'h-9 flex-1 rounded-md px-2 text-sm font-medium',
-            })}
-          >
-            {examPending ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <GraduationCap className="size-4" />
-            )}
-            {t('player.finalExam')}
-          </button>
-        </div>
+        {diagramHref || showFinalExam ? (
+          <div className="flex items-center gap-1">
+            {diagramHref ? (
+              <Link
+                href={diagramHref}
+                className={buttonClasses({
+                  variant: 'ghost',
+                  size: 'sm',
+                  className: 'h-9 flex-1 rounded-md px-2 text-sm font-medium',
+                })}
+              >
+                <Network className="size-4" />
+                {t('player.diagram')}
+              </Link>
+            ) : null}
+            {showFinalExam ? (
+              <button
+                type="button"
+                onClick={onFinalExam}
+                disabled={examPending}
+                className={buttonClasses({
+                  variant: 'ghost',
+                  size: 'sm',
+                  className: 'h-9 flex-1 rounded-md px-2 text-sm font-medium',
+                })}
+              >
+                {examPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <GraduationCap className="size-4" />
+                )}
+                {t('player.finalExam')}
+              </button>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       <div className="shrink-0 px-5 pb-4 pt-4">

@@ -23,6 +23,9 @@ const courseSchema = new Schema(
     currency: { type: String, default: 'USD' },
     isPublished: { type: Boolean, default: false, index: true },
     slug: { type: String, unique: true, sparse: true, index: true },
+    /** Platform-owned curated paths — any authenticated learner can open without purchase. */
+    platformCurated: { type: Boolean, default: false, index: true },
+    estimatedHours: { type: Number, default: null, min: 0 },
     enrollmentCount: { type: Number, default: 0, min: 0 },
     revenueCents: { type: Number, default: 0, min: 0 },
     status: {

@@ -16,6 +16,7 @@ import { courseGenerationQueue, jobPriority } from '../../jobs/queue';
 import { generateCourseTree, type CourseTreeGenerator } from './course.generator';
 import { generateLessonContent, type LessonContentGenerator } from './lesson.generator';
 import { AiError } from '../ai-guidance/ai.error';
+import { getCuratedCourseBySlug } from './curatedCourse.service';
 
 function formatGenerationFailure(err: unknown): string {
   if (err instanceof AiError && err.message.includes('schema validation')) {
@@ -112,7 +113,20 @@ export async function listCourses(userId: string) {
     .map((id) => enrolledById.get(id))
     .filter((course): course is NonNullable<typeof course> => Boolean(course));
 
-  const combined = [...owned, ...orderedEnrolled];
+  const curated = await Course.find({
+    platformCurated: true,
+    isPublished: true,
+    status: 'ready',
+  }).sort({ createdAt: 1 });
+
+  const combinedIds = new Set<string>();
+  const combined: typeof owned = [];
+  for (const course of [...curated, ...owned, ...orderedEnrolled]) {
+    const id = String(course._id);
+    if (combinedIds.has(id)) continue;
+    combinedIds.add(id);
+    combined.push(course);
+  }
 
   return Promise.all(
     combined.map(async (course) => {
@@ -125,6 +139,61 @@ export async function listCourses(userId: string) {
 // Full Course -> Module -> Lesson tree for React Flow (§1.4). Ordered.
 export async function getStructure(userId: string, courseId: string) {
   const course = await requireAccessibleCourse(userId, courseId);
+
+  const modules = await Module.find({ courseId: course._id }).sort({ order: 1 });
+  const tree = await Promise.all(
+    modules.map(async (m) => {
+      const lessons = await Lesson.find({ moduleId: m._id }).sort({ order: 1 });
+      return {
+        id: String(m._id),
+        title: m.title,
+        domain: m.domain,
+        order: m.order,
+        lessonCount: lessons.length,
+        lessons: lessons.map((l) => ({ id: String(l._id), title: l.title, order: l.order })),
+      };
+    }),
+  );
+
+  return {
+    course: {
+      id: String(course._id),
+      title: course.title,
+      status: course.status,
+      category: course.category,
+      level: course.level,
+    },
+    modules: tree,
+  };
+}
+
+export async function getCuratedCoursePublic(slug: string) {
+  const course = await getCuratedCourseBySlug(slug);
+  if (!course) throw new AppError(404, 'Curated course not found');
+  return course;
+}
+
+async function requireCuratedCourse(courseId: string) {
+  if (!Types.ObjectId.isValid(courseId)) throw new AppError(404, 'Course not found');
+  const course = await Course.findOne({
+    _id: courseId,
+    platformCurated: true,
+    isPublished: true,
+    status: 'ready',
+  });
+  if (!course) throw new AppError(404, 'Course not found');
+  return course;
+}
+
+export async function getCuratedCoursePublicById(courseId: string, userId?: string) {
+  const course = await requireCuratedCourse(courseId);
+  const json = course.toJSON() as Record<string, unknown>;
+  if (userId) return withUserCourseProgress(userId, json);
+  return { ...json, progressPercent: 0, status: 'ready' };
+}
+
+export async function getCuratedStructurePublic(courseId: string) {
+  const course = await requireCuratedCourse(courseId);
 
   const modules = await Module.find({ courseId: course._id }).sort({ order: 1 });
   const tree = await Promise.all(

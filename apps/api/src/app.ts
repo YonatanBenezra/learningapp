@@ -36,6 +36,7 @@ import aiRoutes from './modules/ai-guidance/ai.routes';
 import problemRoutes from './modules/problems/problem.routes';
 import practiceRoutes from './modules/practice/practice.routes';
 import simulationRoutes from './modules/simulations/simulation.routes';
+import curatedPublicRoutes from './modules/courses/curatedCourse.public.routes';
 
 export const app = express();
 
@@ -107,6 +108,7 @@ app.use('/ai', aiRoutes);
 app.use('/problems', problemRoutes);
 app.use('/practice', practiceRoutes);
 app.use('/simulations', simulationRoutes);
+app.use('/guided-courses', curatedPublicRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

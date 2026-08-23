@@ -26,7 +26,6 @@ import {
   LessonContentEditor,
   type LessonContentDraft,
 } from '@/src/features/lessons/components/LessonContentEditor';
-import { LessonPracticeActions } from '@/src/features/lessons/components/LessonPracticeActions';
 
 function prettyKey(key: string): string {
   return key.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
@@ -267,18 +266,8 @@ export function LessonView({ lessonId }: { lessonId: string }) {
 
       {!isEditing ? (
         <>
-          {!canEditContent ? (
-            <>
-              <LessonPracticeActions
-                lessonId={lessonId}
-                lessonTitle={lesson.title}
-                labLabel={labMeta?.label}
-              />
-
-              {completeFailed ? (
-                <p className="mt-6 text-sm text-bad">{t('player.saveProgressError')}</p>
-              ) : null}
-            </>
+          {completeFailed ? (
+            <p className="mt-6 text-sm text-bad">{t('player.saveProgressError')}</p>
           ) : null}
 
           <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6">
