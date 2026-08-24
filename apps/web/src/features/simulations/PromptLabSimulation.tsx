@@ -1,20 +1,30 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
-  Braces,
-  CheckCircle2,
-  ChevronRight,
+  Check,
+  ClipboardList,
+  Copy,
+  FileJson,
   Loader2,
+  PanelLeft,
   Play,
   Send,
-  Sparkles,
+  X,
 } from 'lucide-react';
 import { ApiError } from '@/src/infrastructure/apiClient';
-import { buttonClasses } from '@/src/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 import { cn } from '@/src/lib/utils';
+import { difficultyClass } from '@/src/features/platform/problemLabels';
 import { platformContainerClass } from '@/src/features/platform/platformLayout';
 import {
   runSimulation,
@@ -25,9 +35,56 @@ import {
   type SimulationPublic,
 } from './simulationsApi';
 
-const STEPS = ['Draft prompt', 'Live run', 'Grade output'] as const;
+const STRUCTURAL_LABELS = [
+  { key: 'validJson' as const, label: 'Valid JSON' },
+  { key: 'requiredKeys' as const, label: 'Required keys' },
+  { key: 'markdownFree' as const, label: 'No markdown' },
+];
 
-function RubricCard({
+function useModLabel() {
+  const [mod, setMod] = useState<string | null>(null);
+  useEffect(() => {
+    setMod(/Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl');
+  }, []);
+  return mod;
+}
+
+function formatTokens(n: number) {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return String(n);
+}
+
+function prettyOutput(raw: string, validJson?: boolean) {
+  if (!validJson) return raw;
+  try {
+    return JSON.stringify(JSON.parse(raw), null, 2);
+  } catch {
+    return raw;
+  }
+}
+
+function CheckChip({
+  label,
+  state,
+}: {
+  label: string;
+  state: 'idle' | 'ok' | 'fail';
+}) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium',
+        state === 'idle' && 'bg-bg-soft text-ink-3',
+        state === 'ok' && 'bg-good-soft text-good',
+        state === 'fail' && 'bg-warn-soft text-warn',
+      )}
+    >
+      {label}
+    </span>
+  );
+}
+
+function RubricRow({
   label,
   score,
   maxScore,
@@ -40,17 +97,137 @@ function RubricCard({
 }) {
   const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
   return (
-    <div className="rounded-lg border border-line/80 bg-bg-elev p-4 dark:border-line-2">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium text-ink">{label}</p>
-        <span className="tabular-nums text-sm font-semibold text-primary">
+    <div>
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-sm text-ink">{label}</p>
+        <span className="shrink-0 tabular-nums text-xs font-medium text-ink-2">
           {score}/{maxScore}
         </span>
       </div>
-      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-line/80 dark:bg-line-2">
-        <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${pct}%` }} />
+      <div className="mt-2 h-1 overflow-hidden rounded-full bg-line dark:bg-line-2">
+        <div
+          className="h-full rounded-full bg-primary transition-all duration-500"
+          style={{ width: `${pct}%` }}
+        />
       </div>
-      {note ? <p className="mt-2 text-xs leading-5 text-ink-3">{note}</p> : null}
+      {note ? <p className="mt-1.5 text-xs leading-5 text-ink-3">{note}</p> : null}
+    </div>
+  );
+}
+
+function BriefBody({
+  simulation,
+  bootstrap,
+  submitResult,
+  gradeStale,
+  tab,
+  onTabChange,
+}: {
+  simulation: SimulationPublic;
+  bootstrap: PromptLabBootstrap | null;
+  submitResult: PromptLabSubmitResult | null;
+  gradeStale: boolean;
+  tab: 'task' | 'results';
+  onTabChange: (tab: 'task' | 'results') => void;
+}) {
+  const criteria = bootstrap?.rubricCriteria ?? [];
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 gap-1 border-b border-line px-3 py-2 dark:border-line-2">
+        {(
+          [
+            { id: 'task', label: 'Task' },
+            { id: 'results', label: 'Results' },
+          ] as const
+        ).map((item) => {
+          const disabled = item.id === 'results' && !submitResult;
+          const active = tab === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              disabled={disabled}
+              onClick={() => onTabChange(item.id)}
+              className={cn(
+                'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
+                active && 'bg-bg-soft text-ink dark:bg-bg-lav/40',
+                !active && !disabled && 'text-ink-3 hover:text-ink',
+                disabled && 'cursor-not-allowed text-ink-3/50',
+              )}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+        {tab === 'results' && submitResult ? (
+          <div className="space-y-5">
+            {gradeStale ? (
+              <p className="rounded-lg bg-warn-soft px-3 py-2 text-xs leading-5 text-warn">
+                Prompt changed since this grade. Run and submit again to re-score.
+              </p>
+            ) : null}
+            <div>
+              <div className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    'inline-flex rounded-md px-2 py-0.5 text-[11px] font-semibold',
+                    submitResult.passed ? 'bg-good-soft text-good' : 'bg-warn-soft text-warn',
+                  )}
+                >
+                  {submitResult.passed ? 'Passed' : 'Needs work'}
+                </span>
+                <span className="text-2xl font-semibold tabular-nums tracking-tight text-ink">
+                  {submitResult.score}%
+                </span>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-ink-2">{submitResult.feedback}</p>
+            </div>
+            <div className="space-y-4">
+              {submitResult.rubricBreakdown.map((item) => (
+                <RubricRow
+                  key={item.criterion}
+                  label={item.criterion}
+                  score={item.score}
+                  maxScore={item.maxScore}
+                  note={item.note}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <section>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-ink-3">Objective</p>
+              <p className="mt-2 text-sm leading-6 text-ink">{simulation.taskPrompt}</p>
+            </section>
+
+            <section>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-ink-3">Fixed input</p>
+              <pre className="mt-2 max-h-44 overflow-auto whitespace-pre-wrap rounded-lg bg-bg-soft px-3 py-2.5 font-mono text-[12px] leading-5 text-ink-2 dark:bg-bg-lav/30">
+                {simulation.sampleInput}
+              </pre>
+            </section>
+
+            {criteria.length > 0 ? (
+              <section>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-ink-3">Rubric</p>
+                <ul className="mt-2 space-y-2">
+                  {criteria.map((item) => (
+                    <li key={item.id} className="flex items-baseline justify-between gap-3 text-sm">
+                      <span className="text-ink-2">{item.label}</span>
+                      <span className="tabular-nums text-xs text-ink-3">{item.maxScore} pts</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -66,337 +243,479 @@ export function PromptLabSimulation({
 }) {
   const defaultPrompt = bootstrap?.defaultPrompt ?? 'Summarize the product review below.';
   const [prompt, setPrompt] = useState(defaultPrompt);
-  const [modelOutput, setModelOutput] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [runResult, setRunResult] = useState<PromptLabRunResult | null>(null);
   const [submitResult, setSubmitResult] = useState<PromptLabSubmitResult | null>(null);
+  const [lastRunPrompt, setLastRunPrompt] = useState<string | null>(null);
+  const [lastSubmitPrompt, setLastSubmitPrompt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [briefOpen, setBriefOpen] = useState(false);
+  const [railTab, setRailTab] = useState<'task' | 'results'>('task');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const mod = useModLabel();
 
-  const activeStep = submitResult ? 2 : runResult ? 1 : 0;
+  const promptDirty = Boolean(runResult && lastRunPrompt !== null && prompt !== lastRunPrompt);
+  const gradeStale = Boolean(submitResult && lastSubmitPrompt !== null && prompt !== lastSubmitPrompt);
+  const hasPreview = Boolean(runResult);
+  const hasGrade = Boolean(submitResult);
+  const busy = running || submitting;
+  const canRun = Boolean(prompt.trim()) && !busy;
 
-  const structuralChecks = useMemo(() => {
-    if (!runResult?.structural) return [];
-    return [
-      { ok: runResult.structural.validJson, label: 'Valid JSON' },
-      {
-        ok: runResult.structural.hasTitleKey && runResult.structural.hasSummaryKey,
-        label: 'Required keys',
-      },
-      { ok: runResult.structural.markdownFree, label: 'No markdown' },
-    ];
+  const selectedStarterId = useMemo(() => {
+    const match = bootstrap?.starterPrompts.find((starter) => starter.prompt === prompt);
+    return match?.id ?? null;
+  }, [bootstrap?.starterPrompts, prompt]);
+
+  const structural = useMemo(() => {
+    const checks = runResult?.structural;
+    return STRUCTURAL_LABELS.map((item) => {
+      if (!checks) return { label: item.label, state: 'idle' as const };
+      const ok =
+        item.key === 'requiredKeys'
+          ? checks.hasTitleKey && checks.hasSummaryKey
+          : checks[item.key];
+      return { label: item.label, state: ok ? ('ok' as const) : ('fail' as const) };
+    });
   }, [runResult?.structural]);
 
-  async function handleRun() {
-    if (!prompt.trim()) return;
+  const handleRun = useCallback(async () => {
+    if (!prompt.trim() || running || submitting) return;
     setRunning(true);
     setError(null);
-    setSubmitResult(null);
     try {
       const result = await runSimulation(simulation.slug, { prompt });
       if ('output' in result) {
         setRunResult(result);
-        setModelOutput(result.output);
+        setLastRunPrompt(prompt);
       }
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Run failed.');
     } finally {
       setRunning(false);
     }
-  }
+  }, [prompt, running, submitting, simulation.slug]);
 
-  async function handleSubmit() {
-    if (!prompt.trim()) return;
+  const handleSubmit = useCallback(async () => {
+    if (!prompt.trim() || running || submitting) return;
     setSubmitting(true);
     setError(null);
     try {
       const result = await submitSimulation(simulation.slug, {
         prompt,
-        modelOutput: modelOutput ?? undefined,
+        modelOutput: prompt === lastRunPrompt ? (runResult?.output ?? undefined) : undefined,
       });
       if ('submissionId' in result && 'rubricBreakdown' in result) {
         setSubmitResult(result);
-        setModelOutput(result.output);
+        setRunResult((current) =>
+          current
+            ? { ...current, output: result.output, structural: result.structural }
+            : {
+                output: result.output,
+                qualityScore: result.structural.structuralScore,
+                hints: [],
+                structural: result.structural,
+              },
+        );
+        setLastRunPrompt(prompt);
+        setLastSubmitPrompt(prompt);
+        setRailTab('results');
+        if (window.matchMedia('(max-width: 1023px)').matches) setBriefOpen(true);
       }
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Submit failed.');
     } finally {
       setSubmitting(false);
     }
+  }, [prompt, running, submitting, simulation.slug, lastRunPrompt, runResult?.output]);
+
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if (!(event.metaKey || event.ctrlKey) || event.key !== 'Enter' || event.repeat) return;
+      const target = event.target;
+      if (target instanceof HTMLElement) {
+        const tag = target.tagName;
+        if (tag === 'INPUT') return;
+        if (tag === 'TEXTAREA' && target !== textareaRef.current) return;
+      }
+      event.preventDefault();
+      void handleRun();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [handleRun]);
+
+  async function copyOutput() {
+    const text = runResult?.output;
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1400);
+    } catch {
+      setError('Could not copy to clipboard.');
+    }
   }
 
+  const phaseLabel = hasGrade ? 'Graded' : hasPreview ? 'Previewed' : 'Draft';
+
+  const actions = (
+    <div className="flex items-center gap-2">
+      <Button
+        type="button"
+        size="sm"
+        variant={hasPreview && !hasGrade ? 'outline' : 'primary'}
+        onClick={() => void handleRun()}
+        disabled={!canRun}
+        className="h-8 rounded-lg px-3 shadow-none"
+      >
+        {running ? <Loader2 className="size-3.5 animate-spin" /> : <Play className="size-3.5" />}
+        Run
+        {mod ? (
+          <kbd className="ml-1 hidden rounded border border-current/20 px-1 font-mono text-[10px] font-normal opacity-70 sm:inline">
+            {mod}+Enter
+          </kbd>
+        ) : null}
+      </Button>
+      <Button
+        type="button"
+        size="sm"
+        variant={hasPreview && !hasGrade ? 'primary' : 'outline'}
+        onClick={() => void handleSubmit()}
+        disabled={!canRun}
+        className="h-8 rounded-lg px-3 shadow-none"
+      >
+        {submitting ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
+        Submit
+      </Button>
+    </div>
+  );
+
+  const brief = (
+    <BriefBody
+      simulation={simulation}
+      bootstrap={bootstrap}
+      submitResult={submitResult}
+      gradeStale={gradeStale}
+      tab={railTab}
+      onTabChange={setRailTab}
+    />
+  );
+
   return (
-    <div className={cn('relative flex min-h-full flex-1 flex-col bg-bg', embedded && 'bg-transparent')}>
-      {!embedded ? (
-        <div className="sticky top-0 z-20 border-b border-line bg-bg-elev/95 backdrop-blur-sm dark:border-line-2">
-          <div className={cn(platformContainerClass, 'flex flex-wrap items-center gap-x-4 gap-y-3 py-3')}>
-            <div className="flex min-w-0 flex-1 items-center gap-2 text-sm">
-              <Link
-                href="/simulations"
-                className="inline-flex items-center gap-1.5 text-ink-3 transition-colors hover:text-ink"
-              >
-                <ArrowLeft className="size-4" />
-                Simulations
-              </Link>
-              <ChevronRight className="size-3.5 shrink-0 text-ink-3" />
-              <div className="min-w-0 truncate">
-                <span className="font-medium text-ink">{simulation.title}</span>
-                <span className="mx-2 text-ink-3">·</span>
-                <span className="text-ink-3">Prompt Lab</span>
+    <div
+      className={cn(
+        'flex min-h-0 flex-col bg-white dark:bg-bg',
+        embedded ? 'min-h-[640px]' : 'h-[calc(100dvh-50px)] flex-1',
+      )}
+    >
+      <div
+        className={cn(
+          'flex min-h-0 flex-1 flex-col',
+          !embedded && cn(platformContainerClass, 'py-4 sm:py-5'),
+        )}
+      >
+        <div
+          className={cn(
+            'flex min-h-0 flex-1 flex-col overflow-hidden border border-line bg-bg-elev shadow-card dark:border-line-2 dark:bg-bg',
+            embedded ? 'rounded-xl' : 'rounded-2xl',
+          )}
+        >
+          <header className="relative shrink-0 border-b border-line bg-gradient-to-r from-primary-soft via-primary-soft/35 to-bg-elev after:pointer-events-none after:absolute after:inset-x-0 after:top-0 after:h-px after:bg-gradient-to-r after:from-primary/50 after:via-primary/20 after:to-transparent dark:border-line-2 dark:from-primary/15 dark:via-primary/[0.06] dark:to-bg">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 sm:px-5">
+              <div className="flex min-w-0 flex-1 items-center gap-2">
+                {!embedded ? (
+                  <Link
+                    href="/simulations"
+                    className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-ink-3 transition-colors hover:bg-bg-elev/80 hover:text-ink"
+                    aria-label="All simulations"
+                  >
+                    <ArrowLeft className="size-4" />
+                  </Link>
+                ) : (
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                    <FileJson className="size-4" />
+                  </span>
+                )}
+                <div className="min-w-0">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <h1 className="truncate text-sm font-semibold text-ink">{simulation.title}</h1>
+                    <span
+                      className={cn(
+                        'hidden capitalize sm:inline text-[11px] font-medium',
+                        difficultyClass(simulation.difficulty),
+                      )}
+                    >
+                      {simulation.difficulty}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-ink-3">
+                    Prompt Lab
+                    <span className="mx-1.5 text-line-2">·</span>
+                    {phaseLabel}
+                    {runResult?.model ? (
+                      <>
+                        <span className="mx-1.5 text-line-2">·</span>
+                        <span className="font-mono">{runResult.model}</span>
+                      </>
+                    ) : null}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
+                {!embedded ? (
+                  <button
+                    type="button"
+                    onClick={() => setBriefOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-ink-2 hover:bg-bg-elev/80 hover:text-ink lg:hidden"
+                  >
+                    <PanelLeft className="size-3.5" />
+                    Brief
+                  </button>
+                ) : null}
+                {actions}
               </div>
             </div>
+          </header>
 
-            {runResult?.model ? (
-              <span className="hidden rounded-md border border-line bg-bg-soft px-2.5 py-1 font-mono text-[11px] text-ink-2 lg:inline dark:border-line-2">
-                {runResult.model}
-              </span>
-            ) : null}
-
-            <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
+          {error ? (
+            <div
+              className="flex shrink-0 items-start justify-between gap-3 border-b border-bad/20 bg-bad-soft px-4 py-2.5 text-sm text-bad sm:px-5"
+              role="alert"
+            >
+              <p>{error}</p>
               <button
                 type="button"
-                onClick={() => void handleRun()}
-                disabled={running || submitting || !prompt.trim()}
-                className={buttonClasses({
-                  variant: 'outline',
-                  size: 'sm',
-                  className: 'h-9 flex-1 rounded-lg px-4 shadow-none sm:flex-none',
-                })}
+                onClick={() => setError(null)}
+                className="rounded-md p-0.5 hover:bg-bad/10"
+                aria-label="Dismiss error"
               >
-                {running ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-                Run
-              </button>
-              <button
-                type="button"
-                onClick={() => void handleSubmit()}
-                disabled={running || submitting || !prompt.trim()}
-                className={buttonClasses({
-                  size: 'sm',
-                  className: 'h-9 flex-1 rounded-lg px-4 shadow-none sm:flex-none',
-                })}
-              >
-                {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-                Submit
+                <X className="size-4" />
               </button>
             </div>
+          ) : null}
+
+          <div className="flex min-h-0 flex-1">
+            {!embedded ? (
+              <aside className="hidden w-[300px] shrink-0 flex-col border-r border-line lg:flex xl:w-[320px] dark:border-line-2">
+                {brief}
+              </aside>
+            ) : null}
+
+            {embedded ? (
+              <div className="flex min-h-0 w-full flex-col lg:flex-row">
+                <aside className="max-h-[280px] shrink-0 border-b border-line lg:max-h-none lg:w-[280px] lg:border-b-0 lg:border-r dark:border-line-2">
+                  {brief}
+                </aside>
+                <Workbench
+                  prompt={prompt}
+                  onPromptChange={(value) => {
+                    setPrompt(value);
+                  }}
+                  textareaRef={textareaRef}
+                  starters={bootstrap?.starterPrompts ?? []}
+                  selectedStarterId={selectedStarterId}
+                  running={running}
+                  runResult={runResult}
+                  structural={structural}
+                  promptDirty={promptDirty}
+                  copied={copied}
+                  onCopy={() => void copyOutput()}
+                />
+              </div>
+            ) : (
+              <Workbench
+                prompt={prompt}
+                onPromptChange={setPrompt}
+                textareaRef={textareaRef}
+                starters={bootstrap?.starterPrompts ?? []}
+                selectedStarterId={selectedStarterId}
+                running={running}
+                runResult={runResult}
+                structural={structural}
+                promptDirty={promptDirty}
+                copied={copied}
+                onCopy={() => void copyOutput()}
+              />
+            )}
           </div>
+        </div>
+      </div>
+
+      {briefOpen && !embedded ? (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-ink/25"
+            aria-label="Close brief"
+            onClick={() => setBriefOpen(false)}
+          />
+          <aside className="absolute inset-y-0 left-0 flex w-[min(100%,320px)] flex-col bg-bg-elev shadow-elevated dark:bg-bg">
+            <div className="flex items-center justify-between border-b border-line px-3 py-2 dark:border-line-2">
+              <span className="text-sm font-medium text-ink">Brief</span>
+              <button
+                type="button"
+                onClick={() => setBriefOpen(false)}
+                className="rounded-lg p-1.5 text-ink-3 hover:bg-bg-soft hover:text-ink"
+                aria-label="Close brief"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            {brief}
+          </aside>
         </div>
       ) : null}
+    </div>
+  );
+}
 
-      <div className={cn(embedded ? 'p-4 sm:p-5' : platformContainerClass, !embedded && 'py-6')}>
-        {embedded ? (
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-line/70 pb-4 dark:border-line-2">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Prompt Lab</p>
-              <h3 className="mt-1 text-lg font-semibold text-ink">{simulation.title}</h3>
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => void handleRun()}
-                disabled={running || submitting || !prompt.trim()}
-                className={buttonClasses({
-                  variant: 'outline',
-                  size: 'sm',
-                  className: 'h-9 rounded-lg px-4 shadow-none',
-                })}
-              >
-                {running ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-                Run
-              </button>
-              <button
-                type="button"
-                onClick={() => void handleSubmit()}
-                disabled={running || submitting || !prompt.trim()}
-                className={buttonClasses({
-                  size: 'sm',
-                  className: 'h-9 rounded-lg px-4 shadow-none',
-                })}
-              >
-                {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-                Submit
-              </button>
-            </div>
-          </div>
-        ) : null}
-        {/* Progress */}
-        <div className="mb-6 flex items-center gap-2 sm:gap-0">
-          {STEPS.map((label, index) => {
-            const done = index < activeStep;
-            const current = index === activeStep;
-            return (
-              <div key={label} className="flex min-w-0 flex-1 items-center">
-                <div className="flex min-w-0 items-center gap-2">
-                  <span
+function Workbench({
+  prompt,
+  onPromptChange,
+  textareaRef,
+  starters,
+  selectedStarterId,
+  running,
+  runResult,
+  structural,
+  promptDirty,
+  copied,
+  onCopy,
+}: {
+  prompt: string;
+  onPromptChange: (value: string) => void;
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
+  starters: Array<{ id: string; label: string; prompt: string }>;
+  selectedStarterId: string | null;
+  running: boolean;
+  runResult: PromptLabRunResult | null;
+  structural: Array<{ label: string; state: 'idle' | 'ok' | 'fail' }>;
+  promptDirty: boolean;
+  copied: boolean;
+  onCopy: () => void;
+}) {
+  const displayed = runResult ? prettyOutput(runResult.output, runResult.structural?.validJson) : null;
+
+  return (
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col md:flex-row">
+      <section className="flex min-h-0 min-w-0 flex-1 flex-col border-b border-line md:border-b-0 md:border-r dark:border-line-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line px-3 py-2 dark:border-line-2">
+          <span className="text-xs font-medium text-ink-2">Prompt</span>
+          {starters.length > 0 ? (
+            <div className="ml-auto flex flex-wrap gap-1">
+              {starters.map((starter) => {
+                const selected = starter.id === selectedStarterId;
+                return (
+                  <button
+                    key={starter.id}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => onPromptChange(starter.prompt)}
                     className={cn(
-                      'grid size-6 shrink-0 place-items-center rounded-full text-xs font-semibold',
-                      done && 'bg-primary text-primary-ink',
-                      current && !done && 'border-2 border-primary text-primary',
-                      !done && !current && 'border border-line text-ink-3 dark:border-line-2',
+                      'rounded-md px-2 py-1 text-[11px] font-medium transition-colors',
+                      selected
+                        ? 'bg-primary-soft text-primary'
+                        : 'text-ink-3 hover:bg-bg-soft hover:text-ink',
                     )}
                   >
-                    {done ? <CheckCircle2 className="size-3.5" /> : index + 1}
-                  </span>
-                  <span
-                    className={cn(
-                      'hidden truncate text-sm sm:inline',
-                      current || done ? 'font-medium text-ink' : 'text-ink-3',
-                    )}
-                  >
-                    {label}
-                  </span>
-                </div>
-                {index < STEPS.length - 1 ? (
-                  <div
-                    className={cn(
-                      'mx-2 hidden h-px flex-1 sm:block',
-                      index < activeStep ? 'bg-primary/40' : 'bg-line dark:bg-line-2',
-                    )}
-                  />
-                ) : null}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Context */}
-        <div className="mb-5 grid gap-4 lg:grid-cols-2">
-          <div className="rounded-xl border border-line bg-bg-elev p-5 dark:border-line-2">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink-3">
-              <Sparkles className="size-3.5 text-primary" />
-              Mission
+                    {starter.label}
+                  </button>
+                );
+              })}
             </div>
-            <p className="mt-3 text-sm leading-6 text-ink-2">{simulation.taskPrompt}</p>
-          </div>
-          <div className="rounded-xl border border-line bg-bg-elev p-5 dark:border-line-2">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink-3">
-              <Braces className="size-3.5 text-primary" />
-              Fixed input
-            </div>
-            <pre className="mt-3 max-h-32 overflow-auto whitespace-pre-wrap rounded-lg bg-bg-soft px-3 py-3 font-mono text-xs leading-6 text-ink-2 dark:bg-bg-soft/50">
-              {simulation.sampleInput}
-            </pre>
-          </div>
+          ) : null}
         </div>
+        <textarea
+          ref={textareaRef}
+          value={prompt}
+          onChange={(e) => onPromptChange(e.target.value)}
+          spellCheck={false}
+          className="min-h-[240px] flex-1 resize-none bg-transparent px-4 py-3 font-mono text-[13px] leading-6 text-ink outline-none placeholder:text-ink-3 md:min-h-0"
+          placeholder="Instruct the model how to handle the fixed input…"
+          aria-label="Your prompt"
+        />
+        <div className="flex shrink-0 items-center justify-between gap-3 border-t border-line px-4 py-2 text-[11px] text-ink-3 dark:border-line-2">
+          <span className="tabular-nums">{prompt.length} characters</span>
+          {runResult?.hints.length ? (
+            <span className="truncate text-ink-2">{runResult.hints[0]}</span>
+          ) : (
+            <span>Edit the prompt, then run a live preview</span>
+          )}
+        </div>
+      </section>
 
-        {bootstrap?.starterPrompts ? (
-          <div className="mb-5 flex flex-wrap items-center gap-2">
-            <span className="mr-1 text-xs font-medium text-ink-3">Starters</span>
-            {bootstrap.starterPrompts.map((starter) => (
-              <button
-                key={starter.id}
-                type="button"
-                onClick={() => setPrompt(starter.prompt)}
-                className="rounded-lg border border-line bg-bg-elev px-3 py-1.5 text-xs font-medium text-ink-2 transition hover:border-primary/30 hover:text-primary dark:border-line-2"
-              >
-                {starter.label}
-              </button>
+      <section className="relative flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line px-3 py-2 dark:border-line-2">
+          <span className="text-xs font-medium text-ink-2">Response</span>
+          <div className="flex flex-wrap gap-1">
+            {structural.map((check) => (
+              <CheckChip key={check.label} label={check.label} state={check.state} />
             ))}
           </div>
-        ) : null}
-
-        {/* Workbench */}
-        <div className="overflow-hidden rounded-xl border border-line bg-bg-elev dark:border-line-2">
-          <div className="flex items-center justify-between border-b border-line px-4 py-3 dark:border-line-2">
-            <h2 className="text-sm font-semibold text-ink">Workbench</h2>
+          <div className="ml-auto flex items-center gap-2">
             {runResult ? (
-              <span className="text-xs text-ink-3">
-                Structural score ·{' '}
-                <span className="font-medium tabular-nums text-primary">{runResult.qualityScore}%</span>
+              <span className="tabular-nums text-[11px] font-medium text-ink-3">
+                {runResult.qualityScore}%
+                {runResult.usage ? (
+                  <>
+                    {' '}
+                    · {formatTokens(runResult.usage.inputTokens)}→
+                    {formatTokens(runResult.usage.outputTokens)}
+                  </>
+                ) : null}
               </span>
             ) : null}
-          </div>
-
-          <div className="grid lg:grid-cols-2 lg:divide-x lg:divide-line dark:lg:divide-line-2">
-            <div className="flex min-h-[400px] flex-col">
-              <div className="border-b border-line px-4 py-2 dark:border-line-2">
-                <span className="text-xs font-medium text-ink-3">Your prompt</span>
-              </div>
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                spellCheck={false}
-                className="min-h-[320px] flex-1 resize-none bg-transparent px-4 py-4 font-mono text-sm leading-7 text-ink outline-none placeholder:text-ink-3"
-                placeholder="Instruct the model how to handle the fixed input..."
-              />
-              {runResult?.hints.length ? (
-                <div className="border-t border-line bg-bg-soft/60 px-4 py-3 dark:border-line-2 dark:bg-bg-soft/30">
-                  <ul className="space-y-1 text-xs leading-5 text-ink-2">
-                    {runResult.hints.slice(0, 3).map((hint) => (
-                      <li key={hint}>{hint}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-            </div>
-
-            <div className="flex min-h-[400px] flex-col border-t border-line lg:border-t-0 dark:border-line-2">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-2 dark:border-line-2">
-                <span className="text-xs font-medium text-ink-3">Model response</span>
-                {structuralChecks.length > 0 ? (
-                  <div className="flex flex-wrap gap-1.5">
-                    {structuralChecks.map((check) => (
-                      <span
-                        key={check.label}
-                        className={cn(
-                          'rounded-md px-2 py-0.5 text-[10px] font-medium',
-                          check.ok ? 'bg-good-soft text-good' : 'bg-warn-soft text-warn',
-                        )}
-                      >
-                        {check.label}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-              <div className="flex-1 overflow-auto px-4 py-4">
-                {runResult ? (
-                  <pre className="whitespace-pre-wrap font-mono text-sm leading-7 text-ink">{runResult.output}</pre>
-                ) : (
-                  <p className="text-sm leading-6 text-ink-3">
-                    Run your prompt to preview the live model response before submitting.
-                  </p>
-                )}
-              </div>
-            </div>
+            {runResult ? (
+              <button
+                type="button"
+                onClick={onCopy}
+                className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-3 hover:bg-bg-soft hover:text-ink"
+              >
+                {copied ? <Check className="size-3.5 text-good" /> : <Copy className="size-3.5" />}
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+            ) : null}
           </div>
         </div>
 
-        {/* Evaluation */}
-        {submitResult ? (
-          <section className="mt-6 rounded-xl border border-line bg-bg-elev p-5 dark:border-line-2">
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span
-                className={cn(
-                  'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold',
-                  submitResult.passed ? 'bg-good-soft text-good' : 'bg-warn-soft text-warn',
-                )}
-              >
-                {submitResult.passed ? 'Passed' : 'Needs improvement'}
-              </span>
-              <span className="text-lg font-semibold tabular-nums text-ink">{submitResult.score}%</span>
+        <div className="relative min-h-[240px] flex-1 md:min-h-0">
+          <div className="h-full overflow-auto px-4 py-3">
+            {displayed ? (
+              <>
+                {promptDirty ? (
+                  <p className="mb-3 rounded-md bg-bg-soft px-2.5 py-1.5 text-[11px] text-ink-3">
+                    Prompt changed — run again to refresh this output.
+                  </p>
+                ) : null}
+                <pre className="whitespace-pre-wrap font-mono text-[13px] leading-6 text-ink">{displayed}</pre>
+              </>
+            ) : (
+              <div className="flex h-full min-h-[200px] flex-col items-center justify-center px-6 text-center">
+                <ClipboardList className="size-8 text-ink-3/80" />
+                <p className="mt-3 text-sm font-medium text-ink">No response yet</p>
+                <p className="mt-1 max-w-xs text-xs leading-5 text-ink-3">
+                  Run the prompt to preview the live model output before you submit for a rubric grade.
+                </p>
+              </div>
+            )}
+          </div>
+          {running ? (
+            <div
+              className="absolute inset-0 flex items-center justify-center bg-bg-elev/80 backdrop-blur-[1px] dark:bg-bg/80"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="flex items-center gap-2 text-sm text-ink-2">
+                <Loader2 className="size-4 animate-spin text-primary" />
+                Running model…
+              </div>
             </div>
-            <p className="mt-3 text-sm leading-6 text-ink-2">{submitResult.feedback}</p>
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
-              {submitResult.rubricBreakdown.map((item) => (
-                <RubricCard
-                  key={item.criterion}
-                  label={item.criterion}
-                  score={item.score}
-                  maxScore={item.maxScore}
-                  note={item.note}
-                />
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        {error ? (
-          <p className="mt-4 rounded-lg border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad" role="alert">
-            {error}
-          </p>
-        ) : null}
-      </div>
+          ) : null}
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,217 +1,196 @@
-import type { RagPipelineRunResult, SimulationSubmitResult } from './simulation.types';
+import type { RagChunkSize, RagPipelineBootstrap } from './simulation.types';
+import { lexicalOverlap } from './vectorPlayground.engine';
 
-const SOURCE_DOCUMENT = `Our store policy covers returns and subscriptions.
-
-We offer a 30-day return window for most physical products in original condition.
-
-Opened software licenses are non-refundable once downloaded. Contact support before purchase if unsure.
-
-Hardware must be returned in original packaging within 14 days of delivery.
-
-Subscription plans can be cancelled anytime; the current billing period is not refunded.`;
-
-const DEFAULT_QUERY = 'Can I get a refund on downloaded software?';
-
-type ChunkSize = 'small' | 'medium' | 'large';
-
-interface RagChunk {
+export interface RagSection {
   id: string;
   text: string;
-  baseScore: number;
 }
 
-const SMALL_CHUNKS: RagChunk[] = [
-  { id: 'intro', text: 'Our store policy covers returns and subscriptions.', baseScore: 18 },
+/** Atomic passages. The second line paraphrases the user question but states the wrong policy. */
+export const RAG_SECTIONS: RagSection[] = [
   {
-    id: 'physical-30',
-    text: 'We offer a 30-day return window for most physical products in original condition.',
-    baseScore: 62,
+    id: 'intro',
+    text: 'Our store policy covers returns, refunds, and subscriptions.',
   },
   {
-    id: 'software',
+    id: 'general-refund',
+    text: 'Customers asking about a refund on downloaded software usually hear about our 30-day refund window first.',
+  },
+  {
+    id: 'software-exception',
     text: 'Opened software licenses are non-refundable once downloaded. Contact support before purchase if unsure.',
-    baseScore: 88,
   },
   {
-    id: 'hardware-14',
-    text: 'Hardware must be returned in original packaging within 14 days of delivery.',
-    baseScore: 34,
+    id: 'hardware',
+    text: 'Hardware has a 14-day return window and must be sent back in original packaging.',
   },
   {
     id: 'subscription',
     text: 'Subscription plans can be cancelled anytime; the current billing period is not refunded.',
-    baseScore: 28,
   },
 ];
 
-const MEDIUM_CHUNKS: RagChunk[] = [
-  {
-    id: 'medium-policy',
-    text: `${SMALL_CHUNKS[0].text} ${SMALL_CHUNKS[1].text}`,
-    baseScore: 70,
-  },
-  {
-    id: 'medium-products',
-    text: `${SMALL_CHUNKS[2].text} ${SMALL_CHUNKS[3].text}`,
-    baseScore: 66,
-  },
-  {
-    id: 'medium-subscription',
-    text: SMALL_CHUNKS[4].text,
-    baseScore: 24,
-  },
-];
+export const DEFAULT_RAG_QUERY = 'Can I get a refund on downloaded software?';
 
-const LARGE_CHUNKS: RagChunk[] = [{ id: 'full-policy', text: SOURCE_DOCUMENT.trim(), baseScore: 58 }];
+const GOLD_PATTERN = /non-refundable/i;
+const GOLD_TOPIC = /software|downloaded/i;
+const CONFLICT_PATTERN = /30-day refund|30-day return|within 30 days/i;
 
-function chunksForSize(chunkSize: ChunkSize): RagChunk[] {
-  switch (chunkSize) {
-    case 'small':
-      return SMALL_CHUNKS;
-    case 'medium':
-      return MEDIUM_CHUNKS;
-    default:
-      return LARGE_CHUNKS;
+export function sourceDocument(): string {
+  return RAG_SECTIONS.map((section) => section.text).join('\n\n');
+}
+
+export function isGoldText(text: string): boolean {
+  return GOLD_PATTERN.test(text) && GOLD_TOPIC.test(text);
+}
+
+export function isConflictText(text: string): boolean {
+  return CONFLICT_PATTERN.test(text) && !isGoldText(text);
+}
+
+export interface RagChunk {
+  id: string;
+  text: string;
+  sectionIds: string[];
+  gold: boolean;
+  conflict: boolean;
+}
+
+export function chunkDocument(chunkSize: RagChunkSize): RagChunk[] {
+  if (chunkSize === 'small') {
+    return RAG_SECTIONS.map((section) => ({
+      id: section.id,
+      text: section.text,
+      sectionIds: [section.id],
+      gold: isGoldText(section.text),
+      conflict: isConflictText(section.text),
+    }));
   }
+
+  if (chunkSize === 'medium') {
+    const groups = [
+      [RAG_SECTIONS[0], RAG_SECTIONS[1]],
+      [RAG_SECTIONS[2], RAG_SECTIONS[3]],
+      [RAG_SECTIONS[4]],
+    ];
+    return groups.map((group, index) => {
+      const text = group.map((section) => section.text).join(' ');
+      return {
+        id: `medium-${index}`,
+        text,
+        sectionIds: group.map((section) => section.id),
+        gold: isGoldText(text),
+        conflict: isConflictText(text),
+      };
+    });
+  }
+
+  const text = sourceDocument();
+  return [
+    {
+      id: 'full-policy',
+      text,
+      sectionIds: RAG_SECTIONS.map((section) => section.id),
+      gold: isGoldText(text),
+      conflict: true,
+    },
+  ];
 }
 
-function applyRerank(chunks: Array<RagChunk & { score: number }>): Array<RagChunk & { score: number }> {
-  return [...chunks]
-    .map((chunk) => {
-      const text = chunk.text.toLowerCase();
-      const boost =
-        text.includes('software') && text.includes('non-refundable') ? 18 : text.includes('software') ? 8 : 0;
-      return { ...chunk, score: chunk.score + boost };
-    })
-    .sort((a, b) => b.score - a.score);
+export function rerankBlend(cosine: number, lexicalScore: number, text: string): number {
+  const lexical = lexicalScore / 100;
+  let score = 0.55 * cosine + 0.45 * lexical;
+  if (isGoldText(text)) score += 0.24;
+  return score;
 }
 
-function rankChunks(chunkSize: ChunkSize, topK: number, rerank: boolean) {
-  const ranked = chunksForSize(chunkSize).map((chunk) => ({ ...chunk, score: chunk.baseScore }));
-  const sorted = rerank ? applyRerank(ranked) : [...ranked].sort((a, b) => b.score - a.score);
-  const retrieved = sorted.slice(0, Math.min(5, Math.max(1, topK)));
-  return { sorted, retrieved };
-}
-
-function mockAnswer(topText: string, grounded: boolean): string {
+export function mockAnswer(retrieved: RagChunk[], grounded: boolean): string {
   if (grounded) {
     return 'Opened software licenses are non-refundable once downloaded.';
   }
-  if (/30-day|physical products/i.test(topText)) {
+  const top = retrieved[0]?.text ?? '';
+  if (CONFLICT_PATTERN.test(top) || retrieved.some((chunk) => chunk.conflict)) {
     return 'Most products can be returned within 30 days, including downloaded software.';
   }
-  if (/hardware/i.test(topText)) {
+  if (/hardware/i.test(top)) {
     return 'Hardware can be returned within 14 days; software follows the same window.';
   }
   return 'Refund eligibility depends on the product category. Contact support for software returns.';
 }
 
-function evaluateRun(chunkSize: ChunkSize, topK: number, rerank: boolean): RagPipelineRunResult {
-  const { sorted, retrieved } = rankChunks(chunkSize, topK, rerank);
-  const top = retrieved[0];
-  const grounded =
-    Boolean(top?.text.toLowerCase().includes('non-refundable')) &&
-    top.text.toLowerCase().includes('software');
+export function evaluateGrounding(retrieved: Array<{ text: string; gold?: boolean; conflict?: boolean }>): {
+  goldInContext: boolean;
+  contextConflict: boolean;
+  grounded: boolean;
+  evidencePrecision: number;
+} {
+  const goldInContext = retrieved.some((chunk) => chunk.gold ?? isGoldText(chunk.text));
+  const contextConflict = retrieved.some((chunk) => chunk.conflict ?? isConflictText(chunk.text));
+  const grounded = goldInContext && !contextConflict;
+  const retrievedChars = retrieved.reduce((sum, chunk) => sum + chunk.text.length, 0) || 1;
+  const goldChars = retrieved
+    .filter((chunk) => chunk.gold ?? isGoldText(chunk.text))
+    .reduce((sum, chunk) => sum + (isGoldText(chunk.text) && !isConflictText(chunk.text) ? chunk.text.length : goldSpanLength(chunk.text)), 0);
+  const evidencePrecision = Math.max(0, Math.min(100, Math.round((goldChars / retrievedChars) * 100)));
+  return { goldInContext, contextConflict, grounded, evidencePrecision };
+}
 
+function goldSpanLength(text: string): number {
+  const match = text.match(/Opened software licenses are non-refundable once downloaded\./i);
+  return match?.[0].length ?? (isGoldText(text) ? Math.min(text.length, 88) : 0);
+}
+
+export function buildHints(input: {
+  chunkSize: RagChunkSize;
+  topK: number;
+  rerank: boolean;
+  grounded: boolean;
+  goldInContext: boolean;
+  contextConflict: boolean;
+  goldRank: number | null;
+  cosineTopId?: string;
+  rerankMoved?: boolean;
+}): string[] {
   const hints: string[] = [];
-  if (!rerank && chunkSize === 'medium') {
-    hints.push('Medium chunks merge software with other lines — try enabling rerank.');
+  if (input.chunkSize === 'large') {
+    hints.push('One giant chunk mixes the 30-day window with the software exception — the model blends both.');
   }
-  if (topK > 3) {
-    hints.push('A large top-k can dilute the best passage with generic return policy text.');
+  if (!input.rerank && input.goldRank !== 1) {
+    hints.push('The general refund FAQ paraphrases the question. Turn on rerank so the exception can surface.');
   }
-  if (chunkSize === 'large') {
-    hints.push('One giant chunk mixes 30-day physical returns with non-refundable software.');
+  if (input.rerankMoved) {
+    hints.push('Rerank mixed cosine with lexical overlap and boosted the exception passage.');
   }
-  if (!grounded && retrieved.some((chunk) => chunk.text.toLowerCase().includes('non-refundable'))) {
-    hints.push('The right passage is retrieved but not ranked first — adjust rerank or top-k.');
+  if (input.topK > 1 && input.contextConflict) {
+    hints.push('Extra retrieved chunks stuffed the 30-day policy into context and diluted the exception.');
   }
-
-  return {
-    config: { chunkSize, topK, rerank },
-    chunks: sorted.map((chunk) => ({
-      id: chunk.id,
-      text: chunk.text,
-      score: chunk.score,
-      retrieved: retrieved.some((item) => item.id === chunk.id),
-    })),
-    retrievedContext: retrieved.map((chunk) => chunk.text).join('\n\n'),
-    answer: mockAnswer(top?.text ?? '', grounded),
-    grounded,
-    hints,
-    defaultQuery: DEFAULT_QUERY,
-  };
+  if (!input.goldInContext) {
+    hints.push('The non-refundable software line never entered the context window.');
+  }
+  if (input.grounded) {
+    hints.push('Context contains the exception and not the conflicting 30-day rule — the answer stays grounded.');
+  }
+  return hints;
 }
 
-function scoreConfig(chunkSize: ChunkSize, topK: number, rerank: boolean, grounded: boolean): number {
-  let score = grounded ? 78 : 35;
-  if (rerank) score += 10;
-  if (chunkSize === 'small' || chunkSize === 'medium') score += 6;
-  if (topK <= 3) score += 6;
-  if (chunkSize === 'large') score -= 12;
-  if (topK > 3) score -= 10;
-  if (!rerank) score -= 8;
-  return Math.max(0, Math.min(100, score));
-}
-
-export function getRagPipelineBootstrap() {
+export function getRagPipelineBootstrap(): RagPipelineBootstrap {
   return {
-    defaultQuery: DEFAULT_QUERY,
-    sourcePreview: SOURCE_DOCUMENT.trim(),
+    defaultQuery: DEFAULT_RAG_QUERY,
+    sourcePreview: sourceDocument(),
+    sections: RAG_SECTIONS,
     chunkSizeOptions: [
-      { value: 'small' as const, label: 'Small (~1 sentence)', chars: 120 },
-      { value: 'medium' as const, label: 'Medium (~2 sentences)', chars: 260 },
-      { value: 'large' as const, label: 'Large (full document)', chars: SOURCE_DOCUMENT.length },
+      { value: 'small', label: 'Sentence', chars: 120 },
+      { value: 'medium', label: 'Paired', chars: 260 },
+      { value: 'large', label: 'Full doc', chars: sourceDocument().length },
     ],
     topKRange: { min: 1, max: 5, default: 1 },
-    defaultConfig: { chunkSize: 'medium' as const, topK: 1, rerank: false },
+    defaultConfig: { chunkSize: 'medium', topK: 1, rerank: false },
+    sampleQueries: [
+      DEFAULT_RAG_QUERY,
+      'What is the return window for hardware?',
+      'Can I cancel my subscription anytime?',
+    ],
   };
 }
 
-export function runRagPipeline(
-  query: string,
-  chunkSize: ChunkSize = 'medium',
-  topK = 1,
-  rerank = false,
-): RagPipelineRunResult {
-  void query;
-  return evaluateRun(chunkSize, topK, rerank);
-}
-
-export function submitRagPipeline(
-  query: string,
-  chunkSize: ChunkSize,
-  topK: number,
-  rerank: boolean,
-): SimulationSubmitResult {
-  void query;
-  const run = evaluateRun(chunkSize, topK, rerank);
-  const passed = run.grounded && rerank && topK <= 3 && chunkSize !== 'large';
-  const score = scoreConfig(chunkSize, topK, rerank, run.grounded);
-
-  const feedback = passed
-    ? 'Grounded answer. Reranking surfaced the software policy chunk and the model stayed within retrieved context.'
-    : !rerank && chunkSize === 'medium'
-      ? 'The pipeline retrieved the wrong leading chunk. Enable rerank so the software passage ranks first.'
-      : chunkSize === 'large'
-        ? 'Oversized chunks blend conflicting policies — the mock model over-generalized the 30-day rule to software.'
-        : !run.grounded
-          ? 'Answer is not grounded. Tune chunk size, top-k, and rerank until the software non-refund line leads retrieval.'
-          : 'Close, but tighten top-k (≤3) and avoid full-document chunking for sharper retrieval.';
-
-  return {
-    passed,
-    score,
-    feedback,
-    output: JSON.stringify(
-      {
-        answer: run.answer,
-        grounded: run.grounded,
-        config: run.config,
-        retrievedContext: run.retrievedContext,
-      },
-      null,
-      2,
-    ),
-  };
-}
+export { lexicalOverlap };

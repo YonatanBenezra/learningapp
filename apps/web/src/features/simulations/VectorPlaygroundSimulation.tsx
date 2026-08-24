@@ -1,19 +1,19 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
-  CheckCircle2,
-  ChevronDown,
-  Circle,
+  Layers,
   Loader2,
   Search,
   Send,
+  X,
 } from 'lucide-react';
 import { ApiError } from '@/src/infrastructure/apiClient';
-import { buttonClasses } from '@/src/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 import { cn } from '@/src/lib/utils';
+import { difficultyClass } from '@/src/features/platform/problemLabels';
 import { platformContainerClass } from '@/src/features/platform/platformLayout';
 import {
   runSimulation,
@@ -24,19 +24,76 @@ import {
   type VectorPlaygroundSubmitResult,
 } from './simulationsApi';
 
-function ScoreMeter({ value, active }: { value: number; active?: boolean }) {
+function useModLabel() {
+  const [mod, setMod] = useState<string | null>(null);
+  useEffect(() => {
+    setMod(/Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl');
+  }, []);
+  return mod;
+}
+
+function DualSignal({
+  cosine,
+  lexicalScore,
+  strong,
+}: {
+  cosine: number;
+  lexicalScore: number;
+  strong?: boolean;
+}) {
   return (
-    <div className="flex min-w-[120px] items-center gap-2">
-      <div className="h-2 w-20 overflow-hidden rounded-full bg-line dark:bg-line-2">
-        <div
-          className={cn('h-full rounded-full transition-all duration-500', active ? 'bg-primary' : 'bg-ink-3/40')}
-          style={{ width: `${Math.max(value, 6)}%` }}
-        />
+    <div className="mt-2 space-y-1">
+      <div className="flex items-center gap-2">
+        <span className="w-12 shrink-0 text-[11px] text-ink-3">cosine</span>
+        <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-line dark:bg-line-2">
+          <div
+            className={cn('h-full rounded-full', strong ? 'bg-primary' : 'bg-primary/45')}
+            style={{ width: `${Math.max(cosine * 100, 2)}%` }}
+          />
+        </div>
+        <span className="w-11 shrink-0 text-right font-mono text-[11px] tabular-nums text-ink-2">
+          {formatCosine(cosine)}
+        </span>
       </div>
-      <span className={cn('w-9 text-right tabular-nums text-sm font-medium', active ? 'text-primary' : 'text-ink-2')}>
-        {value}%
-      </span>
+      <div className="flex items-center gap-2">
+        <span className="w-12 shrink-0 text-[11px] text-ink-3">lexical</span>
+        <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-line dark:bg-line-2">
+          <div
+            className="h-full rounded-full bg-ink-3/50"
+            style={{ width: `${Math.max(lexicalScore, 2)}%` }}
+          />
+        </div>
+        <span className="w-11 shrink-0 text-right font-mono text-[11px] tabular-nums text-ink-2">
+          {lexicalScore}%
+        </span>
+      </div>
     </div>
+  );
+}
+
+function formatCosine(value: number) {
+  return value.toFixed(3);
+}
+
+function EmbeddingBadge({
+  provider,
+  fallback,
+}: {
+  provider?: 'openrouter' | 'local';
+  fallback?: boolean;
+}) {
+  const live = provider === 'openrouter' && !fallback;
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center rounded-md px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide',
+        live && 'bg-good-soft text-good',
+        !live && fallback && 'bg-warn-soft text-warn',
+        !live && !fallback && 'bg-bg-soft text-ink-2',
+      )}
+    >
+      {live ? 'Live' : 'Local'}
+    </span>
   );
 }
 
@@ -61,39 +118,56 @@ export function VectorPlaygroundSimulation({
 
   const [query, setQuery] = useState(bootstrap.defaultQuery);
   const [topK, setTopK] = useState(defaultTopK);
-  const [corpusOpen, setCorpusOpen] = useState(false);
   const [selectedChunkId, setSelectedChunkId] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [runResult, setRunResult] = useState<VectorPlaygroundRunResult | null>(null);
   const [submitResult, setSubmitResult] = useState<VectorPlaygroundSubmitResult | null>(null);
+  const [lastRunQuery, setLastRunQuery] = useState<string | null>(null);
+  const [lastRunTopK, setLastRunTopK] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [indexOpen, setIndexOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const mod = useModLabel();
 
-  const phase = submitResult ? 2 : runResult ? 1 : 0;
+  const busy = running || submitting;
+  const canSearch = Boolean(query.trim()) && !busy;
+  const rankingStale = Boolean(
+    runResult && (query !== lastRunQuery || topK !== lastRunTopK),
+  );
   const selectedMatch = runResult?.matches.find((match) => match.id === selectedChunkId) ?? null;
-  const selectedCorpus = bootstrap.chunks.find((chunk) => chunk.id === selectedChunkId);
+  const topMatch = runResult?.matches[0] ?? null;
+  const selectedStarter = bootstrap.sampleQueries.find((sample) => sample === query) ?? null;
+  const scoreById = useMemo(() => {
+    const map = new Map<string, VectorPlaygroundRunResult['index'][number]>();
+    const rows = runResult?.index ?? runResult?.matches ?? [];
+    rows.forEach((row) => {
+      map.set(row.id, row);
+    });
+    return map;
+  }, [runResult]);
 
-  async function handleRun() {
-    if (!query.trim()) return;
+  const handleRun = useCallback(async () => {
+    if (!query.trim() || running || submitting) return;
     setRunning(true);
     setError(null);
-    setSubmitResult(null);
     setSelectedChunkId(null);
     try {
       const result = await runSimulation(simulation.slug, { query, topK });
       if ('matches' in result) {
         setRunResult(result);
-        if (result.matches[0]) setSelectedChunkId(result.matches[0].id);
+        setLastRunQuery(query);
+        setLastRunTopK(topK);
       }
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Search failed.');
     } finally {
       setRunning(false);
     }
-  }
+  }, [query, topK, running, submitting, simulation.slug]);
 
-  async function handleSubmit() {
-    if (!query.trim() || !selectedChunkId) return;
+  const handleSubmit = useCallback(async () => {
+    if (!query.trim() || !selectedChunkId || running || submitting) return;
     setSubmitting(true);
     setError(null);
     try {
@@ -106,354 +180,562 @@ export function VectorPlaygroundSimulation({
     } finally {
       setSubmitting(false);
     }
-  }
+  }, [query, selectedChunkId, topK, running, submitting, simulation.slug]);
+
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if (event.repeat) return;
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        const target = event.target;
+        if (target instanceof HTMLElement && target.tagName === 'TEXTAREA') return;
+        event.preventDefault();
+        void handleRun();
+        return;
+      }
+      if (!runResult || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target;
+      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return;
+      const index = Number(event.key) - 1;
+      if (index >= 0 && index < runResult.matches.length) {
+        event.preventDefault();
+        setSelectedChunkId(runResult.matches[index].id);
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [handleRun, runResult]);
+
+  const indexPanel = (
+    <IndexPanel
+      chunks={bootstrap.chunks}
+      scoreById={scoreById}
+      selectedChunkId={selectedChunkId}
+      hasRanking={Boolean(runResult)}
+      onSelect={(id) => {
+        const row = scoreById.get(id);
+        if (!row?.retrieved) return;
+        setSelectedChunkId(id);
+        setIndexOpen(false);
+      }}
+    />
+  );
+
+  const rankingPanel = (
+    <RankingPanel
+      running={running}
+      runResult={runResult}
+      rankingStale={rankingStale}
+      selectedChunkId={selectedChunkId}
+      selectedMatch={selectedMatch}
+      topMatch={topMatch}
+      submitResult={submitResult}
+      submitting={submitting}
+      canSubmit={Boolean(selectedChunkId) && !busy && !rankingStale}
+      onSelect={setSelectedChunkId}
+      onSubmit={() => void handleSubmit()}
+      onOpenIndex={() => setIndexOpen(true)}
+      chunkCount={bootstrap.chunks.length}
+      embedded={embedded}
+    />
+  );
 
   return (
-    <div className={cn('flex min-h-full flex-1 flex-col bg-bg', embedded ? 'pb-6' : 'pb-24 lg:pb-8')}>
+    <div
+      className={cn(
+        'flex min-h-0 flex-col bg-white dark:bg-bg',
+        embedded ? 'min-h-[640px]' : 'h-[calc(100dvh-50px)] flex-1',
+      )}
+    >
       <div
         className={cn(
-          embedded ? 'w-full px-4 py-4 sm:px-5' : cn(platformContainerClass, 'mx-auto w-full max-w-4xl py-6 lg:py-8'),
+          'flex min-h-0 flex-1 flex-col',
+          embedded ? 'p-4 sm:p-5' : cn(platformContainerClass, 'py-4 sm:py-5'),
         )}
       >
-        {!embedded ? (
-          <Link
-            href="/simulations"
-            className="inline-flex items-center gap-1.5 text-sm text-ink-2 transition-colors hover:text-ink"
-          >
-            <ArrowLeft className="size-4" />
-            Back to simulations
-          </Link>
-        ) : null}
-
-        <header className={cn('border-b border-line pb-6 dark:border-line-2', embedded ? 'mt-0' : 'mt-5')}>
-          <p className="text-xs font-semibold uppercase tracking-wide text-primary">Vector Playground</p>
-          {!embedded ? (
-            <>
-              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{simulation.title}</h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-2">{simulation.description}</p>
-            </>
-          ) : (
-            <h3 className="mt-1 text-lg font-semibold text-ink">{simulation.title}</h3>
-          )}
-          <p className="mt-3 text-xs text-ink-3">
-            {bootstrap.chunks.length} documents in index · cosine similarity ranking
-            {runResult?.embeddingModel ? (
-              <>
-                {' '}
-                · <span className="font-mono">{runResult.embeddingModel}</span>
-              </>
+        <div className={cn('shrink-0', embedded ? 'mb-4' : 'mb-5')}>
+          <div className="flex items-start gap-3">
+            {!embedded ? (
+              <Link
+                href="/simulations"
+                className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-ink-3 transition-colors hover:bg-bg-soft hover:text-ink"
+                aria-label="All simulations"
+              >
+                <ArrowLeft className="size-4" />
+              </Link>
             ) : null}
-          </p>
-        </header>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-ink-3">
+                Vector Playground
+              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                <h1 className={cn('font-semibold tracking-tight text-ink', embedded ? 'text-xl' : 'text-[22px]')}>
+                  {simulation.title}
+                </h1>
+                <span className={cn('text-xs font-medium capitalize', difficultyClass(simulation.difficulty))}>
+                  {simulation.difficulty}
+                </span>
+              </div>
+              <p className="mt-1.5 max-w-3xl text-[15px] leading-6 text-ink-2">{simulation.taskPrompt}</p>
+            </div>
+            <p className="hidden shrink-0 pt-6 text-right text-xs text-ink-3 sm:block">
+              {bootstrap.chunks.length} docs
+              <span className="mx-1.5 text-line-2">·</span>
+              cosine vs lexical
+            </p>
+          </div>
+        </div>
 
-        {/* Progress — minimal, not a heavy stepper */}
-        <ol className="mt-6 flex flex-wrap gap-4 text-sm">
-          {[
-            { label: 'Search', done: phase >= 1, current: phase === 0 },
-            { label: 'Compare results', done: phase >= 1, current: phase === 1 && !submitResult },
-            { label: 'Submit answer', done: phase >= 2, current: phase === 2 },
-          ].map((step) => (
-            <li key={step.label} className="flex items-center gap-2">
-              {step.done ? (
-                <CheckCircle2 className="size-4 text-primary" />
-              ) : (
-                <Circle className={cn('size-4', step.current ? 'text-primary' : 'text-ink-3')} />
-              )}
-              <span className={cn(step.done || step.current ? 'font-medium text-ink' : 'text-ink-3')}>
-                {step.label}
-              </span>
-            </li>
-          ))}
-        </ol>
-
-        {/* Task */}
-        <section className="mt-6 rounded-2xl border border-line bg-bg-elev p-5 shadow-[var(--shadow-xs)] dark:border-line-2">
-          <h2 className="text-sm font-semibold text-ink">Your task</h2>
-          <p className="mt-2 text-sm leading-6 text-ink-2">{simulation.taskPrompt}</p>
-        </section>
-
-        {/* Search */}
-        <section className="mt-4 rounded-2xl border border-line bg-bg-elev p-5 shadow-[var(--shadow-xs)] dark:border-line-2">
-          <label htmlFor="vector-query" className="text-sm font-semibold text-ink">
-            Search query
-          </label>
-          <p className="mt-1 text-xs text-ink-3">Write a question, run search, then pick the best matching chunk.</p>
-          <textarea
-            id="vector-query"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            rows={3}
-            spellCheck={false}
-            className="mt-4 w-full resize-none rounded-xl border border-line-2 bg-bg px-4 py-3 text-sm leading-6 text-ink outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10 dark:border-line-2 dark:bg-bg-soft"
-            placeholder="e.g. How can I reduce hallucinations in a RAG assistant?"
-          />
-
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
-            <div className="flex flex-wrap items-center gap-4">
-              <label className="flex items-center gap-2 text-sm text-ink-2">
-                Results
-                <select
-                  value={topK}
-                  onChange={(e) => setTopK(Number(e.target.value))}
-                  className="rounded-lg border border-line-2 bg-bg px-3 py-1.5 text-sm text-ink outline-none focus:border-primary dark:border-line-2 dark:bg-bg-soft"
-                >
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-bg-elev shadow-card ring-1 ring-line/80 dark:bg-bg dark:ring-line-2">
+          <div className="relative shrink-0 px-4 py-4 sm:px-5">
+            <label htmlFor="vector-query" className="sr-only">
+              Search query
+            </label>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+              <div className="relative min-w-0 flex-1">
+                <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
+                <input
+                  ref={inputRef}
+                  id="vector-query"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  spellCheck={false}
+                  autoComplete="off"
+                  placeholder="Ask the index something to retrieve…"
+                  className="h-12 w-full rounded-xl bg-bg-soft pl-10 pr-4 text-[15px] text-ink outline-none transition placeholder:text-ink-3 focus:bg-bg-elev focus:ring-2 focus:ring-primary/20 dark:bg-bg-soft"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex rounded-xl bg-bg-soft p-1">
                   {topKOptions.map((value) => (
-                    <option key={value} value={value}>
-                      Top {value}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              {bootstrap.sampleQueries?.length ? (
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs text-ink-3">Examples</span>
-                  {bootstrap.sampleQueries.slice(0, 3).map((sample) => (
                     <button
-                      key={sample}
+                      key={value}
                       type="button"
-                      onClick={() => setQuery(sample)}
-                      className="rounded-lg border border-line px-2.5 py-1 text-xs text-ink-2 transition hover:border-primary/40 hover:text-primary dark:border-line-2"
+                      aria-pressed={topK === value}
+                      onClick={() => setTopK(value)}
+                      className={cn(
+                        'h-8 min-w-8 rounded-lg px-2.5 text-[13px] font-medium transition-colors',
+                        topK === value ? 'bg-primary text-primary-ink' : 'text-ink-3 hover:text-ink',
+                      )}
                     >
-                      {sample.length > 42 ? `${sample.slice(0, 42)}…` : sample}
+                      {value}
                     </button>
                   ))}
                 </div>
-              ) : null}
+                <span className="hidden text-xs text-ink-3 sm:inline">top-k</span>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => void handleRun()}
+                  disabled={!canSearch}
+                  className="h-12 rounded-xl px-4 shadow-none"
+                >
+                  {running ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
+                  Search
+                  {mod ? (
+                    <kbd className="ml-1 hidden rounded border border-current/20 px-1 font-mono text-[11px] font-normal opacity-70 md:inline">
+                      {mod}+Enter
+                    </kbd>
+                  ) : null}
+                </Button>
+              </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => void handleRun()}
-              disabled={running || submitting || !query.trim()}
-              className={buttonClasses({
-                size: 'sm',
-                className: 'hidden h-10 w-full rounded-xl px-5 shadow-none sm:inline-flex sm:w-auto',
-              })}
-            >
-              {running ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
-              Run search
-            </button>
-          </div>
-        </section>
-
-        {/* Corpus — collapsed by default, optional reference */}
-        <section className="mt-4 overflow-hidden rounded-2xl border border-line bg-bg-elev dark:border-line-2">
-          <button
-            type="button"
-            onClick={() => setCorpusOpen((open) => !open)}
-            className="flex w-full items-center justify-between px-5 py-4 text-left transition hover:bg-bg-soft/60 dark:hover:bg-bg-soft/20"
-          >
-            <div>
-              <p className="text-sm font-semibold text-ink">Knowledge base</p>
-              <p className="mt-0.5 text-xs text-ink-3">{bootstrap.chunks.length} indexed chunks — expand to read full text</p>
-            </div>
-            <ChevronDown className={cn('size-4 text-ink-3 transition', corpusOpen && 'rotate-180')} />
-          </button>
-          {corpusOpen ? (
-            <div className="border-t border-line px-5 py-4 dark:border-line-2">
-              <ul className="divide-y divide-line dark:divide-line-2">
-                {bootstrap.chunks.map((chunk, index) => (
-                  <li key={chunk.id} className="py-3 first:pt-0 last:pb-0">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <p className="text-sm font-medium text-ink">{chunk.source}</p>
-                      <span className="shrink-0 font-mono text-[10px] text-ink-3">doc-{String(index + 1).padStart(2, '0')}</span>
-                    </div>
-                    <p className="mt-1 text-sm leading-6 text-ink-2">{chunk.text}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </section>
-
-        {/* Results table */}
-        <section className="mt-6">
-          <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-            <div>
-              <h2 className="text-sm font-semibold text-ink">Search results</h2>
-              <p className="mt-0.5 text-xs text-ink-3">
-                {runResult
-                  ? `${runResult.matches.length} matches · select the chunk that best answers your query`
-                  : 'Run a search to see ranked matches'}
-              </p>
-            </div>
-            {runResult?.matches[0] ? (
-              <p className="text-xs text-ink-3">
-                Highest score:{' '}
-                <span className="font-semibold tabular-nums text-primary">{runResult.matches[0].score}%</span>
-              </p>
+            {bootstrap.sampleQueries.length > 0 ? (
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                <span className="mr-1 text-xs text-ink-3">Try</span>
+                {bootstrap.sampleQueries.map((sample) => {
+                  const active = selectedStarter === sample;
+                  return (
+                    <button
+                      key={sample}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => {
+                        setQuery(sample);
+                        inputRef.current?.focus();
+                      }}
+                      className={cn(
+                        'max-w-full truncate rounded-full px-2.5 py-1 text-xs font-medium transition-colors',
+                        active
+                          ? 'bg-primary-soft text-primary'
+                          : 'bg-bg-elev/80 text-ink-2 hover:bg-bg-elev hover:text-ink dark:bg-bg-soft',
+                      )}
+                    >
+                      {sample}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
+            {runResult ? (
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-3">
+                <EmbeddingBadge
+                  provider={runResult.embeddingProvider}
+                  fallback={runResult.embeddingFallback}
+                />
+                {runResult.embeddingModel ? (
+                  <span className="font-mono text-ink-2">{runResult.embeddingModel}</span>
+                ) : null}
+                {runResult.embeddingDimensions ? <span>{runResult.embeddingDimensions}d</span> : null}
+                {typeof runResult.latencyMs === 'number' ? (
+                  <span className="tabular-nums">{runResult.latencyMs}ms</span>
+                ) : null}
+              </div>
             ) : null}
           </div>
 
-          {!runResult ? (
-            <div className="rounded-2xl border border-dashed border-line-2 bg-bg-soft/50 px-6 py-14 text-center dark:bg-bg-lav/10">
-              <Search className="mx-auto size-8 text-ink-3" />
-              <p className="mt-3 text-sm font-medium text-ink">No results yet</p>
-              <p className="mt-1 text-sm text-ink-3">Enter a query above and run search to compare similarity scores.</p>
-            </div>
-          ) : (
-            <div className="overflow-hidden rounded-2xl border border-line bg-bg-elev shadow-[var(--shadow-xs)] dark:border-line-2">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[640px] text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-line bg-bg-soft/80 text-xs font-medium uppercase tracking-wide text-ink-3 dark:border-line-2 dark:bg-bg-soft/40">
-                      <th className="w-12 px-4 py-3" scope="col">
-                        Pick
-                      </th>
-                      <th className="w-14 px-2 py-3" scope="col">
-                        Rank
-                      </th>
-                      <th className="px-3 py-3" scope="col">
-                        Document
-                      </th>
-                      <th className="w-36 px-3 py-3" scope="col">
-                        Similarity
-                      </th>
-                      <th className="px-4 py-3" scope="col">
-                        Excerpt
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {runResult.matches.map((match, index) => {
-                      const selected = selectedChunkId === match.id;
-                      return (
-                        <tr
-                          key={match.id}
-                          className={cn(
-                            'border-b border-line last:border-0 dark:border-line-2',
-                            selected && 'bg-primary-soft/40 dark:bg-primary/10',
-                          )}
-                        >
-                          <td className="px-4 py-4">
-                            <input
-                              type="radio"
-                              name="vector-chunk"
-                              checked={selected}
-                              onChange={() => setSelectedChunkId(match.id)}
-                              aria-label={`Select ${match.source}`}
-                              className="size-4 accent-[var(--primary)]"
-                            />
-                          </td>
-                          <td className="px-2 py-4 tabular-nums text-ink-2">#{index + 1}</td>
-                          <td className="px-3 py-4">
-                            <p className="font-medium text-ink">{match.source}</p>
-                            {index === 0 ? (
-                              <span className="mt-1 inline-block text-[10px] font-semibold uppercase tracking-wide text-primary">
-                                Best match
-                              </span>
-                            ) : null}
-                          </td>
-                          <td className="px-3 py-4">
-                            <ScoreMeter value={match.score} active={selected || index === 0} />
-                          </td>
-                          <td className="px-4 py-4 text-ink-2">
-                            <p className="line-clamp-2 leading-6">{match.text}</p>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {runResult?.hints[0] ? (
-            <p className="mt-3 text-xs leading-5 text-ink-3">{runResult.hints[0]}</p>
-          ) : null}
-        </section>
-
-        {/* Selected preview */}
-        {selectedMatch ? (
-          <section className="mt-4 rounded-2xl border border-primary/20 bg-primary-soft/30 p-5 dark:bg-primary/10">
-            <h3 className="text-sm font-semibold text-ink">Your selection</h3>
-            <p className="mt-1 text-xs text-ink-3">{selectedCorpus?.source ?? selectedMatch.source}</p>
-            <p className="mt-3 text-sm leading-7 text-ink-2">{selectedMatch.text}</p>
-          </section>
-        ) : null}
-
-        {/* Desktop submit */}
-        {runResult ? (
-          <div className="mt-6 hidden justify-end sm:flex">
-            <button
-              type="button"
-              onClick={() => void handleSubmit()}
-              disabled={running || submitting || !selectedChunkId}
-              className={buttonClasses({
-                size: 'sm',
-                className: 'h-10 rounded-xl px-6 shadow-none',
-              })}
+          {runResult?.embeddingWarning ? (
+            <div
+              className="flex shrink-0 items-start justify-between gap-3 bg-warn-soft/80 px-4 py-2.5 text-[15px] text-warn sm:px-5"
+              role="status"
             >
-              {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-              Submit answer
-            </button>
-          </div>
-        ) : null}
-
-        {/* Grade */}
-        {submitResult ? (
-          <section
-            className={cn(
-              'mt-6 rounded-2xl border p-5',
-              submitResult.passed
-                ? 'border-good/30 bg-good-soft/60'
-                : 'border-warn/30 bg-warn-soft/50',
-            )}
-          >
-            <div className="flex flex-wrap items-center gap-3">
-              <span
-                className={cn(
-                  'rounded-lg px-2.5 py-1 text-xs font-semibold',
-                  submitResult.passed ? 'bg-good/15 text-good' : 'bg-warn/15 text-warn',
-                )}
-              >
-                {submitResult.passed ? 'Passed' : 'Try again'}
-              </span>
-              <span className="text-lg font-semibold tabular-nums text-ink">{submitResult.score}%</span>
+              <p>{runResult.embeddingWarning}</p>
             </div>
-            <p className="mt-3 text-sm leading-6 text-ink-2">{submitResult.feedback}</p>
-          </section>
-        ) : null}
+          ) : null}
 
-        {error ? (
-          <p className="mt-4 rounded-xl border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad" role="alert">
-            {error}
-          </p>
-        ) : null}
-      </div>
+          {error ? (
+            <div
+              className="flex shrink-0 items-start justify-between gap-3 bg-bad-soft px-4 py-2.5 text-[15px] text-bad sm:px-5"
+              role="alert"
+            >
+              <p>{error}</p>
+              <button
+                type="button"
+                onClick={() => setError(null)}
+                className="rounded-md p-0.5 hover:bg-bad/10"
+                aria-label="Dismiss error"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+          ) : null}
 
-      {/* Mobile sticky actions */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-bg-elev/95 p-4 backdrop-blur-sm dark:border-line-2 sm:hidden">
-        <div className="mx-auto flex max-w-4xl gap-2">
-          <button
-            type="button"
-            onClick={() => void handleRun()}
-            disabled={running || submitting || !query.trim()}
-            className={buttonClasses({
-              variant: 'outline',
-              size: 'sm',
-              className: 'h-11 flex-1 rounded-xl shadow-none',
-            })}
-          >
-            {running ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
-            Search
-          </button>
-          <button
-            type="button"
-            onClick={() => void handleSubmit()}
-            disabled={running || submitting || !selectedChunkId || !runResult}
-            className={buttonClasses({
-              size: 'sm',
-              className: 'h-11 flex-1 rounded-xl shadow-none',
-            })}
-          >
-            {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-            Submit
-          </button>
+          <div className="flex min-h-0 flex-1">
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col">{rankingPanel}</div>
+            <aside className="hidden w-[300px] shrink-0 bg-bg-soft/50 xl:flex xl:w-[320px] dark:bg-bg-soft/20">
+              {indexPanel}
+            </aside>
+          </div>
         </div>
       </div>
+
+      {indexOpen ? (
+        <div className="fixed inset-0 z-40 xl:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-ink/25"
+            aria-label="Close index"
+            onClick={() => setIndexOpen(false)}
+          />
+          <aside className="absolute inset-y-0 right-0 flex w-[min(100%,340px)] flex-col bg-bg-elev shadow-elevated dark:bg-bg">
+            <div className="flex items-center justify-between border-b border-line px-3 py-2 dark:border-line-2">
+              <span className="text-[15px] font-medium text-ink">Index</span>
+              <button
+                type="button"
+                onClick={() => setIndexOpen(false)}
+                className="rounded-lg p-1.5 text-ink-3 hover:bg-bg-soft hover:text-ink"
+                aria-label="Close index"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            {indexPanel}
+          </aside>
+        </div>
+      ) : null}
     </div>
+  );
+}
+
+function IndexPanel({
+  chunks,
+  scoreById,
+  selectedChunkId,
+  hasRanking,
+  onSelect,
+}: {
+  chunks: VectorPlaygroundBootstrap['chunks'];
+  scoreById: Map<string, VectorPlaygroundRunResult['index'][number]>;
+  selectedChunkId: string | null;
+  hasRanking: boolean;
+  onSelect: (id: string) => void;
+}) {
+  const retrievedCount = [...scoreById.values()].filter((row) => row.retrieved).length;
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-baseline justify-between gap-2 px-4 py-3">
+        <p className="text-[13px] font-semibold text-ink">Index</p>
+        <p className="text-xs text-ink-3">
+          {hasRanking ? `${retrievedCount}/${chunks.length} retrieved` : `${chunks.length} chunks`}
+        </p>
+      </div>
+      <ul className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+        {chunks.map((chunk) => {
+          const row = scoreById.get(chunk.id);
+          const selected = selectedChunkId === chunk.id;
+          const missed = Boolean(hasRanking && row && !row.retrieved);
+          return (
+            <li key={chunk.id}>
+              <button
+                type="button"
+                disabled={Boolean(hasRanking && !row?.retrieved)}
+                onClick={() => onSelect(chunk.id)}
+                className={cn(
+                  'w-full rounded-lg px-3 py-2.5 text-left transition',
+                  selected && 'bg-primary-soft/80 dark:bg-primary/10',
+                  !selected && row?.retrieved && 'hover:bg-bg-elev/80',
+                  missed && 'opacity-70',
+                )}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <p className="truncate text-[13px] font-medium text-ink">{chunk.source}</p>
+                  {row ? (
+                    <span className="shrink-0 font-mono text-[11px] text-ink-3">
+                      {row.retrieved ? `#${row.rank}` : 'out'}
+                    </span>
+                  ) : null}
+                </div>
+                <p className="mt-1 line-clamp-3 text-xs leading-5 text-ink-2">{chunk.text}</p>
+                {row ? (
+                  <DualSignal cosine={row.cosine} lexicalScore={row.lexicalScore} strong={row.rank === 1 || selected} />
+                ) : null}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function RankingPanel({
+  running,
+  runResult,
+  rankingStale,
+  selectedChunkId,
+  selectedMatch,
+  topMatch,
+  submitResult,
+  submitting,
+  canSubmit,
+  onSelect,
+  onSubmit,
+  onOpenIndex,
+  chunkCount,
+  embedded,
+}: {
+  running: boolean;
+  runResult: VectorPlaygroundRunResult | null;
+  rankingStale: boolean;
+  selectedChunkId: string | null;
+  selectedMatch: VectorPlaygroundRunResult['matches'][number] | null;
+  topMatch: VectorPlaygroundRunResult['matches'][number] | null;
+  submitResult: VectorPlaygroundSubmitResult | null;
+  submitting: boolean;
+  canSubmit: boolean;
+  onSelect: (id: string) => void;
+  onSubmit: () => void;
+  onOpenIndex: () => void;
+  chunkCount: number;
+  embedded: boolean;
+}) {
+  const delta =
+    selectedMatch && topMatch && selectedMatch.id !== topMatch.id
+      ? selectedMatch.cosine - topMatch.cosine
+      : null;
+
+  const lexicalTop = runResult?.index
+    ? [...runResult.index].sort((a, b) => b.lexicalScore - a.lexicalScore)[0]
+    : undefined;
+  const lexicalDisagrees = Boolean(
+    lexicalTop && runResult?.matches[0] && lexicalTop.id !== runResult.matches[0].id,
+  );
+
+  return (
+    <section className="relative flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-center justify-between gap-3 px-4 py-2.5 sm:px-5">
+        <div className="min-w-0">
+          <p className="text-[13px] font-semibold text-ink">Ranking</p>
+          <p className="text-xs text-ink-3">
+            {runResult
+              ? `${runResult.matches.length} of ${runResult.index?.length ?? chunkCount} retrieved · cosine vs lexical`
+              : 'Search to rank the index by cosine similarity'}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onOpenIndex}
+          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-ink-2 hover:bg-bg-soft hover:text-ink xl:hidden"
+        >
+          <Layers className="size-3.5" />
+          Index
+          <span className="tabular-nums text-ink-3">{chunkCount}</span>
+        </button>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
+        {!runResult ? (
+          <div className="flex h-full min-h-[240px] flex-col items-center justify-center px-6 text-center">
+            <div className="grid size-12 place-items-center rounded-2xl bg-bg-soft text-ink-3">
+              <Search className="size-5" />
+            </div>
+            <p className="mt-4 text-[15px] font-medium text-ink">No ranking yet</p>
+            <p className="mt-1 max-w-sm text-[13px] leading-5 text-ink-3">
+              Run a query against the index. Matches appear here by similarity — then choose the chunk that
+              actually answers the question.
+            </p>
+          </div>
+        ) : (
+          <ol>
+            {runResult.matches.map((match, index) => {
+              const selected = selectedChunkId === match.id;
+              const top = index === 0;
+              return (
+                <li key={match.id}>
+                  <button
+                    type="button"
+                    onClick={() => onSelect(match.id)}
+                    aria-pressed={selected}
+                    className={cn(
+                      'w-full rounded-xl px-3 py-3.5 text-left transition sm:px-3',
+                      selected
+                        ? 'bg-primary-soft/70 dark:bg-primary/10'
+                        : 'hover:bg-bg-soft/80',
+                    )}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span
+                        className={cn(
+                          'mt-0.5 w-6 shrink-0 font-mono text-xl font-semibold tabular-nums',
+                          selected || top ? 'text-primary' : 'text-ink-3',
+                        )}
+                      >
+                        {index + 1}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <p className="truncate text-[15px] font-medium text-ink">{match.source}</p>
+                          <span
+                            className={cn(
+                              'shrink-0 font-mono text-[15px] font-semibold tabular-nums',
+                              selected || top ? 'text-primary' : 'text-ink-2',
+                            )}
+                          >
+                            {formatCosine(match.cosine)}
+                          </span>
+                        </div>
+                        <DualSignal
+                          cosine={match.cosine}
+                          lexicalScore={match.lexicalScore}
+                          strong={selected || top}
+                        />
+                        {match.lexicalTerms.length > 0 ? (
+                          <p className="mt-1.5 text-xs text-ink-3">
+                            overlap {match.lexicalTerms.slice(0, 4).join(', ')}
+                            {match.lexicalTerms.length > 4 ? '…' : ''}
+                          </p>
+                        ) : (
+                          <p className="mt-1.5 text-xs text-ink-3">no lexical overlap</p>
+                        )}
+                        <p className="mt-2.5 text-[15px] leading-6 text-ink-2">{match.text}</p>
+                        {top ? (
+                          <span className="mt-2 inline-block text-[11px] font-semibold uppercase tracking-wider text-primary">
+                            Highest cosine
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        )}
+      </div>
+
+      {runResult ? (
+        <div className="shrink-0 px-4 py-3 sm:px-5">
+          {rankingStale ? (
+            <p className="mb-3 text-xs text-warn">Query changed — search again before submitting.</p>
+          ) : null}
+          {lexicalDisagrees && !submitResult ? (
+            <p className="mb-3 text-xs leading-5 text-ink-3">
+              Cosine and lexical ranks disagree — that is the point of embeddings.
+            </p>
+          ) : null}
+          {runResult.hints[0] && !submitResult && !lexicalDisagrees ? (
+            <p className="mb-3 text-xs leading-5 text-ink-3">{runResult.hints[0]}</p>
+          ) : null}
+
+          {submitResult ? (
+            <div
+              className={cn(
+                'mb-3 rounded-xl px-3 py-3',
+                submitResult.passed ? 'bg-good-soft' : 'bg-warn-soft',
+              )}
+            >
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span
+                  className={cn(
+                    'text-xs font-semibold',
+                    submitResult.passed ? 'text-good' : 'text-warn',
+                  )}
+                >
+                  {submitResult.passed ? 'Passed' : 'Try again'}
+                </span>
+                <span className="font-mono text-[15px] font-semibold tabular-nums text-ink">
+                  cos {formatCosine(submitResult.topCosine ?? submitResult.selectedCosine ?? submitResult.score / 100)}
+                </span>
+                {submitResult.passed ? (
+                  <span className="text-xs text-ink-3">highest cosine in the index</span>
+                ) : (
+                  <span className="text-xs text-ink-3">
+                    your pick cos {formatCosine(submitResult.selectedCosine ?? 0)}
+                    {submitResult.selectedRank ? ` · rank ${submitResult.selectedRank}` : ''}
+                  </span>
+                )}
+              </div>
+              <p className="mt-1.5 text-[15px] leading-6 text-ink-2">{submitResult.feedback}</p>
+            </div>
+          ) : null}
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="min-w-0 text-xs leading-5 text-ink-3">
+              {selectedMatch
+                ? `${selectedMatch.source} · cos ${formatCosine(selectedMatch.cosine)} · lex ${selectedMatch.lexicalScore}%${
+                    delta !== null ? ` · ${delta > 0 ? '+' : ''}${formatCosine(delta)} vs top` : ''
+                  }`
+                : 'Select a retrieved chunk to submit'}
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              onClick={onSubmit}
+              disabled={!canSubmit}
+              className="h-9 rounded-lg px-4 shadow-none"
+            >
+              {submitting ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
+              Submit pick
+            </Button>
+          </div>
+        </div>
+      ) : !embedded ? (
+        <p className="hidden px-5 py-3 text-xs text-ink-3 sm:block">Press 1–5 after search to pick a rank.</p>
+      ) : null}
+
+      {running ? (
+        <div
+          className="absolute inset-0 flex items-center justify-center bg-bg-elev/75 backdrop-blur-[1px] dark:bg-bg/75"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2 text-[15px] text-ink-2">
+            <Loader2 className="size-4 animate-spin text-primary" />
+            Ranking by cosine…
+          </div>
+        </div>
+      ) : null}
+    </section>
   );
 }

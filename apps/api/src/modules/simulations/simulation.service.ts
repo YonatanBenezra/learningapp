@@ -3,7 +3,11 @@ import { logger } from '../../common/utils/logger';
 import { Simulation } from './simulation.model';
 import { getGuardrailsBootstrap, runGuardrails, submitGuardrails } from './guardrails.engine';
 import { getPromptLabBootstrap, runPromptLabLive, submitPromptLabLive } from './promptLab.service';
-import { getRagPipelineBootstrap, runRagPipeline, submitRagPipeline } from './ragPipeline.engine';
+import {
+  getRagPipelineBootstrap,
+  runRagPipelineLive,
+  submitRagPipelineLive,
+} from './ragPipeline.service';
 import {
   getVectorPlaygroundBootstrap,
   runVectorPlaygroundLive,
@@ -118,7 +122,7 @@ export async function runSimulation(
     const query = (body.query ?? simulation.sampleInput).trim();
     if (!query) throw new AppError(400, 'query is required');
     const bootstrap = getRagPipelineBootstrap();
-    return runRagPipeline(
+    return runRagPipelineLive(
       query,
       body.chunkSize ?? bootstrap.defaultConfig.chunkSize,
       body.topK ?? bootstrap.defaultConfig.topK,
@@ -200,12 +204,15 @@ export async function submitSimulation(
     const query = (body.query ?? simulation.sampleInput).trim();
     if (!query) throw new AppError(400, 'query is required');
     const bootstrap = getRagPipelineBootstrap();
-    return submitRagPipeline(
+    return submitRagPipelineLive({
+      simulationSlug: simulation.slug,
       query,
-      body.chunkSize ?? bootstrap.defaultConfig.chunkSize,
-      body.topK ?? bootstrap.defaultConfig.topK,
-      body.rerank ?? bootstrap.defaultConfig.rerank,
-    );
+      chunkSize: body.chunkSize ?? bootstrap.defaultConfig.chunkSize,
+      topK: body.topK ?? bootstrap.defaultConfig.topK,
+      rerank: body.rerank ?? bootstrap.defaultConfig.rerank,
+      userId: ctx.userId ?? null,
+      guestSessionId: guestSessionId ?? null,
+    });
   }
 
   if (simulation.kind === 'guardrails') {

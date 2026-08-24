@@ -1,6 +1,5 @@
 import { env } from '../../config/env';
 import { AI_CONFIG } from './ai.config';
-import { ProviderHttpError } from './provider';
 
 const OPENROUTER_EMBEDDINGS_URL = 'https://openrouter.ai/api/v1/embeddings';
 
@@ -8,6 +7,10 @@ export interface EmbeddingBatchResult {
   vectors: number[][];
   model: string;
   provider: 'openrouter' | 'local';
+  dimensions: number;
+  fallback: boolean;
+  fallbackReason?: 'no_api_key' | 'provider_error' | 'invalid_response';
+  fallbackMessage?: string;
 }
 
 function buildHeaders(): Record<string, string> {
@@ -69,14 +72,40 @@ export function localEmbedTexts(texts: string[], dimensions = 64): EmbeddingBatc
     vectors,
     model: 'local-hash-embedding',
     provider: 'local',
+    dimensions,
+    fallback: false,
+  };
+}
+
+function localFallback(
+  texts: string[],
+  reason: NonNullable<EmbeddingBatchResult['fallbackReason']>,
+  message?: string,
+): EmbeddingBatchResult {
+  return {
+    ...localEmbedTexts(texts),
+    fallback: true,
+    fallbackReason: reason,
+    fallbackMessage: message,
   };
 }
 
 export async function embedTexts(texts: string[]): Promise<EmbeddingBatchResult> {
-  if (!texts.length) return { vectors: [], model: 'local-hash-embedding', provider: 'local' };
+  if (!texts.length) {
+    return {
+      vectors: [],
+      model: 'local-hash-embedding',
+      provider: 'local',
+      dimensions: 0,
+      fallback: false,
+    };
+  }
 
   if (!env.openRouterApiKey) {
-    return localEmbedTexts(texts);
+    return {
+      ...localEmbedTexts(texts),
+      fallbackReason: 'no_api_key',
+    };
   }
 
   const controller = new AbortController();
@@ -101,21 +130,24 @@ export async function embedTexts(texts: string[]): Promise<EmbeddingBatchResult>
 
     if (!res.ok) {
       const message = body.error?.message ?? res.statusText ?? 'Embedding request failed';
-      throw new ProviderHttpError(message, res.status);
+      return localFallback(texts, 'provider_error', message);
     }
 
     const vectors = (body.data ?? []).map((row) => row.embedding ?? []);
     if (vectors.length !== texts.length || vectors.some((vector) => vector.length === 0)) {
-      return localEmbedTexts(texts);
+      return localFallback(texts, 'invalid_response', 'Embedding response was incomplete.');
     }
 
     return {
       vectors,
       model: body.model ?? AI_CONFIG.embeddingModel,
       provider: 'openrouter',
+      dimensions: vectors[0]?.length ?? 0,
+      fallback: false,
     };
-  } catch {
-    return localEmbedTexts(texts);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Embedding request failed';
+    return localFallback(texts, 'provider_error', message);
   } finally {
     clearTimeout(timer);
   }

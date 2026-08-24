@@ -47,7 +47,7 @@ function SimulationPageContent({ slug }: { slug: string }) {
 
   if (!sessionReady || loading) {
     return (
-      <div className="flex flex-1 items-center justify-center py-24">
+      <div className="flex h-[calc(100dvh-50px)] flex-1 items-center justify-center">
         <Spinner className="size-8 text-primary" />
       </div>
     );

@@ -55,14 +55,24 @@ export interface VectorPlaygroundMatch {
   source: string;
   text: string;
   score: number;
+  cosine: number;
+  lexicalScore: number;
+  lexicalTerms: string[];
+  rank: number;
+  retrieved: boolean;
 }
 
 export interface VectorPlaygroundRunResult {
   matches: VectorPlaygroundMatch[];
+  index: VectorPlaygroundMatch[];
   hints: string[];
   defaultQuery?: string;
   embeddingModel?: string;
   embeddingProvider?: 'openrouter' | 'local';
+  embeddingDimensions?: number;
+  embeddingFallback?: boolean;
+  embeddingWarning?: string;
+  latencyMs?: number;
   topK?: number;
   topMatchId?: string;
 }
@@ -71,6 +81,9 @@ export interface VectorPlaygroundSubmitResult extends SimulationSubmitResult {
   submissionId: string;
   topMatchId: string;
   selectedChunkId: string;
+  selectedCosine: number;
+  topCosine: number;
+  selectedRank: number;
 }
 
 export type RagChunkSize = 'small' | 'medium' | 'large';
@@ -78,18 +91,48 @@ export type RagChunkSize = 'small' | 'medium' | 'large';
 export interface RagPipelineChunkResult {
   id: string;
   text: string;
+  sectionIds: string[];
+  gold: boolean;
+  conflict: boolean;
   score: number;
+  cosine: number;
+  lexicalScore: number;
+  lexicalTerms: string[];
+  rank: number;
   retrieved: boolean;
+  cosineRank: number;
+  rerankScore: number;
 }
 
 export interface RagPipelineRunResult {
   config: { chunkSize: RagChunkSize; topK: number; rerank: boolean };
+  query: string;
   chunks: RagPipelineChunkResult[];
   retrievedContext: string;
   answer: string;
   grounded: boolean;
+  goldInContext: boolean;
+  contextConflict: boolean;
+  goldRank: number | null;
+  goldCosine: number | null;
+  evidencePrecision: number;
   hints: string[];
   defaultQuery?: string;
+  embeddingModel?: string;
+  embeddingProvider?: 'openrouter' | 'local';
+  embeddingDimensions?: number;
+  embeddingFallback?: boolean;
+  embeddingWarning?: string;
+  latencyMs?: number;
+}
+
+export interface RagPipelineSubmitResult extends SimulationSubmitResult {
+  submissionId: string;
+  grounded: boolean;
+  goldInContext: boolean;
+  goldRank: number | null;
+  goldCosine: number | null;
+  evidencePrecision: number;
 }
 
 export type SimulationRunResult =
@@ -121,9 +164,11 @@ export interface VectorPlaygroundBootstrap {
 export interface RagPipelineBootstrap {
   defaultQuery: string;
   sourcePreview: string;
+  sections: Array<{ id: string; text: string }>;
   chunkSizeOptions: Array<{ value: RagChunkSize; label: string; chars: number }>;
   topKRange: { min: number; max: number; default: number };
   defaultConfig: { chunkSize: RagChunkSize; topK: number; rerank: boolean };
+  sampleQueries: string[];
 }
 
 export interface GuardrailsConfig {

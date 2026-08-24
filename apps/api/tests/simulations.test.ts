@@ -8,6 +8,7 @@ import { Simulation } from '../src/modules/simulations/simulation.model';
 import { SimulationSubmission } from '../src/modules/simulations/simulationSubmission.model';
 import { analyzePromptLabOutput } from '../src/modules/simulations/promptLab.service';
 import { resetVectorPlaygroundCache } from '../src/modules/simulations/vectorPlayground.service';
+import { resetRagPipelineCache } from '../src/modules/simulations/ragPipeline.service';
 import { seedSimulations } from '../src/modules/simulations/simulation.service';
 
 const TEST_DB = 'mongodb://127.0.0.1:27017/b2c_test_simulations';
@@ -25,7 +26,10 @@ vi.mock('../src/modules/ai-guidance/embedding.client', async (importOriginal) =>
   const actual = await importOriginal<typeof import('../src/modules/ai-guidance/embedding.client')>();
   return {
     ...actual,
-    embedTexts: vi.fn(async (texts: string[]) => actual.localEmbedTexts(texts)),
+    embedTexts: vi.fn(async (texts: string[]) => ({
+      ...actual.localEmbedTexts(texts),
+      fallbackReason: 'no_api_key' as const,
+    })),
   };
 });
 
@@ -35,6 +39,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   resetVectorPlaygroundCache();
+  resetRagPipelineCache();
   vi.mocked(getAiClient).mockReturnValue({
     complete: vi.fn().mockResolvedValue({
       text: GOOD_JSON,
@@ -158,7 +163,17 @@ describe('simulations API', () => {
     expect(run.status).toBe(200);
     expect(run.body.result.matches[0].id).toBe('chunk-hallucination');
     expect(run.body.result.matches[0].score).toBeGreaterThan(50);
+    expect(run.body.result.matches[0].cosine).toBeGreaterThan(0.5);
+    expect(run.body.result.matches.length).toBe(3);
+    expect(run.body.result.index).toHaveLength(5);
+    expect(run.body.result.index.filter((row: { retrieved: boolean }) => row.retrieved)).toHaveLength(3);
+    expect(typeof run.body.result.matches[0].lexicalScore).toBe('number');
+    expect(Array.isArray(run.body.result.matches[0].lexicalTerms)).toBe(true);
     expect(run.body.result.embeddingModel).toBeTruthy();
+    expect(run.body.result.embeddingProvider).toBe('local');
+    expect(run.body.result.embeddingDimensions).toBe(64);
+    expect(run.body.result.latencyMs).toBeGreaterThanOrEqual(0);
+    expect(run.body.result.embeddingWarning).toBeTruthy();
 
     const pass = await request(app)
       .post('/simulations/vector-playground/submit')
@@ -169,6 +184,10 @@ describe('simulations API', () => {
     expect(pass.status).toBe(201);
     expect(pass.body.result.passed).toBe(true);
     expect(pass.body.result.submissionId).toBeTruthy();
+    expect(pass.body.result.score).toBe(run.body.result.matches[0].score);
+    expect(pass.body.result.selectedCosine).toBe(run.body.result.matches[0].cosine);
+    expect(pass.body.result.topCosine).toBe(run.body.result.matches[0].cosine);
+    expect(pass.body.result.selectedRank).toBe(1);
 
     const saved = await SimulationSubmission.findById(pass.body.result.submissionId).lean();
     expect(saved?.kind).toBe('vector_playground');
@@ -180,8 +199,14 @@ describe('simulations API', () => {
         query: 'How can I reduce hallucinations when building a RAG assistant?',
         selectedChunkId: 'chunk-finetune',
       });
+    const failRow = run.body.result.index.find((row: { id: string }) => row.id === 'chunk-finetune');
     expect(fail.status).toBe(201);
     expect(fail.body.result.passed).toBe(false);
+    expect(fail.body.result.selectedChunkId).toBe('chunk-finetune');
+    expect(fail.body.result.topMatchId).toBe('chunk-hallucination');
+    expect(fail.body.result.score).toBe(failRow.score);
+    expect(fail.body.result.selectedRank).toBe(failRow.rank);
+    expect(fail.body.result.selectedRank).toBeGreaterThan(1);
   });
 
   it('runs rag pipeline with chunking controls and grades grounded answers', async () => {
@@ -191,32 +216,47 @@ describe('simulations API', () => {
     expect(detail.status).toBe(200);
     expect(detail.body.simulation.kind).toBe('rag_pipeline');
     expect(detail.body.bootstrap.defaultConfig.rerank).toBe(false);
+    expect(detail.body.bootstrap.sections.length).toBe(5);
 
     const bad = await request(app)
       .post('/simulations/rag-pipeline/run')
-      .send({ chunkSize: 'medium', topK: 1, rerank: false });
+      .send({ query: 'Can I get a refund on downloaded software?', chunkSize: 'medium', topK: 1, rerank: false });
     expect(bad.status).toBe(200);
     expect(bad.body.result.grounded).toBe(false);
+    expect(bad.body.result.goldInContext).toBe(false);
     expect(bad.body.result.answer).toContain('30 days');
+    expect(bad.body.result.query).toContain('downloaded software');
+
+    const hardware = await request(app)
+      .post('/simulations/rag-pipeline/run')
+      .send({ query: 'What is the return window for hardware?', chunkSize: 'small', topK: 1, rerank: false });
+    expect(hardware.status).toBe(200);
+    expect(hardware.body.result.chunks[0].id).toBe('hardware');
 
     const good = await request(app)
       .post('/simulations/rag-pipeline/run')
-      .send({ chunkSize: 'medium', topK: 1, rerank: true });
+      .send({ query: 'Can I get a refund on downloaded software?', chunkSize: 'medium', topK: 1, rerank: true });
     expect(good.status).toBe(200);
     expect(good.body.result.grounded).toBe(true);
+    expect(good.body.result.goldInContext).toBe(true);
     expect(good.body.result.answer).toContain('non-refundable');
+    expect(good.body.result.chunks[0].gold).toBe(true);
 
     const pass = await request(app)
       .post('/simulations/rag-pipeline/submit')
-      .send({ chunkSize: 'medium', topK: 1, rerank: true });
+      .send({ query: 'Can I get a refund on downloaded software?', chunkSize: 'medium', topK: 1, rerank: true });
     expect(pass.status).toBe(201);
     expect(pass.body.result.passed).toBe(true);
+    expect(pass.body.result.score).toBe(good.body.result.chunks.find((row: { gold: boolean }) => row.gold).score);
+    expect(pass.body.result.submissionId).toBeTruthy();
 
     const fail = await request(app)
       .post('/simulations/rag-pipeline/submit')
-      .send({ chunkSize: 'large', topK: 1, rerank: true });
+      .send({ query: 'Can I get a refund on downloaded software?', chunkSize: 'large', topK: 1, rerank: true });
     expect(fail.status).toBe(201);
     expect(fail.body.result.passed).toBe(false);
+    expect(fail.body.result.goldInContext).toBe(true);
+    expect(fail.body.result.score).toBe(fail.body.result.evidencePrecision);
   });
 
   it('runs guardrails simulator and grades layered defenses', async () => {

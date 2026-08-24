@@ -55,6 +55,18 @@ function tokenize(text: string): Set<string> {
   );
 }
 
+export function lexicalOverlap(query: string, text: string): { score: number; terms: string[] } {
+  const queryTokens = tokenize(query);
+  const chunkTokens = tokenize(text);
+  if (queryTokens.size === 0) return { score: 0, terms: [] };
+
+  const terms = [...queryTokens].filter((token) => chunkTokens.has(token));
+  return {
+    score: Math.round((terms.length / queryTokens.size) * 100),
+    terms,
+  };
+}
+
 function scoreChunk(query: string, chunk: VectorChunk): number {
   const queryTokens = tokenize(query);
   if (queryTokens.size === 0) return 0;
@@ -74,61 +86,65 @@ function scoreChunk(query: string, chunk: VectorChunk): number {
   return Math.max(0, Math.min(100, Math.round(base + keywordBonus)));
 }
 
-function expectedBestChunkId(query: string): string {
-  const q = query.toLowerCase();
-  if (q.includes('hallucin') || (q.includes('rag') && q.includes('reduce'))) {
-    return 'chunk-hallucination';
-  }
-  if (q.includes('cosine') || q.includes('similarity') || q.includes('embedding')) {
-    return 'chunk-cosine';
-  }
-  if (q.includes('chunk') || q.includes('split')) {
-    return 'chunk-chunking';
-  }
-  return 'chunk-rag-basics';
-}
-
 export function runVectorPlayground(query: string, topK = 3): VectorPlaygroundRunResult {
   const k = Math.min(5, Math.max(1, topK));
-  const matches = VECTOR_PLAYGROUND_CHUNKS.map((chunk) => ({
-    id: chunk.id,
-    source: chunk.source,
-    text: chunk.text,
-    score: scoreChunk(query, chunk),
-  }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, k);
+  const ranked = VECTOR_PLAYGROUND_CHUNKS.map((chunk) => {
+    const lexical = lexicalOverlap(query, `${chunk.source} ${chunk.text}`);
+    const score = scoreChunk(query, chunk);
+    return {
+      id: chunk.id,
+      source: chunk.source,
+      text: chunk.text,
+      score,
+      cosine: score / 100,
+      lexicalScore: lexical.score,
+      lexicalTerms: lexical.terms,
+    };
+  }).sort((a, b) => b.score - a.score);
+
+  const index = ranked.map((match, position) => ({
+    ...match,
+    rank: position + 1,
+    retrieved: position < k,
+  }));
 
   const hints: string[] = [];
-  if (matches[0]?.score < 45) {
+  if (index[0]?.score < 45) {
     hints.push('Try query words like "hallucination", "RAG", or "grounding".');
   }
-  if (matches.length > 1 && matches[0].score - matches[1].score < 8) {
+  if (index.length > 1 && index[0].score - index[1].score < 8) {
     hints.push('Top scores are close — compare whether the chunk mentions grounding vs generic RAG.');
   }
 
-  return { matches, hints, defaultQuery: DEFAULT_QUERY };
+  return {
+    matches: index.filter((match) => match.retrieved),
+    index,
+    hints,
+    defaultQuery: DEFAULT_QUERY,
+    topK: k,
+    topMatchId: index[0]?.id,
+  };
 }
 
 export function submitVectorPlayground(
   query: string,
   selectedChunkId: string,
 ): SimulationSubmitResult {
-  const expectedId = expectedBestChunkId(query);
-  const passed = selectedChunkId === expectedId;
-  const top = runVectorPlayground(query, 1).matches[0];
-  const score = passed ? Math.max(top?.score ?? 70, 85) : Math.max(20, (top?.score ?? 0) - 15);
+  const run = runVectorPlayground(query, 5);
+  const top = run.index[0];
+  const selected = run.index.find((row) => row.id === selectedChunkId);
+  const passed = Boolean(selected && top && selected.id === top.id);
+  const score = selected ? selected.score : 0;
 
-  const expectedChunk = VECTOR_PLAYGROUND_CHUNKS.find((c) => c.id === expectedId);
   const feedback = passed
-    ? 'Correct chunk. It explicitly mentions grounding retrieved context to reduce hallucinations.'
-    : `Not the best match. Look for a chunk about grounding retrieved context, not just generic RAG or training. Best match: ${expectedChunk?.source ?? expectedId}.`;
+    ? `Correct pick. "${top?.source ?? ''}" had the highest score (${top?.cosine.toFixed(3)}).`
+    : `Not the top match. You picked "${selected?.source ?? selectedChunkId}" (rank ${selected?.rank ?? '—'}). Top was "${top?.source ?? ''}".`;
 
   return {
     passed,
     score,
     feedback,
-    output: JSON.stringify({ query, selectedChunkId, expectedId, topMatch: top }, null, 2),
+    output: JSON.stringify({ query, selectedChunkId, topMatchId: top?.id, selectedRank: selected?.rank }, null, 2),
   };
 }
 
