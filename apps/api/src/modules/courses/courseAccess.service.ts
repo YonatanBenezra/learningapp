@@ -63,6 +63,8 @@ export async function withUserCourseProgress<
     kind?: string;
     userId?: unknown;
     _id?: unknown;
+    platformCurated?: boolean;
+    isPublished?: boolean;
   },
 >(userId: string, course: T): Promise<T> {
   if (course.platformCurated && course.isPublished && course.status === 'ready') {

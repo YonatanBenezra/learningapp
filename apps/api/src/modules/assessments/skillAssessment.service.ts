@@ -88,7 +88,7 @@ type AssessmentAccess = {
 };
 
 function assertAssessmentAccess(
-  assessment: { userId?: Types.ObjectId | null; guestSessionId?: string | null },
+  assessment: { userId?: unknown; guestSessionId?: string | null },
   access: AssessmentAccess,
 ) {
   if (access.userId) {
