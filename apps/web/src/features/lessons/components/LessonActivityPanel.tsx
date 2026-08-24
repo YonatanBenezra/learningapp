@@ -10,8 +10,8 @@ export function LessonActivityPanel({ activity }: { activity: LessonActivity }) 
   if (activity.kind === 'simulation') {
     return (
       <section className="mt-12 border-t border-line/70 pt-8">
-        <p className="max-w-xl text-sm leading-6 text-ink/55">{activity.instructions}</p>
-        <div className="mt-6">
+        <p className="text-sm leading-6 text-ink/55">{activity.instructions}</p>
+        <div className="mt-6 w-full min-w-0">
           <InlineSimulationEmbed slug={activity.simulationSlug} />
         </div>
       </section>

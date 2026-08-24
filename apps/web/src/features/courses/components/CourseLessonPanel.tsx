@@ -53,8 +53,8 @@ export function CourseLessonPanel({
 
   if (lessonQ.isLoading) {
     return (
-      <div className="flex min-h-[calc(100dvh-4rem)] flex-col p-5 sm:p-8 lg:px-10 lg:py-9">
-        <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col">
+      <div className="flex min-h-[calc(100dvh-4rem)] flex-col py-5 sm:py-6 lg:py-8">
+        <div className="flex w-full min-w-0 flex-1 flex-col">
           <Skeleton className="h-4 w-64" shimmer />
           <Skeleton className="mt-3 h-10 w-3/4 max-w-xl" shimmer />
           <Skeleton className="mt-8 h-24 w-full" shimmer />
@@ -89,8 +89,8 @@ export function CourseLessonPanel({
   const activity = parseLessonActivity(lesson.content);
 
   return (
-    <div className="flex min-h-full flex-col p-5 sm:p-8 lg:px-10 lg:py-9">
-      <div className="mx-auto w-full max-w-4xl">
+    <div className="flex min-h-full flex-col py-5 sm:py-6 lg:py-8">
+      <div className="w-full min-w-0">
         <p className="text-sm font-medium text-ink/45">
           {moduleTitle}
           {position ? (
@@ -117,7 +117,7 @@ export function CourseLessonPanel({
           {lesson.title}
         </h1>
 
-        <article className="mt-8">
+        <article className="mt-8 w-full min-w-0">
           <LessonContentBody content={lesson.content} />
         </article>
 

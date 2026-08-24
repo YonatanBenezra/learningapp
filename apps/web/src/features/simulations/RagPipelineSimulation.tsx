@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Loader2, Play, Send, X } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Loader2, Play, Send, X } from 'lucide-react';
 import { ApiError } from '@/src/infrastructure/apiClient';
 import { Button } from '@/src/components/ui/button';
 import { cn } from '@/src/lib/utils';
@@ -163,10 +163,6 @@ export function RagPipelineSimulation({
   const retrievedIds = new Set(
     (runResult?.chunks ?? []).filter((chunk) => chunk.retrieved).flatMap((chunk) => chunk.sectionIds),
   );
-  const goldIds = new Set(sections.filter((section) => /non-refundable/i.test(section.text)).map((section) => section.id));
-  const conflictIds = new Set(
-    sections.filter((section) => /30-day refund|30-day return/i.test(section.text)).map((section) => section.id),
-  );
 
   return (
     <div
@@ -205,8 +201,6 @@ export function RagPipelineSimulation({
               <p className="mt-1.5 max-w-3xl text-[15px] leading-6 text-ink-2">{simulation.taskPrompt}</p>
             </div>
             <p className="hidden shrink-0 pt-6 text-right text-xs text-ink-3 sm:block">
-              {sections.length} passages
-              <span className="mx-1.5 text-line-2">·</span>
               chunk → retrieve → generate
             </p>
           </div>
@@ -214,22 +208,24 @@ export function RagPipelineSimulation({
 
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-bg-elev shadow-card ring-1 ring-line/80 dark:bg-bg dark:ring-line-2">
           <div className="shrink-0 px-4 py-4 sm:px-5">
-            <label htmlFor="rag-query" className="sr-only">
-              User question
-            </label>
-            <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
-              <input
-                ref={inputRef}
-                id="rag-query"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                spellCheck={false}
-                autoComplete="off"
-                placeholder="Ask the policy document…"
-                className="h-12 min-w-0 flex-1 rounded-xl bg-bg-soft px-4 text-[15px] text-ink outline-none transition placeholder:text-ink-3 focus:bg-bg-elev focus:ring-2 focus:ring-primary/20 dark:bg-bg-soft"
-              />
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="flex rounded-xl bg-bg-soft p-1">
+            <div className="flex flex-col gap-3 xl:flex-row xl:items-stretch">
+              <div className="min-w-0 flex-1 border-l-[3px] border-primary pl-3">
+                <label htmlFor="rag-query" className="block text-[11px] font-medium uppercase tracking-wide text-ink-3">
+                  Question
+                </label>
+                <input
+                  ref={inputRef}
+                  id="rag-query"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  spellCheck={false}
+                  autoComplete="off"
+                  placeholder="Ask the policy document…"
+                  className="mt-1 h-9 w-full bg-transparent text-[15px] text-ink outline-none placeholder:text-ink-3"
+                />
+              </div>
+              <div className="flex flex-wrap items-center gap-2 xl:justify-end">
+                <FlowControl label="Split">
                   {bootstrap.chunkSizeOptions.map((option) => (
                     <button
                       key={option.value}
@@ -237,15 +233,16 @@ export function RagPipelineSimulation({
                       aria-pressed={chunkSize === option.value}
                       onClick={() => setChunkSize(option.value)}
                       className={cn(
-                        'h-8 rounded-lg px-2.5 text-[13px] font-medium transition-colors',
+                        'h-8 rounded-md px-2.5 text-[13px] font-medium',
                         chunkSize === option.value ? 'bg-primary text-primary-ink' : 'text-ink-3 hover:text-ink',
                       )}
                     >
                       {option.label}
                     </button>
                   ))}
-                </div>
-                <div className="flex rounded-xl bg-bg-soft p-1">
+                </FlowControl>
+                <ChevronRight className="hidden size-4 text-ink-3 xl:block" />
+                <FlowControl label="k">
                   {topKOptions.map((value) => (
                     <button
                       key={value}
@@ -253,21 +250,21 @@ export function RagPipelineSimulation({
                       aria-pressed={topK === value}
                       onClick={() => setTopK(value)}
                       className={cn(
-                        'h-8 min-w-8 rounded-lg px-2.5 text-[13px] font-medium transition-colors',
+                        'h-8 min-w-8 rounded-md px-2 text-[13px] font-medium',
                         topK === value ? 'bg-primary text-primary-ink' : 'text-ink-3 hover:text-ink',
                       )}
                     >
                       {value}
                     </button>
                   ))}
-                </div>
-                <span className="hidden text-xs text-ink-3 sm:inline">top-k</span>
+                </FlowControl>
+                <ChevronRight className="hidden size-4 text-ink-3 xl:block" />
                 <button
                   type="button"
                   aria-pressed={rerank}
                   onClick={() => setRerank((value) => !value)}
                   className={cn(
-                    'h-10 rounded-xl px-3 text-[13px] font-medium transition-colors',
+                    'h-10 rounded-md px-3 text-[13px] font-medium',
                     rerank ? 'bg-primary text-primary-ink' : 'bg-bg-soft text-ink-2 hover:text-ink',
                   )}
                 >
@@ -278,12 +275,12 @@ export function RagPipelineSimulation({
                   size="sm"
                   onClick={() => void handleRun()}
                   disabled={!canRun}
-                  className="h-12 rounded-xl px-4 shadow-none"
+                  className="h-10 rounded-md px-4 shadow-none"
                 >
                   {running ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
                   Run
                   {mod ? (
-                    <kbd className="ml-1 hidden rounded border border-current/20 px-1 font-mono text-[11px] font-normal opacity-70 md:inline">
+                    <kbd className="ml-1 hidden rounded border border-current/20 px-1 font-mono text-[10px] font-normal opacity-70 md:inline">
                       {mod}+Enter
                     </kbd>
                   ) : null}
@@ -292,30 +289,26 @@ export function RagPipelineSimulation({
             </div>
 
             {bootstrap.sampleQueries?.length ? (
-              <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                <span className="mr-1 text-xs text-ink-3">Try</span>
-                {bootstrap.sampleQueries.map((sample) => {
-                  const active = selectedStarter === sample;
-                  return (
-                    <button
-                      key={sample}
-                      type="button"
-                      aria-pressed={active}
-                      onClick={() => {
-                        setQuery(sample);
-                        inputRef.current?.focus();
-                      }}
-                      className={cn(
-                        'max-w-full truncate rounded-full px-2.5 py-1 text-xs font-medium transition-colors',
-                        active
-                          ? 'bg-primary-soft text-primary'
-                          : 'bg-bg-elev/80 text-ink-2 hover:bg-bg-elev hover:text-ink dark:bg-bg-soft',
-                      )}
-                    >
-                      {sample}
-                    </button>
-                  );
-                })}
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-3">
+                <span>Examples</span>
+                {bootstrap.sampleQueries.map((sample, index) => (
+                  <button
+                    key={sample}
+                    type="button"
+                    title={sample}
+                    aria-pressed={selectedStarter === sample}
+                    onClick={() => {
+                      setQuery(sample);
+                      inputRef.current?.focus();
+                    }}
+                    className={cn(
+                      'underline-offset-2 hover:underline',
+                      selectedStarter === sample ? 'text-primary' : 'text-ink-2',
+                    )}
+                  >
+                    Q{index + 1}
+                  </button>
+                ))}
               </div>
             ) : null}
 
@@ -349,31 +342,25 @@ export function RagPipelineSimulation({
               label="Source"
               hint={`${chunkCountFor(chunkSize)} chunks`}
             >
-              <SourceStage
-                groups={groups}
-                retrievedIds={retrievedIds}
-                goldIds={goldIds}
-                conflictIds={conflictIds}
-                hasRun={Boolean(runResult)}
-              />
+              <SourceStage groups={groups} retrievedIds={retrievedIds} hasRun={Boolean(runResult)} />
             </StageColumn>
             <StageColumn
-              className={cn('min-w-0 flex-1 bg-bg-soft/50 dark:bg-bg-soft/20', stage !== 'retrieve' && 'hidden xl:flex')}
+              className={cn('min-w-0 flex-1 bg-bg-soft/40 dark:bg-bg-soft/15', stage !== 'retrieve' && 'hidden xl:flex')}
               label="Retrieve"
-              hint={runResult ? `${runResult.chunks.filter((c) => c.retrieved).length} in window` : 'cosine, then rerank'}
+              hint={runResult ? `${runResult.chunks.filter((c) => c.retrieved).length} pulled` : 'cosine → rerank'}
             >
               <RetrieveStage runResult={runResult} rerank={lastRun?.rerank ?? rerank} />
             </StageColumn>
             <StageColumn
               className={cn('min-w-0 flex-1', stage !== 'context' && 'hidden xl:flex')}
               label="Context"
-              hint={runResult ? `${runResult.retrievedContext.length} chars` : 'stuffed into the model'}
+              hint={runResult ? `${runResult.evidencePrecision}% exception` : 'stuffed window'}
             >
               <ContextStage runResult={runResult} />
             </StageColumn>
             <StageColumn
-              className={cn('min-w-0 flex-1 bg-bg-soft/50 dark:bg-bg-soft/20', stage !== 'answer' && 'hidden xl:flex')}
-              label="Answer"
+              className={cn('min-w-0 flex-1 bg-bg-soft/40 dark:bg-bg-soft/15', stage !== 'answer' && 'hidden xl:flex')}
+              label="Generate"
               hint={runResult ? (runResult.grounded ? 'grounded' : 'hallucinated') : 'after retrieve'}
             >
               <AnswerStage runResult={runResult} />
@@ -438,6 +425,15 @@ export function RagPipelineSimulation({
   );
 }
 
+function FlowControl({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex items-center gap-1 rounded-lg bg-bg-soft px-1 py-1">
+      <span className="hidden pl-1.5 text-[11px] font-medium uppercase tracking-wide text-ink-3 sm:inline">{label}</span>
+      {children}
+    </div>
+  );
+}
+
 function PipelineStrip({
   runResult,
   rankingStale,
@@ -452,12 +448,7 @@ function PipelineStrip({
   onStage: (id: StageId) => void;
 }) {
   const steps: Array<{ id: StageId; label: string; detail: string; tone: 'idle' | 'good' | 'warn' }> = [
-    {
-      id: 'source',
-      label: 'Source',
-      detail: `${chunkCount} chunks`,
-      tone: 'idle',
-    },
+    { id: 'source', label: 'Source', detail: `${chunkCount} chunks`, tone: 'idle' },
     {
       id: 'retrieve',
       label: 'Retrieve',
@@ -472,56 +463,42 @@ function PipelineStrip({
     },
     {
       id: 'answer',
-      label: 'Answer',
+      label: 'Generate',
       detail: !runResult || rankingStale ? '—' : runResult.grounded ? 'grounded' : 'hallucinated',
       tone: !runResult || rankingStale ? 'idle' : runResult.grounded ? 'good' : 'warn',
     },
   ];
 
   return (
-    <div className="mt-4 flex gap-1 overflow-x-auto">
+    <div className="mt-4 flex items-center gap-1">
       {steps.map((step, index) => (
-        <button
-          key={step.id}
-          type="button"
-          onClick={() => onStage(step.id)}
-          className={cn(
-            'flex min-w-0 flex-1 items-center gap-2 rounded-xl px-2.5 py-2 text-left transition xl:pointer-events-none xl:cursor-default',
-            stage === step.id ? 'bg-bg-soft dark:bg-bg-soft/80' : 'hover:bg-bg-soft/60 xl:hover:bg-transparent',
-          )}
-        >
-          <span
+        <div key={step.id} className="flex min-w-0 flex-1 items-center">
+          {index > 0 ? <ChevronRight className="mx-0.5 hidden size-3.5 shrink-0 text-ink-3 sm:block" /> : null}
+          <button
+            type="button"
+            onClick={() => onStage(step.id)}
             className={cn(
-              'grid size-6 shrink-0 place-items-center rounded-full font-mono text-[11px] font-semibold',
-              step.tone === 'good' && 'bg-good-soft text-good',
-              step.tone === 'warn' && 'bg-warn-soft text-warn',
-              step.tone === 'idle' && 'bg-bg-soft text-ink-3',
+              'flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left xl:pointer-events-none xl:cursor-default',
+              stage === step.id ? 'bg-bg-soft' : 'hover:bg-bg-soft/70 xl:hover:bg-transparent',
             )}
           >
-            {index + 1}
-          </span>
-          <span className="min-w-0">
-            <span className="block text-[13px] font-medium text-ink">{step.label}</span>
-            <span className="block truncate text-xs text-ink-3">{step.detail}</span>
-          </span>
-        </button>
-      ))}
-      {runResult ? (
-        <div className="hidden shrink-0 items-center gap-2 pl-2 text-xs text-ink-3 xl:flex">
-          <span
-            className={cn(
-              'rounded-md px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide',
-              runResult.embeddingProvider === 'openrouter' && !runResult.embeddingFallback
-                ? 'bg-good-soft text-good'
-                : 'bg-warn-soft text-warn',
-            )}
-          >
-            {runResult.embeddingProvider === 'openrouter' && !runResult.embeddingFallback ? 'Live' : 'Local'}
-          </span>
-          {runResult.embeddingModel ? <span className="font-mono text-ink-2">{runResult.embeddingModel}</span> : null}
-          {typeof runResult.latencyMs === 'number' ? <span className="tabular-nums">{runResult.latencyMs}ms</span> : null}
+            <span
+              className={cn(
+                'grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-semibold',
+                step.tone === 'good' && 'bg-good-soft text-good',
+                step.tone === 'warn' && 'bg-warn-soft text-warn',
+                step.tone === 'idle' && 'bg-bg-soft text-ink-3',
+              )}
+            >
+              {index + 1}
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-[13px] font-medium text-ink">{step.label}</span>
+              <span className="hidden truncate text-xs text-ink-3 sm:block">{step.detail}</span>
+            </span>
+          </button>
         </div>
-      ) : null}
+      ))}
     </div>
   );
 }
@@ -551,43 +528,38 @@ function StageColumn({
 function SourceStage({
   groups,
   retrievedIds,
-  goldIds,
-  conflictIds,
   hasRun,
 }: {
   groups: Array<{ key: string; sections: Array<{ id: string; text: string }> }>;
   retrievedIds: Set<string>;
-  goldIds: Set<string>;
-  conflictIds: Set<string>;
   hasRun: boolean;
 }) {
   return (
-    <div className="space-y-2">
-      {groups.map((group) => {
+    <div>
+      {groups.map((group, index) => {
         const inWindow = hasRun && group.sections.some((section) => retrievedIds.has(section.id));
-        const hasGold = group.sections.some((section) => goldIds.has(section.id));
-        const hasConflict = group.sections.some((section) => conflictIds.has(section.id));
+        const hasGold = group.sections.some((section) => /non-refundable/i.test(section.text));
+        const hasConflict = group.sections.some((section) => /30-day refund/i.test(section.text));
         return (
-          <div
-            key={group.key}
-            className={cn(
-              'rounded-xl px-3 py-2.5',
-              inWindow && hasGold && !hasConflict && 'bg-good-soft/70',
-              inWindow && hasConflict && 'bg-warn-soft/70',
-              inWindow && !hasGold && !hasConflict && 'bg-primary-soft/60',
-              !inWindow && 'bg-bg-soft/80 dark:bg-bg-soft/40',
-            )}
-          >
-            {group.sections.map((section) => (
-              <p key={section.id} className="text-[15px] leading-6 text-ink-2">
-                {section.text}
-              </p>
-            ))}
-            {inWindow ? (
-              <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-3">
-                {hasGold && !hasConflict ? 'Exception in window' : hasConflict ? 'Conflicting policy' : 'In context'}
-              </p>
+          <div key={group.key}>
+            {index > 0 ? (
+              <p className="my-2 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-ink-3">split</p>
             ) : null}
+            <div
+              className={cn(
+                'border-l-2 pl-3',
+                inWindow && hasGold && !hasConflict && 'border-good bg-good-soft/40',
+                inWindow && hasConflict && 'border-warn bg-warn-soft/40',
+                inWindow && !hasGold && !hasConflict && 'border-primary bg-primary-soft/40',
+                !inWindow && 'border-transparent',
+              )}
+            >
+              {group.sections.map((section) => (
+                <p key={section.id} className="py-1 text-[15px] leading-6 text-ink-2">
+                  {section.text}
+                </p>
+              ))}
+            </div>
           </div>
         );
       })}
@@ -605,42 +577,35 @@ function RetrieveStage({
   if (!runResult) {
     return (
       <p className="pt-6 text-[13px] leading-5 text-ink-3">
-        Run to rank chunks by cosine. Rerank blends lexical overlap and boosts the exception span.
+        Run to rank chunks. Rerank boosts the exception when the FAQ paraphrase wins cosine.
       </p>
     );
   }
 
   return (
-    <ol className="space-y-1">
+    <ol className="space-y-2">
       {runResult.chunks.map((chunk) => {
         const moved = rerank && chunk.cosineRank !== chunk.rank;
         return (
           <li
             key={chunk.id}
             className={cn(
-              'rounded-xl px-3 py-2.5',
-              chunk.retrieved && chunk.gold && 'bg-good-soft/60',
-              chunk.retrieved && chunk.conflict && 'bg-warn-soft/60',
-              chunk.retrieved && !chunk.gold && !chunk.conflict && 'bg-primary-soft/50',
-              !chunk.retrieved && 'opacity-55',
+              'border-l-2 pl-3 py-1.5',
+              chunk.retrieved && chunk.gold && 'border-good',
+              chunk.retrieved && chunk.conflict && 'border-warn',
+              chunk.retrieved && !chunk.gold && !chunk.conflict && 'border-primary',
+              !chunk.retrieved && 'border-transparent opacity-45',
             )}
           >
             <div className="flex items-baseline justify-between gap-2">
-              <span className={cn('font-mono text-[15px] font-semibold tabular-nums', chunk.retrieved ? 'text-primary' : 'text-ink-3')}>
-                {chunk.rank}
-              </span>
-              <span className="font-mono text-[13px] tabular-nums text-ink-2">
-                {rerank ? `rerank ${formatCosine(chunk.rerankScore)}` : `cos ${formatCosine(chunk.cosine)}`}
+              <span className="font-mono text-[13px] font-semibold tabular-nums text-ink">#{chunk.rank}</span>
+              <span className="font-mono text-[12px] tabular-nums text-ink-3">
+                {rerank ? formatCosine(chunk.rerankScore) : formatCosine(chunk.cosine)}
+                {!chunk.retrieved ? ' · out' : ''}
               </span>
             </div>
             <p className="mt-1 text-[15px] leading-6 text-ink-2">{chunk.text}</p>
-            <p className="mt-1.5 text-xs text-ink-3">
-              cos {formatCosine(chunk.cosine)}
-              {chunk.lexicalTerms.length > 0 ? ` · overlap ${chunk.lexicalTerms.slice(0, 3).join(', ')}` : ' · no lexical overlap'}
-              {moved ? ` · was #${chunk.cosineRank}` : ''}
-              {chunk.gold ? ' · exception' : ''}
-              {!chunk.retrieved ? ' · out' : ''}
-            </p>
+            {moved ? <p className="mt-1 text-xs text-ink-3">was cosine #{chunk.cosineRank}</p> : null}
           </li>
         );
       })}
@@ -652,26 +617,32 @@ function ContextStage({ runResult }: { runResult: RagPipelineRunResult | null })
   if (!runResult) {
     return (
       <p className="pt-6 text-[13px] leading-5 text-ink-3">
-        Retrieved chunks are concatenated here. Extra top-k or a full-document chunk mixes policies.
+        Pulled chunks land here. Extra top-k or a full-document split mixes the 30-day rule with the exception.
       </p>
     );
   }
 
   const retrieved = runResult.chunks.filter((chunk) => chunk.retrieved);
+  const goldShare = runResult.evidencePrecision;
+  const rest = Math.max(0, 100 - goldShare);
+
   return (
-    <div className="space-y-3">
-      <p className="text-xs text-ink-3">
+    <div>
+      <div className="mb-3 flex h-1.5 overflow-hidden rounded-full bg-bg-soft">
+        <span className="bg-good" style={{ width: `${goldShare}%` }} />
+        <span className="bg-warn/70" style={{ width: `${rest}%` }} />
+      </div>
+      <p className="mb-3 text-xs text-ink-3">
         {runResult.goldInContext ? 'Exception present' : 'Exception missing'}
-        <span className="mx-1.5 text-line-2">·</span>
-        {runResult.contextConflict ? 'conflicting 30-day rule also stuffed' : 'no conflicting window'}
-        <span className="mx-1.5 text-line-2">·</span>
-        {runResult.evidencePrecision}% evidence
+        {runResult.contextConflict ? ' · 30-day rule also stuffed' : ' · no conflicting window'}
       </p>
-      {retrieved.map((chunk) => (
-        <p key={chunk.id} className={cn('text-[15px] leading-6', chunk.gold ? 'text-ink' : 'text-ink-2')}>
-          {chunk.text}
-        </p>
-      ))}
+      <div className="space-y-3">
+        {retrieved.map((chunk) => (
+          <p key={chunk.id} className={cn('text-[15px] leading-6', chunk.gold ? 'text-ink' : 'text-ink-2')}>
+            {chunk.text}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
@@ -680,22 +651,17 @@ function AnswerStage({ runResult }: { runResult: RagPipelineRunResult | null }) 
   if (!runResult) {
     return (
       <p className="pt-6 text-[13px] leading-5 text-ink-3">
-        The mock generator stays inside retrieved context when the exception is the only refund rule in the window.
+        The generator stays honest only when the exception is in context and the 30-day paraphrase is not.
       </p>
     );
   }
 
   return (
     <div>
-      <p
-        className={cn(
-          'text-xs font-semibold uppercase tracking-wide',
-          runResult.grounded ? 'text-good' : 'text-warn',
-        )}
-      >
-        {runResult.grounded ? 'Grounded in retrieval' : 'Likely hallucination'}
+      <p className={cn('text-xs font-semibold uppercase tracking-wide', runResult.grounded ? 'text-good' : 'text-warn')}>
+        {runResult.grounded ? 'Grounded' : 'Hallucinated'}
       </p>
-      <p className="mt-2 text-[15px] leading-6 text-ink">{runResult.answer}</p>
+      <p className="mt-2 text-[15px] leading-7 text-ink">{runResult.answer}</p>
     </div>
   );
 }

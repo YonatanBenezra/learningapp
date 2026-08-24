@@ -53,7 +53,7 @@ export function InlineSimulationEmbed({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-primary/20 bg-bg dark:border-line-2">
+    <div className="w-full min-w-0 overflow-hidden rounded-xl border border-primary/20 bg-bg dark:border-line-2">
       <SimulationExperience simulation={simulation} bootstrap={bootstrap} embedded />
     </div>
   );

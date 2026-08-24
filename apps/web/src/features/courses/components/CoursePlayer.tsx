@@ -39,6 +39,10 @@ interface CoursePlayerProps {
   guided?: boolean;
 }
 
+/** Lesson column matches navbar (`max-w-[1400px]`); sidebar uses leftover viewport on the right. */
+const playerColumnsClass =
+  'flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:grid lg:grid-cols-[minmax(0px,max(0px,calc((100%-1400px)/2)))_minmax(0,1400px)_minmax(25rem,1fr)]';
+
 export function CoursePlayer({ courseId, course, guided = false }: CoursePlayerProps) {
   const { t } = useTranslation();
   const isRtl = useIsRtl();
@@ -130,8 +134,11 @@ export function CoursePlayer({ courseId, course, guided = false }: CoursePlayerP
   if (structureQ.isLoading) {
     return (
       <div className="flex h-[calc(100dvh-4rem)]">
-        <Skeleton className="h-full flex-1 rounded-none" shimmer />
-        <Skeleton className="hidden h-full w-[360px] rounded-none lg:block" shimmer />
+        <div className={playerColumnsClass}>
+          <div className="hidden lg:block" aria-hidden />
+          <Skeleton className="h-full min-w-0 flex-1 rounded-none" shimmer />
+          <Skeleton className="hidden h-full min-w-0 rounded-none lg:block lg:ps-[5px]" shimmer />
+        </div>
       </div>
     );
   }
@@ -168,8 +175,10 @@ export function CoursePlayer({ courseId, course, guided = false }: CoursePlayerP
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
-        <section className="order-2 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:order-1">
+      <div className={playerColumnsClass}>
+        <div className="hidden lg:block" aria-hidden />
+
+        <section className="order-2 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-4 sm:px-6 lg:order-none">
           <div className="min-h-0 flex-1 overflow-y-auto">
             {activeLessonId ? (
               <div className="min-h-full">
@@ -180,7 +189,7 @@ export function CoursePlayer({ courseId, course, guided = false }: CoursePlayerP
                   position={nav.position}
                   guided={guided}
                 />
-                <div className="mx-auto w-full max-w-4xl px-5 pb-12 sm:px-8 lg:px-10">
+                <div className="w-full pb-12">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line/70 pt-8">
                     {nav.prev ? (
                       <button
@@ -271,24 +280,26 @@ export function CoursePlayer({ courseId, course, guided = false }: CoursePlayerP
           </div>
         </section>
 
-        <div className="order-1 flex min-h-[240px] shrink-0 flex-col overflow-hidden border-b border-line/70 bg-bg-elev/40 lg:order-2 lg:h-full lg:w-[360px] lg:border-b-0 lg:border-s">
-          <CourseModuleSidebar
-            modules={modules}
-            activeLessonId={activeLessonId}
-            expandedModuleId={expandedModuleId}
-            completedLessonIds={completedLessonIds}
-            diagramHref={guided ? undefined : learnerCourseStructurePath(courseId)}
-            showFinalExam={!guided}
-            examPending={examGen.isPending}
-            onFinalExam={() =>
-              examGen.mutate(
-                { scope: 'course', scopeId: courseId },
-                { onSuccess: (exam) => router.push(`/exam/${exam.id}`) },
-              )
-            }
-            onToggleModule={toggleModule}
-            onSelectLesson={selectLesson}
-          />
+        <div className="order-1 flex min-h-[240px] min-w-0 flex-col overflow-hidden border-b border-line/70 lg:order-none lg:h-full lg:min-h-0 lg:border-b-0 lg:ps-[5px]">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-bg-elev/40">
+            <CourseModuleSidebar
+              modules={modules}
+              activeLessonId={activeLessonId}
+              expandedModuleId={expandedModuleId}
+              completedLessonIds={completedLessonIds}
+              diagramHref={guided ? undefined : learnerCourseStructurePath(courseId)}
+              showFinalExam={!guided}
+              examPending={examGen.isPending}
+              onFinalExam={() =>
+                examGen.mutate(
+                  { scope: 'course', scopeId: courseId },
+                  { onSuccess: (exam) => router.push(`/exam/${exam.id}`) },
+                )
+              }
+              onToggleModule={toggleModule}
+              onSelectLesson={selectLesson}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -313,7 +324,7 @@ function CourseIntroPanel({
   const Icon = category?.icon ?? BookOpen;
 
   return (
-    <div className="flex min-h-full items-center justify-center px-6 py-12 sm:px-10">
+    <div className="flex min-h-full items-center justify-center py-12">
       <div className="w-full max-w-lg">
         <span
           className={cn(

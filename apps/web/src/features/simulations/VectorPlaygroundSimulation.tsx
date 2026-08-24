@@ -242,7 +242,7 @@ export function VectorPlaygroundSimulation({
   return (
     <div
       className={cn(
-        'flex min-h-0 flex-col bg-white dark:bg-bg',
+        'flex min-h-0 w-full flex-col bg-white dark:bg-bg',
         embedded ? 'min-h-[640px]' : 'h-[calc(100dvh-50px)] flex-1',
       )}
     >
@@ -275,7 +275,7 @@ export function VectorPlaygroundSimulation({
                   {simulation.difficulty}
                 </span>
               </div>
-              <p className="mt-1.5 max-w-3xl text-[15px] leading-6 text-ink-2">{simulation.taskPrompt}</p>
+              <p className="mt-1.5 text-[15px] leading-6 text-ink-2">{simulation.taskPrompt}</p>
             </div>
             <p className="hidden shrink-0 pt-6 text-right text-xs text-ink-3 sm:block">
               {bootstrap.chunks.length} docs
