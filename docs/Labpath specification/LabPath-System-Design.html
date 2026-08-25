@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>LabPath — System Design, Architecture, Database & User Flows</title>
+  <style>
+    @page { size: A4; margin: 16mm 16mm 18mm 16mm; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: #1b2430;
+      background: #fff;
+      font-size: 10.5pt;
+      line-height: 1.45;
+    }
+    h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; color: #122033; margin: 0 0 8px; font-weight: 600; }
+    h1 { font-size: 26pt; line-height: 1.15; }
+    h2 { font-size: 16pt; margin-top: 0; padding-bottom: 6px; border-bottom: 1.5px solid #c4a574; }
+    h3 { font-size: 12.5pt; margin-top: 16px; }
+    h4 { font-size: 11pt; color: #2a3d55; }
+    p { margin: 0 0 8px; }
+    a { color: #1a4a6e; }
+    ul, ol { margin: 4px 0 10px; padding-left: 18px; }
+    li { margin-bottom: 3px; }
+    table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 9.4pt; }
+    th { background: #122033; color: #fff; text-align: left; padding: 6px 8px; font-weight: 600; }
+    td { border-bottom: 1px solid #e4e0d8; padding: 5px 8px; vertical-align: top; }
+    tr:nth-child(even) td { background: #f7f4ef; }
+    code, .mono { font-family: "SF Mono", "Cascadia Code", Consolas, monospace; font-size: 8.6pt; }
+    pre {
+      background: #122033;
+      color: #e8eef4;
+      padding: 12px 14px;
+      border-radius: 4px;
+      font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+      font-size: 7.6pt;
+      line-height: 1.38;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 8px 0 14px;
+    }
+    .page { page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .cover {
+      min-height: 250mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #122033;
+      color: #f4efe6;
+      padding: 28mm 18mm 18mm;
+      margin: -16mm;
+      width: calc(100% + 32mm);
+    }
+    .cover h1 { color: #fff; font-size: 32pt; border: 0; }
+    .kicker { letter-spacing: 2.4px; font-size: 9pt; text-transform: uppercase; color: #c4a574; margin-bottom: 14px; }
+    .cover-sub { font-size: 13pt; max-width: 150mm; color: #d7dce3; margin-top: 10px; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; font-size: 10pt; border-top: 1px solid #3a4d63; padding-top: 16px; }
+    .meta-grid strong { display: block; color: #c4a574; font-size: 8pt; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+    .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+    .pill { border: 1px solid #c4a574; color: #c4a574; padding: 4px 10px; font-size: 8.5pt; letter-spacing: 0.4px; }
+    .note {
+      background: #f7f4ef;
+      border-left: 3px solid #c4a574;
+      padding: 8px 12px;
+      margin: 10px 0 14px;
+      font-size: 9.6pt;
+    }
+    .warn {
+      background: #f8efe6;
+      border-left: 3px solid #b45a1a;
+      padding: 8px 12px;
+      margin: 10px 0 14px;
+      font-size: 9.6pt;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 10px 0 14px; }
+    .card {
+      border: 1px solid #ddd6c8;
+      padding: 10px 12px;
+      background: #fff;
+      page-break-inside: avoid;
+    }
+    .card h4 { margin: 0 0 6px; }
+    .muted { color: #5c6b7a; }
+    .small { font-size: 9pt; color: #5c6b7a; }
+    .arch {
+      background: #f7f4ef;
+      border: 1px solid #ddd6c8;
+      padding: 12px;
+      font-family: "SF Mono", Consolas, monospace;
+      font-size: 7.4pt;
+      line-height: 1.32;
+      white-space: pre;
+      overflow: hidden;
+      margin: 8px 0 14px;
+    }
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 10px 0 14px;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      flex: 1 1 70px;
+      background: #122033;
+      color: #fff;
+      padding: 8px 8px;
+      font-size: 8.4pt;
+      min-width: 72px;
+    }
+    .flow-step span { display: block; color: #c4a574; font-size: 7.5pt; margin-bottom: 3px; }
+    .flow-arrow { display: flex; align-items: center; color: #c4a574; font-size: 14pt; padding: 0 4px; }
+    .toc a { text-decoration: none; color: #122033; }
+    .toc td { border: 0; background: transparent !important; padding: 4px 0; }
+    .toc .num { color: #c4a574; width: 28px; font-weight: 700; }
+    .badge { display: inline-block; background: #122033; color: #fff; font-size: 7.5pt; padding: 1px 6px; margin-right: 4px; }
+    .badge-gold { background: #8a6a32; }
+    .footer-note { font-size: 8.5pt; color: #7a8794; margin-top: 18px; }
+    .er { font-size: 8.2pt; }
+  </style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="page">
+  <div class="cover">
+    <div>
+      <div class="kicker">Engineering blueprint · Phase 0</div>
+      <h1>LabPath<br>System Design</h1>
+      <p class="cover-sub">Architecture, NestJS backend, PostgreSQL / Prisma data model, and learner user flows — mapped to the v1.0 product specification.</p>
+      <div class="pill-row">
+        <div class="pill">Next.js</div>
+        <div class="pill">NestJS</div>
+        <div class="pill">Prisma</div>
+        <div class="pill">PostgreSQL + pgvector</div>
+        <div class="pill">BullMQ / Redis</div>
+      </div>
+    </div>
+    <div class="meta-grid">
+      <div><strong>Document</strong>System Design &amp; Data Architecture v1.0</div>
+      <div><strong>Based on</strong>LabPath Product Specification v1.0 · 25 Aug 2026</div>
+      <div><strong>Status</strong>Draft for engineering review</div>
+      <div><strong>Scope</strong>Phase 0 POC · 10 exercises · 3 simulators</div>
+      <div><strong>Audience</strong>Backend, frontend, product</div>
+      <div><strong>Stack decision</strong>Node / NestJS replaces Python workers for Phase 0</div>
+    </div>
+  </div>
+</section>
+
+<!-- TOC -->
+<section class="page">
+  <h2>Contents</h2>
+  <table class="toc">
+    <tr><td class="num">01</td><td><a>Purpose, constraints and stack</a></td></tr>
+    <tr><td class="num">02</td><td><a>System architecture</a></td></tr>
+    <tr><td class="num">03</td><td><a>NestJS module map</a></td></tr>
+    <tr><td class="num">04</td><td><a>Grading engine on Nest</a></td></tr>
+    <tr><td class="num">05</td><td><a>Database design</a></td></tr>
+    <tr><td class="num">06</td><td><a>Prisma schema</a></td></tr>
+    <tr><td class="num">07</td><td><a>User flows</a></td></tr>
+    <tr><td class="num">08</td><td><a>API surface and events</a></td></tr>
+    <tr><td class="num">09</td><td><a>Security, budgets, anti-cheat</a></td></tr>
+    <tr><td class="num">10</td><td><a>Phase 0 delivery sequence</a></td></tr>
+  </table>
+
+  <h3>How to read this document</h3>
+  <p>This is the engineering companion to the product spec. Product rules (P1–P8, grader classes, hidden sets, exercise-as-code) are unchanged. This document translates them into a NestJS + Prisma system the team can start building.</p>
+  <div class="warn">
+    <strong>Stack change vs product spec §11.</strong> The product spec recommended Python/FastAPI grading workers. The team decision for this blueprint is a single NestJS codebase: HTTP API + BullMQ workers. Metrics, Assertion DSL, Slice Spec parser, and harnesses ship in TypeScript. A Python sidecar remains an optional later extraction if a metric library becomes a blocker — it is not required for Phase 0.
+  </div>
+  <div class="note">
+    <strong>What must stay true from day one:</strong> hidden eval sets never reach the API database role; verdicts are three-valued (pass / fail / inconclusive); money is EUR micros; submissions and traces are durable addressable objects; users have roles <code>learner | tutor | org_admin | admin</code>; every exercise has at least one class A gate.
+  </div>
+</section>
+
+<!-- 1 PURPOSE -->
+<section class="page">
+  <h2>1. Purpose, constraints and stack</h2>
+  <p>Phase 0 proves one thing: a graded, hidden-eval-set exercise produces feedback good enough that engineers come back. Not payments, not sandbox, not tutors.</p>
+
+  <h3>1.1 Product constraints that bind architecture</h3>
+  <table>
+    <tr><th>Principle</th><th>Architecture consequence</th></tr>
+    <tr><td>P1 Objective pass/fail</td><td>Gates live in <code>exercise.yaml</code>, executed by workers, stored as <code>GateResult</code> rows/JSON.</td></tr>
+    <tr><td>P2 Deterministic before judges</td><td>Class A metrics run first. Class B is optional and never the sole gate.</td></tr>
+    <tr><td>P3 Feedback is the product</td><td>Grade payload includes scorecard, rotated failing cases, failure classes, next action.</td></tr>
+    <tr><td>P4 Hidden test sets</td><td>Two Postgres schemas. API role cannot SELECT harness secrets.</td></tr>
+    <tr><td>P6 Bounded cost</td><td>Model gateway meters every provider call; job killed on EUR/token/call breach.</td></tr>
+    <tr><td>P8 Stable verdicts</td><td><code>gen_cache</code> + <code>judge_cache</code> + frozen fixtures for Evaluation. Target ≥ 99%.</td></tr>
+    <tr><td>§7.7 No wall-clock gates</td><td>Efficiency gates use tokens / call counts / context size only.</td></tr>
+    <tr><td>§12.2 No arbitrary code</td><td>Learner input = JSON config, prompts, Assertion DSL, Slice Spec. RE2 only.</td></tr>
+  </table>
+
+  <h3>1.2 Chosen stack</h3>
+  <table>
+    <tr><th>Layer</th><th>Choice</th><th>Why</th></tr>
+    <tr><td>Web</td><td>Next.js / React on Vercel</td><td>Reuse prototype shell. Catalogue, workspace, trace, progress.</td></tr>
+    <tr><td>API</td><td>NestJS (Node 20+)</td><td>Modules map 1:1 to domains. Guards, pipes, SSE, queues native.</td></tr>
+    <tr><td>ORM</td><td>Prisma</td><td>Typed models, migrations, JSON columns for polymorphic payloads.</td></tr>
+    <tr><td>Database</td><td>PostgreSQL 16 + pgvector</td><td>Source of truth. One less vector DB. EUR integer money.</td></tr>
+    <tr><td>Queue</td><td>Redis + BullMQ</td><td>Grade jobs, hint jobs, ingest. Worker process separate from HTTP.</td></tr>
+    <tr><td>Object store</td><td>S3-compatible</td><td>Corpora, hidden jsonl, traces, frozen generations.</td></tr>
+    <tr><td>Models</td><td>Model gateway module</td><td>Pin versions, cache, meter, hard cutoff. Provider locked by O1.</td></tr>
+    <tr><td>Auth</td><td>Magic link + OAuth</td><td>Minimal Phase 0. JWT access + rotating refresh cookies.</td></tr>
+  </table>
+
+  <h3>1.3 Explicitly out of Phase 0</h3>
+  <p>Code sandbox, Stripe, contests, streaks, public profiles, tutor marketplace UI, i18n, the other five simulators. Role enum and shareable traces are still built now so Phase 4 is not a rewrite.</p>
+</section>
+
+<!-- 2 ARCHITECTURE -->
+<section class="page">
+  <h2>2. System architecture</h2>
+  <p>One NestJS repository, two processes: <strong>API</strong> (HTTP + SSE) and <strong>Worker</strong> (grading). They share Prisma models and a Redis queue. They do not share database roles.</p>
+  <div class="arch">┌──────────────────────────────────────────────────────────────────────────┐
+│  WEB  Next.js / React  (Vercel)                                          │
+│  Catalogue · Workspace · Trace · Progress · Auth                         │
+│  talks to API only via REST + SSE  (Next /api proxy optional)            │
+└────────────────────────────────┬─────────────────────────────────────────┘
+                                 │  HTTPS
+┌────────────────────────────────┴─────────────────────────────────────────┐
+│  API PROCESS  NestJS  ·  role: labpath_api                               │
+│  Auth · Catalogue · Attempts · Submissions · Runs/SSE · Grades · Hints   │
+│  Progress · Ingest admin (signed) · Cost dashboard (internal)            │
+│  NEVER loads hidden eval files · NEVER calls models except G1/G2 live    │
+└───────────────┬───────────────────────────────────────────┬──────────────┘
+                │ enqueue grade job                         │ Prisma (public)
+                ▼                                           ▼
+┌──────────────────────────────┐                 ┌─────────────────────────┐
+│  REDIS / BullMQ              │                 │  POSTGRES               │
+│  queue: grade                │                 │  schema public  API+WRK │
+│  queue: ingest               │                 │  schema harness  WRK    │
+└───────────────┬──────────────┘                 │  extension vector       │
+                │                                └────────────┬────────────┘
+                ▼                                             │
+┌─────────────────────────────────────────────────────────────┴────────────┐
+│  WORKER PROCESS  NestJS  ·  role: labpath_worker                         │
+│  Validate → Materialise → Execute → Measure → Judge → Score → Explain    │
+│  RAG harness · Eval harness · Guardrail harness                          │
+│  Assertion DSL (RE2) · Slice Spec parser · Metric lib · Judge service    │
+│  Budget enforcer · Model gateway + caches                                │
+└──────────┬───────────────────────────┬─────────────────────┬─────────────┘
+           ▼                           ▼                     ▼
+┌────────────────────┐    ┌────────────────────┐   ┌───────────────────────┐
+│  OBJECT STORE      │    │  MODEL GATEWAY     │   │  pgvector             │
+│  hidden evals      │    │  pin · cache       │   │  precomputed chunks   │
+│  corpora · traces  │    │  meter · kill      │   │  RAG corpus only      │
+│  frozen gens E1-E3 │    │  EUR micros        │   │                       │
+└────────────────────┘    └────────────────────┘   └───────────────────────┘</div>
+
+  <h3>2.1 Process split</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>API process</h4>
+      <p class="small">Accepts learner traffic. Validates submission JSON against the exercise schema. Creates Attempt / Submission / Run rows. Enqueues a job. Streams run progress. Returns scorecards with rotated failing cases only.</p>
+    </div>
+    <div class="card">
+      <h4>Worker process</h4>
+      <p class="small">Reads hidden assets from object store + <code>harness</code> schema. Runs harnesses under a hard budget. Writes Grade + Trace. Never serves HTTP to the public internet.</p>
+    </div>
+  </div>
+
+  <h3>2.2 Why two database roles</h3>
+  <p>Product spec §12.4: hidden eval sets never leave the server — not in API responses, traces, or error messages. The strongest enforcement is not “remember to omit the field”. It is a Postgres role that physically cannot read the table.</p>
+  <ul>
+    <li><code>labpath_api</code> — GRANT on schema <code>public</code> only.</li>
+    <li><code>labpath_worker</code> — GRANT on <code>public</code> + <code>harness</code> + object-store IAM.</li>
+    <li>CI leakage test greps API fixtures for hidden-set canaries and fails the build.</li>
+  </ul>
+</section>
+
+<!-- 3 NEST -->
+<section class="page">
+  <h2>3. NestJS module map</h2>
+  <p>Monorepo stays. <code>apps/api</code> is rewritten from Express + Mongoose to NestJS + Prisma. <code>apps/web</code> keeps the prototype shell. <code>packages/shared</code> holds enums, failure-class vocabulary, and DTO types.</p>
+
+<pre>apps/api/
+  src/
+    main.ts                     HTTP bootstrap
+    worker.main.ts              BullMQ bootstrap (same AppModule, different entry)
+    app.module.ts
+    prisma/                     PrismaService (API) + PrismaHarnessService (worker)
+    modules/
+      auth/                     magic link, OAuth, JWT, roles guard
+      users/
+      catalogue/                GET /exercises, GET /exercises/:slug
+      attempts/                 start attempt, attempt policy (E3 cooldown)
+      submissions/              POST payload, schema validate, enqueue
+      runs/                     GET status, GET SSE stream
+      grades/                   GET scorecard (rotated cases)
+      traces/                   GET instrumentation blob (no hidden labels)
+      hints/                    unlock next hint
+      progress/                 solves, skill rollup
+      ingest/                   signed admin upsert from GitHub Action
+      cost/                     internal cost dashboard
+    grading/                    worker-only
+      pipeline.processor.ts     VALIDATE…EXPLAIN
+      harnesses/rag|eval|guardrail
+      metrics/                  recall@k, nDCG, F1, kappa, Wilson, z-test
+      dsl/                      assertion.dsl.ts, slice-spec.parser.ts
+      judge/                    quarantine, JSON schema verdict, evidence bind
+      gateway/                  provider calls, caches, EUR meter
+      budget/                   kill switch
+      normaliser/               G1/G2 shared encoding normaliser
+    common/                     filters, interceptors, RE2, ids</pre>
+
+  <h3>3.1 HTTP modules vs worker modules</h3>
+  <table>
+    <tr><th>Module</th><th>Process</th><th>Responsibility</th></tr>
+    <tr><td>Auth, Users, Catalogue</td><td>API</td><td>Identity and public exercise metadata</td></tr>
+    <tr><td>Attempts, Submissions</td><td>API</td><td>Lifecycle + payload hash + enqueue</td></tr>
+    <tr><td>Runs, Grades, Traces, Hints</td><td>API</td><td>Read models. SSE from Redis pub/sub</td></tr>
+    <tr><td>Ingest</td><td>API (admin)</td><td>Signed upsert. Does not copy hidden files into SQL</td></tr>
+    <tr><td>GradingModule</td><td>Worker only</td><td>Imported in <code>worker.main.ts</code>, not in public HTTP app</td></tr>
+    <tr><td>GatewayModule</td><td>Worker (+ G1/G2 API live turns)</td><td>All provider I/O. G1/G2 chat turns hit gateway from API with the same meter</td></tr>
+  </table>
+
+  <h3>3.2 Interactive exception: G1 / G2</h3>
+  <p>Most exercises are “submit config → async grade”. G1 is a live mock chat. G2 is “submit a page, then watch the agent”. Those turns still go through the model gateway and write a tool-call log. Win detection stays class A: canary in output, or <code>send_email.to</code> equals attacker address. The grade job for G1/G2 may be short-circuited to an event detector on the same request path, with the Run still persisted.</p>
+
+  <div class="note">Keep Nest module names stable. Adding Prompt Engineering (Phase 1) or Agent simulator (Phase 2) should be a new harness folder, not a new data model.</div>
+</section>
+
+<!-- 4 GRADING -->
+<section class="page">
+  <h2>4. Grading engine on Nest</h2>
+  <p>The pipeline is identical to spec §7.1. Implementation language is TypeScript.</p>
+  <div class="flow">
+    <div class="flow-step"><span>1</span>VALIDATE</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>2</span>MATERIALISE</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>3</span>EXECUTE</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>4</span>MEASURE</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>5</span>JUDGE</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>6</span>SCORE</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>7</span>EXPLAIN</div>
+  </div>
+  <table>
+    <tr><th>Step</th><th>What runs</th></tr>
+    <tr><td>Validate</td><td>JSON Schema for the exercise, size caps, banned constructs, E3 attempt policy, degenerate-suite guard (E1).</td></tr>
+    <tr><td>Materialise</td><td>Build retriever config, prompt, assertion suite, slice spec, or mock-app policy from payload.</td></tr>
+    <tr><td>Execute</td><td>Hidden set from object store. Sample G3 with <code>sampleSeed</code>. Frozen fixtures for E1–E3. Precomputed embeddings for RAG.</td></tr>
+    <tr><td>Measure</td><td>Class A: recall@k, nDCG@k, F1, kappa, canary, tool log, token proxies, gold-span overlap.</td></tr>
+    <tr><td>Judge</td><td>Only R2/R3/R4. n=3 majority, temp 0, quarantined blocks, structured JSON, evidence span check, cache key <code>(judgeVersion, rubricHash, outputHash)</code>.</td></tr>
+    <tr><td>Score</td><td>Banded CI for class B. Pass / fail / inconclusive. Inconclusive does not consume the attempt; one rerun on a larger sample.</td></tr>
+    <tr><td>Explain</td><td>Failure-class taxonomy + rotated K failing cases. Never the full hidden set.</td></tr>
+  </table>
+
+  <h3>4.1 TypeScript metric library (Phase 0 complete list)</h3>
+  <div class="grid-3">
+    <div class="card"><h4>RAG</h4><p class="small">recall@k, gold-span overlap, citation-id validity, nDCG@k, mean prompt tokens, model-call count</p></div>
+    <div class="card"><h4>Eval</h4><p class="small">precision/recall/F1, Cohen’s κ, self-consistency, two-proportion z, BH/Bonferroni, bootstrap CI</p></div>
+    <div class="card"><h4>Guardrails</h4><p class="small">canary detect, tool-log match, block rate, Wilson interval, filter token count</p></div>
+  </div>
+
+  <h3>4.2 Assertion DSL and Slice Spec</h3>
+  <p>Two separate parsers. Do not unify in Phase 0.</p>
+  <ul>
+    <li><strong>Assertion DSL</strong> — YAML, RE2 via the <code>re2</code> npm package (not JS RegExp). Timeouts 50 ms / assertion, 5 s / suite, max 40 assertions, pattern ≤ 512 chars.</li>
+    <li><strong>Slice Spec</strong> — hand-written boolean parser over <code>meta.*</code> only. Never <code>eval()</code>, never <code>new Function()</code>.</li>
+  </ul>
+
+  <h3>4.3 Caches that make P8 true</h3>
+  <table>
+    <tr><th>Cache</th><th>Key</th><th>Used by</th></tr>
+    <tr><td>Frozen generations</td><td>object-store fixtures, versioned</td><td>E1 E2 E3 — no live gen at grade time</td></tr>
+    <tr><td>gen_cache</td><td>(modelVersion, promptHash, paramsHash)</td><td>R2–R4, G1–G3 re-grades</td></tr>
+    <tr><td>judge_cache</td><td>(judgeVersion, rubricHash, outputHash)</td><td>All class B</td></tr>
+    <tr><td>chunk embeddings</td><td>(corpusVersion, embedModel, chunkId)</td><td>All RAG</td></tr>
+  </table>
+</section>
+
+<!-- 5 DATABASE DESIGN -->
+<section class="page">
+  <h2>5. Database design</h2>
+  <h3>5.1 Rules</h3>
+  <ul>
+    <li>UUIDs everywhere (<code>gen_random_uuid()</code>).</li>
+    <li>All money is <code>BIGINT</code> EUR micros. <code>fxRate</code> recorded on the run. No mixed-currency columns.</li>
+    <li><code>verdict</code> is an enum of three values, never a boolean.</li>
+    <li>Submission <code>payload</code> is polymorphic JSON, validated by the exercise’s JSON Schema.</li>
+    <li>Hidden eval JSONL is <strong>not</strong> a Prisma model the API can query. It lives in object storage. Worker reads it with a signed URI stored in <code>harness.exercise_assets</code>.</li>
+    <li>Public sample may be copied into <code>exercises.publicSample</code> because the catalogue endpoint is allowed to return it.</li>
+    <li>Historical grades keep <code>exerciseVersion</code>. Never silently re-score.</li>
+  </ul>
+
+  <h3>5.2 Schema map</h3>
+  <table class="er">
+    <tr><th>Schema</th><th>Tables</th><th>Who can read</th></tr>
+    <tr><td><code>public</code></td><td>users, identities, exercises, attempts, submissions, runs, grades, traces, hint_unlocks, skills, user_skill_scores, refresh_tokens, magic_links</td><td>API + worker</td></tr>
+    <tr><td><code>harness</code></td><td>exercise_assets, corpus_chunks, gen_cache, judge_cache, label_sets</td><td>Worker only</td></tr>
+  </table>
+
+  <h3>5.3 Entity relationships</h3>
+  <div class="arch">User 1──* Attempt 1──* Submission 1──* Run 1──1 Grade
+                                      └──1 Trace (blob URI)
+
+Exercise 1──* Attempt
+Exercise *──* Skill          (ExerciseSkill)
+User *──* Skill              (UserSkillScore)
+
+Run.sampleSeed  →  makes G3 (and any sampled exercise) replayable
+Run.costEurMicros + fxRate  →  unit-economics dashboard
+Grade.verdict ∈ {pass, fail, inconclusive}
+Grade.failureClasses[]  →  controlled vocabulary, not free text</div>
+
+  <h3>5.4 What is not stored in Postgres</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>Object store</h4>
+      <p class="small">eval_hidden.jsonl, full traces, frozen generation fixtures, RAG corpora source files, judge rubrics YAML, reference/near-miss solutions.</p>
+    </div>
+    <div class="card">
+      <h4>Git (exercise-as-code)</h4>
+      <p class="small">exercise.yaml, brief.md, hints.md, public/hidden jsonl, grader extras, solution/. GitHub Action validates and upserts metadata only.</p>
+    </div>
+  </div>
+
+  <h3>5.5 Role model (marketplace-ready, unused until Phase 4)</h3>
+  <p><code>learner</code> is the only active product role in Phase 0. <code>tutor</code> and <code>org_admin</code> exist on the enum so we do not migrate user types later. No tutor tables, booking, or payouts until Phase 4.</p>
+</section>
+
+<!-- 6 PRISMA -->
+<section class="page">
+  <h2>6. Prisma schema — datasource, enums, identity</h2>
+  <p>File: <code>apps/api/prisma/schema.prisma</code>. Preview features: <code>postgresqlExtensions</code>, <code>multiSchema</code>.</p>
+<pre>generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "multiSchema"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto, vector]
+  schemas    = ["public", "harness"]
+}
+
+enum Role           { learner tutor org_admin admin          @@schema("public") }
+enum AuthProvider   { magic_link google github               @@schema("public") }
+enum ExerciseType   { drill exercise lab simulation scenario @@schema("public") }
+enum Simulator      { rag evaluation guardrails              @@schema("public") }
+enum Difficulty     { E M H                                  @@schema("public") }
+enum AttemptStatus  { started submitted grading graded abandoned @@schema("public") }
+enum RunStatus      { queued running succeeded failed killed_budget @@schema("public") }
+enum Verdict        { pass fail inconclusive                 @@schema("public") }
+
+model User {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String    @unique
+  emailVerified DateTime?
+  role          Role      @default(learner)
+  displayName   String?
+  imageUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  identities      Identity[]
+  magicLinks      MagicLink[]
+  refreshTokens   RefreshToken[]
+  attempts        Attempt[]
+  hintUnlocks     HintUnlock[]
+  skillScores     UserSkillScore[]
+
+  @@map("users")
+  @@schema("public")
+}
+
+model Identity {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String       @db.Uuid
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider       AuthProvider
+  providerUserId String?
+  passwordHash   String?
+  createdAt      DateTime     @default(now())
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+  @@map("identities")
+  @@schema("public")
+}
+
+model MagicLink {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([tokenHash])
+  @@map("magic_links")
+  @@schema("public")
+}
+
+model RefreshToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@map("refresh_tokens")
+  @@schema("public")
+}</pre>
+</section>
+
+<section class="page">
+  <h2>6. Prisma schema — catalogue, skills, attempts</h2>
+<pre>model Skill {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug     String  @unique
+  name     String
+  parentId String? @db.Uuid
+  parent   Skill?  @relation("SkillTree", fields: [parentId], references: [id])
+  children Skill[] @relation("SkillTree")
+
+  exercises ExerciseSkill[]
+  scores    UserSkillScore[]
+
+  @@map("skills")
+  @@schema("public")
+}
+
+model Exercise {
+  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug             String
+  version          Int
+  type             ExerciseType @default(exercise)
+  simulator        Simulator
+  title            String
+  briefMd          String
+  difficulty       Difficulty
+  submissionSchema Json
+  thresholds       Json
+  budget           Json         // { maxModelCalls, maxTokens, maxCostEur, wallClockS }
+  gates            Json         // copy of exercise.yaml gates for the worker
+  attemptPolicy    Json?        // { maxAttempts, cooldownHours } — E3 uses this
+  feedback         Json         // { showFailingCases, rotate }
+  publicSample     Json?        // allowed on GET /exercises/:slug
+  isPublished      Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  skills     ExerciseSkill[]
+  attempts   Attempt[]
+  hintUnlocks HintUnlock[]
+
+  @@unique([slug, version])
+  @@index([simulator, difficulty, isPublished])
+  @@map("exercises")
+  @@schema("public")
+}
+
+model ExerciseSkill {
+  exerciseId String   @db.Uuid
+  skillId    String   @db.Uuid
+  weight     Float    @default(1)
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, skillId])
+  @@map("exercise_skills")
+  @@schema("public")
+}
+
+model UserSkillScore {
+  userId      String   @db.Uuid
+  skillId     String   @db.Uuid
+  score       Float    @default(0)
+  lastPracticedAt DateTime?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill       Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([userId, skillId])
+  @@map("user_skill_scores")
+  @@schema("public")
+}
+
+model Attempt {
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String        @db.Uuid
+  exerciseId       String        @db.Uuid
+  exerciseVersion  Int
+  status           AttemptStatus @default(started)
+  startedAt        DateTime      @default(now())
+  submittedAt      DateTime?
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise         Exercise      @relation(fields: [exerciseId], references: [id])
+  submissions      Submission[]
+
+  @@index([userId, exerciseId])
+  @@map("attempts")
+  @@schema("public")
+}
+
+model HintUnlock {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @db.Uuid
+  exerciseId  String   @db.Uuid
+  hintIndex   Int
+  unlockedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+
+  @@unique([userId, exerciseId, hintIndex])
+  @@map("hint_unlocks")
+  @@schema("public")
+}</pre>
+  <p class="small">Ingest upserts a new <code>Exercise</code> row when YAML content changes and bumps <code>version</code>. Old attempts keep pointing at the old row via <code>exerciseVersion</code>.</p>
+</section>
+
+<section class="page">
+  <h2>6. Prisma schema — submissions, runs, grades, traces</h2>
+<pre>model Submission {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  attemptId  String   @db.Uuid
+  payload    Json     // polymorphic per simulator — never contains hidden labels
+  payloadHash String
+  createdAt  DateTime @default(now())
+  attempt    Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  runs       Run[]
+
+  @@index([attemptId])
+  @@index([payloadHash])
+  @@map("submissions")
+  @@schema("public")
+}
+
+model Run {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  submissionId    String    @db.Uuid
+  workerVersion   String
+  modelVersions   Json      // { generator, judge, embed }
+  sampleSeed      String?   // G3 and any sample_per_attempt exercise
+  status          RunStatus @default(queued)
+  tokensIn        Int       @default(0)
+  tokensOut       Int       @default(0)
+  costEurMicros   BigInt    @default(0)
+  fxRate          Decimal   @db.Decimal(12, 6)
+  cacheHitRatio   Float     @default(0)
+  errorCode       String?
+  errorMessage    String?
+  startedAt       DateTime?
+  finishedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  submission      Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  grade           Grade?
+  trace           Trace?
+
+  @@index([submissionId])
+  @@index([status, createdAt])
+  @@map("runs")
+  @@schema("public")
+}
+
+model Grade {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId          String   @unique @db.Uuid
+  verdict        Verdict
+  metrics        Json     // [{ id, value, ciLow, ciHigh, threshold, passed }]
+  gateResults    Json     // [{ id, class, outcome, metric }]
+  failureClasses String[]
+  scorecard      Json     // learner-facing projection, already redacted
+  failingCases   Json     // ROTATED sample only — never the full hidden set
+  createdAt      DateTime @default(now())
+  run            Run      @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@map("grades")
+  @@schema("public")
+}
+
+model Trace {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId     String   @unique @db.Uuid
+  blobUri   String   // object store — chunks, prompts, tools, tokens, latency
+  createdAt DateTime @default(now())
+  run       Run      @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@map("traces")
+  @@schema("public")
+}</pre>
+  <div class="warn">
+    <strong>Redaction rule.</strong> <code>Grade.failingCases</code> is written by the worker after sampling. The API returns this column as-is and never joins to hidden labels. Trace blobs must be stripped of gold labels before upload. A CI test asserts hidden fixture strings cannot appear in grade or trace JSON.
+  </div>
+</section>
+
+<section class="page">
+  <h2>6. Prisma schema — harness (worker-only)</h2>
+<pre>model ExerciseAsset {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  exerciseSlug  String
+  exerciseVersion Int
+  hiddenEvalUri String   // s3://.../eval_hidden.jsonl  — NEVER copied to public
+  publicEvalUri String
+  corpusUri     String?
+  labelsUri     String?
+  frozenGenUri  String?  // E1-E3
+  judgeYamlUri  String?
+  createdAt     DateTime @default(now())
+
+  @@unique([exerciseSlug, exerciseVersion])
+  @@map("exercise_assets")
+  @@schema("harness")
+}
+
+model CorpusChunk {
+  id             String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  corpusId       String
+  chunkId        String
+  text           String
+  headingPath    String?
+  embedModel     String
+  embedding      Unsupported("vector")?
+  createdAt      DateTime                     @default(now())
+
+  @@unique([corpusId, chunkId, embedModel])
+  @@map("corpus_chunks")
+  @@schema("harness")
+}
+
+model GenCache {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelVersion String
+  promptHash   String
+  paramsHash   String
+  blobUri      String
+  hits         Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([modelVersion, promptHash, paramsHash])
+  @@map("gen_cache")
+  @@schema("harness")
+}
+
+model JudgeCache {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  judgeVersion String
+  rubricHash   String
+  outputHash   String
+  verdict      Json
+  hits         Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([judgeVersion, rubricHash, outputHash])
+  @@map("judge_cache")
+  @@schema("harness")
+}
+
+model LabelSet {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  exerciseSlug String
+  annotatorA   String
+  annotatorB   String
+  kappaHh      Float?
+  adjudicated  Boolean  @default(false)
+  labelsUri    String
+  createdAt    DateTime @default(now())
+
+  @@map("label_sets")
+  @@schema("harness")
+}</pre>
+
+  <h3>6.1 Postgres grants (run after migrate)</h3>
+<pre>REVOKE ALL ON SCHEMA harness FROM PUBLIC, labpath_api;
+GRANT USAGE ON SCHEMA public TO labpath_api, labpath_worker;
+GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO labpath_api;
+GRANT ALL ON SCHEMA harness TO labpath_worker;
+GRANT ALL ON ALL TABLES IN SCHEMA harness TO labpath_worker;</pre>
+  <p class="small">Worker Prisma client uses <code>DATABASE_URL_WORKER</code>. API client uses <code>DATABASE_URL</code>. Do not put the worker URL in the API process env.</p>
+</section>
+
+<section class="page">
+  <h2>6. Payload shapes (polymorphic JSON)</h2>
+  <p>One <code>submissions.payload</code> column. Validation is per-exercise JSON Schema stored on <code>Exercise.submissionSchema</code>.</p>
+  <table>
+    <tr><th>Exercise</th><th>Payload (conceptual)</th></tr>
+    <tr><td>R1</td><td><code>{ chunkSize, overlap, split: "fixed"|"sentence"|"recursive"|"heading" }</code></td></tr>
+    <tr><td>R2</td><td><code>{ topK, rerank, chunkSize }</code></td></tr>
+    <tr><td>R3</td><td><code>{ generationPrompt }</code></td></tr>
+    <tr><td>R4</td><td><code>{ reranker, topN, queryRewritePrompt? }</code></td></tr>
+    <tr><td>E1 / G3 filters</td><td>Assertion DSL YAML string (parsed server-side)</td></tr>
+    <tr><td>E2</td><td><code>{ judgePrompt, rubric }</code></td></tr>
+    <tr><td>E3</td><td>Slice Spec YAML</td></tr>
+    <tr><td>G1</td><td>Interactive turns: <code>{ level, messages[] }</code> — win is an event, not a batch grade</td></tr>
+    <tr><td>G2</td><td><code>{ pageContent, level }</code></td></tr>
+    <tr><td>G3</td><td><code>{ systemPrompt, inputFilterYaml, outputFilterYaml, toolPolicy? }</code></td></tr>
+  </table>
+
+  <h3>6.2 JSON stored on Grade</h3>
+<pre>// metrics[]
+{ "id": "recall_at_5", "value": 0.83, "ciLow": null, "ciHigh": null,
+  "threshold": 0.80, "op": "gte", "class": "A", "passed": true }
+
+// gateResults[]
+{ "id": "citation-support", "class": "B", "outcome": "inconclusive",
+  "metric": "citation_supports_claim" }
+
+// failingCases[]  — already rotated
+{ "input": "...", "expected": "...", "actual": "...", "failureClass": "chunk-too-large" }</pre>
+</section>
+
+<!-- 7 USER FLOWS -->
+<section class="page">
+  <h2>7. User flows</h2>
+  <p>Phase 0 has four screens. All flows below use those screens. Activation metric: signup → first submission in the same session.</p>
+
+  <h3>7.1 First session (activation)</h3>
+  <div class="flow">
+    <div class="flow-step"><span>1</span>Land</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>2</span>Magic link / OAuth</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>3</span>Catalogue</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>4</span>Open R1</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>5</span>Submit</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>6</span>Scorecard</div>
+  </div>
+  <p>R1 is the onboarding exercise: under 15 minutes, class A only, no judge. Catalogue default-sorts Easy + RAG first for new users. Auth is required before submit (guest browse of briefs is allowed; submit is not).</p>
+
+  <h3>7.2 Catalogue</h3>
+  <ul>
+    <li>GET <code>/api/exercises?simulator=&amp;difficulty=&amp;skill=</code></li>
+    <li>Cards grouped by simulator. Difficulty badge, skill tags, solved state from <code>/api/me/progress</code>.</li>
+    <li>Hidden sets, thresholds internals, and reference solutions are not in this payload.</li>
+  </ul>
+
+  <h3>7.3 Start attempt → workspace</h3>
+  <div class="arch">Learner opens /exercises/:slug
+        │
+        ├─ GET /api/exercises/:slug     brief, schema, public sample, budgets
+        ├─ POST /api/attempts           { exerciseSlug } → Attempt(started)
+        └─ Workspace renders
+              Left   brief, objective, constraints, budgets, hints
+              Centre submission surface (form | prompt | YAML | mock app)
+              Right  run panel (idle)</div>
+  <p>E3 attempt policy is enforced here: if 5 submissions in the window, API returns 429 with <code>cooldownHours: 24</code>.</p>
+</section>
+
+<section class="page">
+  <h2>7. User flows — submit and grade</h2>
+  <h3>7.4 Async grade (R1–R4, E1–E3, G3)</h3>
+  <div class="arch">POST /api/attempts/:id/submissions   { payload }
+        │
+        ├─ JSON Schema validate (fast reject)
+        ├─ E1 degenerate-suite check
+        ├─ payloadHash = sha256(canonical json)
+        ├─ Attempt → submitted / grading
+        ├─ Run(queued) inserted
+        └─ BullMQ job grade:{runId}
+                │
+Learner GET /api/runs/:id/stream   (SSE)
+        events: queued | started | step | metric | done | killed_budget | error
+                │
+Worker pipeline VALIDATE…EXPLAIN
+        ├─ write Grade (verdict, rotated cases)
+        ├─ write Trace blob (redacted)
+        ├─ Attempt → graded
+        └─ publish SSE done
+                │
+Workspace right panel → scorecard + 3 failing cases + failure class + next action</div>
+
+  <h3>7.5 Inconclusive (class B band / G3 Wilson)</h3>
+  <ol>
+    <li>Worker returns <code>verdict: inconclusive</code>.</li>
+    <li>UI copy: result is within measurement noise; attempt is not consumed.</li>
+    <li>Worker automatically enqueues one rerun on a larger sample, same payloadHash.</li>
+    <li>If still inconclusive → resolve as <code>pass</code> (spec §7.2).</li>
+  </ol>
+
+  <h3>7.6 Hints</h3>
+  <p>POST <code>/api/exercises/:slug/hints/next</code> unlocks the next index into <code>hint_unlocks</code>. Hints are progressive. Tutor CTA is <strong>not</strong> shown in Phase 0. Spec allows the booking prompt only after ≥ 3 failed attempts in later phases — do not upsell on attempt one.</p>
+
+  <h3>7.7 Trace</h3>
+  <p>GET <code>/api/runs/:id/trace</code> returns the instrumentation blob: retrieved chunks + scores, prompts actually sent, tokens, cost, per-step latency, tool calls. Gold labels and hidden questions that were not in the rotated sample are absent. Free-tier hiding of traces is a Phase 1 concern; Phase 0 shows traces to every authenticated solver.</p>
+</section>
+
+<section class="page">
+  <h2>7. User flows — simulator-specific</h2>
+
+  <h3>7.8 RAG (R1–R4)</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>R1 / R2 / R4 — config form</h4>
+      <p class="small">Centre panel is structured fields (chunk size, overlap, top-k, reranker). Public sample of 5 Q/A is visible. Submit runs retrieval (R1 has zero live generations). Feedback highlights gold span vs retrieved chunks.</p>
+    </div>
+    <div class="card">
+      <h4>R3 — prompt editor (flagship)</h4>
+      <p class="small">Retrieval is fixed. Learner writes the generation prompt. Scorecard shows citation format, ID validity, gold-span overlap, refusal counts, then banded class B support. Demo this one.</p>
+    </div>
+  </div>
+
+  <h3>7.9 Evaluation (E1–E3)</h3>
+  <div class="grid-3">
+    <div class="card"><h4>E1 YAML assertions</h4><p class="small">Editor + 10 labelled public samples. Confusion matrix on fail. Rotating 3 FP + 3 FN.</p></div>
+    <div class="card"><h4>E2 judge prompt</h4><p class="small">Platform-fixed temperature 0.7, 80 items × 3. Learner does not set temperature. Malformed JSON = incorrect.</p></div>
+    <div class="card"><h4>E3 slice spec</h4><p class="small">Metadata schema published in the brief. 5 submits then 24h cooldown. No candidate slice list to brute-force.</p></div>
+  </div>
+
+  <h3>7.10 Guardrails (G1–G3)</h3>
+  <div class="arch">G1 Break the Concierge — split UI, live chat
+  Left: brief + level + objective (extract canary)
+  Right: mock hotel concierge
+  Each turn: POST /api/simulations/g1/turns  → gateway → canary detector
+  Win: detector hits → defence debrief (which encoding, what would have stopped it)
+
+G2 Indirect Payload — no chat with the agent
+  Learner submits page HTML/markdown
+  Worker runs mock research agent + optional confirmation-gate policy checker
+  Win: tool log send_email.to == attacker address
+
+G3 Hold the Line — blue team
+  Learner submits system prompt + Assertion DSL filters + optional tool policy
+  Worker samples 40 attacks + 60 benign from 500-item pool (sampleSeed stored)
+  Scorecard: 2×2 + all errors from THAT sample only + Wilson CI</div>
+
+  <h3>7.11 Progress</h3>
+  <p>GET <code>/api/me/progress</code> → attempts, solves, first-cut skill radar from <code>user_skill_scores</code>. Recency decay can be a computed view; full decay is Phase 3. No public profile URL in Phase 0.</p>
+</section>
+
+<section class="page">
+  <h2>7. User flow — sequence (happy path)</h2>
+  <div class="arch">Browser              API                   Redis                 Worker              Postgres / S3
+  |                    |                      |                      |                    |
+  |  POST /attempts    |                      |                      |                    |
+  |------------------->|  insert Attempt      |                      |                    |
+  |  201 attemptId     |                      |                      |                    |
+  |                    |                      |                      |                    |
+  |  POST /submissions |  validate schema     |                      |                    |
+  |------------------->|  insert Submission   |                      |                    |
+  |                    |  insert Run(queued)  |                      |                    |
+  |                    |  enqueue grade       |                      |                    |
+  |                    |--------------------->|                      |                    |
+  |  202 runId         |                      |                      |                    |
+  |                    |                      |                      |                    |
+  |  GET /runs/:id/stream (SSE)               |                      |                    |
+  |------------------->|  subscribe           |                      |                    |
+  |                    |                      |  job picked          |                    |
+  |                    |                      |--------------------->|  load hidden jsonl |
+  |                    |                      |                      |  gateway + caches  |
+  |  event: started    |&lt;---------------------|&lt;---------------------|  publish           |
+  |  event: metric     |                      |                      |                    |
+  |                    |                      |                      |  insert Grade      |
+  |                    |                      |                      |  put Trace blob    |
+  |  event: done       |                      |                      |                    |
+  |                    |                      |                      |                    |
+  |  GET /runs/:id/grade                      |                      |                    |
+  |------------------->|  select Grade        |                      |                    |
+  |  scorecard JSON    |  (no harness schema) |                      |                    |</div>
+  <p class="small">On budget kill: worker sets <code>Run.status = killed_budget</code>, SSE event explains tokens/EUR cap, no silent timeout.</p>
+</section>
+
+<!-- 8 API -->
+<section class="page">
+  <h2>8. API surface and events</h2>
+  <p>All routes prefixed <code>/api</code>. Auth: Bearer access JWT (15 min) + httpOnly refresh cookie. Role guard on every route except catalogue read of published briefs (optional public) and auth.</p>
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Auth</th><th>Notes</th></tr>
+    <tr><td>POST</td><td>/auth/magic-link</td><td>no</td><td>email → mailed token</td></tr>
+    <tr><td>POST</td><td>/auth/magic-link/consume</td><td>no</td><td>sets cookies</td></tr>
+    <tr><td>POST</td><td>/auth/oauth/:provider</td><td>no</td><td>Google / GitHub</td></tr>
+    <tr><td>POST</td><td>/auth/refresh</td><td>cookie</td><td>rotate refresh</td></tr>
+    <tr><td>GET</td><td>/exercises</td><td>yes</td><td>filter simulator, difficulty, skill</td></tr>
+    <tr><td>GET</td><td>/exercises/:slug</td><td>yes</td><td>brief, schema, public sample, budgets — never hidden</td></tr>
+    <tr><td>POST</td><td>/attempts</td><td>yes</td><td>start attempt</td></tr>
+    <tr><td>POST</td><td>/attempts/:id/submissions</td><td>yes</td><td>enqueue run</td></tr>
+    <tr><td>GET</td><td>/runs/:id</td><td>yes</td><td>poll status</td></tr>
+    <tr><td>GET</td><td>/runs/:id/stream</td><td>yes</td><td>SSE</td></tr>
+    <tr><td>GET</td><td>/runs/:id/grade</td><td>yes</td><td>scorecard, rotated cases, failure classes</td></tr>
+    <tr><td>GET</td><td>/runs/:id/trace</td><td>yes</td><td>instrumentation</td></tr>
+    <tr><td>POST</td><td>/exercises/:slug/hints/next</td><td>yes</td><td>unlock</td></tr>
+    <tr><td>GET</td><td>/me/progress</td><td>yes</td><td>attempts, solves, radar</td></tr>
+    <tr><td>POST</td><td>/simulations/g1/turns</td><td>yes</td><td>interactive concierge</td></tr>
+    <tr><td>POST</td><td>/internal/ingest/exercises</td><td>signed</td><td>GitHub Action; metadata only</td></tr>
+    <tr><td>GET</td><td>/internal/cost</td><td>admin</td><td>cost dashboard</td></tr>
+  </table>
+
+  <h3>8.1 SSE events</h3>
+  <p><code>queued</code>, <code>started</code>, <code>step</code> (validate|execute|measure|judge|score), <code>metric</code> (partial), <code>done</code>, <code>inconclusive</code>, <code>killed_budget</code>, <code>error</code>.</p>
+
+  <h3>8.2 Ownership</h3>
+  <p>Runs, grades, traces are readable only by the owning user (or admin). Spec §9.3: they are durable and addressable so a later share token can be added without moving blobs. Phase 0 does not implement share links.</p>
+</section>
+
+<!-- 9 SECURITY -->
+<section class="page">
+  <h2>9. Security, budgets, anti-cheat</h2>
+  <h3>9.1 Execution safety (Phase 0)</h3>
+  <ul>
+    <li>No Docker sandbox. No learner Python. No <code>eval()</code>.</li>
+    <li>RE2 only for DSL patterns. Assertion timeouts as specified.</li>
+    <li>Slice Spec: comparison + boolean over published <code>meta.*</code> fields.</li>
+    <li>Primary live threat: prompt injection of judges via R3/E2/G3 learner text. Mitigate with quarantine delimiters, structured verdict schema, evidence binding, ~40-payload adversarial CI suite.</li>
+  </ul>
+
+  <h3>9.2 Budget kill</h3>
+  <p>Gateway wraps every model call. Counters on the Run: tokens in/out, call count, <code>costEurMicros</code>. Crossing any cap in <code>Exercise.budget</code> sets <code>killed_budget</code> and stops the job. Wall-clock is a worker safety timeout, not a learner-facing gate.</p>
+  <table>
+    <tr><th>Exercise</th><th>EUR cap / attempt</th></tr>
+    <tr><td>R1 / E1 / E3</td><td>€0.02 / €0.001 / €0.001</td></tr>
+    <tr><td>R2 / R4</td><td>€0.30</td></tr>
+    <tr><td>R3</td><td>€0.35 (highest)</td></tr>
+    <tr><td>E2</td><td>€0.25 (240 learner-judge calls)</td></tr>
+    <tr><td>G1 / G2 / G3</td><td>€0.05 / €0.08 / €0.20</td></tr>
+  </table>
+  <p class="small">Blended mean target ≤ €0.20. O8 (unit economics vs Pro price) is a Phase 1 pricing call, not a Phase 0 schema change.</p>
+
+  <h3>9.3 Anti-cheat</h3>
+  <ul>
+    <li>Hidden jsonl never in <code>public</code> schema, never in API JSON, never in error messages.</li>
+    <li>Rotated failing cases: R1 = 3 of 30; R4 = 5 improved + 3 degraded; E1 = 3 FP + 3 FN; G3 = errors from the 100-item sample only.</li>
+    <li><code>sampleSeed</code> on Run makes G3 replayable for support without publishing the pool.</li>
+    <li>Accept that a determined cheater beats a practice platform. Do not cripple UX.</li>
+  </ul>
+
+  <h3>9.4 Performance budgets</h3>
+  <p>Catalogue/workspace &lt; 1.5 s p95. Job start &lt; 3 s. Grade &lt; 60 s p95. Progress via SSE.</p>
+</section>
+
+<!-- 10 SEQUENCE -->
+<section class="page">
+  <h2>10. Phase 0 delivery sequence</h2>
+  <table>
+    <tr><th>Week</th><th>Engineering milestone</th></tr>
+    <tr><td>0</td><td>Lock O1 (model provider). Thresholds cannot be tuned without it.</td></tr>
+    <tr><td>1</td><td>Prisma schema + two DB roles + migrate. Nest skeleton (API + worker). Model gateway + gen_cache. exercise.yaml ingest Action. Labelling guidelines (content).</td></tr>
+    <tr><td>2</td><td><strong>Go/no-go:</strong> RAG harness + R1 end-to-end, ≥ 99% re-grade stability. Vertical slice through workspace.</td></tr>
+    <tr><td>3</td><td>Workspace + trace against R1. Start authoring R3 and G3 (hardest content first).</td></tr>
+    <tr><td>4</td><td>R2, R4. Judge service with quarantine + structured verdicts. Double-annotation underway.</td></tr>
+    <tr><td>5</td><td>Eval harness + frozen fixtures. Freeze Assertion DSL grammar. E1, E2.</td></tr>
+    <tr><td>6</td><td>Guardrail harness, shared normaliser, tool-call log, G2 policy checker. G1, G2. E3 + Slice Spec.</td></tr>
+    <tr><td>7</td><td>G3 pool-and-sample. Budget kill tests. Leakage tests. Adversarial grader suite. RE2 DoS test.</td></tr>
+    <tr><td>8</td><td>Threshold tune, 20 external testers, feedback iteration, acceptance sign-off.</td></tr>
+  </table>
+  <div class="note">If R1 is not stable by end of week 2, the schedule is wrong. If R3/G3 authoring overruns at week 3, cut to 8 exercises (drop R2 and E3) — do not cut the tester round.</div>
+
+  <h3>10.1 What this replaces in the current repo</h3>
+  <table>
+    <tr><th>Today</th><th>Phase 0 target</th></tr>
+    <tr><td>Express + Mongoose + MongoDB</td><td>NestJS + Prisma + PostgreSQL</td></tr>
+    <tr><td>In-process simulation engines</td><td>BullMQ worker + harness folders</td></tr>
+    <tr><td>Course / LMS modules</td><td>Out of scope — do not port</td></tr>
+    <tr><td>Code-exec / terminal sandboxes</td><td>Phase 1, not now</td></tr>
+  </table>
+
+  <h3>10.2 Open decisions that still block week 1</h3>
+  <ul>
+    <li><strong>O1</strong> Model provider for graders/judges.</li>
+    <li><strong>O4</strong> Synthetic corpus (recommended) vs licensed docs.</li>
+    <li><strong>O7</strong> Hands-on Agent Breaker scoring check before any external comparison claim.</li>
+  </ul>
+
+  <p class="footer-note">LabPath System Design v1.0 · Companion to Product Specification v1.0 · NestJS / Prisma / PostgreSQL · Draft for engineering review · 26 August 2026</p>
+</section>
+
+</body>
+</html>

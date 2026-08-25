@@ -1,23 +1,26 @@
 {
-  "name": "aieng-platform",
+  "name": "labpath",
   "version": "0.1.0",
   "private": true,
-  "description": "AI engineering practice platform — monorepo (web + API + shared packages)",
+  "description": "LabPath — practice platform for AI engineering",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev:api & npm run dev:web",
-    "dev:web": "npm run dev -w @aieng/web",
-    "dev:api": "npm run dev -w @aieng/api",
-    "build": "npm run build -w @aieng/shared && npm run build -w @aieng/api && npm run build -w @aieng/web",
-    "build:web": "npm run build -w @aieng/web",
-    "build:api": "npm run build -w @aieng/api",
-    "typecheck": "npm run build -w @aieng/shared && npm run typecheck -ws --if-present",
-    "lint": "npm run lint -ws --if-present",
-    "test": "npm run test -w @aieng/api",
-    "test:e2e": "npm run test:e2e -w @aieng/web"
+    "dev:api": "npm run start:dev -w @labpath/api",
+    "dev:worker": "npm run start:worker:dev -w @labpath/api",
+    "build:api": "npm run build -w @labpath/api",
+    "start:api": "npm run start:prod -w @labpath/api",
+    "start:worker": "npm run start:worker:prod -w @labpath/api",
+    "dev:web": "npm run dev -w @labpath/web",
+    "build:web": "npm run build -w @labpath/web",
+    "lint": "npm run lint -w @labpath/api && npm run lint -w @labpath/web",
+    "typecheck": "npm run typecheck -w @labpath/api && npm run typecheck -w @labpath/web",
+    "test": "npm run test -w @labpath/api",
+    "prisma:generate": "npm run prisma:generate -w @labpath/api",
+    "prisma:migrate": "npm run prisma:migrate -w @labpath/api",
+    "prisma:studio": "npm run prisma:studio -w @labpath/api"
   },
   "engines": {
     "node": ">=20"

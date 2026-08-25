@@ -1,8 +1,12 @@
-import { asyncHandler } from '../../common/utils/asyncHandler';
-import * as progressService from './progress.service';
+import { Controller, Get } from '@nestjs/common';
+import { ProgressService } from './progress.service';
 
-export const listProgress = asyncHandler(async (req, res) => {
-  const courseId = typeof req.query.courseId === 'string' ? req.query.courseId : undefined;
-  const progress = await progressService.listProgress(req.user!.id, courseId);
-  res.json({ progress });
-});
+@Controller('me')
+export class ProgressController {
+  constructor(private readonly progressService: ProgressService) {}
+
+  @Get('progress')
+  getMine() {
+    return this.progressService.getMine('');
+  }
+}

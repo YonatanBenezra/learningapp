@@ -1,27 +1,25 @@
-# @aieng/api
+# @labpath/api
 
-Express REST API for the AI engineering practice platform.
+NestJS HTTP API and grading worker.
 
-Part of the **aieng-platform** monorepo. See [../../ARCHITECTURE.md](../../ARCHITECTURE.md) and [../../README.md](../../README.md).
-
-## Quick start
-
-```bash
-# From repo root
-npm install
-npm run build -w @aieng/shared
-npm run dev:api
+```
+src/
+  main.ts              HTTP process
+  worker.ts            worker process
+  core/                config, prisma, redis, queue, logger, health
+  common/              shared constants, guards, filters, pipes
+  modules/
+    identity/          auth, users
+    catalogue/         exercises, skills
+    practice/          attempts, submissions, runs, grades, traces, hints
+    progress/
+    ingest/
+    cost/
+    grading/           harnesses, gateway, dsl, metrics (worker only)
 ```
 
-## Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | tsx watch `src/server.ts` |
-| `npm run build` | `tsc` → `dist/` |
-| `npm run test` | Vitest |
-| `npm run lint` | ESLint |
-
-## Environment
-
-Copy `.env.example` → `.env`. Requires MongoDB and Redis for full functionality.
+```bash
+cp .env.example .env
+npm run start:dev
+npm run start:worker:dev
+```

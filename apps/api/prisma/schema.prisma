@@ -1,0 +1,397 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto, vector]
+  schemas    = ["public", "harness"]
+}
+
+enum Role {
+  learner
+  tutor
+  org_admin
+  admin
+
+  @@schema("public")
+}
+
+enum AuthProvider {
+  magic_link
+  google
+  github
+
+  @@schema("public")
+}
+
+enum ExerciseType {
+  drill
+  exercise
+  lab
+  simulation
+  scenario
+
+  @@schema("public")
+}
+
+enum Simulator {
+  rag
+  evaluation
+  guardrails
+  prompt_engineering
+  agent
+  benchmark
+  neural_network
+  fine_tuning
+
+  @@schema("public")
+}
+
+enum Difficulty {
+  E
+  M
+  H
+
+  @@schema("public")
+}
+
+enum AttemptStatus {
+  started
+  submitted
+  grading
+  graded
+  abandoned
+
+  @@schema("public")
+}
+
+enum RunStatus {
+  queued
+  running
+  succeeded
+  failed
+  killed_budget
+
+  @@schema("public")
+}
+
+enum Verdict {
+  pass
+  fail
+  inconclusive
+
+  @@schema("public")
+}
+
+model User {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String    @unique
+  emailVerified DateTime?
+  role          Role      @default(learner)
+  displayName   String?
+  imageUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  identities    Identity[]
+  magicLinks    MagicLink[]
+  refreshTokens RefreshToken[]
+  attempts      Attempt[]
+  hintUnlocks   HintUnlock[]
+  skillScores   UserSkillScore[]
+
+  @@map("users")
+  @@schema("public")
+}
+
+model Identity {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String       @db.Uuid
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider       AuthProvider
+  providerUserId String?
+  passwordHash   String?
+  createdAt      DateTime     @default(now())
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+  @@map("identities")
+  @@schema("public")
+}
+
+model MagicLink {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String    @db.Uuid
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([tokenHash])
+  @@map("magic_links")
+  @@schema("public")
+}
+
+model RefreshToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@map("refresh_tokens")
+  @@schema("public")
+}
+
+model Skill {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug     String  @unique
+  name     String
+  parentId String? @db.Uuid
+  parent   Skill?  @relation("SkillTree", fields: [parentId], references: [id])
+  children Skill[] @relation("SkillTree")
+
+  exercises ExerciseSkill[]
+  scores    UserSkillScore[]
+
+  @@map("skills")
+  @@schema("public")
+}
+
+model Exercise {
+  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug             String
+  version          Int
+  type             ExerciseType @default(exercise)
+  simulator        Simulator
+  title            String
+  briefMd          String
+  difficulty       Difficulty
+  submissionSchema Json
+  thresholds       Json
+  budget           Json
+  gates            Json
+  attemptPolicy    Json?
+  feedback         Json
+  publicSample     Json?
+  isPublished      Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  skills      ExerciseSkill[]
+  attempts    Attempt[]
+  hintUnlocks HintUnlock[]
+
+  @@unique([slug, version])
+  @@index([simulator, difficulty, isPublished])
+  @@map("exercises")
+  @@schema("public")
+}
+
+model ExerciseSkill {
+  exerciseId String   @db.Uuid
+  skillId    String   @db.Uuid
+  weight     Float    @default(1)
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, skillId])
+  @@map("exercise_skills")
+  @@schema("public")
+}
+
+model UserSkillScore {
+  userId          String    @db.Uuid
+  skillId         String    @db.Uuid
+  score           Float     @default(0)
+  lastPracticedAt DateTime?
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill           Skill     @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([userId, skillId])
+  @@map("user_skill_scores")
+  @@schema("public")
+}
+
+model Attempt {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String        @db.Uuid
+  exerciseId      String        @db.Uuid
+  exerciseVersion Int
+  status          AttemptStatus @default(started)
+  startedAt       DateTime      @default(now())
+  submittedAt     DateTime?
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise        Exercise      @relation(fields: [exerciseId], references: [id])
+  submissions     Submission[]
+
+  @@index([userId, exerciseId])
+  @@map("attempts")
+  @@schema("public")
+}
+
+model HintUnlock {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @db.Uuid
+  exerciseId String   @db.Uuid
+  hintIndex  Int
+  unlockedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+
+  @@unique([userId, exerciseId, hintIndex])
+  @@map("hint_unlocks")
+  @@schema("public")
+}
+
+model Submission {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  attemptId   String   @db.Uuid
+  payload     Json
+  payloadHash String
+  createdAt   DateTime @default(now())
+  attempt     Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  runs        Run[]
+
+  @@index([attemptId])
+  @@index([payloadHash])
+  @@map("submissions")
+  @@schema("public")
+}
+
+model Run {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  submissionId  String    @db.Uuid
+  workerVersion String
+  modelVersions Json
+  sampleSeed    String?
+  status        RunStatus @default(queued)
+  tokensIn      Int       @default(0)
+  tokensOut     Int       @default(0)
+  costEurMicros BigInt    @default(0)
+  fxRate        Decimal   @db.Decimal(12, 6)
+  cacheHitRatio Float     @default(0)
+  errorCode     String?
+  errorMessage  String?
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  submission    Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  grade         Grade?
+  trace         Trace?
+
+  @@index([submissionId])
+  @@index([status, createdAt])
+  @@map("runs")
+  @@schema("public")
+}
+
+model Grade {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId          String   @unique @db.Uuid
+  verdict        Verdict
+  metrics        Json
+  gateResults    Json
+  failureClasses String[]
+  scorecard      Json
+  failingCases   Json
+  createdAt      DateTime @default(now())
+  run            Run      @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@map("grades")
+  @@schema("public")
+}
+
+model Trace {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId     String   @unique @db.Uuid
+  blobUri   String
+  createdAt DateTime @default(now())
+  run       Run      @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@map("traces")
+  @@schema("public")
+}
+
+model ExerciseAsset {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  exerciseSlug    String
+  exerciseVersion Int
+  hiddenEvalUri   String
+  publicEvalUri   String
+  corpusUri       String?
+  labelsUri       String?
+  frozenGenUri    String?
+  judgeYamlUri    String?
+  createdAt       DateTime @default(now())
+
+  @@unique([exerciseSlug, exerciseVersion])
+  @@map("exercise_assets")
+  @@schema("harness")
+}
+
+model CorpusChunk {
+  id          String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  corpusId    String
+  chunkId     String
+  text        String
+  headingPath String?
+  embedModel  String
+  embedding   Unsupported("vector")?
+  createdAt   DateTime                  @default(now())
+
+  @@unique([corpusId, chunkId, embedModel])
+  @@map("corpus_chunks")
+  @@schema("harness")
+}
+
+model GenCache {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelVersion String
+  promptHash   String
+  paramsHash   String
+  blobUri      String
+  hits         Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([modelVersion, promptHash, paramsHash])
+  @@map("gen_cache")
+  @@schema("harness")
+}
+
+model JudgeCache {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  judgeVersion String
+  rubricHash   String
+  outputHash   String
+  verdict      Json
+  hits         Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([judgeVersion, rubricHash, outputHash])
+  @@map("judge_cache")
+  @@schema("harness")
+}
+
+model LabelSet {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  exerciseSlug String
+  annotatorA   String
+  annotatorB   String
+  kappaHh      Float?
+  adjudicated  Boolean  @default(false)
+  labelsUri    String
+  createdAt    DateTime @default(now())
+
+  @@map("label_sets")
+  @@schema("harness")
+}
