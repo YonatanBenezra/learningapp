@@ -20,6 +20,8 @@
     "test": "npm run test -w @labpath/api",
     "prisma:generate": "npm run prisma:generate -w @labpath/api",
     "prisma:migrate": "npm run prisma:migrate -w @labpath/api",
+    "prisma:migrate:deploy": "npm run prisma:migrate:deploy -w @labpath/api",
+    "prisma:seed": "npm run prisma:seed -w @labpath/api",
     "prisma:studio": "npm run prisma:studio -w @labpath/api"
   },
   "engines": {

@@ -1,12 +1,23 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { CurrentUser } from '../../../common/decorators/current-user.decorator';
+import type { AuthenticatedUser } from '../../../common/types/authenticated-user';
 import { HintsService } from './hints.service';
 
 @Controller('exercises')
 export class HintsController {
   constructor(private readonly hintsService: HintsService) {}
 
+  @Get(':slug/hints')
+  list(@CurrentUser() user: AuthenticatedUser, @Param('slug') slug: string) {
+    return this.hintsService.list(user, slug);
+  }
+
   @Post(':slug/hints/next')
-  unlockNext(@Param('slug') slug: string) {
-    return this.hintsService.unlockNext(slug);
+  @HttpCode(200)
+  unlockNext(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('slug') slug: string,
+  ) {
+    return this.hintsService.unlockNext(user, slug);
   }
 }

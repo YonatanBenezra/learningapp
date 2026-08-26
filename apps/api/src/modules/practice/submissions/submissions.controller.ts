@@ -1,4 +1,6 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { CurrentUser } from '../../../common/decorators/current-user.decorator';
+import type { AuthenticatedUser } from '../../../common/types/authenticated-user';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
 import { SubmissionsService } from './submissions.service';
 
@@ -8,9 +10,10 @@ export class SubmissionsController {
 
   @Post()
   create(
-    @Param('attemptId') attemptId: string,
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('attemptId', new ParseUUIDPipe()) attemptId: string,
     @Body() dto: CreateSubmissionDto,
   ) {
-    return this.submissionsService.create(attemptId, dto);
+    return this.submissionsService.create(user, attemptId, dto);
   }
 }

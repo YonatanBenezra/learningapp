@@ -23,3 +23,5 @@ cp .env.example .env
 npm run start:dev
 npm run start:worker:dev
 ```
+
+Authenticated `GET /api/internal/cost` is the ugly cost readout. `POST /api/internal/cost/over-budget` kills a probe run (`killed_budget`). Harnesses must call `ModelGateway` — never a provider SDK.

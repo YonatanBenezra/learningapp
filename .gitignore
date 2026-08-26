@@ -21,3 +21,4 @@ npm-debug.log*
 .next/
 
 infra/postgres/data/
+apps/api/var/

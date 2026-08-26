@@ -1,0 +1,6 @@
+[
+  "Tell the model to cite retrieved chunks in the form [chunk:ID] and to use only those ids.",
+  "If the retrieved context does not contain the answer, instruct a refusal such as I don't know or REFUSE.",
+  "A helpful-only prompt will skip citations and will guess on unanswerable questions.",
+  "A working prompt names the citation format and says to refuse when the answer is not in context."
+]

@@ -9,9 +9,11 @@ export const envSchema = z.object({
   DATABASE_URL: z
     .string()
     .min(1)
-    .default('postgresql://labpath:labpath@localhost:5432/labpath?schema=public'),
+    .default(
+      'postgresql://labpath:labpath@localhost:5434/labpath?schema=public',
+    ),
   DATABASE_URL_WORKER: z.string().min(1).optional(),
-  REDIS_URL: z.string().min(1).default('redis://localhost:6379'),
+  REDIS_URL: z.string().min(1).default('redis://localhost:6382'),
   JWT_ACCESS_SECRET: z.string().min(16).default('change-me-access-secret'),
   JWT_ACCESS_TTL: z.string().default('15m'),
   JWT_REFRESH_SECRET: z.string().min(16).default('change-me-refresh-secret'),

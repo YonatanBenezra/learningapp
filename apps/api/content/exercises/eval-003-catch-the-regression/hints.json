@@ -1,0 +1,6 @@
+[
+  "The aggregate hides a slice. Group on metadata fields, not on the outputs themselves.",
+  "Language and ticket category together are more precise than either field alone.",
+  "Declare benjamini_hochberg or bonferroni. Skipping correction fails the gate.",
+  "A working spec flags Hebrew billing and does not flag English or Hebrew shipping."
+]

@@ -31,6 +31,8 @@ Phases 1–5 are scoped here, not fully specified. Re-spec each phase before sta
 
 ## Phase 0 — POC (current)
 
+Working plan (steps, status, inner-POC bar): **[phase-0.md](./phase-0.md)**. Implement one step at a time, starting at Step 1.
+
 **Objective:** prove that a graded, hidden-eval-set AI engineering exercise produces feedback good enough that engineers come back. Not scale, not payments, not breadth.
 
 **Duration:** 6–8 weeks.
@@ -40,13 +42,13 @@ Phases 1–5 are scoped here, not fully specified. Re-spec each phase before sta
 | Piece | Status |
 |---|---|
 | Monorepo (`apps/api`, `apps/web`, `infra/`) | Done — shells |
-| Nest modules, Prisma schema, initial migration | Done — not applied to a live DB |
-| HTTP API + worker process split | Done — health only |
-| Next.js routes (catalogue, workspace, trace, progress, auth) | Done — placeholders |
-| Magic-link auth, catalogue, attempts, grading | Next |
-| Prisma migrate on Postgres | Next |
-| Redis / BullMQ wiring | Next |
-| Model gateway, caches, harnesses | Next |
+| Nest modules, Prisma schema, initial migration | Done — applied on local Docker Postgres (:5434) |
+| HTTP API + worker process split | Done — health liveness + ready (Postgres + Redis) |
+| Next.js routes (catalogue, workspace, trace, progress, auth) | Four Phase 0 screens live for R1 (catalogue, workspace, trace, progress) |
+| Magic-link auth, catalogue, attempts, grading | Done through R1 grade, workspace, traces, hints, progress, and metered gateway |
+| Prisma migrate on Postgres | Done |
+| Redis / BullMQ wiring | Redis connected; BullMQ `grade` queue; worker runs the R1 RAG harness |
+| Model gateway, caches, harnesses | Fake pinned gateway + gen/judge cache + `killed_budget`. R2–R4 next |
 | 10 authored exercises + hidden sets | Later in this phase |
 
 ### In

@@ -1,0 +1,6 @@
+[
+  "Top-k of 20 packs almost the whole corpus into the prompt. Cut k and keep recall by reranking.",
+  "A boolean rerank lifts documents whose titles match the query. Use it when k is small.",
+  "Chunk size truncates each retrieved document before the token count. Huge chunks with huge k blow the ceiling.",
+  "A working point on this corpus is topK 5, rerank true, chunkSize 400."
+]

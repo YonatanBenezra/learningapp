@@ -1,22 +1,14 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-import { RequestIdInterceptor } from './common/interceptors/request-id.interceptor';
+import { configureApp } from './bootstrap/configure-app';
+import type { Env } from './core/config/env.schema';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix(process.env.API_PREFIX ?? 'api');
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
-  app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new RequestIdInterceptor());
-  await app.listen(process.env.PORT ?? 3001);
+  configureApp(app);
+  const config = app.get(ConfigService<Env, true>);
+  await app.listen(config.get('PORT', { infer: true }));
 }
 
 void bootstrap();

@@ -1,0 +1,69 @@
+{
+  "slug": "rag-003-the-citation-contract",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "The Citation Contract",
+  "difficulty": "M",
+  "corpusFile": "shared",
+  "skills": [
+    { "slug": "grounding", "name": "Grounding" },
+    { "slug": "prompt-design", "name": "Prompt design" },
+    { "slug": "refusal-behaviour", "name": "Refusal behaviour" }
+  ],
+  "briefMd": "# The Citation Contract\n\nLegal will not sign off until every answer cites its source and the system says \"I don't know\" when it doesn't.\n\nYou author **only the generation prompt**. Retrieval is frozen (heading-aware, chunk 400, overlap 80, k=5).\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["generationPrompt"],
+    "properties": {
+      "generationPrompt": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "gold_span_overlap": 0.85,
+    "unanswerable_refusal": 5,
+    "answerable_refusal_max": 2
+  },
+  "budget": {
+    "max_model_calls": 40,
+    "max_tokens": 80000,
+    "max_cost_eur": 0.2,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    {
+      "id": "citation-format",
+      "class": "A",
+      "metric": "citation_format",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "citation-grounded",
+      "class": "A",
+      "metric": "gold_span_overlap",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "refusal-unanswerable",
+      "class": "A",
+      "metric": "unanswerable_refusals",
+      "op": "gte",
+      "value": 5
+    },
+    {
+      "id": "refusal-answerable",
+      "class": "A",
+      "metric": "answerable_refusals",
+      "op": "lte",
+      "value": 2
+    }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

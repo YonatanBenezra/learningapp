@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/api-client";
-import type { Exercise } from "@/types/exercise";
+import type { Exercise, ExerciseListResponse } from "@/types/exercise";
 
 export const catalogueApi = {
-  list: () => apiClient<Exercise[]>("/exercises"),
+  list: () => apiClient<ExerciseListResponse>("/exercises"),
   getBySlug: (slug: string) => apiClient<Exercise>(`/exercises/${slug}`),
 };

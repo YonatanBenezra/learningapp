@@ -1,0 +1,6 @@
+[
+  "Tiny windows split evidence mid-sentence. Raise chunk size so a full sentence can fit in one chunk.",
+  "A fixed character window ignores document structure. Prefer sentence packing or heading-aware splits.",
+  "Overlap of 0 drops text that sits on a chunk boundary. Add overlap, around 20% of chunk size.",
+  "On this corpus, heading-aware keeps each policy document as one chunk and is enough to pass recall@5."
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "pto",
+    "title": "Paid time off",
+    "text": "Full-time staff receive twenty-two (22) days of paid time off each calendar year. Requests must be submitted at least fourteen (14) days before the first day of leave, except for documented emergencies. Unused days may be carried into the next year up to a maximum of five (5) days; any remainder is forfeited on 31 January. Managers approve PTO in Workday before the leave starts. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "vpn",
+    "title": "VPN and remote access",
+    "text": "Remote access to production networks requires the corporate VPN with hardware MFA enrolled in Okta. Split tunneling is disabled; all traffic must egress through the company gateway. Contractors use the same VPN image and must be offboarded within four hours of contract end. Personal devices are not permitted on the production VPN profile. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "incident",
+    "title": "Incident response",
+    "text": "Priority-1 incidents must be acknowledged within fifteen (15) minutes. Page the on-call primary and post a timeline in Slack channel #incidents. A P1 is any event that blocks customer-facing checkout or authentication. Priority-2 events have a sixty-minute acknowledge target. Severity is set by the incident commander, not the reporter. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "model-usage",
+    "title": "Model usage and PII",
+    "text": "Customer personally identifiable information must not be placed in prompts sent to external model providers. Prompt and completion logs are retained for thirty (30) days and then deleted. Internal fine-tunes may use hashed identifiers only. Screenshots of production PII in tickets are treated as a PII incident. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "expense",
+    "title": "Expense policy",
+    "text": "Team meals are reimbursed up to forty-five euros (€45) per person excluding tax. Alcohol is never reimbursable. Expense reports must be submitted within thirty (30) days of the transaction date or they are declined automatically. Ride-hailing to the office is not reimbursable on ordinary workdays. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "retention",
+    "title": "Data retention",
+    "text": "Support tickets are kept for eighteen (18) months after close. Chat transcripts are kept for ninety (90) days. Laptop disk images from offboarding are retained for three (3) years for legal hold, then destroyed. Backup tapes follow the same clock as the source system. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "oncall",
+    "title": "On-call roster",
+    "text": "Primary on-call rotates every Monday at 09:00 UTC. The previous primary becomes backup for that week. Handoff notes live in the oncall-handbook repo under /handoffs. Secondary pages escalate after ten minutes without an ack. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "vendor",
+    "title": "Vendor security",
+    "text": "Production SaaS vendors must present a current SOC 2 Type II report before procurement. Shadow IT is prohibited; new tools are requested through the security-review form. Exceptions require a director and a time-boxed waiver no longer than ninety days. A missing report blocks the purchase order. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "travel",
+    "title": "Travel booking",
+    "text": "Domestic flights below three hours must be economy. International long-haul may be premium economy when the one-way scheduled time exceeds eight hours. Book through the Navan profile tied to your cost centre. Hotel cap is one hundred eighty euros (€180) per night in Tier-1 cities unless a director approves an exception. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "laptop",
+    "title": "Laptop standard",
+    "text": "Engineering receives a 14-inch Linux workstation with disk encryption enforced by MDM. Lost devices must be reported to IT within two hours. Staff may not dual-boot unsanctioned operating systems. Docking stations are provided; personal USB drives are blocked on the endpoint. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "password",
+    "title": "Password and secrets",
+    "text": "Passwords are at least sixteen characters and stored only in 1Password. Production secrets never live in git. Rotate a leaked credential within one hour of detection. Shared logins are forbidden even for vendors. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "slack",
+    "title": "Slack channels",
+    "text": "Customer incidents are discussed in #incidents, not DMs. Public channels are the default. External guests require a time-boxed multi-channel guest account. Do not paste production credentials into Slack. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "hiring",
+    "title": "Hiring loop",
+    "text": "Every role has a hiring manager, a bar-raiser, and at least one skills interviewer. Offer letters are issued by People Ops within five business days of a hire decision. Referrals receive a two-hundred-euro bonus after ninety days of employment. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "badge",
+    "title": "Office badge",
+    "text": "Office doors require a personal badge. Tailgating is reported. Lost badges are deactivated within thirty minutes of the report. Visitors sign in at reception and wear a red lanyard. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "backup",
+    "title": "Backup policy",
+    "text": "Production databases take encrypted snapshots every four hours and retain them for fourteen days. Point-in-time recovery is tested quarterly. Backups never leave the EU region. Restore drills are logged in the reliability calendar. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "encryption",
+    "title": "Encryption at rest",
+    "text": "All customer data volumes use AES-256 at rest. TLS 1.2 is the minimum in transit. Key material lives in the cloud KMS with annual rotation. Engineers do not copy customer exports to laptops. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-a",
+    "title": "Operations log A",
+    "text": "This operations log is not a policy. days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive days staff calendar year receive. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-b",
+    "title": "Operations log B",
+    "text": "This operations log is not a policy. remote access traffic network days remote access traffic network days remote access traffic network days remote access traffic network days remote access traffic network days remote access traffic network days remote access traffic network days remote access traffic network days remote access traffic network days remote access traffic network days. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-c",
+    "title": "Operations log C",
+    "text": "This operations log is not a policy. tickets meals reports person tax days tickets meals reports person tax days tickets meals reports person tax days tickets meals reports person tax days tickets meals reports person tax days tickets meals reports person tax days tickets meals reports person tax days tickets meals reports person tax days. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-d",
+    "title": "Operations log D",
+    "text": "This operations log is not a policy. vendors reports procurement days vendors reports procurement days vendors reports procurement days vendors reports procurement days vendors reports procurement days vendors reports procurement days vendors reports procurement days vendors reports procurement days vendors reports procurement days. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-e",
+    "title": "Operations log E",
+    "text": "This operations log is not a policy. monday backup week primary days monday backup week primary days monday backup week primary days monday backup week primary days monday backup week primary days monday backup week primary days monday backup week primary days monday backup week primary days. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-f",
+    "title": "Operations log F",
+    "text": "This operations log is not a policy. channels guests account days channels guests account days channels guests account days channels guests account days channels guests account days channels guests account days channels guests account days channels guests account days channels guests account days. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-g",
+    "title": "Operations log G",
+    "text": "This operations log is not a policy. badge visitors reception report days badge visitors reception report days badge visitors reception report days badge visitors reception report days badge visitors reception report days badge visitors reception report days badge visitors reception report days. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  },
+  {
+    "id": "noise-h",
+    "title": "Operations log H",
+    "text": "This operations log is not a policy. volumes exports laptops rotation days volumes exports laptops rotation days volumes exports laptops rotation days volumes exports laptops rotation days volumes exports laptops rotation days volumes exports laptops rotation days volumes exports laptops rotation days. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+  }
+]

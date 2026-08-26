@@ -1,8 +1,2 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-
-@Injectable()
-export class JwtRefreshStrategy {
-  validate(_payload: unknown): never {
-    throw new NotImplementedException();
-  }
-}
+/** Refresh is an opaque rotating cookie handled in AuthService, not Passport. */
+export class JwtRefreshStrategy {}

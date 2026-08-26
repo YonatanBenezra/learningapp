@@ -1,0 +1,35 @@
+{
+  "slug": "eval-003-catch-the-regression",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "evaluation",
+  "title": "Catch the Regression",
+  "difficulty": "H",
+  "skills": [
+    { "slug": "regression-detection", "name": "Regression detection" },
+    { "slug": "slicing", "name": "Slicing" },
+    { "slug": "significance", "name": "Significance" }
+  ],
+  "briefMd": "# Catch the Regression\n\nv2 scores better than v1 on the aggregate metric. Support tickets went up 30%. Find out why.\n\nYou submit a **Slice Spec** (not the Assertion DSL): `where` expressions over `meta.*` only, a per-slice metric, a two-proportion test, and a multiple-comparison correction.\n\nPass when the regressed slice is flagged at corrected p < 0.05, **zero** false-positive slices are flagged, and a correction method is declared. Underpowered slices (n < 20) are reported, not tested.\n\n**Attempt policy:** 5 submissions, then a 24-hour cooldown.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["sliceSpecYaml"],
+    "properties": {
+      "sliceSpecYaml": { "type": "string", "default": "version: 1\nslices:\n  - name: all\n    where: \"true\"\nmetric: pass_rate\ntest: two_proportion_z\nalpha: 0.05\ncorrection: benjamini_hochberg\nmin_slice_n: 20\n" }
+    }
+  },
+  "thresholds": { "alpha": 0.05 },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "gold-slice", "class": "A", "metric": "gold_slice_flagged", "op": "eq", "value": 1 },
+    { "id": "false-positives", "class": "A", "metric": "false_positive_slices", "op": "eq", "value": 0 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": { "maxSubmissions": 5, "cooldownHours": 24 }
+}

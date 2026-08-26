@@ -1,0 +1,45 @@
+{
+  "slug": "rag-001-chunk-it-right",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Chunk It Right",
+  "difficulty": "E",
+  "skills": [
+    { "slug": "chunking", "name": "Chunking" },
+    { "slug": "retrieval-quality", "name": "Retrieval quality" }
+  ],
+  "briefMd": "# Chunk It Right\n\nThe retriever is missing answers that are definitely in the corpus. Nothing is wrong with the model. Fix the chunking.\n\nYou control **only** chunk size, overlap, and splitting strategy (`fixed` / `sentence` / `recursive` / `heading-aware`).\n\nA baseline config scores recall@5 = 0.41. Pass when recall@5 is at least 0.80 on the hidden set.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["chunkSize", "overlap", "splitStrategy"],
+    "properties": {
+      "chunkSize": { "type": "integer", "minimum": 50, "maximum": 2000, "default": 400 },
+      "overlap": { "type": "integer", "minimum": 0, "maximum": 400, "default": 50 },
+      "splitStrategy": {
+        "type": "string",
+        "enum": ["fixed", "sentence", "recursive", "heading-aware"],
+        "default": "sentence"
+      }
+    }
+  },
+  "thresholds": { "recall_at_5": 0.8 },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "recall-at-5",
+      "class": "A",
+      "metric": "recall@5",
+      "op": "gte",
+      "value": 0.8
+    }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

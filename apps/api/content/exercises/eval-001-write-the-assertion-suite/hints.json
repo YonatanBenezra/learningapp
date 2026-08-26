@@ -1,0 +1,6 @@
+[
+  "The positive class is fail. An empty suite flags nothing and scores recall 0.",
+  "Look at the public sample: bad outputs leak SSNs, skip ticket ids, over-refund, or are too short.",
+  "RE2 not_matches / matches / numeric_extract_compare / length_between are enough on this set.",
+  "A suite that flags almost everything is rejected as degenerate before F1 is treated as a pass."
+]
