@@ -11,6 +11,7 @@ import { PracticeModule } from './modules/practice/practice.module';
 import { ProgressModule } from './modules/progress/progress.module';
 import { IngestModule } from './modules/ingest/ingest.module';
 import { CostModule } from './modules/cost/cost.module';
+import { AccountsModule } from './modules/accounts/accounts.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CostModule } from './modules/cost/cost.module';
     ProgressModule,
     IngestModule,
     CostModule,
+    AccountsModule,
   ],
 })
 export class AppModule {}

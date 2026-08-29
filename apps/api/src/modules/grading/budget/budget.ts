@@ -16,6 +16,7 @@ export type BudgetDelta = {
   calls: number;
   tokens: number;
   costEurMicros: number;
+  sandboxMs?: number;
 };
 
 export function parseBudget(raw: unknown): ExerciseBudget {
@@ -56,6 +57,13 @@ export function breachReason(
     used.costEurMicros + extra.costEurMicros > budget.maxCostEurMicros
   ) {
     return `max_cost_eur ${budget.maxCostEurMicros / 1_000_000}`;
+  }
+  if (
+    budget.wallClockS !== null &&
+    extra.sandboxMs !== undefined &&
+    extra.sandboxMs > budget.wallClockS * 1000
+  ) {
+    return `wall_clock_s ${budget.wallClockS}`;
   }
   if (
     budget.wallClockS !== null &&

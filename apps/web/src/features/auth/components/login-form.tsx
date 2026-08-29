@@ -7,7 +7,7 @@ import { authApi } from "@/features/auth/auth-api";
 
 export function LoginForm() {
   return (
-    <Suspense fallback={<p className="text-sm opacity-70">Loading…</p>}>
+    <Suspense fallback={<p className="text-sm lp-muted">Preparing sign-in…</p>}>
       <LoginFormFields />
     </Suspense>
   );
@@ -27,40 +27,53 @@ function LoginFormFields() {
     try {
       const requested = await authApi.requestMagicLink(email);
       if (!requested.token) {
-        setError("Magic link sent. Dev mode should also return a token.");
+        setError(
+          "A sign-in link has been sent. In local development, the API should also return a token.",
+        );
         return;
       }
       await authApi.consumeMagicLink(requested.token);
       router.push(safeNext(searchParams.get("next")));
       router.refresh();
     } catch {
-      setError("Could not sign in. Is the API running?");
+      setError(
+        "We could not complete sign-in. Please verify your email and ensure the API is running.",
+      );
     } finally {
       setPending(false);
     }
   }
 
   return (
-    <form className="flex max-w-sm flex-col gap-3" onSubmit={onSubmit}>
-      <label className="text-sm">
-        Email
+    <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
+      <label className="lp-field">
+        <span className="lp-field-label">Work email</span>
         <input
           type="email"
           name="email"
           required
+          autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="mt-1 block w-full border px-3 py-2"
+          placeholder="name@company.com"
+          className="lp-field-input"
         />
       </label>
       <button
         type="submit"
         disabled={pending}
-        className="border px-3 py-2 text-sm"
+        className="lp-btn lp-btn-primary w-full"
       >
-        {pending ? "Signing in…" : "Send magic link"}
+        {pending ? "Sending secure link…" : "Send sign-in link"}
       </button>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? (
+        <p role="alert" className="lp-form-error">
+          {error}
+        </p>
+      ) : null}
+      <p className="text-xs lp-muted">
+        Links expire after use. Use the same email each time you return.
+      </p>
     </form>
   );
 }

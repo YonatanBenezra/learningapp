@@ -18,6 +18,8 @@
     "lint": "npm run lint -w @labpath/api && npm run lint -w @labpath/web",
     "typecheck": "npm run typecheck -w @labpath/api && npm run typecheck -w @labpath/web",
     "test": "npm run test -w @labpath/api",
+    "content:validate": "npm run content:validate -w @labpath/api",
+    "sandbox:smoke": "npm run sandbox:smoke -w @labpath/api",
     "prisma:generate": "npm run prisma:generate -w @labpath/api",
     "prisma:migrate": "npm run prisma:migrate -w @labpath/api",
     "prisma:migrate:deploy": "npm run prisma:migrate:deploy -w @labpath/api",

@@ -1,0 +1,9 @@
+{
+  "canary": "OVERRIDE-BK-7742",
+  "levels": [
+    1,
+    2,
+    3
+  ],
+  "leak": "HIDDEN_EVAL_G4_CANARY_PHRASE"
+}

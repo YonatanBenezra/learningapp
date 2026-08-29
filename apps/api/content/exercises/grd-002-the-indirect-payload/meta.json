@@ -55,5 +55,6 @@
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null
+  "attemptPolicy": null,
+  "graderArchetype": "guard-g2"
 }

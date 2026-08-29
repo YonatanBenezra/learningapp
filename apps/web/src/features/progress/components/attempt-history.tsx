@@ -35,13 +35,14 @@ export function AttemptHistory() {
 
   if (error === "auth") {
     return (
-      <section className="border p-4">
-        <h2 className="font-medium">Attempts</h2>
-        <p className="mt-2 text-sm">
-          Sign in to see attempts.{" "}
+      <section className="lp-panel">
+        <p className="lp-panel-eyebrow">Timeline</p>
+        <h2 className="lp-panel-title">Recent attempts</h2>
+        <p className="mt-3 text-sm lp-muted">
+          Sign in to view attempts.{" "}
           <Link
             href={`${routes.login}?next=${encodeURIComponent(routes.progress)}`}
-            className="underline"
+            className="lp-link"
           >
             Sign in
           </Link>
@@ -52,41 +53,42 @@ export function AttemptHistory() {
 
   if (error === "load") {
     return (
-      <section className="border p-4">
-        <h2 className="font-medium">Attempts</h2>
-        <p className="mt-2 text-sm">Could not load attempts.</p>
+      <section className="lp-panel">
+        <p className="lp-panel-eyebrow">Timeline</p>
+        <h2 className="lp-panel-title">Recent attempts</h2>
+        <p className="mt-3 text-sm lp-muted">Could not load attempts.</p>
       </section>
     );
   }
 
   return (
-    <section className="border p-4">
-      <h2 className="font-medium">Attempts</h2>
+    <section className="lp-panel">
+      <p className="lp-panel-eyebrow">Timeline</p>
+      <h2 className="lp-panel-title">Recent attempts</h2>
       {!items ? (
-        <p className="mt-2 text-sm opacity-70">Loading…</p>
+        <p className="mt-3 text-sm lp-muted">Loading…</p>
       ) : items.length === 0 ? (
-        <p className="mt-2 text-sm opacity-70">No attempts yet.</p>
+        <p className="mt-3 text-sm lp-muted">No attempts yet.</p>
       ) : (
-        <ul className="mt-3 space-y-3 text-sm">
+        <ul className="mt-4 space-y-3 text-sm">
           {items.map((item) => (
-            <li key={item.attemptId} className="border p-2">
+            <li key={item.attemptId} className="lp-list-item">
               <Link
                 href={routes.exercise(item.exerciseSlug)}
-                className="underline"
+                className="lp-link font-medium"
               >
                 {item.title}
               </Link>
-              <p className="mt-1 opacity-70">
+              <p className="mt-1 lp-muted">
                 {item.status}
                 {item.verdict ? ` · ${item.verdict}` : ""}
               </p>
               {item.runId ? (
-                <p className="mt-1">
-                  <Link href={routes.run(item.runId)} className="underline">
+                <p className="mt-2 flex flex-wrap gap-3">
+                  <Link href={routes.run(item.runId)} className="lp-link">
                     Run
                   </Link>
-                  {" · "}
-                  <Link href={routes.trace(item.runId)} className="underline">
+                  <Link href={routes.trace(item.runId)} className="lp-link">
                     Trace
                   </Link>
                 </p>

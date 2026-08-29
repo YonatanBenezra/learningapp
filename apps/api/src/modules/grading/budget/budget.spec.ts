@@ -32,6 +32,18 @@ describe('budget', () => {
     ).toBeNull();
   });
 
+  it('kills when sandbox duration exceeds wall_clock_s', () => {
+    const budget = parseBudget({ wall_clock_s: 2 });
+    expect(
+      breachReason(budget, used, {
+        calls: 0,
+        tokens: 0,
+        costEurMicros: 0,
+        sandboxMs: 2500,
+      }),
+    ).toBe('wall_clock_s 2');
+  });
+
   it('kills when EUR micros would exceed max_cost_eur', () => {
     const budget = parseBudget({ max_cost_eur: 0.00001 });
     expect(

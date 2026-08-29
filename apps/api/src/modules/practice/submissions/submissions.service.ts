@@ -21,6 +21,7 @@ import {
   GRADE_JOB_NAME,
   type GradeJobData,
 } from '../../grading/processors/grade-job';
+import { AccountService } from '../../accounts/account.service';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
 
 const UNASSIGNED_WORKER = 'unassigned';
@@ -29,6 +30,7 @@ const UNASSIGNED_WORKER = 'unassigned';
 export class SubmissionsService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly accounts: AccountService,
     @InjectQueue(QUEUE_GRADE) private readonly gradeQueue: Queue<GradeJobData>,
   ) {}
 
@@ -80,6 +82,7 @@ export class SubmissionsService {
         where: { id: attempt.id },
         data: { status: 'submitted', submittedAt: new Date() },
       });
+      await this.accounts.incrementOnSubmission(user.id, new Date(), tx);
       return { submission, run };
     });
 

@@ -52,6 +52,7 @@ describe('Auth (e2e)', () => {
       id: consumed.body.user.id,
       email,
       role: 'learner',
+      account: { tier: 'free', subscriptionStatus: 'none' },
     });
   });
 

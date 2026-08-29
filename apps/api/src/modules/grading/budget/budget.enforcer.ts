@@ -63,6 +63,41 @@ export class BudgetEnforcer {
     }
   }
 
+  async recordSandbox(
+    runId: string,
+    usage: {
+      durationMs: number;
+      memoryPeakMb: number | null;
+      tokensIn: number;
+      tokensOut: number;
+      costEurMicros: number;
+    },
+  ): Promise<void> {
+    await this.assertWithinBudget(runId, {
+      calls: 0,
+      tokens: usage.tokensIn + usage.tokensOut,
+      costEurMicros: usage.costEurMicros,
+      sandboxMs: usage.durationMs,
+    });
+    const run = await this.prisma.run.findUniqueOrThrow({
+      where: { id: runId },
+    });
+    const versions = asRecord(run.modelVersions);
+    await this.prisma.run.update({
+      where: { id: runId },
+      data: {
+        tokensIn: run.tokensIn + usage.tokensIn,
+        tokensOut: run.tokensOut + usage.tokensOut,
+        costEurMicros: run.costEurMicros + BigInt(usage.costEurMicros),
+        modelVersions: {
+          ...versions,
+          sandboxMs: usage.durationMs,
+          sandboxMemoryPeakMb: usage.memoryPeakMb,
+        },
+      },
+    });
+  }
+
   async kill(runId: string, reason: string): Promise<void> {
     this.logger.warn(`Run ${runId} killed_budget: ${reason}`);
     await this.prisma.run.update({

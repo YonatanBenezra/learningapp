@@ -1,0 +1,52 @@
+{
+  "slug": "eval-006-length-bound",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "evaluation",
+  "graderArchetype": "eval-e1",
+  "title": "Length Bound",
+  "difficulty": "M",
+  "skills": [
+    {
+      "slug": "content-pipeline",
+      "name": "Content pipeline"
+    }
+  ],
+  "briefMd": "# Length Bound\n\nKeep replies concise with length_between assertions.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "suiteYaml"
+    ],
+    "properties": {
+      "suiteYaml": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "pass": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "pass",
+      "class": "A",
+      "metric": "pass",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null
+}

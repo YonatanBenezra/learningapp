@@ -1,0 +1,57 @@
+{
+  "slug": "rag-009-python-retriever",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "graderArchetype": "rag-sandbox",
+  "title": "Python Retriever",
+  "difficulty": "M",
+  "skills": [
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "sandbox-execution",
+      "name": "Sandbox execution"
+    }
+  ],
+  "briefMd": "# Python Retriever\n\nWrite a Python retriever. Your program reads `/workspace/input.json` (same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` contains the public corpus and the questions to answer. Hidden gold answers are **not** in the sandbox.\n\nFor each question return up to 5 passages. Pass when recall@5 is at least 0.80 on the hidden set.\n\nA keyword-overlap ranker over whole documents is enough. Returning the same short snippet for every question will fail.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "source"
+    ],
+    "properties": {
+      "source": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Python 3 source executed as main.py inside the sandbox"
+      }
+    }
+  },
+  "thresholds": {
+    "recall_at_5": 0.8
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 30
+  },
+  "gates": [
+    {
+      "id": "recall-at-5",
+      "class": "A",
+      "metric": "recall@5",
+      "op": "gte",
+      "value": 0.8
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null
+}

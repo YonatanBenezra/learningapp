@@ -37,7 +37,7 @@ export class AuthService {
     const normalized = email.trim().toLowerCase();
     const user = await this.prisma.user.upsert({
       where: { email: normalized },
-      create: { email: normalized },
+      create: { email: normalized, account: { create: {} } },
       update: {},
     });
     await this.prisma.identity.upsert({

@@ -21,6 +21,17 @@ export const envSchema = z.object({
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
   COOKIE_DOMAIN: z.string().default('localhost'),
   INGEST_SIGNING_SECRET: z.string().min(16).default('change-me-ingest-secret'),
+  SANDBOX_IMAGE: z.string().default('labpath-sandbox:local'),
+  SANDBOX_MAX_MEMORY_MB: z.coerce.number().default(512),
+  SANDBOX_MAX_WALL_CLOCK_S: z.coerce.number().default(30),
+  SANDBOX_GATEWAY_URL: z
+    .string()
+    .default('http://sandbox-gateway:8080'),
+  SANDBOX_DOCKER_NETWORK: z.string().default('labpath_sandbox'),
+  SANDBOX_ALLOW_RUNC_FALLBACK: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((value) => value === 'true'),
 });
 
 export type Env = z.infer<typeof envSchema>;

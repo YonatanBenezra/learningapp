@@ -8,7 +8,11 @@ import type { CorpusDoc } from '../harnesses/rag/chunking';
 import { EvaluationHarness } from '../harnesses/evaluation/evaluation.harness';
 import type { EvalItem } from '../harnesses/evaluation/eval.types';
 import { GuardrailsHarness } from '../harnesses/guardrails/guardrails.harness';
+import { PromptEngineeringHarness } from '../harnesses/prompt-engineering/prompt-engineering.harness';
 import { RagHarness } from '../harnesses/rag/rag.harness';
+import { SandboxHarness } from '../harnesses/sandbox/sandbox.harness';
+import { SANDBOX_SLUG } from '../../catalogue/exercises/exercises.constants';
+import type { PeItem } from '../harnesses/prompt-engineering/pe.types';
 import type { HiddenItem } from '../harnesses/rag/rag.types';
 import { WORKER_VERSION } from '../processors/grade-job';
 
@@ -28,8 +32,10 @@ export class GradingPipeline {
   constructor(
     private readonly prisma: PrismaService,
     private readonly ragHarness: RagHarness,
+    private readonly sandboxHarness: SandboxHarness,
     private readonly evaluationHarness: EvaluationHarness,
     private readonly guardrailsHarness: GuardrailsHarness,
+    private readonly promptEngineeringHarness: PromptEngineeringHarness,
   ) {}
 
   async run(runId: string): Promise<void> {
@@ -74,7 +80,21 @@ export class GradingPipeline {
     const hidden = JSON.parse(await readAsset(assets.hiddenEvalUri)) as unknown;
     const publicItems = publicQuestions(exercise.publicSample);
     let result: PipelineResult;
-    if (exercise.simulator === 'rag') {
+    if (exercise.slug === SANDBOX_SLUG) {
+      if (!assets.corpusUri) {
+        throw new Error(`Missing corpus for ${exercise.slug}`);
+      }
+      const docs = JSON.parse(await readAsset(assets.corpusUri)) as CorpusDoc[];
+      result = await this.sandboxHarness.execute({
+        slug: exercise.slug,
+        runId,
+        payload: run.submission.payload,
+        docs,
+        hidden: hidden as HiddenItem[],
+        publicItems,
+        budget: exercise.budget,
+      });
+    } else if (exercise.simulator === 'rag') {
       if (!assets.corpusUri) {
         throw new Error(`Missing corpus for ${exercise.slug}`);
       }
@@ -102,6 +122,14 @@ export class GradingPipeline {
         payload: run.submission.payload,
         hidden,
         publicItems: hiddenPublic(exercise.publicSample),
+      });
+    } else if (exercise.simulator === 'prompt_engineering') {
+      result = await this.promptEngineeringHarness.execute({
+        slug: exercise.slug,
+        runId,
+        payload: run.submission.payload,
+        hidden: hidden as PeItem[],
+        publicItems: publicQuestions(exercise.publicSample),
       });
     } else {
       throw new Error(`Unsupported simulator: ${exercise.simulator}`);

@@ -1,25 +1,35 @@
 import Link from "next/link";
 import { routes } from "@/config/routes";
+import { SIMULATOR_LABELS } from "@/config/simulators";
 import type { Exercise } from "@/types/exercise";
 
 type ExerciseCardProps = {
   exercise: Exercise;
 };
 
+const DIFFICULTY_LABELS: Record<Exercise["difficulty"], string> = {
+  E: "Easy",
+  M: "Medium",
+  H: "Hard",
+};
+
 export function ExerciseCard({ exercise }: ExerciseCardProps) {
   return (
-    <article className="border p-4">
-      <p className="text-xs uppercase tracking-wide opacity-70">
-        {exercise.simulator} · {exercise.difficulty}
-      </p>
-      <h2 className="mt-1 font-medium">
-        <Link href={routes.exercise(exercise.slug)} className="underline">
+    <article className="lp-card">
+      <div className="lp-card-meta">
+        <span className="lp-badge">{SIMULATOR_LABELS[exercise.simulator]}</span>
+        <span className="lp-badge lp-badge--muted">
+          {DIFFICULTY_LABELS[exercise.difficulty]}
+        </span>
+      </div>
+      <h2 className="lp-card-title">
+        <Link href={routes.exercise(exercise.slug)} className="lp-card-link">
           {exercise.title}
         </Link>
       </h2>
-      <p className="mt-2 text-sm opacity-70">
-        {exercise.skillTags.join(", ")}
-      </p>
+      {exercise.skillTags.length > 0 ? (
+        <p className="lp-card-tags">{exercise.skillTags.join(" · ")}</p>
+      ) : null}
     </article>
   );
 }

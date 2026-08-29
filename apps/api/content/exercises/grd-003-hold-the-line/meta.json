@@ -81,5 +81,6 @@
     "show_failing_cases": 8,
     "rotate": true
   },
-  "attemptPolicy": null
+  "attemptPolicy": null,
+  "graderArchetype": "guard-g3"
 }

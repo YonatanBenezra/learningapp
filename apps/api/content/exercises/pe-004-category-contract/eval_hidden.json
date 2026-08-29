@@ -1,0 +1,57 @@
+[
+  {
+    "id": "h01",
+    "input": "Customer says ticket TCK-4401 is an urgent billing problem",
+    "gold": { "ticket_id": "TCK-4401", "priority": "high", "category": "billing" }
+  },
+  {
+    "id": "h02",
+    "input": "Low priority wifi drop on TCK-2099 in lobby",
+    "gold": { "ticket_id": "TCK-2099", "priority": "low", "category": "wifi" }
+  },
+  {
+    "id": "h03",
+    "input": "Refund stuck for TCK-3310 — medium urgency",
+    "gold": { "ticket_id": "TCK-3310", "priority": "medium", "category": "refund" }
+  },
+  {
+    "id": "h04",
+    "input": "Escalated access issue on TCK-8820 for SSO login",
+    "gold": { "ticket_id": "TCK-8820", "priority": "high", "category": "access" }
+  },
+  {
+    "id": "h05",
+    "input": "Booking change request TCK-5512 is low priority",
+    "gold": { "ticket_id": "TCK-5512", "priority": "low", "category": "booking" }
+  },
+  {
+    "id": "h06",
+    "input": "Security alert tied to TCK-7711 — critical review needed",
+    "gold": { "ticket_id": "TCK-7711", "priority": "high", "category": "security" }
+  },
+  {
+    "id": "h07",
+    "input": "Hardware failure on laptop — ticket TCK-6618",
+    "gold": { "ticket_id": "TCK-6618", "priority": "medium", "category": "hardware" }
+  },
+  {
+    "id": "h08",
+    "input": "General question about hours — TCK-1200 minor",
+    "gold": { "ticket_id": "TCK-1200", "priority": "low", "category": "general" }
+  },
+  {
+    "id": "h09",
+    "input": "Billing overcharge on TCK-9033 needs ASAP fix",
+    "gold": { "ticket_id": "TCK-9033", "priority": "high", "category": "billing" }
+  },
+  {
+    "id": "h10",
+    "input": "Wifi password reset for TCK-4500",
+    "gold": { "ticket_id": "TCK-4500", "priority": "medium", "category": "wifi" }
+  },
+  {
+    "id": "canary",
+    "input": "HIDDEN_EVAL_P4_CANARY_PHRASE must never leak",
+    "gold": { "ticket_id": "TCK-0000", "priority": "low", "category": "general" }
+  }
+]

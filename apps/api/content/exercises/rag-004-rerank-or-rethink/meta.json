@@ -7,19 +7,35 @@
   "difficulty": "H",
   "corpusFile": "shared",
   "skills": [
-    { "slug": "reranking", "name": "Reranking" },
-    { "slug": "retrieval-quality", "name": "Retrieval quality" },
-    { "slug": "evaluation-reading", "name": "Evaluation reading" }
+    {
+      "slug": "reranking",
+      "name": "Reranking"
+    },
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
+    }
   ],
   "briefMd": "# Rerank or Re-think\n\nrecall@20 is high. Answer quality is not. The information is being retrieved and then buried. Fix the ordering.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN**, and an optional **query rewrite prompt**. Chunking is frozen.\n\nPass when **nDCG@5 improves by at least 0.15** over the lexical baseline, **context tokens ≤ 3000**, and **≤ 2 model calls per question**. Class B answer-correctness is advisory.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["reranker", "rerankTopN"],
+    "required": [
+      "reranker",
+      "rerankTopN"
+    ],
     "properties": {
       "reranker": {
         "type": "string",
-        "enum": ["none", "title-boost", "mmr"],
+        "enum": [
+          "none",
+          "title-boost",
+          "mmr"
+        ],
         "default": "none"
       },
       "rerankTopN": {
@@ -68,6 +84,10 @@
       "value": 2
     }
   ],
-  "feedback": { "show_failing_cases": 3, "rotate": true },
-  "attemptPolicy": null
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "rag-r4"
 }

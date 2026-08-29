@@ -7,15 +7,26 @@
   "difficulty": "M",
   "corpusFile": "shared",
   "skills": [
-    { "slug": "grounding", "name": "Grounding" },
-    { "slug": "prompt-design", "name": "Prompt design" },
-    { "slug": "refusal-behaviour", "name": "Refusal behaviour" }
+    {
+      "slug": "grounding",
+      "name": "Grounding"
+    },
+    {
+      "slug": "prompt-design",
+      "name": "Prompt design"
+    },
+    {
+      "slug": "refusal-behaviour",
+      "name": "Refusal behaviour"
+    }
   ],
   "briefMd": "# The Citation Contract\n\nLegal will not sign off until every answer cites its source and the system says \"I don't know\" when it doesn't.\n\nYou author **only the generation prompt**. Retrieval is frozen (heading-aware, chunk 400, overlap 80, k=5).\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["generationPrompt"],
+    "required": [
+      "generationPrompt"
+    ],
     "properties": {
       "generationPrompt": {
         "type": "string",
@@ -64,6 +75,10 @@
       "value": 2
     }
   ],
-  "feedback": { "show_failing_cases": 3, "rotate": true },
-  "attemptPolicy": null
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "rag-r3"
 }

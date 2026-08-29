@@ -3,6 +3,7 @@ import {
   G1_SLUG,
   G2_SLUG,
   G3_SLUG,
+  isGuardG1Slug,
 } from '../../../catalogue/exercises/exercises.constants';
 import { ModelGateway } from '../../gateway/model.gateway';
 import { gradeG1 } from './g1.grade';
@@ -24,7 +25,7 @@ export class GuardrailsHarness {
 
   async execute(input: GuardrailsExecuteInput): Promise<GuardrailsGradeResult> {
     const publicItems = input.publicItems ?? [];
-    if (input.slug === G1_SLUG) {
+    if (isGuardG1Slug(input.slug)) {
       return gradeG1(
         parseString(input.payload, 'attackPrompt'),
         input.hidden,

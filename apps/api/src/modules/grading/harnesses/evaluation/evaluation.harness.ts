@@ -3,6 +3,7 @@ import {
   E1_SLUG,
   E2_SLUG,
   E3_SLUG,
+  isEvalE1Slug,
 } from '../../../catalogue/exercises/exercises.constants';
 import { ModelGateway } from '../../gateway/model.gateway';
 import { gradeE1 } from './e1.grade';
@@ -24,7 +25,7 @@ export class EvaluationHarness {
 
   async execute(input: EvalExecuteInput): Promise<HarnessGradeResult> {
     const publicItems = input.publicItems ?? [];
-    if (input.slug === E1_SLUG) {
+    if (isEvalE1Slug(input.slug)) {
       return gradeE1(parseString(input.payload, 'suiteYaml'), input.hidden, publicItems);
     }
     if (input.slug === E2_SLUG) {

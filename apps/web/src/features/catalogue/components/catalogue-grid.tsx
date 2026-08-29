@@ -36,32 +36,54 @@ export function CatalogueGrid() {
 
   if (error === "auth") {
     return (
-      <p className="text-sm">
-        Sign in to see the catalogue.{" "}
-        <Link href={routes.login} className="underline">
-          Sign in
-        </Link>
-      </p>
+      <div className="lp-panel">
+        <p className="lp-panel-title">Sign in required</p>
+        <p className="mt-2 text-sm lp-muted">
+          Sign in to browse the catalogue.{" "}
+          <Link href={routes.login} className="lp-link">
+            Sign in
+          </Link>
+        </p>
+      </div>
     );
   }
 
   if (error === "load") {
-    return <p className="text-sm">Could not load exercises.</p>;
+    return (
+      <div className="lp-panel">
+        <p className="lp-panel-title">Could not load exercises</p>
+        <p className="mt-2 text-sm lp-muted">
+          Check that the API is running, then refresh this page.
+        </p>
+      </div>
+    );
   }
 
   if (!items) {
-    return <p className="text-sm opacity-70">Loading…</p>;
+    return <p className="text-sm lp-muted">Loading catalogue…</p>;
   }
 
   if (items.length === 0) {
-    return <p className="text-sm">No published exercises yet.</p>;
+    return (
+      <div className="lp-panel">
+        <p className="lp-panel-title">No exercises published yet</p>
+        <p className="mt-2 text-sm lp-muted">
+          Seed the catalogue from the API, then reload.
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((exercise) => (
-        <ExerciseCard key={exercise.slug} exercise={exercise} />
-      ))}
-    </div>
+    <>
+      <p className="mb-4 text-sm lp-muted">
+        {items.length} exercise{items.length === 1 ? "" : "s"} available
+      </p>
+      <div className="lp-grid">
+        {items.map((exercise) => (
+          <ExerciseCard key={exercise.slug} exercise={exercise} />
+        ))}
+      </div>
+    </>
   );
 }

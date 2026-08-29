@@ -4,7 +4,7 @@ Source: [LabPath-Specification.md](Labpath%20specification/LabPath-Specification
 
 Phases 1–5 are scoped here, not fully specified. Re-spec each phase before starting it.
 
-**Now:** boilerplate (folder/module shells). Phase 0 implementation has not started.
+**Now:** Phase 1 Step 7 — Stripe billing. See [phase-1.md](./phase-1.md).
 
 | Status | Meaning |
 |---|---|
@@ -29,9 +29,9 @@ Phases 1–5 are scoped here, not fully specified. Re-spec each phase before sta
 
 ---
 
-## Phase 0 — POC (current)
+## Phase 0 — POC (inner POC — Step 13 pending)
 
-Working plan (steps, status, inner-POC bar): **[phase-0.md](./phase-0.md)**. Implement one step at a time, starting at Step 1.
+Working plan (steps, status, inner-POC bar): **[phase-0.md](./phase-0.md)**. Steps 1–12 are done; finish Step 13 before Phase 1 implementation.
 
 **Objective:** prove that a graded, hidden-eval-set AI engineering exercise produces feedback good enough that engineers come back. Not scale, not payments, not breadth.
 
@@ -160,6 +160,8 @@ Criteria 2, 3, 4, and 9 are the real gates. The rest are hygiene.
 
 ## Phase 1 — Public beta (+10 weeks)
 
+Working plan (steps, status): **[phase-1.md](./phase-1.md)**. Implement one step at a time, starting at Step 1.
+
 **Exit:** 1,000 signups, activation > 40%, D7 > 25%, gross margin positive on Pro.
 
 - Code execution sandbox (gVisor / Firecracker) — dedicated workstream + security review
@@ -232,13 +234,13 @@ Supply is the hard part. Recruit the first 50 tutors from top-ranked users **bef
 | ID | Decision | When | Working position |
 |---|---|---|---|
 | O1 | Model provider — single vs multi | **Before Phase 0 week 1** | Single provider for graders/judges; learner-selectable for the system under test where relevant |
-| O2 | Brand — LabPath vs Bina | Phase 1 | Keep LabPath; "by Bina" endorsement |
-| O3 | Free tier — 3 problems/month vs 3/week | Phase 1 | Start generous (3/week) |
+| O2 | Brand — LabPath vs Bina | Phase 1 Step 1 | **Locked:** LabPath; “by Bina” endorsement — [phase-1-decisions.md](./phase-1-decisions.md) |
+| O3 | Free tier — 3 problems/month vs 3/week | Phase 1 Step 1 | **Locked:** 3 exercises/week (UTC) |
 | O4 | Own corpora vs licence docs | Phase 0 week 1 | Author synthetic corpora |
 | O5 | LabPath-issued vs partner-accredited assessments | Phase 3 | LabPath-issued first |
 | O6 | Tutor geography and payment rails | Phase 4 | — |
 | O7 | Verify competitor-scoring claim first-hand | Phase 0 week 1 | One hour of hands-on testing, recorded |
-| O8 | Unit-economics gap (~€24 compute vs €19 Pro) | Before Phase 1 pricing | Cheaper judge, lower fair-use, higher Pro price, and/or cache sharing. Do not launch paid tiers on current numbers |
+| O8 | Unit-economics gap (~€24 compute vs €19 Pro) | Phase 1 Step 7 (Stripe) | **Locked:** €24/mo Pro, 60 attempts/mo fair-use, ≤€0.10 blend — [phase-1-decisions.md](./phase-1-decisions.md) |
 
 ---
 

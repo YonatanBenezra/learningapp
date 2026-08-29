@@ -1,0 +1,73 @@
+{
+  "slug": "pe-001-the-json-contract",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "prompt_engineering",
+  "title": "The JSON Contract",
+  "difficulty": "E",
+  "skills": [
+    {
+      "slug": "structured-output",
+      "name": "Structured output"
+    },
+    {
+      "slug": "few-shot-design",
+      "name": "Few-shot design"
+    },
+    {
+      "slug": "prompt-clarity",
+      "name": "Prompt clarity"
+    }
+  ],
+  "briefMd": "# The JSON Contract\n\nSupport tickets arrive as messy one-line messages. Your job is to **prompt** a model to extract structured JSON — not to write Python.\n\nSubmit a **system prompt** and a **few-shot block** that instruct the model to return **valid JSON only** with these keys:\n\n- `ticket_id` (format `TCK-####`)\n- `priority` (`low`, `medium`, or `high`)\n- `category` (billing, wifi, refund, access, booking, security, hardware, or general)\n\nWe score whether your prompt contract is explicit enough for a deterministic extractor to recover the right fields on hidden messages.\n\nPass when your prompt passes audit **and** field accuracy ≥ 85% on the hidden set.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "systemPrompt",
+      "fewShotBlock"
+    ],
+    "properties": {
+      "systemPrompt": {
+        "type": "string",
+        "default": ""
+      },
+      "fewShotBlock": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "field_accuracy": 0.85,
+    "prompt_audit": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 60
+  },
+  "gates": [
+    {
+      "id": "prompt-audit",
+      "class": "A",
+      "metric": "prompt_audit",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "field-accuracy",
+      "class": "A",
+      "metric": "field_accuracy",
+      "op": "gte",
+      "value": 0.85
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 4,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "pe-p1"
+}

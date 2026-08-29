@@ -86,6 +86,23 @@ enum Verdict {
   @@schema("public")
 }
 
+enum AccountTier {
+  free
+  pro
+
+  @@schema("public")
+}
+
+enum SubscriptionStatus {
+  none
+  active
+  past_due
+  canceled
+  expired
+
+  @@schema("public")
+}
+
 model User {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email         String    @unique
@@ -103,8 +120,26 @@ model User {
   attempts      Attempt[]
   hintUnlocks   HintUnlock[]
   skillScores   UserSkillScore[]
+  account       Account?
 
   @@map("users")
+  @@schema("public")
+}
+
+model Account {
+  userId              String             @id @db.Uuid
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tier                AccountTier        @default(free)
+  subscriptionStatus  SubscriptionStatus @default(none)
+  periodStartedAt     DateTime?
+  attemptsThisPeriod  Int                @default(0)
+  dailyRunCount       Int                @default(0)
+  dailyRunDate        DateTime?          @db.Date
+  lastAttemptAt       DateTime?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@map("accounts")
   @@schema("public")
 }
 

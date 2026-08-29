@@ -3,6 +3,87 @@ export const R2_SLUG = 'rag-002-the-cost-ceiling';
 export const R3_SLUG = 'rag-003-the-citation-contract';
 export const R4_SLUG = 'rag-004-rerank-or-rethink';
 
+export const RAG_R1_SLUGS = [
+  R1_SLUG,
+  'rag-005-sentence-split',
+  'rag-006-overlap-tune',
+  'rag-007-chunk-balance',
+] as const;
+
+export const RAG_R2_SLUGS = [R2_SLUG, 'rag-008-spend-cap'] as const;
+
+export const SANDBOX_SLUG = 'rag-009-python-retriever';
+
+export const SANDBOX_REFERENCE_SOURCE = `import json
+from pathlib import Path
+
+STOP = {
+    "a", "an", "the", "is", "are", "of", "to", "in", "on", "for", "and", "or",
+    "how", "what", "when", "where", "who", "which", "must", "may",
+}
+
+def tokens(text):
+    out = []
+    word = []
+    for ch in text.lower():
+        if ch.isalnum():
+            word.append(ch)
+        else:
+            if word:
+                tok = "".join(word)
+                if len(tok) > 1 and tok not in STOP:
+                    out.append(tok)
+                word = []
+    if word:
+        tok = "".join(word)
+        if len(tok) > 1 and tok not in STOP:
+            out.append(tok)
+    return out
+
+data = json.loads(Path(__file__).with_name("input.json").read_text())
+docs = []
+for doc in data["corpus"]:
+    body = f"{doc.get('title', '')}. {doc.get('text', '')}".strip()
+    docs.append((set(tokens(body)), body))
+
+results = []
+for item in data["questions"]:
+    qset = set(tokens(item["question"]))
+    ranked = []
+    for dtoks, body in docs:
+        ranked.append((len(qset & dtoks), body))
+    ranked.sort(key=lambda row: row[0], reverse=True)
+    results.append({"id": item["id"], "passages": [body for _, body in ranked[:5]]})
+
+print(json.dumps({"results": results}))
+`;
+
+export const SANDBOX_NEAR_MISS_SOURCE = `import json
+from pathlib import Path
+
+data = json.loads(Path(__file__).with_name("input.json").read_text())
+snippet = (data["corpus"][0].get("text") or "")[:24]
+print(json.dumps({
+    "results": [{"id": q["id"], "passages": [snippet]} for q in data["questions"]]
+}))
+`;
+
+export const SANDBOX_REFERENCE_PAYLOAD = {
+  source: SANDBOX_REFERENCE_SOURCE,
+};
+
+export const SANDBOX_NEAR_MISS_PAYLOAD = {
+  source: SANDBOX_NEAR_MISS_SOURCE,
+};
+
+export function isRagR1Slug(slug: string): boolean {
+  return (RAG_R1_SLUGS as readonly string[]).includes(slug);
+}
+
+export function isRagR2Slug(slug: string): boolean {
+  return (RAG_R2_SLUGS as readonly string[]).includes(slug);
+}
+
 export const HIDDEN_EVAL_CANARY = 'HIDDEN_EVAL_R1_CANARY_PHRASE';
 
 export function isHiddenCanary(question: string): boolean {
@@ -55,6 +136,18 @@ export const R4_NEAR_MISS_PAYLOAD = {
 };
 
 export const E1_SLUG = 'eval-001-write-the-assertion-suite';
+
+export const EVAL_E1_SLUGS = [
+  E1_SLUG,
+  'eval-004-no-pii',
+  'eval-005-ticket-format',
+  'eval-006-length-bound',
+  'eval-007-refund-limit',
+] as const;
+
+export function isEvalE1Slug(slug: string): boolean {
+  return (EVAL_E1_SLUGS as readonly string[]).includes(slug);
+}
 export const E2_SLUG = 'eval-002-judge-the-judge';
 export const E3_SLUG = 'eval-003-catch-the-regression';
 
@@ -135,7 +228,48 @@ min_slice_n: 20
 `,
 };
 
+export const P1_SLUG = 'pe-001-the-json-contract';
+
+export const PE_P1_SLUGS = [
+  P1_SLUG,
+  'pe-002-few-shot-basics',
+  'pe-003-priority-parser',
+  'pe-004-category-contract',
+  'pe-005-ticket-triage',
+] as const;
+
+export function isPeP1Slug(slug: string): boolean {
+  return (PE_P1_SLUGS as readonly string[]).includes(slug);
+}
+
+export const P1_REFERENCE_PAYLOAD = {
+  systemPrompt: `You extract support ticket metadata. Reply with valid JSON only — no markdown fences or prose.
+Required keys: ticket_id, priority, category.
+priority must be low, medium, or high.`,
+  fewShotBlock: `examples:
+  - input: "Ticket TCK-1001 is an urgent billing problem"
+    output: '{"ticket_id":"TCK-1001","priority":"high","category":"billing"}'
+  - input: "Low priority wifi question on TCK-2099"
+    output: '{"ticket_id":"TCK-2099","priority":"low","category":"wifi"}'
+`,
+};
+
+export const P1_NEAR_MISS_PAYLOAD = {
+  systemPrompt: 'Answer helpfully in plain text.',
+  fewShotBlock: '',
+};
+
 export const G1_SLUG = 'grd-001-break-the-concierge';
+
+export const GUARD_G1_SLUGS = [
+  G1_SLUG,
+  'grd-004-polite-boundary',
+  'grd-005-encoding-trick',
+] as const;
+
+export function isGuardG1Slug(slug: string): boolean {
+  return (GUARD_G1_SLUGS as readonly string[]).includes(slug);
+}
 export const G2_SLUG = 'grd-002-the-indirect-payload';
 export const G3_SLUG = 'grd-003-hold-the-line';
 

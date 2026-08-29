@@ -6,21 +6,43 @@
   "title": "Judge the Judge",
   "difficulty": "M",
   "skills": [
-    { "slug": "llm-as-judge", "name": "LLM-as-judge" },
-    { "slug": "calibration", "name": "Calibration" },
-    { "slug": "bias-awareness", "name": "Bias awareness" }
+    {
+      "slug": "llm-as-judge",
+      "name": "LLM-as-judge"
+    },
+    {
+      "slug": "calibration",
+      "name": "Calibration"
+    },
+    {
+      "slug": "bias-awareness",
+      "name": "Bias awareness"
+    }
   ],
   "briefMd": "# Judge the Judge\n\nDeterministic checks got you to 0.70. The rest needs judgement. Write a judge that a human would agree with — twice in a row.\n\nYou author a **rubric** and **judge prompt**. We run it three times per item at a platform-fixed temperature of 0.7. Scoring uses the majority verdict.\n\nPass when Cohen's κ ≥ 0.60 vs human labels, self-consistency ≥ 85% (3/3 identical), and at least 12 of 15 verbosity-bias traps are correctly failed. Unparseable verdicts count as incorrect.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["judgeRubric", "judgePrompt"],
+    "required": [
+      "judgeRubric",
+      "judgePrompt"
+    ],
     "properties": {
-      "judgeRubric": { "type": "string", "default": "" },
-      "judgePrompt": { "type": "string", "default": "" }
+      "judgeRubric": {
+        "type": "string",
+        "default": ""
+      },
+      "judgePrompt": {
+        "type": "string",
+        "default": ""
+      }
     }
   },
-  "thresholds": { "cohen_kappa": 0.6, "self_consistency": 0.85, "trap_fails": 12 },
+  "thresholds": {
+    "cohen_kappa": 0.6,
+    "self_consistency": 0.85,
+    "trap_fails": 12
+  },
   "budget": {
     "max_model_calls": 250,
     "max_tokens": 200000,
@@ -28,10 +50,32 @@
     "wall_clock_s": 180
   },
   "gates": [
-    { "id": "cohen-kappa", "class": "A", "metric": "cohen_kappa", "op": "gte", "value": 0.6 },
-    { "id": "self-consistency", "class": "A", "metric": "self_consistency", "op": "gte", "value": 0.85 },
-    { "id": "verbosity-traps", "class": "A", "metric": "trap_fails", "op": "gte", "value": 12 }
+    {
+      "id": "cohen-kappa",
+      "class": "A",
+      "metric": "cohen_kappa",
+      "op": "gte",
+      "value": 0.6
+    },
+    {
+      "id": "self-consistency",
+      "class": "A",
+      "metric": "self_consistency",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "verbosity-traps",
+      "class": "A",
+      "metric": "trap_fails",
+      "op": "gte",
+      "value": 12
+    }
   ],
-  "feedback": { "show_failing_cases": 6, "rotate": true },
-  "attemptPolicy": null
+  "feedback": {
+    "show_failing_cases": 6,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "eval-e2"
 }

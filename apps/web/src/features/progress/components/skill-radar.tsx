@@ -35,13 +35,14 @@ export function SkillRadar() {
 
   if (error === "auth") {
     return (
-      <section className="border p-4">
-        <h2 className="font-medium">Skills</h2>
-        <p className="mt-2 text-sm">
-          Sign in to see progress.{" "}
+      <section className="lp-panel">
+        <p className="lp-panel-eyebrow">Competency</p>
+        <h2 className="lp-panel-title">Skill scores</h2>
+        <p className="mt-3 text-sm lp-muted">
+          Sign in to view progress.{" "}
           <Link
             href={`${routes.login}?next=${encodeURIComponent(routes.progress)}`}
-            className="underline"
+            className="lp-link"
           >
             Sign in
           </Link>
@@ -52,31 +53,39 @@ export function SkillRadar() {
 
   if (error === "load") {
     return (
-      <section className="border p-4">
-        <h2 className="font-medium">Skills</h2>
-        <p className="mt-2 text-sm">Could not load skills.</p>
+      <section className="lp-panel">
+        <p className="lp-panel-eyebrow">Competency</p>
+        <h2 className="lp-panel-title">Skill scores</h2>
+        <p className="mt-3 text-sm lp-muted">Could not load skills.</p>
       </section>
     );
   }
 
   return (
-    <section className="border p-4">
-      <h2 className="font-medium">Skills</h2>
+    <section className="lp-panel">
+      <p className="lp-panel-eyebrow">Competency</p>
+      <h2 className="lp-panel-title">Skill scores</h2>
       {!progress ? (
-        <p className="mt-2 text-sm opacity-70">Loading…</p>
+        <p className="mt-3 text-sm lp-muted">Loading…</p>
       ) : (
         <>
-          <p className="mt-2 text-sm">
+          <p className="mt-3 text-sm">
             {progress.solves} solve{progress.solves === 1 ? "" : "s"} ·{" "}
             {progress.attempts} attempt{progress.attempts === 1 ? "" : "s"}
           </p>
           {progress.skills.length === 0 ? (
-            <p className="mt-2 text-sm opacity-70">No skill scores yet.</p>
+            <p className="mt-3 text-sm lp-muted">No skill scores yet.</p>
           ) : (
-            <ul className="mt-3 space-y-1 text-sm">
+            <ul className="mt-4 space-y-2 text-sm">
               {progress.skills.map((skill) => (
-                <li key={skill.slug}>
-                  {skill.name}: {skill.score.toFixed(2)}
+                <li
+                  key={skill.slug}
+                  className="flex items-center justify-between gap-3 border-b border-[var(--lp-border)] pb-2 last:border-b-0"
+                >
+                  <span>{skill.name}</span>
+                  <span className="font-medium tabular-nums text-[var(--lp-brand)]">
+                    {skill.score.toFixed(2)}
+                  </span>
                 </li>
               ))}
             </ul>

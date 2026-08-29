@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import {
-  R1_SLUG,
-  R2_SLUG,
   R3_SLUG,
   R4_SLUG,
+  isRagR1Slug,
+  isRagR2Slug,
 } from '../../../catalogue/exercises/exercises.constants';
 import { ModelGateway } from '../../gateway/model.gateway';
 import type { CorpusDoc } from './chunking';
@@ -29,7 +29,7 @@ export class RagHarness {
 
   async execute(input: RagExecuteInput): Promise<RagGradeResult> {
     const publicItems = input.publicItems ?? [];
-    if (input.slug === R1_SLUG) {
+    if (isRagR1Slug(input.slug)) {
       return gradeR1(
         parseR1Payload(input.payload),
         input.docs,
@@ -37,7 +37,7 @@ export class RagHarness {
         publicItems,
       );
     }
-    if (input.slug === R2_SLUG) {
+    if (isRagR2Slug(input.slug)) {
       return gradeR2(
         parseR2Payload(input.payload),
         input.docs,

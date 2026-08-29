@@ -8,9 +8,9 @@ const nav = [
 
 export function AppNav() {
   return (
-    <nav className="flex gap-6 text-sm">
+    <nav className="lp-nav" aria-label="Main">
       {nav.map((item) => (
-        <Link key={item.href} href={item.href} className="hover:underline">
+        <Link key={item.href} href={item.href} className="lp-nav-link">
           {item.label}
         </Link>
       ))}
