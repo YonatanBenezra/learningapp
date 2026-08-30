@@ -1,11 +1,25 @@
 import type { Metadata } from "next";
-import { Figtree, Geist_Mono } from "next/font/google";
+import { Caveat, Figtree, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { brand } from "@/config/brand";
+import { themeInitScript } from "@/features/theme/theme-script";
+import { ThemeToggle } from "@/features/theme/theme-toggle";
 import "./globals.css";
+
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const figtree = Figtree({
   variable: "--font-figtree",
   subsets: ["latin"],
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["500", "600"],
 });
 
 const geistMono = Geist_Mono({
@@ -26,9 +40,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${figtree.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${jakarta.variable} ${figtree.variable} ${caveat.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className={`${jakarta.className} flex min-h-full flex-col`}>
+        {children}
+        <ThemeToggle />
+      </body>
     </html>
   );
 }

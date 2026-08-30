@@ -32,6 +32,11 @@ export const envSchema = z.object({
     .enum(['true', 'false'])
     .default('false')
     .transform((value) => value === 'true'),
+  PUBLIC_WEB_URL: z.string().default('http://localhost:3000'),
+  STRIPE_SECRET_KEY: z.string().optional().default(''),
+  STRIPE_WEBHOOK_SECRET: z.string().optional().default(''),
+  STRIPE_PRICE_MONTHLY: z.string().optional().default(''),
+  STRIPE_PRICE_ANNUAL: z.string().optional().default(''),
 });
 
 export type Env = z.infer<typeof envSchema>;

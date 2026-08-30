@@ -1,0 +1,64 @@
+.lp-theme-switch {
+  --lp-theme-travel: 1.85rem;
+  position: fixed;
+  top: 50%;
+  right: 1.1rem;
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 2rem;
+  height: 4rem;
+  padding: 0.22rem;
+  border: 0;
+  border-radius: 999px;
+  background: #151515;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  transform: translateY(-50%);
+  cursor: pointer;
+  appearance: none;
+}
+
+.lp-theme-knob {
+  position: absolute;
+  top: 0.22rem;
+  left: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #fff;
+  transform: translateX(-50%) translateY(var(--lp-theme-travel));
+  transition: transform 0.28s ease;
+}
+
+html[data-theme="dark"] .lp-theme-knob {
+  transform: translateX(-50%) translateY(0);
+}
+
+.lp-theme-sun {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0.18rem;
+  color: #f5c014;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+html[data-theme="dark"] .lp-theme-sun {
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  .lp-theme-switch {
+    --lp-theme-travel: 1.6rem;
+    right: 0.65rem;
+    width: 1.75rem;
+    height: 3.5rem;
+  }
+
+  .lp-theme-knob {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}

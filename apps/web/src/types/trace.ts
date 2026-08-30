@@ -22,4 +22,6 @@ export type RunTrace = {
   tokensOut?: number;
   costEurMicros?: number;
   queries?: TraceQuery[];
+  gated?: boolean;
+  message?: string;
 };

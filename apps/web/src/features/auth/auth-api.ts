@@ -2,6 +2,7 @@ import { apiClient } from "@/lib/api-client";
 import type { User } from "@/types/user";
 
 export const authApi = {
+  me: () => apiClient<User>("/me"),
   requestMagicLink: (email: string) =>
     apiClient<{ ok: true; token?: string }>("/auth/magic-link", {
       method: "POST",

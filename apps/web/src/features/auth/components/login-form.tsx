@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
-import { routes } from "@/config/routes";
+import { postAuthPath } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
 
 export function LoginForm() {
@@ -33,7 +33,8 @@ function LoginFormFields() {
         return;
       }
       await authApi.consumeMagicLink(requested.token);
-      router.push(safeNext(searchParams.get("next")));
+      const me = await authApi.me();
+      router.push(postAuthPath(Boolean(me.onboarding?.needed), searchParams.get("next")));
       router.refresh();
     } catch {
       setError(
@@ -45,7 +46,7 @@ function LoginFormFields() {
   }
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
+    <form className="lp-auth-form" onSubmit={onSubmit} noValidate>
       <label className="lp-field">
         <span className="lp-field-label">Work email</span>
         <input
@@ -62,7 +63,7 @@ function LoginFormFields() {
       <button
         type="submit"
         disabled={pending}
-        className="lp-btn lp-btn-primary w-full"
+        className="ag-btn ag-btn-lg ag-btn-orange"
       >
         {pending ? "Sending secure link…" : "Send sign-in link"}
       </button>
@@ -71,16 +72,9 @@ function LoginFormFields() {
           {error}
         </p>
       ) : null}
-      <p className="text-xs lp-muted">
+      <p className="lp-auth-note text-xs lp-muted">
         Links expire after use. Use the same email each time you return.
       </p>
     </form>
   );
-}
-
-function safeNext(value: string | null): string {
-  if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return routes.catalogue;
-  }
-  return value;
 }

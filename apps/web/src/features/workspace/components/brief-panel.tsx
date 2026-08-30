@@ -1,20 +1,39 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { routes } from "@/config/routes";
+import { SIMULATOR_LABELS } from "@/config/simulators";
 import type { Exercise, PublicSampleItem } from "@/types/exercise";
 import type { HintList } from "@/types/hint";
+import { ApiError } from "@/lib/api-client";
 import { hintsApi } from "../hints-api";
+
+const DIFFICULTY_LABELS: Record<Exercise["difficulty"], string> = {
+  E: "Easy",
+  M: "Medium",
+  H: "Hard",
+};
 
 type BriefPanelProps = {
   exercise: Exercise | null;
+  onboarding?: boolean;
 };
 
-export function BriefPanel({ exercise }: BriefPanelProps) {
+export function BriefPanel({ exercise, onboarding = false }: BriefPanelProps) {
   if (!exercise) {
     return (
-      <aside className="border-r p-4">
-        <h2 className="font-medium">Brief</h2>
-        <p className="mt-2 text-sm opacity-70">Loading…</p>
+      <aside className="lp-ws-pane lp-ws-pane--brief">
+        <div className="lp-ws-pane-head">
+        <Link
+          href={onboarding ? routes.onboarding : routes.catalogue}
+          className="lp-ws-kicker"
+        >
+          {onboarding ? "First solve" : "Catalogue"}
+        </Link>
+        <h2 className="lp-ws-pane-title">Brief</h2>
+          <p className="lp-ws-pane-lead">Loading…</p>
+        </div>
       </aside>
     );
   }
@@ -22,30 +41,38 @@ export function BriefPanel({ exercise }: BriefPanelProps) {
   const samples = publicSamples(exercise.publicSample);
 
   return (
-    <aside className="overflow-y-auto border-r p-4">
-      <p className="text-xs uppercase tracking-wide opacity-70">
-        {exercise.simulator} · {exercise.difficulty}
-      </p>
-      <h2 className="mt-1 font-medium">{exercise.title}</h2>
-      <div className="mt-3">
-        <BriefMarkdown text={exercise.briefMd ?? ""} />
-      </div>
-      {samples.length > 0 ? (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium">Public sample</h3>
-          <ol className="mt-2 list-decimal space-y-2 pl-4 text-sm">
-            {samples.map((item) => (
-              <li key={item.id ?? item.question}>
-                <p>{item.question}</p>
-                {item.goldAnswer ? (
-                  <p className="opacity-70">{item.goldAnswer}</p>
-                ) : null}
-              </li>
-            ))}
-          </ol>
+    <aside className="lp-ws-pane lp-ws-pane--brief">
+      <div className="lp-ws-pane-head">
+        <Link href={routes.catalogue} className="lp-ws-kicker">
+          {onboarding ? "First solve" : "Catalogue"}
+        </Link>
+        <div className="lp-ws-meta">
+          <span className="lp-badge">{SIMULATOR_LABELS[exercise.simulator]}</span>
+          <span className="lp-badge lp-badge--muted">
+            {DIFFICULTY_LABELS[exercise.difficulty]}
+          </span>
         </div>
-      ) : null}
-      <HintsBlock slug={exercise.slug} />
+        <h2 className="lp-ws-pane-title">{exercise.title}</h2>
+      </div>
+      <div className="lp-ws-pane-body">
+        <BriefMarkdown text={exercise.briefMd ?? ""} />
+        {samples.length > 0 ? (
+          <div className="lp-ws-section">
+            <h3 className="lp-ws-section-title">Public sample</h3>
+            <ol className="lp-ws-samples">
+              {samples.map((item) => (
+                <li key={item.id ?? item.question} className="lp-ws-sample">
+                  <p className="lp-ws-sample-q">{item.question}</p>
+                  {item.goldAnswer ? (
+                    <p className="lp-ws-sample-a">{item.goldAnswer}</p>
+                  ) : null}
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : null}
+        <HintsBlock slug={exercise.slug} />
+      </div>
     </aside>
   );
 }
@@ -98,15 +125,11 @@ function asSample(item: unknown): PublicSampleItem | null {
 function BriefMarkdown({ text }: { text: string }) {
   const blocks = text.trim().split(/\n\n+/);
   return (
-    <div className="space-y-2 text-sm">
+    <div className="lp-ws-brief">
       {blocks.map((block, index) => {
         const heading = block.match(/^#+\s+(.*)$/);
         if (heading) {
-          return (
-            <h3 key={index} className="font-medium">
-              {inline(heading[1] ?? "")}
-            </h3>
-          );
+          return <h3 key={index}>{inline(heading[1] ?? "")}</h3>;
         }
         return (
           <p key={index} className="whitespace-pre-wrap">
@@ -132,6 +155,7 @@ function HintsBlock({ slug }: { slug: string }) {
   const [hints, setHints] = useState<HintList | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [upgrade, setUpgrade] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -155,9 +179,13 @@ function HintsBlock({ slug }: { slug: string }) {
   async function unlock() {
     setPending(true);
     setError(null);
+    setUpgrade(false);
     try {
       setHints(await hintsApi.unlockNext(slug));
     } catch (caught: unknown) {
+      if (caught instanceof ApiError && caught.status === 403) {
+        setUpgrade(true);
+      }
       setError(caught instanceof Error ? caught.message : "Could not unlock");
     } finally {
       setPending(false);
@@ -165,18 +193,20 @@ function HintsBlock({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="mt-6">
-      <h3 className="text-sm font-medium">Hints</h3>
+    <div className="lp-ws-section">
+      <h3 className="lp-ws-section-title">Hints</h3>
       {!hints ? (
-        <p className="mt-2 text-sm opacity-70">Loading…</p>
+        <p className="lp-ws-pane-lead">Loading…</p>
       ) : (
         <>
           {hints.unlocked.length === 0 ? (
-            <p className="mt-2 text-sm opacity-70">No hints unlocked yet.</p>
+            <p className="lp-ws-pane-lead">No hints unlocked yet.</p>
           ) : (
-            <ol className="mt-2 list-decimal space-y-2 pl-4 text-sm">
+            <ol className="lp-ws-hints">
               {hints.unlocked.map((item) => (
-                <li key={item.index}>{item.text}</li>
+                <li key={item.index} className="lp-ws-hint">
+                  {item.text}
+                </li>
               ))}
             </ol>
           )}
@@ -185,14 +215,26 @@ function HintsBlock({ slug }: { slug: string }) {
               type="button"
               onClick={() => void unlock()}
               disabled={pending}
-              className="mt-3 border px-3 py-1 text-sm"
+              className="lp-btn lp-btn-ghost lp-ws-hint-btn"
             >
               {pending ? "Unlocking…" : "Unlock next hint"}
             </button>
           ) : (
-            <p className="mt-2 text-sm opacity-70">All hints unlocked.</p>
+            <p className="lp-ws-pane-lead">All hints unlocked.</p>
           )}
-          {error ? <p className="mt-2 text-sm text-red-700">{error}</p> : null}
+          {error ? (
+            <p className="lp-ws-error">
+              {error}
+              {upgrade ? (
+                <>
+                  {" "}
+                  <Link href={routes.billing} className="lp-link">
+                    Upgrade
+                  </Link>
+                </>
+              ) : null}
+            </p>
+          ) : null}
         </>
       )}
     </div>

@@ -136,6 +136,8 @@ model Account {
   dailyRunCount       Int                @default(0)
   dailyRunDate        DateTime?          @db.Date
   lastAttemptAt       DateTime?
+  stripeCustomerId    String?            @unique
+  stripeSubscriptionId String?           @unique
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 

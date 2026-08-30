@@ -1,0 +1,560 @@
+.lp-app:has(.lp-ws) .lp-app-foot {
+  display: none;
+}
+
+.lp-app:has(.lp-ws) .lp-app-main {
+  padding-top: 6.5rem;
+  padding-bottom: 0;
+}
+
+.lp-ws {
+  display: grid;
+  grid-template-columns: minmax(18rem, 23rem) minmax(20rem, 1fr) minmax(17rem, 22rem);
+  gap: 1rem;
+  height: calc(100dvh - 6.75rem);
+  padding: 0 3.4rem 1.15rem 1.25rem;
+}
+
+.lp-ws-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--lp-border);
+  border-radius: 1.05rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-ws-pane-head {
+  flex-shrink: 0;
+  padding: 1.1rem 1.25rem 0.95rem;
+  border-bottom: 1px solid var(--lp-border);
+}
+
+.lp-ws-kicker {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+  text-decoration: none;
+}
+
+.lp-ws-kicker:hover {
+  color: var(--lp-brand);
+}
+
+.lp-ws-pane-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.lp-ws-pane-lead {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--lp-muted);
+}
+
+.lp-ws-pane-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.1rem 1.25rem 1.4rem;
+}
+
+.lp-ws-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.7rem;
+}
+
+.lp-ws-brief {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.lp-ws-brief h3 {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lp-brand);
+}
+
+.lp-ws-brief p {
+  margin: 0;
+  color: var(--lp-ink);
+}
+
+.lp-ws-brief strong {
+  font-weight: 650;
+}
+
+.lp-ws-section {
+  margin-top: 1.35rem;
+}
+
+.lp-ws-section-title {
+  margin: 0 0 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-ws-samples {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.lp-ws-sample {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--lp-surface) 70%, var(--lp-surface-elevated));
+}
+
+.lp-ws-sample p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.lp-ws-sample-q {
+  font-weight: 550;
+}
+
+.lp-ws-sample-a {
+  margin-top: 0.3rem;
+  color: var(--lp-muted);
+}
+
+.lp-ws-hints {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  counter-reset: hint;
+}
+
+.lp-ws-hint {
+  position: relative;
+  padding: 0.7rem 0.8rem 0.7rem 2.35rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.lp-ws-hint::before {
+  counter-increment: hint;
+  content: counter(hint);
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  display: grid;
+  place-items: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  background: var(--lp-brand-soft);
+  color: var(--lp-brand);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.lp-ws-hint-btn {
+  margin-top: 0.75rem;
+}
+
+.lp-ws-work-head {
+  margin-bottom: 1.15rem;
+}
+
+.lp-ws-pane--work .lp-ws-pane-head {
+  padding-inline: 1.25rem;
+}
+
+.lp-ws-chat {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--lp-border);
+}
+
+.lp-ws-chat .lp-ws-pane-head {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.lp-ws-chat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.85rem 1.25rem 1.15rem;
+}
+
+.lp-ws-chat-body .lp-field-input {
+  background: var(--lp-surface);
+  border-radius: 0.7rem;
+}
+
+.lp-ws-chat-log {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 12.5rem;
+  overflow-y: auto;
+}
+
+.lp-ws-chat-turn {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  background: var(--lp-surface);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.lp-ws-chat-turn p {
+  margin: 0;
+}
+
+.lp-ws-chat-level {
+  display: inline-block;
+  margin-right: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--lp-brand);
+}
+
+.lp-ws-chat-turn.is-won {
+  border-color: color-mix(in srgb, var(--lp-brand) 35%, var(--lp-border));
+  background: var(--lp-brand-soft);
+}
+
+.lp-ws-chat-win {
+  margin-top: 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-brand);
+}
+
+.lp-ws-chat-compose {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.lp-ws-chat-compose .lp-field-input {
+  flex: 1;
+  min-height: 2.75rem;
+  border-radius: 0.7rem;
+  background: var(--lp-surface);
+}
+
+.lp-ws-chat-compose .lp-btn {
+  min-width: 5.5rem;
+  border-radius: 0.7rem;
+}
+
+.lp-ws-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.15rem 1rem;
+  width: 100%;
+}
+
+.lp-ws-form .lp-field-input,
+.lp-ws-form select.lp-field-input {
+  width: 100%;
+  min-height: 2.85rem;
+  border-radius: 0.7rem;
+  background: var(--lp-surface);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.lp-ws-form .lp-field-input:hover {
+  border-color: color-mix(in srgb, var(--lp-brand) 28%, var(--lp-border));
+}
+
+.lp-ws-form textarea.lp-field-input {
+  min-height: 10.5rem;
+  resize: vertical;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.lp-ws-form input[type="number"]::-webkit-outer-spin-button,
+.lp-ws-form input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.lp-ws-form input[type="number"] {
+  appearance: textfield;
+}
+
+.lp-ws-select {
+  position: relative;
+  display: block;
+}
+
+.lp-ws-select select {
+  appearance: none;
+  padding-right: 2.2rem;
+}
+
+.lp-ws-select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 1.5px solid var(--lp-muted);
+  border-bottom: 1.5px solid var(--lp-muted);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.lp-ws-field--wide,
+.lp-ws-form-actions {
+  grid-column: 1 / -1;
+}
+
+.lp-ws-field-hint {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-ws-check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.85rem;
+  padding: 0 0.15rem;
+  font-size: 0.875rem;
+  font-weight: 550;
+}
+
+.lp-ws-submit {
+  width: 100%;
+  min-height: 2.85rem;
+  border-radius: 0.7rem;
+}
+
+.lp-ws-error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--lp-danger);
+}
+
+.lp-ws-empty {
+  display: grid;
+  place-items: center;
+  min-height: 12rem;
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+}
+
+.lp-ws-empty-mark {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-bottom: 0.85rem;
+  border-radius: 0.7rem;
+  background: var(--lp-brand-soft);
+  color: var(--lp-brand);
+}
+
+.lp-ws-empty p {
+  margin: 0;
+  max-width: 16rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--lp-muted);
+}
+
+.lp-ws-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.8125rem;
+}
+
+.lp-ws-status-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--lp-muted);
+}
+
+.lp-ws-status-dot.is-live {
+  background: var(--lp-brand);
+}
+
+.lp-ws-links {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  font-size: 0.8125rem;
+}
+
+.lp-ws-score {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.lp-ws-verdict {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 1.7rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lp-ws-verdict--pass {
+  background: color-mix(in srgb, #15803d 14%, transparent);
+  color: #15803d;
+}
+
+.lp-ws-verdict--fail {
+  background: var(--lp-danger-soft);
+  color: var(--lp-danger);
+}
+
+.lp-ws-verdict--inconclusive {
+  background: color-mix(in srgb, var(--lp-ink) 8%, transparent);
+  color: var(--lp-muted);
+}
+
+html[data-theme="dark"] .lp-ws-verdict--pass {
+  color: #86efac;
+}
+
+.lp-ws-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.lp-ws-metric {
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.7rem;
+}
+
+.lp-ws-metric dt {
+  font-size: 0.6875rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-ws-metric dd {
+  margin: 0.25rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.lp-ws-fails {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.lp-ws-fail {
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.7rem;
+}
+
+.lp-ws-fail p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.lp-ws-fail-note {
+  margin-top: 0.35rem;
+  color: var(--lp-muted);
+}
+
+.lp-ws-state {
+  display: grid;
+  place-items: center;
+  min-height: calc(100dvh - 8rem);
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.lp-ws-state p {
+  margin: 0;
+  max-width: 24rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--lp-muted);
+}
+
+.lp-ws--guardrails .lp-ws-pane--brief,
+.lp-ws--rag .lp-ws-pane--brief {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--lp-brand) 5%, var(--lp-surface-elevated)) 0%,
+      var(--lp-surface-elevated) 7.5rem
+    );
+}
+
+@media (max-width: 1100px) {
+  .lp-ws {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100dvh - 6.75rem);
+    padding: 0 1.15rem 1.25rem;
+  }
+
+  .lp-ws-pane {
+    min-height: 22rem;
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 type SchemaProperty = {
   type?: string;
@@ -21,6 +22,10 @@ type SubmissionSurfaceProps = {
   disabled?: boolean;
   pending?: boolean;
   error?: string | null;
+  errorHref?: string | null;
+  errorLinkLabel?: string | null;
+  initialValues?: Record<string, unknown>;
+  lead?: string;
   onSubmit: (payload: Record<string, unknown>) => void;
 };
 
@@ -29,14 +34,18 @@ export function SubmissionSurface({
   disabled,
   pending,
   error,
+  errorHref,
+  errorLinkLabel,
+  initialValues,
+  lead,
   onSubmit,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSchema(schema), [schema]);
   const [values, setValues] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
-    setValues(defaultsFrom(parsed));
-  }, [parsed]);
+    setValues({ ...defaultsFrom(parsed), ...initialValues });
+  }, [parsed, initialValues]);
 
   const fields = Object.entries(parsed.properties ?? {});
 
@@ -46,33 +55,51 @@ export function SubmissionSurface({
   }
 
   return (
-    <section className="overflow-y-auto p-4">
-      <h2 className="font-medium">Submission</h2>
-      <p className="mt-1 text-sm opacity-70">
-        Fields come from this exercise&apos;s public schema.
-      </p>
-      <form className="mt-4 flex max-w-2xl flex-col gap-3" onSubmit={handleSubmit}>
-        {fields.map(([key, property]) => (
-          <Field
-            key={key}
-            name={key}
-            property={property}
-            value={values[key]}
-            onChange={(next) =>
-              setValues((current) => ({ ...current, [key]: next }))
-            }
-          />
-        ))}
-        <button
-          type="submit"
-          disabled={disabled || pending || fields.length === 0}
-          className="border px-3 py-2 text-sm"
-        >
-          {pending ? "Grading…" : "Submit"}
-        </button>
-        {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      </form>
-    </section>
+    <>
+      <div className="lp-ws-pane-head">
+        <h2 className="lp-ws-pane-title">Submission</h2>
+        <p className="lp-ws-pane-lead">
+          {lead ?? "Configure the public fields, then grade this run."}
+        </p>
+      </div>
+      <section className="lp-ws-pane-body">
+        <form className="lp-ws-form" onSubmit={handleSubmit}>
+          {fields.map(([key, property]) => (
+            <Field
+              key={key}
+              name={key}
+              property={property}
+              value={values[key]}
+              onChange={(next) =>
+                setValues((current) => ({ ...current, [key]: next }))
+              }
+            />
+          ))}
+          <div className="lp-ws-form-actions">
+            <button
+              type="submit"
+              disabled={disabled || pending || fields.length === 0}
+              className="lp-btn lp-btn-primary lp-ws-submit"
+            >
+              {pending ? "Grading…" : "Submit"}
+            </button>
+            {error ? (
+              <p className="lp-ws-error">
+                {error}
+                {errorHref ? (
+                  <>
+                    {" "}
+                    <Link href={errorHref} className="lp-link">
+                      {errorLinkLabel ?? "Open billing"}
+                    </Link>
+                  </>
+                ) : null}
+              </p>
+            ) : null}
+          </div>
+        </form>
+      </section>
+    </>
   );
 }
 
@@ -88,28 +115,31 @@ function Field({
   onChange: (value: unknown) => void;
 }) {
   const label = labelFor(name);
+  const wide = isWideField(property);
   if (property.enum && property.enum.length > 0) {
     return (
-      <label className="text-sm">
-        {label}
-        <select
-          name={name}
-          value={String(value ?? property.enum[0])}
-          onChange={(event) => onChange(event.target.value)}
-          className="mt-1 block w-full border px-3 py-2"
-        >
-          {property.enum.map((option) => (
-            <option key={String(option)} value={String(option)}>
-              {String(option)}
-            </option>
-          ))}
-        </select>
+      <label className={wide ? "lp-field lp-ws-field--wide" : "lp-field"}>
+        <span className="lp-field-label">{label}</span>
+        <span className="lp-ws-select">
+          <select
+            name={name}
+            value={String(value ?? property.enum[0] ?? "")}
+            onChange={(event) => onChange(event.target.value)}
+            className="lp-field-input"
+          >
+            {property.enum.map((option) => (
+              <option key={String(option)} value={String(option)}>
+                {String(option)}
+              </option>
+            ))}
+          </select>
+        </span>
       </label>
     );
   }
   if (property.type === "boolean") {
     return (
-      <label className="flex items-center gap-2 text-sm">
+      <label className="lp-ws-check lp-ws-field--wide">
         <input
           type="checkbox"
           name={name}
@@ -122,37 +152,35 @@ function Field({
   }
   if (property.type === "integer") {
     return (
-      <label className="text-sm">
-        {label}
+      <label className={wide ? "lp-field lp-ws-field--wide" : "lp-field"}>
+        <span className="lp-field-label">{label}</span>
         <input
           type="number"
           name={name}
           min={property.minimum}
           max={property.maximum}
           required
-          value={typeof value === "number" ? value : (property.minimum ?? 0)}
-          onChange={(event) => onChange(Number(event.target.value))}
-          className="mt-1 block w-full border px-3 py-2"
+          inputMode="numeric"
+          placeholder={placeholderFor(property)}
+          value={value === "" || value == null ? "" : String(value)}
+          onChange={(event) => onChange(parseInteger(event.target.value))}
+          className="lp-field-input"
         />
+        <RangeHint property={property} />
       </label>
     );
   }
-  const long =
-    name.toLowerCase().includes("prompt") ||
-    name.toLowerCase().includes("yaml") ||
-    name.toLowerCase().includes("rubric") ||
-    name.toLowerCase().includes("spec") ||
-    name.toLowerCase().includes("content");
+  const long = isLongField(name);
   return (
-    <label className="text-sm">
-      {label}
+    <label className="lp-field lp-ws-field--wide">
+      <span className="lp-field-label">{label}</span>
       {long ? (
         <textarea
           name={name}
-          rows={8}
+          rows={7}
           value={typeof value === "string" ? value : ""}
           onChange={(event) => onChange(event.target.value)}
-          className="mt-1 block w-full border px-3 py-2 font-mono text-xs"
+          className="lp-field-input"
         />
       ) : (
         <input
@@ -160,7 +188,7 @@ function Field({
           name={name}
           value={typeof value === "string" ? value : ""}
           onChange={(event) => onChange(event.target.value)}
-          className="mt-1 block w-full border px-3 py-2"
+          className="lp-field-input"
         />
       )}
     </label>
@@ -177,6 +205,10 @@ function asSchema(value: unknown): SubmissionSchema {
 function defaultsFrom(schema: SubmissionSchema): Record<string, unknown> {
   const values: Record<string, unknown> = {};
   for (const [key, property] of Object.entries(schema.properties ?? {})) {
+    if (property.type === "integer") {
+      values[key] = "";
+      continue;
+    }
     if (property.default !== undefined) {
       values[key] = property.default;
       continue;
@@ -189,13 +221,48 @@ function defaultsFrom(schema: SubmissionSchema): Record<string, unknown> {
       values[key] = false;
       continue;
     }
-    if (property.type === "integer") {
-      values[key] = property.minimum ?? 0;
-      continue;
-    }
     values[key] = "";
   }
   return values;
+}
+
+function parseInteger(raw: string): number | "" {
+  if (raw.trim() === "") {
+    return "";
+  }
+  const next = Number(raw);
+  return Number.isFinite(next) ? next : "";
+}
+
+function isLongField(name: string) {
+  const key = name.toLowerCase();
+  return (
+    key.includes("prompt") ||
+    key.includes("yaml") ||
+    key.includes("rubric") ||
+    key.includes("spec") ||
+    key.includes("content")
+  );
+}
+
+function isWideField(property: SchemaProperty) {
+  return property.type !== "integer";
+}
+
+function placeholderFor(property: SchemaProperty) {
+  if (typeof property.default === "number") {
+    return String(property.default);
+  }
+  return "";
+}
+
+function RangeHint({ property }: { property: SchemaProperty }) {
+  if (property.minimum == null && property.maximum == null) {
+    return null;
+  }
+  const min = property.minimum ?? "—";
+  const max = property.maximum ?? "—";
+  return <span className="lp-ws-field-hint">{min}–{max}</span>;
 }
 
 function labelFor(name: string): string {

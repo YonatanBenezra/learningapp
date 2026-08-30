@@ -33,12 +33,16 @@ export function AttemptHistory() {
     };
   }, []);
 
-  if (error === "auth") {
-    return (
-      <section className="lp-panel">
-        <p className="lp-panel-eyebrow">Timeline</p>
-        <h2 className="lp-panel-title">Recent attempts</h2>
-        <p className="mt-3 text-sm lp-muted">
+  return (
+    <section className="lp-panel lp-pg-panel">
+      <div className="lp-pg-panel-top">
+        <div>
+          <p className="lp-panel-eyebrow">Timeline</p>
+          <h2 className="lp-panel-title">Recent attempts</h2>
+        </div>
+      </div>
+      {error === "auth" ? (
+        <p className="lp-pg-note">
           Sign in to view attempts.{" "}
           <Link
             href={`${routes.login}?next=${encodeURIComponent(routes.progress)}`}
@@ -47,56 +51,94 @@ export function AttemptHistory() {
             Sign in
           </Link>
         </p>
-      </section>
-    );
-  }
-
-  if (error === "load") {
-    return (
-      <section className="lp-panel">
-        <p className="lp-panel-eyebrow">Timeline</p>
-        <h2 className="lp-panel-title">Recent attempts</h2>
-        <p className="mt-3 text-sm lp-muted">Could not load attempts.</p>
-      </section>
-    );
-  }
-
-  return (
-    <section className="lp-panel">
-      <p className="lp-panel-eyebrow">Timeline</p>
-      <h2 className="lp-panel-title">Recent attempts</h2>
-      {!items ? (
-        <p className="mt-3 text-sm lp-muted">Loading…</p>
-      ) : items.length === 0 ? (
-        <p className="mt-3 text-sm lp-muted">No attempts yet.</p>
-      ) : (
-        <ul className="mt-4 space-y-3 text-sm">
-          {items.map((item) => (
-            <li key={item.attemptId} className="lp-list-item">
-              <Link
-                href={routes.exercise(item.exerciseSlug)}
-                className="lp-link font-medium"
-              >
-                {item.title}
-              </Link>
-              <p className="mt-1 lp-muted">
-                {item.status}
-                {item.verdict ? ` · ${item.verdict}` : ""}
-              </p>
-              {item.runId ? (
-                <p className="mt-2 flex flex-wrap gap-3">
-                  <Link href={routes.run(item.runId)} className="lp-link">
-                    Run
-                  </Link>
-                  <Link href={routes.trace(item.runId)} className="lp-link">
-                    Trace
-                  </Link>
-                </p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      )}
+      ) : null}
+      {error === "load" ? (
+        <p className="lp-pg-note">Could not load attempts.</p>
+      ) : null}
+      {!error && !items ? (
+        <div className="lp-pg-skel" aria-hidden="true">
+          <span className="lp-skel-line" />
+          <span className="lp-skel-line" />
+          <span className="lp-skel-line" />
+        </div>
+      ) : null}
+      {items && items.length === 0 ? (
+        <p className="lp-pg-empty">No attempts yet.</p>
+      ) : null}
+      {items && items.length > 0 ? (
+        <div className="lp-pg-table-wrap">
+          <table className="lp-pg-table">
+            <thead>
+              <tr>
+                <th>Exercise</th>
+                <th>Result</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <tr key={item.attemptId}>
+                  <td>
+                    <Link
+                      href={routes.exercise(item.exerciseSlug)}
+                      className="lp-pg-table-exercise"
+                    >
+                      {item.title}
+                    </Link>
+                  </td>
+                  <td>
+                    <span className={`lp-pg-pill ${pillClass(item.verdict)}`}>
+                      {item.verdict ?? item.status}
+                    </span>
+                  </td>
+                  <td className="lp-pg-table-status">{item.status}</td>
+                  <td className="lp-pg-table-date">
+                    {item.startedAt ? formatWhen(item.startedAt) : "—"}
+                  </td>
+                  <td>
+                    {item.runId ? (
+                      <span className="lp-pg-table-links">
+                        <Link href={routes.run(item.runId)} className="lp-link">
+                          Run
+                        </Link>
+                        <Link href={routes.trace(item.runId)} className="lp-link">
+                          Trace
+                        </Link>
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
     </section>
   );
+}
+
+function pillClass(verdict: string | null) {
+  const value = verdict?.toLowerCase();
+  if (value === "fail") {
+    return "lp-pg-pill--fail";
+  }
+  if (value === "pass") {
+    return "lp-pg-pill--pass";
+  }
+  return "";
+}
+
+function formatWhen(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+  return new Intl.DateTimeFormat("en", {
+    day: "numeric",
+    month: "short",
+  }).format(date);
 }

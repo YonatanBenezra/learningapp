@@ -4,7 +4,7 @@ Source: [LabPath-Specification.md](Labpath%20specification/LabPath-Specification
 
 Phases 1–5 are scoped here, not fully specified. Re-spec each phase before starting it.
 
-**Now:** Phase 1 Step 7 — Stripe billing. See [phase-1.md](./phase-1.md).
+**Now:** Phase 1 Step 10 — Engagement. See [phase-1.md](./phase-1.md).
 
 | Status | Meaning |
 |---|---|

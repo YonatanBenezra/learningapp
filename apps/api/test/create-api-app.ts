@@ -12,7 +12,7 @@ export async function createApiApp(options?: {
     imports:
       options?.withWorker === false ? [AppModule] : [AppModule, GradingModule],
   }).compile();
-  const app = moduleFixture.createNestApplication();
+  const app = moduleFixture.createNestApplication({ bodyParser: false });
   configureApp(app);
   await app.init();
   return app;

@@ -4,6 +4,8 @@ export type AccountUsage = {
   tier: AccountTier;
   subscriptionStatus: SubscriptionStatus;
   attemptsThisPeriod: number;
+  attemptsRemaining: number;
+  quotaExceeded: boolean;
   periodStartedAt: string | null;
   dailyRunCount: number;
   dailyRunDate: string | null;

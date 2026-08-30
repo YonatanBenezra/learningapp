@@ -8,23 +8,32 @@ import { ApiError } from "@/lib/api-client";
 import type { Exercise } from "@/types/exercise";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
+import { onboardingApi } from "@/features/onboarding/onboarding-api";
 import { waitForGrade, waitForRun, workspaceApi } from "../workspace-api";
 import { BriefPanel } from "./brief-panel";
 import { G1Chat } from "./g1-chat";
 import { RunPanel } from "./run-panel";
 import { SubmissionSurface } from "./submission-surface";
+import "../workspace.css";
 
 type WorkspaceShellProps = {
   slug: string;
+  initialValues?: Record<string, unknown>;
+  onboarding?: boolean;
 };
 
-export function WorkspaceShell({ slug }: WorkspaceShellProps) {
+export function WorkspaceShell({
+  slug,
+  initialValues,
+  onboarding = false,
+}: WorkspaceShellProps) {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [loadError, setLoadError] = useState<"auth" | "load" | null>(null);
   const [run, setRun] = useState<Run | null>(null);
   const [grade, setGrade] = useState<Grade | null>(null);
   const [pending, setPending] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [quotaHref, setQuotaHref] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -61,14 +70,22 @@ export function WorkspaceShell({ slug }: WorkspaceShellProps) {
     abortRef.current = abort;
     setPending(true);
     setSubmitError(null);
+    setQuotaHref(null);
     setGrade(null);
     setRun(null);
     try {
       const attempt = await workspaceApi.startAttempt(slug);
       const queued = await workspaceApi.submit(attempt.id, payload);
       const finished = await waitForRun(queued.runId, setRun, abort.signal);
+      if (onboarding) {
+        void onboardingApi.track("first_submit").catch(() => undefined);
+      }
       if (finished.status === "succeeded") {
-        setGrade(await waitForGrade(queued.runId, abort.signal));
+        const result = await waitForGrade(queued.runId, abort.signal);
+        setGrade(result);
+        if (onboarding && result.verdict === "pass") {
+          void onboardingApi.track("first_pass").catch(() => undefined);
+        }
       } else {
         setSubmitError(
           finished.errorMessage
@@ -82,6 +99,9 @@ export function WorkspaceShell({ slug }: WorkspaceShellProps) {
       if (caught instanceof DOMException && caught.name === "AbortError") {
         return;
       }
+      if (caught instanceof ApiError && caught.status === 429) {
+        setQuotaHref(routes.billing);
+      }
       setSubmitError(
         caught instanceof Error ? caught.message : "Could not grade this run",
       );
@@ -94,12 +114,12 @@ export function WorkspaceShell({ slug }: WorkspaceShellProps) {
 
   if (loadError === "auth") {
     return (
-      <main className="p-8">
-        <p className="text-sm">
+      <main className="lp-ws-state">
+        <p>
           Sign in to open this exercise.{" "}
           <Link
             href={`${routes.login}?next=${encodeURIComponent(routes.exercise(slug))}`}
-            className="underline"
+            className="lp-link"
           >
             Sign in
           </Link>
@@ -110,16 +130,16 @@ export function WorkspaceShell({ slug }: WorkspaceShellProps) {
 
   if (loadError === "load") {
     return (
-      <main className="p-8">
-        <p className="text-sm">Could not load this exercise.</p>
+      <main className="lp-ws-state">
+        <p>Could not load this exercise.</p>
       </main>
     );
   }
 
   return (
-    <div className="grid min-h-[calc(100vh-57px)] grid-cols-1 lg:grid-cols-[minmax(16rem,22rem)_1fr_minmax(16rem,22rem)]">
-      <BriefPanel exercise={exercise} />
-      <div className="flex min-h-0 flex-col">
+    <div className={`lp-ws${exercise ? ` lp-ws--${exercise.simulator}` : ""}`}>
+      <BriefPanel exercise={exercise} onboarding={onboarding} />
+      <div className="lp-ws-pane lp-ws-pane--work">
         {exercise?.slug === "grd-001-break-the-concierge" ? (
           <G1Chat disabled={!exercise || pending} />
         ) : null}
@@ -128,10 +148,18 @@ export function WorkspaceShell({ slug }: WorkspaceShellProps) {
           disabled={!exercise || pending}
           pending={pending}
           error={submitError}
+          errorHref={quotaHref}
+          errorLinkLabel="Upgrade"
+          initialValues={initialValues}
+          lead={
+            onboarding
+              ? "A starter config is filled in. Submit it to see your first scorecard."
+              : undefined
+          }
           onSubmit={onSubmit}
         />
       </div>
-      <RunPanel run={run} grade={grade} />
+      <RunPanel run={run} grade={grade} onboarding={onboarding} />
     </div>
   );
 }

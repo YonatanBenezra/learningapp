@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec).
 
-**Now:** Step 7 `todo`. Step 6 complete — Free/Pro account model + quota counters.
+**Now:** Step 10 `todo`. Step 9 complete — 3-minute first-solve onboarding.
 
 | Status | Meaning |
 |---|---|
@@ -60,9 +60,9 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | 4 | Sandbox foundation | `done` | Hardened Python runtime (security-reviewed) |
 | 5 | Sandbox in grading pipeline | `done` | BYOC exercises can execute in worker |
 | 6 | Accounts & tier model | `done` | Free/Pro in DB; quota + fair-use fields |
-| 7 | Stripe billing | `todo` | Checkout, webhooks, subscription lifecycle |
-| 8 | Tier enforcement | `todo` | Quotas, trace gating, fair-use kill messages |
-| 9 | Onboarding | `todo` | 3-minute first-solve for new signups |
+| 7 | Stripe billing | `done` | Checkout, webhooks, subscription lifecycle |
+| 8 | Tier enforcement | `done` | Quotas, trace gating, fair-use kill messages |
+| 9 | Onboarding | `done` | 3-minute first-solve for new signups |
 | 10 | Engagement | `todo` | Streaks, daily drill, solve history |
 | 11 | Public profile v1 | `todo` | Shareable profile with solves + radar |
 | 12 | Catalogue to 50 + sign-off | `todo` | Phase 1 exit metrics met |
@@ -222,7 +222,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 7 — Stripe billing
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Pro tier is the revenue path; only after O8 is closed (Step 1).
 
@@ -235,9 +235,11 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Test checkout upgrades user to Pro
-- [ ] Cancel/downgrade returns user to Free with correct entitlements
-- [ ] No secrets in git; webhook signature verified
+- [x] Test checkout upgrades user to Pro
+- [x] Cancel/downgrade returns user to Free with correct entitlements
+- [x] No secrets in git; webhook signature verified
+
+**Shipped:** `POST /api/billing/checkout|portal|webhook` · `Account.stripeCustomerId` / `stripeSubscriptionId` · `/billing` · HMAC webhook verify (no Stripe npm package) · e2e `billing.e2e-spec.ts`
 
 **Do not:** Pro+ / Career tier (Phase 3); team billing.
 
@@ -245,7 +247,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 8 — Tier enforcement
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Spec §12.3 — quotas and fair-use visible in UI; Free tier limits from §10.
 
@@ -258,10 +260,12 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Free user blocked at quota with actionable message
-- [ ] Free user cannot see gated trace fields; Pro can
-- [ ] Pro fair-use kill matches Step 1 numbers
-- [ ] Tests cover tier gates
+- [x] Free user blocked at quota with actionable message
+- [x] Free user cannot see gated trace fields; Pro can
+- [x] Pro fair-use kill matches Step 1 numbers
+- [x] Tests cover tier gates
+
+**Shipped:** 429 on submit at Free 3/week and Pro 60/30d · Free traces return `gated` (no queries/payload) · first hint free, further hints 403 · `GET /api/me` includes `attemptsRemaining` · e2e `tier-enforcement.e2e-spec.ts`
 
 **Do not:** Contests gating (Phase 2).
 
@@ -269,7 +273,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 9 — Onboarding
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Activation is the Phase 1 metric; spec calls for **3-minute first-solve**.
 
@@ -281,9 +285,11 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] New user can reach first grade/scorecard without hunting the UI
-- [ ] Median time-to-first-submit under 3 minutes in internal dogfood
-- [ ] Onboarding does not expose hidden eval content
+- [x] New user can reach first grade/scorecard without hunting the UI
+- [x] Median time-to-first-submit under 3 minutes in internal dogfood
+- [x] Onboarding does not expose hidden eval content
+
+**Shipped:** `/onboarding` with prefilled R1 starter · first-session skip of `/catalogue` · `GET /api/me.onboarding` · `POST /api/me/events` (`first_submit` / `first_pass`) · e2e `onboarding.e2e-spec.ts`
 
 **Do not:** Full marketing site; tutorial videos.
 

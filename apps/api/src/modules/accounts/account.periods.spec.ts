@@ -1,6 +1,8 @@
+import { AccountTier, SubscriptionStatus } from '@prisma/client';
 import {
   rollingWindowStart,
   sameUtcDay,
+  shouldResetPeriod,
   utcDateOnly,
   utcMondayStart,
 } from './account.periods';
@@ -27,6 +29,48 @@ describe('account periods', () => {
     expect(utcDateOnly(new Date('2026-09-01T23:00:00Z')).toISOString()).toBe(
       '2026-09-01T00:00:00.000Z',
     );
+  });
+
+  it('resets Free on a new UTC week and Pro after 30 days', () => {
+    const now = new Date('2026-09-02T12:00:00Z');
+    expect(
+      shouldResetPeriod(
+        {
+          userId: 'u',
+          tier: AccountTier.free,
+          subscriptionStatus: SubscriptionStatus.none,
+          attemptsThisPeriod: 3,
+          periodStartedAt: new Date('2026-08-24T00:00:00Z'),
+          dailyRunCount: 0,
+          dailyRunDate: null,
+          lastAttemptAt: null,
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          createdAt: now,
+          updatedAt: now,
+        },
+        now,
+      ),
+    ).toBe(true);
+    expect(
+      shouldResetPeriod(
+        {
+          userId: 'u',
+          tier: AccountTier.pro,
+          subscriptionStatus: SubscriptionStatus.active,
+          attemptsThisPeriod: 10,
+          periodStartedAt: new Date('2026-08-02T12:00:00Z'),
+          dailyRunCount: 0,
+          dailyRunDate: null,
+          lastAttemptAt: null,
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          createdAt: now,
+          updatedAt: now,
+        },
+        now,
+      ),
+    ).toBe(true);
   });
 
   it('computes a rolling 30-day window start', () => {

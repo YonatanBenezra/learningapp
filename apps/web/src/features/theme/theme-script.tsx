@@ -1,0 +1,1 @@
+export const themeInitScript = `(function(){try{var s=localStorage.getItem("labpath-theme");var t=s==="dark"||s==="light"?s:(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();`;

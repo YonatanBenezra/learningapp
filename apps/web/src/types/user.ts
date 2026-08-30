@@ -11,6 +11,20 @@ export type User = {
     tier: AccountTier;
     subscriptionStatus: string;
     attemptsThisPeriod: number;
+    attemptsRemaining: number;
+    quotaExceeded: boolean;
     dailyRunCount: number;
+    limits: {
+      attemptsPerPeriod: number;
+      periodKind: "calendar_week" | "rolling_30d";
+    };
+  };
+  onboarding?: {
+    needed: boolean;
+    exerciseSlug: string;
+    starter: Record<string, unknown>;
+    createdAt: string;
+    timeToFirstSubmitMs: number | null;
+    timeToFirstPassMs: number | null;
   };
 };

@@ -2,11 +2,15 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { AccountTier } from '@prisma/client';
 import type { AuthenticatedUser } from '../../../common/types/authenticated-user';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import { AccountService } from '../../accounts/account.service';
+import { HINT_UPGRADE_MESSAGE } from '../../accounts/account.quota';
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -17,7 +21,10 @@ export type HintList = {
 
 @Injectable()
 export class HintsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly accounts: AccountService,
+  ) {}
 
   async list(user: AuthenticatedUser, slug: string): Promise<HintList> {
     const exercise = await this.published(slug);
@@ -39,6 +46,14 @@ export class HintsService {
     });
     if (count >= hints.length) {
       throw new BadRequestException('No more hints');
+    }
+    const usage = await this.accounts.usageFor(user.id);
+    if (usage.tier !== AccountTier.pro && count >= 1) {
+      throw new ForbiddenException({
+        message: HINT_UPGRADE_MESSAGE,
+        code: 'pro_required',
+        upgradePath: '/billing',
+      });
     }
     await this.prisma.hintUnlock.create({
       data: {

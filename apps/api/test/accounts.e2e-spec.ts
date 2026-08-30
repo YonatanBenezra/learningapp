@@ -36,6 +36,8 @@ describe('Accounts & tier (e2e)', () => {
       tier: 'free',
       subscriptionStatus: 'none',
       attemptsThisPeriod: 0,
+      attemptsRemaining: 3,
+      quotaExceeded: false,
       dailyRunCount: 0,
       limits: {
         attemptsPerPeriod: 3,

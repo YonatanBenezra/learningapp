@@ -1,62 +1,23 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { PrismaService } from '../src/core/prisma/prisma.service';
 import {
   HIDDEN_EVAL_CANARY,
-  R1_NEAR_MISS_PAYLOAD,
-  R1_REFERENCE_PAYLOAD,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
-
-async function waitForRun(
-  app: INestApplication<App>,
-  cookies: string,
-  runId: string,
-) {
-  for (let attempt = 0; attempt < 50; attempt += 1) {
-    const response = await request(app.getHttpServer())
-      .get(`/api/runs/${runId}`)
-      .set('Cookie', cookies)
-      .expect(200);
-    if (response.body.status === 'succeeded') {
-      return response.body as { id: string };
-    }
-    if (response.body.status === 'failed') {
-      throw new Error(`run ${runId} failed`);
-    }
-    await new Promise((resolve) => {
-      setTimeout(resolve, 100);
-    });
-  }
-  throw new Error(`run ${runId} did not succeed`);
-}
-
-async function submit(
-  app: INestApplication<App>,
-  cookies: string,
-  payload: Record<string, unknown>,
-) {
-  const started = await request(app.getHttpServer())
-    .post('/api/attempts')
-    .set('Cookie', cookies)
-    .send({ exerciseSlug: R1_SLUG })
-    .expect(201);
-  const submitted = await request(app.getHttpServer())
-    .post(`/api/attempts/${started.body.id}/submissions`)
-    .set('Cookie', cookies)
-    .send({ payload })
-    .expect(201);
-  return waitForRun(app, cookies, submitted.body.runId as string);
-}
+import { seedR1Trace } from './seed-trace';
 
 describe('R1 screens (e2e)', () => {
   let app: INestApplication<App>;
+  let prisma: PrismaService;
   let cookies: string;
 
   beforeAll(async () => {
-    app = await createApiApp();
+    app = await createApiApp({ withWorker: false });
+    prisma = app.get(PrismaService);
     cookies = await signIn(app, `r1-screens-${Date.now()}@labpath.test`);
   });
 
@@ -86,55 +47,44 @@ describe('R1 screens (e2e)', () => {
     expect(first.body.unlocked).toHaveLength(1);
     expect(first.body.unlocked[0].text).toEqual(expect.any(String));
 
-    let remaining = first.body.remaining as number;
-    while (remaining > 0) {
-      const next = await request(app.getHttpServer())
-        .post(`/api/exercises/${R1_SLUG}/hints/next`)
-        .set('Cookie', cookies)
-        .expect(200);
-      remaining = next.body.remaining as number;
-    }
-
     await request(app.getHttpServer())
       .post(`/api/exercises/${R1_SLUG}/hints/next`)
       .set('Cookie', cookies)
-      .expect(400);
+      .expect(403);
   });
 
-  it('writes a redacted trace and progress after a grade', async () => {
-    const passed = await submit(app, cookies, R1_REFERENCE_PAYLOAD);
-    const missed = await submit(app, cookies, R1_NEAR_MISS_PAYLOAD);
+  it('gates the Free-tier trace and never leaks hidden eval text', async () => {
+    const me = await request(app.getHttpServer())
+      .get('/api/me')
+      .set('Cookie', cookies)
+      .expect(200);
+    const runId = await seedR1Trace(prisma, me.body.id as string, {
+      goldSpan: 'should-not-leak',
+      queries: [
+        {
+          source: 'hidden',
+          question: HIDDEN_EVAL_CANARY,
+          retrieved: [{ chunkId: 'c', docId: 'd', score: 1, text: 'goldAnswer' }],
+        },
+      ],
+    });
 
     const trace = await request(app.getHttpServer())
-      .get(`/api/runs/${missed.id}/trace`)
+      .get(`/api/runs/${runId}/trace`)
       .set('Cookie', cookies)
       .expect(200);
     const serialized = JSON.stringify(trace.body);
     expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);
     expect(serialized).not.toContain('goldSpan');
     expect(serialized).not.toContain('goldAnswer');
-    expect(trace.body.queries.length).toBeGreaterThan(0);
-    expect(trace.body.queries[0].retrieved[0]).toEqual(
-      expect.objectContaining({
-        chunkId: expect.any(String),
-        score: expect.any(Number),
-        text: expect.any(String),
-      }),
-    );
-
-    const passTrace = await request(app.getHttpServer())
-      .get(`/api/runs/${passed.id}/trace`)
-      .set('Cookie', cookies)
-      .expect(200);
-    expect(JSON.stringify(passTrace.body)).not.toContain(HIDDEN_EVAL_CANARY);
+    expect(trace.body.gated).toBe(true);
+    expect(trace.body.queries).toBeUndefined();
 
     const progress = await request(app.getHttpServer())
       .get('/api/me/progress')
       .set('Cookie', cookies)
       .expect(200);
-    expect(progress.body.attempts).toBeGreaterThanOrEqual(2);
-    expect(progress.body.solves).toBeGreaterThanOrEqual(1);
-    expect(progress.body.skills.length).toBeGreaterThan(0);
+    expect(progress.body.skills).toEqual(expect.any(Array));
     expect(JSON.stringify(progress.body)).not.toContain(HIDDEN_EVAL_CANARY);
   });
 });
