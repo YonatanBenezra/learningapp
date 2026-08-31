@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
-  E1_SLUG,
-  E2_SLUG,
-  E3_SLUG,
   isEvalE1Slug,
+  isEvalE2Slug,
+  isEvalE3Slug,
 } from '../../../catalogue/exercises/exercises.constants';
 import { ModelGateway } from '../../gateway/model.gateway';
 import { gradeE1 } from './e1.grade';
@@ -28,7 +27,7 @@ export class EvaluationHarness {
     if (isEvalE1Slug(input.slug)) {
       return gradeE1(parseString(input.payload, 'suiteYaml'), input.hidden, publicItems);
     }
-    if (input.slug === E2_SLUG) {
+    if (isEvalE2Slug(input.slug)) {
       return gradeE2(
         parseE2(input.payload),
         input.hidden,
@@ -37,7 +36,7 @@ export class EvaluationHarness {
         input.runId,
       );
     }
-    if (input.slug === E3_SLUG) {
+    if (isEvalE3Slug(input.slug)) {
       return gradeE3(
         parseString(input.payload, 'sliceSpecYaml'),
         input.hidden,

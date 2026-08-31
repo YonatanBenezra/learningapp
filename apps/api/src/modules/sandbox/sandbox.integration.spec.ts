@@ -9,7 +9,11 @@ import {
 import { gradeSandboxRetriever } from '../grading/harnesses/sandbox/sandbox.grade';
 import type { CorpusDoc } from '../grading/harnesses/rag/chunking';
 import type { HiddenItem } from '../grading/harnesses/rag/rag.types';
-import { SANDBOX_DEFAULTS, SANDBOX_ERROR_CODES } from './sandbox.constants';
+import {
+  AGENT_SANDBOX_DEFAULTS,
+  SANDBOX_DEFAULTS,
+  SANDBOX_ERROR_CODES,
+} from './sandbox.constants';
 import {
   dockerImageExists,
   ensureSandboxImage,
@@ -53,14 +57,12 @@ describeIntegration('sandbox integration', () => {
         cwd: repoRoot,
       },
     );
-    if (!(await dockerImageExists(SANDBOX_DEFAULTS.image))) {
-      await execFileAsync('docker', [
-        'build',
-        '-t',
-        SANDBOX_DEFAULTS.image,
-        dockerfileDir,
-      ]);
-    }
+    await execFileAsync('docker', [
+      'build',
+      '-t',
+      SANDBOX_DEFAULTS.image,
+      dockerfileDir,
+    ]);
   }, 120_000);
 
   it('runs print("ok") under sandbox limits', async () => {
@@ -164,6 +166,63 @@ print(json.dumps({
     expect(dump).not.toContain('JWT_ACCESS_SECRET');
     expect(dump).not.toContain('eval_hidden');
   }, 120_000);
+
+  it('runs an agent tool loop and collects a tool log without hidden eval', async () => {
+    const result = await runSandboxJob({
+      source: `import labpath_tools as t
+print(t.calculator("2+3*4"))
+print(t.fixture_fetch("/fixtures/ping.json").strip())
+`,
+      maxWallClockS: AGENT_SANDBOX_DEFAULTS.maxWallClockS,
+      allowRuncFallback,
+    });
+    expect(result.ok).toBe(true);
+    expect(result.stdout).toContain('14');
+    expect(result.stdout).toContain('"fixture":"ping"');
+    expect(result.toolLog).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: 'calculator', ok: true, result: 14 }),
+        expect.objectContaining({ name: 'fixture_fetch', ok: true }),
+      ]),
+    );
+    const dump = JSON.stringify(result);
+    expect(dump).not.toContain('HIDDEN_EVAL');
+    expect(dump).not.toContain('eval_hidden');
+    expect(dump).not.toContain('DATABASE_URL');
+  }, 60_000);
+
+  it('blocks fixture_fetch and urllib from leaving the gateway', async () => {
+    const result = await runSandboxJob({
+      source: `import labpath_tools as t
+try:
+    t.fixture_fetch("http://example.com/")
+    print("tool-leaked")
+except Exception:
+    print("tool-blocked")
+import urllib.request
+try:
+    urllib.request.urlopen("http://example.com/", timeout=3)
+    print("net-leaked")
+except Exception:
+    print("net-blocked")
+`,
+      allowRuncFallback,
+    });
+    expect(result.stdout).toContain('tool-blocked');
+    expect(result.stdout).toContain('net-blocked');
+    expect(result.stdout).not.toContain('leaked');
+  }, 60_000);
+
+  it('still kills runaway jobs with sandbox_timeout under the Agent envelope override', async () => {
+    const result = await runSandboxJob({
+      source: 'while True:\n    pass',
+      maxWallClockS: 2,
+      maxMemoryMb: AGENT_SANDBOX_DEFAULTS.maxMemoryMb,
+      allowRuncFallback,
+    });
+    expect(result.ok).toBe(false);
+    expect(result.errorCode).toBe(SANDBOX_ERROR_CODES.TIMEOUT);
+  }, 30_000);
 
   it('builds the sandbox image when missing', async () => {
     const tag = 'labpath-sandbox:integration-tmp';

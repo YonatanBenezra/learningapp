@@ -2,12 +2,16 @@ export const routes = {
   home: "/",
   login: "/login",
   catalogue: "/catalogue",
+  paths: "/paths",
+  path: (slug: string) => `/paths/${slug}`,
   onboarding: "/onboarding",
   exercise: (slug: string) => `/exercises/${slug}`,
   run: (id: string) => `/runs/${id}`,
   trace: (id: string) => `/runs/${id}/trace`,
+  leaderboard: "/leaderboard",
   progress: "/progress",
   billing: "/billing",
+  profile: (slug: string) => `/u/${slug}`,
 } as const;
 
 export function loginPath(next?: string) {

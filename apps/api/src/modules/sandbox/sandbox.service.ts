@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Env } from '../../core/config/env.schema';
+import { withAgentEnvelope } from './sandbox.agent';
 import { SANDBOX_DEFAULTS } from './sandbox.constants';
 import { runSandboxJob } from './sandbox.runner';
 import type {
@@ -28,8 +29,25 @@ export class SandboxService {
     };
   }
 
+  agentRuntimeConfig(): SandboxRuntimeConfig {
+    return withAgentEnvelope(this.runtimeConfig());
+  }
+
   run(input: SandboxJobInput): Promise<SandboxJobResult> {
     const defaults = this.runtimeConfig();
+    return runSandboxJob({
+      image: defaults.image,
+      maxMemoryMb: defaults.maxMemoryMb,
+      maxWallClockS: defaults.maxWallClockS,
+      gatewayUrl: defaults.gatewayUrl,
+      dockerNetwork: defaults.dockerNetwork,
+      allowRuncFallback: defaults.allowRuncFallback,
+      ...input,
+    });
+  }
+
+  runAgent(input: SandboxJobInput): Promise<SandboxJobResult> {
+    const defaults = this.agentRuntimeConfig();
     return runSandboxJob({
       image: defaults.image,
       maxMemoryMb: defaults.maxMemoryMb,

@@ -9,6 +9,8 @@ import { AuthLink } from "@/features/auth/auth-link";
 const links = [
   { href: routes.home, label: "Home" },
   { href: routes.catalogue, label: "Catalogue" },
+  { href: routes.leaderboard, label: "Leaderboard" },
+  { href: routes.paths, label: "Paths" },
   { href: routes.progress, label: "Progress" },
   { href: routes.billing, label: "Billing" },
   { href: routes.login, label: "Sign in" },
@@ -69,6 +71,7 @@ export function HomeNav() {
           {links.map((item) => {
             const LinkTag =
               item.href === routes.catalogue ||
+              item.href === routes.paths ||
               item.href === routes.progress ||
               item.href === routes.billing
                 ? AuthLink

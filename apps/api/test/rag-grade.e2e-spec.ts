@@ -12,7 +12,7 @@ import {
   R4_REFERENCE_PAYLOAD,
   R4_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
-import { signIn } from './auth-helper';
+import { signInPro } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
 jest.setTimeout(120000);
@@ -80,7 +80,7 @@ describe('RAG R2–R4 grade (e2e)', () => {
 
   beforeAll(async () => {
     app = await createApiApp();
-    cookies = await signIn(app, `rag-grade-${Date.now()}@labpath.test`);
+    cookies = await signInPro(app, `rag-grade-${Date.now()}@labpath.test`);
   });
 
   afterAll(async () => {

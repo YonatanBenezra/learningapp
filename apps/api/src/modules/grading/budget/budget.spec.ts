@@ -44,6 +44,31 @@ describe('budget', () => {
     ).toBe('wall_clock_s 2');
   });
 
+  it('still kills on tokens when wall-clock is ignored (Agent pass gate)', () => {
+    const budget = parseBudget({
+      max_tokens: 10,
+      wall_clock_s: 1,
+    });
+    expect(
+      breachReason(
+        budget,
+        used,
+        { calls: 0, tokens: 11, costEurMicros: 0, sandboxMs: 5000 },
+        new Date(),
+        { ignoreWallClock: true },
+      ),
+    ).toBe('max_tokens 10');
+    expect(
+      breachReason(
+        budget,
+        used,
+        { calls: 0, tokens: 0, costEurMicros: 0, sandboxMs: 5000 },
+        new Date(),
+        { ignoreWallClock: true },
+      ),
+    ).toBeNull();
+  });
+
   it('kills when EUR micros would exceed max_cost_eur', () => {
     const budget = parseBudget({ max_cost_eur: 0.00001 });
     expect(

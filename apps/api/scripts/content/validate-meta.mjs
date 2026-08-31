@@ -3,6 +3,8 @@ const SIMULATORS = new Set([
   'evaluation',
   'guardrails',
   'prompt_engineering',
+  'agent',
+  'benchmark',
 ]);
 
 const DIFFICULTIES = new Set(['E', 'M', 'H']);
@@ -14,6 +16,13 @@ const ARCHETYPES = new Set([
   'rag-r4',
   'rag-sandbox',
   'pe-p1',
+  'agent-a1',
+  'agent-a2',
+  'agent-a3',
+  'agent-a4',
+  'bench-b1',
+  'bench-b2',
+  'bench-b3',
   'eval-e1',
   'eval-e2',
   'eval-e3',

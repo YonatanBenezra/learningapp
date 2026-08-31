@@ -1,5 +1,15 @@
 import type { SandboxErrorCode } from './sandbox.constants';
 
+export type AgentToolCall = {
+  name: string;
+  args: Record<string, unknown>;
+  ok: boolean;
+  durationMs: number;
+  result?: unknown;
+  error?: string;
+  resultBytes?: number;
+};
+
 export type SandboxJobInput = {
   source: string;
   workspaceFiles?: Record<string, string>;
@@ -21,6 +31,7 @@ export type SandboxJobResult = {
   memoryPeakMb: number | null;
   runtime: 'runsc' | 'runc';
   containerId?: string;
+  toolLog?: AgentToolCall[];
 };
 
 export type SandboxRuntimeConfig = {

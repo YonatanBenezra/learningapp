@@ -18,6 +18,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "content:validate": "node scripts/content/validate-cli.mjs",
     "content:generate-step3": "node scripts/content/generate-step3-exercises.mjs",
+    "content:generate-step12": "node scripts/content/generate-step12-exercises.mjs",
     "sandbox:smoke": "SANDBOX_INTEGRATION=1 jest --testPathPatterns=sandbox.integration",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",

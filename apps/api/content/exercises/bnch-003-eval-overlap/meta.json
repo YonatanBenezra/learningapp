@@ -1,0 +1,57 @@
+{
+  "slug": "bnch-003-eval-overlap",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "benchmark",
+  "graderArchetype": "bench-b3",
+  "title": "The Eval Overlap",
+  "difficulty": "M",
+  "skills": [
+    {
+      "slug": "contamination",
+      "name": "Contamination"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
+    }
+  ],
+  "briefMd": "# The Eval Overlap\n\nSame frozen 40-ticket set. Same checkpoint. Same seed. No live model calls.\n\nHarness **B** prepends eight “train dump” support tickets as few-shot examples. Those shots were written in the same style as **12 of the 40 eval tickets** (near-paraphrases). Harness **A** is clean — no shots.\n\n| Harness | Setup | Headline |\n|---|---|---|\n| **A** `clean` | no wrapper · seed 1 | **24/40 (60.0%)** |\n| **B** `leaky-fewshot` | eval-like shots · seed 1 | **32/40 (80.0%)** |\n\nB looks like a +20 pp win. Overall 95% Wilson intervals **overlap**. That is not the lesson — read the **clean vs overlap slices** on the scorecard.\n\nPass (class A) when you call the run **contaminated** and name **eval overlap** — not a better model, and not “noise because CIs overlap”. Wall-clock is information, not a gate.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["rankingCall", "deltaCause"],
+    "properties": {
+      "rankingCall": {
+        "type": "string",
+        "enum": ["a_wins", "b_wins", "noise", "contaminated"],
+        "default": "b_wins",
+        "description": "What does the headline accuracy delta mean?"
+      },
+      "deltaCause": {
+        "type": "string",
+        "enum": ["better_model", "ci_overlap", "eval_overlap"],
+        "default": "better_model",
+        "description": "Why the two numbers differ"
+      }
+    }
+  },
+  "thresholds": {
+    "ranking_contaminated": 1,
+    "cause_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "ranking-contaminated", "class": "A", "metric": "ranking_contaminated", "op": "eq", "value": 1 },
+    { "id": "cause-ok", "class": "A", "metric": "cause_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

@@ -302,6 +302,72 @@
   color: var(--color-muted);
 }
 
+.lp-card--benchmark .lp-badge:first-child {
+  background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+  color: var(--color-ink);
+}
+
+.lp-path-strip {
+  margin-bottom: 2.25rem;
+}
+
+.lp-path-strip-head {
+  margin-bottom: 0.85rem;
+}
+
+.lp-path-strip-lead {
+  margin-bottom: 0;
+}
+
+.lp-path-steps-link {
+  display: inline-block;
+  margin-top: 0.55rem;
+  font-size: 0.8125rem;
+}
+
+.lp-path-continue {
+  width: auto;
+  max-width: 18rem;
+  margin-top: 1rem;
+}
+
+.lp-path-steps {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.lp-path-step {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-path-step-meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-ws-path {
+  grid-column: 1 / -1;
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-card--path .lp-badge:first-child {
+  background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+  color: var(--color-ink);
+}
+
 @media (max-width: 800px) {
   .lp-grid.lp-grid-catalogue {
     grid-template-columns: repeat(2, minmax(0, 1fr));

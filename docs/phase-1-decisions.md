@@ -49,7 +49,7 @@ Spec blend ≈ **€0.16/attempt** at 150 attempts/mo exceeded Pro margin at €
 |---|---|
 | Runtime | **gVisor** for public-beta Python sandbox |
 | Limits | 512 MB RAM · 30 s wall clock · no persistent FS · network only via model gateway allowlist |
-| Firecracker | Re-evaluate for Phase 2 Agent simulator (multi-step, longer runs) |
+| Firecracker | Re-evaluated in Phase 2 Step 1: **keep gVisor**; Firecracker out of Phase 2 — [phase-2-decisions.md](./phase-2-decisions.md) |
 | Security review | Engineering lead signs checklist before Step 5 wires sandbox to grading |
 
 ---

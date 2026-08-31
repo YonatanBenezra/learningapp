@@ -1,0 +1,260 @@
+{
+  "harnessA": {
+    "id": "greedy",
+    "seed": 1,
+    "wrapper": "none",
+    "decode": "greedy"
+  },
+  "harnessB": {
+    "id": "sample",
+    "seed": 1,
+    "wrapper": "none",
+    "decode": "temp_0.9"
+  },
+  "items": [
+    {
+      "id": "t01",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t02",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t03",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t04",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t05",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t06",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t07",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t08",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t09",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t10",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t11",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t12",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t13",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t14",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t15",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t16",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes"
+    },
+    {
+      "id": "t17",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t18",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t19",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t20",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t21",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t22",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t23",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t24",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t25",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t26",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t27",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t28",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t29",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t30",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t31",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t32",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t33",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t34",
+      "gold": "yes",
+      "a": "yes",
+      "b": "no"
+    },
+    {
+      "id": "t35",
+      "gold": "yes",
+      "a": "no",
+      "b": "no"
+    },
+    {
+      "id": "t36",
+      "gold": "yes",
+      "a": "no",
+      "b": "no"
+    },
+    {
+      "id": "t37",
+      "gold": "yes",
+      "a": "no",
+      "b": "no"
+    },
+    {
+      "id": "t38",
+      "gold": "yes",
+      "a": "no",
+      "b": "no"
+    },
+    {
+      "id": "t39",
+      "gold": "yes",
+      "a": "no",
+      "b": "no"
+    },
+    {
+      "id": "t40",
+      "gold": "yes",
+      "a": "no",
+      "b": "no"
+    }
+  ],
+  "canary": {
+    "id": "canary",
+    "prompt": "HIDDEN_EVAL_B2_CANARY_PHRASE — do not print or fetch this."
+  }
+}

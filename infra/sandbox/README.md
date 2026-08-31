@@ -2,14 +2,20 @@
 
 Isolated runtime for learner Python. Step 5 grades `rag-009-python-retriever` through `SandboxHarness` (worker materialises `main.py` + `input.json`, never `eval_hidden.json`).
 
-## Limits (locked in phase-1-decisions.md)
+Phase 2 Agent jobs reuse this image and network. Tool host: `import labpath_tools` (baked at `/opt/labpath`). Limits for Agent jobs are a **per-job override** — Phase 1 BYOC stays 30 s.
 
-| Limit | Value |
-|---|---|
-| RAM | 512 MB |
-| Wall clock | 30 s |
-| Filesystem | Ephemeral tmpfs only; submission mounted read-only |
-| Network | Internal Docker network; egress only to `sandbox-gateway` |
+## Limits
+
+| | Phase 1 BYOC | Agent jobs (Phase 2) |
+|---|---|---|
+| RAM | 512 MB | 512 MB |
+| Wall clock | 30 s | **180 s** |
+| PIDs | 64 | 64 |
+| Filesystem | Ephemeral tmpfs; submission `:ro` | Same; no persist between steps |
+| Network | Internal network; only `sandbox-gateway` | Same |
+| Tools | — | `calculator`, `json_store`, `fixture_fetch` (log on stderr marker `LABPATH_TOOL_LOG:`) |
+
+Locked in [phase-1-decisions.md](../../docs/phase-1-decisions.md) and [phase-2-decisions.md](../../docs/phase-2-decisions.md).
 
 ## Local setup
 
@@ -45,6 +51,8 @@ npm run sandbox:smoke -w @labpath/api
 
 Set `SANDBOX_ALLOW_RUNC_FALLBACK=true` for dev machines without gVisor (not for production).
 
+Covers Phase 1 `print("ok")` / timeout / egress **and** Agent calculator + `fixture_fetch` / tool log / hidden-eval leak checks.
+
 ## Security review
 
-Complete [docs/sandbox-security-checklist.md](../../docs/sandbox-security-checklist.md) before wiring sandbox into grading (Step 5).
+Complete [docs/sandbox-security-checklist.md](../../docs/sandbox-security-checklist.md) (Phase 1 + Agent addendum) before wiring Agent A1 (Phase 2 Step 3).

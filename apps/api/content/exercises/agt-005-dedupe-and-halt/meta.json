@@ -1,0 +1,54 @@
+{
+  "slug": "agt-005-dedupe-and-halt",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "agent",
+  "graderArchetype": "agent-a4",
+  "title": "Dedupe and Halt",
+  "difficulty": "H",
+  "skills": [
+    {
+      "slug": "loop-control",
+      "name": "Loop control"
+    },
+    {
+      "slug": "planning",
+      "name": "Planning"
+    }
+  ],
+  "briefMd": "# Dedupe and Halt\n\n`tasks.json` may list the **same instruction more than once**. That is a trap, not a hint to hammer the tool.\n\nPass (class A):\n\n- Hit each unique tool/args once (calculator + json_store put)\n- **At most 2 tool calls** — dedupe by instruction, then halt\n- Do not walk the duplicate rows\n\nProcessing every row fails the call budget. A tight fail-loop still hits `killed_loop`. Wall-clock is not a pass gate. Echoing canaries fails.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["source"],
+    "properties": {
+      "source": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Python 3 agent executed as main.py inside the sandbox"
+      },
+      "systemPrompt": { "type": "string", "default": "" },
+      "toolSchemas": { "type": "string", "default": "" }
+    }
+  },
+  "thresholds": {
+    "tool_hits": 1,
+    "no_canary": 1,
+    "loop_ok": 1,
+    "call_budget": 2
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.05,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    { "id": "tool-hits", "class": "A", "metric": "tool_hits", "op": "gte", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 },
+    { "id": "loop-ceiling", "class": "A", "metric": "loop_ok", "op": "eq", "value": 1 },
+    { "id": "call-budget", "class": "A", "metric": "call_budget", "op": "lte", "value": 2 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

@@ -4,7 +4,7 @@ Source: [LabPath-Specification.md](Labpath%20specification/LabPath-Specification
 
 Phases 1–5 are scoped here, not fully specified. Re-spec each phase before starting it.
 
-**Now:** Phase 1 Step 10 — Engagement. See [phase-1.md](./phase-1.md).
+**Now:** Phase 2 Step 9 `done`. Next is Step 10 — Contests. See [phase-2.md](./phase-2.md) and [phase-2-decisions.md](./phase-2-decisions.md).
 
 | Status | Meaning |
 |---|---|
@@ -177,6 +177,8 @@ Working plan (steps, status): **[phase-1.md](./phase-1.md)**. Implement one step
 
 ## Phase 2 — Depth & competition (+12 weeks)
 
+Working plan (steps, status): **[phase-2.md](./phase-2.md)**. Implement one step at a time, starting at Step 1.
+
 **Exit:** Agent and Benchmark simulators live; contests running; 150 exercises.
 
 - Agent & Tool Use simulator (own mini-project: real tools in sandbox, multi-step traces, loop/cost ceilings)
@@ -241,6 +243,7 @@ Supply is the hard part. Recruit the first 50 tutors from top-ranked users **bef
 | O6 | Tutor geography and payment rails | Phase 4 | — |
 | O7 | Verify competitor-scoring claim first-hand | Phase 0 week 1 | One hour of hands-on testing, recorded |
 | O8 | Unit-economics gap (~€24 compute vs €19 Pro) | Phase 1 Step 7 (Stripe) | **Locked:** €24/mo Pro, 60 attempts/mo fair-use, ≤€0.10 blend — [phase-1-decisions.md](./phase-1-decisions.md) |
+| O9 | Agent isolation — keep gVisor vs Firecracker | Phase 2 Step 1 | **Locked:** gVisor; Agent jobs 180 s / 512 MB; Firecracker out of Phase 2 — [phase-2-decisions.md](./phase-2-decisions.md) |
 
 ---
 

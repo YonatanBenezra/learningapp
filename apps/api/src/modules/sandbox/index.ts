@@ -1,5 +1,6 @@
 export * from './sandbox.constants';
 export * from './sandbox.types';
+export * from './sandbox.agent';
 export * from './sandbox.runner';
 export * from './sandbox.service';
 export * from './sandbox.module';

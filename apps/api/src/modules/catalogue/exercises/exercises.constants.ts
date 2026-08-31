@@ -8,6 +8,7 @@ export const RAG_R1_SLUGS = [
   'rag-005-sentence-split',
   'rag-006-overlap-tune',
   'rag-007-chunk-balance',
+  'rag-010-window-fit',
 ] as const;
 
 export const RAG_R2_SLUGS = [R2_SLUG, 'rag-008-spend-cap'] as const;
@@ -84,6 +85,8 @@ export function isRagR2Slug(slug: string): boolean {
   return (RAG_R2_SLUGS as readonly string[]).includes(slug);
 }
 
+export const PHASE_1_CATALOGUE_TARGET = 50;
+
 export const HIDDEN_EVAL_CANARY = 'HIDDEN_EVAL_R1_CANARY_PHRASE';
 
 export function isHiddenCanary(question: string): boolean {
@@ -143,6 +146,11 @@ export const EVAL_E1_SLUGS = [
   'eval-005-ticket-format',
   'eval-006-length-bound',
   'eval-007-refund-limit',
+  'eval-008-ssn-guard',
+  'eval-009-ticket-id',
+  'eval-010-reply-length',
+  'eval-011-refund-cap',
+  'eval-012-full-suite',
 ] as const;
 
 export function isEvalE1Slug(slug: string): boolean {
@@ -150,6 +158,22 @@ export function isEvalE1Slug(slug: string): boolean {
 }
 export const E2_SLUG = 'eval-002-judge-the-judge';
 export const E3_SLUG = 'eval-003-catch-the-regression';
+
+export const EVAL_E2_SLUGS = [
+  E2_SLUG,
+  'eval-013-strict-judge',
+  'eval-014-trap-hunter',
+] as const;
+
+export const EVAL_E3_SLUGS = [E3_SLUG, 'eval-015-slice-alert'] as const;
+
+export function isEvalE2Slug(slug: string): boolean {
+  return (EVAL_E2_SLUGS as readonly string[]).includes(slug);
+}
+
+export function isEvalE3Slug(slug: string): boolean {
+  return (EVAL_E3_SLUGS as readonly string[]).includes(slug);
+}
 
 export const E1_REFERENCE_PAYLOAD = {
   suiteYaml: `version: 1
@@ -236,6 +260,11 @@ export const PE_P1_SLUGS = [
   'pe-003-priority-parser',
   'pe-004-category-contract',
   'pe-005-ticket-triage',
+  'pe-006-id-extractor',
+  'pe-007-urgency-map',
+  'pe-008-slot-fill',
+  'pe-009-schema-lock',
+  'pe-010-output-contract',
 ] as const;
 
 export function isPeP1Slug(slug: string): boolean {
@@ -265,6 +294,10 @@ export const GUARD_G1_SLUGS = [
   G1_SLUG,
   'grd-004-polite-boundary',
   'grd-005-encoding-trick',
+  'grd-006-direct-jailbreak',
+  'grd-007-hex-extract',
+  'grd-008-role-swap',
+  'grd-009-override-hunt',
 ] as const;
 
 export function isGuardG1Slug(slug: string): boolean {
@@ -272,6 +305,28 @@ export function isGuardG1Slug(slug: string): boolean {
 }
 export const G2_SLUG = 'grd-002-the-indirect-payload';
 export const G3_SLUG = 'grd-003-hold-the-line';
+
+export const GUARD_G2_SLUGS = [
+  G2_SLUG,
+  'grd-010-page-inject',
+  'grd-011-bcc-smuggle',
+  'grd-012-wrapper-break',
+] as const;
+
+export const GUARD_G3_SLUGS = [
+  G3_SLUG,
+  'grd-013-filter-stack',
+  'grd-014-wilson-gate',
+  'grd-015-benign-pass',
+] as const;
+
+export function isGuardG2Slug(slug: string): boolean {
+  return (GUARD_G2_SLUGS as readonly string[]).includes(slug);
+}
+
+export function isGuardG3Slug(slug: string): boolean {
+  return (GUARD_G3_SLUGS as readonly string[]).includes(slug);
+}
 
 export const G1_REFERENCE_PAYLOAD = {
   attackPrompt:
@@ -329,5 +384,301 @@ verdict:
 `,
   outputFilterYaml: '',
 };
+
+export const A1_SLUG = 'agt-001-call-the-right-tool';
+export const A2_SLUG = 'agt-002-recover-and-stop';
+export const A3_SLUG = 'agt-003-plan-the-sequence';
+export const A4_SLUG = 'agt-004-call-budget';
+export const A5_SLUG = 'agt-005-dedupe-and-halt';
+
+export const AGENT_A1_SLUGS = [A1_SLUG] as const;
+export const AGENT_A2_SLUGS = [A2_SLUG] as const;
+
+export function isAgentA1Slug(slug: string): boolean {
+  return (AGENT_A1_SLUGS as readonly string[]).includes(slug);
+}
+
+export function isAgentA2Slug(slug: string): boolean {
+  return (AGENT_A2_SLUGS as readonly string[]).includes(slug);
+}
+
+export const A1_REFERENCE_SOURCE = `import json
+import re
+from pathlib import Path
+import labpath_tools as t
+
+data = json.loads(Path("tasks.json").read_text())
+for task in data["tasks"]:
+    inst = str(task.get("instruction") or "").strip()
+    if inst.startswith("CALCULATOR"):
+        match = re.search(r"expr=(\\S+)", inst)
+        if match:
+            t.calculator(match.group(1))
+    elif inst.startswith("JSON_STORE"):
+        key_match = re.search(r"key=(\\S+)", inst)
+        value_match = re.search(r"value=(.+)$", inst)
+        if key_match and value_match:
+            t.json_store("put", key_match.group(1), json.loads(value_match.group(1)))
+print(json.dumps({"ok": True}))
+`;
+
+export const A1_NEAR_MISS_SOURCE = `import labpath_tools as t
+t.calculator("1+1")
+print("done")
+`;
+
+export const A1_REFERENCE_PAYLOAD = {
+  source: A1_REFERENCE_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A1_NEAR_MISS_PAYLOAD = {
+  source: A1_NEAR_MISS_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A1_LOOP_SOURCE = `import labpath_tools as t
+for i in range(20):
+    try:
+        t.calculator(str(i))
+    except Exception:
+        break
+print("done")
+`;
+
+export const A1_LOOP_PAYLOAD = {
+  source: A1_LOOP_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A2_REFERENCE_SOURCE = `import json
+import re
+from pathlib import Path
+import labpath_tools as t
+
+data = json.loads(Path("tasks.json").read_text())
+for task in data["tasks"]:
+    inst = str(task.get("instruction") or "").strip()
+    expr_match = re.search(r"expr=(\\S+)", inst)
+    fallback_match = re.search(r"fallback=(\\S+)", inst)
+    if not expr_match:
+        continue
+    try:
+        t.calculator(expr_match.group(1))
+    except Exception:
+        if fallback_match:
+            t.calculator(fallback_match.group(1))
+print(json.dumps({"ok": True}))
+`;
+
+export const A2_NEAR_MISS_SOURCE = `import labpath_tools as t
+for _ in range(3):
+    try:
+        t.calculator("not-a-number")
+    except Exception:
+        pass
+print("done")
+`;
+
+export const A2_REFERENCE_PAYLOAD = {
+  source: A2_REFERENCE_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A2_NEAR_MISS_PAYLOAD = {
+  source: A2_NEAR_MISS_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A3_REFERENCE_SOURCE = `import json
+import re
+from pathlib import Path
+import labpath_tools as t
+
+data = json.loads(Path("tasks.json").read_text())
+expr = None
+key = None
+for task in data["tasks"]:
+    inst = str(task.get("instruction") or "")
+    expr_match = re.search(r"expr=(\\S+)", inst)
+    if expr_match:
+        expr = expr_match.group(1)
+    key_match = re.search(r"key=(\\S+)", inst)
+    if key_match:
+        key = key_match.group(1)
+if expr is None or key is None:
+    raise SystemExit("missing pipeline slots")
+value = t.calculator(expr)
+t.json_store("put", key, value)
+print(json.dumps({"ok": True}))
+`;
+
+export const A3_NEAR_MISS_SOURCE = `import labpath_tools as t
+t.json_store("put", "answer", 25)
+t.calculator("5*5")
+print("done")
+`;
+
+export const A3_REFERENCE_PAYLOAD = {
+  source: A3_REFERENCE_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A3_NEAR_MISS_PAYLOAD = {
+  source: A3_NEAR_MISS_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A4_REFERENCE_SOURCE = `import json
+import re
+from pathlib import Path
+import labpath_tools as t
+
+data = json.loads(Path("tasks.json").read_text())
+for task in data["tasks"]:
+    inst = str(task.get("instruction") or "").strip()
+    if inst.startswith("CALCULATOR"):
+        match = re.search(r"expr=(\\S+)", inst)
+        if match:
+            t.calculator(match.group(1))
+    elif inst.startswith("JSON_STORE"):
+        key_match = re.search(r"key=(\\S+)", inst)
+        if key_match:
+            t.json_store("put", key_match.group(1), True)
+print(json.dumps({"ok": True}))
+`;
+
+export const A4_NEAR_MISS_SOURCE = `${A4_REFERENCE_SOURCE}
+import labpath_tools as t
+for i in range(4):
+    t.calculator(str(i))
+`;
+
+export const A4_REFERENCE_PAYLOAD = {
+  source: A4_REFERENCE_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A4_NEAR_MISS_PAYLOAD = {
+  source: A4_NEAR_MISS_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A5_REFERENCE_SOURCE = `import json
+import re
+from pathlib import Path
+import labpath_tools as t
+
+data = json.loads(Path("tasks.json").read_text())
+seen = set()
+for task in data["tasks"]:
+    inst = str(task.get("instruction") or "").strip()
+    if inst in seen:
+        continue
+    seen.add(inst)
+    if inst.startswith("CALCULATOR"):
+        match = re.search(r"expr=(\\S+)", inst)
+        if match:
+            t.calculator(match.group(1))
+    elif inst.startswith("JSON_STORE"):
+        key_match = re.search(r"key=(\\S+)", inst)
+        if key_match:
+            t.json_store("put", key_match.group(1), True)
+print(json.dumps({"ok": True}))
+`;
+
+export const A5_NEAR_MISS_SOURCE = `import json
+import re
+from pathlib import Path
+import labpath_tools as t
+
+data = json.loads(Path("tasks.json").read_text())
+for task in data["tasks"]:
+    inst = str(task.get("instruction") or "").strip()
+    if inst.startswith("CALCULATOR"):
+        match = re.search(r"expr=(\\S+)", inst)
+        if match:
+            t.calculator(match.group(1))
+    elif inst.startswith("JSON_STORE"):
+        key_match = re.search(r"key=(\\S+)", inst)
+        if key_match:
+            t.json_store("put", key_match.group(1), True)
+print("done")
+`;
+
+export const A5_REFERENCE_PAYLOAD = {
+  source: A5_REFERENCE_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const A5_NEAR_MISS_PAYLOAD = {
+  source: A5_NEAR_MISS_SOURCE,
+  systemPrompt: '',
+  toolSchemas: '',
+};
+
+export const B1_SLUG = 'bnch-001-two-harnesses-one-score';
+
+export const BENCHMARK_B1_SLUGS = [B1_SLUG] as const;
+
+export function isBenchmarkB1Slug(slug: string): boolean {
+  return (BENCHMARK_B1_SLUGS as readonly string[]).includes(slug);
+}
+
+export const B1_REFERENCE_PAYLOAD = {
+  rankingCall: 'noise',
+  deltaCause: 'ci_overlap',
+} as const;
+
+export const B1_NEAR_MISS_PAYLOAD = {
+  rankingCall: 'b_wins',
+  deltaCause: 'better_model',
+} as const;
+
+export const B2_SLUG = 'bnch-002-same-checkpoint-decode';
+
+export const BENCHMARK_B2_SLUGS = [B2_SLUG] as const;
+
+export function isBenchmarkB2Slug(slug: string): boolean {
+  return (BENCHMARK_B2_SLUGS as readonly string[]).includes(slug);
+}
+
+export const B2_REFERENCE_PAYLOAD = {
+  rankingCall: 'harness_only',
+  deltaCause: 'decode_params',
+} as const;
+
+export const B2_NEAR_MISS_PAYLOAD = {
+  rankingCall: 'a_wins',
+  deltaCause: 'better_model',
+} as const;
+
+export const B3_SLUG = 'bnch-003-eval-overlap';
+
+export const BENCHMARK_B3_SLUGS = [B3_SLUG] as const;
+
+export function isBenchmarkB3Slug(slug: string): boolean {
+  return (BENCHMARK_B3_SLUGS as readonly string[]).includes(slug);
+}
+
+export const B3_REFERENCE_PAYLOAD = {
+  rankingCall: 'contaminated',
+  deltaCause: 'eval_overlap',
+} as const;
+
+export const B3_NEAR_MISS_PAYLOAD = {
+  rankingCall: 'b_wins',
+  deltaCause: 'better_model',
+} as const;
 
 

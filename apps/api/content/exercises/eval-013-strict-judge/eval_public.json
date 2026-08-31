@@ -1,0 +1,50 @@
+[
+  {
+    "id": "p1",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1101 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p2",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1102 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p3",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1103 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p4",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1104 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p5",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1105 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p6",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1106 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p7",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1107 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p8",
+    "input": "Need a status update",
+    "output": "Ticket TCK-1108 is on track. A refund of $40 is within policy. Let me know if you need a hand.",
+    "humanLabel": "pass"
+  }
+]

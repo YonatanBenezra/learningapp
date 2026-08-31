@@ -57,6 +57,15 @@ export async function validateExerciseDir(dir) {
     errors.push('solution/near-miss.json must be an object');
   }
 
+  const publicRaw = await readFile(path.join(dir, 'eval_public.json'), 'utf8');
+  if (publicRaw.includes('HIDDEN_EVAL')) {
+    errors.push('eval_public.json leaks a HIDDEN_EVAL canary');
+  }
+  const hiddenRaw = await readFile(path.join(dir, 'eval_hidden.json'), 'utf8');
+  if (!hiddenRaw.includes('HIDDEN_EVAL')) {
+    errors.push('eval_hidden.json is missing a HIDDEN_EVAL canary');
+  }
+
   return errors;
 }
 

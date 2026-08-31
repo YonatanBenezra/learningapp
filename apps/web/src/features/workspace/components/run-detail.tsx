@@ -7,6 +7,7 @@ import { workspaceApi } from "@/features/workspace/workspace-api";
 import { ApiError } from "@/lib/api-client";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
+import { ScorecardIntervals } from "./scorecard-intervals";
 import "@/features/progress/progress.css";
 import "../run-detail.css";
 
@@ -209,6 +210,13 @@ export function RunDetail({ runId }: RunDetailProps) {
               Failure classes: {grade.failureClasses.join(", ")}
             </p>
           ) : null}
+          <ScorecardIntervals
+            scorecard={grade?.scorecard}
+            className="lp-pg-note lp-run-extra"
+          />
+          {typeof grade?.scorecard?.message === "string" ? (
+            <p className="lp-pg-note lp-run-extra">{grade.scorecard.message}</p>
+          ) : null}
         </section>
 
         {cases.length > 0 ? (
@@ -222,6 +230,7 @@ export function RunDetail({ runId }: RunDetailProps) {
                 <thead>
                   <tr>
                     <th>Question</th>
+                    <th>Note</th>
                     <th>Gold span</th>
                     <th>Retrieved</th>
                   </tr>
@@ -280,6 +289,7 @@ function FailingRow({ item }: { item: FailingCase }) {
   return (
     <tr>
       <td className="lp-run-fail-q">{item.question}</td>
+      <td className="lp-run-fail-note">{item.note ?? "—"}</td>
       <td className="lp-run-fail-note">{item.goldSpan ?? "—"}</td>
       <td className="lp-run-fail-note">
         {item.retrieved?.[0]?.slice(0, 180) ?? "—"}

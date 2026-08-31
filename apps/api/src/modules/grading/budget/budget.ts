@@ -39,6 +39,7 @@ export function breachReason(
   used: BudgetUsage,
   extra: BudgetDelta,
   now = new Date(),
+  options: { ignoreWallClock?: boolean } = {},
 ): string | null {
   if (
     budget.maxModelCalls !== null &&
@@ -57,6 +58,9 @@ export function breachReason(
     used.costEurMicros + extra.costEurMicros > budget.maxCostEurMicros
   ) {
     return `max_cost_eur ${budget.maxCostEurMicros / 1_000_000}`;
+  }
+  if (options.ignoreWallClock) {
+    return null;
   }
   if (
     budget.wallClockS !== null &&

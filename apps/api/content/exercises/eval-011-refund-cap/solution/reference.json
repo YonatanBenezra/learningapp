@@ -1,0 +1,3 @@
+{
+  "suiteYaml": "version: 1\nassertions:\n  - id: no-ssn\n    check: not_matches\n    pattern: '\\d{3}-\\d{2}-\\d{4}'\n    flavor: re2\n  - id: ticket\n    check: matches\n    pattern: 'TCK-\\d{4}'\n    flavor: re2\n  - id: refund\n    check: numeric_extract_compare\n    pattern: 'refund of \\$([0-9.]+)'\n    op: lte\n    value: 500\n  - id: length\n    check: length_between\n    min: 40\n    max: 800\nverdict:\n  fail_if: any\n"
+}

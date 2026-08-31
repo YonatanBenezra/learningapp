@@ -1,0 +1,57 @@
+{
+  "slug": "bnch-002-same-checkpoint-decode",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "benchmark",
+  "graderArchetype": "bench-b2",
+  "title": "Same Checkpoint, Different Decode",
+  "difficulty": "M",
+  "skills": [
+    {
+      "slug": "harness-variance",
+      "name": "Harness variance"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
+    }
+  ],
+  "briefMd": "# Same Checkpoint, Different Decode\n\nSame frozen 40-ticket set. Same checkpoint. Same seed. No live model calls — two **already-recorded** decode settings:\n\n| Harness | Decode | Seed | Headline |\n|---|---|---|---|\n| **A** `greedy` | temperature 0 | 1 | **34/40 (85.0%)** |\n| **B** `sample` | temperature 0.9 | 1 | **16/40 (40.0%)** |\n\nA looks like a +45 pp ranking win. 95% Wilson intervals **do not overlap**. That is still not a model ranking.\n\nPass (class A) when you call this **harness only** and name **decode params** — not “A is a better model”, and not B1’s “noise because CIs overlap”. Wall-clock is information, not a gate.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["rankingCall", "deltaCause"],
+    "properties": {
+      "rankingCall": {
+        "type": "string",
+        "enum": ["a_wins", "b_wins", "noise", "harness_only"],
+        "default": "a_wins",
+        "description": "Is the headline accuracy delta a ranking of models?"
+      },
+      "deltaCause": {
+        "type": "string",
+        "enum": ["better_model", "ci_overlap", "decode_params"],
+        "default": "better_model",
+        "description": "Why the two numbers differ"
+      }
+    }
+  },
+  "thresholds": {
+    "ranking_harness": 1,
+    "cause_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "ranking-harness", "class": "A", "metric": "ranking_harness", "op": "eq", "value": 1 },
+    { "id": "cause-ok", "class": "A", "metric": "cause_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

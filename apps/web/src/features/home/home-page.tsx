@@ -49,7 +49,7 @@ export function HomePage() {
           <div className="ag-hero-inner">
             <p className="ag-badge">
               <span aria-hidden="true">›</span>
-              Practice platform
+              Public beta
               <span aria-hidden="true">‹</span>
             </p>
             <h1 className="ag-title">
@@ -155,6 +155,12 @@ export function HomePage() {
                     <AuthLink href={routes.catalogue}>Catalogue</AuthLink>
                   </li>
                   <li>
+                    <Link href={routes.leaderboard}>Leaderboard</Link>
+                  </li>
+                  <li>
+                    <AuthLink href={routes.paths}>Paths</AuthLink>
+                  </li>
+                  <li>
                     <AuthLink href={routes.progress}>Progress</AuthLink>
                   </li>
                   <li>
@@ -165,6 +171,9 @@ export function HomePage() {
               <div>
                 <p className="ag-col-title">Other links</p>
                 <ul>
+                  <li>
+                    <AuthLink href={routes.paths}>Start a path</AuthLink>
+                  </li>
                   <li>
                     <AuthLink href={routes.catalogue}>Exercises</AuthLink>
                   </li>

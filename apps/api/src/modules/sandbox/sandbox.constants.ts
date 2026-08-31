@@ -10,6 +10,16 @@ export const SANDBOX_DEFAULTS = {
   tmpfsSizeMb: 16,
 } as const;
 
+/** Agent jobs only. Do not use these to raise Phase 1 BYOC limits. */
+export const AGENT_SANDBOX_DEFAULTS = {
+  maxMemoryMb: 512,
+  maxWallClockS: 180,
+  maxSteps: 8,
+  maxToolCalls: 12,
+  tools: ['calculator', 'json_store', 'fixture_fetch'] as const,
+  toolLogPath: '/tmp/labpath_tool_log.json',
+} as const;
+
 export const SANDBOX_ALLOWED_ENV = [
   'SANDBOX_GATEWAY_URL',
   'PYTHONUNBUFFERED',
@@ -19,6 +29,9 @@ export const SANDBOX_FORBIDDEN_FILE_PATTERNS = [
   'eval_hidden',
   '.env',
   'credentials',
+  'labpath_tools',
+  'sitecustomize',
+  'labpath_tool_log',
 ] as const;
 
 export const SANDBOX_ERROR_CODES = {

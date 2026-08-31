@@ -4,6 +4,7 @@ import Link from "next/link";
 import { routes } from "@/config/routes";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
+import { ScorecardIntervals } from "./scorecard-intervals";
 
 type RunPanelProps = {
   run: Run | null;
@@ -91,6 +92,13 @@ function Scorecard({ grade }: { grade: Grade }) {
           Failure classes: {grade.failureClasses.join(", ")}
         </p>
       ) : null}
+      <ScorecardIntervals
+        scorecard={grade.scorecard}
+        className="lp-ws-pane-lead"
+      />
+      {typeof grade.scorecard?.message === "string" ? (
+        <p className="lp-ws-pane-lead">{grade.scorecard.message}</p>
+      ) : null}
       {cases.length > 0 ? (
         <div>
           <h3 className="lp-ws-section-title">Failing samples</h3>
@@ -109,8 +117,8 @@ function FailingSample({ item }: { item: FailingCase }) {
   return (
     <li className="lp-ws-fail">
       <p>{item.question}</p>
-      {item.goldSpan ? (
-        <p className="lp-ws-fail-note">Gold span: {item.goldSpan}</p>
+      {item.note ? (
+        <p className="lp-ws-fail-note">{item.note}</p>
       ) : null}
       {item.retrieved && item.retrieved.length > 0 ? (
         <p className="lp-ws-fail-note">

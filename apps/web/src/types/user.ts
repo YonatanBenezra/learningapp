@@ -6,7 +6,14 @@ export type User = {
   id: string;
   email: string;
   role: UserRole;
-  displayName?: string;
+  displayName?: string | null;
+  profile?: {
+    slug: string | null;
+    public: boolean;
+    canPublish: boolean;
+    published: boolean;
+    urlPath: string | null;
+  };
   account?: {
     tier: AccountTier;
     subscriptionStatus: string;

@@ -4,6 +4,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
+import { splitToolLogStderr } from './sandbox.agent';
 import {
   SANDBOX_DEFAULTS,
   SANDBOX_ERROR_CODES,
@@ -127,6 +128,7 @@ export async function runSandboxJob(
         durationMs: Date.now() - started,
         memoryPeakMb: null,
         runtime: 'runsc',
+        toolLog: [],
       };
     }
 
@@ -150,17 +152,19 @@ export async function runSandboxJob(
       );
 
     const errorCode = classifyExit(exitCode, signal, false);
+    const split = splitToolLogStderr(stderr);
     return {
       ok: errorCode === SANDBOX_ERROR_CODES.OK,
       errorCode,
       exitCode,
       stdout,
-      stderr,
+      stderr: split.stderr,
       durationMs: Date.now() - started,
       memoryPeakMb:
         errorCode === SANDBOX_ERROR_CODES.OOM ? maxMemoryMb : memoryPeakMb,
       runtime,
       containerId: containerName,
+      toolLog: split.toolLog,
     };
   } catch (error) {
     const timedOut =
@@ -176,6 +180,7 @@ export async function runSandboxJob(
         memoryPeakMb: null,
         runtime: 'runsc',
         containerId: containerName,
+        toolLog: [],
       };
     }
 
@@ -189,6 +194,7 @@ export async function runSandboxJob(
       memoryPeakMb: null,
       runtime: 'runsc',
       containerId: containerName,
+      toolLog: [],
     };
   } finally {
     await rm(workDir, { recursive: true, force: true });
@@ -337,12 +343,16 @@ async function execDockerWithTimeout(
 
     const timer = setTimeout(() => {
       clearInterval(statsTimer);
-      void removeContainer(containerName).finally(() => {
+      void killContainer(containerName).finally(() => {
         child.kill();
         reject(new Error('sandbox_timeout'));
       });
     }, timeoutMs);
   });
+}
+
+async function killContainer(containerName: string): Promise<void> {
+  await execFileAsync('docker', ['kill', containerName]).catch(() => undefined);
 }
 
 async function removeContainer(containerName: string): Promise<void> {

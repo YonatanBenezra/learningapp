@@ -1,0 +1,81 @@
+{
+  "slug": "eval-014-trap-hunter",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "evaluation",
+  "title": "Trap Hunter",
+  "difficulty": "M",
+  "skills": [
+    {
+      "slug": "llm-as-judge",
+      "name": "LLM-as-judge"
+    },
+    {
+      "slug": "calibration",
+      "name": "Calibration"
+    },
+    {
+      "slug": "bias-awareness",
+      "name": "Bias awareness"
+    }
+  ],
+  "briefMd": "# Trap Hunter\n\nCatch verbosity-bias traps without collapsing κ.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "judgeRubric",
+      "judgePrompt"
+    ],
+    "properties": {
+      "judgeRubric": {
+        "type": "string",
+        "default": ""
+      },
+      "judgePrompt": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "cohen_kappa": 0.6,
+    "self_consistency": 0.85,
+    "trap_fails": 12
+  },
+  "budget": {
+    "max_model_calls": 250,
+    "max_tokens": 200000,
+    "max_cost_eur": 0.25,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    {
+      "id": "cohen-kappa",
+      "class": "A",
+      "metric": "cohen_kappa",
+      "op": "gte",
+      "value": 0.6
+    },
+    {
+      "id": "self-consistency",
+      "class": "A",
+      "metric": "self_consistency",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "verbosity-traps",
+      "class": "A",
+      "metric": "trap_fails",
+      "op": "gte",
+      "value": 12
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 6,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "eval-e2"
+}

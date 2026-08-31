@@ -20,12 +20,14 @@ type WorkspaceShellProps = {
   slug: string;
   initialValues?: Record<string, unknown>;
   onboarding?: boolean;
+  pathSlug?: string;
 };
 
 export function WorkspaceShell({
   slug,
   initialValues,
   onboarding = false,
+  pathSlug,
 }: WorkspaceShellProps) {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [loadError, setLoadError] = useState<"auth" | "load" | null>(null);
@@ -138,7 +140,11 @@ export function WorkspaceShell({
 
   return (
     <div className={`lp-ws${exercise ? ` lp-ws--${exercise.simulator}` : ""}`}>
-      <BriefPanel exercise={exercise} onboarding={onboarding} />
+      <BriefPanel
+        exercise={exercise}
+        onboarding={onboarding}
+        pathSlug={pathSlug}
+      />
       <div className="lp-ws-pane lp-ws-pane--work">
         {exercise?.slug === "grd-001-break-the-concierge" ? (
           <G1Chat disabled={!exercise || pending} />

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
 import { ApiError } from "@/lib/api-client";
 import { tracesApi } from "@/features/traces/traces-api";
-import type { RunTrace, TraceQuery } from "@/types/trace";
+import type { RunTrace, TraceQuery, TraceStep } from "@/types/trace";
 import "@/features/progress/progress.css";
 import "@/features/workspace/run-detail.css";
 import "../trace-view.css";
@@ -98,20 +98,50 @@ export function TraceView({ runId }: TraceViewProps) {
   }
 
   const queries = trace.queries ?? [];
+  const steps = trace.steps ?? [];
   const gated = Boolean(trace.gated);
+  const isAgent = trace.simulator === "agent" || steps.length > 0;
 
   return (
     <div className="lp-page lp-page-progress">
       <TraceHeader runId={runId} simulator={trace.simulator} />
 
       <div className="lp-run-stats">
-        <Stat label="Chunks" value={formatCount(trace.chunkCount)} />
-        <Stat label="Top-k" value={formatCount(trace.k)} />
-        <Stat
-          label="Tokens"
-          value={`${trace.tokensIn ?? 0} / ${trace.tokensOut ?? 0}`}
-        />
-        <Stat label="Cost" value={formatCost(trace.costEurMicros)} />
+        {isAgent ? (
+          <>
+            <Stat
+              label="Steps"
+              value={
+                trace.ceilings
+                  ? `${trace.ceilings.stepsUsed} / ${trace.ceilings.maxSteps}`
+                  : formatCount(steps.length)
+              }
+            />
+            <Stat
+              label="Tool calls"
+              value={formatCount(trace.ceilings?.toolCallsUsed ?? steps.length)}
+            />
+            <Stat
+              label="Duration"
+              value={
+                typeof trace.sandbox?.durationMs === "number"
+                  ? `${trace.sandbox.durationMs} ms`
+                  : "—"
+              }
+            />
+            <Stat label="Cost" value={formatCost(trace.costEurMicros)} />
+          </>
+        ) : (
+          <>
+            <Stat label="Chunks" value={formatCount(trace.chunkCount)} />
+            <Stat label="Top-k" value={formatCount(trace.k)} />
+            <Stat
+              label="Tokens"
+              value={`${trace.tokensIn ?? 0} / ${trace.tokensOut ?? 0}`}
+            />
+            <Stat label="Cost" value={formatCost(trace.costEurMicros)} />
+          </>
+        )}
       </div>
 
       <div className="lp-pg">
@@ -129,48 +159,97 @@ export function TraceView({ runId }: TraceViewProps) {
                   label="Created"
                   value={trace.createdAt ? formatWhen(trace.createdAt) : "—"}
                 />
-                <DetailRow label="Chunks" value={formatCount(trace.chunkCount)} />
-                <DetailRow label="Top-k" value={formatCount(trace.k)} />
-                <DetailRow
-                  label="Tokens in"
-                  value={formatCount(trace.tokensIn)}
-                />
-                <DetailRow
-                  label="Tokens out"
-                  value={formatCount(trace.tokensOut)}
-                />
+                {isAgent ? (
+                  <>
+                    <DetailRow
+                      label="Steps"
+                      value={
+                        trace.ceilings
+                          ? `${trace.ceilings.stepsUsed} / ${trace.ceilings.maxSteps}`
+                          : formatCount(steps.length)
+                      }
+                    />
+                    <DetailRow
+                      label="Tool calls"
+                      value={`${trace.ceilings?.toolCallsUsed ?? steps.length} / ${trace.ceilings?.maxToolCalls ?? "—"}`}
+                    />
+                    <DetailRow
+                      label="Duration"
+                      value={
+                        typeof trace.sandbox?.durationMs === "number"
+                          ? `${trace.sandbox.durationMs} ms (information)`
+                          : "—"
+                      }
+                    />
+                  </>
+                ) : (
+                  <>
+                    <DetailRow label="Chunks" value={formatCount(trace.chunkCount)} />
+                    <DetailRow label="Top-k" value={formatCount(trace.k)} />
+                    <DetailRow
+                      label="Tokens in"
+                      value={formatCount(trace.tokensIn)}
+                    />
+                    <DetailRow
+                      label="Tokens out"
+                      value={formatCount(trace.tokensOut)}
+                    />
+                  </>
+                )}
                 <DetailRow label="Cost" value={formatCost(trace.costEurMicros)} />
               </tbody>
             </table>
           </div>
         </section>
 
-        <section className="lp-panel lp-pg-panel">
-          <div className="lp-pg-panel-top">
-            <p className="lp-panel-eyebrow">Retrieval</p>
-            <h2 className="lp-panel-title">Queries</h2>
-          </div>
-          {gated ? (
-            <p className="lp-pg-note">
-              {trace.message ??
-                "Full traces are included with Pro. Your scorecard still shows the verdict."}{" "}
-              <Link href={routes.billing} className="lp-link">
-                Upgrade
-              </Link>
-            </p>
-          ) : queries.length === 0 ? (
-            <p className="lp-pg-empty">No retrieval steps recorded.</p>
-          ) : (
-            <div className="lp-pg">
-              {queries.map((query) => (
-                <QueryBlock
-                  key={`${query.source}-${query.question}`}
-                  query={query}
-                />
-              ))}
+        {isAgent ? (
+          <section className="lp-panel lp-pg-panel">
+            <div className="lp-pg-panel-top">
+              <p className="lp-panel-eyebrow">Agent</p>
+              <h2 className="lp-panel-title">Steps</h2>
             </div>
-          )}
-        </section>
+            {gated ? (
+              <p className="lp-pg-note">
+                {trace.message ??
+                  "Full traces are included with Pro. Your scorecard still shows the verdict."}{" "}
+                <Link href={routes.billing} className="lp-link">
+                  Upgrade
+                </Link>
+              </p>
+            ) : steps.length === 0 ? (
+              <p className="lp-pg-empty">No tool steps recorded.</p>
+            ) : (
+              <StepsTable steps={steps} />
+            )}
+          </section>
+        ) : (
+          <section className="lp-panel lp-pg-panel">
+            <div className="lp-pg-panel-top">
+              <p className="lp-panel-eyebrow">Retrieval</p>
+              <h2 className="lp-panel-title">Queries</h2>
+            </div>
+            {gated ? (
+              <p className="lp-pg-note">
+                {trace.message ??
+                  "Full traces are included with Pro. Your scorecard still shows the verdict."}{" "}
+                <Link href={routes.billing} className="lp-link">
+                  Upgrade
+                </Link>
+              </p>
+            ) : queries.length === 0 ? (
+              <p className="lp-pg-empty">No retrieval steps recorded.</p>
+            ) : (
+              <div className="lp-pg">
+                {queries.map((query) => (
+                  <QueryBlock
+                    key={`${query.source}-${query.question}`}
+                    query={query}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         {trace.payload ? (
           <section className="lp-panel lp-pg-panel">
@@ -200,7 +279,13 @@ function TraceHeader({
       <div>
         <h1 className="lp-cat-title">Trace</h1>
         <p className="lp-cat-lead">
-          {simulator ? `${simulator} retrieval steps` : "Retrieval steps for this run."}
+          {simulator === "agent"
+            ? "Tool steps for this run. Duration is information, not a pass gate."
+            : simulator === "benchmark"
+              ? "Harness comparison for this run. Wall-clock is information, not a pass gate."
+              : simulator
+                ? `${simulator} retrieval steps`
+                : "Retrieval steps for this run."}
         </p>
       </div>
       <div className="lp-run-links">
@@ -212,6 +297,39 @@ function TraceHeader({
         </Link>
       </div>
     </header>
+  );
+}
+
+function StepsTable({ steps }: { steps: TraceStep[] }) {
+  return (
+    <div className="lp-pg-table-wrap">
+      <table className="lp-pg-table" data-testid="trace-steps">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Kind</th>
+            <th>Name</th>
+            <th>Args</th>
+            <th>Result</th>
+            <th>Duration</th>
+            <th>Ok</th>
+          </tr>
+        </thead>
+        <tbody>
+          {steps.map((step) => (
+            <tr key={step.index} data-testid="trace-step">
+              <td className="lp-run-mono">{step.index}</td>
+              <td>{step.kind}</td>
+              <td className="lp-pg-table-skill">{step.name}</td>
+              <td className="lp-trace-text">{step.argsSummary || "—"}</td>
+              <td className="lp-run-mono">{step.resultBytes} B</td>
+              <td>{step.durationMs} ms</td>
+              <td>{step.ok ? "yes" : step.error || "no"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

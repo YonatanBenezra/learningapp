@@ -241,7 +241,9 @@ function isLongField(name: string) {
     key.includes("yaml") ||
     key.includes("rubric") ||
     key.includes("spec") ||
-    key.includes("content")
+    key.includes("content") ||
+    key.includes("source") ||
+    key.includes("schema")
   );
 }
 

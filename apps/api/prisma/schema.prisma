@@ -110,6 +110,8 @@ model User {
   role          Role      @default(learner)
   displayName   String?
   imageUrl      String?
+  profileSlug   String?   @unique
+  profilePublic Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
@@ -229,6 +231,34 @@ model Exercise {
   @@unique([slug, version])
   @@index([simulator, difficulty, isPublished])
   @@map("exercises")
+  @@schema("public")
+}
+
+model GuidedPath {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String   @unique
+  title       String
+  intent      String
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  steps       GuidedPathStep[]
+
+  @@map("guided_paths")
+  @@schema("public")
+}
+
+model GuidedPathStep {
+  pathId       String     @db.Uuid
+  position     Int
+  exerciseSlug String
+  path         GuidedPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  @@id([pathId, position])
+  @@unique([pathId, exerciseSlug])
+  @@index([exerciseSlug])
+  @@map("guided_path_steps")
   @@schema("public")
 }
 

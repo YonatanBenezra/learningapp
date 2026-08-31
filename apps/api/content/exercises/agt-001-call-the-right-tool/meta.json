@@ -1,0 +1,79 @@
+{
+  "slug": "agt-001-call-the-right-tool",
+  "version": 2,
+  "type": "exercise",
+  "simulator": "agent",
+  "graderArchetype": "agent-a1",
+  "title": "Call the Right Tool",
+  "difficulty": "E",
+  "skills": [
+    {
+      "slug": "tool-schema",
+      "name": "Tool schema"
+    },
+    {
+      "slug": "planning",
+      "name": "Planning"
+    }
+  ],
+  "briefMd": "# Call the Right Tool\n\nYou are wiring a tiny agent. Hidden tasks arrive as lines in `tasks.json` (same directory as `main.py`):\n\n```json\n{ \"tasks\": [ { \"id\": \"t1\", \"instruction\": \"CALCULATOR expr=2+2\" } ] }\n```\n\nCall the **allowlisted** sandbox tools — do not reach the public internet.\n\n- `labpath_tools.calculator(expr)` — arithmetic only\n- `labpath_tools.json_store(\"put\", key, value)` — per-run JSON store\n- `labpath_tools.fixture_fetch(path)` — gateway fixtures only (not required to pass this exercise)\n\nInstructions are tagged:\n\n- `CALCULATOR expr=12*(3+4)`\n- `JSON_STORE put key=ticket value={\"id\":\"TCK-1001\"}`\n\nPass when every hidden task hits the matching tool with the matching args (class A on the tool log). Echoing hidden canaries fails.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["source"],
+    "properties": {
+      "source": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Python 3 agent executed as main.py inside the sandbox"
+      },
+      "systemPrompt": {
+        "type": "string",
+        "default": ""
+      },
+      "toolSchemas": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "tool_hits": 1,
+    "no_canary": 1,
+    "loop_ok": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.05,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    {
+      "id": "tool-hits",
+      "class": "A",
+      "metric": "tool_hits",
+      "op": "gte",
+      "value": 1
+    },
+    {
+      "id": "no-canary",
+      "class": "A",
+      "metric": "no_canary",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "loop-ceiling",
+      "class": "A",
+      "metric": "loop_ok",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null
+}

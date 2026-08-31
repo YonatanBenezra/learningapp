@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
-  G1_SLUG,
-  G2_SLUG,
-  G3_SLUG,
   isGuardG1Slug,
+  isGuardG2Slug,
+  isGuardG3Slug,
 } from '../../../catalogue/exercises/exercises.constants';
 import { ModelGateway } from '../../gateway/model.gateway';
 import { gradeG1 } from './g1.grade';
@@ -34,7 +33,7 @@ export class GuardrailsHarness {
         input.runId,
       );
     }
-    if (input.slug === G2_SLUG) {
+    if (isGuardG2Slug(input.slug)) {
       return gradeG2(
         parseString(input.payload, 'pageContent'),
         input.hidden,
@@ -43,7 +42,7 @@ export class GuardrailsHarness {
         input.runId,
       );
     }
-    if (input.slug === G3_SLUG) {
+    if (isGuardG3Slug(input.slug)) {
       return gradeG3(parseG3(input.payload), input.hidden, publicItems, input.runId);
     }
     throw new Error(`Unsupported guardrails exercise: ${input.slug}`);

@@ -1,0 +1,73 @@
+{
+  "slug": "pe-010-output-contract",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "prompt_engineering",
+  "title": "Output Contract",
+  "difficulty": "M",
+  "skills": [
+    {
+      "slug": "structured-output",
+      "name": "Structured output"
+    },
+    {
+      "slug": "few-shot-design",
+      "name": "Few-shot design"
+    },
+    {
+      "slug": "prompt-clarity",
+      "name": "Prompt clarity"
+    }
+  ],
+  "briefMd": "# Output Contract\n\nA strict JSON contract with enumerated labels and two few-shots.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "systemPrompt",
+      "fewShotBlock"
+    ],
+    "properties": {
+      "systemPrompt": {
+        "type": "string",
+        "default": ""
+      },
+      "fewShotBlock": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "field_accuracy": 0.85,
+    "prompt_audit": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 60
+  },
+  "gates": [
+    {
+      "id": "prompt-audit",
+      "class": "A",
+      "metric": "prompt_audit",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "field-accuracy",
+      "class": "A",
+      "metric": "field_accuracy",
+      "op": "gte",
+      "value": 0.85
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 4,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "pe-p1"
+}

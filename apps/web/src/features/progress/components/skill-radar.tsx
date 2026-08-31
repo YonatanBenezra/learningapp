@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
 import { progressApi } from "@/features/progress/progress-api";
 import { ApiError } from "@/lib/api-client";
-import type { Progress, SkillScore } from "@/types/progress";
+import type { Progress } from "@/types/progress";
+import { SkillsTable } from "./skills-table";
 
 export function SkillRadar() {
   const [progress, setProgress] = useState<Progress | null>(null);
@@ -84,50 +85,7 @@ export function SkillRadar() {
           <span className="lp-skel-line" />
         </div>
       ) : null}
-      {progress ? <ScoredSkills skills={progress.skills} /> : null}
+      {progress ? <SkillsTable skills={progress.skills} /> : null}
     </section>
-  );
-}
-
-function ScoredSkills({ skills }: { skills: SkillScore[] }) {
-  if (skills.length === 0) {
-    return <p className="lp-pg-empty">No skill scores yet.</p>;
-  }
-
-  return (
-    <div className="lp-pg-table-wrap">
-      <table className="lp-pg-table">
-        <thead>
-          <tr>
-            <th>Skill</th>
-            <th>Score</th>
-            <th className="lp-pg-table-bar">Progress</th>
-          </tr>
-        </thead>
-        <tbody>
-          {skills.map((skill) => {
-            const empty = skill.score <= 0;
-            return (
-              <tr key={skill.slug}>
-                <td className="lp-pg-table-skill">{skill.name}</td>
-                <td className={`lp-pg-table-score${empty ? " is-empty" : ""}`}>
-                  {empty ? "—" : skill.score.toFixed(2)}
-                </td>
-                <td className="lp-pg-table-bar">
-                  <div className="lp-pg-bar" aria-hidden="true">
-                    <div
-                      className="lp-pg-bar-fill"
-                      style={{
-                        width: `${Math.max(0, Math.min(skill.score, 1)) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
   );
 }

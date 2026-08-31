@@ -38,7 +38,7 @@ export class GradeProcessor extends WorkerHost {
       if (error instanceof BudgetExceededError) {
         return;
       }
-      const message = error instanceof Error ? error.message : 'unknown';
+      const message = messageFromUnknown(error);
       await this.prisma.run
         .update({
           where: { id: runId },
@@ -58,4 +58,17 @@ export class GradeProcessor extends WorkerHost {
       throw error;
     }
   }
+}
+
+function messageFromUnknown(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  if (error && typeof error === 'object' && 'message' in error) {
+    const message = (error as { message: unknown }).message;
+    if (typeof message === 'string' && message.length > 0) {
+      return message;
+    }
+  }
+  return 'unknown';
 }

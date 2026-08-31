@@ -38,7 +38,7 @@ export function AttemptHistory() {
       <div className="lp-pg-panel-top">
         <div>
           <p className="lp-panel-eyebrow">Timeline</p>
-          <h2 className="lp-panel-title">Recent attempts</h2>
+          <h2 className="lp-panel-title">Solve history</h2>
         </div>
       </div>
       {error === "auth" ? (

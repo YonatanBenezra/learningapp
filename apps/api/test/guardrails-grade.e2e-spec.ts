@@ -12,7 +12,7 @@ import {
   G3_REFERENCE_PAYLOAD,
   G3_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
-import { signIn } from './auth-helper';
+import { signInPro } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
 jest.setTimeout(120000);
@@ -80,7 +80,7 @@ describe('Guardrails G1–G3 (e2e)', () => {
 
   beforeAll(async () => {
     app = await createApiApp();
-    cookies = await signIn(app, `grd-grade-${Date.now()}@labpath.test`);
+    cookies = await signInPro(app, `grd-grade-${Date.now()}@labpath.test`);
   });
 
   afterAll(async () => {

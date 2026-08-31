@@ -16,6 +16,60 @@
   margin-bottom: 1.1rem;
 }
 
+.lp-pg-drill-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.lp-pg-drill-kicker {
+  margin: 0.35rem 0 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-pg-drill-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.lp-pg-drill-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-pg-streak {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 7.5rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.85rem;
+  background: var(--lp-surface);
+}
+
+.lp-pg-streak-value {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--lp-brand);
+}
+
+.lp-pg-streak-label {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 550;
+  color: var(--lp-muted);
+  text-align: right;
+}
+
 .lp-pg-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -187,6 +241,60 @@ html[data-theme="dark"] .lp-pg-pill--pass {
   gap: 0.85rem;
 }
 
+.lp-pg-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.lp-pg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.lp-pg-slug {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.lp-pg-slug-prefix {
+  color: var(--lp-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-pg-slug .lp-field-input {
+  flex: 1;
+}
+
+.lp-pg-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.lp-pg-solves {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lp-pg-solves li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--lp-border);
+}
+
+.lp-pg-solves li:last-child {
+  border-bottom: 0;
+}
+
 @media (max-width: 720px) {
   .lp-pg-stats {
     grid-template-columns: 1fr;
@@ -194,5 +302,17 @@ html[data-theme="dark"] .lp-pg-pill--pass {
 
   .lp-pg-table-bar {
     display: none;
+  }
+
+  .lp-pg-drill-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-pg-streak {
+    align-items: flex-start;
+  }
+
+  .lp-pg-streak-label {
+    text-align: left;
   }
 }

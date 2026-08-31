@@ -4,6 +4,11 @@ RUN useradd --create-home --uid 1000 sandbox \
   && mkdir /workspace \
   && chown sandbox:sandbox /workspace
 
+COPY python /opt/labpath
+RUN chown -R root:root /opt/labpath && chmod -R a+rX /opt/labpath
+
+ENV PYTHONPATH=/opt/labpath
+
 USER sandbox
 WORKDIR /workspace
 

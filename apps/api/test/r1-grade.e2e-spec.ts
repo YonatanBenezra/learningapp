@@ -7,7 +7,7 @@ import {
   R1_REFERENCE_PAYLOAD,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
-import { signIn } from './auth-helper';
+import { signInPro } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
 async function waitForRun(
@@ -63,7 +63,7 @@ describe('R1 grade (e2e)', () => {
 
   beforeAll(async () => {
     app = await createApiApp();
-    cookies = await signIn(app, `r1-grade-${Date.now()}@labpath.test`);
+    cookies = await signInPro(app, `r1-grade-${Date.now()}@labpath.test`);
   });
 
   afterAll(async () => {

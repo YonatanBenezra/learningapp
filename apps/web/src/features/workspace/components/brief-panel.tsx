@@ -18,18 +18,29 @@ const DIFFICULTY_LABELS: Record<Exercise["difficulty"], string> = {
 type BriefPanelProps = {
   exercise: Exercise | null;
   onboarding?: boolean;
+  pathSlug?: string;
 };
 
-export function BriefPanel({ exercise, onboarding = false }: BriefPanelProps) {
+export function BriefPanel({
+  exercise,
+  onboarding = false,
+  pathSlug,
+}: BriefPanelProps) {
   if (!exercise) {
     return (
       <aside className="lp-ws-pane lp-ws-pane--brief">
         <div className="lp-ws-pane-head">
         <Link
-          href={onboarding ? routes.onboarding : routes.catalogue}
+          href={
+            pathSlug
+              ? routes.path(pathSlug)
+              : onboarding
+                ? routes.onboarding
+                : routes.catalogue
+          }
           className="lp-ws-kicker"
         >
-          {onboarding ? "First solve" : "Catalogue"}
+          {pathSlug ? "Path" : onboarding ? "First solve" : "Catalogue"}
         </Link>
         <h2 className="lp-ws-pane-title">Brief</h2>
           <p className="lp-ws-pane-lead">Loading…</p>
@@ -43,8 +54,11 @@ export function BriefPanel({ exercise, onboarding = false }: BriefPanelProps) {
   return (
     <aside className="lp-ws-pane lp-ws-pane--brief">
       <div className="lp-ws-pane-head">
-        <Link href={routes.catalogue} className="lp-ws-kicker">
-          {onboarding ? "First solve" : "Catalogue"}
+        <Link
+          href={pathSlug ? routes.path(pathSlug) : routes.catalogue}
+          className="lp-ws-kicker"
+        >
+          {pathSlug ? "Path" : onboarding ? "First solve" : "Catalogue"}
         </Link>
         <div className="lp-ws-meta">
           <span className="lp-badge">{SIMULATOR_LABELS[exercise.simulator]}</span>

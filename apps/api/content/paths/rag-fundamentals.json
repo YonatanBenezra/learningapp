@@ -1,0 +1,11 @@
+{
+  "slug": "rag-fundamentals",
+  "title": "RAG fundamentals",
+  "intent": "Chunk a corpus, cut cost, then split on sentence boundaries.",
+  "sortOrder": 1,
+  "steps": [
+    "rag-001-chunk-it-right",
+    "rag-002-the-cost-ceiling",
+    "rag-005-sentence-split"
+  ]
+}

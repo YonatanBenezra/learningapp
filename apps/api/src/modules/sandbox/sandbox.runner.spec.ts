@@ -5,7 +5,12 @@ import {
   parseDockerMemUsage,
   sandboxEnvArgs,
 } from './sandbox.runner';
-import { SANDBOX_DEFAULTS, SANDBOX_ERROR_CODES } from './sandbox.constants';
+import { parseAgentToolLog, splitToolLogStderr, withAgentEnvelope } from './sandbox.agent';
+import {
+  AGENT_SANDBOX_DEFAULTS,
+  SANDBOX_DEFAULTS,
+  SANDBOX_ERROR_CODES,
+} from './sandbox.constants';
 
 describe('sandbox runner helpers', () => {
   it('classifies timeout, oom, ok, and runtime errors', () => {
@@ -66,6 +71,9 @@ describe('sandbox runner helpers', () => {
 
   it('rejects hidden eval and secret files in the workspace', () => {
     expect(() =>
+      assertWorkspaceSafe({ 'labpath_tools.py': 'def calculator(x): return 0' }),
+    ).toThrow(/forbidden file/);
+    expect(() =>
       assertWorkspaceSafe({ 'eval_hidden.json': '{"id":1}' }),
     ).toThrow(/forbidden file/);
     expect(() =>
@@ -74,5 +82,60 @@ describe('sandbox runner helpers', () => {
     expect(() => assertWorkspaceSafe({ '../secret': 'x' })).toThrow(
       /sandbox path/,
     );
+  });
+
+  it('keeps Phase 1 BYOC limits while Agent jobs get a longer envelope', () => {
+    expect(SANDBOX_DEFAULTS.maxWallClockS).toBe(30);
+    expect(SANDBOX_DEFAULTS.maxMemoryMb).toBe(512);
+    expect(AGENT_SANDBOX_DEFAULTS.maxWallClockS).toBe(180);
+    expect(AGENT_SANDBOX_DEFAULTS.maxMemoryMb).toBe(512);
+    expect(AGENT_SANDBOX_DEFAULTS.maxToolCalls).toBe(12);
+    expect(AGENT_SANDBOX_DEFAULTS.maxSteps).toBe(8);
+    const agent = withAgentEnvelope({
+      image: SANDBOX_DEFAULTS.image,
+      maxMemoryMb: SANDBOX_DEFAULTS.maxMemoryMb,
+      maxWallClockS: SANDBOX_DEFAULTS.maxWallClockS,
+      gatewayUrl: SANDBOX_DEFAULTS.gatewayUrl,
+      dockerNetwork: SANDBOX_DEFAULTS.dockerNetwork,
+      allowRuncFallback: false,
+    });
+    expect(agent.maxWallClockS).toBe(180);
+    expect(agent.maxMemoryMb).toBe(512);
+  });
+
+  it('parses allowlisted tool-log rows and drops unknown tools', () => {
+    const calls = parseAgentToolLog(
+      JSON.stringify([
+        {
+          name: 'calculator',
+          args: { expr: '1+1' },
+          ok: true,
+          durationMs: 1,
+          result: 2,
+        },
+        { name: 'shell', args: {}, ok: true, durationMs: 1 },
+        { name: 'calculator' },
+      ]),
+    );
+    expect(calls).toEqual([
+      {
+        name: 'calculator',
+        args: { expr: '1+1' },
+        ok: true,
+        durationMs: 1,
+        result: 2,
+      },
+    ]);
+    expect(parseAgentToolLog('not-json')).toEqual([]);
+  });
+
+  it('strips tool-log markers from stderr', () => {
+    const { stderr, toolLog } = splitToolLogStderr(
+      'warn\nLABPATH_TOOL_LOG:[{"name":"calculator","args":{"expr":"1"},"ok":true,"durationMs":0,"result":1}]\n',
+    );
+    expect(stderr.trim()).toBe('warn');
+    expect(toolLog).toEqual([
+      expect.objectContaining({ name: 'calculator', ok: true, result: 1 }),
+    ]);
   });
 });

@@ -3,6 +3,10 @@ import { UserRole } from '../../../common/constants/roles';
 import { PrismaService } from '../../../core/prisma/prisma.service';
 import { AccountService } from '../../accounts/account.service';
 import type { AccountUsage } from '../../accounts/account.types';
+import {
+  toProfileSettings,
+  type ProfileSettings,
+} from '../../profiles/profile-settings';
 import type { PublicUser } from '../auth/auth.service';
 import {
   elapsedMs,
@@ -15,6 +19,7 @@ import {
 export type MeResponse = PublicUser & {
   account: AccountUsage;
   onboarding: OnboardingState;
+  profile: ProfileSettings;
 };
 
 @Injectable()
@@ -33,13 +38,15 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException();
     }
+    const account = await this.accounts.usageFor(userId);
     return {
       id: user.id,
       email: user.email,
       role: user.role as UserRole,
       displayName: user.displayName,
-      account: await this.accounts.usageFor(userId),
+      account,
       onboarding: await this.onboardingFor(userId, user.createdAt),
+      profile: toProfileSettings(user, account.tier),
     };
   }
 

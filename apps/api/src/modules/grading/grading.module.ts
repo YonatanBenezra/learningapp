@@ -6,6 +6,8 @@ import { GatewayModule } from './gateway/gateway.module';
 import { EvaluationHarness } from './harnesses/evaluation/evaluation.harness';
 import { GuardrailsHarness } from './harnesses/guardrails/guardrails.harness';
 import { PromptEngineeringHarness } from './harnesses/prompt-engineering/prompt-engineering.harness';
+import { AgentHarness } from './harnesses/agent/agent.harness';
+import { BenchmarkHarness } from './harnesses/benchmark/benchmark.harness';
 import { RagHarness } from './harnesses/rag/rag.harness';
 import { SandboxHarness } from './harnesses/sandbox/sandbox.harness';
 import { JudgeService } from './judge/judge.service';
@@ -26,6 +28,8 @@ import { IngestProcessor } from './processors/ingest.processor';
     EvaluationHarness,
     GuardrailsHarness,
     PromptEngineeringHarness,
+    AgentHarness,
+    BenchmarkHarness,
     AssertionDsl,
     SliceSpecParser,
     MetricsLibrary,

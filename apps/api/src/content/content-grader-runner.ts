@@ -10,6 +10,13 @@ import { gradeG2 } from '../modules/grading/harnesses/guardrails/g2.grade';
 import { gradeG3 } from '../modules/grading/harnesses/guardrails/g3.grade';
 import { gradeP1 } from '../modules/grading/harnesses/prompt-engineering/p1.grade';
 import type { PeItem } from '../modules/grading/harnesses/prompt-engineering/pe.types';
+import { gradeAgent } from '../modules/grading/harnesses/agent/a1.grade';
+import { agentGradeOptions } from '../modules/grading/harnesses/agent/agent.options';
+import { parseAgentPayload } from '../modules/grading/harnesses/agent/agent.payloads';
+import type { AgentItem } from '../modules/grading/harnesses/agent/agent.types';
+import { gradeB1 } from '../modules/grading/harnesses/benchmark/b1.grade';
+import { gradeB2 } from '../modules/grading/harnesses/benchmark/b2.grade';
+import { gradeB3 } from '../modules/grading/harnesses/benchmark/b3.grade';
 import type { CorpusDoc } from '../modules/grading/harnesses/rag/chunking';
 import {
   parseR1Payload,
@@ -103,6 +110,24 @@ export async function runContentGrader(
         hiddenRaw as PeItem[],
         publicQuestions(publicRaw),
       );
+    case 'agent-a1':
+    case 'agent-a2':
+    case 'agent-a3':
+    case 'agent-a4':
+      return gradeAgent(
+        parseAgentPayload(payload),
+        hiddenRaw as AgentItem[],
+        publicQuestions(publicRaw),
+        runLocalPython,
+        undefined,
+        agentGradeOptions(bundle.meta.slug),
+      );
+    case 'bench-b1':
+      return gradeB1(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'bench-b2':
+      return gradeB2(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'bench-b3':
+      return gradeB3(payload, hiddenRaw, publicQuestions(publicRaw));
     case 'eval-e1':
       return gradeE1(String(payload.suiteYaml ?? ''), hiddenRaw as EvalItem[]);
     case 'eval-e2':

@@ -12,7 +12,7 @@ import {
   E3_REFERENCE_PAYLOAD,
   E3_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
-import { signIn } from './auth-helper';
+import { signInPro } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
 jest.setTimeout(180000);
@@ -85,7 +85,7 @@ describe('Eval E1–E3 grade (e2e)', () => {
 
   beforeAll(async () => {
     app = await createApiApp();
-    cookies = await signIn(app, `eval-grade-${Date.now()}@labpath.test`);
+    cookies = await signInPro(app, `eval-grade-${Date.now()}@labpath.test`);
   });
 
   afterAll(async () => {
@@ -112,7 +112,7 @@ describe('Eval E1–E3 grade (e2e)', () => {
   );
 
   it('rejects a sixth E3 submission within the cooldown window', async () => {
-    const policyCookies = await signIn(
+    const policyCookies = await signInPro(
       app,
       `eval-e3-policy-${Date.now()}@labpath.test`,
     );

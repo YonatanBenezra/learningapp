@@ -33,7 +33,7 @@ describe('Catalogue (e2e)', () => {
 
   it('lists published R1 for an authenticated user', async () => {
     const response = await request(app.getHttpServer())
-      .get('/api/exercises')
+      .get('/api/exercises?pageSize=100')
       .set('Cookie', cookies)
       .expect(200);
 
@@ -88,6 +88,50 @@ describe('Catalogue (e2e)', () => {
       ]),
     );
     expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
+  });
+
+  it('lists 50 published exercises without hidden eval text', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/exercises?pageSize=100')
+      .set('Cookie', cookies)
+      .expect(200);
+
+    expect(response.body.total).toBeGreaterThanOrEqual(50);
+    expect(response.body.items.length).toBeGreaterThanOrEqual(50);
+    const simulators = response.body.items.map(
+      (item: { simulator: string }) => item.simulator,
+    );
+    const ragPrompt = simulators.filter(
+      (value: string) => value === 'rag' || value === 'prompt_engineering',
+    ).length;
+    const evalCount = simulators.filter(
+      (value: string) => value === 'evaluation',
+    ).length;
+    const guardCount = simulators.filter(
+      (value: string) => value === 'guardrails',
+    ).length;
+    expect(ragPrompt).toBeGreaterThanOrEqual(20);
+    expect(evalCount).toBeGreaterThanOrEqual(15);
+    expect(guardCount).toBeGreaterThanOrEqual(15);
+    expect(simulators).toEqual(
+      expect.arrayContaining(['agent', 'benchmark']),
+    );
+
+    const serialized = JSON.stringify(response.body);
+    expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);
+    expect(serialized).not.toContain('HIDDEN_EVAL');
+    expect(serialized).not.toContain('eval_hidden');
+
+    for (const item of response.body.items as { slug: string }[]) {
+      const detail = await request(app.getHttpServer())
+        .get(`/api/exercises/${item.slug}`)
+        .set('Cookie', cookies)
+        .expect(200);
+      const body = JSON.stringify(detail.body);
+      expect(detail.body.hiddenEval).toBeUndefined();
+      expect(body).not.toContain('HIDDEN_EVAL');
+      expect(body).not.toContain('eval_hidden');
+    }
   });
 
   it('returns the public brief and sample without hidden eval items', async () => {

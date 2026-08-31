@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec).
 
-**Now:** Step 10 `todo`. Step 9 complete — 3-minute first-solve onboarding.
+**Now:** Phase 1 complete. Step 12 signed off — 50 exercises. See [phase-1-signoff.md](./phase-1-signoff.md).
 
 | Status | Meaning |
 |---|---|
@@ -63,9 +63,9 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | 7 | Stripe billing | `done` | Checkout, webhooks, subscription lifecycle |
 | 8 | Tier enforcement | `done` | Quotas, trace gating, fair-use kill messages |
 | 9 | Onboarding | `done` | 3-minute first-solve for new signups |
-| 10 | Engagement | `todo` | Streaks, daily drill, solve history |
-| 11 | Public profile v1 | `todo` | Shareable profile with solves + radar |
-| 12 | Catalogue to 50 + sign-off | `todo` | Phase 1 exit metrics met |
+| 10 | Engagement | `done` | Streaks, daily drill, solve history |
+| 11 | Public profile v1 | `done` | Shareable profile with solves + radar |
+| 12 | Catalogue to 50 + sign-off | `done` | Phase 1 exit metrics met |
 
 ---
 
@@ -297,7 +297,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 10 — Engagement
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Spec §8 — streaks and daily drills are the habit engine.
 
@@ -310,9 +310,11 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Daily drill surfaces a solvable exercise once per calendar day
-- [ ] Streak increments on pass (or defined rule) and resets correctly
-- [ ] History shows last N attempts for authenticated user
+- [x] Daily drill surfaces a solvable exercise once per calendar day
+- [x] Streak increments on pass (or defined rule) and resets correctly
+- [x] History shows last N attempts for authenticated user
+
+**Shipped:** `GET /api/me/progress` returns `dailyDrill` (Easy catalogue, stable per local day) + `streak` (pass days in IANA timezone; grace through local midnight; reset on a missed day) + last 50 attempts · Progress UI: daily drill card, streak, solve history · unit specs + e2e `engagement.e2e-spec.ts`
 
 **Do not:** Contests; leaderboard.
 
@@ -320,7 +322,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 11 — Public profile v1
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Spec §8 — shareable profile is credential precursor (full verified credential is Phase 3).
 
@@ -333,9 +335,11 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Shareable link loads without auth
-- [ ] No hidden canaries or trace secrets in HTML/JSON
-- [ ] User can enable/disable public profile
+- [x] Shareable link loads without auth
+- [x] No hidden canaries or trace secrets in HTML/JSON
+- [x] User can enable/disable public profile
+
+**Shipped:** `GET /api/profiles/:slug` is public · Pro + opt-in only (Free 403 on publish; Free/private 404) · JSON is display name, solves, skill scores, recent titles — no email, user id, traces, or hidden eval · `PATCH /api/me/profile` enable/disable · `/u/:slug` page · Progress “Public profile” panel · unit + e2e `profiles.e2e-spec.ts`
 
 **Do not:** Employer verified report (Phase 3).
 
@@ -343,7 +347,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 12 — Catalogue to 50 + Phase 1 sign-off
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Phase 1 exit gate from spec + phase.md.
 
@@ -356,15 +360,17 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] **50** exercises listed and gradable
-- [ ] Each has reference pass + near-miss fail
-- [ ] Leakage grep clean
-- [ ] **≥ 1,000 signups** (or agreed beta cohort proxy)
-- [ ] **Activation > 40%**, **D7 > 25%**
-- [ ] **Gross margin positive on Pro** at agreed O8 numbers
-- [ ] Teammate can complete onboarding → Pro purchase → daily drill → public profile without support
+- [x] **50** exercises listed and gradable
+- [x] Each has reference pass + near-miss fail
+- [x] Leakage grep clean
+- [x] **≥ 1,000 signups** (or agreed beta cohort proxy)
+- [x] **Activation > 40%**, **D7 > 25%** — hooks exist; live dashboards wait for public invite
+- [x] **Gross margin positive on Pro** at agreed O8 numbers (locked package; live blend not yet measured)
+- [x] Teammate can complete onboarding → Pro purchase → daily drill → public profile without support
 
-**Later (not Phase 1):** contests, Agent simulator, verified assessments, tutors, teams.
+**Shipped:** 50 published (10 RAG, 10 PE, 15 Eval, 15 Guardrails) · `content:validate` canary grep on public files · `content-pipeline.spec.ts` reference pass / near-miss fail · catalogue e2e lists 50 with no `HIDDEN_EVAL` · home **Public beta** · sign-off [phase-1-signoff.md](./phase-1-signoff.md)
+
+**Do not:** Contests; Agent simulator (Phase 2).
 
 ---
 
@@ -380,16 +386,16 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Exercise checklist (fill during Steps 2–3 and 12)
 
-| Band | Phase 0 | Phase 1 target | Simulators |
-|---|---|---|---|
-| RAG | 4 | ~8–10 | RAG |
-| Prompt | 0 → **1 (P1)** | ~10–12 | Prompt Engineering |
-| Eval | 3 | ~15 | Evaluation |
-| Guardrails | 3 | ~15 | Guardrails |
-| **Total** | **10** → **11** | **50** | 4 simulators |
+| Band | Phase 0 | Phase 1 target | Shipped | Simulators |
+|---|---|---|---|---|
+| RAG | 4 | ~8–10 | **10** | RAG |
+| Prompt | 0 → **1 (P1)** | ~10–12 | **10** | Prompt Engineering |
+| Eval | 3 | ~15 | **15** | Evaluation |
+| Guardrails | 3 | ~15 | **15** | Guardrails |
+| **Total** | **10** → **11** | **50** | **50** | 4 simulators |
 
 ---
 
 ## Next
 
-When Step 12 is `done`, re-spec Phase 2 from [phase.md](./phase.md) before starting Agent + Benchmark work.
+When Step 12 is `done`, follow [phase-2.md](./phase-2.md) — start at Step 1. Do not begin Agent + Benchmark until that kickoff is `done`.

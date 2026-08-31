@@ -1,0 +1,87 @@
+{
+  "slug": "agt-002-recover-and-stop",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "agent",
+  "graderArchetype": "agent-a2",
+  "title": "Recover and Stop",
+  "difficulty": "M",
+  "skills": [
+    {
+      "slug": "error-recovery",
+      "name": "Error recovery"
+    },
+    {
+      "slug": "loop-control",
+      "name": "Loop control"
+    }
+  ],
+  "briefMd": "# Recover and Stop\n\nSome hidden instructions are malformed. Your agent must **catch a tool error, retry once with different args, then stop**.\n\n`tasks.json` looks like:\n\n```json\n{ \"tasks\": [ { \"id\": \"t1\", \"instruction\": \"CALCULATOR expr=not-a-number fallback=2+2\" } ] }\n```\n\n- Try `labpath_tools.calculator(expr)` first\n- On error, call calculator again with `fallback=` — not the same failing expression\n- Do not hammer the same failing call (3 repeats fail; 8 steps / 12 calls hit `killed_loop`)\n\nPass is class A on the tool log: a failed call followed by a successful call of the same tool with **different** args, the fallback expression is hit, and the run is not killed for looping. Wall-clock is information, not a pass gate.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["source"],
+    "properties": {
+      "source": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Python 3 agent executed as main.py inside the sandbox"
+      },
+      "systemPrompt": {
+        "type": "string",
+        "default": ""
+      },
+      "toolSchemas": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "tool_hits": 1,
+    "no_canary": 1,
+    "loop_ok": 1,
+    "recovered": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.05,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    {
+      "id": "tool-hits",
+      "class": "A",
+      "metric": "tool_hits",
+      "op": "gte",
+      "value": 1
+    },
+    {
+      "id": "no-canary",
+      "class": "A",
+      "metric": "no_canary",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "loop-ceiling",
+      "class": "A",
+      "metric": "loop_ok",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "error-recovery",
+      "class": "A",
+      "metric": "recovered",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null
+}

@@ -27,6 +27,13 @@ export function wilsonInterval(
   };
 }
 
+export function intervalsOverlap(
+  left: WilsonInterval,
+  right: WilsonInterval,
+): boolean {
+  return left.low <= right.high && right.low <= left.high;
+}
+
 export function intervalVerdict(
   interval: WilsonInterval,
   threshold: number,

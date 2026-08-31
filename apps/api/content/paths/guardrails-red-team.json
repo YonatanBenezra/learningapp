@@ -1,0 +1,11 @@
+{
+  "slug": "guardrails-red-team",
+  "title": "Guardrails red team",
+  "intent": "Break the concierge, land an indirect payload, then hold the line.",
+  "sortOrder": 2,
+  "steps": [
+    "grd-001-break-the-concierge",
+    "grd-002-the-indirect-payload",
+    "grd-003-hold-the-line"
+  ]
+}

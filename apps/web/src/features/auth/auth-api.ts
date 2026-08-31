@@ -14,4 +14,13 @@ export const authApi = {
       body: JSON.stringify({ token }),
     }),
   logout: () => apiClient<void>("/auth/logout", { method: "POST" }),
+  updateProfile: (body: {
+    displayName?: string | null;
+    slug?: string | null;
+    enabled?: boolean;
+  }) =>
+    apiClient<NonNullable<User["profile"]>>("/me/profile", {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
 };

@@ -54,9 +54,19 @@ export class BudgetEnforcer {
     };
   }
 
-  async assertWithinBudget(runId: string, extra: BudgetDelta): Promise<void> {
+  async assertWithinBudget(
+    runId: string,
+    extra: BudgetDelta,
+    options: { ignoreWallClock?: boolean } = {},
+  ): Promise<void> {
     const run = await this.load(runId);
-    const reason = breachReason(run.budget, this.usage(run), extra);
+    const reason = breachReason(
+      run.budget,
+      this.usage(run),
+      extra,
+      new Date(),
+      options,
+    );
     if (reason) {
       await this.kill(runId, reason);
       throw new BudgetExceededError(runId, reason);
@@ -72,13 +82,19 @@ export class BudgetEnforcer {
       tokensOut: number;
       costEurMicros: number;
     },
+    options: { countWallClock?: boolean } = {},
   ): Promise<void> {
-    await this.assertWithinBudget(runId, {
-      calls: 0,
-      tokens: usage.tokensIn + usage.tokensOut,
-      costEurMicros: usage.costEurMicros,
-      sandboxMs: usage.durationMs,
-    });
+    const ignoreWallClock = options.countWallClock === false;
+    await this.assertWithinBudget(
+      runId,
+      {
+        calls: 0,
+        tokens: usage.tokensIn + usage.tokensOut,
+        costEurMicros: usage.costEurMicros,
+        ...(ignoreWallClock ? {} : { sandboxMs: usage.durationMs }),
+      },
+      { ignoreWallClock },
+    );
     const run = await this.prisma.run.findUniqueOrThrow({
       where: { id: runId },
     });
@@ -106,7 +122,7 @@ export class BudgetEnforcer {
         status: 'killed_budget',
         finishedAt: new Date(),
         errorCode: 'budget_exceeded',
-        errorMessage: reason,
+        errorMessage: `Budget exceeded (${reason}). Cut tokens or cost — wall-clock is information, not a pass gate.`,
       },
     });
   }

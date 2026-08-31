@@ -9,10 +9,13 @@ import { EvaluationHarness } from '../harnesses/evaluation/evaluation.harness';
 import type { EvalItem } from '../harnesses/evaluation/eval.types';
 import { GuardrailsHarness } from '../harnesses/guardrails/guardrails.harness';
 import { PromptEngineeringHarness } from '../harnesses/prompt-engineering/prompt-engineering.harness';
+import { AgentHarness } from '../harnesses/agent/agent.harness';
+import { BenchmarkHarness } from '../harnesses/benchmark/benchmark.harness';
 import { RagHarness } from '../harnesses/rag/rag.harness';
 import { SandboxHarness } from '../harnesses/sandbox/sandbox.harness';
 import { SANDBOX_SLUG } from '../../catalogue/exercises/exercises.constants';
 import type { PeItem } from '../harnesses/prompt-engineering/pe.types';
+import type { AgentItem } from '../harnesses/agent/agent.types';
 import type { HiddenItem } from '../harnesses/rag/rag.types';
 import { WORKER_VERSION } from '../processors/grade-job';
 
@@ -36,6 +39,8 @@ export class GradingPipeline {
     private readonly evaluationHarness: EvaluationHarness,
     private readonly guardrailsHarness: GuardrailsHarness,
     private readonly promptEngineeringHarness: PromptEngineeringHarness,
+    private readonly agentHarness: AgentHarness,
+    private readonly benchmarkHarness: BenchmarkHarness,
   ) {}
 
   async run(runId: string): Promise<void> {
@@ -129,6 +134,23 @@ export class GradingPipeline {
         runId,
         payload: run.submission.payload,
         hidden: hidden as PeItem[],
+        publicItems: publicQuestions(exercise.publicSample),
+      });
+    } else if (exercise.simulator === 'agent') {
+      result = await this.agentHarness.execute({
+        slug: exercise.slug,
+        runId,
+        payload: run.submission.payload,
+        hidden: hidden as AgentItem[],
+        publicItems: publicQuestions(exercise.publicSample),
+        budget: exercise.budget,
+      });
+    } else if (exercise.simulator === 'benchmark') {
+      result = await this.benchmarkHarness.execute({
+        slug: exercise.slug,
+        runId,
+        payload: run.submission.payload,
+        hidden,
         publicItems: publicQuestions(exercise.publicSample),
       });
     } else {
