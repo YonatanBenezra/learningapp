@@ -1,0 +1,3 @@
+{
+  "source": "import labpath_tools as t\nt.json_store(\"put\", \"answer\", 25)\nt.calculator(\"5*5\")\nprint(\"done\")\n"
+}

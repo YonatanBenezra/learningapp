@@ -4,7 +4,7 @@ Source: [LabPath-Specification.md](Labpath%20specification/LabPath-Specification
 
 Phases 1–5 are scoped here, not fully specified. Re-spec each phase before starting it.
 
-**Now:** Phase 2 Step 9 `done`. Next is Step 10 — Contests. See [phase-2.md](./phase-2.md) and [phase-2-decisions.md](./phase-2-decisions.md).
+**Now:** Phase 2 **complete** (Step 12 sign-off). Re-spec Phase 3 before verified assessments. See [phase-2-signoff.md](./phase-2-signoff.md).
 
 | Status | Meaning |
 |---|---|

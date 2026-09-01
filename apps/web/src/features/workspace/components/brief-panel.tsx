@@ -19,28 +19,30 @@ type BriefPanelProps = {
   exercise: Exercise | null;
   onboarding?: boolean;
   pathSlug?: string;
+  backHref?: string;
+  backLabel?: string;
+  hintsDisabled?: boolean;
 };
 
 export function BriefPanel({
   exercise,
   onboarding = false,
   pathSlug,
+  backHref,
+  backLabel,
+  hintsDisabled = false,
 }: BriefPanelProps) {
+  const navHref =
+    backHref ??
+    (pathSlug ? routes.path(pathSlug) : onboarding ? routes.onboarding : routes.catalogue);
+  const navLabel =
+    backLabel ?? (pathSlug ? "Path" : onboarding ? "First solve" : "Catalogue");
   if (!exercise) {
     return (
       <aside className="lp-ws-pane lp-ws-pane--brief">
         <div className="lp-ws-pane-head">
-        <Link
-          href={
-            pathSlug
-              ? routes.path(pathSlug)
-              : onboarding
-                ? routes.onboarding
-                : routes.catalogue
-          }
-          className="lp-ws-kicker"
-        >
-          {pathSlug ? "Path" : onboarding ? "First solve" : "Catalogue"}
+        <Link href={navHref} className="lp-ws-kicker">
+          {navLabel}
         </Link>
         <h2 className="lp-ws-pane-title">Brief</h2>
           <p className="lp-ws-pane-lead">Loading…</p>
@@ -54,11 +56,8 @@ export function BriefPanel({
   return (
     <aside className="lp-ws-pane lp-ws-pane--brief">
       <div className="lp-ws-pane-head">
-        <Link
-          href={pathSlug ? routes.path(pathSlug) : routes.catalogue}
-          className="lp-ws-kicker"
-        >
-          {pathSlug ? "Path" : onboarding ? "First solve" : "Catalogue"}
+        <Link href={navHref} className="lp-ws-kicker">
+          {navLabel}
         </Link>
         <div className="lp-ws-meta">
           <span className="lp-badge">{SIMULATOR_LABELS[exercise.simulator]}</span>
@@ -85,7 +84,11 @@ export function BriefPanel({
             </ol>
           </div>
         ) : null}
-        <HintsBlock slug={exercise.slug} />
+        {hintsDisabled ? (
+          <p className="lp-ws-pane-lead">Hints are off for contest attempts.</p>
+        ) : (
+          <HintsBlock slug={exercise.slug} />
+        )}
       </div>
     </aside>
   );

@@ -1,0 +1,3 @@
+{
+  "source": "import json\nimport re\nfrom pathlib import Path\nimport labpath_tools as t\n\ndata = json.loads(Path(\"tasks.json\").read_text())\nfor task in data[\"tasks\"]:\n    inst = str(task.get(\"instruction\") or \"\").strip()\n    if inst.startswith(\"CALCULATOR\"):\n        match = re.search(r\"expr=(\\S+)\", inst)\n        if match:\n            t.calculator(match.group(1))\n    elif inst.startswith(\"JSON_STORE\"):\n        key_match = re.search(r\"key=(\\S+)\", inst)\n        if key_match:\n            t.json_store(\"put\", key_match.group(1), True)\nprint(json.dumps({\"ok\": True}))\n"
+}

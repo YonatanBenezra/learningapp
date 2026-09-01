@@ -51,7 +51,7 @@ export async function upsertExercise(prisma, dir) {
       feedback: meta.feedback,
       publicSample,
       attemptPolicy: meta.attemptPolicy ?? null,
-      isPublished: true,
+      isPublished: meta.isPublished !== false,
     },
     update: {
       title: meta.title,
@@ -64,7 +64,7 @@ export async function upsertExercise(prisma, dir) {
       feedback: meta.feedback,
       publicSample,
       attemptPolicy: meta.attemptPolicy ?? null,
-      isPublished: true,
+      isPublished: meta.isPublished !== false,
     },
   });
 
@@ -74,6 +74,11 @@ export async function upsertExercise(prisma, dir) {
       exerciseId: exercise.id,
       skillId: skill.id,
     })),
+  });
+
+  await prisma.exercise.updateMany({
+    where: { slug: meta.slug, version: { lt: meta.version } },
+    data: { isPublished: false },
   });
 
   await prisma.exerciseAsset.upsert({

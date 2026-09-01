@@ -9,6 +9,10 @@ export const routes = {
   run: (id: string) => `/runs/${id}`,
   trace: (id: string) => `/runs/${id}/trace`,
   leaderboard: "/leaderboard",
+  contests: "/contests",
+  contest: (slug: string) => `/contests/${slug}`,
+  contestProblem: (contestSlug: string, exerciseSlug: string) =>
+    `/contests/${contestSlug}/problems/${exerciseSlug}`,
   progress: "/progress",
   billing: "/billing",
   profile: (slug: string) => `/u/${slug}`,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SANDBOX_SLUG } from '../../../catalogue/exercises/exercises.constants';
+import { isSandboxRagSlug } from '../../../catalogue/exercises/exercises.constants';
 import { SANDBOX_DEFAULTS } from '../../../sandbox/sandbox.constants';
 import { SandboxService } from '../../../sandbox/sandbox.service';
 import { BudgetEnforcer } from '../../budget/budget.enforcer';
@@ -28,7 +28,7 @@ export class SandboxHarness {
   ) {}
 
   async execute(input: SandboxExecuteInput): Promise<SandboxGradeResult> {
-    if (input.slug !== SANDBOX_SLUG) {
+    if (!isSandboxRagSlug(input.slug)) {
       throw new Error(`Unsupported sandbox exercise: ${input.slug}`);
     }
     await this.budget.assertWithinBudget(input.runId, {

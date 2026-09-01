@@ -1,0 +1,71 @@
+{
+  "slug": "eval-028-decode-fit",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "evaluation",
+  "title": "Regression Slice 28",
+  "difficulty": "H",
+  "skills": [
+    {
+      "slug": "regression-detection",
+      "name": "Regression detection"
+    },
+    {
+      "slug": "slicing",
+      "name": "Slicing"
+    },
+    {
+      "slug": "significance",
+      "name": "Significance"
+    }
+  ],
+  "briefMd": "# Regression Slice 28\n\nSlice spec that catches a localized regression.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "sliceSpecYaml"
+    ],
+    "properties": {
+      "sliceSpecYaml": {
+        "type": "string",
+        "default": "version: 1\nslices:\n  - name: all\n    where: \"true\"\nmetric: pass_rate\ntest: two_proportion_z\nalpha: 0.05\ncorrection: benjamini_hochberg\nmin_slice_n: 20\n"
+      }
+    }
+  },
+  "thresholds": {
+    "alpha": 0.05
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "gold-slice",
+      "class": "A",
+      "metric": "gold_slice_flagged",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "false-positives",
+      "class": "A",
+      "metric": "false_positive_slices",
+      "op": "eq",
+      "value": 0
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": {
+    "maxSubmissions": 5,
+    "cooldownHours": 24
+  },
+  "graderArchetype": "eval-e3",
+  "isPublished": true
+}

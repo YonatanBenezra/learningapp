@@ -33,7 +33,7 @@ describe('Catalogue (e2e)', () => {
 
   it('lists published R1 for an authenticated user', async () => {
     const response = await request(app.getHttpServer())
-      .get('/api/exercises?pageSize=100')
+      .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
 
@@ -92,7 +92,7 @@ describe('Catalogue (e2e)', () => {
 
   it('lists 50 published exercises without hidden eval text', async () => {
     const response = await request(app.getHttpServer())
-      .get('/api/exercises?pageSize=100')
+      .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
 

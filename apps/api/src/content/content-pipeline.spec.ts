@@ -11,13 +11,13 @@ import {
   B1_SLUG,
   B2_SLUG,
   B3_SLUG,
-  PHASE_1_CATALOGUE_TARGET,
+  PHASE_2_CATALOGUE_TARGET,
 } from '../modules/catalogue/exercises/exercises.constants';
 
 describe('content pipeline — reference solutions', () => {
   it('runs reference pass and near-miss fail for every exercise', async () => {
     const bundles = await loadAllExerciseBundles();
-    expect(bundles.length).toBeGreaterThanOrEqual(PHASE_1_CATALOGUE_TARGET);
+    expect(bundles.length).toBeGreaterThanOrEqual(PHASE_2_CATALOGUE_TARGET);
     expect(bundles.map((bundle) => bundle.meta.slug)).toEqual(
       expect.arrayContaining([
         A1_SLUG,

@@ -40,7 +40,11 @@ export async function loadAllExerciseBundles(): Promise<ExerciseContentBundle[]>
   const dirs = await listExerciseDirs();
   const bundles: ExerciseContentBundle[] = [];
   for (const dir of dirs) {
-    bundles.push(await loadExerciseBundle(dir));
+    const bundle = await loadExerciseBundle(dir);
+    if (bundle.meta.isPublished === false) {
+      continue;
+    }
+    bundles.push(bundle);
   }
   return bundles;
 }

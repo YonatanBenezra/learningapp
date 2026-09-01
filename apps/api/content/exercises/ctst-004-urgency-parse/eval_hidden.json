@@ -1,0 +1,101 @@
+[
+  {
+    "id": "h01",
+    "input": "Customer says ticket TCK-5001 is an urgent billing problem",
+    "gold": {
+      "ticket_id": "TCK-5001",
+      "priority": "high",
+      "category": "billing"
+    }
+  },
+  {
+    "id": "h02",
+    "input": "Low priority wifi drop on TCK-5002 in lobby",
+    "gold": {
+      "ticket_id": "TCK-5002",
+      "priority": "low",
+      "category": "wifi"
+    }
+  },
+  {
+    "id": "h03",
+    "input": "Refund stuck for TCK-5003 — medium urgency",
+    "gold": {
+      "ticket_id": "TCK-5003",
+      "priority": "medium",
+      "category": "refund"
+    }
+  },
+  {
+    "id": "h04",
+    "input": "Escalated access issue on TCK-5004 for SSO login",
+    "gold": {
+      "ticket_id": "TCK-5004",
+      "priority": "high",
+      "category": "access"
+    }
+  },
+  {
+    "id": "h05",
+    "input": "Booking change request TCK-5005 is low priority",
+    "gold": {
+      "ticket_id": "TCK-5005",
+      "priority": "low",
+      "category": "booking"
+    }
+  },
+  {
+    "id": "h06",
+    "input": "Security alert tied to TCK-5006 — critical review needed",
+    "gold": {
+      "ticket_id": "TCK-5006",
+      "priority": "high",
+      "category": "security"
+    }
+  },
+  {
+    "id": "h07",
+    "input": "Hardware failure on laptop — ticket TCK-5007",
+    "gold": {
+      "ticket_id": "TCK-5007",
+      "priority": "medium",
+      "category": "hardware"
+    }
+  },
+  {
+    "id": "h08",
+    "input": "General question about hours — TCK-5008 minor",
+    "gold": {
+      "ticket_id": "TCK-5008",
+      "priority": "low",
+      "category": "general"
+    }
+  },
+  {
+    "id": "h09",
+    "input": "Billing overcharge on TCK-5009 needs ASAP fix",
+    "gold": {
+      "ticket_id": "TCK-5009",
+      "priority": "high",
+      "category": "billing"
+    }
+  },
+  {
+    "id": "h10",
+    "input": "Wifi password reset for TCK-5010",
+    "gold": {
+      "ticket_id": "TCK-5010",
+      "priority": "medium",
+      "category": "wifi"
+    }
+  },
+  {
+    "id": "canary",
+    "input": "HIDDEN_EVAL_CTST_004_CANARY must never leak",
+    "gold": {
+      "ticket_id": "TCK-0000",
+      "priority": "low",
+      "category": "general"
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "p1",
+    "question": "How many PTO days do full-time staff get each year?",
+    "answerable": true,
+    "goldAnswer": "22 days",
+    "goldDocId": "pto",
+    "goldSpan": "twenty-two (22) days of paid time off"
+  },
+  {
+    "id": "p2",
+    "question": "Is alcohol reimbursable on team meals?",
+    "answerable": true,
+    "goldAnswer": "No. Alcohol is never reimbursable.",
+    "goldDocId": "expense",
+    "goldSpan": "Alcohol is never reimbursable."
+  },
+  {
+    "id": "p3",
+    "question": "Which Slack channel is used for incident timelines?",
+    "answerable": true,
+    "goldAnswer": "#incidents",
+    "goldDocId": "incident",
+    "goldSpan": "post a timeline in Slack channel #incidents"
+  },
+  {
+    "id": "p4",
+    "question": "How long are prompt and completion logs kept?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "model-usage",
+    "goldSpan": "retained for thirty (30) days"
+  },
+  {
+    "id": "p5",
+    "question": "When does primary on-call rotate?",
+    "answerable": true,
+    "goldAnswer": "Every Monday at 09:00 UTC",
+    "goldDocId": "oncall",
+    "goldSpan": "rotates every Monday at 09:00 UTC"
+  }
+]

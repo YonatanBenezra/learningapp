@@ -13,7 +13,7 @@ import { AgentHarness } from '../harnesses/agent/agent.harness';
 import { BenchmarkHarness } from '../harnesses/benchmark/benchmark.harness';
 import { RagHarness } from '../harnesses/rag/rag.harness';
 import { SandboxHarness } from '../harnesses/sandbox/sandbox.harness';
-import { SANDBOX_SLUG } from '../../catalogue/exercises/exercises.constants';
+import { isSandboxRagSlug } from '../../catalogue/exercises/exercises.constants';
 import type { PeItem } from '../harnesses/prompt-engineering/pe.types';
 import type { AgentItem } from '../harnesses/agent/agent.types';
 import type { HiddenItem } from '../harnesses/rag/rag.types';
@@ -85,7 +85,7 @@ export class GradingPipeline {
     const hidden = JSON.parse(await readAsset(assets.hiddenEvalUri)) as unknown;
     const publicItems = publicQuestions(exercise.publicSample);
     let result: PipelineResult;
-    if (exercise.slug === SANDBOX_SLUG) {
+    if (isSandboxRagSlug(exercise.slug)) {
       if (!assets.corpusUri) {
         throw new Error(`Missing corpus for ${exercise.slug}`);
       }

@@ -1,0 +1,98 @@
+{
+  "slug": "bnch-016-retriever-run",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "benchmark",
+  "graderArchetype": "bench-b1",
+  "title": "Benchmark Slice 16",
+  "difficulty": "H",
+  "skills": [
+    {
+      "slug": "harness-variance",
+      "name": "Harness variance"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
+    }
+  ],
+  "briefMd": "# Benchmark Slice 16\n\nRead frozen benchmark traces. Name harness variance or contamination.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "rankingCall",
+      "deltaCause"
+    ],
+    "properties": {
+      "rankingCall": {
+        "type": "string",
+        "enum": [
+          "a_wins",
+          "b_wins",
+          "noise"
+        ],
+        "default": "a_wins",
+        "description": "Is the headline accuracy delta a ranking win?"
+      },
+      "deltaCause": {
+        "type": "string",
+        "enum": [
+          "better_model",
+          "ci_overlap",
+          "seed_or_wrapper"
+        ],
+        "default": "better_model",
+        "description": "Why the two numbers differ"
+      }
+    }
+  },
+  "thresholds": {
+    "ranking_noise": 1,
+    "cause_ok": 1,
+    "ci_overlap": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "ranking-noise",
+      "class": "A",
+      "metric": "ranking_noise",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "cause-ok",
+      "class": "A",
+      "metric": "cause_ok",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "ci-overlap",
+      "class": "A",
+      "metric": "ci_overlap",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "no-canary",
+      "class": "A",
+      "metric": "no_canary",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "isPublished": true
+}

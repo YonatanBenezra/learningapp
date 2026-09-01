@@ -1,0 +1,6 @@
+[
+  {
+    "id": "p1",
+    "question": "Harness A (greedy, T=0, seed 1) is 34/40. Harness B (sample, T=0.9, seed 1) is 16/40 on the same frozen 40 tickets and the same checkpoint."
+  }
+]

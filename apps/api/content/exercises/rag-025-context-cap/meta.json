@@ -1,0 +1,59 @@
+{
+  "slug": "rag-025-context-cap",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "graderArchetype": "rag-sandbox",
+  "title": "Retriever Slice 25",
+  "difficulty": "H",
+  "skills": [
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "sandbox-execution",
+      "name": "Sandbox execution"
+    }
+  ],
+  "briefMd": "# Retriever Slice 25\n\nPython retriever in the sandbox. recall@5 ≥ 0.80.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "source"
+    ],
+    "properties": {
+      "source": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Python 3 source executed as main.py inside the sandbox"
+      }
+    }
+  },
+  "thresholds": {
+    "recall_at_5": 0.8
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 30
+  },
+  "gates": [
+    {
+      "id": "recall-at-5",
+      "class": "A",
+      "metric": "recall@5",
+      "op": "gte",
+      "value": 0.8
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "isPublished": true,
+  "corpusFile": "shared"
+}

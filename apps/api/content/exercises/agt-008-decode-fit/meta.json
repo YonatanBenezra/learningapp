@@ -1,0 +1,90 @@
+{
+  "slug": "agt-008-decode-fit",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "agent",
+  "graderArchetype": "agent-a3",
+  "title": "Agent Slice 8",
+  "difficulty": "E",
+  "skills": [
+    {
+      "slug": "planning",
+      "name": "Planning"
+    },
+    {
+      "slug": "tool-schema",
+      "name": "Tool schema"
+    }
+  ],
+  "briefMd": "# Agent Slice 8\n\nTool-use agent in the sandbox. Class A on the tool log.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "source"
+    ],
+    "properties": {
+      "source": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Python 3 agent executed as main.py inside the sandbox"
+      },
+      "systemPrompt": {
+        "type": "string",
+        "default": ""
+      },
+      "toolSchemas": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "tool_hits": 1,
+    "no_canary": 1,
+    "loop_ok": 1,
+    "calc_before_store": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.05,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    {
+      "id": "tool-hits",
+      "class": "A",
+      "metric": "tool_hits",
+      "op": "gte",
+      "value": 1
+    },
+    {
+      "id": "no-canary",
+      "class": "A",
+      "metric": "no_canary",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "loop-ceiling",
+      "class": "A",
+      "metric": "loop_ok",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "calc-before-store",
+      "class": "A",
+      "metric": "calc_before_store",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "isPublished": true
+}

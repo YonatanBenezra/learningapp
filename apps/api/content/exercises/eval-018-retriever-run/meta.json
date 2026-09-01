@@ -1,0 +1,73 @@
+{
+  "slug": "eval-018-retriever-run",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "evaluation",
+  "title": "Assertion Slice 18",
+  "difficulty": "E",
+  "skills": [
+    {
+      "slug": "eval-design",
+      "name": "Eval design"
+    },
+    {
+      "slug": "deterministic-checks",
+      "name": "Deterministic checks"
+    }
+  ],
+  "briefMd": "# Assertion Slice 18\n\nAssertion DSL suite on hidden labels.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "suiteYaml"
+    ],
+    "properties": {
+      "suiteYaml": {
+        "type": "string",
+        "default": "version: 1\nassertions: []\nverdict:\n  fail_if: any\n"
+      }
+    }
+  },
+  "thresholds": {
+    "f1": 0.7,
+    "precision": 0.65,
+    "recall": 0.6
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "f1",
+      "class": "A",
+      "metric": "f1",
+      "op": "gte",
+      "value": 0.7
+    },
+    {
+      "id": "precision",
+      "class": "A",
+      "metric": "precision",
+      "op": "gte",
+      "value": 0.65
+    },
+    {
+      "id": "recall",
+      "class": "A",
+      "metric": "recall",
+      "op": "gte",
+      "value": 0.6
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 6,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "eval-e1",
+  "isPublished": true
+}

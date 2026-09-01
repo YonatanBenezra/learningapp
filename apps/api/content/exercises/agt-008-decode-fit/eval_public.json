@@ -1,0 +1,10 @@
+[
+  {
+    "id": "p1",
+    "question": "FIRST CALCULATOR expr=2+2"
+  },
+  {
+    "id": "p2",
+    "question": "THEN JSON_STORE put key=answer"
+  }
+]

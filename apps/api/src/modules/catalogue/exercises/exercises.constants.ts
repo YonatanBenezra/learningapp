@@ -77,15 +77,41 @@ export const SANDBOX_NEAR_MISS_PAYLOAD = {
   source: SANDBOX_NEAR_MISS_SOURCE,
 };
 
+export function exerciseNumber(slug: string, prefix: string): number | null {
+  if (!slug.startsWith(`${prefix}-`)) {
+    return null;
+  }
+  const match = /^[a-z]+-(\d+)/.exec(slug);
+  return match ? Number(match[1]) : null;
+}
+
 export function isRagR1Slug(slug: string): boolean {
-  return (RAG_R1_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'rag');
+  return n !== null && (n === 1 || (n >= 5 && n <= 7) || n === 10 || (n >= 11 && n <= 15));
 }
 
 export function isRagR2Slug(slug: string): boolean {
-  return (RAG_R2_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'rag');
+  return n !== null && (n === 2 || n === 8 || (n >= 16 && n <= 18));
+}
+
+export function isRagR3Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'rag');
+  return n !== null && (n === 3 || n === 19 || n === 20);
+}
+
+export function isRagR4Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'rag');
+  return n !== null && (n === 4 || n === 21 || n === 22);
+}
+
+export function isSandboxRagSlug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'rag');
+  return n !== null && (n === 9 || (n >= 23 && n <= 25));
 }
 
 export const PHASE_1_CATALOGUE_TARGET = 50;
+export const PHASE_2_CATALOGUE_TARGET = 150;
 
 export const HIDDEN_EVAL_CANARY = 'HIDDEN_EVAL_R1_CANARY_PHRASE';
 
@@ -154,7 +180,8 @@ export const EVAL_E1_SLUGS = [
 ] as const;
 
 export function isEvalE1Slug(slug: string): boolean {
-  return (EVAL_E1_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'eval');
+  return n !== null && (n === 1 || (n >= 4 && n <= 12) || (n >= 16 && n <= 20));
 }
 export const E2_SLUG = 'eval-002-judge-the-judge';
 export const E3_SLUG = 'eval-003-catch-the-regression';
@@ -168,11 +195,13 @@ export const EVAL_E2_SLUGS = [
 export const EVAL_E3_SLUGS = [E3_SLUG, 'eval-015-slice-alert'] as const;
 
 export function isEvalE2Slug(slug: string): boolean {
-  return (EVAL_E2_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'eval');
+  return n !== null && (n === 2 || n === 13 || n === 14 || (n >= 21 && n <= 23));
 }
 
 export function isEvalE3Slug(slug: string): boolean {
-  return (EVAL_E3_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'eval');
+  return n !== null && (n === 3 || n === 15 || (n >= 24 && n <= 30));
 }
 
 export const E1_REFERENCE_PAYLOAD = {
@@ -268,7 +297,8 @@ export const PE_P1_SLUGS = [
 ] as const;
 
 export function isPeP1Slug(slug: string): boolean {
-  return (PE_P1_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'pe');
+  return n !== null && n >= 1 && n <= 20;
 }
 
 export const P1_REFERENCE_PAYLOAD = {
@@ -301,7 +331,8 @@ export const GUARD_G1_SLUGS = [
 ] as const;
 
 export function isGuardG1Slug(slug: string): boolean {
-  return (GUARD_G1_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'grd');
+  return n !== null && (n === 1 || (n >= 4 && n <= 9) || (n >= 16 && n <= 20));
 }
 export const G2_SLUG = 'grd-002-the-indirect-payload';
 export const G3_SLUG = 'grd-003-hold-the-line';
@@ -321,11 +352,13 @@ export const GUARD_G3_SLUGS = [
 ] as const;
 
 export function isGuardG2Slug(slug: string): boolean {
-  return (GUARD_G2_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'grd');
+  return n !== null && (n === 2 || (n >= 10 && n <= 12) || (n >= 21 && n <= 25));
 }
 
 export function isGuardG3Slug(slug: string): boolean {
-  return (GUARD_G3_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'grd');
+  return n !== null && (n === 3 || (n >= 13 && n <= 15) || (n >= 26 && n <= 30));
 }
 
 export const G1_REFERENCE_PAYLOAD = {
@@ -632,7 +665,18 @@ export const B1_SLUG = 'bnch-001-two-harnesses-one-score';
 export const BENCHMARK_B1_SLUGS = [B1_SLUG] as const;
 
 export function isBenchmarkB1Slug(slug: string): boolean {
-  return (BENCHMARK_B1_SLUGS as readonly string[]).includes(slug);
+  const n = exerciseNumber(slug, 'bnch');
+  return n !== null && (n === 1 || n % 3 === 1);
+}
+
+export function isBenchmarkB2Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'bnch');
+  return n !== null && n >= 2 && n % 3 === 2;
+}
+
+export function isBenchmarkB3Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'bnch');
+  return n !== null && n >= 3 && n % 3 === 0;
 }
 
 export const B1_REFERENCE_PAYLOAD = {
@@ -649,10 +693,6 @@ export const B2_SLUG = 'bnch-002-same-checkpoint-decode';
 
 export const BENCHMARK_B2_SLUGS = [B2_SLUG] as const;
 
-export function isBenchmarkB2Slug(slug: string): boolean {
-  return (BENCHMARK_B2_SLUGS as readonly string[]).includes(slug);
-}
-
 export const B2_REFERENCE_PAYLOAD = {
   rankingCall: 'harness_only',
   deltaCause: 'decode_params',
@@ -666,10 +706,6 @@ export const B2_NEAR_MISS_PAYLOAD = {
 export const B3_SLUG = 'bnch-003-eval-overlap';
 
 export const BENCHMARK_B3_SLUGS = [B3_SLUG] as const;
-
-export function isBenchmarkB3Slug(slug: string): boolean {
-  return (BENCHMARK_B3_SLUGS as readonly string[]).includes(slug);
-}
 
 export const B3_REFERENCE_PAYLOAD = {
   rankingCall: 'contaminated',

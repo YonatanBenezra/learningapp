@@ -93,7 +93,7 @@ describe('B1–B3 benchmark grade (e2e)', () => {
 
   it('lists B1–B3 in the catalogue under benchmark', async () => {
     const response = await request(app.getHttpServer())
-      .get('/api/exercises?pageSize=100')
+      .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
     const items = response.body.items as Array<{

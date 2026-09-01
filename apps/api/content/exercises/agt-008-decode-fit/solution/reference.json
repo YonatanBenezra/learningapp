@@ -1,0 +1,3 @@
+{
+  "source": "import json\nimport re\nfrom pathlib import Path\nimport labpath_tools as t\n\ndata = json.loads(Path(\"tasks.json\").read_text())\nexpr = None\nkey = None\nfor task in data[\"tasks\"]:\n    inst = str(task.get(\"instruction\") or \"\")\n    expr_match = re.search(r\"expr=(\\S+)\", inst)\n    if expr_match:\n        expr = expr_match.group(1)\n    key_match = re.search(r\"key=(\\S+)\", inst)\n    if key_match:\n        key = key_match.group(1)\nif expr is None or key is None:\n    raise SystemExit(\"missing pipeline slots\")\nvalue = t.calculator(expr)\nt.json_store(\"put\", key, value)\nprint(json.dumps({\"ok\": True}))\n"
+}

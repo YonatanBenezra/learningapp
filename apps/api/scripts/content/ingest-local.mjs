@@ -2,6 +2,7 @@ import { createRequire } from 'node:module';
 import { listExerciseDirs } from './validate.mjs';
 import { upsertExercise } from './upsert-exercise.mjs';
 import { upsertAllPaths } from './upsert-paths.mjs';
+import { upsertAllContests } from './upsert-contests.mjs';
 
 const require = createRequire(import.meta.url);
 const { PrismaClient } = require('@prisma/client');
@@ -24,6 +25,10 @@ export async function upsertAllExercises(filterSlugs = null) {
       const paths = await upsertAllPaths(prisma);
       for (const slug of paths) {
         seeded.push(`path:${slug}`);
+      }
+      const contests = await upsertAllContests(prisma);
+      for (const slug of contests) {
+        seeded.push(`contest:${slug}`);
       }
     }
     return seeded;

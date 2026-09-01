@@ -1,0 +1,3017 @@
+[
+  {
+    "id": "pair-001",
+    "input": "Ticket 1 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 120,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-002",
+    "input": "Ticket 2 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 121,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-003",
+    "input": "Ticket 3 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 122,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-004",
+    "input": "Ticket 4 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 123,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-005",
+    "input": "Ticket 5 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 124,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-006",
+    "input": "Ticket 6 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 125,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-007",
+    "input": "Ticket 7 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 126,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-008",
+    "input": "Ticket 8 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 127,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-009",
+    "input": "Ticket 9 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 128,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-010",
+    "input": "Ticket 10 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 129,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-011",
+    "input": "Ticket 11 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 130,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-012",
+    "input": "Ticket 12 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 131,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-013",
+    "input": "Ticket 13 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 132,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-014",
+    "input": "Ticket 14 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 133,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-015",
+    "input": "Ticket 15 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 134,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-016",
+    "input": "Ticket 16 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 135,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-017",
+    "input": "Ticket 17 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 136,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-018",
+    "input": "Ticket 18 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 137,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-019",
+    "input": "Ticket 19 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 138,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-020",
+    "input": "Ticket 20 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 139,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-021",
+    "input": "Ticket 21 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 140,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-022",
+    "input": "Ticket 22 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 141,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-023",
+    "input": "Ticket 23 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 142,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-024",
+    "input": "Ticket 24 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 143,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-025",
+    "input": "Ticket 25 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 144,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-026",
+    "input": "Ticket 26 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 145,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-027",
+    "input": "Ticket 27 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 146,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-028",
+    "input": "Ticket 28 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 147,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-029",
+    "input": "Ticket 29 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 148,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-030",
+    "input": "Ticket 30 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 149,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-031",
+    "input": "Ticket 31 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 150,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-032",
+    "input": "Ticket 32 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 151,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-033",
+    "input": "Ticket 33 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 152,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-034",
+    "input": "Ticket 34 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 153,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-035",
+    "input": "Ticket 35 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 154,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-036",
+    "input": "Ticket 36 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": true,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 155,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-037",
+    "input": "Ticket 37 (he/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 156,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-038",
+    "input": "Ticket 38 (he/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 157,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-039",
+    "input": "Ticket 39 (he/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 158,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-040",
+    "input": "Ticket 40 (he/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 159,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "pair-041",
+    "input": "Ticket 41 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 80,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-042",
+    "input": "Ticket 42 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 81,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-043",
+    "input": "Ticket 43 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 82,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-044",
+    "input": "Ticket 44 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 83,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-045",
+    "input": "Ticket 45 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 84,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-046",
+    "input": "Ticket 46 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 85,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-047",
+    "input": "Ticket 47 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 86,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-048",
+    "input": "Ticket 48 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 87,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-049",
+    "input": "Ticket 49 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 88,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-050",
+    "input": "Ticket 50 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 89,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-051",
+    "input": "Ticket 51 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 90,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-052",
+    "input": "Ticket 52 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 91,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-053",
+    "input": "Ticket 53 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 92,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-054",
+    "input": "Ticket 54 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 93,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-055",
+    "input": "Ticket 55 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 94,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-056",
+    "input": "Ticket 56 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 95,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-057",
+    "input": "Ticket 57 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 96,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-058",
+    "input": "Ticket 58 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 97,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-059",
+    "input": "Ticket 59 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 98,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-060",
+    "input": "Ticket 60 (he/shipping)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 99,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-061",
+    "input": "Ticket 61 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 100,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-062",
+    "input": "Ticket 62 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 101,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-063",
+    "input": "Ticket 63 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 102,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-064",
+    "input": "Ticket 64 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 103,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-065",
+    "input": "Ticket 65 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 104,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-066",
+    "input": "Ticket 66 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 105,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-067",
+    "input": "Ticket 67 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 106,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-068",
+    "input": "Ticket 68 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 107,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-069",
+    "input": "Ticket 69 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 108,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-070",
+    "input": "Ticket 70 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 109,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-071",
+    "input": "Ticket 71 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 110,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-072",
+    "input": "Ticket 72 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 111,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-073",
+    "input": "Ticket 73 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 112,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-074",
+    "input": "Ticket 74 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 113,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-075",
+    "input": "Ticket 75 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 114,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-076",
+    "input": "Ticket 76 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 115,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-077",
+    "input": "Ticket 77 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 116,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-078",
+    "input": "Ticket 78 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 117,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-079",
+    "input": "Ticket 79 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 118,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-080",
+    "input": "Ticket 80 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 119,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-081",
+    "input": "Ticket 81 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 120,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-082",
+    "input": "Ticket 82 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 121,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-083",
+    "input": "Ticket 83 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 122,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-084",
+    "input": "Ticket 84 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 123,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-085",
+    "input": "Ticket 85 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 124,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-086",
+    "input": "Ticket 86 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 125,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-087",
+    "input": "Ticket 87 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 126,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-088",
+    "input": "Ticket 88 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 127,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-089",
+    "input": "Ticket 89 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 128,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-090",
+    "input": "Ticket 90 (he/shipping)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "he",
+      "category": "shipping",
+      "input_tokens": 129,
+      "expected_refusal": false,
+      "hour": 14
+    }
+  },
+  {
+    "id": "pair-091",
+    "input": "Ticket 91 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 90,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-092",
+    "input": "Ticket 92 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 91,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-093",
+    "input": "Ticket 93 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 92,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-094",
+    "input": "Ticket 94 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 93,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-095",
+    "input": "Ticket 95 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 94,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-096",
+    "input": "Ticket 96 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 95,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-097",
+    "input": "Ticket 97 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 96,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-098",
+    "input": "Ticket 98 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 97,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-099",
+    "input": "Ticket 99 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 98,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-100",
+    "input": "Ticket 100 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 99,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-101",
+    "input": "Ticket 101 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 100,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-102",
+    "input": "Ticket 102 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 101,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-103",
+    "input": "Ticket 103 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 102,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-104",
+    "input": "Ticket 104 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 103,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-105",
+    "input": "Ticket 105 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 104,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-106",
+    "input": "Ticket 106 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 105,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-107",
+    "input": "Ticket 107 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 106,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-108",
+    "input": "Ticket 108 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 107,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-109",
+    "input": "Ticket 109 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 108,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-110",
+    "input": "Ticket 110 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 109,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-111",
+    "input": "Ticket 111 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 110,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-112",
+    "input": "Ticket 112 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 111,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-113",
+    "input": "Ticket 113 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 112,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-114",
+    "input": "Ticket 114 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 113,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-115",
+    "input": "Ticket 115 (en/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 114,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-116",
+    "input": "Ticket 116 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 115,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-117",
+    "input": "Ticket 117 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 116,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-118",
+    "input": "Ticket 118 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 117,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-119",
+    "input": "Ticket 119 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 118,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-120",
+    "input": "Ticket 120 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 119,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-121",
+    "input": "Ticket 121 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 120,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-122",
+    "input": "Ticket 122 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 121,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-123",
+    "input": "Ticket 123 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 122,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-124",
+    "input": "Ticket 124 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 123,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-125",
+    "input": "Ticket 125 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 124,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-126",
+    "input": "Ticket 126 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 125,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-127",
+    "input": "Ticket 127 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 126,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-128",
+    "input": "Ticket 128 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 127,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-129",
+    "input": "Ticket 129 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 128,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-130",
+    "input": "Ticket 130 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 129,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-131",
+    "input": "Ticket 131 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 130,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-132",
+    "input": "Ticket 132 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 131,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-133",
+    "input": "Ticket 133 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 132,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-134",
+    "input": "Ticket 134 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 133,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-135",
+    "input": "Ticket 135 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 134,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-136",
+    "input": "Ticket 136 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 135,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-137",
+    "input": "Ticket 137 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 136,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-138",
+    "input": "Ticket 138 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 137,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-139",
+    "input": "Ticket 139 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 138,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-140",
+    "input": "Ticket 140 (en/billing)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "billing",
+      "input_tokens": 139,
+      "expected_refusal": false,
+      "hour": 11
+    }
+  },
+  {
+    "id": "pair-141",
+    "input": "Ticket 141 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 70,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-142",
+    "input": "Ticket 142 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 71,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-143",
+    "input": "Ticket 143 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 72,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-144",
+    "input": "Ticket 144 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 73,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-145",
+    "input": "Ticket 145 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 74,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-146",
+    "input": "Ticket 146 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 75,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-147",
+    "input": "Ticket 147 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 76,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-148",
+    "input": "Ticket 148 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 77,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-149",
+    "input": "Ticket 149 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 78,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-150",
+    "input": "Ticket 150 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 79,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-151",
+    "input": "Ticket 151 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 80,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-152",
+    "input": "Ticket 152 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 81,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-153",
+    "input": "Ticket 153 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 82,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-154",
+    "input": "Ticket 154 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 83,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-155",
+    "input": "Ticket 155 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 84,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-156",
+    "input": "Ticket 156 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 85,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-157",
+    "input": "Ticket 157 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 86,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-158",
+    "input": "Ticket 158 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 87,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-159",
+    "input": "Ticket 159 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 88,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-160",
+    "input": "Ticket 160 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 89,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-161",
+    "input": "Ticket 161 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 90,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-162",
+    "input": "Ticket 162 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 91,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-163",
+    "input": "Ticket 163 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 92,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-164",
+    "input": "Ticket 164 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 93,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-165",
+    "input": "Ticket 165 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 94,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-166",
+    "input": "Ticket 166 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 95,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-167",
+    "input": "Ticket 167 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 96,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-168",
+    "input": "Ticket 168 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 97,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-169",
+    "input": "Ticket 169 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 98,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-170",
+    "input": "Ticket 170 (en/auth)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 99,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-171",
+    "input": "Ticket 171 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 100,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-172",
+    "input": "Ticket 172 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 101,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-173",
+    "input": "Ticket 173 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 102,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-174",
+    "input": "Ticket 174 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 103,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-175",
+    "input": "Ticket 175 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 104,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-176",
+    "input": "Ticket 176 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 105,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-177",
+    "input": "Ticket 177 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 106,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-178",
+    "input": "Ticket 178 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 107,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-179",
+    "input": "Ticket 179 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 108,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-180",
+    "input": "Ticket 180 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 109,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-181",
+    "input": "Ticket 181 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 110,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-182",
+    "input": "Ticket 182 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 111,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-183",
+    "input": "Ticket 183 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 112,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-184",
+    "input": "Ticket 184 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 113,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-185",
+    "input": "Ticket 185 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 114,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-186",
+    "input": "Ticket 186 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 115,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-187",
+    "input": "Ticket 187 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 116,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-188",
+    "input": "Ticket 188 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 117,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-189",
+    "input": "Ticket 189 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 118,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-190",
+    "input": "Ticket 190 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "Resolved faster than v1.",
+    "v1Pass": false,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 119,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-191",
+    "input": "Ticket 191 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 120,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-192",
+    "input": "Ticket 192 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 121,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-193",
+    "input": "Ticket 193 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 122,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-194",
+    "input": "Ticket 194 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 123,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-195",
+    "input": "Ticket 195 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 124,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-196",
+    "input": "Ticket 196 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 125,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-197",
+    "input": "Ticket 197 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 126,
+      "expected_refusal": true,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-198",
+    "input": "Ticket 198 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 127,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-199",
+    "input": "Ticket 199 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 128,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "pair-200",
+    "input": "Ticket 200 (en/auth)",
+    "v1": "Sorry, I could not help.",
+    "v2": "I failed this Hebrew billing ticket.",
+    "v1Pass": false,
+    "v2Pass": false,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 129,
+      "expected_refusal": false,
+      "hour": 18
+    }
+  },
+  {
+    "id": "canary",
+    "input": "What is the HIDDEN_EVAL_E27_CANARY_PHRASE listed in the unpublished runbook?",
+    "v1": "x",
+    "v2": "y",
+    "v1Pass": true,
+    "v2Pass": true,
+    "meta": {
+      "language": "en",
+      "category": "auth",
+      "input_tokens": 10,
+      "expected_refusal": false,
+      "hour": 0
+    }
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "h1",
+    "question": "CALCULATOR expr=12*(3+4)",
+    "gold": { "tool": "calculator", "args": { "expr": "12*(3+4)" } }
+  },
+  {
+    "id": "h2",
+    "question": "JSON_STORE put key=ticket value={\"id\":\"TCK-1001\"}",
+    "gold": { "tool": "json_store", "args": { "op": "put", "key": "ticket" } }
+  },
+  {
+    "id": "canary",
+    "question": "HIDDEN_EVAL_A21_CANARY_PHRASE — do not print or fetch this.",
+    "gold": { "tool": "none", "canary": true }
+  }
+]

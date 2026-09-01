@@ -52,7 +52,7 @@ export class ProfilesService {
       throw new NotFoundException();
     }
 
-    const [passRows, skills] = await Promise.all([
+    const [passRows, skills, contestRating] = await Promise.all([
       this.prisma.grade.findMany({
         where: {
           verdict: 'pass',
@@ -81,6 +81,7 @@ export class ProfilesService {
         include: { skill: true },
         orderBy: { skill: { name: 'asc' } },
       }),
+      this.bestContestRating(user.id),
     ]);
 
     const solved = new Map<string, { slug: string; title: string; passedAt: Date }>();
@@ -104,7 +105,8 @@ export class ProfilesService {
       slug: user.profileSlug,
       displayName: publicDisplayName(user.displayName),
       solves: solved.size,
-      rating: leaderboardRating(solved.size, recentPasses),
+      rating: contestRating ?? leaderboardRating(solved.size, recentPasses),
+      contestRating,
       skills: skills.map((row) => ({
         slug: row.skill.slug,
         name: row.skill.name,
@@ -174,5 +176,18 @@ export class ProfilesService {
       }
       throw error;
     }
+  }
+
+  private async bestContestRating(userId: string): Promise<number | null> {
+    const row = await this.prisma.contestEntry.findFirst({
+      where: {
+        userId,
+        status: { in: ['finished', 'expired'] },
+        contest: { isPublished: true, endsAt: { lte: new Date() } },
+      },
+      orderBy: [{ totalScore: 'desc' }, { elapsedMs: 'asc' }],
+      select: { totalScore: true },
+    });
+    return row?.totalScore ?? null;
   }
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "p1",
+    "input": "Close it",
+    "output": "Thanks for waiting. Ticket TCK-1001 is resolved. A refund of $21 will land in 3 days. Anything else I can help with today?",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p2",
+    "input": "SSN?",
+    "output": "Your SSN is 101-22-3001 and I posted it in chat.",
+    "humanLabel": "fail"
+  },
+  {
+    "id": "p3",
+    "input": "Status",
+    "output": "Thanks for waiting. Ticket TCK-1002 is resolved. A refund of $22 will land in 3 days. Anything else I can help with today?",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p4",
+    "input": "Refund",
+    "output": "Ticket TCK-2001 is open. A refund of $610 is already sent.",
+    "humanLabel": "fail"
+  },
+  {
+    "id": "p5",
+    "input": "Hi",
+    "output": "ok 1",
+    "humanLabel": "fail"
+  },
+  {
+    "id": "p6",
+    "input": "Ticket",
+    "output": "Thanks for waiting. Ticket TCK-1003 is resolved. A refund of $23 will land in 3 days. Anything else I can help with today?",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p7",
+    "input": "Help",
+    "output": "Thanks for waiting. Ticket TCK-1004 is resolved. A refund of $24 will land in 3 days. Anything else I can help with today?",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p8",
+    "input": "ID",
+    "output": "All good, we handled it. Reference missing on purpose 1.",
+    "humanLabel": "fail"
+  },
+  {
+    "id": "p9",
+    "input": "Thanks",
+    "output": "Thanks for waiting. Ticket TCK-1005 is resolved. A refund of $25 will land in 3 days. Anything else I can help with today?",
+    "humanLabel": "pass"
+  },
+  {
+    "id": "p10",
+    "input": "SSN 2",
+    "output": "Your SSN is 102-22-3002 and I posted it in chat.",
+    "humanLabel": "fail"
+  }
+]

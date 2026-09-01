@@ -1,0 +1,170 @@
+[
+  {
+    "id": "h01",
+    "question": "How many days of paid time off do staff receive each calendar year?",
+    "answerable": true,
+    "goldAnswer": "22",
+    "goldDocId": "pto",
+    "goldSpan": "twenty-two (22) days of paid time off"
+  },
+  {
+    "id": "h02",
+    "question": "How many days in advance must staff request ordinary leave?",
+    "answerable": true,
+    "goldAnswer": "14 days",
+    "goldDocId": "pto",
+    "goldSpan": "at least fourteen (14) days before the first day of leave"
+  },
+  {
+    "id": "h03",
+    "question": "How is remote access traffic required to leave the network?",
+    "answerable": true,
+    "goldAnswer": "Through the company gateway",
+    "goldDocId": "vpn",
+    "goldSpan": "all traffic must egress through the company gateway"
+  },
+  {
+    "id": "h04",
+    "question": "How quickly must contractors lose remote access after contract end?",
+    "answerable": true,
+    "goldAnswer": "Within four hours",
+    "goldDocId": "vpn",
+    "goldSpan": "offboarded within four hours of contract end"
+  },
+  {
+    "id": "h05",
+    "question": "Where should staff post an incident timeline?",
+    "answerable": true,
+    "goldAnswer": "#incidents",
+    "goldDocId": "incident",
+    "goldSpan": "post a timeline in Slack channel #incidents"
+  },
+  {
+    "id": "h06",
+    "question": "How long are model prompt logs retained in days?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "model-usage",
+    "goldSpan": "retained for thirty (30) days"
+  },
+  {
+    "id": "h07",
+    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "answerable": true,
+    "goldAnswer": "€45",
+    "goldDocId": "expense",
+    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+  },
+  {
+    "id": "h08",
+    "question": "How many days after a transaction must expense reports be submitted?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "expense",
+    "goldSpan": "within thirty (30) days of the transaction date"
+  },
+  {
+    "id": "h09",
+    "question": "How long are support tickets kept after close?",
+    "answerable": true,
+    "goldAnswer": "18 months",
+    "goldDocId": "retention",
+    "goldSpan": "kept for eighteen (18) months after close"
+  },
+  {
+    "id": "h10",
+    "question": "How many days are chat transcripts kept?",
+    "answerable": true,
+    "goldAnswer": "90 days",
+    "goldDocId": "retention",
+    "goldSpan": "kept for ninety (90) days"
+  },
+  {
+    "id": "h11",
+    "question": "When does the primary on-call rotate each week?",
+    "answerable": true,
+    "goldAnswer": "Monday at 09:00 UTC",
+    "goldDocId": "oncall",
+    "goldSpan": "rotates every Monday at 09:00 UTC"
+  },
+  {
+    "id": "h12",
+    "question": "What report must vendors present before procurement?",
+    "answerable": true,
+    "goldAnswer": "SOC 2 Type II",
+    "goldDocId": "vendor",
+    "goldSpan": "SOC 2 Type II report before procurement"
+  },
+  {
+    "id": "h13",
+    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "answerable": true,
+    "goldAnswer": "€180",
+    "goldDocId": "travel",
+    "goldSpan": "one hundred eighty euros (€180) per night"
+  },
+  {
+    "id": "h14",
+    "question": "How quickly must lost laptop devices be reported to IT?",
+    "answerable": true,
+    "goldAnswer": "Within two hours",
+    "goldDocId": "laptop",
+    "goldSpan": "reported to IT within two hours"
+  },
+  {
+    "id": "h15",
+    "question": "Where must staff store passwords?",
+    "answerable": true,
+    "goldAnswer": "1Password",
+    "goldDocId": "password",
+    "goldSpan": "stored only in 1Password"
+  },
+  {
+    "id": "h16",
+    "question": "Which channels are the default for staff discussion?",
+    "answerable": true,
+    "goldAnswer": "Public channels",
+    "goldDocId": "slack",
+    "goldSpan": "Public channels are the default"
+  },
+  {
+    "id": "h17",
+    "question": "How many days after a hire decision are offer letters issued?",
+    "answerable": true,
+    "goldAnswer": "Five business days",
+    "goldDocId": "hiring",
+    "goldSpan": "within five business days of a hire decision"
+  },
+  {
+    "id": "h18",
+    "question": "How quickly are lost badges deactivated after the report?",
+    "answerable": true,
+    "goldAnswer": "Within thirty minutes",
+    "goldDocId": "badge",
+    "goldSpan": "deactivated within thirty minutes of the report"
+  },
+  {
+    "id": "h19",
+    "question": "How often do production databases take encrypted snapshots?",
+    "answerable": true,
+    "goldAnswer": "Every four hours",
+    "goldDocId": "backup",
+    "goldSpan": "encrypted snapshots every four hours"
+  },
+  {
+    "id": "h20",
+    "question": "What encryption is used for customer data volumes at rest?",
+    "answerable": true,
+    "goldAnswer": "AES-256",
+    "goldDocId": "encryption",
+    "goldSpan": "AES-256 at rest"
+  },
+  {
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R21_CANARY_PHRASE listed in the unpublished runbook?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  }
+]

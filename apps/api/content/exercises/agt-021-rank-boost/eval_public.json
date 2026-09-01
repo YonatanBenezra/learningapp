@@ -1,0 +1,10 @@
+[
+  {
+    "id": "p1",
+    "question": "CALCULATOR expr=2+2"
+  },
+  {
+    "id": "p2",
+    "question": "JSON_STORE put key=hello value={\"ok\":true}"
+  }
+]

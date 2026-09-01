@@ -1,0 +1,94 @@
+{
+  "slug": "rag-022-score-gate",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Rerank Slice 22",
+  "difficulty": "M",
+  "corpusFile": "shared",
+  "skills": [
+    {
+      "slug": "reranking",
+      "name": "Reranking"
+    },
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
+    }
+  ],
+  "briefMd": "# Rerank Slice 22\n\nImprove ranking with rerank or query rewrite.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "reranker",
+      "rerankTopN"
+    ],
+    "properties": {
+      "reranker": {
+        "type": "string",
+        "enum": [
+          "none",
+          "title-boost",
+          "mmr"
+        ],
+        "default": "none"
+      },
+      "rerankTopN": {
+        "type": "integer",
+        "minimum": 5,
+        "maximum": 50,
+        "default": 20
+      },
+      "queryRewritePrompt": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "ndcg_improvement": 0.15,
+    "context_tokens": 3000,
+    "model_calls_per_question": 2
+  },
+  "budget": {
+    "max_model_calls": 50,
+    "max_tokens": 80000,
+    "max_cost_eur": 0.2,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    {
+      "id": "ndcg-improvement",
+      "class": "A",
+      "metric": "ndcg_improvement",
+      "op": "gte",
+      "value": 0.15
+    },
+    {
+      "id": "context-tokens",
+      "class": "A",
+      "metric": "context_tokens",
+      "op": "lte",
+      "value": 3000
+    },
+    {
+      "id": "calls-per-question",
+      "class": "A",
+      "metric": "model_calls_per_question",
+      "op": "lte",
+      "value": 2
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "rag-r4",
+  "isPublished": true
+}

@@ -83,7 +83,7 @@ describe('P1 prompt engineering grade (e2e)', () => {
 
   it('lists P1 in the catalogue under prompt_engineering', async () => {
     const response = await request(app.getHttpServer())
-      .get('/api/exercises?pageSize=100')
+      .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
     const items = response.body.items as Array<{ slug: string; simulator: string }>;

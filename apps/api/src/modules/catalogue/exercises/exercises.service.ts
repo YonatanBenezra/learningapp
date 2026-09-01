@@ -16,20 +16,23 @@ export class ExercisesService {
     const page = query.page;
     const pageSize = query.pageSize;
     const where = { isPublished: true };
-    const [total, rows] = await this.prisma.$transaction([
-      this.prisma.exercise.count({ where }),
-      this.prisma.exercise.findMany({
-        where,
-        include: withSkills,
-        orderBy: [
-          { simulator: 'asc' },
-          { difficulty: 'asc' },
-          { title: 'asc' },
-        ],
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-      }),
-    ]);
+    const latest = await this.prisma.exercise.findMany({
+      where,
+      distinct: ['slug'],
+      orderBy: [{ slug: 'asc' }, { version: 'desc' }],
+      include: withSkills,
+    });
+    latest.sort((left, right) => {
+      if (left.simulator !== right.simulator) {
+        return left.simulator.localeCompare(right.simulator);
+      }
+      if (left.difficulty !== right.difficulty) {
+        return left.difficulty.localeCompare(right.difficulty);
+      }
+      return left.title.localeCompare(right.title);
+    });
+    const total = latest.length;
+    const rows = latest.slice((page - 1) * pageSize, page * pageSize);
 
     return {
       items: rows.map(toCatalogueListItem),

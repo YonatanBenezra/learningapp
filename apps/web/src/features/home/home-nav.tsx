@@ -10,6 +10,7 @@ const links = [
   { href: routes.home, label: "Home" },
   { href: routes.catalogue, label: "Catalogue" },
   { href: routes.leaderboard, label: "Leaderboard" },
+  { href: routes.contests, label: "Contests" },
   { href: routes.paths, label: "Paths" },
   { href: routes.progress, label: "Progress" },
   { href: routes.billing, label: "Billing" },
@@ -72,6 +73,7 @@ export function HomeNav() {
             const LinkTag =
               item.href === routes.catalogue ||
               item.href === routes.paths ||
+              item.href === routes.contests ||
               item.href === routes.progress ||
               item.href === routes.billing
                 ? AuthLink

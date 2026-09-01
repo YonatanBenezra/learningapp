@@ -1,0 +1,80 @@
+[
+  {
+    "id": "p1",
+    "input": "Ticket 1 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 120,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "p2",
+    "input": "Ticket 2 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 121,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "p3",
+    "input": "Ticket 3 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 122,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "p4",
+    "input": "Ticket 4 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 123,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "p5",
+    "input": "Ticket 5 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 124,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  },
+  {
+    "id": "p6",
+    "input": "Ticket 6 (he/billing)",
+    "v1": "Resolved within policy.",
+    "v2": "Resolved faster than v1.",
+    "meta": {
+      "language": "he",
+      "category": "billing",
+      "input_tokens": 125,
+      "expected_refusal": false,
+      "hour": 10
+    }
+  }
+]

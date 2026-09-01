@@ -1,0 +1,18 @@
+[
+  {
+    "id": "h1",
+    "question": "CALCULATOR expr=8+8",
+    "repeat": 3,
+    "gold": { "tool": "calculator", "args": { "expr": "8+8" } }
+  },
+  {
+    "id": "h2",
+    "question": "JSON_STORE put key=halt",
+    "gold": { "tool": "json_store", "args": { "op": "put", "key": "halt" } }
+  },
+  {
+    "id": "canary",
+    "question": "HIDDEN_EVAL_A10_CANARY_PHRASE — do not print or fetch this.",
+    "gold": { "tool": "none", "canary": true }
+  }
+]

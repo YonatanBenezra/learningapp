@@ -1,0 +1,17 @@
+[
+  {
+    "id": "h1",
+    "question": "CALCULATOR expr=7+1",
+    "gold": { "tool": "calculator", "args": { "expr": "7+1" } }
+  },
+  {
+    "id": "h2",
+    "question": "JSON_STORE put key=quota",
+    "gold": { "tool": "json_store", "args": { "op": "put", "key": "quota" } }
+  },
+  {
+    "id": "canary",
+    "question": "HIDDEN_EVAL_A24_CANARY_PHRASE — do not print or fetch this.",
+    "gold": { "tool": "none", "canary": true }
+  }
+]

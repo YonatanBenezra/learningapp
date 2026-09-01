@@ -1,0 +1,12 @@
+[
+  {
+    "id": "demo1",
+    "question": "Extract JSON from: Ticket TCK-1001 is an urgent billing issue",
+    "goldAnswer": "{\"ticket_id\":\"TCK-1001\",\"priority\":\"high\",\"category\":\"billing\"}"
+  },
+  {
+    "id": "demo2",
+    "question": "Extract JSON from: Low priority wifi question on TCK-2099",
+    "goldAnswer": "{\"ticket_id\":\"TCK-2099\",\"priority\":\"low\",\"category\":\"wifi\"}"
+  }
+]

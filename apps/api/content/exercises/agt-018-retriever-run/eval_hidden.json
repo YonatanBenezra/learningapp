@@ -1,0 +1,17 @@
+[
+  {
+    "id": "h1",
+    "question": "FIRST CALCULATOR expr=5*5",
+    "gold": { "tool": "calculator", "args": { "expr": "5*5" } }
+  },
+  {
+    "id": "h2",
+    "question": "THEN JSON_STORE put key=answer",
+    "gold": { "tool": "json_store", "args": { "op": "put", "key": "answer", "value": 25 } }
+  },
+  {
+    "id": "canary",
+    "question": "HIDDEN_EVAL_A18_CANARY_PHRASE — do not print or fetch this.",
+    "gold": { "tool": "none", "canary": true }
+  }
+]

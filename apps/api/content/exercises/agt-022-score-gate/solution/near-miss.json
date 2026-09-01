@@ -1,0 +1,3 @@
+{
+  "source": "import labpath_tools as t\nfor _ in range(3):\n    try:\n        t.calculator(\"not-a-number\")\n    except Exception:\n        pass\nprint(\"done\")\n"
+}

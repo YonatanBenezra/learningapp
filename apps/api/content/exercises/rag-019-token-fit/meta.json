@@ -1,0 +1,85 @@
+{
+  "slug": "rag-019-token-fit",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Citation Slice 19",
+  "difficulty": "M",
+  "corpusFile": "shared",
+  "skills": [
+    {
+      "slug": "grounding",
+      "name": "Grounding"
+    },
+    {
+      "slug": "prompt-design",
+      "name": "Prompt design"
+    },
+    {
+      "slug": "refusal-behaviour",
+      "name": "Refusal behaviour"
+    }
+  ],
+  "briefMd": "# Citation Slice 19\n\nAuthor a generation prompt with citations and refusals.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "generationPrompt"
+    ],
+    "properties": {
+      "generationPrompt": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "gold_span_overlap": 0.85,
+    "unanswerable_refusal": 5,
+    "answerable_refusal_max": 2
+  },
+  "budget": {
+    "max_model_calls": 40,
+    "max_tokens": 80000,
+    "max_cost_eur": 0.2,
+    "wall_clock_s": 180
+  },
+  "gates": [
+    {
+      "id": "citation-format",
+      "class": "A",
+      "metric": "citation_format",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "id": "citation-grounded",
+      "class": "A",
+      "metric": "gold_span_overlap",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "refusal-unanswerable",
+      "class": "A",
+      "metric": "unanswerable_refusals",
+      "op": "gte",
+      "value": 5
+    },
+    {
+      "id": "refusal-answerable",
+      "class": "A",
+      "metric": "answerable_refusals",
+      "op": "lte",
+      "value": 2
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "rag-r3",
+  "isPublished": true
+}

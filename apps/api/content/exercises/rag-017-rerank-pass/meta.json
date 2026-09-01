@@ -1,0 +1,80 @@
+{
+  "slug": "rag-017-rerank-pass",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Cost Slice 17",
+  "difficulty": "M",
+  "corpusFile": "shared",
+  "skills": [
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "cost-engineering",
+      "name": "Cost engineering"
+    }
+  ],
+  "briefMd": "# Cost Slice 17\n\nKeep retrieval under budget with recall gates.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "topK",
+      "rerank",
+      "chunkSize"
+    ],
+    "properties": {
+      "topK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 20
+      },
+      "rerank": {
+        "type": "boolean",
+        "default": false
+      },
+      "chunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      }
+    }
+  },
+  "thresholds": {
+    "mean_prompt_tokens": 2000,
+    "recall_at_k": 0.8
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 2000
+    },
+    {
+      "id": "recall-at-k",
+      "class": "A",
+      "metric": "recall@k",
+      "op": "gte",
+      "value": 0.8
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "graderArchetype": "rag-r2",
+  "isPublished": true
+}

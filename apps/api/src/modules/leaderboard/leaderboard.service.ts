@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { AccountTier } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
+import { ContestsService } from '../contests/contests.service';
 import { publicDisplayName } from '../profiles/profile-slug';
+import {
+  CONTEST_LEADERBOARD_RULE,
+  sortContestRows,
+} from '../contests/contest-rank';
 import {
   LEADERBOARD_RULE,
   RECENT_PASS_WINDOW_MS,
@@ -20,9 +25,35 @@ export type LeaderboardEntry = {
 
 @Injectable()
 export class LeaderboardService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly contests: ContestsService,
+  ) {}
 
   async list(now = new Date()): Promise<{
+    rule: string;
+    items: LeaderboardEntry[];
+  }> {
+    const ended = await this.contests.latestEndedContest(now);
+    if (ended) {
+      const rows = await this.contests.contestBoard(ended.id);
+      const ranked = sortContestRows(rows);
+      return {
+        rule: CONTEST_LEADERBOARD_RULE,
+        items: ranked.map((row, index) => ({
+          rank: index + 1,
+          slug: row.slug,
+          displayName: row.displayName,
+          solves: 0,
+          recentPasses: 0,
+          rating: row.totalScore,
+        })),
+      };
+    }
+    return this.listPractice(now);
+  }
+
+  private async listPractice(now: Date): Promise<{
     rule: string;
     items: LeaderboardEntry[];
   }> {

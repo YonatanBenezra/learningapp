@@ -103,6 +103,14 @@ enum SubscriptionStatus {
   @@schema("public")
 }
 
+enum ContestEntryStatus {
+  active
+  finished
+  expired
+
+  @@schema("public")
+}
+
 model User {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email         String    @unique
@@ -123,6 +131,7 @@ model User {
   hintUnlocks   HintUnlock[]
   skillScores   UserSkillScore[]
   account       Account?
+  contestEntries ContestEntry[]
 
   @@map("users")
   @@schema("public")
@@ -287,6 +296,59 @@ model UserSkillScore {
   @@schema("public")
 }
 
+model Contest {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug           String           @unique
+  title          String
+  intent         String
+  startsAt       DateTime
+  endsAt         DateTime
+  timeBoxMinutes Int
+  sampleSize     Int
+  isPublished    Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  problems       ContestProblem[]
+  entries        ContestEntry[]
+
+  @@map("contests")
+  @@schema("public")
+}
+
+model ContestProblem {
+  contestId    String  @db.Uuid
+  position     Int
+  exerciseSlug String
+  contest      Contest @relation(fields: [contestId], references: [id], onDelete: Cascade)
+
+  @@id([contestId, position])
+  @@unique([contestId, exerciseSlug])
+  @@index([exerciseSlug])
+  @@map("contest_problems")
+  @@schema("public")
+}
+
+model ContestEntry {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contestId    String             @db.Uuid
+  userId       String             @db.Uuid
+  sampleSeed   String
+  sampledSlugs String[]
+  startedAt    DateTime           @default(now())
+  finishedAt   DateTime?
+  totalScore   Int                @default(0)
+  elapsedMs    Int?
+  status       ContestEntryStatus @default(active)
+  contest      Contest            @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attempts     Attempt[]
+
+  @@unique([contestId, userId])
+  @@index([contestId, status])
+  @@map("contest_entries")
+  @@schema("public")
+}
+
 model Attempt {
   id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId          String        @db.Uuid
@@ -295,11 +357,14 @@ model Attempt {
   status          AttemptStatus @default(started)
   startedAt       DateTime      @default(now())
   submittedAt     DateTime?
+  contestEntryId  String?       @db.Uuid
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   exercise        Exercise      @relation(fields: [exerciseId], references: [id])
+  contestEntry    ContestEntry? @relation(fields: [contestEntryId], references: [id])
   submissions     Submission[]
 
   @@index([userId, exerciseId])
+  @@index([contestEntryId])
   @@map("attempts")
   @@schema("public")
 }

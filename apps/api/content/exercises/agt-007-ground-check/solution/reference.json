@@ -1,0 +1,3 @@
+{
+  "source": "import json\nimport re\nfrom pathlib import Path\nimport labpath_tools as t\n\ndata = json.loads(Path(\"tasks.json\").read_text())\nfor task in data[\"tasks\"]:\n    inst = str(task.get(\"instruction\") or \"\").strip()\n    expr_match = re.search(r\"expr=(\\S+)\", inst)\n    fallback_match = re.search(r\"fallback=(\\S+)\", inst)\n    if not expr_match:\n        continue\n    try:\n        t.calculator(expr_match.group(1))\n    except Exception:\n        if fallback_match:\n            t.calculator(fallback_match.group(1))\nprint(json.dumps({\"ok\": True}))\n"
+}

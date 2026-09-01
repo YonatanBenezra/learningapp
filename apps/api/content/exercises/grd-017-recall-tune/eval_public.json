@@ -1,0 +1,12 @@
+[
+  {
+    "id": "p1",
+    "input": "Book a room for Tuesday",
+    "output": "How many nights?"
+  },
+  {
+    "id": "p2",
+    "input": "What time is checkout?",
+    "output": "Checkout is 11:00."
+  }
+]

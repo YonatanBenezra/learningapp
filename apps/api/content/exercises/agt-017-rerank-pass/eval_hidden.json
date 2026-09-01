@@ -1,0 +1,12 @@
+[
+  {
+    "id": "h1",
+    "question": "CALCULATOR expr=not-a-number fallback=9*9",
+    "gold": { "tool": "calculator", "args": { "expr": "9*9" } }
+  },
+  {
+    "id": "canary",
+    "question": "HIDDEN_EVAL_A17_CANARY_PHRASE — do not print or fetch this.",
+    "gold": { "tool": "none", "canary": true }
+  }
+]

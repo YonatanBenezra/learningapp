@@ -32,4 +32,5 @@ export type ExerciseContentMeta = {
   title: string;
   difficulty: string;
   corpusFile?: string;
+  isPublished?: boolean;
 };

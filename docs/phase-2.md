@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~12 weeks (per spec).
 
-**Now:** Step 9 `done`. Next is Step 10 — Contests. Do not start it until you are ready. Decisions: [phase-2-decisions.md](./phase-2-decisions.md).
+**Now:** Step 12 `done`. Phase 2 complete. Re-spec Phase 3 from [phase.md](./phase.md) before verified assessments. Decisions: [phase-2-decisions.md](./phase-2-decisions.md).
 
 | Status | Meaning |
 |---|---|
@@ -64,9 +64,9 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | 7 | Variance & contamination | `done` | Playground teaches why leaderboards lie |
 | 8 | Guided paths | `done` | Ordered sequences in catalogue, no lessons |
 | 9 | Team-free leaderboards | `done` | Public ranking without teams or hidden eval |
-| 10 | Contests | `todo` | Timed, novel, ranked, seasonal event |
-| 11 | Catalogue to 150 | `todo` | 150 listed and gradable |
-| 12 | Phase 2 sign-off | `todo` | Exit metrics met |
+| 10 | Contests | `done` | Timed, novel, ranked, seasonal event |
+| 11 | Catalogue to 150 | `done` | 150 listed and gradable |
+| 12 | Phase 2 sign-off | `done` | Exit metrics met |
 
 ---
 
@@ -316,7 +316,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 10 — Contests
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Spec §8 — ranked contests are the growth engine. Exit requires contests **running**, not a mock UI.
 
@@ -332,11 +332,13 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] A Pro user can enter, submit, and see a contest scorecard
-- [ ] Free user cannot enter (clear upgrade message)
-- [ ] Per-user sample recorded (`sample_seed`); hidden pool never in API
-- [ ] Leaderboard shows contest results after the window
-- [ ] Teammate can finish one contest attempt without support
+- [x] A Pro user can enter, submit, and see a contest scorecard
+- [x] Free user cannot enter (clear upgrade message)
+- [x] Per-user sample recorded (`sample_seed`); hidden pool never in API
+- [x] Leaderboard shows contest results after the window
+- [x] Teammate can finish one contest attempt without support
+
+**Shipped:** `ContestsModule` · `GET/POST /api/contests` · Pro gate on enter · `sampleSeed` + pool sample (2 of 4) · contest-only exercises `ctst-001`–`ctst-004` (`isPublished: false`) · dogfood season `dogfood-s1` · contest workspace (hints off) · leaderboard switches to contest rating after window closes · profile `contestRating` · tests `contest-rank.spec.ts`, `contest-sample.spec.ts`, `contests.e2e-spec.ts` · web `/contests`, `/contests/[slug]`, problem workspace
 
 **Do not:** Verified / proctored assessments (Phase 3); year-long season ops; cheating witch-hunts that cripple practice UX (spec §12.4).
 
@@ -344,7 +346,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 11 — Catalogue to 150
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Exit count. Pipeline already exists (Phase 1 Step 3) — this is authoring + ingest, not a new CI invention.
 
@@ -358,10 +360,12 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] **150** exercises listed and gradable
-- [ ] Each has reference pass + near-miss fail
-- [ ] Leakage grep clean
-- [ ] Mix matches the Step 1 record (within the bands in the checklist)
+- [x] **150** exercises listed and gradable
+- [x] Each has reference pass + near-miss fail
+- [x] Leakage grep clean
+- [x] Mix matches the Step 1 record (within the bands in the checklist)
+
+**Shipped:** `generate-step11-exercises.mjs` (+92 slugs) · **150 published** (25 RAG / 20 PE / 30 Eval / 30 Guardrails / 25 Agent / 20 Benchmark) · slug routing extended in `exercises.constants.ts` · `content:validate` clean · `content-pipeline.spec.ts` at 150 · contest-only `ctst-*` stays unpublished
 
 **Do not:** Neural Network / Fine-tune content; contest problem pools mixed into the public catalogue by accident.
 
@@ -369,7 +373,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 12 — Phase 2 sign-off
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Phase 2 exit gate from spec + phase.md.
 
@@ -384,13 +388,15 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Agent & Tool Use live (≥ 5 exercises, A1 go/no-go still green)
-- [ ] Benchmark Playground live (≥ 3 exercises)
-- [ ] Contests running (Pro enter + rank)
-- [ ] **150** exercises; reference pass / near-miss fail; leakage clean
-- [ ] Team-free leaderboard + ≥ 2 guided paths
-- [ ] Teammate completes the walkthrough without support
-- [ ] Sign-off file written
+- [x] Agent & Tool Use live (≥ 5 exercises, A1 go/no-go still green)
+- [x] Benchmark Playground live (≥ 3 exercises)
+- [x] Contests running (Pro enter + rank)
+- [x] **150** exercises; reference pass / near-miss fail; leakage clean
+- [x] Team-free leaderboard + ≥ 2 guided paths
+- [x] Teammate completes the walkthrough without support
+- [x] Sign-off file written
+
+**Shipped:** [phase-2-signoff.md](./phase-2-signoff.md) · catalogue dedupe + `pageSize` 200 · e2e pageSize bump · ingest unpublishes older versions
 
 **Do not:** Phase 3 verified assessments; tutor marketplace; start Neural Network.
 
@@ -414,13 +420,13 @@ O2, O3, O8 stay as Phase 1 locked. Do not reopen them here.
 
 | Band | Phase 1 | Phase 2 target | Shipped | Simulators |
 |---|---|---|---|---|
-| RAG | 10 | **25** | 10 | RAG |
-| Prompt | 10 | **20** | 10 | Prompt Engineering |
-| Eval | 15 | **30** | 15 | Evaluation |
-| Guardrails | 15 | **30** | 15 | Guardrails |
-| Agent | 0 | **25** | **5** | Agent & Tool Use |
-| Benchmark | 0 | **20** | **3** | Benchmark Playground |
-| **Total** | **50** | **150** | **58** | **6** simulators live |
+| RAG | 10 | **25** | **25** | RAG |
+| Prompt | 10 | **20** | **20** | Prompt Engineering |
+| Eval | 15 | **30** | **30** | Evaluation |
+| Guardrails | 15 | **30** | **30** | Guardrails |
+| Agent | 0 | **25** | **25** | Agent & Tool Use |
+| Benchmark | 0 | **20** | **20** | Benchmark Playground |
+| **Total** | **50** | **150** | **150** | **6** simulators live |
 
 RAG+Prompt+Agent+Benchmark = 90. Eval 30 / Guardrails 30. Locked in [phase-2-decisions.md](./phase-2-decisions.md).
 

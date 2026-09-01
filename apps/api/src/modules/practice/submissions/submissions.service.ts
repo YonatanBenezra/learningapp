@@ -22,6 +22,7 @@ import {
   type GradeJobData,
 } from '../../grading/processors/grade-job';
 import { AccountService } from '../../accounts/account.service';
+import { ContestsService } from '../../contests/contests.service';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
 
 const UNASSIGNED_WORKER = 'unassigned';
@@ -31,6 +32,7 @@ export class SubmissionsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly accounts: AccountService,
+    private readonly contests: ContestsService,
     @InjectQueue(QUEUE_GRADE) private readonly gradeQueue: Queue<GradeJobData>,
   ) {}
 
@@ -58,6 +60,7 @@ export class SubmissionsService {
       });
     }
 
+    await this.contests.assertContestSubmission(attemptId, user.id);
     await assertAttemptPolicy(this.prisma, user.id, attempt.exercise);
 
     const payloadHash = hashToken(canonicalJson(dto.payload));

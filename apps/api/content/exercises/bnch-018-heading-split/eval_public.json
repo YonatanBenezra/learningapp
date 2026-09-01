@@ -1,0 +1,6 @@
+[
+  {
+    "id": "p1",
+    "question": "Harness A (clean, seed 1) is 24/40. Harness B (eval-like few-shot, seed 1) is 32/40. Twelve of the forty tickets are near-paraphrases of B’s train-dump shots."
+  }
+]

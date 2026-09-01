@@ -1,0 +1,298 @@
+{
+  "harnessA": {
+    "id": "clean",
+    "seed": 1,
+    "wrapper": "none"
+  },
+  "harnessB": {
+    "id": "leaky-fewshot",
+    "seed": 1,
+    "wrapper": "eval-like-shots"
+  },
+  "items": [
+    {
+      "id": "o01",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o02",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o03",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o04",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o05",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o06",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o07",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o08",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o09",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o10",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o11",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "o12",
+      "gold": "yes",
+      "a": "no",
+      "b": "yes",
+      "slice": "overlap"
+    },
+    {
+      "id": "c01",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c02",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c03",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c04",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c05",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c06",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c07",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c08",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c09",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c10",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c11",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c12",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c13",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c14",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c15",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c16",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c17",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c18",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c19",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c20",
+      "gold": "yes",
+      "a": "yes",
+      "b": "yes",
+      "slice": "clean"
+    },
+    {
+      "id": "c21",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    },
+    {
+      "id": "c22",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    },
+    {
+      "id": "c23",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    },
+    {
+      "id": "c24",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    },
+    {
+      "id": "c25",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    },
+    {
+      "id": "c26",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    },
+    {
+      "id": "c27",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    },
+    {
+      "id": "c28",
+      "gold": "yes",
+      "a": "no",
+      "b": "no",
+      "slice": "clean"
+    }
+  ],
+  "canary": {
+    "id": "canary",
+    "prompt": "HIDDEN_EVAL_B18_CANARY_PHRASE — do not print or fetch this."
+  }
+}

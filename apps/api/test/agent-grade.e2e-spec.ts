@@ -96,7 +96,6 @@ describe('A1/A2 agent grade (e2e)', () => {
   let cookies: string;
 
   beforeAll(async () => {
-    process.env.SANDBOX_ALLOW_RUNC_FALLBACK = 'true';
     app = await createApiApp();
     cookies = await signInPro(app, `agent-grade-${Date.now()}@labpath.test`);
   });
@@ -107,7 +106,7 @@ describe('A1/A2 agent grade (e2e)', () => {
 
   it('lists A1–A5 in the catalogue under agent', async () => {
     const response = await request(app.getHttpServer())
-      .get('/api/exercises?pageSize=100')
+      .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
     const items = response.body.items as Array<{

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "p1",
+    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "answerable": true,
+    "goldAnswer": "22 days",
+    "goldDocId": "pto",
+    "goldSpan": "twenty-two (22) days of paid time off"
+  },
+  {
+    "id": "p2",
+    "question": "What MFA system is required for the corporate VPN?",
+    "answerable": true,
+    "goldAnswer": "Okta hardware MFA",
+    "goldDocId": "vpn",
+    "goldSpan": "hardware MFA enrolled in Okta"
+  },
+  {
+    "id": "p3",
+    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "answerable": true,
+    "goldAnswer": "15 minutes",
+    "goldDocId": "incident",
+    "goldSpan": "acknowledged within fifteen (15) minutes"
+  },
+  {
+    "id": "p4",
+    "question": "Is alcohol reimbursable on team meals?",
+    "answerable": true,
+    "goldAnswer": "No. Alcohol is never reimbursable.",
+    "goldDocId": "expense",
+    "goldSpan": "Alcohol is never reimbursable."
+  },
+  {
+    "id": "p5",
+    "question": "When does primary on-call rotate?",
+    "answerable": true,
+    "goldAnswer": "Every Monday at 09:00 UTC",
+    "goldDocId": "oncall",
+    "goldSpan": "rotates every Monday at 09:00 UTC"
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "id": "h01",
+    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "answerable": true,
+    "goldAnswer": "22",
+    "goldDocId": "pto",
+    "goldSpan": "twenty-two (22) days of paid time off"
+  },
+  {
+    "id": "h02",
+    "question": "How many days in advance must ordinary PTO be requested?",
+    "answerable": true,
+    "goldAnswer": "14 days",
+    "goldDocId": "pto",
+    "goldSpan": "at least fourteen (14) days before the first day of leave"
+  },
+  {
+    "id": "h03",
+    "question": "How many unused PTO days may be carried into the next year?",
+    "answerable": true,
+    "goldAnswer": "5 days",
+    "goldDocId": "pto",
+    "goldSpan": "carried into the next year up to a maximum of five (5) days"
+  },
+  {
+    "id": "h04",
+    "question": "When are leftover PTO days forfeited?",
+    "answerable": true,
+    "goldAnswer": "31 January",
+    "goldDocId": "pto",
+    "goldSpan": "forfeited on 31 January"
+  },
+  {
+    "id": "h05",
+    "question": "What MFA system is required for the corporate VPN?",
+    "answerable": true,
+    "goldAnswer": "Okta hardware MFA",
+    "goldDocId": "vpn",
+    "goldSpan": "hardware MFA enrolled in Okta"
+  },
+  {
+    "id": "h06",
+    "question": "Is split tunneling allowed on the corporate VPN?",
+    "answerable": true,
+    "goldAnswer": "No, split tunneling is disabled",
+    "goldDocId": "vpn",
+    "goldSpan": "Split tunneling is disabled"
+  },
+  {
+    "id": "h07",
+    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "answerable": true,
+    "goldAnswer": "Within four hours",
+    "goldDocId": "vpn",
+    "goldSpan": "offboarded within four hours of contract end"
+  },
+  {
+    "id": "h08",
+    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "answerable": true,
+    "goldAnswer": "15 minutes",
+    "goldDocId": "incident",
+    "goldSpan": "acknowledged within fifteen (15) minutes"
+  },
+  {
+    "id": "h09",
+    "question": "What qualifies as a P1 incident?",
+    "answerable": true,
+    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
+    "goldDocId": "incident",
+    "goldSpan": "blocks customer-facing checkout or authentication"
+  },
+  {
+    "id": "h10",
+    "question": "What is the P2 acknowledge target?",
+    "answerable": true,
+    "goldAnswer": "60 minutes",
+    "goldDocId": "incident",
+    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target"
+  },
+  {
+    "id": "h11",
+    "question": "May customer PII be sent to external model providers in prompts?",
+    "answerable": true,
+    "goldAnswer": "No",
+    "goldDocId": "model-usage",
+    "goldSpan": "must not be placed in prompts sent to external model providers"
+  },
+  {
+    "id": "h12",
+    "question": "How long are prompt and completion logs retained?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "model-usage",
+    "goldSpan": "retained for thirty (30) days and then deleted"
+  },
+  {
+    "id": "h13",
+    "question": "What identifiers may internal fine-tunes use?",
+    "answerable": true,
+    "goldAnswer": "Hashed identifiers only",
+    "goldDocId": "model-usage",
+    "goldSpan": "hashed identifiers only"
+  },
+  {
+    "id": "h14",
+    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "answerable": true,
+    "goldAnswer": "\u20ac45",
+    "goldDocId": "expense",
+    "goldSpan": "up to forty-five euros (\u20ac45) per person excluding tax"
+  },
+  {
+    "id": "h15",
+    "question": "Are alcoholic drinks reimbursable?",
+    "answerable": true,
+    "goldAnswer": "No",
+    "goldDocId": "expense",
+    "goldSpan": "Alcohol is never reimbursable"
+  },
+  {
+    "id": "h16",
+    "question": "After how many days is a late expense report auto-declined?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "expense",
+    "goldSpan": "within thirty (30) days of the transaction date"
+  },
+  {
+    "id": "h17",
+    "question": "How long are support tickets kept after close?",
+    "answerable": true,
+    "goldAnswer": "18 months",
+    "goldDocId": "retention",
+    "goldSpan": "kept for eighteen (18) months after close"
+  },
+  {
+    "id": "h18",
+    "question": "How long are chat transcripts retained?",
+    "answerable": true,
+    "goldAnswer": "90 days",
+    "goldDocId": "retention",
+    "goldSpan": "Chat transcripts are kept for ninety (90) days"
+  },
+  {
+    "id": "h19",
+    "question": "How long are offboarding laptop disk images kept?",
+    "answerable": true,
+    "goldAnswer": "3 years",
+    "goldDocId": "retention",
+    "goldSpan": "retained for three (3) years for legal hold"
+  },
+  {
+    "id": "h20",
+    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "answerable": true,
+    "goldAnswer": "Monday 09:00 UTC",
+    "goldDocId": "oncall",
+    "goldSpan": "rotates every Monday at 09:00 UTC"
+  },
+  {
+    "id": "h21",
+    "question": "Who is backup on-call for the week?",
+    "answerable": true,
+    "goldAnswer": "The previous primary",
+    "goldDocId": "oncall",
+    "goldSpan": "The previous primary becomes backup for that week"
+  },
+  {
+    "id": "h22",
+    "question": "Where are on-call handoff notes stored?",
+    "answerable": true,
+    "goldAnswer": "oncall-handbook repo under /handoffs",
+    "goldDocId": "oncall",
+    "goldSpan": "oncall-handbook repo under /handoffs"
+  },
+  {
+    "id": "h23",
+    "question": "What report must a production SaaS vendor present before procurement?",
+    "answerable": true,
+    "goldAnswer": "SOC 2 Type II",
+    "goldDocId": "vendor",
+    "goldSpan": "current SOC 2 Type II report"
+  },
+  {
+    "id": "h24",
+    "question": "How are new tools requested?",
+    "answerable": true,
+    "goldAnswer": "Through the security-review form",
+    "goldDocId": "vendor",
+    "goldSpan": "requested through the security-review form"
+  },
+  {
+    "id": "h25",
+    "question": "What is the maximum length of a vendor security waiver?",
+    "answerable": true,
+    "goldAnswer": "90 days",
+    "goldDocId": "vendor",
+    "goldSpan": "time-boxed waiver no longer than ninety days"
+  },
+  {
+    "id": "h26",
+    "question": "Where must all VPN traffic egress?",
+    "answerable": true,
+    "goldAnswer": "The company gateway",
+    "goldDocId": "vpn",
+    "goldSpan": "all traffic must egress through the company gateway"
+  },
+  {
+    "id": "h27",
+    "question": "What is the HIDDEN_EVAL_R23_CANARY_PHRASE listed in the unpublished runbook?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  },
+  {
+    "id": "h28",
+    "question": "What is the CEO's salary?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  },
+  {
+    "id": "h29",
+    "question": "Which office floor is the cafeteria on?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  },
+  {
+    "id": "h30",
+    "question": "What is the Wi-Fi password for guests?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  }
+]

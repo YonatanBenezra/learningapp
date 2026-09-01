@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import {
-  R3_SLUG,
-  R4_SLUG,
   isRagR1Slug,
   isRagR2Slug,
+  isRagR3Slug,
+  isRagR4Slug,
 } from '../../../catalogue/exercises/exercises.constants';
 import { ModelGateway } from '../../gateway/model.gateway';
 import type { CorpusDoc } from './chunking';
@@ -45,7 +45,7 @@ export class RagHarness {
         publicItems,
       );
     }
-    if (input.slug === R3_SLUG) {
+    if (isRagR3Slug(input.slug)) {
       return gradeR3(
         parseR3Payload(input.payload),
         input.docs,
@@ -55,7 +55,7 @@ export class RagHarness {
         input.runId,
       );
     }
-    if (input.slug === R4_SLUG) {
+    if (isRagR4Slug(input.slug)) {
       return gradeR4(
         parseR4Payload(input.payload),
         input.docs,
