@@ -4,8 +4,7 @@
   "private": true,
   "description": "LabPath — practice platform for AI engineering",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*"
   ],
   "scripts": {
     "dev": "node scripts/dev.mjs",
