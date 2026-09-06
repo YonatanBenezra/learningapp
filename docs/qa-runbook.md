@@ -45,12 +45,28 @@ SANDBOX_INTEGRATION=1 SANDBOX_ALLOW_RUNC_FALLBACK=true npm run sandbox:smoke -w 
 
 ## Local stack for manual QA
 
-Three processes:
+**Prefer one command** (API + grading worker + web):
+
+```bash
+npm run dev
+```
+
+> **Worker is mandatory.** Without `dev:worker`, submits stay `queued` and never get a scorecard.
+
+Or three terminals:
 
 ```bash
 npm run dev:api      # http://localhost:3001
-npm run dev:worker
+npm run dev:worker   # sets SANDBOX_ALLOW_RUNC_FALLBACK=true
 npm run dev:web      # http://localhost:3000
+```
+
+**Agent track prerequisites** (otherwise A1+ fail with `sandbox_runtime_unavailable`):
+
+```bash
+docker compose up -d sandbox-gateway
+docker build -t labpath-sandbox:local infra/sandbox
+# Ensure apps/api/.env has SANDBOX_ALLOW_RUNC_FALLBACK=true (copied from .env.example)
 ```
 
 | Check | Command / URL |
@@ -216,6 +232,8 @@ Source: [phase-2-signoff.md](./phase-2-signoff.md).
 ### Agent / sandbox infra
 
 - [ ] `docker compose ps` → `sandbox-gateway` running
+- [ ] `labpath-sandbox:local` image built (`docker build -t labpath-sandbox:local infra/sandbox`)
+- [ ] Worker process has `SANDBOX_ALLOW_RUNC_FALLBACK=true` (default via `npm run dev` / `npm run dev:worker`)
 - [ ] Agent grade response has no `sandboxError: sandbox_runtime_unavailable`
 - [ ] If e2e agent tests fail locally: ensure `SANDBOX_ALLOW_RUNC_FALLBACK=true` **before** Node starts (already in `test:e2e` script)
 

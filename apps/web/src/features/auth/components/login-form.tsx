@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 import { postAuthPath } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
+import { setAuthenticatedUser } from "@/features/auth/auth-session";
 
 export function LoginForm() {
   return (
@@ -28,12 +29,13 @@ function LoginFormFields() {
       const requested = await authApi.requestMagicLink(email);
       if (!requested.token) {
         setError(
-          "A sign-in link has been sent. In local development, the API should also return a token.",
+          "No sign-in token came back. In local development, sign-in usually completes instantly — confirm the API is running on :3001 and NODE_ENV=development.",
         );
         return;
       }
       await authApi.consumeMagicLink(requested.token);
       const me = await authApi.me();
+      setAuthenticatedUser(me);
       router.push(postAuthPath(Boolean(me.onboarding?.needed), searchParams.get("next")));
       router.refresh();
     } catch {
@@ -73,7 +75,8 @@ function LoginFormFields() {
         </p>
       ) : null}
       <p className="lp-auth-note text-xs lp-muted">
-        Links expire after use. Use the same email each time you return.
+        Sign-in completes instantly in development (token returned by the API).
+        In production, check your email — links expire after use.
       </p>
     </form>
   );

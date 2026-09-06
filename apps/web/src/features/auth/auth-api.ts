@@ -13,6 +13,11 @@ export const authApi = {
       method: "POST",
       body: JSON.stringify({ token }),
     }),
+  refresh: () =>
+    apiClient<{ user: User }>("/auth/refresh", {
+      method: "POST",
+      body: "{}",
+    }),
   logout: () => apiClient<void>("/auth/logout", { method: "POST" }),
   updateProfile: (body: {
     displayName?: string | null;

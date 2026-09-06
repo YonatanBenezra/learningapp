@@ -1,0 +1,380 @@
+/* Account profile studio */
+
+.lp-acc {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.lp-acc-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 1.25rem;
+}
+
+.lp-acc-title {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+
+.lp-acc-lead {
+  max-width: 34rem;
+  margin: 0.4rem 0 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.lp-acc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.lp-acc-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lp-acc-chip--brand {
+  border-color: color-mix(in srgb, var(--lp-brand) 35%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-brand) 12%, transparent);
+  color: var(--lp-brand);
+}
+
+.lp-acc-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.lp-acc-panel {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-acc-panel--identity {
+  background:
+    radial-gradient(
+      90% 80% at 0% 0%,
+      color-mix(in srgb, var(--lp-brand) 12%, transparent),
+      transparent 55%
+    ),
+    var(--lp-surface-elevated);
+}
+
+.lp-acc-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
+.lp-acc-kicker {
+  margin: 0;
+  color: var(--lp-brand);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lp-acc-panel-title {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lp-acc-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.lp-acc-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 3.35rem;
+  height: 3.35rem;
+  border-radius: 0.5rem;
+  background: var(--lp-brand);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.lp-acc-identity-copy {
+  min-width: 0;
+}
+
+.lp-acc-name {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lp-acc-email {
+  margin: 0.25rem 0 0;
+  overflow: hidden;
+  color: var(--lp-muted);
+  font-size: 0.85rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp-acc-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.lp-acc-stat {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.8rem 0.85rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 80%, transparent);
+}
+
+.lp-acc-stat strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: capitalize;
+}
+
+.lp-acc-stat--accent strong {
+  color: var(--lp-brand);
+}
+
+.lp-acc-stat span {
+  color: var(--lp-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lp-acc-form {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.lp-acc-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.lp-acc-label {
+  color: var(--lp-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lp-acc-input {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 80%, transparent);
+  color: var(--lp-ink);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.lp-acc-input:focus {
+  border-color: color-mix(in srgb, var(--lp-brand) 45%, var(--lp-border));
+  box-shadow: 0 0 0 3px var(--color-ring, color-mix(in srgb, var(--lp-brand) 18%, transparent));
+}
+
+.lp-acc-slug {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.5rem;
+  padding: 0 0.2rem 0 0.8rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 80%, transparent);
+}
+
+.lp-acc-slug:focus-within {
+  border-color: color-mix(in srgb, var(--lp-brand) 45%, var(--lp-border));
+  box-shadow: 0 0 0 3px var(--color-ring, color-mix(in srgb, var(--lp-brand) 18%, transparent));
+}
+
+.lp-acc-slug-prefix {
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-acc-slug .lp-acc-input {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  min-height: 2.35rem;
+  padding-left: 0;
+}
+
+.lp-acc-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 70%, transparent);
+  cursor: pointer;
+}
+
+.lp-acc-toggle input {
+  margin-top: 0.2rem;
+  accent-color: var(--lp-brand);
+}
+
+.lp-acc-toggle strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.lp-acc-toggle span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--lp-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.lp-acc-toggle.is-disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.lp-acc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.lp-acc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0 0.95rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--lp-brand);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.lp-acc-btn:hover:not(:disabled) {
+  background: var(--lp-brand-hover);
+}
+
+.lp-acc-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.lp-acc-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--lp-border);
+  color: var(--lp-ink);
+}
+
+.lp-acc-btn--ghost:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--lp-brand) 40%, var(--lp-border));
+  color: var(--lp-brand);
+}
+
+.lp-acc-note {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.lp-acc-note a,
+.lp-acc-link {
+  color: var(--lp-brand);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lp-acc-note a:hover,
+.lp-acc-link:hover {
+  text-decoration: underline;
+}
+
+.lp-acc-ok {
+  margin: 0;
+  color: var(--lp-brand);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.lp-acc-error {
+  margin: 0;
+  color: var(--lp-danger, #dc2626);
+  font-size: 0.85rem;
+}
+
+.lp-acc-banner {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.2rem 1.1rem;
+  border: 1px dashed var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-acc-banner strong {
+  font-size: 0.95rem;
+}
+
+.lp-acc-banner p {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 900px) {
+  .lp-acc-layout {
+    grid-template-columns: 1fr;
+  }
+}

@@ -5,6 +5,8 @@ import { ApiError } from "@/lib/api-client";
 import type { PathListItem } from "@/types/path";
 import { pathsApi } from "../paths-api";
 import { PathCard } from "./path-card";
+import { PathStripSkeleton } from "./path-strip-skeleton";
+import "@/features/catalogue/catalogue.css";
 
 export function PathStrip() {
   const [items, setItems] = useState<PathListItem[] | null>(null);
@@ -19,8 +21,8 @@ export function PathStrip() {
         }
       })
       .catch((caught: unknown) => {
-        if (!cancelled && !(caught instanceof ApiError && caught.status === 401)) {
-          setItems([]);
+        if (!cancelled) {
+          setItems(caught instanceof ApiError && caught.status === 401 ? [] : []);
         }
       });
     return () => {
@@ -28,19 +30,21 @@ export function PathStrip() {
     };
   }, []);
 
-  if (!items || items.length === 0) {
+  if (!items) {
+    return <PathStripSkeleton />;
+  }
+
+  if (items.length === 0) {
     return null;
   }
 
   return (
     <section className="lp-path-strip" aria-label="Guided paths">
       <div className="lp-path-strip-head">
-        <p className="lp-panel-eyebrow">Guided paths</p>
-        <p className="lp-cat-count lp-path-strip-lead">
-          Ordered sets. One exercise at a time. Quotas still apply.
-        </p>
+        <h2>Guided paths</h2>
+        <p className="lp-path-strip-lead">One exercise at a time · quotas apply</p>
       </div>
-      <div className="lp-grid lp-grid-catalogue">
+      <div className="lp-path-rail">
         {items.map((path) => (
           <PathCard key={path.slug} path={path} />
         ))}

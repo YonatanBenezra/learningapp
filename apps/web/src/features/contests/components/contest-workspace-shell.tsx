@@ -77,7 +77,16 @@ export function ContestWorkspaceShell({
     try {
       const attempt = await contestsApi.startAttempt(contestSlug, exerciseSlug);
       const queued = await workspaceApi.submit(attempt.id, payload);
-      const finished = await waitForRun(queued.runId, setRun, abort.signal);
+      const finished = await waitForRun(
+        queued.runId,
+        setRun,
+        abort.signal,
+        () => {
+          setSubmitError(
+            "Still queued after 30s. The grading worker may be offline — start it with npm run dev:worker or npm run dev.",
+          );
+        },
+      );
       if (finished.status === "succeeded") {
         const result = await waitForGrade(queued.runId, abort.signal);
         setGrade(result);

@@ -78,7 +78,16 @@ export function WorkspaceShell({
     try {
       const attempt = await workspaceApi.startAttempt(slug);
       const queued = await workspaceApi.submit(attempt.id, payload);
-      const finished = await waitForRun(queued.runId, setRun, abort.signal);
+      const finished = await waitForRun(
+        queued.runId,
+        setRun,
+        abort.signal,
+        () => {
+          setSubmitError(
+            "Still queued after 30s. The grading worker may be offline — start it with npm run dev:worker or npm run dev.",
+          );
+        },
+      );
       if (onboarding) {
         void onboardingApi.track("first_submit").catch(() => undefined);
       }
@@ -151,21 +160,42 @@ export function WorkspaceShell({
         ) : null}
         <SubmissionSurface
           schema={exercise?.submissionSchema}
+          simulator={exercise?.simulator}
           disabled={!exercise || pending}
           pending={pending}
           error={submitError}
           errorHref={quotaHref}
           errorLinkLabel="Upgrade"
           initialValues={initialValues}
+          title={
+            exercise?.simulator === "rag"
+              ? "Retriever config"
+              : exercise?.simulator === "evaluation"
+                ? "Eval suite"
+                : exercise?.simulator === "guardrails"
+                  ? "Guard stack"
+                  : "Submission"
+          }
           lead={
             onboarding
               ? "A starter config is filled in. Submit it to see your first scorecard."
-              : undefined
+              : exercise?.simulator === "rag"
+                ? "Tune chunking, retrieval, and prompts — then grade against the hidden set."
+                : exercise?.simulator === "evaluation"
+                  ? "Author assertions, a judge, or a slice spec — then grade against hidden labels."
+                  : exercise?.simulator === "guardrails"
+                    ? "Author an attack, an inject page, or a defense stack — then grade."
+                    : undefined
           }
           onSubmit={onSubmit}
         />
       </div>
-      <RunPanel run={run} grade={grade} onboarding={onboarding} />
+      <RunPanel
+        run={run}
+        grade={grade}
+        onboarding={onboarding}
+        simulator={exercise?.simulator}
+      />
     </div>
   );
 }

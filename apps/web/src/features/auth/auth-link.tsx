@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { loginPath, postAuthPath } from "@/config/routes";
-import { authApi } from "@/features/auth/auth-api";
-import { ApiError } from "@/lib/api-client";
+import {
+  ensureAuthSession,
+} from "@/features/auth/auth-session";
 
 type AuthLinkProps = {
   href: string;
@@ -14,22 +15,25 @@ type AuthLinkProps = {
 };
 
 export function AuthLink({ href, className, children, onClick }: AuthLinkProps) {
-  const [target, setTarget] = useState(loginPath(href));
+  // Start at the real destination so early clicks don't bounce to /login.
+  const [target, setTarget] = useState(href);
 
   useEffect(() => {
     let cancelled = false;
-    authApi
-      .me()
-      .then((me) => {
-        if (!cancelled) {
-          setTarget(postAuthPath(Boolean(me.onboarding?.needed), href));
-        }
-      })
-      .catch((caught: unknown) => {
-        if (!cancelled && !(caught instanceof ApiError && caught.status === 401)) {
-          setTarget(href);
-        }
-      });
+    ensureAuthSession().then((session) => {
+      if (cancelled) {
+        return;
+      }
+      if (session.status === "authenticated") {
+        setTarget(postAuthPath(Boolean(session.user.onboarding?.needed), href));
+        return;
+      }
+      if (session.status === "anonymous") {
+        setTarget(loginPath(href));
+        return;
+      }
+      setTarget(href);
+    });
     return () => {
       cancelled = true;
     };

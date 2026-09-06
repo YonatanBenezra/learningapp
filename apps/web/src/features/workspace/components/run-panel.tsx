@@ -10,14 +10,32 @@ type RunPanelProps = {
   run: Run | null;
   grade: Grade | null;
   onboarding?: boolean;
+  simulator?: string;
 };
 
-export function RunPanel({ run, grade, onboarding = false }: RunPanelProps) {
+export function RunPanel({
+  run,
+  grade,
+  onboarding = false,
+  simulator,
+}: RunPanelProps) {
+  const isRag = simulator === "rag";
+  const isEval = simulator === "evaluation";
+  const isGuard = simulator === "guardrails";
+  const isScorecard = isRag || isEval || isGuard;
   return (
     <aside className="lp-ws-pane lp-ws-pane--run">
       <div className="lp-ws-pane-head">
-        <h2 className="lp-ws-pane-title">Run</h2>
-        <p className="lp-ws-pane-lead">Scorecard after you submit.</p>
+        <h2 className="lp-ws-pane-title">{isScorecard ? "Scorecard" : "Run"}</h2>
+        <p className="lp-ws-pane-lead">
+          {isRag
+            ? "Recall, failing queries, and retrieval notes after grade."
+            : isEval
+              ? "F1, κ, slice flags, and failing cases after grade."
+              : isGuard
+                ? "Block rates, levels won, and failing probes after grade."
+                : "Scorecard after you submit."}
+        </p>
       </div>
       <div className="lp-ws-pane-body">
         {!run ? (
@@ -33,7 +51,15 @@ export function RunPanel({ run, grade, onboarding = false }: RunPanelProps) {
                 />
               </svg>
             </span>
-            <p>Submit a config to grade this exercise.</p>
+            <p>
+              {isRag
+                ? "Run a retrieval grade to see recall and failing samples."
+                : isEval
+                  ? "Run an evaluation grade to see metrics and failing samples."
+                  : isGuard
+                    ? "Run a guardrail grade to see block rates and failing samples."
+                    : "Submit a config to grade this exercise."}
+            </p>
           </div>
         ) : (
           <p className="lp-ws-status">

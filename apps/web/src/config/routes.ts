@@ -15,6 +15,7 @@ export const routes = {
     `/contests/${contestSlug}/problems/${exerciseSlug}`,
   progress: "/progress",
   billing: "/billing",
+  account: "/profile",
   profile: (slug: string) => `/u/${slug}`,
 } as const;
 

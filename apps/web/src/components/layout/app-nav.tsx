@@ -2,9 +2,11 @@ import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
 
 const nav = [
+  { href: routes.home, label: "Home" },
   { href: routes.catalogue, label: "Catalogue" },
-  { href: routes.progress, label: "Progress" },
-  { href: routes.billing, label: "Billing" },
+  { href: routes.leaderboard, label: "Leaderboard" },
+  { href: routes.contests, label: "Contests" },
+  { href: routes.paths, label: "Paths" },
 ];
 
 export function AppNav() {

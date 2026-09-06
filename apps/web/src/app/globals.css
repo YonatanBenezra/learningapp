@@ -8,11 +8,11 @@
   --color-ink: #171717;
   --color-muted: #6b6b6b;
   --color-line: #d6d6d2;
-  --color-brand: #ff5c2a;
-  --color-brand-hover: #e84e1f;
-  --color-brand-soft: rgba(255, 92, 42, 0.12);
-  --color-brand-glow: #ffb07a;
-  --color-ring: rgba(255, 92, 42, 0.22);
+  --color-brand: #0d9488;
+  --color-brand-hover: #0f766e;
+  --color-brand-soft: rgba(13, 148, 136, 0.12);
+  --color-brand-glow: #5eead4;
+  --color-ring: rgba(13, 148, 136, 0.22);
   --color-danger: #b91c1c;
   --color-danger-soft: #fef2f2;
 
@@ -22,17 +22,17 @@
 }
 
 html[data-theme="dark"] {
-  --color-bg: #141413;
-  --color-bg-soft: #1c1c1a;
-  --color-card: #1f1f1c;
-  --color-ink: #f5f5f2;
-  --color-muted: #a3a39c;
-  --color-line: #33332e;
-  --color-brand: #ff7a4d;
-  --color-brand-hover: #ff8d66;
-  --color-brand-soft: rgba(255, 92, 42, 0.16);
-  --color-brand-glow: #ff9a6a;
-  --color-ring: rgba(255, 92, 42, 0.28);
+  --color-bg: #070e1e;
+  --color-bg-soft: #0c1528;
+  --color-card: #101a2e;
+  --color-ink: #e8eef8;
+  --color-muted: #8b9bb4;
+  --color-line: #1c2a42;
+  --color-brand: #2dd4bf;
+  --color-brand-hover: #5eead4;
+  --color-brand-soft: rgba(45, 212, 191, 0.14);
+  --color-brand-glow: #99f6e4;
+  --color-ring: rgba(45, 212, 191, 0.28);
   --color-danger: #fca5a5;
   --color-danger-soft: rgba(185, 28, 28, 0.15);
   --background: var(--color-bg);
@@ -52,6 +52,9 @@ html {
   overflow-y: scroll;
   scrollbar-gutter: stable;
   background: var(--color-bg);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-muted) 55%, transparent)
+    color-mix(in srgb, var(--color-line) 70%, transparent);
 }
 
 body {
@@ -59,4 +62,32 @@ body {
   background: var(--color-bg);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-muted) 55%, transparent)
+    color-mix(in srgb, var(--color-line) 70%, transparent);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-muted) 45%, transparent);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-muted) 70%, transparent);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }

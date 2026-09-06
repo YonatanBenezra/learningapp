@@ -1,0 +1,452 @@
+/* Progress studio — keep legacy .lp-pg-* for billing/runs/traces */
+
+.lp-prog {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.lp-prog-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 1.25rem;
+}
+
+.lp-prog-title {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+
+.lp-prog-lead {
+  max-width: 34rem;
+  margin: 0.4rem 0 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.lp-prog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.lp-prog-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lp-prog-chip--brand {
+  border-color: color-mix(in srgb, var(--lp-brand) 35%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-brand) 12%, transparent);
+  color: var(--lp-brand);
+}
+
+.lp-prog-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+  gap: 0.85rem;
+}
+
+.lp-prog-panel {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-prog-panel--drill {
+  background:
+    radial-gradient(
+      90% 80% at 0% 0%,
+      color-mix(in srgb, var(--lp-brand) 12%, transparent),
+      transparent 55%
+    ),
+    var(--lp-surface-elevated);
+}
+
+.lp-prog-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
+.lp-prog-kicker {
+  margin: 0;
+  color: var(--lp-brand);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lp-prog-panel-title {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lp-prog-note {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.82rem;
+}
+
+.lp-prog-drill {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.lp-prog-drill-date {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.8rem;
+}
+
+.lp-prog-drill-title {
+  margin: 0.35rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.lp-prog-drill-meta {
+  margin: 0.35rem 0 0;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+}
+
+.lp-prog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.lp-prog-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  padding: 0 0.95rem;
+  border-radius: 0.5rem;
+  background: var(--lp-brand);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lp-prog-btn:hover {
+  background: var(--lp-brand-hover);
+}
+
+.lp-prog-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--lp-border);
+  color: var(--lp-ink);
+}
+
+.lp-prog-btn--ghost:hover {
+  border-color: color-mix(in srgb, var(--lp-brand) 40%, var(--lp-border));
+  color: var(--lp-brand);
+}
+
+.lp-prog-streak {
+  display: grid;
+  gap: 0.2rem;
+  justify-items: end;
+  min-width: 7rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-brand) 8%, transparent);
+  text-align: right;
+}
+
+.lp-prog-streak strong {
+  color: var(--lp-brand);
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.lp-prog-streak span {
+  color: var(--lp-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.lp-prog-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.lp-prog-stat {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 80%, transparent);
+}
+
+.lp-prog-stat strong {
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-transform: capitalize;
+}
+
+.lp-prog-stat--accent strong {
+  color: var(--lp-brand);
+}
+
+.lp-prog-stat span {
+  color: var(--lp-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lp-prog-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.lp-prog-skills {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lp-prog-skill {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 70%, transparent);
+}
+
+.lp-prog-skill-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.lp-prog-skill-name {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.lp-prog-skill-score {
+  color: var(--lp-brand);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-prog-skill-score.is-empty {
+  color: var(--lp-muted);
+}
+
+.lp-prog-bar {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--lp-ink) 8%, transparent);
+}
+
+.lp-prog-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--lp-brand);
+}
+
+.lp-prog-attempts {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-prog-attempt {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem 0.85rem;
+  align-items: center;
+  padding: 0.8rem 0.85rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 70%, transparent);
+}
+
+.lp-prog-attempt-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.lp-prog-attempt-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lp-prog-attempt-title a:hover {
+  color: var(--lp-brand);
+}
+
+.lp-prog-attempt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+}
+
+.lp-prog-attempt-side {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: end;
+}
+
+.lp-prog-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.45rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--lp-ink) 7%, transparent);
+  color: var(--lp-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.lp-prog-pill--pass {
+  background: color-mix(in srgb, var(--lp-brand) 16%, transparent);
+  color: var(--lp-brand);
+}
+
+.lp-prog-pill--fail {
+  background: var(--lp-danger-soft, color-mix(in srgb, #dc2626 14%, transparent));
+  color: var(--lp-danger, #dc2626);
+}
+
+.lp-prog-attempt-links {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.lp-prog-attempt-links a {
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lp-prog-attempt-links a:hover {
+  color: var(--lp-brand);
+}
+
+.lp-prog-empty {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.lp-prog-error {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.2rem 1.1rem;
+  border: 1px dashed var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-prog-error strong {
+  font-size: 0.95rem;
+}
+
+.lp-prog-error p {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+}
+
+.lp-prog-link {
+  color: var(--lp-brand);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lp-prog-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1000px) {
+  .lp-prog-top,
+  .lp-prog-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .lp-prog-drill {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-prog-streak {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .lp-prog-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-prog-attempt {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-prog-attempt-side {
+    justify-items: start;
+  }
+}

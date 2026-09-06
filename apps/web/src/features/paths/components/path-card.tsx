@@ -11,23 +11,30 @@ export function PathCard({ path }: { path: PathListItem }) {
     : path.passedCount > 0
       ? "Continue"
       : "Start path";
+  const progress =
+    path.stepCount > 0 ? Math.round((path.passedCount / path.stepCount) * 100) : 0;
 
   return (
-    <article className="lp-card lp-card--exercise lp-card--path">
-      <div className="lp-card-meta">
-        <span className="lp-badge">Path</span>
-        <span className="lp-badge lp-badge--muted">
+    <article className="lp-path-card">
+      <div className="lp-path-card-top">
+        <span className="lp-path-mark">Path</span>
+        <span className="lp-path-progress">
           {path.passedCount}/{path.stepCount}
         </span>
       </div>
-      <h2 className="lp-card-title">{path.title}</h2>
-      <p className="lp-card-tags">{path.intent}</p>
-      <Link href={href} className="lp-card-btn">
-        {label}
-      </Link>
-      <Link href={routes.path(path.slug)} className="lp-path-steps-link">
-        View steps
-      </Link>
+      <div className="lp-path-bar" aria-hidden="true">
+        <span style={{ width: `${progress}%` }} />
+      </div>
+      <h3 className="lp-path-card-title">{path.title}</h3>
+      <p className="lp-path-card-copy">{path.intent}</p>
+      <div className="lp-path-card-actions">
+        <Link href={href} className="lp-cat-btn">
+          {label}
+        </Link>
+        <Link href={routes.path(path.slug)} className="lp-path-steps-link">
+          View steps
+        </Link>
+      </div>
     </article>
   );
 }

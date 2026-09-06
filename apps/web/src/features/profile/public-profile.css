@@ -1,0 +1,336 @@
+/* Public profile */
+
+.lp-pp {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: calc(100dvh - 6.75rem - 3rem);
+}
+
+.lp-page-profile {
+  min-height: calc(100dvh - 6.75rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.lp-page-profile .lp-pp {
+  flex: 1;
+  width: 100%;
+}
+
+.lp-pp-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.1rem 1.5rem;
+  padding: 1.25rem 1.3rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background:
+    radial-gradient(
+      90% 80% at 0% 0%,
+      color-mix(in srgb, var(--lp-brand) 14%, transparent),
+      transparent 55%
+    ),
+    var(--lp-surface-elevated);
+}
+
+.lp-pp-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  min-width: 0;
+}
+
+.lp-pp-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.5rem;
+  background: var(--lp-brand);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.lp-pp-copy {
+  min-width: 0;
+}
+
+.lp-pp-kicker {
+  margin: 0 0 0.25rem;
+  color: var(--lp-brand);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lp-pp-title {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.8vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.lp-pp-lead {
+  margin: 0.35rem 0 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.lp-pp-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lp-pp-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 80%, transparent);
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lp-pp-chip--brand {
+  border-color: color-mix(in srgb, var(--lp-brand) 35%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-brand) 12%, transparent);
+  color: var(--lp-brand);
+}
+
+.lp-pp-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.lp-pp-stat {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-pp-stat-value {
+  font-size: 1.45rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.lp-pp-stat--rating .lp-pp-stat-value {
+  color: var(--lp-brand);
+}
+
+.lp-pp-stat-label {
+  color: var(--lp-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lp-pp-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.lp-pp-panel {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-pp-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
+.lp-pp-panel-kicker {
+  margin: 0;
+  color: var(--lp-brand);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lp-pp-panel-title {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lp-pp-panel-note {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.78rem;
+}
+
+.lp-pp-skills {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.lp-pp-skill {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 70%, transparent);
+}
+
+.lp-pp-skill-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.lp-pp-skill-name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.lp-pp-skill-score {
+  color: var(--lp-brand);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-pp-skill-score.is-empty {
+  color: var(--lp-muted);
+}
+
+.lp-pp-bar {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--lp-ink) 8%, transparent);
+}
+
+.lp-pp-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--lp-brand);
+}
+
+.lp-pp-solves {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-pp-solve {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.8rem 0.85rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface) 70%, transparent);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.lp-pp-solve:hover {
+  border-color: color-mix(in srgb, var(--lp-brand) 35%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-brand) 6%, transparent);
+}
+
+.lp-pp-solve-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.lp-pp-solve-date {
+  flex: 0 0 auto;
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.lp-pp-empty {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.lp-pp-error {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.35rem 1.15rem;
+  border: 1px dashed var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-pp-error strong {
+  font-size: 0.95rem;
+}
+
+.lp-pp-error p {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 1000px) {
+  .lp-pp-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lp-pp-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-pp-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-pp-hero {
+    align-items: start;
+  }
+}

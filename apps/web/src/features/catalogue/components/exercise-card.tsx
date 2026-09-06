@@ -15,18 +15,20 @@ const DIFFICULTY_LABELS: Record<Exercise["difficulty"], string> = {
 
 export function ExerciseCard({ exercise }: ExerciseCardProps) {
   return (
-    <article className={`lp-card lp-card--exercise lp-card--${exercise.simulator}`}>
-      <div className="lp-card-meta">
-        <span className="lp-badge">{SIMULATOR_LABELS[exercise.simulator]}</span>
-        <span className="lp-badge lp-badge--muted">
+    <article className="lp-ex-card">
+      <div className="lp-ex-card-meta">
+        <span className="lp-ex-badge">{SIMULATOR_LABELS[exercise.simulator]}</span>
+        <span className={`lp-ex-badge lp-ex-badge--${exercise.difficulty}`}>
           {DIFFICULTY_LABELS[exercise.difficulty]}
         </span>
       </div>
-      <h2 className="lp-card-title">{exercise.title}</h2>
-      {exercise.skillTags.length > 0 ? (
-        <p className="lp-card-tags">{exercise.skillTags.join(" · ")}</p>
-      ) : null}
-      <Link href={routes.exercise(exercise.slug)} className="lp-card-btn">
+      <h3 className="lp-ex-card-title">{exercise.title}</h3>
+      <p className="lp-ex-card-tags">
+        {exercise.skillTags.length > 0
+          ? exercise.skillTags.join(" · ")
+          : "Graded set · scorecard on submit"}
+      </p>
+      <Link href={routes.exercise(exercise.slug)} className="lp-cat-btn">
         Start
       </Link>
     </article>

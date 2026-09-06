@@ -8,8 +8,9 @@
     "packages/*"
   ],
   "scripts": {
+    "dev": "node scripts/dev.mjs",
     "dev:api": "npm run start:dev -w @labpath/api",
-    "dev:worker": "npm run start:worker:dev -w @labpath/api",
+    "dev:worker": "SANDBOX_ALLOW_RUNC_FALLBACK=true npm run start:worker:dev -w @labpath/api",
     "build:api": "npm run build -w @labpath/api",
     "start:api": "npm run start:prod -w @labpath/api",
     "start:worker": "npm run start:worker:prod -w @labpath/api",

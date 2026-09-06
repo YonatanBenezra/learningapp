@@ -24,7 +24,10 @@ export async function waitForRun(
   runId: string,
   onUpdate: (run: Run) => void,
   signal?: AbortSignal,
+  onQueuedTooLong?: () => void,
 ): Promise<Run> {
+  const started = Date.now();
+  let warned = false;
   for (let attempt = 0; attempt < 300; attempt += 1) {
     if (signal?.aborted) {
       throw new DOMException("Aborted", "AbortError");
@@ -34,6 +37,14 @@ export async function waitForRun(
       throw new DOMException("Aborted", "AbortError");
     }
     onUpdate(run);
+    if (
+      !warned &&
+      run.status === "queued" &&
+      Date.now() - started > 30_000
+    ) {
+      warned = true;
+      onQueuedTooLong?.();
+    }
     if (TERMINAL.includes(run.status)) {
       return run;
     }

@@ -1,42 +1,44 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { GlobalLoader } from "@/components/ui/global-loader";
 import { loginPath } from "@/config/routes";
-import { authApi } from "@/features/auth/auth-api";
-import { ApiError } from "@/lib/api-client";
+import {
+  ensureAuthSession,
+  getAuthSnapshot,
+} from "@/features/auth/auth-session";
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [allowed, setAllowed] = useState(false);
+  const cached = getAuthSnapshot();
+  const [ready, setReady] = useState(
+    cached.status === "authenticated" || cached.status === "soft",
+  );
 
   useEffect(() => {
     let cancelled = false;
-    authApi
-      .me()
-      .then(() => {
-        if (!cancelled) {
-          setAllowed(true);
-        }
-      })
-      .catch((caught: unknown) => {
-        if (cancelled) {
-          return;
-        }
-        if (caught instanceof ApiError && caught.status === 401) {
-          router.replace(loginPath(pathname));
-          return;
-        }
-        setAllowed(true);
-      });
+
+    ensureAuthSession().then((session) => {
+      if (cancelled) {
+        return;
+      }
+      if (session.status === "authenticated" || session.status === "soft") {
+        setReady(true);
+        return;
+      }
+      setReady(false);
+      router.replace(loginPath(pathname));
+    });
+
     return () => {
       cancelled = true;
     };
   }, [pathname, router]);
 
-  if (!allowed) {
-    return null;
+  if (!ready) {
+    return <GlobalLoader fullPage />;
   }
 
   return children;

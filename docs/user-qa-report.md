@@ -94,23 +94,23 @@ Automated gates (same day): `content:validate` 154/154 · e2e **76/76** · typec
 
 ## Solutions
 
-| # | Problem | Recommended fix | Priority |
-|---|---|---|---|
-| 1 | Worker not running | Add a root `npm run dev` that starts **api + worker + web** together. Bold warning in README: worker is mandatory. Optional: if a run stays `queued` >30s, show *“Grading worker may be offline”* in the UI. | **P0** |
-| 2 | Run page no polling | Add interval polling in `RunDetail` for `queued`/`running` (reuse the `waitForRun` pattern from the workspace). | **P1** |
-| 3 | Agent dev setup | Update [qa-runbook.md](./qa-runbook.md) + README: require `sandbox-gateway` and `SANDBOX_ALLOW_RUNC_FALLBACK=true` on the worker process. | **P1** |
-| 4 | Auth blank flash | Replace `null` in `RequireAuth` with a loading skeleton or “Checking session…”. | **P2** |
-| 5 | Dev login copy | In local/dev mode: *“Sign-in completes instantly in development.”* | **P3** |
+| # | Problem | Recommended fix | Priority | Status |
+|---|---|---|---|---|
+| 1 | Worker not running | Root `npm run dev` starts **api + worker + web**. Bold warning in README. UI warns if a run stays `queued` >30s. | **P0** | Done |
+| 2 | Run page no polling | `RunDetail` polls while `queued`/`running` and loads the grade when ready. | **P1** | Done |
+| 3 | Agent dev setup | README + [qa-runbook.md](./qa-runbook.md) + `.env.example`: `sandbox-gateway`, image build, `SANDBOX_ALLOW_RUNC_FALLBACK=true` on worker. | **P1** | Done |
+| 4 | Auth blank flash | `RequireAuth` shows `GlobalLoader` while checking the session. | **P2** | Done |
+| 5 | Dev login copy | Dev-facing copy: sign-in completes instantly in development. | **P3** | Done |
 
 ---
 
 ## Action items
 
-- [ ] P0: `npm run dev` meta-script + README warning
-- [ ] P1: Run detail polling
-- [ ] P1: Sandbox dev prerequisites in docs
-- [ ] P2: Auth loading state
-- [ ] P3: Login dev copy
+- [x] P0: `npm run dev` meta-script + README warning
+- [x] P1: Run detail polling
+- [x] P1: Sandbox dev prerequisites in docs
+- [x] P2: Auth loading state
+- [x] P3: Login dev copy
 
 ---
 

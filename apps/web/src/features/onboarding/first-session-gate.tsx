@@ -1,9 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { GlobalLoader } from "@/components/ui/global-loader";
 import { routes } from "@/config/routes";
-import { authApi } from "@/features/auth/auth-api";
+import { ensureAuthSession } from "@/features/auth/auth-session";
 
 export function FirstSessionGate({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -11,30 +12,26 @@ export function FirstSessionGate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
-    authApi
-      .me()
-      .then((me) => {
-        if (cancelled) {
-          return;
-        }
-        if (me.onboarding?.needed) {
-          router.replace(routes.onboarding);
-          return;
-        }
-        setReady(true);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setReady(true);
-        }
-      });
+    ensureAuthSession().then((session) => {
+      if (cancelled) {
+        return;
+      }
+      if (
+        session.status === "authenticated" &&
+        session.user.onboarding?.needed
+      ) {
+        router.replace(routes.onboarding);
+        return;
+      }
+      setReady(true);
+    });
     return () => {
       cancelled = true;
     };
   }, [router]);
 
   if (!ready) {
-    return <p className="lp-page lp-pg-note">Opening your first solve…</p>;
+    return <GlobalLoader fullPage />;
   }
 
   return children;

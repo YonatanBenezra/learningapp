@@ -277,20 +277,35 @@ Workspaces: `/exercises/<slug>` for each of the slugs in `apps/api/content/exerc
 
 ## Local development
 
+> **Grading worker is mandatory.** Submits stay `queued` forever if only the API and web are running. Prefer `npm run dev` so API + worker + web start together.
+
 Host ports **5432** and **6379** were already taken on the team machines, so Compose publishes Postgres on **5434** and Redis on **6382**.
 
 ```bash
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local
 docker compose up -d
+# Agent track also needs the sandbox gateway (+ local runc fallback in .env):
+docker compose up -d sandbox-gateway
+docker build -t labpath-sandbox:local infra/sandbox
 npm install
 npm run prisma:generate
 npm run prisma:migrate:deploy
 npm run prisma:seed
-npm run dev:api      # http://localhost:3001
-npm run dev:worker
-npm run dev:web      # http://localhost:3000
+npm run dev         # API :3001 + worker + web :3000
+# Or separately:
+# npm run dev:api && npm run dev:worker && npm run dev:web
 ```
+
+**Agent / sandbox prerequisites (local):**
+
+| Requirement | Why |
+|---|---|
+| `docker compose up -d sandbox-gateway` | Agent + sandbox RAG tool host |
+| `SANDBOX_ALLOW_RUNC_FALLBACK=true` on the **worker** | Dev machines without gVisor (`runsc`) — already set by `npm run dev:worker` / `npm run dev` |
+| `labpath-sandbox:local` image | Built from `infra/sandbox` |
+
+Without the worker, the UI shows *“Grading worker may be offline”* if a run stays queued for more than 30 seconds.
 
 | Service | URL |
 |---|---|

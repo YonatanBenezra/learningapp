@@ -1,5 +1,4 @@
 import { PublicProfileView } from "@/features/profile/components/public-profile";
-import "@/features/progress/progress.css";
 
 export default async function PublicProfilePage({
   params,

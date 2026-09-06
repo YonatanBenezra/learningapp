@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Caveat, Figtree, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { RootNav } from "@/components/layout/root-nav";
 import { brand } from "@/config/brand";
 import { themeInitScript } from "@/features/theme/theme-script";
 import { ThemeToggle } from "@/features/theme/theme-toggle";
@@ -47,6 +48,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className={`${jakarta.className} flex min-h-full flex-col`}>
+        <RootNav />
         {children}
         <ThemeToggle />
       </body>

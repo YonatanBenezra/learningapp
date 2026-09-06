@@ -2,7 +2,6 @@ import Link from "next/link";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
-import { HomeNav } from "./home-nav";
 import "./home.css";
 
 function TileIcon({ d }: { d: string }) {
@@ -22,9 +21,18 @@ function TileIcon({ d }: { d: string }) {
 export function HomePage() {
   return (
     <div className="ag-page">
-      <HomeNav />
       <main>
         <section className="ag-hero">
+          <div className="ag-fx" aria-hidden="true">
+            <span className="ag-fx-grid" />
+            <span className="ag-fx-scan" />
+            <span className="ag-fx-beam ag-fx-beam--a" />
+            <span className="ag-fx-beam ag-fx-beam--b" />
+            <span className="ag-fx-beam ag-fx-beam--c" />
+            <span className="ag-fx-spark ag-fx-spark--1" />
+            <span className="ag-fx-spark ag-fx-spark--2" />
+            <span className="ag-fx-spark ag-fx-spark--3" />
+          </div>
           <div className="ag-rings" aria-hidden="true">
             <i />
             <i />
@@ -106,7 +114,7 @@ export function HomePage() {
                 <p className="ag-cta-kicker">Let&apos;s run a set</p>
                 <h2 className="ag-cta-title">Ready to open the catalogue?</h2>
                 <AuthLink href={routes.catalogue} className="ag-btn ag-btn-lg ag-btn-dark">
-                  Get started
+                  Open catalogue
                 </AuthLink>
               </div>
               <div className="ag-call">
@@ -158,10 +166,10 @@ export function HomePage() {
                     <Link href={routes.leaderboard}>Leaderboard</Link>
                   </li>
                   <li>
-                    <AuthLink href={routes.paths}>Paths</AuthLink>
+                    <AuthLink href={routes.contests}>Contests</AuthLink>
                   </li>
                   <li>
-                    <AuthLink href={routes.progress}>Progress</AuthLink>
+                    <AuthLink href={routes.paths}>Paths</AuthLink>
                   </li>
                   <li>
                     <Link href={routes.login}>Sign in</Link>
@@ -169,19 +177,22 @@ export function HomePage() {
                 </ul>
               </div>
               <div>
-                <p className="ag-col-title">Other links</p>
+                <p className="ag-col-title">Dashboard</p>
                 <ul>
+                  <li>
+                    <AuthLink href={routes.account}>Profile</AuthLink>
+                  </li>
+                  <li>
+                    <AuthLink href={routes.progress}>Progress</AuthLink>
+                  </li>
+                  <li>
+                    <AuthLink href={routes.billing}>Billing</AuthLink>
+                  </li>
                   <li>
                     <AuthLink href={routes.paths}>Start a path</AuthLink>
                   </li>
                   <li>
                     <AuthLink href={routes.catalogue}>Exercises</AuthLink>
-                  </li>
-                  <li>
-                    <AuthLink href={routes.progress}>Skill scores</AuthLink>
-                  </li>
-                  <li>
-                    <Link href={routes.login}>Magic link</Link>
                   </li>
                 </ul>
               </div>

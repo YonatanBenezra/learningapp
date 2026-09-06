@@ -5,33 +5,103 @@ import { useEffect, useState } from "react";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
+import {
+  ensureAuthSession,
+  getAuthSnapshot,
+} from "@/features/auth/auth-session";
 
-const links = [
+const publicLinks = [
   { href: routes.home, label: "Home" },
   { href: routes.catalogue, label: "Catalogue" },
   { href: routes.leaderboard, label: "Leaderboard" },
   { href: routes.contests, label: "Contests" },
   { href: routes.paths, label: "Paths" },
-  { href: routes.progress, label: "Progress" },
-  { href: routes.billing, label: "Billing" },
-  { href: routes.login, label: "Sign in" },
 ];
 
+const authHrefs = new Set<string>([
+  routes.catalogue,
+  routes.paths,
+  routes.contests,
+]);
+
+function isSignedInStatus(status: string) {
+  return status === "authenticated" || status === "soft";
+}
+
 export function HomeNav() {
-  const [open, setOpen] = useState(false);
+  const cached = getAuthSnapshot();
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [signedIn, setSignedIn] = useState(isSignedInStatus(cached.status));
 
   useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
+    let cancelled = false;
+    ensureAuthSession().then((session) => {
+      if (!cancelled) {
+        setSignedIn(isSignedInStatus(session.status));
       }
+    });
+    return () => {
+      cancelled = true;
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+
+      setScrolled(y > 16);
+
+      if (y < 48) {
+        setHidden(false);
+      } else if (delta > 6) {
+        setHidden(true);
+      } else if (delta < -6) {
+        setHidden(false);
+      }
+
+      document.documentElement.style.setProperty(
+        "--ag-scroll",
+        String(Math.min(y / 600, 1)),
+      );
+
+      lastY = y;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.documentElement.style.removeProperty("--ag-scroll");
+    };
+  }, []);
+
+  const headerClass = [
+    "ag-header",
+    scrolled ? "is-scrolled" : "",
+    hidden ? "is-hidden" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const links = signedIn
+    ? publicLinks
+    : [...publicLinks, { href: routes.login, label: "Sign in" }];
+
   return (
-    <header className={`ag-header${open ? " is-open" : ""}`}>
+    <header className={headerClass}>
       <div className="ag-nav">
         <Link href={routes.home} className="ag-logo">
           <span className="ag-mark" aria-hidden="true">
@@ -47,59 +117,28 @@ export function HomeNav() {
           </span>
           <span className="ag-logo-name">{brand.name}</span>
         </Link>
-        <div className="ag-menu-cell">
-          <button
-            type="button"
-            className="ag-menu-btn"
-            aria-expanded={open}
-            aria-controls="ag-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((value) => !value)}
-          >
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-        <div className="ag-nav-cta">
-          <AuthLink href={routes.catalogue} className="ag-btn ag-btn-sm ag-btn-dark">
-            Get Started
-          </AuthLink>
-        </div>
-      </div>
-      {open ? (
-        <nav id="ag-menu" className="ag-overlay" aria-label="Page">
+        <nav className="ag-nav-links" aria-label="Page">
           {links.map((item) => {
-            const LinkTag =
-              item.href === routes.catalogue ||
-              item.href === routes.paths ||
-              item.href === routes.contests ||
-              item.href === routes.progress ||
-              item.href === routes.billing
-                ? AuthLink
-                : Link;
+            const LinkTag = authHrefs.has(item.href) ? AuthLink : Link;
             return (
-              <LinkTag
-                key={item.href}
-                href={item.href}
-                className="ag-overlay-link"
-                onClick={() => setOpen(false)}
-              >
+              <LinkTag key={item.href} href={item.href} className="ag-nav-link">
                 {item.label}
               </LinkTag>
             );
           })}
-          <div className="ag-overlay-meta">
-            <div className="ag-socials" aria-hidden="true">
-              <span className="ag-dot" />
-              <span className="ag-dot" />
-              <span className="ag-dot" />
-              <span className="ag-dot" />
-            </div>
-            <p>© 2026 {brand.name}</p>
-          </div>
         </nav>
-      ) : null}
+        <div className="ag-nav-cta">
+          {signedIn ? (
+            <Link href={routes.progress} className="ag-btn ag-btn-sm ag-btn-orange">
+              Dashboard
+            </Link>
+          ) : (
+            <AuthLink href={routes.catalogue} className="ag-btn ag-btn-sm ag-btn-orange">
+              Get Started
+            </AuthLink>
+          )}
+        </div>
+      </div>
     </header>
   );
 }
