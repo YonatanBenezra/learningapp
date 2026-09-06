@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+# Build context must be the monorepo root (not apps/api).
 
 FROM node:22-alpine AS deps
 WORKDIR /app
@@ -19,6 +20,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY --from=build /app/apps/api/prisma ./apps/api/prisma
 COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+COPY --from=build /app/apps/api/content ./apps/api/content
 WORKDIR /app/apps/api
 EXPOSE 3001
 CMD ["node", "dist/main"]
