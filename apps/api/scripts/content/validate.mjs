@@ -1,6 +1,6 @@
 import { access, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { exercisesRoot } from './paths.mjs';
+import { contentRoot, exercisesRoot } from './paths.mjs';
 import { readJson } from './upsert-exercise.mjs';
 import { validateMeta } from './validate-meta.mjs';
 
@@ -79,5 +79,25 @@ export async function validateAllExercises(root = exercisesRoot) {
       errors,
     });
   }
+
+  const allowlistPath = path.join(contentRoot, 'published-slugs.json');
+  const allowlistErrors = [];
+  try {
+    const allowlist = JSON.parse(await readFile(allowlistPath, 'utf8'));
+    const slugs = allowlist.slugs;
+    if (!Array.isArray(slugs) || slugs.length === 0) {
+      allowlistErrors.push('published-slugs.json has no slugs');
+    } else {
+      for (const slug of slugs) {
+        if (!(await exists(path.join(root, slug, 'meta.json')))) {
+          allowlistErrors.push(`published slug missing on disk: ${slug}`);
+        }
+      }
+    }
+  } catch (error) {
+    allowlistErrors.push(`published-slugs.json: ${error.message}`);
+  }
+  report.push({ slug: 'published-slugs.json', errors: allowlistErrors });
+
   return report;
 }

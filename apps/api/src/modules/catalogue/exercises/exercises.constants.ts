@@ -112,6 +112,8 @@ export function isSandboxRagSlug(slug: string): boolean {
 
 export const PHASE_1_CATALOGUE_TARGET = 50;
 export const PHASE_2_CATALOGUE_TARGET = 150;
+/** Live POC catalogue size — see `content/published-slugs.json`. */
+export const POC_CATALOGUE_TARGET = 20;
 
 export const HIDDEN_EVAL_CANARY = 'HIDDEN_EVAL_R1_CANARY_PHRASE';
 

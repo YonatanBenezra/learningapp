@@ -2,6 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import {
   exercisesRoot,
+  loadPublishedSlugs,
   type ExerciseContentMeta,
   type GraderArchetype,
 } from './content-paths';
@@ -38,10 +39,11 @@ export async function loadExerciseBundle(dir: string): Promise<ExerciseContentBu
 
 export async function loadAllExerciseBundles(): Promise<ExerciseContentBundle[]> {
   const dirs = await listExerciseDirs();
+  const published = new Set(loadPublishedSlugs());
   const bundles: ExerciseContentBundle[] = [];
   for (const dir of dirs) {
     const bundle = await loadExerciseBundle(dir);
-    if (bundle.meta.isPublished === false) {
+    if (!published.has(bundle.meta.slug)) {
       continue;
     }
     bundles.push(bundle);

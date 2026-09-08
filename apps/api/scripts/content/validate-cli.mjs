@@ -15,7 +15,8 @@ for (const row of report) {
   }
 }
 
-console.log(`\n${report.length} exercises checked, ${failures.length} failed`);
+const exerciseRows = report.filter((row) => row.slug !== 'published-slugs.json');
+console.log(`\n${exerciseRows.length} exercises checked, ${failures.length} failed`);
 
 if (failures.length > 0) {
   process.exitCode = 1;

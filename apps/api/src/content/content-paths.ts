@@ -1,7 +1,16 @@
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 export const contentRoot = path.join(process.cwd(), 'content');
 export const exercisesRoot = path.join(contentRoot, 'exercises');
+export const publishedSlugsPath = path.join(contentRoot, 'published-slugs.json');
+
+export function loadPublishedSlugs(): string[] {
+  const raw = JSON.parse(readFileSync(publishedSlugsPath, 'utf8')) as {
+    slugs: string[];
+  };
+  return raw.slugs;
+}
 
 export type GraderArchetype =
   | 'rag-r1'

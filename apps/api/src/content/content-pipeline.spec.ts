@@ -2,6 +2,7 @@ import {
   loadAllExerciseBundles,
 } from './content-loader';
 import { runContentGrader } from './content-grader-runner';
+import { loadPublishedSlugs } from './content-paths';
 import {
   A1_SLUG,
   A2_SLUG,
@@ -11,13 +12,17 @@ import {
   B1_SLUG,
   B2_SLUG,
   B3_SLUG,
-  PHASE_2_CATALOGUE_TARGET,
+  POC_CATALOGUE_TARGET,
 } from '../modules/catalogue/exercises/exercises.constants';
 
 describe('content pipeline — reference solutions', () => {
   it('runs reference pass and near-miss fail for every exercise', async () => {
     const bundles = await loadAllExerciseBundles();
-    expect(bundles.length).toBeGreaterThanOrEqual(PHASE_2_CATALOGUE_TARGET);
+    const published = loadPublishedSlugs();
+    expect(published).toHaveLength(POC_CATALOGUE_TARGET);
+    expect(bundles.map((bundle) => bundle.meta.slug).sort()).toEqual(
+      [...published].sort(),
+    );
     expect(bundles.map((bundle) => bundle.meta.slug)).toEqual(
       expect.arrayContaining([
         A1_SLUG,

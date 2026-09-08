@@ -1,7 +1,13 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { sharedCorpusUri } from './paths.mjs';
+import { contentRoot, sharedCorpusUri } from './paths.mjs';
+
+const publishedSlugs = new Set(
+  JSON.parse(
+    readFileSync(path.join(contentRoot, 'published-slugs.json'), 'utf8'),
+  ).slugs,
+);
 
 export function fileUri(dir, name) {
   return `file:${path.join(dir, name)}`;
@@ -51,7 +57,7 @@ export async function upsertExercise(prisma, dir) {
       feedback: meta.feedback,
       publicSample,
       attemptPolicy: meta.attemptPolicy ?? null,
-      isPublished: meta.isPublished !== false,
+      isPublished: publishedSlugs.has(meta.slug),
     },
     update: {
       title: meta.title,
@@ -64,7 +70,7 @@ export async function upsertExercise(prisma, dir) {
       feedback: meta.feedback,
       publicSample,
       attemptPolicy: meta.attemptPolicy ?? null,
-      isPublished: meta.isPublished !== false,
+      isPublished: publishedSlugs.has(meta.slug),
     },
   });
 

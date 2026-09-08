@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { loadPublishedSlugs } from '../src/content/content-paths';
 import {
   E1_SLUG,
   E2_SLUG,
@@ -9,6 +10,7 @@ import {
   G2_SLUG,
   G3_SLUG,
   HIDDEN_EVAL_CANARY,
+  POC_CATALOGUE_TARGET,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
 import { signIn } from './auth-helper';
@@ -37,7 +39,7 @@ describe('Catalogue (e2e)', () => {
       .set('Cookie', cookies)
       .expect(200);
 
-    expect(response.body.total).toBeGreaterThanOrEqual(10);
+    expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
     expect(response.body.items).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -90,32 +92,31 @@ describe('Catalogue (e2e)', () => {
     expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
   });
 
-  it('lists 50 published exercises without hidden eval text', async () => {
+  it('lists the 20 curated POC exercises without hidden eval text', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
 
-    expect(response.body.total).toBeGreaterThanOrEqual(50);
-    expect(response.body.items.length).toBeGreaterThanOrEqual(50);
-    const simulators = response.body.items.map(
-      (item: { simulator: string }) => item.simulator,
-    );
-    const ragPrompt = simulators.filter(
-      (value: string) => value === 'rag' || value === 'prompt_engineering',
-    ).length;
-    const evalCount = simulators.filter(
-      (value: string) => value === 'evaluation',
-    ).length;
-    const guardCount = simulators.filter(
-      (value: string) => value === 'guardrails',
-    ).length;
-    expect(ragPrompt).toBeGreaterThanOrEqual(20);
-    expect(evalCount).toBeGreaterThanOrEqual(15);
-    expect(guardCount).toBeGreaterThanOrEqual(15);
-    expect(simulators).toEqual(
-      expect.arrayContaining(['agent', 'benchmark']),
-    );
+    const published = loadPublishedSlugs();
+    const items = response.body.items as Array<{
+      slug: string;
+      simulator: string;
+    }>;
+    expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
+    expect(items).toHaveLength(POC_CATALOGUE_TARGET);
+    expect(items.map((item) => item.slug).sort()).toEqual([...published].sort());
+    expect(items.some((item) => item.slug.startsWith('ctst-'))).toBe(false);
+
+    const simulators = items.map((item) => item.simulator);
+    expect(simulators.filter((value) => value === 'rag')).toHaveLength(5);
+    expect(
+      simulators.filter((value) => value === 'prompt_engineering'),
+    ).toHaveLength(1);
+    expect(simulators.filter((value) => value === 'evaluation')).toHaveLength(3);
+    expect(simulators.filter((value) => value === 'guardrails')).toHaveLength(3);
+    expect(simulators.filter((value) => value === 'agent')).toHaveLength(5);
+    expect(simulators.filter((value) => value === 'benchmark')).toHaveLength(3);
 
     const serialized = JSON.stringify(response.body);
     expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);
@@ -132,6 +133,13 @@ describe('Catalogue (e2e)', () => {
       expect(body).not.toContain('HIDDEN_EVAL');
       expect(body).not.toContain('eval_hidden');
     }
+  });
+
+  it('hides unpublished filler exercises from the catalogue', async () => {
+    await request(app.getHttpServer())
+      .get('/api/exercises/rag-005-sentence-split')
+      .set('Cookie', cookies)
+      .expect(404);
   });
 
   it('returns the public brief and sample without hidden eval items', async () => {
