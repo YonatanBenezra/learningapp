@@ -291,6 +291,55 @@
   color: var(--lp-muted);
 }
 
+.lp-ex-block-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.lp-view-toggle {
+  display: inline-flex;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-view-toggle button {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 1.8rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--lp-muted);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.lp-view-toggle button svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.lp-view-toggle button:hover {
+  color: var(--lp-ink);
+}
+
+.lp-view-toggle button[aria-pressed="true"] {
+  background: var(--lp-brand-soft);
+  color: var(--lp-brand);
+}
+
+.lp-view-toggle button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--lp-brand) 55%, transparent);
+  outline-offset: 1px;
+}
+
 .lp-ex-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -382,6 +431,61 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
 .lp-ex-card .lp-cat-btn {
   width: 100%;
   margin-top: 0.35rem;
+}
+
+/* Exercises — list view */
+.lp-ex-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lp-ex-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.6rem 1.25rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.lp-ex-row:hover {
+  border-color: color-mix(in srgb, var(--lp-brand) 35%, var(--lp-border));
+  box-shadow: 0 10px 22px rgba(7, 14, 30, 0.08);
+}
+
+.lp-ex-row-main {
+  min-width: 0;
+}
+
+.lp-ex-row-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+
+.lp-ex-row-tags {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+.lp-ex-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.lp-ex-row .lp-cat-btn {
+  min-width: 5.25rem;
 }
 
 .lp-cat-empty {
@@ -503,6 +607,22 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
 @media (max-width: 1100px) {
   .lp-ex-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .lp-ex-row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .lp-ex-row-meta {
+    justify-content: flex-start;
+  }
+
+  .lp-ex-row .lp-cat-btn {
+    width: 100%;
+    margin-top: 0.15rem;
   }
 }
 

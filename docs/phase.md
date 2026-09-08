@@ -4,7 +4,7 @@ Source: [LabPath-Specification.md](Labpath%20specification/LabPath-Specification
 
 Phases 1–5 are scoped here, not fully specified. Re-spec each phase before starting it.
 
-**Now:** Phase 2 **complete** (Step 12 sign-off). Re-spec Phase 3 before verified assessments. See [phase-2-signoff.md](./phase-2-signoff.md).
+**Now:** Phase 3 **Step 1** — kickoff & decisions. Working plan: [phase-3.md](./phase-3.md). Decisions: [phase-3-decisions.md](./phase-3-decisions.md). Phase 2 closed at Step 12: [phase-2-signoff.md](./phase-2-signoff.md).
 
 | Status | Meaning |
 |---|---|
@@ -191,6 +191,8 @@ Working plan (steps, status): **[phase-2.md](./phase-2.md)**. Implement one step
 ---
 
 ## Phase 3 — Credibility (+10 weeks)
+
+Working plan (steps, status): **[phase-3.md](./phase-3.md)**. Implement one step at a time, starting at Step 1.
 
 **Exit:** verified assessments shipped; public profiles used by employers.
 

@@ -10,8 +10,11 @@ import { ApiError } from "@/lib/api-client";
 import type { Difficulty, Exercise } from "@/types/exercise";
 import { CatalogueSkeleton } from "./catalogue-skeleton";
 import { ExerciseCard } from "./exercise-card";
+import { ExerciseRow } from "./exercise-row";
 
 const PAGE_SIZE = 15;
+
+type ExerciseView = "grid" | "list";
 
 const DIFFICULTY_FILTERS: { id: Difficulty | "all"; label: string }[] = [
   { id: "all", label: "All levels" },
@@ -67,6 +70,27 @@ function SelectCaret() {
   );
 }
 
+function GridViewIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="1.75" y="1.75" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
+      <rect x="9.05" y="1.75" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
+      <rect x="1.75" y="9.05" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
+      <rect x="9.05" y="9.05" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function ListViewIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="1.75" y="2.4" width="12.5" height="2.5" rx="1.1" fill="currentColor" />
+      <rect x="1.75" y="6.75" width="12.5" height="2.5" rx="1.1" fill="currentColor" />
+      <rect x="1.75" y="11.1" width="12.5" height="2.5" rx="1.1" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function CatalogueGrid() {
   const [items, setItems] = useState<Exercise[] | null>(null);
   const [error, setError] = useState<"auth" | "load" | null>(null);
@@ -74,6 +98,7 @@ export function CatalogueGrid() {
   const [difficulty, setDifficulty] = useState<Difficulty | "all">("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const [view, setView] = useState<ExerciseView>("grid");
 
   useEffect(() => {
     let cancelled = false;
@@ -256,11 +281,33 @@ export function CatalogueGrid() {
       <section aria-label="Exercises">
         <div className="lp-ex-block-head">
           <h2>Exercises</h2>
-          <p>
-            {visible.length === 0
-              ? "0 results"
-              : `Showing ${rangeStart}–${rangeEnd} of ${visible.length}`}
-          </p>
+          <div className="lp-ex-block-tools">
+            <p>
+              {visible.length === 0
+                ? "0 results"
+                : `Showing ${rangeStart}–${rangeEnd} of ${visible.length}`}
+            </p>
+            <div className="lp-view-toggle" role="group" aria-label="Exercise view">
+              <button
+                type="button"
+                aria-pressed={view === "grid"}
+                aria-label="Grid view"
+                title="Grid view"
+                onClick={() => setView("grid")}
+              >
+                <GridViewIcon />
+              </button>
+              <button
+                type="button"
+                aria-pressed={view === "list"}
+                aria-label="List view"
+                title="List view"
+                onClick={() => setView("list")}
+              >
+                <ListViewIcon />
+              </button>
+            </div>
+          </div>
         </div>
 
         {items.length === 0 ? (
@@ -275,11 +322,19 @@ export function CatalogueGrid() {
           </div>
         ) : (
           <>
-            <div className="lp-ex-grid">
-              {pageItems.map((exercise) => (
-                <ExerciseCard key={exercise.slug} exercise={exercise} />
-              ))}
-            </div>
+            {view === "grid" ? (
+              <div className="lp-ex-grid">
+                {pageItems.map((exercise) => (
+                  <ExerciseCard key={exercise.slug} exercise={exercise} />
+                ))}
+              </div>
+            ) : (
+              <div className="lp-ex-list">
+                {pageItems.map((exercise) => (
+                  <ExerciseRow key={exercise.slug} exercise={exercise} />
+                ))}
+              </div>
+            )}
 
             {pageCount > 1 ? (
               <nav className="lp-cat-pager" aria-label="Exercise pages">
