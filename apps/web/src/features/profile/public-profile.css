@@ -244,6 +244,24 @@
   background: var(--lp-brand);
 }
 
+.lp-pp-bar > span.lp-pp-bar-raw {
+  background: color-mix(in srgb, var(--lp-brand) 24%, transparent);
+}
+
+.lp-pp-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--lp-brand);
+}
+
+.lp-pp-skill-stale {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--lp-muted);
+}
+
 .lp-pp-solves {
   display: grid;
   gap: 0.45rem;

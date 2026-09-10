@@ -11,7 +11,13 @@ export type ProgressItem = {
 export type SkillScore = {
   slug: string;
   name: string;
+  /** Decayed by recency — the value to display. */
   score: number;
+  /** Score as grading stored it, before decay. */
+  rawScore: number;
+  daysSincePractice: number | null;
+  /** True once the surface should explain the gap. */
+  stale: boolean;
 };
 
 export type Streak = {

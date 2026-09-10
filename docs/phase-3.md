@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec). O10 picking a proctor vendor makes this the tight end of that range.
 
-**Now:** Step 1 `doing`. Decisions drafted in [phase-3-decisions.md](./phase-3-decisions.md) — O5, O10, O11, O12, O13, O14 locked; owners, retake price, and the vendor (O15) still open. Step 2 is next.
+**Now:** Step 2 `done` — skill decay shipped. Step 1 stays `doing`: owners, retake price, and the vendor (O15) are still open, and Step 3 cannot start without them. O16 (band rollup) opened by Step 2.
 
 | Status | Meaning |
 |---|---|
@@ -68,7 +68,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | Step | Name | Status | Unlocks |
 |---|---|---|---|
 | 1 | Kickoff & decisions | `doing` | O5, O10–O14 locked; proctoring + signing + decay + curation frozen |
-| 2 | Skill graph maturity | `todo` | Decay + recency the report can be built on |
+| 2 | Skill graph maturity | `done` | Decay + recency the report can be built on |
 | 3 | Proctor vendor & privacy | `todo` | A vendor, a DPA, a DPIA, and a retention job |
 | 4 | Assessment engine | `todo` | Sittings: novel sample, hard time box, hints off, one attempt |
 | 5 | VA1 + go/no-go | `todo` | First real assessment produces a result |
@@ -124,7 +124,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 2 — Skill graph maturity
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** The verified report is a claim about a person's skills at a point in time. Ship decay first or every issued credential changes meaning the moment decay lands. `UserSkillScore.lastPracticedAt` already exists and is written by [grading.pipeline.ts](../apps/api/src/modules/grading/pipeline/grading.pipeline.ts) — nothing reads it yet.
 
@@ -139,11 +139,18 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Decay is a unit-tested pure function with the O13 constants in one module
-- [ ] A skill unpractised past the half-life visibly fades, and never reads as zero
-- [ ] Practising it again restores the score without a re-grade
-- [ ] Raw vs decayed is distinguishable in the API payload
-- [ ] Existing leaderboard, profile, and progress tests still pass
+- [x] Decay is a unit-tested pure function with the O13 constants in one module
+- [x] A skill unpractised past the half-life visibly fades, and never reads as zero
+- [x] Practising it again restores the score without a re-grade
+- [x] Raw vs decayed is distinguishable in the API payload
+- [x] Existing leaderboard, profile, and progress tests still pass
+
+**Shipped:** `src/modules/skills/skill-decay.ts` — 180-day half-life, 0.25 floor, read-time derivation, null and future-date safe · `skill-decay.spec.ts` (11 cases) · `toSkillScoreView` replaces the duplicated radar mapper in `profiles.service.ts` and `progress.service.ts` · payload now carries `score` (decayed), `rawScore`, `daysSincePractice`, `stale` · web `SkillScore` type + `skill-freshness.ts` · `skills-table.tsx` and `public-profile.tsx` name the reason and show the earned score as a ghost bar · no migration, no cron, no backfill · leaderboard and contest rating untouched
+
+**Deferred, with reasons:**
+
+- **Band rollup not done → O16.** All 35 skill rows are roots (`parentId` is null everywhere), and `Skill.parent` is a *single*-parent tree. `cost-engineering`, `evaluation-reading`, `contamination`, and `planning` each belong to more than one simulator, so a single-parent taxonomy cannot express them. Two candidate designs are recorded in O16; do not invent a 35-skill mapping without picking one.
+- **Difficulty weighting not done.** Spec §8 wants the radar weighted by difficulty *and* recency. Recency now works; difficulty does not, because `grading.pipeline.ts` writes `score` as `passed ? 1 : 0` — the row does not record which exercise difficulty earned it. Retrofitting needs either a write-time change plus a re-grade (**O13 forbids the re-grade**) or a different read-time source. Folded into O16.
 
 **Do not:** Change the contest rating formula; hide practice history; expose `lastPracticedAt` for users who never opted into a public profile.
 
@@ -483,6 +490,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | O13 | Skill decay curve | Step 1 | **Locked:** 180-day half-life, 0.25 floor, radar + report only, shown not hidden |
 | O14 | Catalogue position | Step 1 | **Locked:** curation is permanent — live 20 → **28**, authored 150 → **160**, authoring to 200 cancelled |
 | O15 | Proctor vendor + data residency | **Step 3** | **Open:** record-and-review, ≤ **€8**/sitting, EU processing and storage, web SDK, no biometric match. If nothing qualifies, **O10 reopens** |
+| O16 | Skill band rollup + difficulty weighting | **Step 8** (before the report ships) | **Open.** Rollup option A: populate `Skill.parentId` with six band nodes — needs a 35-skill mapping and forces one band per skill. Option B: derive the band from `ExerciseSkill → Exercise.simulator`, which needs no taxonomy and lets a skill sit under several bands. Difficulty weighting rides along: it needs a score source that records difficulty |
 | — | Retake price | Step 1 | **Open:** working position **€19** one-off; floor is vendor cost + fees + margin |
 | — | Owners: security/abuse, privacy/DPIA, hiring track | Step 1 | **Open:** name at kickoff. Privacy sign-off ≠ contract signer |
 

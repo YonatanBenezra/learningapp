@@ -163,10 +163,24 @@
   background: color-mix(in srgb, var(--lp-border) 70%, transparent);
 }
 
+.lp-pg-bar-raw {
+  height: 100%;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--lp-brand) 24%, transparent);
+}
+
 .lp-pg-bar-fill {
   height: 100%;
   border-radius: inherit;
   background: var(--lp-brand);
+}
+
+.lp-pg-stale {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--lp-muted);
 }
 
 .lp-pg-table-exercise {

@@ -1,4 +1,5 @@
 import type { SkillScore } from "@/types/progress";
+import { skillBarWidths, skillStaleNote } from "../skill-freshness";
 
 export function SkillsTable({
   skills,
@@ -24,20 +25,29 @@ export function SkillsTable({
         <tbody>
           {skills.map((skill) => {
             const blank = skill.score <= 0;
+            const note = skillStaleNote(skill);
+            const bar = skillBarWidths(skill);
             return (
               <tr key={skill.slug}>
-                <td className="lp-pg-table-skill">{skill.name}</td>
-                <td className={`lp-pg-table-score${blank ? " is-empty" : ""}`}>
+                <td className="lp-pg-table-skill">
+                  {skill.name}
+                  {note ? <span className="lp-pg-stale">{note}</span> : null}
+                </td>
+                <td
+                  className={`lp-pg-table-score${blank ? " is-empty" : ""}`}
+                  title={
+                    note
+                      ? `Earned ${skill.rawScore.toFixed(2)}, faded to ${skill.score.toFixed(2)}`
+                      : undefined
+                  }
+                >
                   {blank ? "—" : skill.score.toFixed(2)}
                 </td>
                 <td className="lp-pg-table-bar">
                   <div className="lp-pg-bar" aria-hidden="true">
-                    <div
-                      className="lp-pg-bar-fill"
-                      style={{
-                        width: `${Math.max(0, Math.min(skill.score, 1)) * 100}%`,
-                      }}
-                    />
+                    <div className="lp-pg-bar-raw" style={{ width: `${bar.raw}%` }}>
+                      <div className="lp-pg-bar-fill" style={{ width: `${bar.fill}%` }} />
+                    </div>
                   </div>
                 </td>
               </tr>

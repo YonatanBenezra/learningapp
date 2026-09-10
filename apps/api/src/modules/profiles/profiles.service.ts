@@ -19,6 +19,7 @@ import {
   publicDisplayName,
   RECENT_SOLVE_LIMIT,
 } from './profile-slug';
+import { toSkillScoreView } from '../skills/skill-decay';
 
 const PRO_REQUIRED = {
   message: 'Upgrade to Pro to publish a public profile.',
@@ -85,7 +86,9 @@ export class ProfilesService {
     ]);
 
     const solved = new Map<string, { slug: string; title: string; passedAt: Date }>();
-    const recentCutoff = new Date(Date.now() - RECENT_PASS_WINDOW_MS);
+    // One clock for every decayed row in this response.
+    const now = new Date();
+    const recentCutoff = new Date(now.getTime() - RECENT_PASS_WINDOW_MS);
     let recentPasses = 0;
     for (const row of passRows) {
       const exercise = row.run.submission.attempt.exercise;
@@ -107,11 +110,7 @@ export class ProfilesService {
       solves: solved.size,
       rating: contestRating ?? leaderboardRating(solved.size, recentPasses),
       contestRating,
-      skills: skills.map((row) => ({
-        slug: row.skill.slug,
-        name: row.skill.name,
-        score: row.score,
-      })),
+      skills: skills.map((row) => toSkillScoreView(row, now)),
       recent: [...solved.values()]
         .slice(0, RECENT_SOLVE_LIMIT)
         .map((row) => ({

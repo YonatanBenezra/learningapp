@@ -5,6 +5,7 @@ import { calendarDateKey, resolveTimeZone } from './calendar';
 import { drillPool, pickDailyDrill } from './daily-drill';
 import { HISTORY_LIMIT } from './progress.constants';
 import { computeStreak } from './streak';
+import { toSkillScoreView } from '../skills/skill-decay';
 
 @Injectable()
 export class ProgressService {
@@ -112,11 +113,7 @@ export class ProgressService {
       attempts: attemptCount,
       solves: solvedSlugs.size,
       items,
-      skills: skills.map((row) => ({
-        slug: row.skill.slug,
-        name: row.skill.name,
-        score: row.score,
-      })),
+      skills: skills.map((row) => toSkillScoreView(row, now)),
       streak: {
         current: streak.current,
         longest: streak.longest,

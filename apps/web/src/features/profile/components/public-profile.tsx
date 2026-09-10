@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { GlobalLoader } from "@/components/ui/global-loader";
 import { routes } from "@/config/routes";
 import { profileApi } from "@/features/profile/profile-api";
+import { skillBarWidths, skillStaleNote } from "@/features/progress/skill-freshness";
 import { ApiError } from "@/lib/api-client";
 import type { PublicProfile } from "@/types/profile";
 import "../public-profile.css";
@@ -164,7 +165,8 @@ export function PublicProfileView({ slug }: { slug: string }) {
               <div className="lp-pp-skills">
                 {profile.skills.map((skill) => {
                   const blank = skill.score <= 0;
-                  const width = Math.max(0, Math.min(skill.score, 1)) * 100;
+                  const note = skillStaleNote(skill);
+                  const bar = skillBarWidths(skill);
                   return (
                     <div key={skill.slug} className="lp-pp-skill">
                       <div className="lp-pp-skill-top">
@@ -176,8 +178,14 @@ export function PublicProfileView({ slug }: { slug: string }) {
                         </span>
                       </div>
                       <div className="lp-pp-bar" aria-hidden="true">
-                        <span style={{ width: `${width}%` }} />
+                        <span className="lp-pp-bar-raw" style={{ width: `${bar.raw}%` }}>
+                          <span
+                            className="lp-pp-bar-fill"
+                            style={{ width: `${bar.fill}%` }}
+                          />
+                        </span>
                       </div>
+                      {note ? <p className="lp-pp-skill-stale">{note}</p> : null}
                     </div>
                   );
                 })}
