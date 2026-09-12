@@ -11,7 +11,7 @@ import "./billing.css";
 
 export function BillingPage() {
   return (
-    <Suspense fallback={<GlobalLoader fullPage />}>
+    <Suspense fallback={<GlobalLoader contained />}>
       <BillingFields />
     </Suspense>
   );
@@ -75,7 +75,7 @@ function BillingFields() {
   }
 
   if (!user && !error) {
-    return <GlobalLoader fullPage />;
+    return <GlobalLoader contained />;
   }
 
   return (

@@ -377,3 +377,337 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Contest detail */
+
+.lp-ct-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lp-brand);
+}
+
+.lp-ctd-facts {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.lp-ctd-alert {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--lp-danger) 35%, var(--lp-border));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-danger) 8%, transparent);
+  color: var(--lp-danger);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.lp-ctd-enter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--lp-brand) 28%, var(--lp-border));
+  border-radius: 0.5rem;
+  background:
+    radial-gradient(
+      70% 90% at 0% 0%,
+      color-mix(in srgb, var(--lp-brand) 12%, transparent),
+      transparent 60%
+    ),
+    var(--lp-surface-elevated);
+}
+
+.lp-ctd-enter-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.lp-ctd-enter-copy {
+  max-width: 40rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--lp-muted);
+}
+
+.lp-ctd-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.lp-ctd-section-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lp-ctd-section-note {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--lp-muted);
+}
+
+.lp-ctd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 0.85rem;
+}
+
+.lp-ctd-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+  transition:
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.lp-ctd-card:hover {
+  border-color: color-mix(in srgb, var(--lp-brand) 38%, var(--lp-border));
+  box-shadow: 0 14px 30px rgba(7, 14, 30, 0.1);
+  transform: translateY(-2px);
+}
+
+.lp-ctd-card.is-scored {
+  border-color: color-mix(in srgb, var(--lp-brand) 26%, var(--lp-border));
+}
+
+.lp-ctd-card .lp-ct-card-copy {
+  flex: 1;
+  font-size: 0.8rem;
+}
+
+.lp-ctd-card-btn {
+  width: 100%;
+  margin-top: 0.3rem;
+}
+
+.lp-ctd-verdict {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--lp-ink) 6%, transparent);
+  color: var(--lp-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lp-ctd-verdict--pass {
+  background: color-mix(in srgb, #059669 16%, transparent);
+  color: #34d399;
+}
+
+.lp-ctd-verdict--fail {
+  background: color-mix(in srgb, #dc2626 14%, transparent);
+  color: #f87171;
+}
+
+html:not([data-theme="dark"]) .lp-ctd-verdict--pass {
+  color: #047857;
+}
+
+html:not([data-theme="dark"]) .lp-ctd-verdict--fail {
+  color: #b91c1c;
+}
+
+.lp-ctd-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-ctd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.lp-ctd-table th {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--lp-border);
+  color: var(--lp-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.lp-ctd-table td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--lp-border) 60%, transparent);
+}
+
+.lp-ctd-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.lp-ctd-table-score {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (max-width: 1100px) {
+  .lp-ctd-facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-ctd-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lp-ctd-enter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lp-ctd-enter .lp-ct-btn {
+    width: 100%;
+  }
+}
+
+.lp-ct-skel-eyebrow {
+  width: 4.25rem;
+  height: 0.62rem;
+  margin-bottom: 0.55rem;
+}
+
+.lp-ct-skel-section {
+  width: 7rem;
+  height: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.lp-ctd-skel-btn {
+  width: 100%;
+  margin-top: 0.3rem;
+}
+
+.lp-ctd-notice {
+  margin: 0 0 0.85rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-ink) 4%, transparent);
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.lp-ctd-card-closed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  margin-top: 0.3rem;
+  border: 1px dashed var(--lp-border);
+  border-radius: 0.5rem;
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Contest problem state screens */
+
+.lp-ctd-state {
+  display: grid;
+  place-items: center;
+  min-height: calc(100dvh - 8rem);
+  padding: 2rem 1.25rem;
+}
+
+.lp-ctd-state-card {
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  width: min(30rem, 100%);
+  padding: 2rem 1.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  background:
+    radial-gradient(
+      80% 70% at 50% 0%,
+      color-mix(in srgb, var(--lp-brand) 8%, transparent),
+      transparent 60%
+    ),
+    var(--lp-surface-elevated);
+  text-align: center;
+}
+
+.lp-ctd-state-icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 0.35rem;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--lp-ink) 6%, transparent);
+  color: var(--lp-muted);
+}
+
+.lp-ctd-state-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.lp-ctd-state-icon--closed {
+  background: color-mix(in srgb, var(--lp-brand) 14%, transparent);
+  color: var(--lp-brand);
+}
+
+.lp-ctd-state-icon--error {
+  background: color-mix(in srgb, var(--lp-danger) 12%, transparent);
+  color: var(--lp-danger);
+}
+
+.lp-ctd-state-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.lp-ctd-state-copy {
+  max-width: 24rem;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--lp-muted);
+}
+
+.lp-ctd-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}

@@ -1,9 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { routes } from "@/config/routes";
 import { contestsApi } from "@/features/contests/contests-api";
+import {
+  ContestState,
+  contestProblemState,
+} from "@/features/contests/components/contest-state";
 import { BriefPanel } from "@/features/workspace/components/brief-panel";
 import { RunPanel } from "@/features/workspace/components/run-panel";
 import { SubmissionSurface } from "@/features/workspace/components/submission-surface";
@@ -30,6 +33,8 @@ export function ContestWorkspaceShell({
 }: ContestWorkspaceShellProps) {
   const [exercise, setExercise] = useState<ContestExercise | null>(null);
   const [loadError, setLoadError] = useState<"auth" | "load" | null>(null);
+  const [loadMessage, setLoadMessage] = useState<string | null>(null);
+  const [loadStatus, setLoadStatus] = useState<number | null>(null);
   const [run, setRun] = useState<Run | null>(null);
   const [grade, setGrade] = useState<Grade | null>(null);
   const [pending, setPending] = useState(false);
@@ -50,9 +55,10 @@ export function ContestWorkspaceShell({
         if (cancelled) {
           return;
         }
-        setLoadError(
-          caught instanceof ApiError && caught.status === 401 ? "auth" : "load",
-        );
+        setLoadError("load");
+        // The API explains an expired or finished entry; do not bury it.
+        setLoadStatus(caught instanceof ApiError ? caught.status : null);
+        setLoadMessage(caught instanceof ApiError ? caught.message : null);
       });
     return () => {
       cancelled = true;
@@ -116,27 +122,12 @@ export function ContestWorkspaceShell({
     }
   }
 
-  if (loadError === "auth") {
+  if (loadError) {
     return (
-      <main className="lp-ws-state">
-        <p>
-          Sign in to open this contest problem.{" "}
-          <Link href={routes.login} className="lp-link">
-            Sign in
-          </Link>
-        </p>
-      </main>
-    );
-  }
-
-  if (loadError === "load") {
-    return (
-      <main className="lp-ws-state">
-        <p>Could not load this contest problem.</p>
-        <Link href={routes.contest(contestSlug)} className="lp-link">
-          Back to contest
-        </Link>
-      </main>
+      <ContestState
+        contestSlug={contestSlug}
+        {...contestProblemState(loadStatus, loadMessage)}
+      />
     );
   }
 

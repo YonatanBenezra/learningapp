@@ -2,7 +2,10 @@ import "./global-loader.css";
 
 type GlobalLoaderProps = {
   label?: string;
+  /** Fixed overlay over the whole viewport. Only for screens with no shell yet. */
   fullPage?: boolean;
+  /** Fills the content area instead, so a persistent shell stays visible. */
+  contained?: boolean;
 };
 
 const DOTS = 14;
@@ -10,10 +13,13 @@ const DOTS = 14;
 export function GlobalLoader({
   label = "Loading....",
   fullPage = false,
+  contained = false,
 }: GlobalLoaderProps) {
   return (
     <div
-      className={`lp-loader${fullPage ? " lp-loader--page" : ""}`}
+      className={`lp-loader${fullPage ? " lp-loader--page" : ""}${
+        contained ? " lp-loader--content" : ""
+      }`}
       role="status"
       aria-live="polite"
       aria-busy="true"

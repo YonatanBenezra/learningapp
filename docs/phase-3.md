@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec). O10 picking a proctor vendor makes this the tight end of that range.
 
-**Now:** Step 2 `done` — skill decay shipped. Owners named (Yonatan Benezra, all three roles). **Step 3 is unblocked** — its first task is resolving O15. Step 1 stays `doing` on two items: the retake price, and the ten-company outreach list. O16 (band rollup) opened by Step 2.
+**Now:** Step 3 `doing` — demo phase. Constructor SDK playground live: https://sdk-demo.web.proctor.constructor.app/ · Playbook: [phase-3-proctor-demo-playbook.md](./phase-3-proctor-demo-playbook.md). Jewel Mia books vendor demos + signs DPA. Step 1 stays `doing` on retake price (€19) and hiring list.
 
 | Status | Meaning |
 |---|---|
@@ -69,7 +69,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 |---|---|---|---|
 | 1 | Kickoff & decisions | `doing` | O5, O10–O14 locked; proctoring + signing + decay + curation frozen |
 | 2 | Skill graph maturity | `done` | Decay + recency the report can be built on |
-| 3 | Proctor vendor & privacy | `todo` | A vendor, a DPA, a DPIA, and a retention job |
+| 3 | Proctor vendor & privacy | `doing` | A vendor, a DPA, a DPIA, and a retention job |
 | 4 | Assessment engine | `todo` | Sittings: novel sample, hard time box, hints off, one attempt |
 | 5 | VA1 + go/no-go | `todo` | First real assessment produces a result |
 | 6 | Signed results | `todo` | A result that cannot be forged or edited |
@@ -111,7 +111,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 - [x] Skill slugs and VA1 blueprint frozen before any content exists
 - [x] `phase.md` "Now" pointer updated
 - [x] Security / abuse review owner named for Steps 3–4 — Yonatan Benezra
-- [x] Privacy / DPIA owner named — Yonatan Benezra. **Open rider:** the vendor contract must then be signed by someone else, or the DPIA is not an independent check
+- [x] Privacy / DPIA owner named — Yonatan Benezra. Vendor contract / DPA signer — **Jewel Mia**
 - [ ] Retake price confirmed
 - [x] Hiring-track owner named — Yonatan Benezra
 - [ ] First outreach list (ten target companies) written
@@ -159,13 +159,13 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 3 — Proctor vendor & privacy
 
-**Status:** `todo`
+**Status:** `doing`
 
 **Why:** O10 chose a third-party SDK, which means webcam and screen recordings of identifiable people. That is a compliance workstream before it is an integration, and it gates everything downstream. Phase 2 gave the Agent runtime the same standalone treatment for the same reason.
 
 **Do**
 
-- Contract signer must **not** be the privacy/DPIA owner (Yonatan Benezra) — settle this before signing, or the DPIA is not an independent check
+- Vendor contract / DPA signed by **Jewel Mia** — not the privacy/DPIA owner (Yonatan Benezra)
 - Resolve **O15** using the worksheet: [phase-3-proctor-vendor-shortlist.md](./phase-3-proctor-vendor-shortlist.md). Shortlist vendors against the requirement table — record-and-review, **≤ €8 per sitting**, EU processing and storage, 30-day configurable retention, web SDK, no biometric match, documented accessibility. Verify residency, retention, and price against the contract, not the marketing page
 - If nothing meets the €8 ceiling for record-and-review, **stop and reopen O10** — do not integrate and hope
 - Sign the **DPA**; record the sub-processor list
@@ -494,7 +494,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | O15 | Proctor vendor + data residency | **Step 3** | **Open:** record-and-review, ≤ **€8**/sitting, EU processing and storage, web SDK, no biometric match. Worksheet: [phase-3-proctor-vendor-shortlist.md](./phase-3-proctor-vendor-shortlist.md). If nothing qualifies, **O10 reopens** |
 | O16 | Skill band rollup + difficulty weighting | **Step 8** (before the report ships) | **Open.** Rollup option A: populate `Skill.parentId` with six band nodes — needs a 35-skill mapping and forces one band per skill. Option B: derive the band from `ExerciseSkill → Exercise.simulator`, which needs no taxonomy and lets a skill sit under several bands. Difficulty weighting rides along: it needs a score source that records difficulty |
 | — | Retake price | Step 1 | **Open:** working position **€19** one-off; floor is vendor cost + fees + margin |
-| — | Owners: security/abuse, privacy/DPIA, hiring track | Step 1 | **Open:** name at kickoff. Privacy sign-off ≠ contract signer |
+| — | Owners: security/abuse, privacy/DPIA, hiring track, contract signer | Step 1 | **Locked:** Yonatan Benezra (security, privacy/DPIA, hiring); **Jewel Mia** (vendor contract / DPA) |
 
 O2, O3, O8 stay as Phase 1 locked. O9 and the Agent / contest locks stay as Phase 2 locked. Do not reopen them here.
 

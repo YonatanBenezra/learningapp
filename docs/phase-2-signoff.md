@@ -27,6 +27,8 @@ Engineering sign-off for [phase-2.md](./phase-2.md) Step 12. Product metrics tha
 
 Contest-only `ctst-*` (4) stay **unpublished** — not in the public catalogue.
 
+> **Note (2026-09-08):** The table above reflects the Phase 2 sign-off snapshot when ingest published all 150. A later POC curation ([O14](./phase-3-decisions.md), `content/published-slugs.json`) reduced the **live** catalogue to **20** exercises. The authored library (154 on disk) still validates in CI; only the allowlisted slugs are published to learners.
+
 CI gates:
 
 - `npm run content:validate` — meta, reference + near-miss, no `HIDDEN_EVAL` in `eval_public.json`

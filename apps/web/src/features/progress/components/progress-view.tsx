@@ -121,7 +121,7 @@ export function ProgressView() {
   }
 
   if (!progress || !user) {
-    return <GlobalLoader fullPage />;
+    return <GlobalLoader contained />;
   }
 
   const drill = progress.dailyDrill;

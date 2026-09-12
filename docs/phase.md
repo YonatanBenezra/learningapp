@@ -4,7 +4,7 @@ Source: [LabPath-Specification.md](Labpath%20specification/LabPath-Specification
 
 Phases 1–5 are scoped here, not fully specified. Re-spec each phase before starting it.
 
-**Now:** Phase 3 **Step 2 `done`** (skill decay); **Step 3 next** — proctor vendor & privacy. Working plan: [phase-3.md](./phase-3.md). Decisions: [phase-3-decisions.md](./phase-3-decisions.md). Phase 2 closed at Step 12: [phase-2-signoff.md](./phase-2-signoff.md).
+**Now:** Phase 3 **Step 3 `doing`** — O15 vendor shortlist (PRUEFSTER, Talview EU, Constructor Proctor); outreach ready. Step 2 done (skill decay). Working plan: [phase-3.md](./phase-3.md). Decisions: [phase-3-decisions.md](./phase-3-decisions.md). Phase 2 closed at Step 12: [phase-2-signoff.md](./phase-2-signoff.md).
 
 | Status | Meaning |
 |---|---|

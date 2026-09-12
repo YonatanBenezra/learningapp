@@ -54,6 +54,15 @@ export function DashboardTopbar({ onMenuOpen }: DashboardTopbarProps) {
       <div className="lp-dash-topbar-actions">
         <Link href={routes.catalogue} className="lp-btn lp-btn-primary lp-dash-top-cta">
           Open catalogue
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path
+              d="M6 3.5L10.5 8 6 12.5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </Link>
       </div>
     </header>

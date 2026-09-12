@@ -155,7 +155,7 @@ export function ProfileSettings() {
   }
 
   if (!user) {
-    return <GlobalLoader fullPage />;
+    return <GlobalLoader contained />;
   }
 
   const shownName = displayName.trim() || user.displayName || "Learner";

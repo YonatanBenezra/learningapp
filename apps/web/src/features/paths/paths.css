@@ -417,3 +417,216 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Path detail */
+
+.lp-pd-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lp-brand);
+}
+
+.lp-pd-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.75rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  background:
+    radial-gradient(
+      70% 90% at 0% 0%,
+      color-mix(in srgb, var(--lp-brand) 10%, transparent),
+      transparent 60%
+    ),
+    var(--lp-surface-elevated);
+}
+
+.lp-pd-progress .lp-paths-progress {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.lp-pd-progress-cta {
+  display: grid;
+  justify-items: end;
+  gap: 0.3rem;
+}
+
+.lp-pd-progress-next {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-pd-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.lp-pd-section-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lp-pd-section-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--lp-muted);
+}
+
+.lp-pd-steps {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.lp-pd-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.6rem;
+  background: var(--lp-surface-elevated);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.lp-pd-step:hover {
+  border-color: color-mix(in srgb, var(--lp-brand) 35%, var(--lp-border));
+  box-shadow: 0 10px 22px rgba(7, 14, 30, 0.08);
+}
+
+.lp-pd-step.is-next {
+  border-color: color-mix(in srgb, var(--lp-brand) 45%, var(--lp-border));
+  background:
+    radial-gradient(
+      60% 120% at 0% 50%,
+      color-mix(in srgb, var(--lp-brand) 10%, transparent),
+      transparent 60%
+    ),
+    var(--lp-surface-elevated);
+}
+
+/* Connector, so the rows read as one route. */
+.lp-pd-step::after {
+  content: "";
+  position: absolute;
+  left: 2.3rem;
+  bottom: -0.5rem;
+  width: 1px;
+  height: 0.5rem;
+  background: var(--lp-border);
+}
+
+.lp-pd-step:last-child::after {
+  display: none;
+}
+
+.lp-pd-mark {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 50%;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-pd-mark svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.lp-pd-mark--done {
+  border-color: transparent;
+  background: var(--lp-brand);
+  color: #fff;
+}
+
+.lp-pd-mark--next {
+  border-color: var(--lp-brand);
+  color: var(--lp-brand);
+}
+
+.lp-pd-step-body {
+  min-width: 0;
+}
+
+.lp-pd-step-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lp-pd-step-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.lp-pd-step-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--lp-muted);
+}
+
+.lp-pd-step-btn {
+  min-width: 5.25rem;
+}
+
+.lp-pd-skel-eyebrow {
+  width: 4.5rem;
+  height: 0.62rem;
+  margin-bottom: 0.55rem;
+}
+
+.lp-pd-skel-panel {
+  height: 5.5rem;
+  border-radius: 0.75rem;
+}
+
+.lp-pd-skel-mark {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+}
+
+@media (max-width: 640px) {
+  .lp-pd-step {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .lp-pd-step-btn {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .lp-pd-progress-cta {
+    justify-items: start;
+  }
+}

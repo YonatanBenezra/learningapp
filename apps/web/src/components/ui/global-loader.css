@@ -15,7 +15,11 @@
   min-height: 100dvh;
   width: 100%;
   padding: 0;
-  background: var(--lp-bg, var(--background, #f7f7f5));
+  background: var(--lp-surface, var(--background, #f4f4f2));
+}
+
+.lp-loader--content {
+  min-height: min(60vh, 26rem);
 }
 
 .lp-loader-helix {

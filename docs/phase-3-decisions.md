@@ -6,7 +6,7 @@ Source: [LabPath-Specification.md](./Labpath%20specification/LabPath-Specificati
 
 O2, O3, O8 stay as Phase 1 locked. O9 and the Agent / contest locks stay as Phase 2 locked. Do not reopen them here.
 
-**Open in this record:** owners (security/abuse, hiring track), retake price, proctor vendor. Everything else below is locked.
+**Open in this record:** retake price, proctor vendor (O15). Owners and contract signer locked. Everything else below is locked.
 
 ---
 
@@ -145,7 +145,7 @@ Constants live in one module so the curve is testable and tunable in one place.
 
 ## O15 — Proctor vendor and data residency
 
-**Open. Due in Step 3, before any integration work.**
+**In progress (Step 3, started 2026-09-13).** Pre-screen complete; outreach pending.
 
 | Field | Requirement |
 |---|---|
@@ -157,6 +157,8 @@ Constants live in one module so the curve is testable and tunable in one place.
 | Integration | Web SDK; no native app, no desktop installer |
 | Accessibility | Documented behaviour with screen readers and without a webcam |
 | Exit | Recordings exportable and deletable on termination |
+
+**Shortlist (pre-screen, not yet gated):** PRUEFSTER · Talview EU · Constructor Proctor. Rejected: VigiExam (live-only), AutoProctor (US storage), ProctorU Record+ (EU residency unconfirmed).
 
 Worksheet: [phase-3-proctor-vendor-shortlist.md](./phase-3-proctor-vendor-shortlist.md). Shortlist and price the candidates against this table in Step 3 — do not take a vendor's marketing page as the answer on residency, retention, or price. If nothing meets the €8 ceiling for record-and-review, **O10 reopens** before integration, not after.
 
@@ -213,9 +215,10 @@ Named 2026-09-11.
 |---|---|
 | Security / abuse review (Step 3–4) | **Yonatan Benezra** |
 | Privacy / DPIA sign-off (Step 3) | **Yonatan Benezra** |
+| Vendor contract / DPA signer (Step 3) | **Jewel Mia** |
 | Hiring-team track (Steps 1–8, gated at 13) | **Yonatan Benezra** |
 
-**Separation of duties — still to settle.** One person holding all three is fine for a team this size, with one exception: a DPIA is an independent check, so **the vendor contract must be signed by someone other than Yonatan Benezra.** Otherwise the same person both commits us to a processor and signs off that the processing is lawful, and the DPIA stops being evidence of anything. Working position: the founder signs the contract, Yonatan signs the DPIA. Confirm before Step 3 signs anything.
+**Separation of duties — settled (2026-09-13).** Yonatan Benezra holds security, privacy/DPIA, and hiring track. **Jewel Mia** signs the vendor contract and DPA. The same person must not both commit us to a processor and sign off that the processing is lawful — otherwise the DPIA stops being evidence of anything.
 
 The hiring track's first deliverable is a list of ten target companies — **not yet written.**
 
