@@ -158,7 +158,7 @@ Constants live in one module so the curve is testable and tunable in one place.
 | Accessibility | Documented behaviour with screen readers and without a webcam |
 | Exit | Recordings exportable and deletable on termination |
 
-Shortlist and price the candidates against this table in Step 3 — do not take a vendor's marketing page as the answer on residency, retention, or price. If nothing meets the €8 ceiling for record-and-review, **O10 reopens** before integration, not after.
+Worksheet: [phase-3-proctor-vendor-shortlist.md](./phase-3-proctor-vendor-shortlist.md). Shortlist and price the candidates against this table in Step 3 — do not take a vendor's marketing page as the answer on residency, retention, or price. If nothing meets the €8 ceiling for record-and-review, **O10 reopens** before integration, not after.
 
 ---
 
@@ -207,13 +207,17 @@ tuned-model-eval
 
 ## Owners
 
+Named 2026-09-11.
+
 | Role | Owner |
 |---|---|
-| Security / abuse review (Step 3–4) | **TBD — name at kickoff** |
-| Privacy / DPIA sign-off (Step 3) | **TBD — name at kickoff.** Cannot be the same person who signs the vendor contract |
-| Hiring-team track (Steps 1–8, gated at 13) | **TBD — name at kickoff** |
+| Security / abuse review (Step 3–4) | **Yonatan Benezra** |
+| Privacy / DPIA sign-off (Step 3) | **Yonatan Benezra** |
+| Hiring-team track (Steps 1–8, gated at 13) | **Yonatan Benezra** |
 
-The hiring track's first deliverable is a list of ten target companies. Phase 3 does not pass without three of them reading a real report (Step 13).
+**Separation of duties — still to settle.** One person holding all three is fine for a team this size, with one exception: a DPIA is an independent check, so **the vendor contract must be signed by someone other than Yonatan Benezra.** Otherwise the same person both commits us to a processor and signs off that the processing is lawful, and the DPIA stops being evidence of anything. Working position: the founder signs the contract, Yonatan signs the DPIA. Confirm before Step 3 signs anything.
+
+The hiring track's first deliverable is a list of ten target companies — **not yet written.**
 
 ---
 

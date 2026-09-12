@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec). O10 picking a proctor vendor makes this the tight end of that range.
 
-**Now:** Step 2 `done` — skill decay shipped. Step 1 stays `doing`: owners, retake price, and the vendor (O15) are still open, and Step 3 cannot start without them. O16 (band rollup) opened by Step 2.
+**Now:** Step 2 `done` — skill decay shipped. Owners named (Yonatan Benezra, all three roles). **Step 3 is unblocked** — its first task is resolving O15. Step 1 stays `doing` on two items: the retake price, and the ten-company outreach list. O16 (band rollup) opened by Step 2.
 
 | Status | Meaning |
 |---|---|
@@ -110,11 +110,12 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 - [x] Written decision record for O5, O10, O11, O12, O13, O14
 - [x] Skill slugs and VA1 blueprint frozen before any content exists
 - [x] `phase.md` "Now" pointer updated
-- [ ] Security / abuse review owner named for Steps 3–4
-- [ ] Privacy / DPIA owner named — not the same person who signs the vendor contract
+- [x] Security / abuse review owner named for Steps 3–4 — Yonatan Benezra
+- [x] Privacy / DPIA owner named — Yonatan Benezra. **Open rider:** the vendor contract must then be signed by someone else, or the DPIA is not an independent check
 - [ ] Retake price confirmed
-- [ ] Hiring-track owner named and first outreach list written
-- [ ] Team agrees Step 2 is next (skill graph before the report that reads from it)
+- [x] Hiring-track owner named — Yonatan Benezra
+- [ ] First outreach list (ten target companies) written
+- [x] Team agrees Step 2 is next (skill graph before the report that reads from it)
 
 **Record:** [phase-3-decisions.md](./phase-3-decisions.md)
 
@@ -164,7 +165,8 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Do**
 
-- Resolve **O15**: shortlist vendors against the requirement table — record-and-review, **≤ €8 per sitting**, EU processing and storage, 30-day configurable retention, web SDK, no biometric match, documented accessibility. Verify residency, retention, and price against the contract, not the marketing page
+- Contract signer must **not** be the privacy/DPIA owner (Yonatan Benezra) — settle this before signing, or the DPIA is not an independent check
+- Resolve **O15** using the worksheet: [phase-3-proctor-vendor-shortlist.md](./phase-3-proctor-vendor-shortlist.md). Shortlist vendors against the requirement table — record-and-review, **≤ €8 per sitting**, EU processing and storage, 30-day configurable retention, web SDK, no biometric match, documented accessibility. Verify residency, retention, and price against the contract, not the marketing page
 - If nothing meets the €8 ceiling for record-and-review, **stop and reopen O10** — do not integrate and hope
 - Sign the **DPA**; record the sub-processor list
 - Complete the **DPIA** (GDPR Art. 35 — systematic monitoring). Privacy owner signs, and it is not the person who signed the contract
@@ -489,7 +491,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | O12 | Signing key custody + revocation | Step 1 | **Locked:** Ed25519, key in the deployment secret store, rotatable, revocation is a state |
 | O13 | Skill decay curve | Step 1 | **Locked:** 180-day half-life, 0.25 floor, radar + report only, shown not hidden |
 | O14 | Catalogue position | Step 1 | **Locked:** curation is permanent — live 20 → **28**, authored 150 → **160**, authoring to 200 cancelled |
-| O15 | Proctor vendor + data residency | **Step 3** | **Open:** record-and-review, ≤ **€8**/sitting, EU processing and storage, web SDK, no biometric match. If nothing qualifies, **O10 reopens** |
+| O15 | Proctor vendor + data residency | **Step 3** | **Open:** record-and-review, ≤ **€8**/sitting, EU processing and storage, web SDK, no biometric match. Worksheet: [phase-3-proctor-vendor-shortlist.md](./phase-3-proctor-vendor-shortlist.md). If nothing qualifies, **O10 reopens** |
 | O16 | Skill band rollup + difficulty weighting | **Step 8** (before the report ships) | **Open.** Rollup option A: populate `Skill.parentId` with six band nodes — needs a 35-skill mapping and forces one band per skill. Option B: derive the band from `ExerciseSkill → Exercise.simulator`, which needs no taxonomy and lets a skill sit under several bands. Difficulty weighting rides along: it needs a score source that records difficulty |
 | — | Retake price | Step 1 | **Open:** working position **€19** one-off; floor is vendor cost + fees + margin |
 | — | Owners: security/abuse, privacy/DPIA, hiring track | Step 1 | **Open:** name at kickoff. Privacy sign-off ≠ contract signer |
