@@ -15,6 +15,7 @@ import {
   waitForRun,
   workspaceApi,
 } from "@/features/workspace/workspace-api";
+import { WORKER_OFFLINE_MESSAGE } from "@/features/workspace/worker-offline-message";
 import { ApiError } from "@/lib/api-client";
 import type { ContestExercise } from "@/types/contest";
 import type { Exercise } from "@/types/exercise";
@@ -88,9 +89,7 @@ export function ContestWorkspaceShell({
         setRun,
         abort.signal,
         () => {
-          setSubmitError(
-            "Still queued after 30s. The grading worker may be offline — start it with npm run dev:worker or npm run dev.",
-          );
+          setSubmitError(WORKER_OFFLINE_MESSAGE);
         },
       );
       if (finished.status === "succeeded") {

@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec). O10 picking a proctor vendor makes this the tight end of that range.
 
-**Now:** Step 3 `doing` — demo phase. Constructor SDK playground live: https://sdk-demo.web.proctor.constructor.app/ · Playbook: [phase-3-proctor-demo-playbook.md](./phase-3-proctor-demo-playbook.md). Jewel Mia books vendor demos + signs DPA. Step 1 stays `doing` on retake price (€19) and hiring list.
+**Now:** Step 3 **paused** — team decided **no proctoring for now** (O10 reopened 2026-09-13). Next: agree the assessment envelope without a proctor vendor, then unblocks Step 4 (timed sitting, no hints — contest-shaped, no webcam). Step 2 done (skill decay). Step 1 still open on retake price + hiring list.
 
 | Status | Meaning |
 |---|---|
@@ -69,7 +69,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 |---|---|---|---|
 | 1 | Kickoff & decisions | `doing` | O5, O10–O14 locked; proctoring + signing + decay + curation frozen |
 | 2 | Skill graph maturity | `done` | Decay + recency the report can be built on |
-| 3 | Proctor vendor & privacy | `doing` | A vendor, a DPA, a DPIA, and a retention job |
+| 3 | Proctor vendor & privacy | `paused` | Deferred — no proctoring for now (O10 reopened) |
 | 4 | Assessment engine | `todo` | Sittings: novel sample, hard time box, hints off, one attempt |
 | 5 | VA1 + go/no-go | `todo` | First real assessment produces a result |
 | 6 | Signed results | `todo` | A result that cannot be forged or edited |
@@ -159,7 +159,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 3 — Proctor vendor & privacy
 
-**Status:** `doing`
+**Status:** `paused` — **no proctoring for now** (2026-09-13). Vendor worksheet and demo playbook kept for when this reopens.
 
 **Why:** O10 chose a third-party SDK, which means webcam and screen recordings of identifiable people. That is a compliance workstream before it is an integration, and it gates everything downstream. Phase 2 gave the Agent runtime the same standalone treatment for the same reason.
 

@@ -6,7 +6,7 @@ Source: [LabPath-Specification.md](./Labpath%20specification/LabPath-Specificati
 
 O2, O3, O8 stay as Phase 1 locked. O9 and the Agent / contest locks stay as Phase 2 locked. Do not reopen them here.
 
-**Open in this record:** retake price, proctor vendor (O15). Owners and contract signer locked. Everything else below is locked.
+**Open in this record:** retake price, **O10 replacement envelope** (what verified assessment uses instead of proctoring). Proctor vendor (O15) **deferred**. Owners and contract signer locked. Everything else below is locked.
 
 ---
 
@@ -25,7 +25,9 @@ Spec §8 and the O-table scheduled this for Phase 3.
 
 ## O10 — Proctoring envelope v1
 
-**Decision: third-party proctor SDK.** Webcam + screen recording through a vendor, not telemetry alone.
+**Reopened (2026-09-13): proctoring deferred.** Team decision: no third-party proctoring integration for now. Step 3 (vendor + DPA + DPIA) is paused. Revisit when verified assessments need employer-grade anti-cheat, or when budget/process allows.
+
+**Previous decision (on hold):** third-party proctor SDK — webcam + screen recording through a vendor, not telemetry alone.
 
 | Field | Decision |
 |---|---|

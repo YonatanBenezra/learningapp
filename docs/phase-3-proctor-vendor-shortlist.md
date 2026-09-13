@@ -6,7 +6,7 @@ Decisions this must respect: [phase-3-decisions.md](./phase-3-decisions.md) — 
 
 > **Fill every cell from the contract, the DPA, or a written quote — never from a marketing page.** Residency, retention, and price are the three fields vendors describe loosely in public and precisely in contracts. A cell you cannot evidence stays `pending`, and `pending` never counts as a pass.
 
-**Status (2026-09-13):** Pre-screen complete. Demo playbook ready: [phase-3-proctor-demo-playbook.md](./phase-3-proctor-demo-playbook.md). **Constructor SDK playground** can be tried now (no vendor call). Sales demos: book via playbook. Notes template: [phase-3-proctor-demo-notes.md](./phase-3-proctor-demo-notes.md).
+**Status (2026-09-13):** **Paused** — team is not using proctoring for now. Worksheet kept for when O10 closes again. Do not book vendor demos or sign DPAs until explicitly reopened.
 
 ---
 

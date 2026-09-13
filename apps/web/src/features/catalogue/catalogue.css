@@ -22,12 +22,33 @@
   flex: 1 1 14rem;
 }
 
+.lp-cat-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+}
+
 .lp-cat-title {
   margin: 0;
   font-size: clamp(1.75rem, 3vw, 2.35rem);
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.08;
+}
+
+.lp-cat-count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 999px;
+  background: var(--lp-surface-elevated);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+  letter-spacing: 0.01em;
 }
 
 .lp-cat-lead {

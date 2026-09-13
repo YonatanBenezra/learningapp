@@ -192,10 +192,15 @@ export function CatalogueGrid() {
     <div className="lp-cat">
       <header className="lp-cat-hero">
         <div className="lp-cat-hero-copy">
-          <h1 className="lp-cat-title">Catalogue</h1>
+          <div className="lp-cat-title-row">
+            <h1 className="lp-cat-title">Catalogue</h1>
+            <span className="lp-cat-count" aria-label={`${items.length} exercises`}>
+              {items.length} exercises
+            </span>
+          </div>
           <p className="lp-cat-lead">
-            Graded exercises across RAG, prompts, evaluation, guardrails, agents,
-            and benchmarks. Follow a path or open any set.
+            Curated POC set across RAG, prompts, evaluation, guardrails, agents,
+            and benchmarks. Follow a path or open any exercise.
           </p>
         </div>
 

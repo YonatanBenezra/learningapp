@@ -3,7 +3,7 @@
  * Starts API + grading worker + web together for local dogfood.
  * The worker is mandatory — submits stay queued without it.
  */
-const { spawn } = require("node:child_process");
+import { spawn } from "node:child_process";
 
 const children = [];
 

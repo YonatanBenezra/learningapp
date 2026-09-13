@@ -8,6 +8,7 @@ import { ApiError } from "@/lib/api-client";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { ScorecardIntervals } from "./scorecard-intervals";
+import { WorkerOfflineBanner } from "./worker-offline-banner";
 import "../run-detail.css";
 
 type RunDetailProps = {
@@ -179,9 +180,7 @@ export function RunDetail({ runId }: RunDetailProps) {
         ) : null}
         {workerMaybeOffline ? (
           <p className="lp-run-banner lp-run-banner--warn" role="status">
-            Still queued after 30s. The grading worker may be offline — start it
-            with <code>npm run dev:worker</code> or <code>npm run dev</code> from
-            the repo root.
+            <WorkerOfflineBanner />
           </p>
         ) : null}
 

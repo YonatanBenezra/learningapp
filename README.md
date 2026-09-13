@@ -8,7 +8,7 @@ Learners solve bounded, graded problems (chunking, retrieval, eval design, injec
 
 **This repo is the Phase 0 inner POC:** ten playable exercises across three simulators, a catalogue, a workspace, traces, and progress. It is not a public launch. Stripe, a code sandbox, contests, and a visual redesign are out of this phase.
 
-Product spec: [docs/Labpath specification/LabPath-Specification.md](./docs/Labpath%20specification/LabPath-Specification.md) · Phase plan: [docs/phase.md](./docs/phase.md) · Inner POC steps: [docs/phase-0.md](./docs/phase-0.md)
+Product spec: [docs/Labpath specification/LabPath-Specification.md](./docs/Labpath%20specification/LabPath-Specification.md) · Phase plan: [docs/phase.md](./docs/phase.md) · Inner POC steps: [docs/phase-0.md](./docs/phase-0.md) · **Dogfood (current):** [docs/dogfood-plan.md](./docs/dogfood-plan.md)
 
 ---
 

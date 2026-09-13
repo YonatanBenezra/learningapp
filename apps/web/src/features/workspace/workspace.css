@@ -459,6 +459,57 @@
   color: var(--lp-muted);
 }
 
+.lp-ws-onboard-win,
+.lp-ws-onboard-retry {
+  margin-top: 0.35rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.85rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-ws-onboard-win {
+  border-color: color-mix(in srgb, #15803d 30%, var(--lp-border));
+  background: color-mix(in srgb, #15803d 7%, var(--lp-surface-elevated));
+}
+
+.lp-ws-onboard-win-kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #15803d;
+}
+
+.lp-ws-onboard-win-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.lp-ws-onboard-win-copy {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+.lp-ws-onboard-win-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  margin-top: 0.85rem;
+}
+
+.lp-ws-onboard-win-actions .lp-btn {
+  min-height: 2rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8125rem;
+}
+
 html[data-theme="dark"] .lp-ws-verdict--pass {
   color: #86efac;
 }

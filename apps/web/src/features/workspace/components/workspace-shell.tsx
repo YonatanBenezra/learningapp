@@ -10,6 +10,7 @@ import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { onboardingApi } from "@/features/onboarding/onboarding-api";
 import { waitForGrade, waitForRun, workspaceApi } from "../workspace-api";
+import { WORKER_OFFLINE_MESSAGE } from "../worker-offline-message";
 import { BriefPanel } from "./brief-panel";
 import { G1Chat } from "./g1-chat";
 import { RunPanel } from "./run-panel";
@@ -21,6 +22,11 @@ type WorkspaceShellProps = {
   initialValues?: Record<string, unknown>;
   onboarding?: boolean;
   pathSlug?: string;
+  onSessionChange?: (session: {
+    run: Run | null;
+    grade: Grade | null;
+    pending: boolean;
+  }) => void;
 };
 
 export function WorkspaceShell({
@@ -28,6 +34,7 @@ export function WorkspaceShell({
   initialValues,
   onboarding = false,
   pathSlug,
+  onSessionChange,
 }: WorkspaceShellProps) {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [loadError, setLoadError] = useState<"auth" | "load" | null>(null);
@@ -66,6 +73,10 @@ export function WorkspaceShell({
     };
   }, []);
 
+  useEffect(() => {
+    onSessionChange?.({ run, grade, pending });
+  }, [run, grade, pending, onSessionChange]);
+
   async function onSubmit(payload: Record<string, unknown>) {
     abortRef.current?.abort();
     const abort = new AbortController();
@@ -83,9 +94,7 @@ export function WorkspaceShell({
         setRun,
         abort.signal,
         () => {
-          setSubmitError(
-            "Still queued after 30s. The grading worker may be offline — start it with npm run dev:worker or npm run dev.",
-          );
+          setSubmitError(WORKER_OFFLINE_MESSAGE);
         },
       );
       if (onboarding) {

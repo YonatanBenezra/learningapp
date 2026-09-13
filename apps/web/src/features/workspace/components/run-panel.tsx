@@ -81,20 +81,13 @@ export function RunPanel({
             </Link>
           </p>
         ) : null}
-        {grade ? <Scorecard grade={grade} /> : null}
-        {onboarding && grade ? (
-          <p className="lp-ws-links">
-            <Link href={routes.catalogue} className="lp-link">
-              Continue to the catalogue
-            </Link>
-          </p>
-        ) : null}
+        {grade ? <Scorecard grade={grade} onboarding={onboarding} /> : null}
       </div>
     </aside>
   );
 }
 
-function Scorecard({ grade }: { grade: Grade }) {
+function Scorecard({ grade, onboarding = false }: { grade: Grade; onboarding?: boolean }) {
   const metrics = Object.entries(grade.metrics ?? {});
   const cases = Array.isArray(grade.failingCases) ? grade.failingCases : [];
 
@@ -133,6 +126,30 @@ function Scorecard({ grade }: { grade: Grade }) {
               <FailingSample key={item.question} item={item} />
             ))}
           </ul>
+        </div>
+      ) : null}
+      {onboarding && grade.verdict === "pass" ? (
+        <div className="lp-ws-onboard-win" role="status">
+          <p className="lp-ws-onboard-win-kicker">First solve complete</p>
+          <p className="lp-ws-onboard-win-title">You read a live scorecard — nice work.</p>
+          <p className="lp-ws-onboard-win-copy">
+            Explore the curated catalogue or follow a guided path next.
+          </p>
+          <div className="lp-ws-onboard-win-actions">
+            <Link href={routes.catalogue} className="lp-btn lp-btn-primary">
+              Browse catalogue
+            </Link>
+            <Link href={routes.paths} className="lp-link">
+              Guided paths
+            </Link>
+          </div>
+        </div>
+      ) : onboarding && grade.verdict === "fail" ? (
+        <div className="lp-ws-onboard-retry" role="status">
+          <p className="lp-ws-onboard-win-copy">
+            Not a pass yet — tweak chunk size or overlap and submit again. The brief
+            on the left has hints.
+          </p>
         </div>
       ) : null}
     </div>
