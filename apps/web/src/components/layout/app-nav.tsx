@@ -6,6 +6,7 @@ const nav = [
   { href: routes.catalogue, label: "Catalogue" },
   { href: routes.leaderboard, label: "Leaderboard" },
   { href: routes.contests, label: "Contests" },
+  { href: routes.assessments, label: "Assessments" },
   { href: routes.paths, label: "Paths" },
 ];
 

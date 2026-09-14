@@ -63,7 +63,7 @@ export function ContestDetailView({ slug }: { slug: string }) {
   return <ContestView initial={contest} />;
 }
 
-function ContestDetailSkeleton() {
+export function ContestDetailSkeleton() {
   return (
     <div className="lp-ct lp-ct-skel" aria-busy="true" aria-live="polite">
       <header className="lp-ct-hero">

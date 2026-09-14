@@ -1,0 +1,42 @@
+[
+  {
+    "id": "p1",
+    "question": "How many days of paid time off do staff receive each calendar year?",
+    "answerable": true,
+    "goldAnswer": "22 days",
+    "goldDocId": "pto",
+    "goldSpan": "twenty-two (22) days of paid time off"
+  },
+  {
+    "id": "p2",
+    "question": "How is remote access traffic required to leave the network?",
+    "answerable": true,
+    "goldAnswer": "Through the company gateway; split tunneling is disabled",
+    "goldDocId": "vpn",
+    "goldSpan": "all traffic must egress through the company gateway"
+  },
+  {
+    "id": "p3",
+    "question": "How long are support tickets kept after close?",
+    "answerable": true,
+    "goldAnswer": "18 months",
+    "goldDocId": "retention",
+    "goldSpan": "kept for eighteen (18) months after close"
+  },
+  {
+    "id": "p4",
+    "question": "When does the primary on-call rotate each week?",
+    "answerable": true,
+    "goldAnswer": "Monday at 09:00 UTC",
+    "goldDocId": "oncall",
+    "goldSpan": "rotates every Monday at 09:00 UTC"
+  },
+  {
+    "id": "p5",
+    "question": "What report must vendors present before procurement?",
+    "answerable": true,
+    "goldAnswer": "SOC 2 Type II",
+    "goldDocId": "vendor",
+    "goldSpan": "SOC 2 Type II report before procurement"
+  }
+]

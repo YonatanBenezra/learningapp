@@ -5,6 +5,8 @@ import { readTraceBlob } from '../../../common/utils/trace-blob';
 import { PrismaService } from '../../../core/prisma/prisma.service';
 import { AccountService } from '../../accounts/account.service';
 import { GATED_TRACE_MESSAGE } from '../../accounts/account.quota';
+import { ASSESSMENT_TRACE_WITHHELD } from '../../assessments/assessments.constants';
+import { ContestsService } from '../../contests/contests.service';
 
 const FREE_TRACE_KEYS = [
   'simulator',
@@ -20,18 +22,35 @@ export class TracesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly accounts: AccountService,
+    private readonly contests: ContestsService,
   ) {}
 
   async getByRunId(user: AuthenticatedUser, runId: string) {
     const run = await this.prisma.run.findFirst({
       where: { id: runId, submission: { attempt: { userId: user.id } } },
-      include: { trace: true },
+      include: {
+        trace: true,
+        submission: { select: { attemptId: true } },
+      },
     });
     if (!run) {
       throw new NotFoundException('Run not found');
     }
     if (!run.trace) {
       throw new NotFoundException('Trace not ready');
+    }
+    if (
+      await this.contests.isActiveAssessmentAttempt(
+        run.submission.attemptId,
+        user.id,
+      )
+    ) {
+      return {
+        runId,
+        createdAt: run.trace.createdAt,
+        gated: true,
+        message: ASSESSMENT_TRACE_WITHHELD,
+      };
     }
     const blob = await readTraceBlob(run.trace.blobUri);
     const body =

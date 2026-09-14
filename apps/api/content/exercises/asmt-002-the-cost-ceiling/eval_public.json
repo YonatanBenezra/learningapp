@@ -1,0 +1,42 @@
+[
+  {
+    "id": "p1",
+    "question": "How many days of paid time off do staff receive each calendar year?",
+    "answerable": true,
+    "goldAnswer": "22 days",
+    "goldDocId": "pto",
+    "goldSpan": "twenty-two (22) days of paid time off"
+  },
+  {
+    "id": "p2",
+    "question": "Is alcohol reimbursable on team meals?",
+    "answerable": true,
+    "goldAnswer": "No. Alcohol is never reimbursable.",
+    "goldDocId": "expense",
+    "goldSpan": "Alcohol is never reimbursable."
+  },
+  {
+    "id": "p3",
+    "question": "When does primary on-call rotate?",
+    "answerable": true,
+    "goldAnswer": "Every Monday at 09:00 UTC",
+    "goldDocId": "oncall",
+    "goldSpan": "rotates every Monday at 09:00 UTC"
+  },
+  {
+    "id": "p4",
+    "question": "What report must production SaaS vendors present before procurement?",
+    "answerable": true,
+    "goldAnswer": "SOC 2 Type II",
+    "goldDocId": "vendor",
+    "goldSpan": "SOC 2 Type II report before procurement"
+  },
+  {
+    "id": "p5",
+    "question": "Where must production secrets never live?",
+    "answerable": true,
+    "goldAnswer": "git",
+    "goldDocId": "password",
+    "goldSpan": "Production secrets never live in git"
+  }
+]

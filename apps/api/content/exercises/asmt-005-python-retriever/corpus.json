@@ -1,0 +1,42 @@
+[
+  {
+    "id": "pto",
+    "title": "Paid time off",
+    "text": "Full-time staff receive twenty-two (22) days of paid time off each calendar year. Requests must be submitted at least fourteen (14) days before the first day of leave, except for documented emergencies. Unused days may be carried into the next year up to a maximum of five (5) days; any remainder is forfeited on 31 January."
+  },
+  {
+    "id": "vpn",
+    "title": "VPN and remote access",
+    "text": "Remote access to production networks requires the corporate VPN with hardware MFA enrolled in Okta. Split tunneling is disabled; all traffic must egress through the company gateway. Contractors use the same VPN image and must be offboarded within four hours of contract end."
+  },
+  {
+    "id": "incident",
+    "title": "Incident response",
+    "text": "Priority-1 incidents must be acknowledged within fifteen (15) minutes. Page the on-call primary and post a timeline in Slack channel #incidents. A P1 is any event that blocks customer-facing checkout or authentication. Priority-2 events have a sixty-minute acknowledge target."
+  },
+  {
+    "id": "model-usage",
+    "title": "Model usage and PII",
+    "text": "Customer personally identifiable information must not be placed in prompts sent to external model providers. Prompt and completion logs are retained for thirty (30) days and then deleted. Internal fine-tunes may use hashed identifiers only."
+  },
+  {
+    "id": "expense",
+    "title": "Expense policy",
+    "text": "Team meals are reimbursed up to forty-five euros (€45) per person excluding tax. Alcohol is never reimbursable. Expense reports must be submitted within thirty (30) days of the transaction date or they are declined automatically."
+  },
+  {
+    "id": "retention",
+    "title": "Data retention",
+    "text": "Support tickets are kept for eighteen (18) months after close. Chat transcripts are kept for ninety (90) days. Laptop disk images from offboarding are retained for three (3) years for legal hold, then destroyed."
+  },
+  {
+    "id": "oncall",
+    "title": "On-call roster",
+    "text": "Primary on-call rotates every Monday at 09:00 UTC. The previous primary becomes backup for that week. Handoff notes live in the oncall-handbook repo under /handoffs."
+  },
+  {
+    "id": "vendor",
+    "title": "Vendor security",
+    "text": "Production SaaS vendors must present a current SOC 2 Type II report before procurement. Shadow IT is prohibited; new tools are requested through the security-review form. Exceptions require a director and a time-boxed waiver no longer than ninety days."
+  }
+]

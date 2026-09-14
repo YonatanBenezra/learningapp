@@ -13,6 +13,10 @@ export const routes = {
   contest: (slug: string) => `/contests/${slug}`,
   contestProblem: (contestSlug: string, exerciseSlug: string) =>
     `/contests/${contestSlug}/problems/${exerciseSlug}`,
+  assessments: "/assessments",
+  assessment: (slug: string) => `/assessments/${slug}`,
+  assessmentProblem: (assessmentSlug: string, exerciseSlug: string) =>
+    `/assessments/${assessmentSlug}/problems/${exerciseSlug}`,
   progress: "/progress",
   billing: "/billing",
   account: "/profile",

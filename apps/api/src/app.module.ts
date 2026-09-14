@@ -15,6 +15,7 @@ import { AccountsModule } from './modules/accounts/accounts.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
+import { AssessmentsModule } from './modules/assessments/assessments.module';
 import { ContestsModule } from './modules/contests/contests.module';
 
 @Module({
@@ -36,6 +37,7 @@ import { ContestsModule } from './modules/contests/contests.module';
     ProfilesModule,
     LeaderboardModule,
     ContestsModule,
+    AssessmentsModule,
   ],
 })
 export class AppModule {}

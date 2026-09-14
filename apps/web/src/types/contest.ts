@@ -4,6 +4,8 @@ export type ContestListItem = {
   slug: string;
   title: string;
   intent: string;
+  kind?: "contest" | "assessment";
+  seasonKey?: string | null;
   startsAt: string;
   endsAt: string;
   timeBoxMinutes: number;

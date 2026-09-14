@@ -37,6 +37,8 @@ type ContestStateProps = {
   title: string;
   body: string;
   contestSlug: string;
+  backHref?: string;
+  backLabel?: string;
   action?: { href: string; label: string };
 };
 
@@ -45,6 +47,8 @@ export function ContestState({
   title,
   body,
   contestSlug,
+  backHref,
+  backLabel = "Contest",
   action,
 }: ContestStateProps) {
   return (
@@ -66,8 +70,11 @@ export function ContestState({
         <h1 className="lp-ctd-state-title">{title}</h1>
         <p className="lp-ctd-state-copy">{body}</p>
         <div className="lp-ctd-state-actions">
-          <Link href={routes.contest(contestSlug)} className="lp-ct-btn">
-            Back to contest
+          <Link
+            href={backHref ?? routes.contest(contestSlug)}
+            className="lp-ct-btn"
+          >
+            Back to {backLabel.toLowerCase()}
           </Link>
           {action ? (
             <Link href={action.href} className="lp-ct-btn lp-ct-btn--ghost">
@@ -91,12 +98,14 @@ export function ContestState({
 export function contestProblemState(
   status: number | null,
   message: string | null,
-): Omit<ContestStateProps, "contestSlug"> {
+  variant: "contest" | "assessment" = "contest",
+): Omit<ContestStateProps, "contestSlug" | "backHref" | "backLabel"> {
+  const sitting = variant === "assessment" ? "assessment" : "contest";
   if (status === 401) {
     return {
       tone: "locked",
       title: "Sign in to continue",
-      body: "Contest problems open only for the account that entered the contest.",
+      body: `${sitting} problems open only for the account that started the ${sitting}.`,
       action: { href: routes.login, label: "Sign in" },
     };
   }
@@ -104,14 +113,14 @@ export function contestProblemState(
     return {
       tone: "closed",
       title: "This attempt is closed",
-      body: "Your contest time box has ended, so the problems can no longer be opened. Your score and verdicts are on the contest page.",
+      body: `Your ${sitting} time box has ended, so the problems can no longer be opened. Your score and verdicts are on the ${sitting} page.`,
     };
   }
   if (status === 403) {
     return {
       tone: "locked",
-      title: "You have not entered this contest",
-      body: "Problems are drawn when you enter. Contests are Pro only, and hints stay off for the whole time box.",
+      title: `You have not started this ${sitting}`,
+      body: `Problems are drawn when you start. ${variant === "assessment" ? "Assessments" : "Contests"} are Pro only, and hints stay off for the whole time box.`,
       action: { href: routes.billing, label: "See plans" },
     };
   }
@@ -127,6 +136,6 @@ export function contestProblemState(
     title: "Could not load this problem",
     body:
       message ??
-      "Something went wrong on the way to the contest. Check that the API is running, then try again.",
+      `Something went wrong on the way to the ${sitting}. Check that the API is running, then try again.`,
   };
 }

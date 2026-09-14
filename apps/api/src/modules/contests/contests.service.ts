@@ -7,8 +7,14 @@ import {
 import {
   AccountTier,
   ContestEntryStatus,
+  ContestKind,
   type Contest,
 } from '@prisma/client';
+import {
+  ASSESSMENT_PRO_REQUIRED,
+  ASSESSMENT_SEASON_USED,
+} from '../assessments/assessments.constants';
+import { currentAssessmentSeasonKey } from '../assessments/assessment-season';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { randomToken } from '../../common/utils/token-hash';
 import { PrismaService } from '../../core/prisma/prisma.service';
@@ -27,6 +33,8 @@ export type ContestListItem = {
   slug: string;
   title: string;
   intent: string;
+  kind: ContestKind;
+  seasonKey: string | null;
   startsAt: string;
   endsAt: string;
   timeBoxMinutes: number;
@@ -71,10 +79,14 @@ export class ContestsService {
     private readonly accounts: AccountService,
   ) {}
 
-  async list(user: AuthenticatedUser, now = new Date()): Promise<{ items: ContestListItem[] }> {
+  async list(
+    user: AuthenticatedUser,
+    kind: ContestKind = ContestKind.contest,
+    now = new Date(),
+  ): Promise<{ items: ContestListItem[] }> {
     const [contests, entries, account] = await Promise.all([
       this.prisma.contest.findMany({
-        where: { isPublished: true },
+        where: { isPublished: true, kind },
         include: { problems: true },
         orderBy: [{ startsAt: 'desc' }],
       }),
@@ -85,9 +97,20 @@ export class ContestsService {
       this.accounts.usageFor(user.id),
     ]);
     const entered = new Set(entries.map((row) => row.contestId));
+    const seasonSittingUsed =
+      kind === ContestKind.assessment
+        ? await this.hasAssessmentSeasonEntry(user.id, now)
+        : false;
     return {
       items: contests.map((contest) =>
-        this.toListItem(contest, entered.has(contest.id), account.tier, now),
+        this.toListItem(
+          contest,
+          entered.has(contest.id),
+          account.tier,
+          now,
+          null,
+          seasonSittingUsed,
+        ),
       ),
     };
   }
@@ -96,8 +119,9 @@ export class ContestsService {
     user: AuthenticatedUser,
     slug: string,
     now = new Date(),
+    expectedKind: ContestKind = ContestKind.contest,
   ): Promise<ContestDetail> {
-    const contest = await this.loadContest(slug);
+    const contest = await this.loadContest(slug, expectedKind);
     const account = await this.accounts.usageFor(user.id);
     let entry = await this.prisma.contestEntry.findUnique({
       where: {
@@ -126,12 +150,17 @@ export class ContestsService {
       entry = await this.syncEntry(entry.id, contest, now);
     }
     const entered = Boolean(entry);
+    const seasonSittingUsed =
+      contest.kind === ContestKind.assessment
+        ? await this.hasAssessmentSeasonEntry(user.id, now)
+        : false;
     const listItem = this.toListItem(
       contest,
       entered,
       account.tier,
       now,
       entry?.status ?? null,
+      seasonSittingUsed,
     );
     const slugs =
       entry?.sampledSlugs ??
@@ -195,19 +224,35 @@ export class ContestsService {
     };
   }
 
-  async enter(user: AuthenticatedUser, slug: string, now = new Date()) {
-    const contest = await this.loadContest(slug);
+  async enter(
+    user: AuthenticatedUser,
+    slug: string,
+    now = new Date(),
+    expectedKind: ContestKind = ContestKind.contest,
+  ) {
+    const contest = await this.loadContest(slug, expectedKind);
     const account = await this.accounts.usageFor(user.id);
     if (account.tier !== AccountTier.pro) {
-      throw new ForbiddenException(PRO_REQUIRED);
+      throw new ForbiddenException(
+        contest.kind === ContestKind.assessment
+          ? ASSESSMENT_PRO_REQUIRED
+          : PRO_REQUIRED,
+      );
     }
     const window = contestWindow(contest, now);
     if (window !== 'open') {
       throw new BadRequestException(
         window === 'upcoming'
-          ? 'This contest has not opened yet.'
-          : 'This contest is closed.',
+          ? contest.kind === ContestKind.assessment
+            ? 'This assessment window has not opened yet.'
+            : 'This contest has not opened yet.'
+          : contest.kind === ContestKind.assessment
+            ? 'This assessment window is closed.'
+            : 'This contest is closed.',
       );
+    }
+    if (contest.kind === ContestKind.assessment) {
+      await this.assertAssessmentSeasonAvailable(user.id, contest, now);
     }
     const existing = await this.prisma.contestEntry.findUnique({
       where: {
@@ -215,7 +260,7 @@ export class ContestsService {
       },
     });
     if (existing) {
-      return this.getBySlug(user, slug, now);
+      return this.getBySlug(user, slug, now, expectedKind);
     }
     const pool = contest.problems
       .sort((left, right) => left.position - right.position)
@@ -230,11 +275,16 @@ export class ContestsService {
         sampledSlugs,
       },
     });
-    return this.getBySlug(user, slug, now);
+    return this.getBySlug(user, slug, now, expectedKind);
   }
 
-  async getExercise(user: AuthenticatedUser, contestSlug: string, exerciseSlug: string) {
-    const contest = await this.loadContest(contestSlug);
+  async getExercise(
+    user: AuthenticatedUser,
+    contestSlug: string,
+    exerciseSlug: string,
+    expectedKind: ContestKind = ContestKind.contest,
+  ) {
+    const contest = await this.loadContest(contestSlug, expectedKind);
     const entry = await this.requireActiveEntry(contest.id, user.id);
     if (!entry.sampledSlugs.includes(exerciseSlug)) {
       throw new NotFoundException('Contest problem not found');
@@ -257,6 +307,7 @@ export class ContestsService {
       submissionSchema: exercise.submissionSchema,
       publicSample: exercise.publicSample,
       contestSlug: contest.slug,
+      sittingKind: contest.kind,
       hintsDisabled: true,
     };
   }
@@ -266,8 +317,9 @@ export class ContestsService {
     contestSlug: string,
     exerciseSlug: string,
     now = new Date(),
+    expectedKind: ContestKind = ContestKind.contest,
   ) {
-    const contest = await this.loadContest(contestSlug);
+    const contest = await this.loadContest(contestSlug, expectedKind);
     const entry = await this.requireActiveEntry(contest.id, user.id, now);
     if (!entry.sampledSlugs.includes(exerciseSlug)) {
       throw new NotFoundException('Contest problem not found');
@@ -323,6 +375,27 @@ export class ContestsService {
     return Boolean(attempt?.contestEntryId);
   }
 
+  async isActiveAssessmentAttempt(
+    attemptId: string,
+    userId: string,
+  ): Promise<boolean> {
+    const attempt = await this.prisma.attempt.findFirst({
+      where: { id: attemptId, userId },
+      select: {
+        contestEntry: {
+          select: {
+            status: true,
+            contest: { select: { kind: true } },
+          },
+        },
+      },
+    });
+    return (
+      attempt?.contestEntry?.contest.kind === ContestKind.assessment &&
+      attempt.contestEntry.status === ContestEntryStatus.active
+    );
+  }
+
   async latestEndedContest(now = new Date()) {
     return this.prisma.contest.findFirst({
       where: { isPublished: true, endsAt: { lte: now } },
@@ -361,15 +434,62 @@ export class ContestsService {
     }));
   }
 
-  private async loadContest(slug: string): Promise<ContestWithProblems> {
+  private async loadContest(
+    slug: string,
+    expectedKind: ContestKind = ContestKind.contest,
+  ): Promise<ContestWithProblems> {
     const contest = await this.prisma.contest.findFirst({
-      where: { slug, isPublished: true },
+      where: { slug, isPublished: true, kind: expectedKind },
       include: { problems: { orderBy: { position: 'asc' } } },
     });
     if (!contest) {
-      throw new NotFoundException('Contest not found');
+      throw new NotFoundException(
+        expectedKind === ContestKind.assessment
+          ? 'Assessment not found'
+          : 'Contest not found',
+      );
     }
     return contest;
+  }
+
+  private async hasAssessmentSeasonEntry(
+    userId: string,
+    now: Date,
+  ): Promise<boolean> {
+    const seasonKey = currentAssessmentSeasonKey(now);
+    const used = await this.prisma.contestEntry.findFirst({
+      where: {
+        userId,
+        contest: {
+          kind: ContestKind.assessment,
+          seasonKey,
+        },
+      },
+      select: { id: true },
+    });
+    return Boolean(used);
+  }
+
+  private async assertAssessmentSeasonAvailable(
+    userId: string,
+    contest: Pick<Contest, 'seasonKey' | 'startsAt'>,
+    now: Date,
+  ): Promise<void> {
+    const seasonKey =
+      contest.seasonKey ?? currentAssessmentSeasonKey(contest.startsAt);
+    const used = await this.prisma.contestEntry.findFirst({
+      where: {
+        userId,
+        contest: {
+          kind: ContestKind.assessment,
+          seasonKey,
+        },
+      },
+      select: { id: true },
+    });
+    if (used) {
+      throw new BadRequestException(ASSESSMENT_SEASON_USED);
+    }
   }
 
   private async requireActiveEntry(
@@ -498,6 +618,7 @@ export class ContestsService {
     tier: AccountTier,
     now: Date,
     entryStatus: ContestEntryStatus | null = null,
+    seasonSittingUsed = false,
   ): ContestListItem {
     const window = contestWindow(contest, now);
     const canEnter =
@@ -505,11 +626,14 @@ export class ContestsService {
       window === 'open' &&
       !entered &&
       entryStatus !== ContestEntryStatus.finished &&
-      entryStatus !== ContestEntryStatus.expired;
+      entryStatus !== ContestEntryStatus.expired &&
+      !(contest.kind === ContestKind.assessment && seasonSittingUsed);
     return {
       slug: contest.slug,
       title: contest.title,
       intent: contest.intent,
+      kind: contest.kind,
+      seasonKey: contest.seasonKey,
       startsAt: contest.startsAt.toISOString(),
       endsAt: contest.endsAt.toISOString(),
       timeBoxMinutes: contest.timeBoxMinutes,
@@ -570,6 +694,6 @@ function assertTimeBoxOpen(
   now: Date,
 ): void {
   if (!isWithinTimeBox(contest, entry.startedAt, now)) {
-    throw new BadRequestException('Your contest time box has expired.');
+    throw new BadRequestException('Your sitting time box has expired.');
   }
 }

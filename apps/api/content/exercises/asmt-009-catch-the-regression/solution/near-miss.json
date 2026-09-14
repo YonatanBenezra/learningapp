@@ -1,0 +1,3 @@
+{
+  "sliceSpecYaml": "version: 1\nslices:\n  - name: all\n    where: \"true\"\nmetric: pass_rate\ntest: two_proportion_z\nalpha: 0.05\ncorrection: benjamini_hochberg\nmin_slice_n: 20\n"
+}

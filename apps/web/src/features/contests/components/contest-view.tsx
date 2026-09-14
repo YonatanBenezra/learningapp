@@ -5,12 +5,17 @@ import { useState } from "react";
 import { routes } from "@/config/routes";
 import { SIMULATOR_LABELS, type SimulatorSlug } from "@/config/simulators";
 import { ApiError } from "@/lib/api-client";
-import type { ContestDetail } from "@/types/contest";
-import { contestsApi } from "../contests-api";
+import type { ContestDetail, ContestProblem } from "@/types/contest";
+import {
+  sittingConfig,
+  type SittingVariant,
+} from "@/features/sittings/sitting-config";
+import { ViewToggle, type LayoutView } from "./view-toggle";
 import "../contests.css";
 
 type ContestViewProps = {
   initial: ContestDetail;
+  variant?: SittingVariant;
 };
 
 const DIFFICULTY_LABELS: Record<string, string> = {
@@ -48,26 +53,196 @@ function simulatorLabel(value: string): string {
   return SIMULATOR_LABELS[value as SimulatorSlug] ?? value;
 }
 
-export function ContestView({ initial }: ContestViewProps) {
+function sittingEnterTitle(
+  contest: ContestDetail,
+  labels: ReturnType<typeof sittingConfig>["labels"],
+  variant: SittingVariant,
+) {
+  if (contest.canEnter) {
+    return labels.enterTitle;
+  }
+  if (contest.window === "open") {
+    return labels.proOnlyTitle;
+  }
+  if (variant === "assessment") {
+    return "This assessment window is not open";
+  }
+  return "This contest is not open";
+}
+
+function sittingEnterCopy(
+  contest: ContestDetail,
+  labels: ReturnType<typeof sittingConfig>["labels"],
+) {
+  if (contest.canEnter) {
+    return `${contest.sampledCount || 4} problems are sampled from a hidden pool of ${contest.problemCount}. Hints stay off for the whole ${contest.timeBoxMinutes}-minute box.`;
+  }
+  if (contest.window === "open") {
+    return labels.proOnlyCopy;
+  }
+  if (contest.window === "upcoming") {
+    return `Opens ${formatDate(contest.startsAt)}.`;
+  }
+  return `Closed ${formatDate(contest.endsAt)}.`;
+}
+
+function SittingEnterAction({
+  contest,
+  pending,
+  onEnter,
+  labels,
+  className = "lp-ct-btn",
+}: {
+  contest: ContestDetail;
+  pending: boolean;
+  onEnter: () => void;
+  labels: ReturnType<typeof sittingConfig>["labels"];
+  className?: string;
+}) {
+  if (contest.canEnter) {
+    return (
+      <button
+        type="button"
+        className={className}
+        disabled={pending}
+        onClick={onEnter}
+      >
+        {pending ? labels.enterPending : labels.enterAction}
+      </button>
+    );
+  }
+  if (contest.window === "open") {
+    return (
+      <Link href={routes.billing} className={className}>
+        Upgrade to Pro
+      </Link>
+    );
+  }
+  return null;
+}
+
+function SittingEnterGrid({
+  contest,
+  labels,
+  variant,
+  pending,
+  onEnter,
+}: {
+  contest: ContestDetail;
+  labels: ReturnType<typeof sittingConfig>["labels"];
+  variant: SittingVariant;
+  pending: boolean;
+  onEnter: () => void;
+}) {
+  const sampled = contest.sampledCount || 4;
+
+  return (
+    <div className="lp-ctd-enter-grid">
+      <article className="lp-ctd-enter-card">
+        <h2 className="lp-ctd-enter-title">{sittingEnterTitle(contest, labels, variant)}</h2>
+        <p className="lp-ctd-enter-copy">{sittingEnterCopy(contest, labels)}</p>
+      </article>
+
+      <article className="lp-ctd-enter-card lp-ctd-enter-card--stat">
+        <strong>{contest.timeBoxMinutes} min</strong>
+        <span>Time box</span>
+      </article>
+
+      <article className="lp-ctd-enter-card lp-ctd-enter-card--stat">
+        <strong>{sampled}</strong>
+        <span>Sampled</span>
+        <p className="lp-ctd-enter-card-note">Pool of {contest.problemCount}</p>
+      </article>
+
+      <article className="lp-ctd-enter-card lp-ctd-enter-card--action">
+        <p className="lp-ctd-enter-card-note">
+          {contest.canEnter || contest.window === "open"
+            ? "Hints off · traces unlock when the sitting closes"
+            : sittingEnterCopy(contest, labels)}
+        </p>
+        <SittingEnterAction
+          contest={contest}
+          pending={pending}
+          onEnter={onEnter}
+          labels={labels}
+          className="lp-ct-btn lp-ctd-enter-card-btn"
+        />
+      </article>
+    </div>
+  );
+}
+
+function ProblemCard({
+  contestSlug,
+  problem,
+  entryOver,
+  problemHref,
+}: {
+  contestSlug: string;
+  problem: ContestProblem;
+  entryOver: boolean;
+  problemHref: (contestSlug: string, exerciseSlug: string) => string;
+}) {
+  return (
+    <article
+      className={`lp-ctd-card${problem.scored ? " is-scored" : ""}`}
+    >
+      <div className="lp-ct-card-top">
+        <span className="lp-ct-badge">
+          {DIFFICULTY_LABELS[problem.difficulty] ?? problem.difficulty}
+        </span>
+        {problem.scored ? (
+          <span
+            className={`lp-ctd-verdict lp-ctd-verdict--${
+              problem.verdict ?? "unknown"
+            }`}
+          >
+            {problem.verdict ?? "scored"} · {problem.score ?? 0} pts
+          </span>
+        ) : (
+          <span className="lp-ctd-verdict lp-ctd-verdict--todo">Not solved</span>
+        )}
+      </div>
+
+      <h3 className="lp-ct-card-title">{problem.title}</h3>
+      <p className="lp-ct-card-copy">{simulatorLabel(problem.simulator)}</p>
+
+      {entryOver ? (
+        <span className="lp-ctd-card-closed">
+          {problem.scored ? "Scored" : "Not attempted"}
+        </span>
+      ) : (
+        <Link
+          href={problemHref(contestSlug, problem.slug)}
+          className={`lp-ct-btn${problem.scored ? " lp-ct-btn--ghost" : ""} lp-ctd-card-btn`}
+        >
+          {problem.scored ? "Review" : "Solve"}
+        </Link>
+      )}
+    </article>
+  );
+}
+
+export function ContestView({ initial, variant = "contest" }: ContestViewProps) {
+  const { api, problemHref, labels } = sittingConfig(variant);
   const [contest, setContest] = useState(initial);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [bannerLayout, setBannerLayout] = useState<LayoutView>("list");
 
   async function onEnter() {
     setPending(true);
     setError(null);
     try {
-      const next = await contestsApi.enter(contest.slug);
+      const next = await api.enter(contest.slug);
       setContest(next);
     } catch (caught: unknown) {
       if (caught instanceof ApiError && caught.status === 403) {
-        setError("Upgrade to Pro to enter contests.");
+        setError(labels.upgradeError);
         return;
       }
       setError(
-        caught instanceof Error
-          ? caught.message
-          : "Could not enter this contest.",
+        caught instanceof Error ? caught.message : labels.enterError,
       );
     } finally {
       setPending(false);
@@ -86,7 +261,7 @@ export function ContestView({ initial }: ContestViewProps) {
     <div className="lp-ct">
       <header className="lp-ct-hero">
         <div>
-          <p className="lp-ct-eyebrow">Contest</p>
+          <p className="lp-ct-eyebrow">{labels.eyebrow}</p>
           <h1 className="lp-ct-title">{contest.title}</h1>
           <p className="lp-ct-lead">{contest.intent}</p>
         </div>
@@ -135,44 +310,45 @@ export function ContestView({ initial }: ContestViewProps) {
       {error ? <p className="lp-ctd-alert">{error}</p> : null}
 
       {!contest.entered ? (
-        <section className="lp-ctd-enter" aria-label="Enter contest">
-          <div>
-            <h2 className="lp-ctd-enter-title">
-              {contest.canEnter
-                ? "Your problems are drawn when you enter"
-                : contest.window === "open"
-                  ? "Contests are Pro only"
-                  : "This contest is not open"}
-            </h2>
-            <p className="lp-ctd-enter-copy">
-              {contest.canEnter
-                ? `${contest.sampledCount || 2} problems are sampled from a hidden pool of ${contest.problemCount}. Hints stay off for the whole ${contest.timeBoxMinutes}-minute box.`
-                : contest.window === "open"
-                  ? "Upgrade to enter ranked seasons. Practice stays free either way."
-                  : contest.window === "upcoming"
-                    ? `Opens ${formatDate(contest.startsAt)}.`
-                    : `Closed ${formatDate(contest.endsAt)}.`}
-            </p>
+        <section className="lp-ctd-enter-block" aria-label={labels.enterAction}>
+          <div className="lp-ctd-enter-toolbar">
+            <ViewToggle
+              view={bannerLayout}
+              onChange={setBannerLayout}
+              label="Sitting banner layout"
+            />
           </div>
-          {contest.canEnter ? (
-            <button
-              type="button"
-              className="lp-ct-btn"
-              disabled={pending}
-              onClick={() => void onEnter()}
-            >
-              {pending ? "Entering…" : "Enter contest"}
-            </button>
-          ) : contest.window === "open" ? (
-            <Link href={routes.billing} className="lp-ct-btn">
-              Upgrade to Pro
-            </Link>
-          ) : null}
+          {bannerLayout === "grid" ? (
+            <SittingEnterGrid
+              contest={contest}
+              labels={labels}
+              variant={variant}
+              pending={pending}
+              onEnter={() => void onEnter()}
+            />
+          ) : (
+            <div className="lp-ctd-enter">
+              <div>
+                <h2 className="lp-ctd-enter-title">
+                  {sittingEnterTitle(contest, labels, variant)}
+                </h2>
+                <p className="lp-ctd-enter-copy">
+                  {sittingEnterCopy(contest, labels)}
+                </p>
+              </div>
+              <SittingEnterAction
+                contest={contest}
+                pending={pending}
+                onEnter={() => void onEnter()}
+                labels={labels}
+              />
+            </div>
+          )}
         </section>
       ) : null}
 
       {contest.entered ? (
-        <section aria-label="Contest problems">
+        <section aria-label={labels.problemsSection}>
           <div className="lp-ctd-section-head">
             <div>
               <h2 className="lp-ctd-section-title">Problems</h2>
@@ -184,7 +360,7 @@ export function ContestView({ initial }: ContestViewProps) {
             </div>
             {nextProblem && contest.status === "active" ? (
               <Link
-                href={routes.contestProblem(contest.slug, nextProblem.slug)}
+                href={problemHref(contest.slug, nextProblem.slug)}
                 className="lp-ct-btn"
               >
                 Continue
@@ -202,57 +378,23 @@ export function ContestView({ initial }: ContestViewProps) {
 
           <div className="lp-ctd-grid">
             {contest.problems.map((problem) => (
-              <article
+              <ProblemCard
                 key={problem.slug}
-                className={`lp-ctd-card${problem.scored ? " is-scored" : ""}`}
-              >
-                <div className="lp-ct-card-top">
-                  <span className="lp-ct-badge">
-                    {DIFFICULTY_LABELS[problem.difficulty] ?? problem.difficulty}
-                  </span>
-                  {problem.scored ? (
-                    <span
-                      className={`lp-ctd-verdict lp-ctd-verdict--${
-                        problem.verdict ?? "unknown"
-                      }`}
-                    >
-                      {problem.verdict ?? "scored"} · {problem.score ?? 0} pts
-                    </span>
-                  ) : (
-                    <span className="lp-ctd-verdict lp-ctd-verdict--todo">
-                      Not solved
-                    </span>
-                  )}
-                </div>
-
-                <h3 className="lp-ct-card-title">{problem.title}</h3>
-                <p className="lp-ct-card-copy">
-                  {simulatorLabel(problem.simulator)}
-                </p>
-
-                {entryOver ? (
-                  <span className="lp-ctd-card-closed">
-                    {problem.scored ? "Scored" : "Not attempted"}
-                  </span>
-                ) : (
-                  <Link
-                    href={routes.contestProblem(contest.slug, problem.slug)}
-                    className={`lp-ct-btn${problem.scored ? " lp-ct-btn--ghost" : ""} lp-ctd-card-btn`}
-                  >
-                    {problem.scored ? "Review" : "Solve"}
-                  </Link>
-                )}
-              </article>
+                contestSlug={contest.slug}
+                problem={problem}
+                entryOver={entryOver}
+                problemHref={problemHref}
+              />
             ))}
           </div>
         </section>
       ) : null}
 
       {contest.scorecard ? (
-        <section aria-label="Contest scorecard">
+        <section aria-label={labels.scorecardSection}>
           <div className="lp-ctd-section-head">
             <div>
-              <h2 className="lp-ctd-section-title">Scorecard</h2>
+              <h2 className="lp-ctd-section-title">{labels.scorecardSection}</h2>
               <p className="lp-ctd-section-note">
                 Total {contest.scorecard.totalScore} ·{" "}
                 {formatElapsed(contest.scorecard.elapsedMs)} elapsed

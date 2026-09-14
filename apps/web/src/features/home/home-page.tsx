@@ -61,7 +61,8 @@ export function HomePage() {
               <span aria-hidden="true">‹</span>
             </p>
             <h1 className="ag-title">
-              The gym for AI <em>engineers</em>
+              <span className="ag-title-line">The gym for AI</span>
+              <span className="ag-title-accent">engineers</span>
             </h1>
             <p className="ag-lead">
               {brand.description} Hidden eval sets. A score that only moves when

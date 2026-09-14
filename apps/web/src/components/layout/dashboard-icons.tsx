@@ -78,6 +78,15 @@ export function ContestsIcon() {
   );
 }
 
+export function AssessmentsIcon() {
+  return (
+    <Svg>
+      <path d="M8 1.6 13.2 3.6V7.8c0 2.8-2 5.4-5.2 6.6-3.2-1.2-5.2-3.8-5.2-6.6V3.6L8 1.6Z" />
+      <path d="M6 8.2 7.4 9.6 10.2 6.8" />
+    </Svg>
+  );
+}
+
 export function LeaderboardIcon() {
   return (
     <Svg>

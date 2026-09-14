@@ -1,0 +1,24 @@
+{
+  "slug": "va1-q3-2026",
+  "title": "Verified Assessment v1",
+  "intent": "Novel RAG + Evaluation sitting. Four problems sampled from a hidden pool of twelve. One per Pro season. Hints off; traces unlock when the sitting closes.",
+  "seasonKey": "2026-Q3",
+  "startsAt": "2026-07-01T00:00:00.000Z",
+  "endsAt": "2026-09-30T23:59:59.000Z",
+  "timeBoxMinutes": 90,
+  "sampleSize": 4,
+  "pool": [
+    "asmt-001-chunk-it-right",
+    "asmt-002-the-cost-ceiling",
+    "asmt-003-the-citation-contract",
+    "asmt-004-rerank-or-rethink",
+    "asmt-005-python-retriever",
+    "asmt-006-sentence-split",
+    "asmt-007-write-the-assertion-suite",
+    "asmt-008-judge-the-judge",
+    "asmt-009-catch-the-regression",
+    "asmt-010-no-pii",
+    "asmt-011-ticket-format",
+    "asmt-012-length-bound"
+  ]
+}

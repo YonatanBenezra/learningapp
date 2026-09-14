@@ -9,6 +9,7 @@ import { ensureAuthSession } from "@/features/auth/auth-session";
 import { LogoutButton } from "@/features/auth/logout-button";
 import type { User } from "@/types/user";
 import {
+  AssessmentsIcon,
   BillingIcon,
   CatalogueIcon,
   ContestsIcon,
@@ -39,6 +40,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
       { href: routes.catalogue, label: "Catalogue", icon: CatalogueIcon },
       { href: routes.paths, label: "Paths", icon: PathsIcon },
       { href: routes.contests, label: "Contests", icon: ContestsIcon },
+      { href: routes.assessments, label: "Assessments", icon: AssessmentsIcon },
       { href: routes.leaderboard, label: "Leaderboard", icon: LeaderboardIcon },
     ],
   },

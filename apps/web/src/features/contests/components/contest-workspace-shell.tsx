@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { routes } from "@/config/routes";
-import { contestsApi } from "@/features/contests/contests-api";
+import {
+  sittingConfig,
+  type SittingVariant,
+} from "@/features/sittings/sitting-config";
 import {
   ContestState,
   contestProblemState,
@@ -26,12 +29,15 @@ import "@/features/workspace/workspace.css";
 type ContestWorkspaceShellProps = {
   contestSlug: string;
   exerciseSlug: string;
+  variant?: SittingVariant;
 };
 
 export function ContestWorkspaceShell({
   contestSlug,
   exerciseSlug,
+  variant = "contest",
 }: ContestWorkspaceShellProps) {
+  const { api, detailHref, labels } = sittingConfig(variant);
   const [exercise, setExercise] = useState<ContestExercise | null>(null);
   const [loadError, setLoadError] = useState<"auth" | "load" | null>(null);
   const [loadMessage, setLoadMessage] = useState<string | null>(null);
@@ -45,7 +51,7 @@ export function ContestWorkspaceShell({
 
   useEffect(() => {
     let cancelled = false;
-    contestsApi
+    api
       .getExercise(contestSlug, exerciseSlug)
       .then((result) => {
         if (!cancelled) {
@@ -64,7 +70,7 @@ export function ContestWorkspaceShell({
     return () => {
       cancelled = true;
     };
-  }, [contestSlug, exerciseSlug]);
+  }, [api, contestSlug, exerciseSlug]);
 
   useEffect(() => {
     return () => {
@@ -82,7 +88,7 @@ export function ContestWorkspaceShell({
     setGrade(null);
     setRun(null);
     try {
-      const attempt = await contestsApi.startAttempt(contestSlug, exerciseSlug);
+      const attempt = await api.startAttempt(contestSlug, exerciseSlug);
       const queued = await workspaceApi.submit(attempt.id, payload);
       const finished = await waitForRun(
         queued.runId,
@@ -125,7 +131,9 @@ export function ContestWorkspaceShell({
     return (
       <ContestState
         contestSlug={contestSlug}
-        {...contestProblemState(loadStatus, loadMessage)}
+        backHref={detailHref(contestSlug)}
+        backLabel={labels.eyebrow}
+        {...contestProblemState(loadStatus, loadMessage, variant)}
       />
     );
   }
@@ -148,8 +156,8 @@ export function ContestWorkspaceShell({
     <div className={`lp-ws${exercise ? ` lp-ws--${exercise.simulator}` : ""}`}>
       <BriefPanel
         exercise={panelExercise}
-        backHref={routes.contest(contestSlug)}
-        backLabel="Contest"
+        backHref={detailHref(contestSlug)}
+        backLabel={labels.eyebrow}
         hintsDisabled={exercise?.hintsDisabled ?? true}
       />
       <div className="lp-ws-pane lp-ws-pane--work">

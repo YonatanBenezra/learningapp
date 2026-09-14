@@ -1,0 +1,3 @@
+{
+  "suiteYaml": "version: 1\nassertions:\n  - id: no-ssn\n    check: not_matches\n    pattern: '\\d{3}-\\d{2}-\\d{4}'\n    flavor: re2\nverdict:\n  fail_if: any\n"
+}

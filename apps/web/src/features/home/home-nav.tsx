@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useId, useRef, useState } from "react";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
@@ -15,6 +16,7 @@ const publicLinks = [
   { href: routes.catalogue, label: "Catalogue" },
   { href: routes.leaderboard, label: "Leaderboard" },
   { href: routes.contests, label: "Contests" },
+  { href: routes.assessments, label: "Assessments" },
   { href: routes.paths, label: "Paths" },
 ];
 
@@ -22,16 +24,23 @@ const authHrefs = new Set<string>([
   routes.catalogue,
   routes.paths,
   routes.contests,
+  routes.assessments,
 ]);
+
+const NAV_COLLAPSE_MQ = "(max-width: 859px)";
 
 function isSignedInStatus(status: string) {
   return status === "authenticated" || status === "soft";
 }
 
 export function HomeNav() {
+  const pathname = usePathname();
   const cached = getAuthSnapshot();
+  const headerRef = useRef<HTMLElement>(null);
+  const navId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(isSignedInStatus(cached.status));
 
   useEffect(() => {
@@ -45,6 +54,44 @@ export function HomeNav() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (menuOpen) setHidden(false);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const media = window.matchMedia(NAV_COLLAPSE_MQ);
+    const onChange = () => {
+      if (!media.matches) setMenuOpen(false);
+    };
+    onChange();
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    const onPointer = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -91,18 +138,16 @@ export function HomeNav() {
   const headerClass = [
     "ag-header",
     scrolled ? "is-scrolled" : "",
-    hidden ? "is-hidden" : "",
+    hidden && !menuOpen ? "is-hidden" : "",
   ]
     .filter(Boolean)
     .join(" ");
 
-  const links = signedIn
-    ? publicLinks
-    : [...publicLinks, { href: routes.login, label: "Sign in" }];
+  const links = publicLinks;
 
   return (
-    <header className={headerClass}>
-      <div className="ag-nav">
+    <header ref={headerRef} className={headerClass}>
+      <div className={`ag-nav${menuOpen ? " is-open" : ""}`}>
         <Link href={routes.home} className="ag-logo">
           <span className="ag-mark" aria-hidden="true">
             <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
@@ -117,7 +162,7 @@ export function HomeNav() {
           </span>
           <span className="ag-logo-name">{brand.name}</span>
         </Link>
-        <nav className="ag-nav-links" aria-label="Page">
+        <nav className="ag-nav-links" id={navId} aria-label="Page">
           {links.map((item) => {
             const LinkTag = authHrefs.has(item.href) ? AuthLink : Link;
             return (
@@ -128,6 +173,18 @@ export function HomeNav() {
           })}
         </nav>
         <div className="ag-nav-cta">
+          <button
+            type="button"
+            className="ag-nav-toggle"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls={navId}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
           {signedIn ? (
             <Link href={routes.progress} className="ag-btn ag-btn-sm ag-btn-orange">
               Dashboard

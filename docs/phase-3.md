@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec). O10 picking a proctor vendor makes this the tight end of that range.
 
-**Now:** Step 3 **paused** — team decided **no proctoring for now** (O10 reopened 2026-09-13). Next: agree the assessment envelope without a proctor vendor, then unblocks Step 4 (timed sitting, no hints — contest-shaped, no webcam). Step 2 done (skill decay). Step 1 still open on retake price + hiring list.
+**Now:** Step 4 **doing** — assessment engine (contest-shaped sitting, no proctor). Step 3 **paused** (no proctoring). Step 2 done (skill decay). Step 1 still open on retake price + hiring list.
 
 | Status | Meaning |
 |---|---|
@@ -70,7 +70,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | 1 | Kickoff & decisions | `doing` | O5, O10–O14 locked; proctoring + signing + decay + curation frozen |
 | 2 | Skill graph maturity | `done` | Decay + recency the report can be built on |
 | 3 | Proctor vendor & privacy | `paused` | Deferred — no proctoring for now (O10 reopened) |
-| 4 | Assessment engine | `todo` | Sittings: novel sample, hard time box, hints off, one attempt |
+| 4 | Assessment engine | `doing` | Sittings: novel sample, hard time box, hints off, one attempt |
 | 5 | VA1 + go/no-go | `todo` | First real assessment produces a result |
 | 6 | Signed results | `todo` | A result that cannot be forged or edited |
 | 7 | Public verification | `todo` | A stranger can check a result without an account |
@@ -194,9 +194,9 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 4 — Assessment engine
 
-**Status:** `todo`
+**Status:** `doing`
 
-**Why:** Spec §8 — proctored, novel, time-boxed, no hints. Phase 2 contests already do window, pool, per-user sample, and hints-off. An assessment is that machine with a harder envelope and a single attempt, so extend it rather than inventing a parallel one.
+**Why:** Spec §8 — novel, time-boxed, no hints. Phase 2 contests already do window, pool, per-user sample, and hints-off. An assessment is that machine with a harder envelope and a single attempt, so extend it rather than inventing a parallel one. **Proctoring (Step 3) is deferred** — no consent gate or recording in this step.
 
 **Do**
 
@@ -205,18 +205,18 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 - Novel pool: `asmt-*` exercises stay `isPublished: false` — never in the public catalogue, never in the daily drill
 - Per-user sample with a recorded `sample_seed`, as contests do
 - Hints **off**; traces withheld until the sitting closes
-- Wire the Step 3 consent gate and recording session into sitting open/close
 - Abandon and timeout are explicit terminal states, not a stuck row
-- Record the per-sitting vendor cost in the existing cost ledger so the blend stays measurable (O11)
+- *(Deferred with Step 3)* consent gate, recording session, vendor cost ledger
 
 **Done when**
 
-- [ ] A sitting opens only after consent, runs under the time box, and closes on submit or timeout
-- [ ] Second sitting in the same season is refused with a clear message
-- [ ] Free user cannot open a sitting (clear upgrade message)
-- [ ] Hidden pool and canaries never appear in API, trace, or telemetry payloads
-- [ ] Recording session id is bound to the sitting and is not exposed to the learner's public surfaces
-- [ ] Sitting cost lands in the cost ledger
+- [x] `kind=assessment` on contest engine; `/api/assessments` routes
+- [x] One sitting per Pro season enforced (`assessment_season_used`)
+- [x] Pro-only enter; Free gets upgrade message
+- [x] Traces gated while sitting is `active`
+- [ ] Assessment detail + problem workspace in web (reuse contest shell)
+- [ ] `content/assessments/` ingest path ready for VA1 (Step 5)
+- [ ] *(Step 3 deferred)* recording session id bound to sitting
 
 **Do not:** Sign anything yet; build the employer view; apply assessment telemetry or recording to ordinary practice attempts.
 
@@ -224,7 +224,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 5 — VA1 + go/no-go
 
-**Status:** `todo`
+**Status:** `doing`
 
 **Why:** Same shape as R1 / P1 / A1 / B1 — one playable artefact is the gate. If VA1 cannot be sat and scored, nothing downstream is worth building.
 

@@ -112,6 +112,13 @@ enum ContestEntryStatus {
   @@schema("public")
 }
 
+enum ContestKind {
+  contest
+  assessment
+
+  @@schema("public")
+}
+
 model User {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email         String    @unique
@@ -302,6 +309,8 @@ model Contest {
   slug           String           @unique
   title          String
   intent         String
+  kind           ContestKind      @default(contest)
+  seasonKey      String?
   startsAt       DateTime
   endsAt         DateTime
   timeBoxMinutes Int
@@ -312,6 +321,7 @@ model Contest {
   problems       ContestProblem[]
   entries        ContestEntry[]
 
+  @@index([kind, seasonKey])
   @@map("contests")
   @@schema("public")
 }

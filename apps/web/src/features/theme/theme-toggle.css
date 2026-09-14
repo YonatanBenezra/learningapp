@@ -52,13 +52,21 @@ html[data-theme="dark"] .lp-theme-sun {
 @media (max-width: 720px) {
   .lp-theme-switch {
     --lp-theme-travel: 1.6rem;
-    right: 0.65rem;
+    top: max(5.15rem, calc(4.15rem + env(safe-area-inset-top)));
+    right: max(0.55rem, env(safe-area-inset-right));
+    bottom: auto;
     width: 1.75rem;
     height: 3.5rem;
+    transform: none;
   }
 
   .lp-theme-knob {
     width: 1.3rem;
     height: 1.3rem;
+  }
+
+  html:has(.ag-nav.is-open) .lp-theme-switch {
+    opacity: 0;
+    pointer-events: none;
   }
 }
