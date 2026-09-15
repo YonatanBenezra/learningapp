@@ -1,0 +1,72 @@
+{
+  "slug": "nn-001-read-the-learning-curve",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "neural_network",
+  "graderArchetype": "nn-n1",
+  "title": "Read the Learning Curve",
+  "difficulty": "E",
+  "skills": [
+    {
+      "slug": "training-dynamics",
+      "name": "Training dynamics"
+    },
+    {
+      "slug": "overfitting",
+      "name": "Overfitting"
+    }
+  ],
+  "briefMd": "# Read the Learning Curve\n\nThree **frozen** training runs on the same tabular dataset — no GPU, no live training. Each run logged train/val accuracy for 8 epochs:\n\n| Run | Config | Final train | Final val |\n|---|---|---|---|\n| **A** | 128 units · dropout 0.3 | 88% | 82% |\n| **B** | 512 units · no dropout | 99% | 68% |\n| **C** | 512 units · dropout 0.5 | 76% | 75% |\n\nRun B looks like the headline winner on train, but val **peaked at epoch 4** then fell. Pass (class A) when you name the overfitting run, call the failure mode **overfitting**, and pick a regularisation knob — not \"none needed\".\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["overfitRun", "diagnosis", "nextKnob"],
+    "properties": {
+      "overfitRun": {
+        "type": "string",
+        "enum": ["run-a", "run-b", "run-c"],
+        "default": "run-a",
+        "description": "Which run shows harmful train/val divergence?"
+      },
+      "diagnosis": {
+        "type": "string",
+        "enum": ["overfitting", "underfitting", "good_fit"],
+        "default": "good_fit",
+        "description": "Failure mode on the selected run"
+      },
+      "nextKnob": {
+        "type": "string",
+        "enum": [
+          "add_dropout",
+          "add_regularization",
+          "reduce_capacity",
+          "increase_capacity",
+          "increase_data",
+          "none_needed"
+        ],
+        "default": "none_needed",
+        "description": "What would you change next?"
+      }
+    }
+  },
+  "thresholds": {
+    "target_run": 1,
+    "diagnosis_ok": 1,
+    "knob_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "target-run", "class": "A", "metric": "target_run", "op": "eq", "value": 1 },
+    { "id": "diagnosis-ok", "class": "A", "metric": "diagnosis_ok", "op": "eq", "value": 1 },
+    { "id": "knob-ok", "class": "A", "metric": "knob_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

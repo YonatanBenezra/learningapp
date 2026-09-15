@@ -1,0 +1,50 @@
+{
+  "targetRun": "run-a",
+  "expectedDiagnosis": "overfitting",
+  "acceptedKnobs": ["add_regularization", "add_dropout"],
+  "runs": [
+    {
+      "id": "run-a",
+      "config": "256 units · no dropout",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.72, "valAcc": 0.74 },
+        { "epoch": 2, "trainAcc": 0.84, "valAcc": 0.76 },
+        { "epoch": 3, "trainAcc": 0.91, "valAcc": 0.75 },
+        { "epoch": 4, "trainAcc": 0.95, "valAcc": 0.71 },
+        { "epoch": 5, "trainAcc": 0.97, "valAcc": 0.69 },
+        { "epoch": 6, "trainAcc": 0.98, "valAcc": 0.67 }
+      ]
+    },
+    {
+      "id": "run-b",
+      "config": "256 units · dropout 0.3",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.7, "valAcc": 0.69 },
+        { "epoch": 2, "trainAcc": 0.78, "valAcc": 0.77 },
+        { "epoch": 3, "trainAcc": 0.82, "valAcc": 0.81 },
+        { "epoch": 4, "trainAcc": 0.84, "valAcc": 0.83 },
+        { "epoch": 5, "trainAcc": 0.85, "valAcc": 0.84 },
+        { "epoch": 6, "trainAcc": 0.86, "valAcc": 0.84 }
+      ]
+    },
+    {
+      "id": "run-c",
+      "config": "256 units · dropout 0.5",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.65, "valAcc": 0.64 },
+        { "epoch": 2, "trainAcc": 0.69, "valAcc": 0.68 },
+        { "epoch": 3, "trainAcc": 0.72, "valAcc": 0.71 },
+        { "epoch": 4, "trainAcc": 0.73, "valAcc": 0.72 },
+        { "epoch": 5, "trainAcc": 0.74, "valAcc": 0.73 },
+        { "epoch": 6, "trainAcc": 0.74, "valAcc": 0.73 }
+      ]
+    },
+    {
+      "id": "canary",
+      "config": "HIDDEN_EVAL_N3_CANARY_PHRASE",
+      "canary": true,
+      "epochs": [{ "epoch": 1, "trainAcc": 0, "valAcc": 0 }]
+    }
+  ],
+  "canary": { "id": "canary", "prompt": "HIDDEN_EVAL_N3_CANARY_PHRASE" }
+}

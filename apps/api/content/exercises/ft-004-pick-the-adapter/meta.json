@@ -1,0 +1,51 @@
+{
+  "slug": "ft-004-pick-the-adapter",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "fine_tuning",
+  "graderArchetype": "ft-f4",
+  "title": "Pick the Adapter",
+  "difficulty": "M",
+  "skills": [
+    { "slug": "adapter-methods", "name": "Adapter methods" },
+    { "slug": "tuning-decision", "name": "Tuning decision" }
+  ],
+  "briefMd": "# Pick the Adapter\n\nYou have **800 labelled examples** for a domain FAQ assistant. Budget is tight; full fine-tune of a 7B model would cost ~€2,400 and risks overfitting on this slice.\n\nFrozen options on the table:\n\n| Method | Typical fit |\n|---|---|\n| **Prompt only** | < 200 examples or fast iteration |\n| **LoRA** | hundreds to low thousands of examples |\n| **Full fine-tune** | large budget + thousands of examples |\n\nPass when you pick **LoRA** and justify it with **data scarcity** or **cost** — not “quality at any price”.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["adapterChoice", "rationale"],
+    "properties": {
+      "adapterChoice": {
+        "type": "string",
+        "enum": ["lora", "full_fine_tune", "prompt_only"],
+        "default": "full_fine_tune",
+        "description": "Which adaptation method fits this dataset?"
+      },
+      "rationale": {
+        "type": "string",
+        "enum": ["cost", "data_scarcity", "latency", "quality"],
+        "default": "quality",
+        "description": "Primary reason for the choice"
+      }
+    }
+  },
+  "thresholds": {
+    "adapter_ok": 1,
+    "rationale_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "adapter-ok", "class": "A", "metric": "adapter_ok", "op": "eq", "value": 1 },
+    { "id": "rationale-ok", "class": "A", "metric": "rationale_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

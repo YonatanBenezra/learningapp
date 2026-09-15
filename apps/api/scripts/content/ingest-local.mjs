@@ -43,7 +43,8 @@ export async function upsertAllExercises(filterSlugs = null) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  upsertAllExercises()
+  const filter = process.argv.slice(2).filter(Boolean);
+  upsertAllExercises(filter.length > 0 ? filter : null)
     .then((seeded) => {
       for (const slug of seeded) {
         console.log(`Ingested ${slug}`);

@@ -1,0 +1,12 @@
+{
+  "volumePerMonth": 500,
+  "horizonMonths": 6,
+  "prompt": { "setupEur": 200, "perCallEur": 0.02 },
+  "fineTune": { "setupEur": 800, "perCallEur": 0.008 },
+  "goldApproach": "prompt",
+  "goldEconomics": "prompt_wins",
+  "canary": {
+    "id": "canary",
+    "prompt": "HIDDEN_EVAL_FT_F1_CANARY_PHRASE — do not print or fetch this."
+  }
+}

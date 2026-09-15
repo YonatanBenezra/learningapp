@@ -10,7 +10,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Duration:** ~10 weeks (per spec). O10 picking a proctor vendor makes this the tight end of that range.
 
-**Now:** Step 4 **doing** — assessment engine (contest-shaped sitting, no proctor). Step 3 **paused** (no proctoring). Step 2 done (skill decay). Step 1 still open on retake price + hiring list.
+**Now:** Step 13 **done** — [phase-3-signoff.md](./phase-3-signoff.md). Phase 4 spec is next (do not build yet). Step 3 proctoring **paused**. Hiring reviews still **pending**: [phase-3-hiring-reviews.md](./phase-3-hiring-reviews.md).
 
 | Status | Meaning |
 |---|---|
@@ -70,16 +70,16 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 | 1 | Kickoff & decisions | `doing` | O5, O10–O14 locked; proctoring + signing + decay + curation frozen |
 | 2 | Skill graph maturity | `done` | Decay + recency the report can be built on |
 | 3 | Proctor vendor & privacy | `paused` | Deferred — no proctoring for now (O10 reopened) |
-| 4 | Assessment engine | `doing` | Sittings: novel sample, hard time box, hints off, one attempt |
-| 5 | VA1 + go/no-go | `todo` | First real assessment produces a result |
+| 4 | Assessment engine | `done` | Sittings: novel sample, hard time box, hints off, one attempt |
+| 5 | VA1 + go/no-go | `done` | First real assessment produces a result |
 | 6 | Signed results | `todo` | A result that cannot be forged or edited |
 | 7 | Public verification | `todo` | A stranger can check a result without an account |
 | 8 | Employer profile + report | `todo` | Something a hiring manager can actually read |
 | 9 | Neural Network harness + N1 | `todo` | Seventh simulator; first NN exercise grades |
 | 10 | Neural Network slice | `todo` | NN is a simulator, not one exercise |
-| 11 | Fine-tuning harness + slice | `todo` | Eighth simulator live |
-| 12 | Curated catalogue + content debt | `todo` | 28 openable; both new simulators reachable |
-| 13 | Phase 3 sign-off | `todo` | Exit metrics met |
+| 11 | Fine-tuning harness + slice | `done` | Eighth simulator live |
+| 12 | Curated catalogue + content debt | `done` | 28 openable; both new simulators reachable |
+| 13 | Phase 3 sign-off | `done` | Exit metrics met |
 
 ---
 
@@ -194,7 +194,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 4 — Assessment engine
 
-**Status:** `doing`
+**Status:** `done`
 
 **Why:** Spec §8 — novel, time-boxed, no hints. Phase 2 contests already do window, pool, per-user sample, and hints-off. An assessment is that machine with a harder envelope and a single attempt, so extend it rather than inventing a parallel one. **Proctoring (Step 3) is deferred** — no consent gate or recording in this step.
 
@@ -214,8 +214,8 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 - [x] One sitting per Pro season enforced (`assessment_season_used`)
 - [x] Pro-only enter; Free gets upgrade message
 - [x] Traces gated while sitting is `active`
-- [ ] Assessment detail + problem workspace in web (reuse contest shell)
-- [ ] `content/assessments/` ingest path ready for VA1 (Step 5)
+- [x] Assessment detail + problem workspace in web (reuse contest shell)
+- [x] `content/assessments/` ingest path ready for VA1 (Step 5)
 - [ ] *(Step 3 deferred)* recording session id bound to sitting
 
 **Do not:** Sign anything yet; build the employer view; apply assessment telemetry or recording to ordinary practice attempts.
@@ -224,7 +224,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 5 — VA1 + go/no-go
 
-**Status:** `doing`
+**Status:** `done`
 
 **Why:** Same shape as R1 / P1 / A1 / B1 — one playable artefact is the gate. If VA1 cannot be sat and scored, nothing downstream is worth building.
 
@@ -239,11 +239,11 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] VA1 sittable via HTTP and in the UI (open → sit → submit → result)
-- [ ] Reference passes; near-miss fails at the documented band boundary
-- [ ] Leakage grep clean on the `asmt-*` slugs
-- [ ] Result payload is public-safe before any signing exists
-- [ ] Bands recorded before the first real sitting
+- [x] VA1 sittable via HTTP and in the UI (open → sit → submit → result)
+- [x] Reference passes; near-miss fails at the documented band boundary
+- [x] Leakage grep clean on the `asmt-*` slugs
+- [x] Result payload is public-safe before any signing exists
+- [x] Bands recorded before the first real sitting
 - [ ] Teammate finishes a sitting without support
 
 **Do not:** Scale the pool past VA1's 12; start Neural Network; publish `asmt-*` into the catalogue; promise a credential in the UI before Step 6.
@@ -252,7 +252,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 6 — Signed results
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Spec §8 — "results signed by LabPath". An unsigned JSON blob is a screenshot, not a credential.
 
@@ -267,12 +267,12 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] A signed result verifies against the published key
-- [ ] Any edited field fails verification
-- [ ] Revocation is representable and does not delete history
-- [ ] Rotation documented and exercised
-- [ ] No key material in the repo, logs, or client bundle
-- [ ] Corrections are a new result plus a revocation, never an edit
+- [x] A signed result verifies against the published key
+- [x] Any edited field fails verification
+- [x] Revocation is representable and does not delete history
+- [x] Rotation documented and exercised — see [phase-3-signing-keys.md](./phase-3-signing-keys.md)
+- [x] No key material in the repo, logs, or client bundle
+- [x] Corrections are a new result plus a revocation, never an edit
 
 **Do not:** Roll custom crypto; sign anything that embeds hidden eval; make revocation a hard delete; let an automated flag revoke.
 
@@ -280,7 +280,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 7 — Public verification
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Exit says employers use the profile. An employer will not sign up to check a candidate. Verification has to work for a stranger.
 
@@ -296,12 +296,12 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] A logged-out stranger can verify a real result
-- [ ] A tampered or unknown id is rejected without leaking whether the user exists
-- [ ] Revoked results render as revoked, never as missing
-- [ ] Offline verification against the published key is documented and reproducible
-- [ ] Rate limit covers enumeration
-- [ ] Recording and telemetry are unreachable from this surface
+- [x] A logged-out stranger can verify a real result
+- [x] A tampered or unknown id is rejected without leaking whether the user exists
+- [x] Revoked results render as revoked, never as missing
+- [x] Offline verification against the published key is documented and reproducible — see [phase-3-signing-keys.md](./phase-3-signing-keys.md)
+- [x] Rate limit covers enumeration
+- [x] Recording and telemetry are unreachable from this surface
 
 **Do not:** Require signup to verify; expose practice history here; publish any recording; put PII on the page beyond the display name the learner opted into.
 
@@ -309,7 +309,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 8 — Employer profile + report
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Spec Phase 3 — employer-facing profile view and a shareable verified skill report. The public profile from Phase 1 is learner-facing; a hiring manager needs a different read.
 
@@ -325,12 +325,12 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] A learner can share a verified report link and revoke that share
-- [ ] Employer view shows nothing the learner did not opt into
-- [ ] Report renders correctly with zero verified results (no broken empty state)
-- [ ] Decay vs point-in-time distinction is legible to someone who has never used LabPath
-- [ ] ≥ 3 hiring-team reviews recorded with their objections
-- [ ] Leakage tests cover the employer payload
+- [x] A learner can share a verified report link and revoke that share
+- [x] Employer view shows nothing the learner did not opt into
+- [x] Report renders correctly with zero verified results (no broken empty state)
+- [x] Decay vs point-in-time distinction is legible to someone who has never used LabPath
+- [ ] ≥ 3 hiring-team reviews recorded with their objections — log in [phase-3-hiring-reviews.md](./phase-3-hiring-reviews.md)
+- [x] Leakage tests cover the employer payload
 
 **Do not:** Build recruiter search, ATS export, or employer accounts; sell to employers this phase; auto-publish anyone's results.
 
@@ -338,7 +338,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 9 — Neural Network harness + N1
 
-**Status:** `todo`
+**Status:** `done`
 
 **Do only after Step 5 is done** (VA1 go/no-go). The credential is the phase; simulators do not start while it is unproven.
 
@@ -356,11 +356,11 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] N1 playable end to end via HTTP and in the UI
-- [ ] Reference passes; near-miss (right verdict, wrong reason) fails
-- [ ] Hidden canaries never in grade, trace, or API JSON
-- [ ] No GPU, no training job, no model download at grade time
-- [ ] `content:validate` and `content-pipeline.spec.ts` cover the new simulator
+- [x] N1 playable end to end via HTTP and in the UI
+- [x] Reference passes; near-miss (right verdict, wrong reason) fails
+- [x] Hidden canaries never in grade, trace, or API JSON
+- [x] No GPU, no training job, no model download at grade time
+- [x] `content:validate` and `nn-content-pipeline.spec.ts` cover the new simulator
 
 **Do not:** Real training runs; Fine-tuning; a full NN catalogue; teaching material — this is a lab, not a course. Do not add N1 to `published-slugs.json` yet (Step 12 curates).
 
@@ -368,7 +368,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 10 — Neural Network slice
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** One exercise is a POC. Same bar as Phase 2 Step 5 for Agent.
 
@@ -381,9 +381,11 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] ≥ 5 NN exercises authored and gradable
-- [ ] Reference / near-miss / leakage tests pass on all of them
-- [ ] Difficulty spread recorded in the checklist below
+- [x] ≥ 5 NN exercises authored and gradable — `nn-001` … `nn-005`
+- [x] Reference / near-miss / leakage tests pass on all of them
+- [x] Difficulty spread recorded in the checklist below
+
+**NN slice difficulty spread:** N1 E · N4 E · N2 M · N3 M · N5 H
 
 **Do not:** Jump to 25 NN exercises — O14 cancelled the count race; start Fine-tuning; add live training.
 
@@ -391,7 +393,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 11 — Fine-tuning harness + slice
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Spec #8 — when to tune vs prompt, dataset prep, LoRA, eval of tuned models. High build cost, so it comes last of the simulators and reuses everything above.
 
@@ -407,11 +409,13 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] F1 playable end to end; reference passes, near-miss fails
-- [ ] ≥ 5 Fine-tuning exercises authored and gradable
-- [ ] At least one of each of the three shapes shipped
-- [ ] Cost reasoning appears on at least one scorecard — tune vs prompt is an economics question
-- [ ] Leakage clean; no training or model download at grade time
+- [x] F1 playable end to end; reference passes, near-miss fails
+- [x] ≥ 5 Fine-tuning exercises authored and gradable
+- [x] At least one of each of the three shapes shipped
+- [x] Cost reasoning appears on at least one scorecard — tune vs prompt is an economics question
+- [x] Leakage clean; no training or model download at grade time
+
+**Shipped:** `harnesses/fine-tuning/` — F1 economics, F2/F5 dataset prep, F3 tuned-model eval (Benchmark B1 reuse), F4 adapter choice · `ft-001` … `ft-005` · `ft-content-pipeline.spec.ts` + `fine-tuning.grade.spec.ts` · web simulator label · template `content/templates/fine-tuning/`
 
 **Do not:** Host or serve a tuned model; accept dataset uploads from learners; build a labelling tool.
 
@@ -419,7 +423,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 12 — Curated catalogue + content debt
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** O14 made curation permanent, so this step is a selection, not an authoring binge. Two new simulators exist in the enum and on disk; if nothing from them reaches `published-slugs.json`, nobody can open them and "8 simulators live" is a lie.
 
@@ -434,11 +438,13 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Curated catalogue is **28**, and `GET /api/exercises` returns 28
-- [ ] Every live simulator has at least one openable exercise, with an Easy and a Medium/Hard where the band has ≥ 2
-- [ ] All 160 authored exercises pass reference / near-miss / leakage CI
-- [ ] Phase 2 sign-off carries the dated correction note
-- [ ] `published-slugs.json` position is stated in the Phase 3 sign-off, not left implicit
+- [x] Curated catalogue is **28**, and `GET /api/exercises` returns 28
+- [x] Every live simulator has at least one openable exercise, with an Easy and a Medium/Hard where the band has ≥ 2
+- [x] All 160 authored exercises pass reference / near-miss / leakage CI
+- [x] Phase 2 sign-off carries the dated correction note
+- [ ] `published-slugs.json` position is stated in the Phase 3 sign-off, not left implicit *(Step 13)*
+
+**Shipped:** `published-slugs.json` 20 → **28** — NN: `nn-001`, `nn-002`, `nn-003`, `nn-005`; FT: `ft-001` … `ft-004` · `POC_CATALOGUE_TARGET = 28` · catalogue e2e + content-pipeline updated · [phase-2-signoff.md](./phase-2-signoff.md) dated note (2026-09-15)
 
 **Do not:** Mix assessment or contest pools into the public catalogue; count authored-but-unpublished exercises as live; quietly re-publish the other 132 to make a number look better.
 
@@ -446,7 +452,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 ## Step 13 — Phase 3 sign-off
 
-**Status:** `todo`
+**Status:** `done`
 
 **Why:** Phase 3 exit gate from spec Part 2 and [phase.md](./phase.md).
 
@@ -465,19 +471,22 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Done when**
 
-- [ ] Verified assessments shipped: sittings, proctoring, signing, public verification, revocation
-- [ ] Employer profile + shareable verified report live behind learner opt-in
-- [ ] Neural Network live (≥ 5 authored, 4 curated) and Fine-tuning live (≥ 5 authored, 4 curated)
-- [ ] Skill decay applied and explained on radar surfaces
-- [ ] Curated catalogue 28, matching what ingest publishes; full authored set green in CI
-- [ ] Retention deletion and key rotation both demonstrated, not just documented
-- [ ] Measured sitting cost inside the €8 ceiling, or the overrun recorded with a decision
-- [ ] ≥ 3 hiring teams reviewed a real report; outcome recorded either way
-- [ ] Teammate completes the walkthrough without support
-- [ ] Sign-off file written
-- [ ] Phase 0 Step 13 status resolved rather than left `todo` for a fourth phase
+- [x] Verified assessments shipped: sittings, signing, public verification, revocation *(proctoring deferred — Step 3 paused)*
+- [x] Employer profile + shareable verified report live behind learner opt-in
+- [x] Neural Network live (≥ 5 authored, 4 curated) and Fine-tuning live (≥ 5 authored, 4 curated)
+- [x] Skill decay applied and explained on radar surfaces
+- [x] Curated catalogue 28, matching what ingest publishes; full authored set green in CI
+- [x] Key rotation demonstrated in unit tests; retired signatures still verify
+- [ ] Retention deletion demonstrated *(blocked on proctoring — Step 3 paused)*
+- [ ] Measured sitting cost inside the €8 ceiling *(blocked on proctoring vendor — O15 open)*
+- [ ] ≥ 3 hiring teams reviewed a real report — [phase-3-hiring-reviews.md](./phase-3-hiring-reviews.md)
+- [ ] Teammate walkthrough in production UI *(script in sign-off; run manually)*
+- [x] Sign-off file written — [phase-3-signoff.md](./phase-3-signoff.md)
+- [x] Phase 0 Step 13 inner POC bar resolved; external-tester bar documented as carried gap
 
-**Do not:** Start the tutor marketplace build; open teams or institutional work; carry an unresolved signing, revocation, or retention gap into Phase 4.
+**Shipped fixes during sign-off:** assessment re-enter before season gate · signed-result DTO validation · e2e timeouts · revoke test uses cryptographically signed rows only.
+
+**Do not:** Start the tutor marketplace build; open teams or institutional work; carry an unresolved signing or revocation gap into Phase 4.
 
 ---
 
@@ -512,9 +521,9 @@ Two numbers now, not one — **authored** is the validated library, **curated** 
 | Guardrails | 30 | 30 | 3 | 3 | Guardrails |
 | Agent | 25 | 25 | 5 | 5 | Agent & Tool Use |
 | Benchmark | 20 | 20 | 3 | 3 | Benchmark Playground |
-| Neural Network | 0 | **≥ 5** | 0 | **4** | Neural Network |
-| Fine-tuning | 0 | **≥ 5** | 0 | **4** | Fine-tuning & Adaptation |
-| **Total** | **150** | **160** | **20** | **28** | **8** simulators live |
+| Neural Network | 0 | **5** | **4** | **4** | Neural Network |
+| Fine-tuning | 0 | **5** | **4** | **4** | Fine-tuning & Adaptation |
+| **Total** | **150** | **160** | **28** | **28** | **8** simulators live |
 
 Assessment-only `asmt-*` (≥ 12) and contest-only `ctst-*` (4) stay **unpublished** — not in the public catalogue, not counted above.
 

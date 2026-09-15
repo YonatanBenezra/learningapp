@@ -7,6 +7,7 @@ import { routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
 import { ApiError } from "@/lib/api-client";
 import type { User } from "@/types/user";
+import { VerifiedResultsShare } from "./verified-results-share";
 import "../account-profile.css";
 
 function initials(name: string, email: string) {
@@ -274,7 +275,8 @@ export function ProfileSettings() {
               <span>
                 <strong>Publish this profile</strong>
                 <span>
-                  Show verified solves and skill scores on your public page.
+                  Show your employer view, decayed radar, and opted-in verified
+                  results.
                 </span>
               </span>
             </label>
@@ -308,6 +310,11 @@ export function ProfileSettings() {
             </div>
           </form>
         </section>
+
+        <VerifiedResultsShare
+          profileSlug={profile?.slug ?? (slug.trim() || null)}
+          profilePublished={published}
+        />
       </div>
     </div>
   );

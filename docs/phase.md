@@ -4,7 +4,7 @@ Source: [LabPath-Specification.md](Labpath%20specification/LabPath-Specification
 
 Phases 1–5 are scoped here, not fully specified. Re-spec each phase before starting it.
 
-**Now:** Phase 3 — Step 5 **doing** (VA1 pool + sittable UI). Step 4 assessment engine shipped. Step 3 proctoring paused. Working plan: [phase-3.md](./phase-3.md). Decisions: [phase-3-decisions.md](./phase-3-decisions.md).
+**Now:** Phase 3 **done** — [phase-3-signoff.md](./phase-3-signoff.md). **Next:** write Phase 4 tutor-marketplace spec (spec §9) before any build. Proctoring paused; hiring reviews pending. Decisions: [phase-3-decisions.md](./phase-3-decisions.md).
 
 | Status | Meaning |
 |---|---|
@@ -23,7 +23,7 @@ Phases 1–5 are scoped here, not fully specified. Re-spec each phase before sta
 | **0** | POC — 10 exercises, 3 simulators | 6–8 weeks | All ten criteria in §0.8. Short: stable verdicts, calibrated judges, injection-resistant graders, ≥15 of 20 external testers complete ≥5 exercises and ≥70% rate feedback helpful |
 | 1 | Public beta | +10 weeks | 50 exercises, code sandbox, accounts, payments, 1,000 signups |
 | 2 | Depth & competition | +12 weeks | Agent + Benchmark simulators live; contests running; 150 exercises |
-| 3 | Credibility | +10 weeks | Verified assessments shipped; public profiles used by employers |
+| 3 | Credibility | +10 weeks | **Done** — signed VA1, verification, employer report, NN + FT; proctoring deferred |
 | 4 | Tutor marketplace | +12 weeks | 50 vetted tutors; first 500 paid sessions |
 | 5 | Teams, institutions, Bina | +12 weeks | First team and first institutional contract |
 
@@ -192,9 +192,9 @@ Working plan (steps, status): **[phase-2.md](./phase-2.md)**. Implement one step
 
 ## Phase 3 — Credibility (+10 weeks)
 
-Working plan (steps, status): **[phase-3.md](./phase-3.md)**. Implement one step at a time, starting at Step 1.
+**Status:** Done — [phase-3-signoff.md](./phase-3-signoff.md) (2026-09-15). Working plan: [phase-3.md](./phase-3.md).
 
-**Exit:** verified assessments shipped; public profiles used by employers.
+**Exit:** verified assessments shipped; public profiles used by employers. *(Proctoring and hiring-loop adoption deferred — see sign-off.)*
 
 - Verified assessments: proctored, novel, time-boxed, no hints, LabPath-signed result
 - Employer-facing profile + shareable verified skill report

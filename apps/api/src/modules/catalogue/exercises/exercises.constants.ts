@@ -112,8 +112,8 @@ export function isSandboxRagSlug(slug: string): boolean {
 
 export const PHASE_1_CATALOGUE_TARGET = 50;
 export const PHASE_2_CATALOGUE_TARGET = 150;
-/** Live POC catalogue size — see `content/published-slugs.json`. */
-export const POC_CATALOGUE_TARGET = 20;
+/** Live curated catalogue size — see `content/published-slugs.json`. */
+export const POC_CATALOGUE_TARGET = 28;
 
 export const HIDDEN_EVAL_CANARY = 'HIDDEN_EVAL_R1_CANARY_PHRASE';
 
@@ -719,4 +719,174 @@ export const B3_NEAR_MISS_PAYLOAD = {
   deltaCause: 'better_model',
 } as const;
 
+export const N1_SLUG = 'nn-001-read-the-learning-curve';
+export const N2_SLUG = 'nn-002-size-the-model';
+export const N3_SLUG = 'nn-003-regularise-or-rethink';
+export const N4_SLUG = 'nn-004-learning-rate-sweep';
+export const N5_SLUG = 'nn-005-capacity-cliff';
+
+export const NEURAL_NETWORK_SLUGS = [
+  N1_SLUG,
+  N2_SLUG,
+  N3_SLUG,
+  N4_SLUG,
+  N5_SLUG,
+] as const;
+
+export const NEURAL_NETWORK_N1_SLUGS = [N1_SLUG] as const;
+
+export function isNeuralNetworkSlug(slug: string): boolean {
+  return exerciseNumber(slug, 'nn') !== null;
+}
+
+export function isNnN1Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'nn');
+  return n !== null && (n === 1 || n % 5 === 1);
+}
+
+export const N1_REFERENCE_PAYLOAD = {
+  overfitRun: 'run-b',
+  diagnosis: 'overfitting',
+  nextKnob: 'add_dropout',
+} as const;
+
+export const N1_NEAR_MISS_PAYLOAD = {
+  overfitRun: 'run-b',
+  diagnosis: 'good_fit',
+  nextKnob: 'none_needed',
+} as const;
+
+export const N2_REFERENCE_PAYLOAD = {
+  overfitRun: 'run-a',
+  diagnosis: 'underfitting',
+  nextKnob: 'increase_capacity',
+} as const;
+
+export const N2_NEAR_MISS_PAYLOAD = {
+  overfitRun: 'run-a',
+  diagnosis: 'underfitting',
+  nextKnob: 'add_dropout',
+} as const;
+
+export const N3_REFERENCE_PAYLOAD = {
+  overfitRun: 'run-a',
+  diagnosis: 'overfitting',
+  nextKnob: 'add_regularization',
+} as const;
+
+export const N3_NEAR_MISS_PAYLOAD = {
+  overfitRun: 'run-a',
+  diagnosis: 'good_fit',
+  nextKnob: 'none_needed',
+} as const;
+
+export const N4_REFERENCE_PAYLOAD = {
+  overfitRun: 'run-b',
+  diagnosis: 'good_fit',
+  nextKnob: 'none_needed',
+} as const;
+
+export const N4_NEAR_MISS_PAYLOAD = {
+  overfitRun: 'run-c',
+  diagnosis: 'underfitting',
+  nextKnob: 'increase_data',
+} as const;
+
+export const N5_REFERENCE_PAYLOAD = {
+  overfitRun: 'run-c',
+  diagnosis: 'overfitting',
+  nextKnob: 'reduce_capacity',
+} as const;
+
+export const N5_NEAR_MISS_PAYLOAD = {
+  overfitRun: 'run-c',
+  diagnosis: 'overfitting',
+  nextKnob: 'none_needed',
+} as const;
+
+export const F1_SLUG = 'ft-001-tune-or-prompt';
+export const F2_SLUG = 'ft-002-prep-the-dataset';
+export const F3_SLUG = 'ft-003-judge-the-tuned-model';
+export const F4_SLUG = 'ft-004-pick-the-adapter';
+export const F5_SLUG = 'ft-005-spot-the-duplicates';
+
+export const FINE_TUNING_SLUGS = [
+  F1_SLUG,
+  F2_SLUG,
+  F3_SLUG,
+  F4_SLUG,
+  F5_SLUG,
+] as const;
+
+export function isFineTuningSlug(slug: string): boolean {
+  return exerciseNumber(slug, 'ft') !== null;
+}
+
+export function isFtF1Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'ft');
+  return n !== null && (n === 1 || n % 5 === 1);
+}
+
+export function isFtF2Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'ft');
+  return n !== null && (n === 2 || n % 5 === 2);
+}
+
+export function isFtF3Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'ft');
+  return n !== null && (n === 3 || n % 5 === 3);
+}
+
+export function isFtF4Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'ft');
+  return n !== null && (n === 4 || n % 5 === 4);
+}
+
+export function isFtF5Slug(slug: string): boolean {
+  const n = exerciseNumber(slug, 'ft');
+  return n !== null && (n === 5 || n % 5 === 0);
+}
+
+export const F1_REFERENCE_PAYLOAD = {
+  approachCall: 'prompt',
+  economicsCall: 'prompt_wins',
+} as const;
+
+export const F1_NEAR_MISS_PAYLOAD = {
+  approachCall: 'fine_tune',
+  economicsCall: 'fine_tune_wins',
+} as const;
+
+export const F2_REFERENCE_PAYLOAD = {
+  issue: 'leakage',
+  rowIds: ['tr-02', 'tr-05'],
+} as const;
+
+export const F2_NEAR_MISS_PAYLOAD = {
+  issue: 'duplicate',
+  rowIds: ['tr-01'],
+} as const;
+
+export const F3_REFERENCE_PAYLOAD = B1_REFERENCE_PAYLOAD;
+export const F3_NEAR_MISS_PAYLOAD = B1_NEAR_MISS_PAYLOAD;
+
+export const F4_REFERENCE_PAYLOAD = {
+  adapterChoice: 'lora',
+  rationale: 'data_scarcity',
+} as const;
+
+export const F4_NEAR_MISS_PAYLOAD = {
+  adapterChoice: 'full_fine_tune',
+  rationale: 'quality',
+} as const;
+
+export const F5_REFERENCE_PAYLOAD = {
+  issue: 'duplicate',
+  rowIds: ['tr-01', 'tr-04'],
+} as const;
+
+export const F5_NEAR_MISS_PAYLOAD = {
+  issue: 'leakage',
+  rowIds: ['tr-02'],
+} as const;
 

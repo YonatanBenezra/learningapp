@@ -31,7 +31,13 @@ export type GraderArchetype =
   | 'eval-e3'
   | 'guard-g1'
   | 'guard-g2'
-  | 'guard-g3';
+  | 'guard-g3'
+  | 'nn-n1'
+  | 'ft-f1'
+  | 'ft-f2'
+  | 'ft-f3'
+  | 'ft-f4'
+  | 'ft-f5';
 
 export type ExerciseContentMeta = {
   slug: string;

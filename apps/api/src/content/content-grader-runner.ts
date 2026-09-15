@@ -17,6 +17,12 @@ import type { AgentItem } from '../modules/grading/harnesses/agent/agent.types';
 import { gradeB1 } from '../modules/grading/harnesses/benchmark/b1.grade';
 import { gradeB2 } from '../modules/grading/harnesses/benchmark/b2.grade';
 import { gradeB3 } from '../modules/grading/harnesses/benchmark/b3.grade';
+import { gradeNeuralNetwork } from '../modules/grading/harnesses/neural-network/neural-network.grade';
+import { gradeF1 } from '../modules/grading/harnesses/fine-tuning/f1.grade';
+import { gradeF2 } from '../modules/grading/harnesses/fine-tuning/f2.grade';
+import { gradeF3 } from '../modules/grading/harnesses/fine-tuning/f3.grade';
+import { gradeF4 } from '../modules/grading/harnesses/fine-tuning/f4.grade';
+import { gradeF5 } from '../modules/grading/harnesses/fine-tuning/f5.grade';
 import type { CorpusDoc } from '../modules/grading/harnesses/rag/chunking';
 import {
   parseR1Payload,
@@ -128,6 +134,18 @@ export async function runContentGrader(
       return gradeB2(payload, hiddenRaw, publicQuestions(publicRaw));
     case 'bench-b3':
       return gradeB3(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'nn-n1':
+      return gradeNeuralNetwork(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'ft-f1':
+      return gradeF1(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'ft-f2':
+      return gradeF2(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'ft-f3':
+      return gradeF3(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'ft-f4':
+      return gradeF4(payload, hiddenRaw, publicQuestions(publicRaw));
+    case 'ft-f5':
+      return gradeF5(payload, hiddenRaw, publicQuestions(publicRaw));
     case 'eval-e1':
       return gradeE1(String(payload.suiteYaml ?? ''), hiddenRaw as EvalItem[]);
     case 'eval-e2':

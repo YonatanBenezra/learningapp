@@ -34,8 +34,41 @@ export type ContestDetail = ContestListItem & {
   problems: ContestProblem[];
   scorecard: {
     totalScore: number;
+    maxScore: number;
     elapsedMs: number;
     items: { slug: string; score: number; verdict: string }[];
+    result: {
+      band: string;
+      bandLabel: string;
+      totalScore: number;
+      maxScore: number;
+      elapsedMs: number;
+      timeBoxMinutes: number;
+      seasonKey: string | null;
+      sampleCount: number;
+      sampleSeed: string;
+      window: { startsAt: string; endsAt: string };
+      items: {
+        slug: string;
+        title: string;
+        verdict: string;
+        score: number;
+      }[];
+      skills: {
+        slug: string;
+        name: string;
+        score: number;
+        problems: number;
+      }[];
+    } | null;
+    signed: {
+      id: string;
+      keyId: string;
+      issuedAt: string;
+      revokedAt: string | null;
+      revokeReasonCode: string | null;
+      signatureValid: boolean;
+    } | null;
   } | null;
 };
 

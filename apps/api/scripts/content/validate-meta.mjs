@@ -5,6 +5,8 @@ const SIMULATORS = new Set([
   'prompt_engineering',
   'agent',
   'benchmark',
+  'neural_network',
+  'fine_tuning',
 ]);
 
 const DIFFICULTIES = new Set(['E', 'M', 'H']);
@@ -29,6 +31,12 @@ const ARCHETYPES = new Set([
   'guard-g1',
   'guard-g2',
   'guard-g3',
+  'nn-n1',
+  'ft-f1',
+  'ft-f2',
+  'ft-f3',
+  'ft-f4',
+  'ft-f5',
 ]);
 
 export function validateMeta(meta, slugDir) {

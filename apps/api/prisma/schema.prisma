@@ -139,7 +139,8 @@ model User {
   hintUnlocks   HintUnlock[]
   skillScores   UserSkillScore[]
   account       Account?
-  contestEntries ContestEntry[]
+  contestEntries         ContestEntry[]
+  signedAssessmentResults SignedAssessmentResult[]
 
   @@map("users")
   @@schema("public")
@@ -353,10 +354,32 @@ model ContestEntry {
   contest      Contest            @relation(fields: [contestId], references: [id], onDelete: Cascade)
   user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   attempts     Attempt[]
+  signedResult SignedAssessmentResult?
 
   @@unique([contestId, userId])
   @@index([contestId, status])
   @@map("contest_entries")
+  @@schema("public")
+}
+
+model SignedAssessmentResult {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contestEntryId   String    @unique @db.Uuid
+  userId           String    @db.Uuid
+  assessmentSlug   String
+  payload          Json
+  signature        String
+  keyId            String
+  issuedAt         DateTime  @default(now())
+  sharedPublicAt   DateTime?
+  revokedAt        DateTime?
+  revokeReasonCode String?
+  contestEntry     ContestEntry @relation(fields: [contestEntryId], references: [id], onDelete: Cascade)
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([assessmentSlug])
+  @@map("signed_assessment_results")
   @@schema("public")
 }
 

@@ -1,5 +1,5 @@
 {
-  "note": "POC catalogue. Ingest publishes only these slugs; other exercises stay on disk unpublished.",
+  "note": "Curated catalogue (O14). Ingest publishes only these slugs; other exercises stay on disk unpublished. Phase 3 Step 12: 20 → 28 (+4 NN, +4 FT).",
   "slugs": [
     "rag-001-chunk-it-right",
     "rag-002-the-cost-ceiling",
@@ -20,6 +20,14 @@
     "agt-005-dedupe-and-halt",
     "bnch-001-two-harnesses-one-score",
     "bnch-002-same-checkpoint-decode",
-    "bnch-003-eval-overlap"
+    "bnch-003-eval-overlap",
+    "nn-001-read-the-learning-curve",
+    "nn-002-size-the-model",
+    "nn-003-regularise-or-rethink",
+    "nn-005-capacity-cliff",
+    "ft-001-tune-or-prompt",
+    "ft-002-prep-the-dataset",
+    "ft-003-judge-the-tuned-model",
+    "ft-004-pick-the-adapter"
   ]
 }

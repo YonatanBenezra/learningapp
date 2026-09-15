@@ -21,6 +21,8 @@ export const routes = {
   billing: "/billing",
   account: "/profile",
   profile: (slug: string) => `/u/${slug}`,
+  profileReport: (slug: string) => `/u/${slug}/report`,
+  verifyResult: (resultId: string) => `/verify/${resultId}`,
 } as const;
 
 export function loginPath(next?: string) {

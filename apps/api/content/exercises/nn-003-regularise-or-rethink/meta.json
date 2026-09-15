@@ -1,0 +1,63 @@
+{
+  "slug": "nn-003-regularise-or-rethink",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "neural_network",
+  "graderArchetype": "nn-n1",
+  "title": "Regularise or Rethink",
+  "difficulty": "M",
+  "skills": [
+    { "slug": "regularisation", "name": "Regularisation" },
+    { "slug": "overfitting", "name": "Overfitting" }
+  ],
+  "briefMd": "# Regularise or Rethink\n\nSame 256-unit architecture, three regularisation settings:\n\n| Run | Config | Final train | Final val |\n|---|---|---|---|\n| **A** | no dropout | 98% | 67% |\n| **B** | dropout 0.3 | 86% | 84% |\n| **C** | dropout 0.5 | 74% | 73% |\n\nRun A memorises — val falls after epoch 3. Pass when you flag run A, call **overfitting**, and pick **add_regularization** (or dropout-equivalent knob).\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["overfitRun", "diagnosis", "nextKnob"],
+    "properties": {
+      "overfitRun": {
+        "type": "string",
+        "enum": ["run-a", "run-b", "run-c"],
+        "default": "run-b"
+      },
+      "diagnosis": {
+        "type": "string",
+        "enum": ["overfitting", "underfitting", "good_fit"],
+        "default": "good_fit"
+      },
+      "nextKnob": {
+        "type": "string",
+        "enum": [
+          "add_dropout",
+          "add_regularization",
+          "reduce_capacity",
+          "increase_capacity",
+          "increase_data",
+          "none_needed"
+        ],
+        "default": "none_needed"
+      }
+    }
+  },
+  "thresholds": {
+    "target_run": 1,
+    "diagnosis_ok": 1,
+    "knob_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "target-run", "class": "A", "metric": "target_run", "op": "eq", "value": 1 },
+    { "id": "diagnosis-ok", "class": "A", "metric": "diagnosis_ok", "op": "eq", "value": 1 },
+    { "id": "knob-ok", "class": "A", "metric": "knob_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

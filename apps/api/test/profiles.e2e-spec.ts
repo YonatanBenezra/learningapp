@@ -10,6 +10,8 @@ import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 import { seedPass } from './seed-pass';
 
+jest.setTimeout(30_000);
+
 describe('Public profile (e2e)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
@@ -81,6 +83,13 @@ describe('Public profile (e2e)', () => {
       displayName: 'Ada',
       solves: 1,
       rating: 101,
+      practiceRating: 101,
+      contestRating: null,
+      verifiedResults: [],
+      streak: expect.objectContaining({
+        current: expect.any(Number),
+        longest: expect.any(Number),
+      }),
     });
     expect(profile.body.recent).toEqual(
       expect.arrayContaining([

@@ -8,7 +8,7 @@ Roadmap of all phases: [phase.md](./phase.md). Product rules: [LabPath-Specifica
 
 **Goal:** a learner can open the catalogue, solve graded exercises, and see a scorecard. First proof is **R1**. Then the other nine.
 
-**Now:** Step 12 `done`. Next is Step 13 — Inner POC sign-off. Do not start it until you are ready.
+**Now:** Step 13 `done` (retroactive, 2026-09-15) — inner POC bar met via Phase 1–2 expansion; external-tester round remains deferred. See [phase-3-signoff.md](./phase-3-signoff.md).
 
 | Status | Meaning |
 |---|---|
@@ -335,6 +335,8 @@ Code sandbox, Stripe, contests, streaks, public profiles, tutors, courses, i18n,
 
 ## Step 13 — Inner POC sign-off
 
+**Status:** `done` (retroactive sign-off recorded in [phase-3-signoff.md](./phase-3-signoff.md), 2026-09-15)
+
 Not the full spec §0.8 public bar. This is what we call Phase 0 done **for the inner POC**.
 
 **Done when**
@@ -369,6 +371,6 @@ Not the full spec §0.8 public bar. This is what we call Phase 0 done **for the 
 
 ## Next
 
-Step 12 is `done`. Start **Step 13 — Inner POC sign-off** when ready.
+Step 13 is `done`. Phase 3 engineering sign-off: [phase-3-signoff.md](./phase-3-signoff.md).
 
 Local infra: `docker compose up -d` → Postgres `:5434`, Redis `:6382`. Seed: `npm run prisma:seed`. API + worker: `npm run dev:api` and `npm run dev:worker`. Web: `npm run dev:web`. Workspaces: `/exercises/rag-001-chunk-it-right`, `/exercises/rag-002-the-cost-ceiling`, `/exercises/rag-003-the-citation-contract`, `/exercises/rag-004-rerank-or-rethink`, `/exercises/eval-001-write-the-assertion-suite`, `/exercises/eval-002-judge-the-judge`, `/exercises/eval-003-catch-the-regression`, `/exercises/grd-001-break-the-concierge`, `/exercises/grd-002-the-indirect-payload`, `/exercises/grd-003-hold-the-line`. Cost: `GET /api/internal/cost`. Budget probe: `POST /api/internal/cost/over-budget`.

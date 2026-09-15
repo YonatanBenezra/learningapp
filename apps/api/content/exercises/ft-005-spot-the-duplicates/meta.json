@@ -1,0 +1,51 @@
+{
+  "slug": "ft-005-spot-the-duplicates",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "fine_tuning",
+  "graderArchetype": "ft-f5",
+  "title": "Spot the Duplicates",
+  "difficulty": "H",
+  "skills": [
+    { "slug": "dataset-prep", "name": "Dataset prep" },
+    { "slug": "contamination", "name": "Contamination" }
+  ],
+  "briefMd": "# Spot the Duplicates\n\nBefore merging two annotation batches, you inspect a **frozen slice** of the training pool:\n\n| id | prompt (truncated) | label (truncated) |\n|---|---|---|\n| tr-01 | Summarize invoice #4421 | Invoice 4421 totals €120. |\n| tr-04 | Summarize invoice #4421 | Invoice 4421 totals €120. |\n| tr-02 | Escalate P1 outage ticket | Route to on-call within 5 min. |\n| tr-03 | Export GDPR data package | Provide JSON within 30 days. |\n\nPass when you flag **duplicate** rows and list **both** ids that should be deduped before fine-tuning.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["issue", "rowIds"],
+    "properties": {
+      "issue": {
+        "type": "string",
+        "enum": ["leakage", "duplicate", "label_noise", "format"],
+        "default": "leakage",
+        "description": "Primary dataset defect"
+      },
+      "rowIds": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": [],
+        "description": "Row ids to fix or remove"
+      }
+    }
+  },
+  "thresholds": {
+    "issue_ok": 1,
+    "rows_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "issue-ok", "class": "A", "metric": "issue_ok", "op": "eq", "value": 1 },
+    { "id": "rows-ok", "class": "A", "metric": "rows_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

@@ -12,6 +12,14 @@ import {
   B1_SLUG,
   B2_SLUG,
   B3_SLUG,
+  F1_SLUG,
+  F2_SLUG,
+  F3_SLUG,
+  F4_SLUG,
+  N1_SLUG,
+  N2_SLUG,
+  N3_SLUG,
+  N5_SLUG,
   POC_CATALOGUE_TARGET,
 } from '../modules/catalogue/exercises/exercises.constants';
 
@@ -33,6 +41,14 @@ describe('content pipeline — reference solutions', () => {
         B1_SLUG,
         B2_SLUG,
         B3_SLUG,
+        N1_SLUG,
+        N2_SLUG,
+        N3_SLUG,
+        N5_SLUG,
+        F1_SLUG,
+        F2_SLUG,
+        F3_SLUG,
+        F4_SLUG,
       ]),
     );
 

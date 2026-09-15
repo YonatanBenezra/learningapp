@@ -14,7 +14,10 @@ import {
   ASSESSMENT_PRO_REQUIRED,
   ASSESSMENT_SEASON_USED,
 } from '../assessments/assessments.constants';
+import { buildAssessmentResult } from '../assessments/assessment-result';
 import { currentAssessmentSeasonKey } from '../assessments/assessment-season';
+import type { AssessmentResult } from '../assessments/assessment-result';
+import { SignedResultsService } from '../assessments/signed-results.service';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { randomToken } from '../../common/utils/token-hash';
 import { PrismaService } from '../../core/prisma/prisma.service';
@@ -63,8 +66,18 @@ export type ContestDetail = ContestListItem & {
   problems: ContestProblemView[];
   scorecard: {
     totalScore: number;
+    maxScore: number;
     elapsedMs: number;
     items: { slug: string; score: number; verdict: string }[];
+    result: AssessmentResult | null;
+    signed: {
+      id: string;
+      keyId: string;
+      issuedAt: string;
+      revokedAt: string | null;
+      revokeReasonCode: string | null;
+      signatureValid: boolean;
+    } | null;
   } | null;
 };
 
@@ -77,6 +90,7 @@ export class ContestsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly accounts: AccountService,
+    private readonly signedResults: SignedResultsService,
   ) {}
 
   async list(
@@ -198,20 +212,52 @@ export class ContestsService {
         },
       ];
     });
-    const scorecard =
-      entry && (entry.status === 'finished' || entry.status === 'expired')
-        ? {
-            totalScore: entry.totalScore,
-            elapsedMs: entry.elapsedMs ?? 0,
-            items: problems
-              .filter((problem) => problem.scored)
-              .map((problem) => ({
-                slug: problem.slug,
-                score: problem.score ?? 0,
-                verdict: problem.verdict ?? 'fail',
-              })),
-          }
-        : null;
+    const scoredItems = problems.map((problem) => ({
+      slug: problem.slug,
+      title: problem.title,
+      score: problem.score ?? 0,
+      verdict: problem.verdict ?? (problem.scored ? 'fail' : 'pending'),
+    }));
+    let scorecard: ContestDetail['scorecard'] = null;
+    if (entry && (entry.status === 'finished' || entry.status === 'expired')) {
+      const skillsByProblem = await this.loadExerciseSkills(entry.sampledSlugs);
+      const result = buildAssessmentResult({
+        kind: contest.kind,
+        seasonKey: contest.seasonKey,
+        startsAt: contest.startsAt,
+        endsAt: contest.endsAt,
+        timeBoxMinutes: contest.timeBoxMinutes,
+        sampleSeed: entry.sampleSeed,
+        elapsedMs: entry.elapsedMs ?? 0,
+        problems: scoredItems,
+        skillsByProblem,
+      });
+      let signedRow = await this.signedResults.findByContestEntry(entry.id);
+      if (!signedRow && contest.kind === ContestKind.assessment) {
+        signedRow = await this.signedResults.issueForEntry(entry.id);
+      }
+      scorecard = {
+        totalScore: entry.totalScore,
+        maxScore: scoredItems.length * 100,
+        elapsedMs: entry.elapsedMs ?? 0,
+        items: scoredItems.map(({ slug, score, verdict }) => ({
+          slug,
+          score,
+          verdict,
+        })),
+        result,
+        signed: signedRow
+          ? {
+              id: signedRow.id,
+              keyId: signedRow.keyId,
+              issuedAt: signedRow.issuedAt,
+              revokedAt: signedRow.revokedAt,
+              revokeReasonCode: signedRow.revokeReasonCode,
+              signatureValid: signedRow.signatureValid,
+            }
+          : null,
+      };
+    }
     return {
       ...listItem,
       sampleSeed: entry?.sampleSeed ?? null,
@@ -251,9 +297,6 @@ export class ContestsService {
             : 'This contest is closed.',
       );
     }
-    if (contest.kind === ContestKind.assessment) {
-      await this.assertAssessmentSeasonAvailable(user.id, contest, now);
-    }
     const existing = await this.prisma.contestEntry.findUnique({
       where: {
         contestId_userId: { contestId: contest.id, userId: user.id },
@@ -261,6 +304,9 @@ export class ContestsService {
     });
     if (existing) {
       return this.getBySlug(user, slug, now, expectedKind);
+    }
+    if (contest.kind === ContestKind.assessment) {
+      await this.assertAssessmentSeasonAvailable(user.id, contest, now);
     }
     const pool = contest.problems
       .sort((left, right) => left.position - right.position)
@@ -583,7 +629,7 @@ export class ContestsService {
           ? ContestEntryStatus.expired
           : ContestEntryStatus.finished
         : current.status;
-    return this.prisma.contestEntry.update({
+    const updated = await this.prisma.contestEntry.update({
       where: { id: entryId },
       data: {
         totalScore: itemScores.reduce((sum, score) => sum + score, 0),
@@ -610,6 +656,13 @@ export class ContestsService {
         },
       },
     });
+    if (
+      nextStatus !== ContestEntryStatus.active &&
+      contest.kind === ContestKind.assessment
+    ) {
+      await this.signedResults.issueForEntry(updated.id);
+    }
+    return updated;
   }
 
   private toListItem(
@@ -661,6 +714,35 @@ export class ContestsService {
       if (!latest.has(row.slug)) {
         latest.set(row.slug, row);
       }
+    }
+    return latest;
+  }
+
+  private async loadExerciseSkills(slugs: string[]) {
+    const rows = await this.prisma.exercise.findMany({
+      where: { slug: { in: slugs } },
+      select: {
+        slug: true,
+        skills: {
+          select: {
+            skill: { select: { slug: true, name: true } },
+          },
+        },
+      },
+      orderBy: { version: 'desc' },
+    });
+    const latest = new Map<string, { slug: string; name: string }[]>();
+    for (const row of rows) {
+      if (latest.has(row.slug)) {
+        continue;
+      }
+      latest.set(
+        row.slug,
+        row.skills.map((link) => ({
+          slug: link.skill.slug,
+          name: link.skill.name,
+        })),
+      );
     }
     return latest;
   }

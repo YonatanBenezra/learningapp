@@ -1,0 +1,9 @@
+{
+  "trainingExamples": 800,
+  "goldAdapter": "lora",
+  "acceptedRationale": ["cost", "data_scarcity"],
+  "canary": {
+    "id": "canary",
+    "prompt": "HIDDEN_EVAL_FT_F4_CANARY_PHRASE — do not print or fetch this."
+  }
+}

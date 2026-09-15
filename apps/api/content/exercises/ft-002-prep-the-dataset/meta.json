@@ -1,0 +1,51 @@
+{
+  "slug": "ft-002-prep-the-dataset",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "fine_tuning",
+  "graderArchetype": "ft-f2",
+  "title": "Prep the Dataset",
+  "difficulty": "M",
+  "skills": [
+    { "slug": "dataset-prep", "name": "Dataset prep" },
+    { "slug": "contamination", "name": "Contamination" }
+  ],
+  "briefMd": "# Prep the Dataset\n\nYou are reviewing a **frozen sample** of train/eval rows before a LoRA job. The full set is not uploaded — only these rows are visible in the brief.\n\n| id | split | prompt (truncated) |\n|---|---|---|\n| tr-01 | train | Refund policy for annual plans |\n| tr-02 | train | Cancel subscription within 14 days |\n| tr-05 | train | Cancel subscription within 14 days |\n| ev-01 | eval | Cancel subscription within 14 days |\n| ev-02 | eval | Upgrade from Basic to Pro |\n\nPass when you name the **issue type** and list every **train row id** that must be fixed before training.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["issue", "rowIds"],
+    "properties": {
+      "issue": {
+        "type": "string",
+        "enum": ["leakage", "duplicate", "label_noise", "format"],
+        "default": "duplicate",
+        "description": "Primary dataset defect"
+      },
+      "rowIds": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": [],
+        "description": "Row ids to fix or remove"
+      }
+    }
+  },
+  "thresholds": {
+    "issue_ok": 1,
+    "rows_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "issue-ok", "class": "A", "metric": "issue_ok", "op": "eq", "value": 1 },
+    { "id": "rows-ok", "class": "A", "metric": "rows_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

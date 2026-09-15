@@ -4,6 +4,7 @@ import { App } from 'supertest/types';
 import { ContestKind } from '@prisma/client';
 import { PrismaService } from '../src/core/prisma/prisma.service';
 import { currentAssessmentSeasonKey } from '../src/modules/assessments/assessment-season';
+import { VA1_ASSESSMENT_SLUG } from '../src/modules/assessments/assessments.constants';
 import { DOGFOOD_CONTEST } from '../src/modules/contests/contests.constants';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
@@ -151,5 +152,48 @@ describe('Assessments (e2e)', () => {
       .set('Cookie', cookies)
       .expect(400);
     expect(blocked.body.message.code).toBe('assessment_season_used');
-  });
+  }, 30_000);
+
+  it('does not leak hidden eval from assessment detail or exercise payloads', async () => {
+    const cookies = await signIn(app, `assessment-leak-${Date.now()}@labpath.test`);
+    const me = await request(app.getHttpServer())
+      .get('/api/me')
+      .set('Cookie', cookies)
+      .expect(200);
+    await prisma.account.update({
+      where: { userId: me.body.id as string },
+      data: { tier: 'pro', subscriptionStatus: 'active' },
+    });
+
+    const va1 = await prisma.contest.findUnique({
+      where: { slug: VA1_ASSESSMENT_SLUG },
+    });
+    if (!va1) {
+      return;
+    }
+
+    const detail = await request(app.getHttpServer())
+      .get(`/api/assessments/${VA1_ASSESSMENT_SLUG}`)
+      .set('Cookie', cookies)
+      .expect(200);
+    expect(JSON.stringify(detail.body)).not.toContain('eval_hidden');
+    expect(JSON.stringify(detail.body)).not.toContain('HIDDEN_EVAL');
+
+    const entered = await request(app.getHttpServer())
+      .post(`/api/assessments/${VA1_ASSESSMENT_SLUG}/enter`)
+      .set('Cookie', cookies)
+      .expect(201);
+    const firstProblem = entered.body.problems[0]?.slug as string | undefined;
+    expect(firstProblem).toBeTruthy();
+    if (!firstProblem) {
+      return;
+    }
+
+    const exercise = await request(app.getHttpServer())
+      .get(`/api/assessments/${VA1_ASSESSMENT_SLUG}/exercises/${firstProblem}`)
+      .set('Cookie', cookies)
+      .expect(200);
+    expect(JSON.stringify(exercise.body)).not.toContain('eval_hidden');
+    expect(JSON.stringify(exercise.body)).not.toContain('HIDDEN_EVAL');
+  }, 30_000);
 });

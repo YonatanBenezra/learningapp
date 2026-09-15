@@ -1,0 +1,40 @@
+{
+  "goldIssue": "duplicate",
+  "goldRowIds": ["tr-01", "tr-04"],
+  "rows": [
+    {
+      "id": "tr-01",
+      "split": "train",
+      "prompt": "Summarize invoice #4421",
+      "label": "Invoice 4421 totals €120."
+    },
+    {
+      "id": "tr-02",
+      "split": "train",
+      "prompt": "Escalate P1 outage ticket",
+      "label": "Route to on-call within 5 minutes."
+    },
+    {
+      "id": "tr-03",
+      "split": "train",
+      "prompt": "Export GDPR data package",
+      "label": "Provide JSON export within 30 days."
+    },
+    {
+      "id": "tr-04",
+      "split": "train",
+      "prompt": "Summarize invoice #4421",
+      "label": "Invoice 4421 totals €120."
+    },
+    {
+      "id": "tr-05",
+      "split": "train",
+      "prompt": "Apply student discount code",
+      "label": "Verify .edu email before applying 20% discount."
+    }
+  ],
+  "canary": {
+    "id": "canary",
+    "prompt": "HIDDEN_EVAL_FT_F5_CANARY_PHRASE — do not print or fetch this."
+  }
+}

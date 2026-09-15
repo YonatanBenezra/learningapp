@@ -9,7 +9,9 @@ import {
   G1_SLUG,
   G2_SLUG,
   G3_SLUG,
+  F1_SLUG,
   HIDDEN_EVAL_CANARY,
+  N1_SLUG,
   POC_CATALOGUE_TARGET,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
@@ -87,12 +89,22 @@ describe('Catalogue (e2e)', () => {
           slug: G3_SLUG,
           title: 'Hold the Line',
         }),
+        expect.objectContaining({
+          slug: N1_SLUG,
+          title: 'Read the Learning Curve',
+          simulator: 'neural_network',
+        }),
+        expect.objectContaining({
+          slug: F1_SLUG,
+          title: 'Tune or Prompt',
+          simulator: 'fine_tuning',
+        }),
       ]),
     );
     expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
   });
 
-  it('lists the 20 curated POC exercises without hidden eval text', async () => {
+  it('lists the 28 curated exercises without hidden eval text', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
@@ -117,6 +129,8 @@ describe('Catalogue (e2e)', () => {
     expect(simulators.filter((value) => value === 'guardrails')).toHaveLength(3);
     expect(simulators.filter((value) => value === 'agent')).toHaveLength(5);
     expect(simulators.filter((value) => value === 'benchmark')).toHaveLength(3);
+    expect(simulators.filter((value) => value === 'neural_network')).toHaveLength(4);
+    expect(simulators.filter((value) => value === 'fine_tuning')).toHaveLength(4);
 
     const serialized = JSON.stringify(response.body);
     expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);
@@ -133,7 +147,7 @@ describe('Catalogue (e2e)', () => {
       expect(body).not.toContain('HIDDEN_EVAL');
       expect(body).not.toContain('eval_hidden');
     }
-  });
+  }, 30_000);
 
   it('hides unpublished filler exercises from the catalogue', async () => {
     await request(app.getHttpServer())

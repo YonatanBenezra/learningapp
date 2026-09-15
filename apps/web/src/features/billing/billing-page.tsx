@@ -60,7 +60,7 @@ function BillingFields() {
       setError(caught instanceof Error ? caught.message : "Checkout failed");
       setPending(null);
     }
-  }
+  } 
 
   async function openPortal() {
     setPending("portal");

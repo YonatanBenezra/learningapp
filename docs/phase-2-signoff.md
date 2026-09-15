@@ -28,6 +28,8 @@ Engineering sign-off for [phase-2.md](./phase-2.md) Step 12. Product metrics tha
 Contest-only `ctst-*` (4) stay **unpublished** — not in the public catalogue.
 
 > **Note (2026-09-08):** The table above reflects the Phase 2 sign-off snapshot when ingest published all 150. A later POC curation ([O14](./phase-3-decisions.md), `content/published-slugs.json`) reduced the **live** catalogue to **20** exercises. The authored library (154 on disk) still validates in CI; only the allowlisted slugs are published to learners.
+>
+> **Note (2026-09-15):** Phase 3 Step 12 expanded the **live** catalogue from **20 → 28** (+4 Neural Network, +4 Fine-tuning). The authored library is **160** catalogue exercises on disk (plus unpublished `asmt-*` / `ctst-*` pools). The table above remains the Phase 2 snapshot — do not read **150 published** as today's live count.
 
 CI gates:
 

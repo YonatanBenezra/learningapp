@@ -1,0 +1,50 @@
+{
+  "targetRun": "run-a",
+  "expectedDiagnosis": "underfitting",
+  "acceptedKnobs": ["increase_capacity", "increase_data"],
+  "runs": [
+    {
+      "id": "run-a",
+      "config": "32 units · dropout 0.2",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.55, "valAcc": 0.54 },
+        { "epoch": 2, "trainAcc": 0.58, "valAcc": 0.57 },
+        { "epoch": 3, "trainAcc": 0.6, "valAcc": 0.59 },
+        { "epoch": 4, "trainAcc": 0.61, "valAcc": 0.6 },
+        { "epoch": 5, "trainAcc": 0.62, "valAcc": 0.61 },
+        { "epoch": 6, "trainAcc": 0.62, "valAcc": 0.61 }
+      ]
+    },
+    {
+      "id": "run-b",
+      "config": "128 units · dropout 0.2",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.68, "valAcc": 0.67 },
+        { "epoch": 2, "trainAcc": 0.75, "valAcc": 0.74 },
+        { "epoch": 3, "trainAcc": 0.8, "valAcc": 0.79 },
+        { "epoch": 4, "trainAcc": 0.83, "valAcc": 0.82 },
+        { "epoch": 5, "trainAcc": 0.84, "valAcc": 0.83 },
+        { "epoch": 6, "trainAcc": 0.85, "valAcc": 0.83 }
+      ]
+    },
+    {
+      "id": "run-c",
+      "config": "512 units · dropout 0.2",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.72, "valAcc": 0.73 },
+        { "epoch": 2, "trainAcc": 0.82, "valAcc": 0.78 },
+        { "epoch": 3, "trainAcc": 0.9, "valAcc": 0.76 },
+        { "epoch": 4, "trainAcc": 0.95, "valAcc": 0.74 },
+        { "epoch": 5, "trainAcc": 0.98, "valAcc": 0.71 },
+        { "epoch": 6, "trainAcc": 0.99, "valAcc": 0.7 }
+      ]
+    },
+    {
+      "id": "canary",
+      "config": "HIDDEN_EVAL_N2_CANARY_PHRASE",
+      "canary": true,
+      "epochs": [{ "epoch": 1, "trainAcc": 0, "valAcc": 0 }]
+    }
+  ],
+  "canary": { "id": "canary", "prompt": "HIDDEN_EVAL_N2_CANARY_PHRASE" }
+}

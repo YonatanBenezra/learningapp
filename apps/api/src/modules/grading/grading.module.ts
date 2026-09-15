@@ -8,6 +8,8 @@ import { GuardrailsHarness } from './harnesses/guardrails/guardrails.harness';
 import { PromptEngineeringHarness } from './harnesses/prompt-engineering/prompt-engineering.harness';
 import { AgentHarness } from './harnesses/agent/agent.harness';
 import { BenchmarkHarness } from './harnesses/benchmark/benchmark.harness';
+import { NeuralNetworkHarness } from './harnesses/neural-network/neural-network.harness';
+import { FineTuningHarness } from './harnesses/fine-tuning/fine-tuning.harness';
 import { RagHarness } from './harnesses/rag/rag.harness';
 import { SandboxHarness } from './harnesses/sandbox/sandbox.harness';
 import { JudgeService } from './judge/judge.service';
@@ -30,6 +32,8 @@ import { IngestProcessor } from './processors/ingest.processor';
     PromptEngineeringHarness,
     AgentHarness,
     BenchmarkHarness,
+    NeuralNetworkHarness,
+    FineTuningHarness,
     AssertionDsl,
     SliceSpecParser,
     MetricsLibrary,

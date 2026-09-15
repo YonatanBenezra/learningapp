@@ -11,6 +11,8 @@ export const ASSESSMENT_SEASON_USED = {
   code: 'assessment_season_used',
 } as const;
 
+export const VA1_ASSESSMENT_SLUG = 'va1-q3-2026';
+
 export const ASSESSMENT_PRO_REQUIRED = {
   message: 'Upgrade to Pro to sit a verified assessment.',
   code: 'pro_required',
@@ -19,5 +21,3 @@ export const ASSESSMENT_PRO_REQUIRED = {
 
 export const ASSESSMENT_TRACE_WITHHELD =
   'Trace is available after the sitting closes.';
-
-export const VA1_ASSESSMENT_SLUG = 'va1-q3-2026';

@@ -1,0 +1,51 @@
+{
+  "slug": "ft-001-tune-or-prompt",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "fine_tuning",
+  "graderArchetype": "ft-f1",
+  "title": "Tune or Prompt",
+  "difficulty": "E",
+  "skills": [
+    { "slug": "tuning-decision", "name": "Tuning decision" },
+    { "slug": "cost-engineering", "name": "Cost engineering" }
+  ],
+  "briefMd": "# Tune or Prompt\n\nYour team needs a **support triage** helper for **500 tickets/month** over **6 months**. Two frozen cost models — no live training:\n\n| Path | One-off setup | Per ticket |\n|---|---|---|\n| **Prompt engineering** | €200 | €0.020 |\n| **LoRA fine-tune** | €800 | €0.008 |\n\nRun the **six-month total** (setup + volume × months × per-call) before you pick. Pass when you choose the cheaper path **and** name the economics winner correctly.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["approachCall", "economicsCall"],
+    "properties": {
+      "approachCall": {
+        "type": "string",
+        "enum": ["prompt", "fine_tune"],
+        "default": "fine_tune",
+        "description": "Which path would you ship?"
+      },
+      "economicsCall": {
+        "type": "string",
+        "enum": ["prompt_wins", "fine_tune_wins"],
+        "default": "fine_tune_wins",
+        "description": "Which path has the lower six-month total?"
+      }
+    }
+  },
+  "thresholds": {
+    "approach_ok": 1,
+    "economics_ok": 1,
+    "no_canary": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.001,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    { "id": "approach-ok", "class": "A", "metric": "approach_ok", "op": "eq", "value": 1 },
+    { "id": "economics-ok", "class": "A", "metric": "economics_ok", "op": "eq", "value": 1 },
+    { "id": "no-canary", "class": "A", "metric": "no_canary", "op": "eq", "value": 1 }
+  ],
+  "feedback": { "show_failing_cases": 3, "rotate": true },
+  "attemptPolicy": null
+}

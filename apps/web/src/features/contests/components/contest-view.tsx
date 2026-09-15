@@ -49,6 +49,72 @@ function formatElapsed(ms: number): string {
   return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
 }
 
+type SignedCredential = NonNullable<
+  NonNullable<ContestDetail["scorecard"]>["signed"]
+>;
+
+function SignedCredentialBlock({ signed }: { signed: SignedCredential }) {
+  const [copied, setCopied] = useState(false);
+  const verifyPath = routes.verifyResult(signed.id);
+  const issued = new Date(signed.issuedAt);
+  const issuedLabel = Number.isNaN(issued.getTime())
+    ? signed.issuedAt
+    : dateFormat.format(issued);
+
+  async function copyVerifyLink() {
+    const url = `${window.location.origin}${verifyPath}`;
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div className="lp-ctd-credential">
+      <div className="lp-ctd-credential-head">
+        <div>
+          <h3 className="lp-ctd-credential-title">LabPath-signed result</h3>
+          <p className="lp-ctd-credential-note">
+            Issued {issuedLabel} · key {signed.keyId}
+            {signed.revokedAt ? " · revoked" : ""}
+          </p>
+        </div>
+        {signed.revokedAt ? (
+          <span className="lp-ct-badge lp-ctd-credential-badge--revoked">
+            Revoked
+          </span>
+        ) : signed.signatureValid ? (
+          <span className="lp-ct-badge lp-ct-badge--entered">Signed</span>
+        ) : (
+          <span className="lp-ct-badge lp-ctd-credential-badge--invalid">
+            Invalid signature
+          </span>
+        )}
+      </div>
+      <p className="lp-ctd-credential-id">
+        <span className="lp-ctd-credential-id-label">Result id</span>
+        <code>{signed.id}</code>
+      </p>
+      {signed.revokeReasonCode ? (
+        <p className="lp-ctd-credential-reason">
+          Revocation reason: {signed.revokeReasonCode}
+        </p>
+      ) : null}
+      <div className="lp-ctd-credential-actions">
+        <button
+          type="button"
+          className="lp-ct-btn lp-ct-btn--ghost"
+          onClick={() => void copyVerifyLink()}
+        >
+          {copied ? "Copied" : "Copy verification link"}
+        </button>
+        <Link href={verifyPath} className="lp-ct-btn">
+          Open verification
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 function simulatorLabel(value: string): string {
   return SIMULATOR_LABELS[value as SimulatorSlug] ?? value;
 }
@@ -396,11 +462,29 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
             <div>
               <h2 className="lp-ctd-section-title">{labels.scorecardSection}</h2>
               <p className="lp-ctd-section-note">
-                Total {contest.scorecard.totalScore} ·{" "}
-                {formatElapsed(contest.scorecard.elapsedMs)} elapsed
+                Total {contest.scorecard.totalScore}
+                {contest.scorecard.maxScore
+                  ? ` / ${contest.scorecard.maxScore}`
+                  : ""}{" "}
+                · {formatElapsed(contest.scorecard.elapsedMs)} elapsed
               </p>
             </div>
+            {contest.scorecard.result ? (
+              <span className="lp-ct-badge lp-ct-badge--entered">
+                {contest.scorecard.result.bandLabel}
+              </span>
+            ) : null}
           </div>
+          {contest.scorecard.result?.skills.length ? (
+            <div className="lp-ctd-facts">
+              {contest.scorecard.result.skills.map((skill) => (
+                <div key={skill.slug} className="lp-ct-fact">
+                  <strong>{skill.score}</strong>
+                  <span>{skill.name}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
           <div className="lp-ctd-table-wrap">
             <table className="lp-ctd-table">
               <thead>
@@ -430,6 +514,9 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
               </tbody>
             </table>
           </div>
+          {variant === "assessment" && contest.scorecard.signed ? (
+            <SignedCredentialBlock signed={contest.scorecard.signed} />
+          ) : null}
         </section>
       ) : null}
     </div>

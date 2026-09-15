@@ -1,0 +1,6 @@
+[
+  {
+    "id": "p1",
+    "question": "Run A (128 units, dropout 0.3) ends at 88% train / 82% val. Run B (512 units, no dropout) ends at 99% train / 68% val. Run C (512 units, dropout 0.5) ends at 76% / 75%."
+  }
+]

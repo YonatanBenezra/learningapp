@@ -1,0 +1,52 @@
+{
+  "goldIssue": "leakage",
+  "goldRowIds": ["tr-02", "tr-05"],
+  "rows": [
+    {
+      "id": "tr-01",
+      "split": "train",
+      "prompt": "Refund policy for annual plans",
+      "label": "Annual plans refund within 30 days if unused."
+    },
+    {
+      "id": "tr-02",
+      "split": "train",
+      "prompt": "Cancel subscription within 14 days",
+      "label": "User may cancel within 14 days for a full refund."
+    },
+    {
+      "id": "tr-03",
+      "split": "train",
+      "prompt": "Reset two-factor authentication",
+      "label": "Support verifies identity before resetting 2FA."
+    },
+    {
+      "id": "tr-04",
+      "split": "train",
+      "prompt": "Export billing history CSV",
+      "label": "Billing exports include the last 24 months."
+    },
+    {
+      "id": "tr-05",
+      "split": "train",
+      "prompt": "Cancel subscription within 14 days",
+      "label": "User may cancel within 14 days for a full refund."
+    },
+    {
+      "id": "ev-01",
+      "split": "eval",
+      "prompt": "Cancel subscription within 14 days",
+      "label": "User may cancel within 14 days for a full refund."
+    },
+    {
+      "id": "ev-02",
+      "split": "eval",
+      "prompt": "Upgrade from Basic to Pro",
+      "label": "Pro upgrade prorates the remaining billing period."
+    }
+  ],
+  "canary": {
+    "id": "canary",
+    "prompt": "HIDDEN_EVAL_FT_F2_CANARY_PHRASE — do not print or fetch this."
+  }
+}

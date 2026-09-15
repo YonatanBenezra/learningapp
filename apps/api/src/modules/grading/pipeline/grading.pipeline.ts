@@ -11,6 +11,8 @@ import { GuardrailsHarness } from '../harnesses/guardrails/guardrails.harness';
 import { PromptEngineeringHarness } from '../harnesses/prompt-engineering/prompt-engineering.harness';
 import { AgentHarness } from '../harnesses/agent/agent.harness';
 import { BenchmarkHarness } from '../harnesses/benchmark/benchmark.harness';
+import { NeuralNetworkHarness } from '../harnesses/neural-network/neural-network.harness';
+import { FineTuningHarness } from '../harnesses/fine-tuning/fine-tuning.harness';
 import { RagHarness } from '../harnesses/rag/rag.harness';
 import { SandboxHarness } from '../harnesses/sandbox/sandbox.harness';
 import { isSandboxRagSlug } from '../../catalogue/exercises/exercises.constants';
@@ -41,6 +43,8 @@ export class GradingPipeline {
     private readonly promptEngineeringHarness: PromptEngineeringHarness,
     private readonly agentHarness: AgentHarness,
     private readonly benchmarkHarness: BenchmarkHarness,
+    private readonly neuralNetworkHarness: NeuralNetworkHarness,
+    private readonly fineTuningHarness: FineTuningHarness,
   ) {}
 
   async run(runId: string): Promise<void> {
@@ -147,6 +151,22 @@ export class GradingPipeline {
       });
     } else if (exercise.simulator === 'benchmark') {
       result = await this.benchmarkHarness.execute({
+        slug: exercise.slug,
+        runId,
+        payload: run.submission.payload,
+        hidden,
+        publicItems: publicQuestions(exercise.publicSample),
+      });
+    } else if (exercise.simulator === 'neural_network') {
+      result = await this.neuralNetworkHarness.execute({
+        slug: exercise.slug,
+        runId,
+        payload: run.submission.payload,
+        hidden,
+        publicItems: publicQuestions(exercise.publicSample),
+      });
+    } else if (exercise.simulator === 'fine_tuning') {
+      result = await this.fineTuningHarness.execute({
         slug: exercise.slug,
         runId,
         payload: run.submission.payload,

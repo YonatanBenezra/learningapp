@@ -1,0 +1,59 @@
+{
+  "targetRun": "run-b",
+  "expectedDiagnosis": "overfitting",
+  "acceptedKnobs": ["add_dropout", "add_regularization", "reduce_capacity"],
+  "runs": [
+    {
+      "id": "run-a",
+      "config": "128 units · dropout 0.3",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.71, "valAcc": 0.7 },
+        { "epoch": 2, "trainAcc": 0.76, "valAcc": 0.75 },
+        { "epoch": 3, "trainAcc": 0.8, "valAcc": 0.78 },
+        { "epoch": 4, "trainAcc": 0.83, "valAcc": 0.81 },
+        { "epoch": 5, "trainAcc": 0.85, "valAcc": 0.82 },
+        { "epoch": 6, "trainAcc": 0.86, "valAcc": 0.82 },
+        { "epoch": 7, "trainAcc": 0.87, "valAcc": 0.82 },
+        { "epoch": 8, "trainAcc": 0.88, "valAcc": 0.82 }
+      ]
+    },
+    {
+      "id": "run-b",
+      "config": "512 units · no dropout",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.7, "valAcc": 0.72 },
+        { "epoch": 2, "trainAcc": 0.78, "valAcc": 0.76 },
+        { "epoch": 3, "trainAcc": 0.86, "valAcc": 0.78 },
+        { "epoch": 4, "trainAcc": 0.92, "valAcc": 0.78 },
+        { "epoch": 5, "trainAcc": 0.95, "valAcc": 0.74 },
+        { "epoch": 6, "trainAcc": 0.97, "valAcc": 0.71 },
+        { "epoch": 7, "trainAcc": 0.98, "valAcc": 0.69 },
+        { "epoch": 8, "trainAcc": 0.99, "valAcc": 0.68 }
+      ]
+    },
+    {
+      "id": "run-c",
+      "config": "512 units · dropout 0.5",
+      "epochs": [
+        { "epoch": 1, "trainAcc": 0.68, "valAcc": 0.67 },
+        { "epoch": 2, "trainAcc": 0.71, "valAcc": 0.7 },
+        { "epoch": 3, "trainAcc": 0.73, "valAcc": 0.72 },
+        { "epoch": 4, "trainAcc": 0.74, "valAcc": 0.73 },
+        { "epoch": 5, "trainAcc": 0.75, "valAcc": 0.74 },
+        { "epoch": 6, "trainAcc": 0.76, "valAcc": 0.75 },
+        { "epoch": 7, "trainAcc": 0.76, "valAcc": 0.75 },
+        { "epoch": 8, "trainAcc": 0.76, "valAcc": 0.75 }
+      ]
+    },
+    {
+      "id": "canary",
+      "config": "HIDDEN_EVAL_N1_CANARY_PHRASE",
+      "canary": true,
+      "epochs": [{ "epoch": 1, "trainAcc": 0, "valAcc": 0 }]
+    }
+  ],
+  "canary": {
+    "id": "canary",
+    "prompt": "HIDDEN_EVAL_N1_CANARY_PHRASE"
+  }
+}

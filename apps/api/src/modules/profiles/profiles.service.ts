@@ -19,6 +19,9 @@ import {
   publicDisplayName,
   RECENT_SOLVE_LIMIT,
 } from './profile-slug';
+import { toPublicVerifiedResult } from '../assessments/public-verified-result';
+import { calendarDateKey } from '../progress/calendar';
+import { computeStreak } from '../progress/streak';
 import { toSkillScoreView } from '../skills/skill-decay';
 
 const PRO_REQUIRED = {
@@ -53,7 +56,8 @@ export class ProfilesService {
       throw new NotFoundException();
     }
 
-    const [passRows, skills, contestRating] = await Promise.all([
+    const [passRows, skills, contestRating, verifiedRows, attemptCount] =
+      await Promise.all([
       this.prisma.grade.findMany({
         where: {
           verdict: 'pass',
@@ -83,6 +87,15 @@ export class ProfilesService {
         orderBy: { skill: { name: 'asc' } },
       }),
       this.bestContestRating(user.id),
+      this.prisma.signedAssessmentResult.findMany({
+        where: {
+          userId: user.id,
+          sharedPublicAt: { not: null },
+          revokedAt: null,
+        },
+        orderBy: { issuedAt: 'desc' },
+      }),
+      this.prisma.attempt.count({ where: { userId: user.id } }),
     ]);
 
     const solved = new Map<string, { slug: string; title: string; passedAt: Date }>();
@@ -104,12 +117,25 @@ export class ProfilesService {
       }
     }
 
+    const practiceRating = leaderboardRating(solved.size, recentPasses);
+    const qualifiedDays = passRows.map((row) =>
+      calendarDateKey(row.createdAt, 'UTC'),
+    );
+    const streak = computeStreak(qualifiedDays, calendarDateKey(now, 'UTC'));
+
     return {
       slug: user.profileSlug,
       displayName: publicDisplayName(user.displayName),
       solves: solved.size,
-      rating: contestRating ?? leaderboardRating(solved.size, recentPasses),
+      attempts: attemptCount,
+      rating: contestRating ?? practiceRating,
       contestRating,
+      practiceRating,
+      streak: {
+        current: streak.current,
+        longest: streak.longest,
+      },
+      verifiedResults: verifiedRows.map((row) => toPublicVerifiedResult(row)),
       skills: skills.map((row) => toSkillScoreView(row, now)),
       recent: [...solved.values()]
         .slice(0, RECENT_SOLVE_LIMIT)

@@ -119,9 +119,9 @@ Constants live in one module so the curve is testable and tunable in one place.
 
 ## O14 — Catalogue position
 
-**Decision: the curated 20-exercise catalogue is permanent, not a demo gate.**
+**Decision: the curated catalogue is permanent, not a demo gate.**
 
-[published-slugs.json](../apps/api/content/published-slugs.json) (commit `27614bb`, 2026-09-08) restricts ingest to 20 slugs. That selection stays.
+[published-slugs.json](../apps/api/content/published-slugs.json) restricts ingest to allowlisted slugs only. Phase 3 Step 12 (2026-09-15) expanded the live set from **20 → 28**.
 
 | Field | Decision |
 |---|---|
@@ -206,6 +206,19 @@ tuned-model-eval
 | Gates | At least one class A gate per problem. No sitting is decided by a judge rating alone |
 | Bands | Score thresholds fixed **before** the first real sitting and recorded in the sign-off — never tuned after seeing results |
 | Novelty | Pool is never in the public catalogue and never in the daily drill |
+
+### VA1 band thresholds (fixed 2026-09-15)
+
+Total score is the sum of four item scores (0–100 each; max **400**).
+
+| Band | Min total score | Meaning |
+|---|---|---|
+| **Verified** | 320 (80%) | Reference sitting (4/4 pass) lands here |
+| **Developing** | 200 (50%) | A three-pass near-miss sitting (300) lands below Verified |
+| **Foundation** | 100 (25%) | Partial progress |
+| **Not ready** | 0 | No meaningful signal |
+
+Implementation: `apps/api/src/modules/assessments/va1-bands.ts`. Do not tune after seeing live results.
 
 ---
 

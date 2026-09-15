@@ -1,0 +1,6 @@
+[
+  {
+    "id": "p1",
+    "question": "256-unit model: run A (no dropout) 98%/67%, run B (dropout 0.3) 86%/84%, run C (dropout 0.5) 74%/73%."
+  }
+]
