@@ -2,10 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import { routes } from "@/config/routes";
+import { DashboardNav } from "@/components/layout/dashboard-nav";
 import { HomeNav } from "@/features/home/home-nav";
+import { ProblemNav } from "@/features/workspace/components/problem-nav";
 import "@/features/home/home.css";
 
-const DASHBOARD_PREFIXES = [routes.progress, routes.billing, routes.account];
+const DASHBOARD_PREFIXES = [routes.progress, routes.account];
 
 function isDashboardPath(pathname: string) {
   return DASHBOARD_PREFIXES.some(
@@ -13,12 +15,22 @@ function isDashboardPath(pathname: string) {
   );
 }
 
-/** Persistent site navbar at the root — hidden only on dashboard routes. */
+function exerciseSlugFromPath(pathname: string) {
+  const match = pathname.match(/^\/exercises\/([^/]+)/);
+  return match?.[1] ?? null;
+}
+
+/** Persistent site navbar — problem workspace uses a dedicated bar. */
 export function RootNav() {
   const pathname = usePathname();
+  const exerciseSlug = exerciseSlugFromPath(pathname);
+
+  if (exerciseSlug) {
+    return <ProblemNav slug={exerciseSlug} />;
+  }
 
   if (isDashboardPath(pathname)) {
-    return null;
+    return <DashboardNav />;
   }
 
   return <HomeNav />;

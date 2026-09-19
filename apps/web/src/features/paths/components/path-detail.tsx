@@ -237,7 +237,7 @@ export function PathDetailView({ slug }: { slug: string }) {
           </div>
         ) : (
           <p className="lp-pd-progress-next">
-            Every step passed. Catalogue quotas still apply to re-runs.
+            Every step passed. Practice quotas still apply to re-runs.
           </p>
         )}
       </section>

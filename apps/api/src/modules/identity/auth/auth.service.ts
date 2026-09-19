@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   Logger,
   NotImplementedException,
@@ -13,8 +14,10 @@ import { hashToken, randomToken } from '../../../common/utils/token-hash';
 import { ttlToMs } from '../../../common/utils/ttl';
 import type { Env } from '../../../core/config/env.schema';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import { parseProfileSlug } from '../../profiles/profile-slug';
 import { clearAuthCookies, readCookie, setAuthCookies } from './auth-cookies';
 import { MAGIC_LINK_TTL_MS, REFRESH_COOKIE } from './auth.constants';
+import { hashPassword, verifyPassword } from './password';
 
 export type PublicUser = {
   id: string;
@@ -32,6 +35,87 @@ export class AuthService {
     private readonly jwt: JwtService,
     private readonly config: ConfigService<Env, true>,
   ) {}
+
+  async register(
+    username: string,
+    email: string,
+    password: string,
+    res: Response,
+  ): Promise<{ user: PublicUser }> {
+    const normalizedEmail = email.trim().toLowerCase();
+    const slug = parseProfileSlug(username);
+    const displayName = username.trim();
+
+    const [emailTaken, slugTaken] = await Promise.all([
+      this.prisma.user.findUnique({ where: { email: normalizedEmail } }),
+      this.prisma.user.findFirst({ where: { profileSlug: slug } }),
+    ]);
+    if (emailTaken) {
+      throw new ConflictException('An account with this email already exists.');
+    }
+    if (slugTaken) {
+      throw new ConflictException('This username is already taken.');
+    }
+
+    const passwordHash = await hashPassword(password);
+    const user = await this.prisma.user.create({
+      data: {
+        email: normalizedEmail,
+        emailVerified: new Date(),
+        displayName,
+        profileSlug: slug,
+        account: { create: {} },
+        identities: {
+          create: {
+            provider: AuthProvider.password,
+            providerUserId: normalizedEmail,
+            passwordHash,
+          },
+        },
+      },
+    });
+
+    return this.issueSession(user, res);
+  }
+
+  async loginWithPassword(
+    login: string,
+    password: string,
+    res: Response,
+  ): Promise<{ user: PublicUser }> {
+    const trimmed = login.trim();
+    const normalized = trimmed.toLowerCase();
+    const byEmail = await this.prisma.user.findUnique({
+      where: { email: normalized },
+    });
+    let user = byEmail;
+    if (!user && trimmed.includes('@') === false) {
+      try {
+        const slug = parseProfileSlug(trimmed);
+        user = await this.prisma.user.findFirst({ where: { profileSlug: slug } });
+      } catch {
+        user = null;
+      }
+    }
+
+    if (!user || user.deletedAt) {
+      throw new UnauthorizedException('Invalid email/username or password.');
+    }
+
+    const identity = await this.prisma.identity.findFirst({
+      where: { userId: user.id, provider: AuthProvider.password },
+    });
+    if (!identity?.passwordHash) {
+      throw new UnauthorizedException('Invalid email/username or password.');
+    }
+
+    const valid = await verifyPassword(password, identity.passwordHash);
+    if (!valid) {
+      throw new UnauthorizedException('Invalid email/username or password.');
+    }
+
+    return this.issueSession(user, res);
+  }
 
   async requestMagicLink(email: string): Promise<{ ok: true; token?: string }> {
     const normalized = email.trim().toLowerCase();

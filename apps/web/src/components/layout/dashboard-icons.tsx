@@ -45,7 +45,7 @@ export function BillingIcon() {
   );
 }
 
-export function CatalogueIcon() {
+export function ProblemsIcon() {
   return (
     <Svg>
       <rect x="2" y="2" width="5" height="5" rx="1.2" />

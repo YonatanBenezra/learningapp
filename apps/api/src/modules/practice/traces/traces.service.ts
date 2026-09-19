@@ -3,6 +3,7 @@ import { AccountTier } from '@prisma/client';
 import type { AuthenticatedUser } from '../../../common/types/authenticated-user';
 import { readTraceBlob } from '../../../common/utils/trace-blob';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import { product } from '../../../config/product.constants';
 import { AccountService } from '../../accounts/account.service';
 import { GATED_TRACE_MESSAGE } from '../../accounts/account.quota';
 import { ASSESSMENT_TRACE_WITHHELD } from '../../assessments/assessments.constants';
@@ -55,9 +56,11 @@ export class TracesService {
     const blob = await readTraceBlob(run.trace.blobUri);
     const body =
       blob && typeof blob === 'object' ? (blob as Record<string, unknown>) : {};
-    const usage = await this.accounts.usageFor(user.id);
-    if (usage.tier !== AccountTier.pro) {
-      return gateFreeTrace(runId, run.trace.createdAt, body);
+    if (!product.fullTracesForAll) {
+      const usage = await this.accounts.usageFor(user.id);
+      if (usage.tier !== AccountTier.pro) {
+        return gateFreeTrace(runId, run.trace.createdAt, body);
+      }
     }
     if (JSON.stringify(body).includes('HIDDEN_EVAL')) {
       return {

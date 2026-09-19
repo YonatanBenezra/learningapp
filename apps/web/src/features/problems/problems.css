@@ -1,4 +1,11 @@
-/* Catalogue — studio layout */
+/* Problems — studio layout */
+
+.lp-page-problems {
+  width: min(1200px, calc(100% - 3rem));
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: 0;
+}
 
 .lp-page-catalogue {
   max-width: 1350px;
@@ -433,12 +440,25 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   color: #b91c1c;
 }
 
+.lp-ex-card-link {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lp-ex-card-link:hover .lp-ex-card-title {
+  color: var(--lp-brand);
+}
+
 .lp-ex-card-title {
   margin: 0.15rem 0 0;
   font-size: 1.02rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.3;
+  transition: color 0.15s ease;
 }
 
 .lp-ex-card-tags {
@@ -449,7 +469,8 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   color: var(--lp-muted);
 }
 
-.lp-ex-card .lp-cat-btn {
+.lp-ex-card .lp-cat-btn,
+.lp-ex-card .lp-ex-start--locked {
   width: 100%;
   margin-top: 0.35rem;
 }
@@ -460,9 +481,77 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   gap: 0.5rem;
 }
 
+.lp-ex-row-num {
+  min-width: 1.75rem;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.lp-ex-card-num {
+  display: inline-flex;
+  align-self: flex-start;
+  min-width: 1.5rem;
+  padding: 0.12rem 0.4rem;
+  border-radius: 0.35rem;
+  background: color-mix(in srgb, var(--lp-ink) 6%, transparent);
+  color: var(--lp-muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-ex-start--locked {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 5.25rem;
+  padding-inline: 0.75rem;
+  background: color-mix(in srgb, var(--lp-ink) 8%, var(--lp-surface-elevated));
+  color: var(--lp-muted);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lp-border) 80%, transparent);
+}
+
+.lp-ex-start--locked:hover {
+  background: color-mix(in srgb, var(--lp-ink) 11%, var(--lp-surface-elevated));
+  color: var(--lp-ink);
+}
+
+.lp-ex-start--locked[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 0.45rem);
+  left: 50%;
+  z-index: 2;
+  width: max-content;
+  max-width: 11rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.35rem;
+  background: var(--lp-ink);
+  color: var(--lp-surface-elevated);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%) translateY(0.15rem);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.lp-ex-start--locked:hover::after,
+.lp-ex-start--locked:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .lp-ex-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 0.6rem 1.25rem;
   padding: 0.85rem 1.1rem;
@@ -479,8 +568,14 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   box-shadow: 0 10px 22px rgba(7, 14, 30, 0.08);
 }
 
-.lp-ex-row-main {
+.lp-ex-row-link {
   min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lp-ex-row-link:hover .lp-ex-row-title {
+  color: var(--lp-brand);
 }
 
 .lp-ex-row-title {
@@ -489,6 +584,7 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.35;
+  transition: color 0.15s ease;
 }
 
 .lp-ex-row-tags {
@@ -505,7 +601,8 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   gap: 0.4rem;
 }
 
-.lp-ex-row .lp-cat-btn {
+.lp-ex-row .lp-cat-btn,
+.lp-ex-row .lp-ex-start--locked {
   min-width: 5.25rem;
 }
 
@@ -594,6 +691,21 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   pointer-events: none;
 }
 
+.lp-ex-row--skel {
+  border-color: color-mix(in srgb, var(--lp-border) 70%, transparent);
+  box-shadow: none;
+}
+
+.lp-ex-row--skel:hover {
+  border-color: color-mix(in srgb, var(--lp-border) 70%, transparent);
+  box-shadow: none;
+  transform: none;
+}
+
+.lp-ex-row-num-skel {
+  justify-self: end;
+}
+
 .lp-skel-block {
   display: block;
   border-radius: 0.45rem;
@@ -631,10 +743,28 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   }
 }
 
+@media (max-width: 859px) {
+  .lp-page-problems {
+    width: calc(100% - 2rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-page-problems {
+    width: calc(100% - 1.5rem);
+  }
+}
+
 @media (max-width: 760px) {
   .lp-ex-row {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: start;
+  }
+
+  .lp-ex-row-meta,
+  .lp-ex-row .lp-cat-btn,
+  .lp-ex-row .lp-ex-start--locked {
+    grid-column: 2;
   }
 
   .lp-ex-row-meta {

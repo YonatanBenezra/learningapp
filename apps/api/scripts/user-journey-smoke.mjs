@@ -67,26 +67,18 @@ async function main() {
   else pass('infra', 'API readiness OK');
 
   // Auth
-  const ml = await api('/api/auth/magic-link', {
+  const username = `qa${Date.now()}`;
+  const password = 'qa-password-123';
+  const registered = await api('/api/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ username, email, password }),
   });
-  if (ml.status !== 201 || !ml.body?.token) {
-    note('blocker', 'auth', `Magic link request failed (${ml.status})`);
+  const cookies = cookieFrom(registered.headers.getSetCookie?.() ?? []);
+  if (registered.status !== 201 || !cookies) {
+    note('blocker', 'auth', `Register failed (${registered.status})`);
     return printReport();
   }
-  pass('auth', 'Magic link issued');
-
-  const consume = await api('/api/auth/magic-link/consume', {
-    method: 'POST',
-    body: JSON.stringify({ token: ml.body.token }),
-  });
-  const cookies = cookieFrom(consume.headers.getSetCookie?.() ?? []);
-  if (consume.status !== 201 || !cookies) {
-    note('blocker', 'auth', 'Magic link consume failed');
-    return printReport();
-  }
-  pass('auth', 'Signed in via magic link');
+  pass('auth', 'Registered and signed in with password');
 
   const me = await api('/api/me', { headers: { Cookie: cookies } });
   if (me.status !== 200) note('high', 'auth', '/me failed after sign-in');
@@ -214,7 +206,7 @@ async function main() {
   const pages = [
     '/',
     '/login',
-    '/catalogue',
+    '/problems',
     '/paths',
     '/contests',
     '/leaderboard',

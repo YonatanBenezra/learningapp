@@ -8,16 +8,7 @@ import { routes } from "@/config/routes";
 import { ensureAuthSession } from "@/features/auth/auth-session";
 import { LogoutButton } from "@/features/auth/logout-button";
 import type { User } from "@/types/user";
-import {
-  AssessmentsIcon,
-  BillingIcon,
-  CatalogueIcon,
-  ContestsIcon,
-  LeaderboardIcon,
-  PathsIcon,
-  ProfileIcon,
-  ProgressIcon,
-} from "./dashboard-icons";
+import { ProblemsIcon, ProgressIcon } from "./dashboard-icons";
 
 type NavItem = {
   href: string;
@@ -25,25 +16,9 @@ type NavItem = {
   icon: () => React.ReactElement;
 };
 
-const navGroups: { title: string; items: NavItem[] }[] = [
-  {
-    title: "Account",
-    items: [
-      { href: routes.account, label: "Profile", icon: ProfileIcon },
-      { href: routes.progress, label: "Progress", icon: ProgressIcon },
-      { href: routes.billing, label: "Billing", icon: BillingIcon },
-    ],
-  },
-  {
-    title: "Practice",
-    items: [
-      { href: routes.catalogue, label: "Catalogue", icon: CatalogueIcon },
-      { href: routes.paths, label: "Paths", icon: PathsIcon },
-      { href: routes.contests, label: "Contests", icon: ContestsIcon },
-      { href: routes.assessments, label: "Assessments", icon: AssessmentsIcon },
-      { href: routes.leaderboard, label: "Leaderboard", icon: LeaderboardIcon },
-    ],
-  },
+const navItems: NavItem[] = [
+  { href: routes.problems, label: "Problems", icon: ProblemsIcon },
+  { href: routes.progress, label: "Progress", icon: ProgressIcon },
 ];
 
 type DashboardSidebarProps = {
@@ -62,12 +37,10 @@ function initialFor(user: User): string {
 
 export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
-  // Starts null on both server and client so the first paint matches.
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    // Resolves from the cached snapshot when RequireAuth already fetched it.
     ensureAuthSession().then((session) => {
       if (!cancelled && session.status === "authenticated") {
         setUser(session.user);
@@ -77,8 +50,6 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
       cancelled = true;
     };
   }, []);
-
-  const tier = user?.account?.tier;
 
   return (
     <>
@@ -91,7 +62,7 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
       />
       <aside className={`lp-dash-sidebar${open ? " is-open" : ""}`} aria-label="Dashboard">
         <div className="lp-dash-brand">
-          <Link href={routes.progress} className="lp-dash-brand-link" onClick={onClose}>
+          <Link href={routes.problems} className="lp-dash-brand-link" onClick={onClose}>
             <span className="lp-mark" aria-hidden="true">
               <svg viewBox="0 0 20 20" width="14" height="14" fill="none">
                 <path
@@ -105,36 +76,31 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
             </span>
             <span>
               <span className="lp-dash-brand-name">{brand.name}</span>
-              <span className="lp-dash-brand-byline">Dashboard</span>
+              <span className="lp-dash-brand-byline">Practice</span>
             </span>
           </Link>
         </div>
 
         <nav className="lp-dash-nav">
-          {navGroups.map((group) => (
-            <div key={group.title} className="lp-dash-group">
-              <p className="lp-dash-group-title">{group.title}</p>
-              <ul className="lp-dash-list">
-                {group.items.map((item) => {
-                  const active = isActive(pathname, item.href);
-                  const Icon = item.icon;
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className={`lp-dash-link${active ? " is-active" : ""}`}
-                        aria-current={active ? "page" : undefined}
-                        onClick={onClose}
-                      >
-                        <Icon />
-                        <span>{item.label}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+          <ul className="lp-dash-list">
+            {navItems.map((item) => {
+              const active = isActive(pathname, item.href);
+              const Icon = item.icon;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`lp-dash-link${active ? " is-active" : ""}`}
+                    aria-current={active ? "page" : undefined}
+                    onClick={onClose}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
 
         <div className="lp-dash-sidebar-foot">
@@ -151,9 +117,6 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
                   {user.email}
                 </span>
               </span>
-              {tier ? (
-                <span className={`lp-dash-tier lp-dash-tier--${tier}`}>{tier}</span>
-              ) : null}
             </div>
           ) : (
             <div className="lp-dash-user lp-dash-user--loading" aria-hidden="true">
@@ -166,8 +129,8 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
           )}
 
           <div className="lp-dash-foot-row">
-            <Link href={routes.catalogue} className="lp-dash-foot-link" onClick={onClose}>
-              Back to catalogue
+            <Link href={routes.problems} className="lp-dash-foot-link" onClick={onClose}>
+              Open problems
             </Link>
             <LogoutButton className="lp-dash-foot-btn" onDone={onClose} />
           </div>

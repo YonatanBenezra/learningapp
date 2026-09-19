@@ -17,6 +17,8 @@ import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { AssessmentsModule } from './modules/assessments/assessments.module';
 import { ContestsModule } from './modules/contests/contests.module';
+import { DemoModule } from './modules/demo/demo.module';
+import { LlmModule } from './modules/llm/llm.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { ContestsModule } from './modules/contests/contests.module';
     LeaderboardModule,
     ContestsModule,
     AssessmentsModule,
+    LlmModule,
+    DemoModule,
   ],
 })
 export class AppModule {}

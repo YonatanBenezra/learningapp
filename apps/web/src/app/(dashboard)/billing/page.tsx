@@ -1,5 +1,5 @@
-import { BillingPage } from "@/features/billing/billing-page";
+import { redirectToProblems } from "@/lib/redirect-to-problems";
 
-export default function Page() {
-  return <BillingPage />;
+export default function BillingRedirectPage() {
+  redirectToProblems();
 }

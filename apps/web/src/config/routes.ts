@@ -1,7 +1,8 @@
 export const routes = {
   home: "/",
   login: "/login",
-  catalogue: "/catalogue",
+  register: "/register",
+  problems: "/problems",
   paths: "/paths",
   path: (slug: string) => `/paths/${slug}`,
   onboarding: "/onboarding",
@@ -34,7 +35,7 @@ export function loginPath(next?: string) {
 
 export function safeNext(value: string | null | undefined): string {
   if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return routes.catalogue;
+    return routes.problems;
   }
   return value;
 }
@@ -46,7 +47,7 @@ export function postAuthPath(
   const next = safeNext(intended);
   if (
     onboardingNeeded &&
-    (next === routes.catalogue || next === routes.home || next === routes.login)
+    (next === routes.problems || next === routes.home || next === routes.login)
   ) {
     return routes.onboarding;
   }

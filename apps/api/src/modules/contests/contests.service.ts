@@ -94,33 +94,36 @@ export class ContestsService {
   ) {}
 
   async list(
-    user: AuthenticatedUser,
+    user: AuthenticatedUser | undefined,
     kind: ContestKind = ContestKind.contest,
     now = new Date(),
   ): Promise<{ items: ContestListItem[] }> {
-    const [contests, entries, account] = await Promise.all([
+    const [contests, entries, tier, seasonSittingUsed] = await Promise.all([
       this.prisma.contest.findMany({
         where: { isPublished: true, kind },
         include: { problems: true },
         orderBy: [{ startsAt: 'desc' }],
       }),
-      this.prisma.contestEntry.findMany({
-        where: { userId: user.id },
-        select: { contestId: true },
-      }),
-      this.accounts.usageFor(user.id),
+      user
+        ? this.prisma.contestEntry.findMany({
+            where: { userId: user.id },
+            select: { contestId: true },
+          })
+        : Promise.resolve([]),
+      user
+        ? this.accounts.usageFor(user.id).then((usage) => usage.tier)
+        : Promise.resolve(AccountTier.free),
+      user && kind === ContestKind.assessment
+        ? this.hasAssessmentSeasonEntry(user.id, now)
+        : Promise.resolve(false),
     ]);
     const entered = new Set(entries.map((row) => row.contestId));
-    const seasonSittingUsed =
-      kind === ContestKind.assessment
-        ? await this.hasAssessmentSeasonEntry(user.id, now)
-        : false;
     return {
       items: contests.map((contest) =>
         this.toListItem(
           contest,
           entered.has(contest.id),
-          account.tier,
+          tier,
           now,
           null,
           seasonSittingUsed,

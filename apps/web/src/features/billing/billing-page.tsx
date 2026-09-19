@@ -130,7 +130,7 @@ function BillingFields() {
               </p>
             </div>
             <ul className="lp-bill-features">
-              <li>Catalogue access and guided paths</li>
+              <li>Problems access and guided paths</li>
               <li>Scorecards on every graded attempt</li>
               <li>Public profile optional</li>
             </ul>

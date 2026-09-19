@@ -22,6 +22,7 @@ enum Role {
 
 enum AuthProvider {
   magic_link
+  password
   google
   github
 

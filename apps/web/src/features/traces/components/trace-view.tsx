@@ -279,9 +279,8 @@ export function TraceView({ runId }: TraceViewProps) {
               <div className="lp-trace-gated">
                 <span>
                   {trace.message ??
-                    "Full traces are included with Pro. Your scorecard still shows the verdict."}
+                    "This trace is not available for this run. Your scorecard still shows the verdict."}
                 </span>
-                <Link href={routes.billing}>Upgrade</Link>
               </div>
             ) : isAgent ? (
               steps.length === 0 ? (

@@ -1,9 +1,5 @@
-import { LeaderboardView } from "@/features/leaderboard/components/leaderboard-view";
+import { redirectToProblems } from "@/lib/redirect-to-problems";
 
-export default function LeaderboardPage() {
-  return (
-    <div className="lp-page lp-page-catalogue lp-page-leaderboard">
-      <LeaderboardView />
-    </div>
-  );
+export default function LeaderboardRedirectPage() {
+  redirectToProblems();
 }

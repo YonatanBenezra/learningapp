@@ -68,8 +68,8 @@ export function OnboardingPage() {
         {session.grade?.verdict === "pass" ? (
           <p className="lp-onboard-done">
             Onboarding complete —{" "}
-            <Link href={routes.catalogue} className="lp-link">
-              open the catalogue
+            <Link href={routes.problems} className="lp-link">
+              open problems
             </Link>
             .
           </p>

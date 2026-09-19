@@ -10,7 +10,10 @@ import {
   ContestState,
   contestProblemState,
 } from "@/features/contests/components/contest-state";
-import { BriefPanel } from "@/features/workspace/components/brief-panel";
+import {
+  BriefPanel,
+  type BriefTab,
+} from "@/features/workspace/components/brief-panel";
 import { RunPanel } from "@/features/workspace/components/run-panel";
 import { SubmissionSurface } from "@/features/workspace/components/submission-surface";
 import {
@@ -47,6 +50,8 @@ export function ContestWorkspaceShell({
   const [pending, setPending] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [quotaHref, setQuotaHref] = useState<string | null>(null);
+  const [briefTab, setBriefTab] = useState<BriefTab>("description");
+  const [briefCollapsed, setBriefCollapsed] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -159,6 +164,10 @@ export function ContestWorkspaceShell({
         backHref={detailHref(contestSlug)}
         backLabel={labels.eyebrow}
         hintsDisabled={exercise?.hintsDisabled ?? true}
+        collapsed={briefCollapsed}
+        tab={briefTab}
+        onTabChange={setBriefTab}
+        onToggleCollapse={() => setBriefCollapsed((current) => !current)}
       />
       <div className="lp-ws-pane lp-ws-pane--work">
         <SubmissionSurface

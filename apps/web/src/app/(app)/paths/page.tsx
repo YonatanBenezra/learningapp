@@ -1,9 +1,5 @@
-import { PathsView } from "@/features/paths/components/paths-view";
+import { redirectToProblems } from "@/lib/redirect-to-problems";
 
-export default function PathsPage() {
-  return (
-    <div className="lp-page lp-page-catalogue lp-page-paths">
-      <PathsView />
-    </div>
-  );
+export default function PathsRedirectPage() {
+  redirectToProblems();
 }

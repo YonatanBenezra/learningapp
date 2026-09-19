@@ -1,9 +1,5 @@
-import { AssessmentsView } from "@/features/assessments/components/assessments-view";
+import { redirectToProblems } from "@/lib/redirect-to-problems";
 
-export default function AssessmentsPage() {
-  return (
-    <div className="lp-page lp-page-catalogue lp-page-contests">
-      <AssessmentsView />
-    </div>
-  );
+export default function AssessmentsRedirectPage() {
+  redirectToProblems();
 }

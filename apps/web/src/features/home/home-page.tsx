@@ -2,6 +2,7 @@ import Link from "next/link";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
+import { AiEngineerSection } from "@/features/home/components/ai-engineer-section";
 import "./home.css";
 
 function TileIcon({ d }: { d: string }) {
@@ -65,8 +66,7 @@ export function HomePage() {
               <span className="ag-title-accent">engineers</span>
             </h1>
             <p className="ag-lead">
-              {brand.description} Hidden eval sets. A score that only moves when
-              your work does.
+              {brand.description} Hidden eval sets. A score that only moves when your work does.
             </p>
             <div className="ag-actions">
               <div className="ag-note" aria-hidden="true">
@@ -86,8 +86,8 @@ export function HomePage() {
                 </svg>
                 <p>Start your first set now</p>
               </div>
-              <AuthLink href={routes.catalogue} className="ag-btn ag-btn-lg ag-btn-orange">
-                Open catalogue
+              <AuthLink href={routes.problems} className="ag-btn ag-btn-lg ag-btn-orange">
+                Open problems
               </AuthLink>
               <Link href={routes.login} className="ag-btn ag-btn-lg ag-btn-dark">
                 Sign in
@@ -106,71 +106,38 @@ export function HomePage() {
             </div>
           </div>
         </section>
+
+        <AiEngineerSection />
       </main>
+
       <footer className="ag-footer">
         <div className="ag-footer-inner">
-          <div className="ag-cta">
-            <div className="ag-cta-panel">
-              <div>
-                <p className="ag-cta-kicker">Let&apos;s run a set</p>
-                <h2 className="ag-cta-title">Ready to open the catalogue?</h2>
-                <AuthLink href={routes.catalogue} className="ag-btn ag-btn-lg ag-btn-dark">
-                  Open catalogue
-                </AuthLink>
-              </div>
-              <div className="ag-call">
-                <div className="ag-call-card">
-                  <p className="ag-live">
-                    <i />
-                    Catalogue is live
-                  </p>
-                  <div className="ag-avatars">
-                    <span className="ag-avatar">LP</span>
-                    <span>+</span>
-                    <span className="ag-avatar ag-avatar--you">You</span>
-                  </div>
-                  <h3>Start with Chunk It Right</h3>
-                  <p>Pick a problem, submit, and read the scorecard.</p>
-                  <AuthLink href={routes.catalogue} className="ag-btn ag-btn-lg ag-btn-orange">
-                    Open catalogue
-                  </AuthLink>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div className="ag-cols">
             <div>
               <p className="ag-brand-name">{brand.name}</p>
               <p className="ag-brand-copy">
                 {brand.tagline}. Sets, reps, and a number that goes up.
               </p>
-              <p className="ag-news-title">Get a sign-in link</p>
-              <form className="ag-news" action={routes.login}>
+              <p className="ag-news-title">Get started</p>
+              <form className="ag-news" action={routes.register}>
                 <input type="email" name="email" placeholder="Enter your email" />
-                <button type="submit" aria-label="Continue to sign in">
+                <button type="submit" aria-label="Continue to register">
                   →
                 </button>
               </form>
             </div>
             <div className="ag-link-grid">
               <div>
-                <p className="ag-col-title">Pages</p>
+                <p className="ag-col-title">Practice</p>
                 <ul>
                   <li>
                     <Link href={routes.home}>Home</Link>
                   </li>
                   <li>
-                    <AuthLink href={routes.catalogue}>Catalogue</AuthLink>
-                  </li>
-                  <li>
-                    <Link href={routes.leaderboard}>Leaderboard</Link>
+                    <AuthLink href={routes.problems}>Problems</AuthLink>
                   </li>
                   <li>
                     <AuthLink href={routes.contests}>Contests</AuthLink>
-                  </li>
-                  <li>
-                    <AuthLink href={routes.paths}>Paths</AuthLink>
                   </li>
                   <li>
                     <Link href={routes.login}>Sign in</Link>
@@ -178,22 +145,13 @@ export function HomePage() {
                 </ul>
               </div>
               <div>
-                <p className="ag-col-title">Dashboard</p>
+                <p className="ag-col-title">Account</p>
                 <ul>
                   <li>
-                    <AuthLink href={routes.account}>Profile</AuthLink>
+                    <AuthLink href={routes.progress}>Profile</AuthLink>
                   </li>
                   <li>
                     <AuthLink href={routes.progress}>Progress</AuthLink>
-                  </li>
-                  <li>
-                    <AuthLink href={routes.billing}>Billing</AuthLink>
-                  </li>
-                  <li>
-                    <AuthLink href={routes.paths}>Start a path</AuthLink>
-                  </li>
-                  <li>
-                    <AuthLink href={routes.catalogue}>Exercises</AuthLink>
                   </li>
                 </ul>
               </div>
@@ -206,7 +164,7 @@ export function HomePage() {
                   <Link href={routes.login}>Sign in to start</Link>
                 </li>
                 <li>
-                  <AuthLink href={routes.catalogue}>Browse the catalogue</AuthLink>
+                  <AuthLink href={routes.problems}>Browse problems</AuthLink>
                 </li>
               </ul>
               <p className="ag-col-title" style={{ marginTop: "1.6rem" }}>

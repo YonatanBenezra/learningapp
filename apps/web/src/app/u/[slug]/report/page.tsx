@@ -1,10 +1,5 @@
-import { EmployerReportView } from "@/features/profile/components/public-profile";
+import { redirectToProblems } from "@/lib/redirect-to-problems";
 
-export default async function EmployerReportPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  return <EmployerReportView slug={slug} />;
+export default function PublicProfileReportRedirectPage() {
+  redirectToProblems();
 }

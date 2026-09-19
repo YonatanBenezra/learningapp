@@ -9,6 +9,7 @@ import {
 import { AccountTier } from '@prisma/client';
 import type { AuthenticatedUser } from '../../../common/types/authenticated-user';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import { product } from '../../../config/product.constants';
 import { AccountService } from '../../accounts/account.service';
 import { HINT_UPGRADE_MESSAGE } from '../../accounts/account.quota';
 
@@ -47,13 +48,15 @@ export class HintsService {
     if (count >= hints.length) {
       throw new BadRequestException('No more hints');
     }
-    const usage = await this.accounts.usageFor(user.id);
-    if (usage.tier !== AccountTier.pro && count >= 1) {
-      throw new ForbiddenException({
-        message: HINT_UPGRADE_MESSAGE,
-        code: 'pro_required',
-        upgradePath: '/billing',
-      });
+    if (!product.unlimitedHints) {
+      const usage = await this.accounts.usageFor(user.id);
+      if (usage.tier !== AccountTier.pro && count >= 1) {
+        throw new ForbiddenException({
+          message: HINT_UPGRADE_MESSAGE,
+          code: 'pro_required',
+          upgradePath: '/billing',
+        });
+      }
     }
     await this.prisma.hintUnlock.create({
       data: {

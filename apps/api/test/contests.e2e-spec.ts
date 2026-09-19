@@ -19,8 +19,9 @@ describe('Contests (e2e)', () => {
     await app.close();
   });
 
-  it('returns 401 without a cookie', async () => {
-    await request(app.getHttpServer()).get('/api/contests').expect(401);
+  it('lists contests without a cookie', async () => {
+    const response = await request(app.getHttpServer()).get('/api/contests').expect(200);
+    expect(Array.isArray(response.body.items)).toBe(true);
   });
 
   it('blocks Free users from entering with upgrade message', async () => {

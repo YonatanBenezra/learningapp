@@ -6,7 +6,7 @@ import type { PathListItem } from "@/types/path";
 import { pathsApi } from "../paths-api";
 import { PathCard } from "./path-card";
 import { PathStripSkeleton } from "./path-strip-skeleton";
-import "@/features/catalogue/catalogue.css";
+import "@/features/problems/problems.css";
 
 export function PathStrip() {
   const [items, setItems] = useState<PathListItem[] | null>(null);

@@ -3,15 +3,15 @@ import type { User } from "@/types/user";
 
 export const authApi = {
   me: () => apiClient<User>("/me"),
-  requestMagicLink: (email: string) =>
-    apiClient<{ ok: true; token?: string }>("/auth/magic-link", {
+  register: (body: { username: string; email: string; password: string }) =>
+    apiClient<{ user: User }>("/auth/register", {
       method: "POST",
-      body: JSON.stringify({ email }),
+      body: JSON.stringify(body),
     }),
-  consumeMagicLink: (token: string) =>
-    apiClient<{ user: User }>("/auth/magic-link/consume", {
+  login: (login: string, password: string) =>
+    apiClient<{ user: User }>("/auth/login", {
       method: "POST",
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ login, password }),
     }),
   refresh: () =>
     apiClient<{ user: User }>("/auth/refresh", {

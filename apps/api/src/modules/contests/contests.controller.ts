@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { ContestsService } from './contests.service';
 import { CreateContestAttemptDto } from './dto/create-contest-attempt.dto';
@@ -8,8 +9,9 @@ import { CreateContestAttemptDto } from './dto/create-contest-attempt.dto';
 export class ContestsController {
   constructor(private readonly contests: ContestsService) {}
 
+  @Public()
   @Get()
-  list(@CurrentUser() user: AuthenticatedUser) {
+  list(@CurrentUser() user?: AuthenticatedUser) {
     return this.contests.list(user);
   }
 

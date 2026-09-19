@@ -82,10 +82,10 @@ export function ContestState({
             </Link>
           ) : (
             <Link
-              href={routes.catalogue}
+              href={routes.problems}
               className="lp-ct-btn lp-ct-btn--ghost"
             >
-              Browse catalogue
+              Browse problems
             </Link>
           )}
         </div>

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { routes } from "@/config/routes";
-import { ApiError } from "@/lib/api-client";
 import type { ContestListItem, ContestWindow } from "@/types/contest";
 import { contestsApi } from "../contests-api";
 import "../contests.css";
@@ -159,10 +158,6 @@ export function ContestsView() {
       })
       .catch((caught: unknown) => {
         if (cancelled) {
-          return;
-        }
-        if (caught instanceof ApiError && caught.status === 401) {
-          setItems([]);
           return;
         }
         setError("load");

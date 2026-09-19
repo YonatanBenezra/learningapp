@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { isPublicAppPath } from "@/config/public-routes";
 import { loginPath, postAuthPath } from "@/config/routes";
-import {
-  ensureAuthSession,
-} from "@/features/auth/auth-session";
+import { ensureAuthSession } from "@/features/auth/auth-session";
+
+function pathFromHref(href: string) {
+  return href.split("#")[0].split("?")[0];
+}
 
 type AuthLinkProps = {
   href: string;
@@ -29,7 +32,9 @@ export function AuthLink({ href, className, children, onClick }: AuthLinkProps) 
         return;
       }
       if (session.status === "anonymous") {
-        setTarget(loginPath(href));
+        setTarget(
+          isPublicAppPath(pathFromHref(href)) ? href : loginPath(href),
+        );
         return;
       }
       setTarget(href);

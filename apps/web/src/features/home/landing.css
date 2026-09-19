@@ -1,0 +1,92 @@
+/* AI Engineer section — theme-aware overrides on landing */
+
+.ag-page--landing .ag-lc-ai {
+  background: transparent;
+  color: var(--ag-ink);
+  padding-inline: 0;
+}
+
+.ag-page--landing .ag-lc-ai-inner {
+  width: min(1200px, calc(100% - 3rem));
+}
+
+.ag-page--landing .ag-lc-ai-glow {
+  display: block;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--ag-orange) 12%, transparent) 0%,
+    transparent 72%
+  );
+}
+
+.ag-page--landing .ag-lc-ai-kicker,
+.ag-page--landing .ag-lc-ai-title {
+  color: var(--ag-orange);
+}
+
+.ag-page--landing .ag-lc-ai-lead,
+.ag-page--landing .ag-lc-ai-sims-title,
+.ag-page--landing .ag-lc-ai-sim-problem {
+  color: var(--ag-muted);
+}
+
+.ag-page--landing .ag-lc-ai-editor {
+  border-color: var(--ag-line);
+  background: color-mix(in srgb, var(--ag-card) 94%, transparent);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--ag-ink) 8%, transparent);
+}
+
+.ag-page--landing .ag-lc-ai-editor-bar,
+.ag-page--landing .ag-lc-ai-chrome {
+  border-color: var(--ag-line);
+  background: color-mix(in srgb, var(--ag-bg-soft) 85%, var(--ag-card));
+}
+
+.ag-page--landing .ag-lc-ai-tab.is-active {
+  background: var(--ag-card);
+  color: var(--ag-ink);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--ag-ink) 8%, transparent);
+}
+
+.ag-page--landing .ag-lc-ai-tab {
+  color: var(--ag-muted);
+}
+
+.ag-page--landing .ag-lc-ai-code-wrap,
+.ag-page--landing .ag-lc-ai-code {
+  background: color-mix(in srgb, var(--ag-bg-soft) 70%, var(--ag-card));
+}
+
+.ag-page--landing .ag-lc-ai-lines {
+  border-color: var(--ag-line);
+  background: color-mix(in srgb, var(--ag-bg-soft) 80%, var(--ag-card));
+  color: color-mix(in srgb, var(--ag-muted) 70%, transparent);
+}
+
+.ag-page--landing .ag-lc-ai-pre {
+  color: var(--ag-ink);
+}
+
+.ag-page--landing .ag-lc-ai-problem {
+  border-color: var(--ag-line);
+  background: color-mix(in srgb, var(--ag-bg-soft) 80%, var(--ag-card));
+  color: var(--ag-muted);
+}
+
+.ag-page--landing .ag-lc-ai-problem strong,
+.ag-page--landing .ag-lc-ai-sim-label {
+  color: var(--ag-ink);
+}
+
+.ag-page--landing .ag-lc-ai-sim.is-active {
+  border-color: var(--ag-line);
+  background: var(--ag-card);
+}
+
+.ag-page--landing .ag-lc-ai-sim:hover {
+  background: color-mix(in srgb, var(--ag-card) 85%, transparent);
+}
+
+.ag-page--landing .ag-lc-ai-more {
+  color: var(--ag-orange);
+}

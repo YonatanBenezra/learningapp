@@ -1,10 +1,5 @@
-import { VerifyResultView } from "@/features/verify/components/verify-result-view";
+import { redirectToProblems } from "@/lib/redirect-to-problems";
 
-export default async function VerifyResultPage({
-  params,
-}: {
-  params: Promise<{ resultId: string }>;
-}) {
-  const { resultId } = await params;
-  return <VerifyResultView resultId={resultId} />;
+export default function VerifyRedirectPage() {
+  redirectToProblems();
 }

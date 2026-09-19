@@ -37,6 +37,8 @@ export const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().optional().default(''),
   STRIPE_PRICE_MONTHLY: z.string().optional().default(''),
   STRIPE_PRICE_ANNUAL: z.string().optional().default(''),
+  OPENROUTER_API_KEY: z.string().optional().default(''),
+  OPENROUTER_MODEL: z.string().default('google/gemini-2.5-flash'),
 });
 
 export type Env = z.infer<typeof envSchema>;

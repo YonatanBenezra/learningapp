@@ -1,14 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { routes } from "@/config/routes";
 import { SIMULATOR_LABELS, SIMULATORS, type SimulatorSlug } from "@/config/simulators";
-import { catalogueApi } from "@/features/catalogue/catalogue-api";
-import { PathStrip } from "@/features/paths/components/path-strip";
-import { ApiError } from "@/lib/api-client";
+import {
+  ensureAuthSession,
+  getAuthSnapshot,
+} from "@/features/auth/auth-session";
+import { problemsApi } from "@/features/problems/problems-api";
 import type { Difficulty, Exercise } from "@/types/exercise";
-import { CatalogueSkeleton } from "./catalogue-skeleton";
+import { ProblemsSkeleton } from "./problems-skeleton";
 import { ExerciseCard } from "./exercise-card";
 import { ExerciseRow } from "./exercise-row";
 
@@ -91,18 +91,37 @@ function ListViewIcon() {
   );
 }
 
-export function CatalogueGrid() {
+export function ProblemsGrid() {
   const [items, setItems] = useState<Exercise[] | null>(null);
-  const [error, setError] = useState<"auth" | "load" | null>(null);
+  const [error, setError] = useState<"load" | null>(null);
   const [track, setTrack] = useState<SimulatorSlug | "all">("all");
   const [difficulty, setDifficulty] = useState<Difficulty | "all">("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [view, setView] = useState<ExerciseView>("grid");
+  const [view, setView] = useState<ExerciseView>("list");
+  const [signedIn, setSignedIn] = useState(
+    () =>
+      getAuthSnapshot().status === "authenticated" ||
+      getAuthSnapshot().status === "soft",
+  );
 
   useEffect(() => {
     let cancelled = false;
-    catalogueApi
+    ensureAuthSession().then((session) => {
+      if (!cancelled) {
+        setSignedIn(
+          session.status === "authenticated" || session.status === "soft",
+        );
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    problemsApi
       .list()
       .then((result) => {
         if (!cancelled) {
@@ -113,9 +132,7 @@ export function CatalogueGrid() {
         if (cancelled) {
           return;
         }
-        setError(
-          caught instanceof ApiError && caught.status === 401 ? "auth" : "load",
-        );
+        setError("load");
       });
     return () => {
       cancelled = true;
@@ -161,20 +178,6 @@ export function CatalogueGrid() {
   const rangeEnd = Math.min(currentPage * PAGE_SIZE, visible.length);
   const filtersActive = track !== "all" || difficulty !== "all" || query.trim().length > 0;
 
-  if (error === "auth") {
-    return (
-      <div className="lp-cat-empty">
-        <strong>Sign in required</strong>
-        <p>
-          Sign in to browse the catalogue.{" "}
-          <Link href={routes.login} className="lp-link">
-            Sign in
-          </Link>
-        </p>
-      </div>
-    );
-  }
-
   if (error === "load") {
     return (
       <div className="lp-cat-empty">
@@ -185,7 +188,7 @@ export function CatalogueGrid() {
   }
 
   if (!items) {
-    return <CatalogueSkeleton />;
+    return <ProblemsSkeleton />;
   }
 
   return (
@@ -193,14 +196,14 @@ export function CatalogueGrid() {
       <header className="lp-cat-hero">
         <div className="lp-cat-hero-copy">
           <div className="lp-cat-title-row">
-            <h1 className="lp-cat-title">Catalogue</h1>
+            <h1 className="lp-cat-title">Problems</h1>
             <span className="lp-cat-count" aria-label={`${items.length} exercises`}>
               {items.length} exercises
             </span>
           </div>
           <p className="lp-cat-lead">
-            Curated POC set across RAG, prompts, evaluation, guardrails, agents,
-            and benchmarks. Follow a path or open any exercise.
+            AI engineering problems across RAG, prompts, evaluation, guardrails,
+            agents, benchmarks, and more. Pick one and submit for a grade.
           </p>
         </div>
 
@@ -281,8 +284,6 @@ export function CatalogueGrid() {
         </div>
       </header>
 
-      <PathStrip />
-
       <section aria-label="Exercises">
         <div className="lp-ex-block-head">
           <h2>Exercises</h2>
@@ -318,7 +319,7 @@ export function CatalogueGrid() {
         {items.length === 0 ? (
           <div className="lp-cat-empty">
             <strong>No exercises published yet</strong>
-            <p>Seed the catalogue from the API, then reload.</p>
+            <p>Seed problems from the API, then reload.</p>
           </div>
         ) : visible.length === 0 ? (
           <div className="lp-cat-empty">
@@ -329,14 +330,24 @@ export function CatalogueGrid() {
           <>
             {view === "grid" ? (
               <div className="lp-ex-grid">
-                {pageItems.map((exercise) => (
-                  <ExerciseCard key={exercise.slug} exercise={exercise} />
+                {pageItems.map((exercise, index) => (
+                  <ExerciseCard
+                    key={exercise.slug}
+                    exercise={exercise}
+                    index={rangeStart + index}
+                    signedIn={signedIn}
+                  />
                 ))}
               </div>
             ) : (
               <div className="lp-ex-list">
-                {pageItems.map((exercise) => (
-                  <ExerciseRow key={exercise.slug} exercise={exercise} />
+                {pageItems.map((exercise, index) => (
+                  <ExerciseRow
+                    key={exercise.slug}
+                    exercise={exercise}
+                    index={rangeStart + index}
+                    signedIn={signedIn}
+                  />
                 ))}
               </div>
             )}

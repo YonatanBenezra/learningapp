@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { routes } from "@/config/routes";
 import { DashboardSidebar } from "./dashboard-sidebar";
 import { DashboardTopbar } from "./dashboard-topbar";
 
@@ -34,6 +35,13 @@ export function DashboardShell({ children }: DashboardShellProps) {
       document.body.style.overflow = prev;
     };
   }, [menuOpen]);
+
+  const profileLayout =
+    pathname === routes.progress || pathname.startsWith(`${routes.progress}/`);
+
+  if (profileLayout) {
+    return <main className="lp-dash-content lp-dash-content--profile">{children}</main>;
+  }
 
   return (
     <div className="lp-dash">

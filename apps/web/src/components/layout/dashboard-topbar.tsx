@@ -8,17 +8,12 @@ const titles: { match: (pathname: string) => boolean; title: string; subtitle?: 
   {
     match: (p) => p.startsWith("/profile"),
     title: "Profile",
-    subtitle: "Public profile and display name",
+    subtitle: "Display name and account",
   },
   {
     match: (p) => p.startsWith("/progress"),
     title: "Progress",
-    subtitle: "Scores, attempts, and quota",
-  },
-  {
-    match: (p) => p.startsWith("/billing"),
-    title: "Billing",
-    subtitle: "Plan and usage",
+    subtitle: "Solve history and skill scores",
   },
 ];
 
@@ -52,8 +47,8 @@ export function DashboardTopbar({ onMenuOpen }: DashboardTopbarProps) {
         </div>
       </div>
       <div className="lp-dash-topbar-actions">
-        <Link href={routes.catalogue} className="lp-btn lp-btn-primary lp-dash-top-cta">
-          Open catalogue
+        <Link href={routes.problems} className="lp-btn lp-btn-primary lp-dash-top-cta">
+          Open problems
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path
               d="M6 3.5L10.5 8 6 12.5"

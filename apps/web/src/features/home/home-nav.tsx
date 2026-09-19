@@ -11,26 +11,23 @@ import {
   getAuthSnapshot,
 } from "@/features/auth/auth-session";
 
-const publicLinks = [
-  { href: routes.home, label: "Home" },
-  { href: routes.catalogue, label: "Catalogue" },
-  { href: routes.leaderboard, label: "Leaderboard" },
-  { href: routes.contests, label: "Contests" },
-  { href: routes.assessments, label: "Assessments" },
-  { href: routes.paths, label: "Paths" },
-];
-
-const authHrefs = new Set<string>([
-  routes.catalogue,
-  routes.paths,
-  routes.contests,
-  routes.assessments,
-]);
+const navLinks = [
+  { href: routes.problems, label: "Problems", auth: false },
+  { href: routes.contests, label: "Contest", auth: false },
+  { href: "#ai-engineer", label: "Simulators", auth: false },
+] as const;
 
 const NAV_COLLAPSE_MQ = "(max-width: 859px)";
 
 function isSignedInStatus(status: string) {
   return status === "authenticated" || status === "soft";
+}
+
+function isActive(pathname: string, href: string) {
+  if (href.startsWith("#")) {
+    return false;
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export function HomeNav() {
@@ -143,8 +140,6 @@ export function HomeNav() {
     .filter(Boolean)
     .join(" ");
 
-  const links = publicLinks;
-
   return (
     <header ref={headerRef} className={headerClass}>
       <div className={`ag-nav${menuOpen ? " is-open" : ""}`}>
@@ -162,38 +157,50 @@ export function HomeNav() {
           </span>
           <span className="ag-logo-name">{brand.name}</span>
         </Link>
-        <nav className="ag-nav-links" id={navId} aria-label="Page">
-          {links.map((item) => {
-            const LinkTag = authHrefs.has(item.href) ? AuthLink : Link;
-            return (
-              <LinkTag key={item.href} href={item.href} className="ag-nav-link">
-                {item.label}
-              </LinkTag>
-            );
-          })}
-        </nav>
-        <div className="ag-nav-cta">
-          <button
-            type="button"
-            className="ag-nav-toggle"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            aria-controls={navId}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span />
-            <span />
-            <span />
-          </button>
-          {signedIn ? (
-            <Link href={routes.progress} className="ag-btn ag-btn-sm ag-btn-orange">
-              Dashboard
-            </Link>
-          ) : (
-            <AuthLink href={routes.catalogue} className="ag-btn ag-btn-sm ag-btn-orange">
-              Get Started
-            </AuthLink>
-          )}
+
+        <div className="ag-nav-end">
+          <nav className="ag-nav-links" id={navId} aria-label="Main">
+            {navLinks.map((item) => {
+              const LinkTag = item.auth ? AuthLink : Link;
+              const active = isActive(pathname, item.href);
+              return (
+                <LinkTag
+                  key={item.href}
+                  href={item.href}
+                  className={`ag-nav-link${active ? " is-active" : ""}`}
+                >
+                  {item.label}
+                </LinkTag>
+              );
+            })}
+          </nav>
+
+          <div className="ag-nav-cta">
+            <button
+              type="button"
+              className="ag-nav-toggle"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              aria-controls={navId}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+            {signedIn ? (
+              <Link href={routes.progress} className="ag-nav-btn">
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href={routes.login}
+                className={`ag-nav-btn${pathname === routes.login ? " is-active" : ""}`}
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </header>

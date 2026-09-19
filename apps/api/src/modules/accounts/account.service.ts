@@ -12,6 +12,7 @@ import {
   shouldResetPeriod,
   utcDateOnly,
 } from './account.periods';
+import { product } from '../../config/product.constants';
 import {
   effectiveAttemptsThisPeriod,
   limitsFor,
@@ -44,7 +45,10 @@ export class AccountService {
   ): Promise<Account> {
     const account = await this.ensureAccount(userId, db);
     const resetPeriod = shouldResetPeriod(account, now);
-    if (remainingAttempts(account, now) <= 0) {
+    if (
+      !product.unlimitedPractice &&
+      remainingAttempts(account, now) <= 0
+    ) {
       throw new QuotaExceededException(account.tier);
     }
     const resetDaily =

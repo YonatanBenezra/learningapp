@@ -1078,6 +1078,15 @@
   min-width: 0;
 }
 
+.lp-dash-content--profile {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  height: 100dvh;
+  padding: var(--lp-dash-nav-offset, 3.25rem) 0 0;
+  overflow: auto;
+}
+
 .lp-dash-content .lp-page {
   padding-top: 1.5rem;
 }

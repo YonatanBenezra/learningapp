@@ -1,9 +1,6 @@
-import { ProfileSettings } from "@/features/profile/components/profile-settings";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
 export default function ProfilePage() {
-  return (
-    <div className="lp-page lp-page-progress">
-      <ProfileSettings />
-    </div>
-  );
+  redirect(routes.progress);
 }

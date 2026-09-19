@@ -2,6 +2,11 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import {
+  asSubmissionSchema,
+  validateSubmission,
+} from "../submission-validation";
+import { IconCode } from "./workspace-icons";
 
 type SchemaProperty = {
   type?: string;
@@ -29,6 +34,7 @@ type SubmissionSurfaceProps = {
   title?: string;
   simulator?: string;
   onSubmit: (payload: Record<string, unknown>) => void;
+  onValidityChange?: (valid: boolean) => void;
 };
 
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
@@ -109,9 +115,11 @@ export function SubmissionSurface({
   title = "Submission",
   simulator,
   onSubmit,
+  onValidityChange,
 }: SubmissionSurfaceProps) {
-  const parsed = useMemo(() => asSchema(schema), [schema]);
+  const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
   const [values, setValues] = useState<Record<string, unknown>>({});
+  const [validationError, setValidationError] = useState<string | null>(null);
   const isRag = simulator === "rag";
   const isEval = simulator === "evaluation";
   const isGuard = simulator === "guardrails";
@@ -137,8 +145,24 @@ export function SubmissionSurface({
     fields.length > 0 &&
     !(isGuard && guardMode?.id === "defend");
 
+  const validation = useMemo(
+    () => validateSubmission(parsed, values),
+    [parsed, values],
+  );
+  const isValid = validation.ok;
+
+  useEffect(() => {
+    onValidityChange?.(isValid);
+  }, [isValid, onValidityChange]);
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const result = validateSubmission(parsed, values);
+    if (!result.ok) {
+      setValidationError(result.message);
+      return;
+    }
+    setValidationError(null);
     onSubmit(values);
   }
 
@@ -152,23 +176,21 @@ export function SubmissionSurface({
           "Author an attack or a defense, then grade against the hidden set."
         : "Configure the public fields, then grade this run.";
 
-  const submitLabel = pending
-    ? "Grading…"
-    : isRag
-      ? "Run retrieval grade"
-      : isEval
-        ? "Run evaluation grade"
-        : isGuard
-          ? "Run guardrail grade"
-          : "Submit";
-
   return (
     <>
-      <div className="lp-ws-pane-head">
-        <h2 className="lp-ws-pane-title">{title}</h2>
-        <p className="lp-ws-pane-lead">{lead ?? defaultLead}</p>
+      <div className="lp-ws-editor-toolbar">
+        <div className="lp-ws-editor-toolbar-start">
+          <span className="lp-ws-editor-icon-badge">
+            <IconCode size={16} />
+          </span>
+          <h2 className="lp-ws-editor-title">{title}</h2>
+        </div>
+        <div className="lp-ws-editor-toolbar-end">
+          <span className="lp-ws-editor-lang">Simulator</span>
+        </div>
       </div>
-      <section className="lp-ws-pane-body">
+      <p className="lp-ws-editor-lead">{lead ?? defaultLead}</p>
+      <section className="lp-ws-pane-body lp-ws-pane-body--editor">
         {pipeline ? (
           <div
             className={`lp-sim-pipe${isEval ? " lp-sim-pipe--eval" : ""}${isRag ? " lp-sim-pipe--rag" : ""}${isGuard ? " lp-sim-pipe--guard" : ""}`}
@@ -239,6 +261,7 @@ export function SubmissionSurface({
         ) : null}
 
         <form
+          id="lp-ws-submit-form"
           className={`lp-ws-form${isRag ? " lp-ws-form--rag" : ""}${isEval ? " lp-ws-form--eval" : ""}${isGuard ? " lp-ws-form--guard" : ""}`}
           onSubmit={handleSubmit}
         >
@@ -248,21 +271,21 @@ export function SubmissionSurface({
               name={key}
               property={property}
               value={values[key]}
+              required={
+                parsed.required ? parsed.required.includes(key) : true
+              }
               rag={isRag}
               codeLab={isEval || isGuard}
-              onChange={(next) =>
-                setValues((current) => ({ ...current, [key]: next }))
-              }
+              onChange={(next) => {
+                setValidationError(null);
+                setValues((current) => ({ ...current, [key]: next }));
+              }}
             />
           ))}
           <div className="lp-ws-form-actions">
-            <button
-              type="submit"
-              disabled={disabled || pending || fields.length === 0}
-              className="lp-btn lp-btn-primary lp-ws-submit"
-            >
-              {submitLabel}
-            </button>
+            {validationError ? (
+              <p className="lp-ws-error">{validationError}</p>
+            ) : null}
             {error ? (
               <p className="lp-ws-error">
                 {error}
@@ -287,6 +310,7 @@ function Field({
   name,
   property,
   value,
+  required = false,
   rag,
   codeLab,
   onChange,
@@ -294,6 +318,7 @@ function Field({
   name: string;
   property: SchemaProperty;
   value: unknown;
+  required?: boolean;
   rag?: boolean;
   codeLab?: boolean;
   onChange: (value: unknown) => void;
@@ -406,7 +431,7 @@ function Field({
           name={name}
           min={property.minimum}
           max={property.maximum}
-          required
+          required={required}
           inputMode="numeric"
           placeholder={placeholderFor(property)}
           value={value === "" || value == null ? "" : String(value)}
@@ -437,6 +462,7 @@ function Field({
               : 12
           }
           value={text}
+          required={required}
           onChange={(event) => onChange(event.target.value)}
           className="lp-field-input lp-sim-code"
           spellCheck={false}
@@ -454,6 +480,7 @@ function Field({
           name={name}
           rows={rag ? 8 : 7}
           value={text}
+          required={required}
           onChange={(event) => onChange(event.target.value)}
           className={`lp-field-input${rag ? " lp-rag-code" : ""}`}
           spellCheck={name.toLowerCase().includes("source") ? false : undefined}
@@ -463,6 +490,7 @@ function Field({
           type="text"
           name={name}
           value={text}
+          required={required}
           onChange={(event) => onChange(event.target.value)}
           className="lp-field-input"
         />

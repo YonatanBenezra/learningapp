@@ -5,12 +5,19 @@ import { routes } from "@/config/routes";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { ScorecardIntervals } from "./scorecard-intervals";
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconTestResult,
+} from "./workspace-icons";
 
 type RunPanelProps = {
   run: Run | null;
   grade: Grade | null;
   onboarding?: boolean;
   simulator?: string;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 };
 
 export function RunPanel({
@@ -18,24 +25,62 @@ export function RunPanel({
   grade,
   onboarding = false,
   simulator,
+  collapsed = false,
+  onToggleCollapse,
 }: RunPanelProps) {
   const isRag = simulator === "rag";
   const isEval = simulator === "evaluation";
   const isGuard = simulator === "guardrails";
   const isScorecard = isRag || isEval || isGuard;
+  if (collapsed) {
+    return (
+      <aside className="lp-ws-pane lp-ws-pane--run is-collapsed">
+        <button
+          type="button"
+          className="lp-ws-run-collapsed-bar"
+          onClick={onToggleCollapse}
+          aria-expanded={false}
+        >
+          <span className="lp-ws-run-collapsed-icon">
+            <IconTestResult size={16} />
+          </span>
+          <span className="lp-ws-run-collapsed-label">Test Result</span>
+          {grade ? (
+            <span className={`lp-ws-run-collapsed-verdict lp-ws-verdict lp-ws-verdict--${grade.verdict}`}>
+              {grade.verdict}
+            </span>
+          ) : null}
+          <IconChevronUp size={14} />
+        </button>
+      </aside>
+    );
+  }
+
   return (
     <aside className="lp-ws-pane lp-ws-pane--run">
-      <div className="lp-ws-pane-head">
-        <h2 className="lp-ws-pane-title">{isScorecard ? "Scorecard" : "Run"}</h2>
-        <p className="lp-ws-pane-lead">
-          {isRag
-            ? "Recall, failing queries, and retrieval notes after grade."
-            : isEval
-              ? "F1, κ, slice flags, and failing cases after grade."
-              : isGuard
-                ? "Block rates, levels won, and failing probes after grade."
-                : "Scorecard after you submit."}
-        </p>
+      <div className="lp-ws-run-toolbar">
+        <div className="lp-ws-run-toolbar-start">
+          <span className="lp-ws-run-icon">
+            <IconTestResult size={16} />
+          </span>
+          <h2 className="lp-ws-run-title">
+            {isScorecard ? "Test Result" : "Run"}
+          </h2>
+          {grade ? (
+            <span className={`lp-ws-verdict lp-ws-verdict--${grade.verdict}`}>
+              {grade.verdict}
+            </span>
+          ) : null}
+        </div>
+        <button
+          type="button"
+          className="lp-ws-icon-btn"
+          aria-label="Minimize results panel"
+          title="Minimize"
+          onClick={onToggleCollapse}
+        >
+          <IconChevronDown size={14} />
+        </button>
       </div>
       <div className="lp-ws-pane-body">
         {!run ? (
@@ -133,11 +178,11 @@ function Scorecard({ grade, onboarding = false }: { grade: Grade; onboarding?: b
           <p className="lp-ws-onboard-win-kicker">First solve complete</p>
           <p className="lp-ws-onboard-win-title">You read a live scorecard — nice work.</p>
           <p className="lp-ws-onboard-win-copy">
-            Explore the curated catalogue or follow a guided path next.
+            Explore curated problems or follow a guided path next.
           </p>
           <div className="lp-ws-onboard-win-actions">
-            <Link href={routes.catalogue} className="lp-btn lp-btn-primary">
-              Browse catalogue
+            <Link href={routes.problems} className="lp-btn lp-btn-primary">
+              Browse problems
             </Link>
             <Link href={routes.paths} className="lp-link">
               Guided paths
