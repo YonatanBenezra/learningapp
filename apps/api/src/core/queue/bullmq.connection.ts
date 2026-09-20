@@ -1,12 +1,14 @@
-import { URL } from 'node:url';
+import type { RedisOptions as BullRedisOptions } from 'bullmq';
+import { parseRedisUrl } from '../redis/redis-url';
 
-export function bullmqConnection(redisUrl: string) {
-  const parsed = new URL(redisUrl);
+export function bullmqConnection(redisUrl: string): BullRedisOptions {
+  const parsed = parseRedisUrl(redisUrl);
   return {
-    host: parsed.hostname,
-    port: parsed.port ? Number(parsed.port) : 6379,
-    username: parsed.username ? decodeURIComponent(parsed.username) : undefined,
-    password: parsed.password ? decodeURIComponent(parsed.password) : undefined,
+    host: parsed.host,
+    port: parsed.port,
+    username: parsed.username,
+    password: parsed.password,
+    tls: parsed.tls,
     maxRetriesPerRequest: null,
   };
 }

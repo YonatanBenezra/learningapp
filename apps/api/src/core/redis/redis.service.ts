@@ -7,6 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import type { Env } from '../config/env.schema';
+import { parseRedisUrl } from './redis-url';
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
@@ -14,10 +15,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private readonly client: Redis;
 
   constructor(private readonly config: ConfigService<Env, true>) {
-    this.client = new Redis(this.config.get('REDIS_URL', { infer: true }), {
+    this.client = new Redis({
+      ...parseRedisUrl(this.config.get('REDIS_URL', { infer: true })),
       lazyConnect: true,
       maxRetriesPerRequest: 1,
-      connectTimeout: 2000,
+      connectTimeout: 5000,
       retryStrategy: (times) =>
         times > 3 ? null : Math.min(times * 200, 1000),
     });

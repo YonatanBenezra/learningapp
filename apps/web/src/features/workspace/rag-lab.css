@@ -1,0 +1,526 @@
+/* RAG Simulation Lab */
+
+.lp-rag-lab {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.lp-rag-lab--loading,
+.lp-rag-lab--disabled {
+  display: grid;
+  place-items: center;
+  min-height: 12rem;
+  padding: 1.5rem;
+  color: var(--lp-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.lp-rag-lab-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.lp-rag-lab-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.lp-rag-lab-lead {
+  margin: 0.2rem 0 0;
+  max-width: 34rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-frozen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.lp-rag-lab-frozen-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lp-brand);
+}
+
+.lp-rag-lab-frozen-chip {
+  display: inline-flex;
+  padding: 0.18rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--lp-brand) 30%, var(--lp-border));
+  border-radius: 0.35rem;
+  background: color-mix(in srgb, var(--lp-brand) 8%, transparent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--lp-border);
+}
+
+.lp-rag-lab-tab {
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lp-rag-lab-tab.is-active {
+  border-color: var(--lp-border);
+  background: var(--lp-surface-elevated);
+  color: var(--lp-ink);
+}
+
+.lp-rag-lab-status {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-status.is-busy {
+  color: var(--lp-brand);
+}
+
+.lp-rag-lab-error {
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--lp-danger, #b91c1c) 35%, transparent);
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--lp-danger, #b91c1c) 8%, transparent);
+  color: var(--lp-danger, #b91c1c);
+  font-size: 0.8125rem;
+}
+
+.lp-rag-lab-pane {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 0.15rem 0.1rem 0.75rem 0;
+}
+
+.lp-rag-lab-empty {
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.lp-rag-lab-corpus {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-rag-lab-doc {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface-elevated) 92%, transparent);
+}
+
+.lp-rag-lab-doc-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.lp-rag-lab-doc-head strong {
+  font-size: 0.875rem;
+}
+
+.lp-rag-lab-doc-head span {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-doc p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-chunk-group h3 {
+  margin: 0 0 0.55rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+
+.lp-rag-lab-chunk-grid {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.lp-rag-lab-chunk {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-left: 3px solid color-mix(in srgb, var(--lp-brand) 55%, var(--lp-border));
+  border-radius: 0.45rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-rag-lab-chunk header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.lp-rag-lab-chunk code {
+  font-size: 0.6875rem;
+  color: var(--lp-brand);
+}
+
+.lp-rag-lab-chunk header span {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-chunk p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-query-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.lp-rag-lab-field {
+  display: grid;
+  gap: 0.25rem;
+  min-width: min(100%, 14rem);
+}
+
+.lp-rag-lab-field--grow {
+  flex: 1;
+  min-width: min(100%, 20rem);
+}
+
+.lp-rag-lab-field span {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-field select,
+.lp-rag-lab-field input {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+  background: var(--lp-surface-elevated);
+  color: var(--lp-ink);
+  font-size: 0.8125rem;
+}
+
+.lp-rag-lab-query-active {
+  margin-bottom: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px dashed var(--lp-border);
+  border-radius: 0.45rem;
+}
+
+.lp-rag-lab-query-active span {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-query-active p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.lp-rag-lab-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.lp-rag-lab-compare h3 {
+  margin: 0 0 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-hits {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-rag-lab-hit {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+  background: var(--lp-surface-elevated);
+}
+
+.lp-rag-lab-hit-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-hit-head code {
+  color: var(--lp-brand);
+}
+
+.lp-rag-lab-hit p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-gen {
+  margin-bottom: 1rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-surface-elevated) 94%, transparent);
+}
+
+.lp-rag-lab-gen-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-gen pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.lp-rag-lab-citations {
+  margin: 0.55rem 0 0;
+  font-size: 0.75rem;
+  color: var(--lp-brand);
+}
+
+.lp-rag-lab-context h3,
+.lp-rag-lab-query-active span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.lp-rag-lab-context h3 {
+  margin: 0 0 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-ws-pane--work {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.lp-ws-work-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.lp-ws-work-pane[hidden] {
+  display: none !important;
+}
+
+.lp-ws-work-tabs {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.55rem 0.85rem 0;
+  border-bottom: 1px solid var(--lp-border);
+  background: color-mix(in srgb, var(--lp-surface-elevated) 88%, transparent);
+}
+
+.lp-ws-work-tab {
+  min-height: 2rem;
+  padding: 0.2rem 0.75rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.lp-ws-work-tab.is-active {
+  color: var(--lp-brand);
+  border-bottom-color: var(--lp-brand);
+}
+
+.lp-ws-work-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.lp-ws-work-tab-tag {
+  padding: 0.05rem 0.35rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--lp-muted) 14%, transparent);
+  color: var(--lp-muted);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lp-ws-lab-hint {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.55rem 0.85rem 0;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--lp-brand) 28%, var(--lp-border));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-brand) 7%, var(--lp-surface-elevated));
+}
+
+.lp-ws-lab-hint p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+.lp-ws-lab-hint-dismiss {
+  flex-shrink: 0;
+  min-height: 1.75rem;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.35rem;
+  background: var(--lp-surface-elevated);
+  color: var(--lp-ink);
+  font-size: 0.75rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.lp-info-tip {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-muted) 18%, transparent);
+  color: var(--lp-muted);
+  font-size: 0.625rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: help;
+}
+
+.lp-info-tip[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.4rem);
+  z-index: 5;
+  width: max-content;
+  max-width: 14rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 0.35rem;
+  background: var(--lp-ink);
+  color: var(--lp-surface-elevated);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%) translateY(0.1rem);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.lp-info-tip:hover::after,
+.lp-info-tip:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 900px) {
+  .lp-rag-lab-compare {
+    grid-template-columns: 1fr;
+  }
+}

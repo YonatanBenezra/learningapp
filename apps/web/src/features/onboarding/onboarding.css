@@ -94,5 +94,5 @@
 }
 
 .lp-app:has(.lp-onboard) .lp-ws {
-  height: calc(100dvh - 12.25rem);
+  height: calc(100dvh - 11.5rem);
 }

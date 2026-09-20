@@ -28,13 +28,14 @@ import "../problem-nav.css";
 
 type ProblemNavProps = {
   slug: string;
+  onboarding?: boolean;
 };
 
 function isSignedInStatus(status: string) {
   return status === "authenticated" || status === "soft";
 }
 
-export function ProblemNav({ slug }: ProblemNavProps) {
+export function ProblemNav({ slug, onboarding = false }: ProblemNavProps) {
   const router = useRouter();
   const [pathQuery, setPathQuery] = useState<string | null>(null);
 
@@ -147,7 +148,10 @@ export function ProblemNav({ slug }: ProblemNavProps) {
             </span>
           </Link>
 
-          <Link href={routes.problems} className="lp-problem-link">
+          <Link
+            href={onboarding ? routes.onboarding : routes.problems}
+            className="lp-problem-link"
+          >
             <span className="lp-problem-link-icon lp-problem-tone--blue" aria-hidden="true">
               <svg viewBox="0 0 16 16" width="15" height="15" fill="none">
                 <path
@@ -158,9 +162,10 @@ export function ProblemNav({ slug }: ProblemNavProps) {
                 />
               </svg>
             </span>
-            Problem List
+            {onboarding ? "First solve" : "Problem List"}
           </Link>
 
+          {!onboarding ? (
           <div className="lp-problem-steppers">
             <button
               type="button"
@@ -198,6 +203,7 @@ export function ProblemNav({ slug }: ProblemNavProps) {
               </svg>
             </button>
           </div>
+          ) : null}
         </div>
 
         <div className="lp-problem-nav-center">
@@ -207,7 +213,9 @@ export function ProblemNav({ slug }: ProblemNavProps) {
             disabled={navState.disabled || navState.pending}
             onClick={() => {
               if (!signedIn) {
-                router.push(loginPath(routes.exercise(slug)));
+                router.push(
+                  loginPath(onboarding ? routes.onboarding : routes.exercise(slug)),
+                );
                 return;
               }
               requestWorkspaceSubmit();

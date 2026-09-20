@@ -750,6 +750,22 @@ html[data-theme="dark"] .lp-badge--sim {
   min-height: 2.5rem;
 }
 
+.lp-ws-pane--run .lp-ws-pane-body {
+  padding: 0.85rem 1rem 1rem;
+}
+
+.lp-ws-metric dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.lp-rag-seg .lp-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .lp-ws-run-collapsed-bar {
   display: flex;
   align-items: center;

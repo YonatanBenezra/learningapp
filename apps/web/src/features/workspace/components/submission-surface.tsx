@@ -2,10 +2,12 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { SPLIT_STRATEGY_TIPS } from "../rag-lab/rag-lab-copy";
 import {
   asSubmissionSchema,
   validateSubmission,
 } from "../submission-validation";
+import { InfoTip } from "./info-tip";
 import { IconCode } from "./workspace-icons";
 
 type SchemaProperty = {
@@ -35,6 +37,7 @@ type SubmissionSurfaceProps = {
   simulator?: string;
   onSubmit: (payload: Record<string, unknown>) => void;
   onValidityChange?: (valid: boolean) => void;
+  onValuesChange?: (values: Record<string, unknown>) => void;
 };
 
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
@@ -116,6 +119,7 @@ export function SubmissionSurface({
   simulator,
   onSubmit,
   onValidityChange,
+  onValuesChange,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
   const [values, setValues] = useState<Record<string, unknown>>({});
@@ -154,6 +158,10 @@ export function SubmissionSurface({
   useEffect(() => {
     onValidityChange?.(isValid);
   }, [isValid, onValidityChange]);
+
+  useEffect(() => {
+    onValuesChange?.(values);
+  }, [values, onValuesChange]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -331,17 +339,27 @@ function Field({
     if (rag) {
       return (
         <fieldset className="lp-rag-seg lp-ws-field--wide">
-          <legend className="lp-field-label">{label}</legend>
+          <legend className="lp-field-label">
+            {label}
+            {name === "splitStrategy" ? (
+              <InfoTip text="How documents are split into chunks before retrieval." />
+            ) : null}
+          </legend>
           <div className="lp-rag-seg-list" role="radiogroup" aria-label={label}>
             {property.enum.map((option) => {
               const optionValue = String(option);
               const active = String(value ?? property.enum?.[0] ?? "") === optionValue;
+              const tip =
+                name === "splitStrategy"
+                  ? SPLIT_STRATEGY_TIPS[optionValue]
+                  : undefined;
               return (
                 <button
                   key={optionValue}
                   type="button"
                   role="radio"
                   aria-checked={active}
+                  title={tip}
                   className={`lp-rag-seg-btn${active ? " is-active" : ""}`}
                   onClick={() => onChange(optionValue)}
                 >

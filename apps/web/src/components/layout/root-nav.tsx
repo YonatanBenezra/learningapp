@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { routes } from "@/config/routes";
 import { DashboardNav } from "@/components/layout/dashboard-nav";
+import { OnboardingProblemNav } from "@/features/onboarding/onboarding-problem-nav";
 import { HomeNav } from "@/features/home/home-nav";
 import { ProblemNav } from "@/features/workspace/components/problem-nav";
 import "@/features/home/home.css";
@@ -27,6 +28,10 @@ export function RootNav() {
 
   if (exerciseSlug) {
     return <ProblemNav slug={exerciseSlug} />;
+  }
+
+  if (pathname === routes.onboarding) {
+    return <OnboardingProblemNav />;
   }
 
   if (isDashboardPath(pathname)) {

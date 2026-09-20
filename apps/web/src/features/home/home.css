@@ -2118,8 +2118,8 @@ html[data-theme="dark"] .ag-cols {
   display: block;
   background: radial-gradient(
     ellipse at center,
-    color-mix(in srgb, var(--ag-orange) 12%, transparent) 0%,
-    transparent 72%
+    color-mix(in srgb, var(--ag-orange) 6%, transparent) 0%,
+    transparent 55%
   );
 }
 
@@ -2137,7 +2137,21 @@ html[data-theme="dark"] .ag-cols {
 .ag-page .ag-lc-ai-editor {
   border-color: var(--ag-line);
   background: color-mix(in srgb, var(--ag-card) 94%, transparent);
-  box-shadow: 0 12px 32px color-mix(in srgb, var(--ag-ink) 8%, transparent);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="dark"] .ag-page .ag-lc-ai-editor {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.28),
+    0 4px 14px rgba(0, 0, 0, 0.32);
+}
+
+html[data-theme="dark"] .ag-page .ag-lc-ai-editor:hover {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.32),
+    0 6px 18px rgba(0, 0, 0, 0.38);
 }
 
 .ag-page .ag-lc-ai-editor-bar,
@@ -2149,7 +2163,11 @@ html[data-theme="dark"] .ag-cols {
 .ag-page .ag-lc-ai-tab.is-active {
   background: var(--ag-card);
   color: var(--ag-ink);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--ag-ink) 8%, transparent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="dark"] .ag-page .ag-lc-ai-tab.is-active {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 .ag-page .ag-lc-ai-tab {

@@ -16,6 +16,7 @@ import { WORKER_OFFLINE_MESSAGE } from "../worker-offline-message";
 import { BriefPanel, type BriefTab } from "./brief-panel";
 import { G1Chat } from "./g1-chat";
 import { RunPanel } from "./run-panel";
+import { RagLabPanel } from "./rag-lab-panel";
 import { SubmissionSurface } from "./submission-surface";
 import { WorkspaceSplit } from "./workspace-split";
 import {
@@ -43,6 +44,37 @@ function readFlag(key: string) {
   return window.localStorage.getItem(key) === "1";
 }
 
+function isRagSandboxSchema(schema: unknown) {
+  if (!schema || typeof schema !== "object") {
+    return false;
+  }
+  const properties = (schema as { properties?: Record<string, unknown> }).properties;
+  if (!properties) {
+    return false;
+  }
+  const keys = Object.keys(properties);
+  return keys.length === 1 && keys[0] === "source";
+}
+
+function ragEditorTitle(schema: unknown) {
+  const keys = Object.keys(
+    ((schema as { properties?: Record<string, unknown> })?.properties ?? {}) as Record<
+      string,
+      unknown
+    >,
+  );
+  if (keys.includes("generationPrompt")) {
+    return "Generation prompt";
+  }
+  if (keys.includes("reranker")) {
+    return "Reranker config";
+  }
+  if (keys.includes("topK")) {
+    return "Retriever budget";
+  }
+  return "Chunking config";
+}
+
 export function WorkspaceShell({
   slug,
   initialValues,
@@ -59,14 +91,21 @@ export function WorkspaceShell({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [briefTab, setBriefTab] = useState<BriefTab>("description");
   const [briefCollapsed, setBriefCollapsed] = useState(false);
-  const [resultsCollapsed, setResultsCollapsed] = useState(false);
+  const [resultsCollapsed, setResultsCollapsed] = useState(onboarding);
   const [submitValid, setSubmitValid] = useState(false);
+  const [labPayload, setLabPayload] = useState<Record<string, unknown>>({});
+  const [workTab, setWorkTab] = useState<"configure" | "lab">("configure");
+  const [labHintDismissed, setLabHintDismissed] = useState(() =>
+    readFlag("lp-ws-lab-hint-dismissed"),
+  );
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     setBriefCollapsed(readFlag("lp-ws-brief-collapsed"));
-    setResultsCollapsed(readFlag("lp-ws-results-collapsed"));
-  }, []);
+    if (!onboarding) {
+      setResultsCollapsed(readFlag("lp-ws-results-collapsed"));
+    }
+  }, [onboarding]);
 
   useEffect(() => {
     let cancelled = false;
@@ -207,22 +246,30 @@ export function WorkspaceShell({
     );
   }
 
+  const ragLabEnabled =
+    exercise?.simulator === "rag" && !isRagSandboxSchema(exercise.submissionSchema);
+  const showRagLab = ragLabEnabled && !onboarding;
   const editorLead =
     onboarding
       ? "A starter config is filled in. Submit to see your first scorecard."
       : exercise?.simulator === "rag"
-        ? "Tune chunking and retrieval settings, then submit to grade."
+        ? "Adjust settings here, then Submit to grade. Simulation Lab is optional preview."
         : exercise?.simulator === "evaluation"
           ? "Author assertions, a judge, or a slice spec — then submit."
           : exercise?.simulator === "guardrails"
             ? "Author an attack, inject page, or defense stack — then submit."
             : "Configure the fields below and submit to grade.";
+  const editorTitle = ragLabEnabled
+    ? ragEditorTitle(exercise.submissionSchema)
+    : exercise?.simulator === "rag"
+      ? "Python retriever"
+      : "Code";
 
   return (
     <div className={`lp-ws${exercise ? ` lp-ws--${exercise.simulator}` : ""}`}>
       <WorkspaceSplit
         storageKey="lp-ws-brief-ratio"
-        defaultRatio={0.44}
+        defaultRatio={onboarding ? 0.36 : 0.44}
         minPrimary={300}
         minSecondary={380}
         primaryCollapsed={briefCollapsed}
@@ -241,7 +288,7 @@ export function WorkspaceShell({
           <WorkspaceSplit
             direction="vertical"
             storageKey="lp-ws-editor-ratio"
-            defaultRatio={0.68}
+            defaultRatio={onboarding ? 0.78 : 0.68}
             minPrimary={200}
             minSecondary={140}
             className="lp-ws-split--stack"
@@ -251,18 +298,71 @@ export function WorkspaceShell({
                 {exercise?.slug === "grd-001-break-the-concierge" ? (
                   <G1Chat disabled={!exercise || pending} />
                 ) : null}
-                <SubmissionSurface
-                  schema={exercise?.submissionSchema}
-                  simulator={exercise?.simulator}
-                  disabled={!exercise || pending}
-                  pending={pending}
-                  error={submitError}
-                  initialValues={initialValues}
-                  title="Code"
-                  lead={editorLead}
-                  onSubmit={onSubmit}
-                  onValidityChange={setSubmitValid}
-                />
+                {showRagLab ? (
+                  <>
+                    {!labHintDismissed ? (
+                      <div className="lp-ws-lab-hint" role="note">
+                        <p>
+                          <strong>Configure</strong> is where you submit for a grade.{" "}
+                          <strong>Simulation Lab</strong> is optional — preview chunks and
+                          retrieval on the public corpus only.
+                        </p>
+                        <button
+                          type="button"
+                          className="lp-ws-lab-hint-dismiss"
+                          onClick={() => {
+                            setLabHintDismissed(true);
+                            window.localStorage.setItem("lp-ws-lab-hint-dismissed", "1");
+                          }}
+                        >
+                          Got it
+                        </button>
+                      </div>
+                    ) : null}
+                    <div className="lp-ws-work-tabs" role="tablist" aria-label="Workspace mode">
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={workTab === "configure"}
+                        className={`lp-ws-work-tab${workTab === "configure" ? " is-active" : ""}`}
+                        onClick={() => setWorkTab("configure")}
+                      >
+                        Configure
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={workTab === "lab"}
+                        className={`lp-ws-work-tab${workTab === "lab" ? " is-active" : ""}`}
+                        onClick={() => setWorkTab("lab")}
+                      >
+                        Simulation Lab
+                        <span className="lp-ws-work-tab-tag">Optional</span>
+                      </button>
+                    </div>
+                  </>
+                ) : null}
+                <div
+                  className="lp-ws-work-pane"
+                  hidden={showRagLab && workTab !== "configure"}
+                >
+                  <SubmissionSurface
+                    schema={exercise?.submissionSchema}
+                    simulator={exercise?.simulator}
+                    disabled={!exercise || pending}
+                    pending={pending}
+                    error={submitError}
+                    initialValues={initialValues}
+                    title={editorTitle}
+                    lead={editorLead}
+                    onSubmit={onSubmit}
+                    onValidityChange={setSubmitValid}
+                    onValuesChange={showRagLab ? setLabPayload : undefined}
+                  />
+                </div>
+                {showRagLab && workTab === "lab" ? (
+                  <RagLabPanel slug={slug} payload={labPayload} />
+                ) : null}
               </div>
             }
             secondary={

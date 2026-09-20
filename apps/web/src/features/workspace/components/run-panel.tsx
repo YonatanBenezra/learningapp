@@ -5,6 +5,8 @@ import { routes } from "@/config/routes";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { ScorecardIntervals } from "./scorecard-intervals";
+import { InfoTip } from "./info-tip";
+import { METRIC_TIPS, metricLabel } from "../rag-lab/rag-lab-copy";
 import {
   IconChevronDown,
   IconChevronUp,
@@ -145,7 +147,10 @@ function Scorecard({ grade, onboarding = false }: { grade: Grade; onboarding?: b
         <dl className="lp-ws-metrics">
           {metrics.map(([key, metric]) => (
             <div key={key} className="lp-ws-metric">
-              <dt>{key}</dt>
+              <dt>
+                {metricLabel(key)}
+                {METRIC_TIPS[key] ? <InfoTip text={METRIC_TIPS[key]} /> : null}
+              </dt>
               <dd>{Number(metric.value).toFixed(2)}</dd>
             </div>
           ))}
