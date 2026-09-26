@@ -347,7 +347,7 @@ function TraceHeader({
       </div>
       <nav className="lp-run-nav" aria-label="Trace links">
         <Link href={routes.run(runId)}>Run</Link>
-        <Link href={routes.progress}>Progress</Link>
+        <Link href={routes.dashboard}>Dashboard</Link>
       </nav>
     </header>
   );

@@ -856,3 +856,149 @@ html[data-theme="dark"] .lp-lc-pill--pass {
     align-items: flex-start;
   }
 }
+
+/* Dashboard skeleton */
+.lp-lc-skel {
+  display: block;
+  border-radius: 0.45rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--lp-border) 80%, transparent),
+    color-mix(in srgb, var(--lp-border) 38%, transparent),
+    color-mix(in srgb, var(--lp-border) 80%, transparent)
+  );
+  background-size: 200% 100%;
+  animation: lp-lc-skel-shimmer 1.25s ease-in-out infinite;
+}
+
+.lp-lc-skel-avatar {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.lp-lc-skel-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.65rem;
+}
+
+.lp-lc-skel-ring {
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.lp-lc-skel-bars {
+  display: grid;
+  gap: 0.55rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.lp-lc-skel-heat-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.lp-lc-skel-heat-grid {
+  display: grid;
+  grid-template-columns: repeat(26, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.lp-lc-skel-heat-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+}
+
+.lp-lc-skel-tabs {
+  display: flex;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+}
+
+.lp-lc-profile--skel {
+  min-height: 100%;
+  height: 100%;
+}
+
+.lp-lc-profile--skel .lp-lc-grid {
+  flex: 1;
+  min-height: 100%;
+  height: 100%;
+  align-items: stretch;
+}
+
+.lp-lc-profile--skel .lp-lc-side,
+.lp-lc-profile--skel .lp-lc-main {
+  min-height: 100%;
+}
+
+.lp-lc-profile--skel .lp-lc-main {
+  flex: 1;
+}
+
+.lp-lc-profile--skel .lp-lc-stats-card,
+.lp-lc-profile--skel .lp-lc-lang-card,
+.lp-lc-profile--skel .lp-lc-list-card,
+.lp-lc-profile--skel .lp-lc-heat-card,
+.lp-lc-profile--skel .lp-lc-badge-card {
+  padding: 1rem;
+}
+
+.lp-lc-profile--skel .lp-lc-lang-card {
+  flex: 1;
+  min-height: 5rem;
+}
+
+.lp-lc-profile--skel .lp-lc-heat-card {
+  flex: 1;
+  min-height: 10rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.lp-lc-profile--skel .lp-lc-skel-heat-grid {
+  flex: 1;
+  min-height: 6rem;
+  align-content: stretch;
+}
+
+.lp-lc-profile--skel .lp-lc-list-card {
+  flex: 1;
+  min-height: 8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.lp-lc-profile--skel .lp-lc-skel-fill {
+  flex: 1;
+  min-height: 2rem;
+  margin-top: 0.55rem;
+  border-radius: 0.45rem;
+}
+
+.lp-lc-profile--skel .lp-lc-solved-card {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1rem;
+}
+
+@keyframes lp-lc-skel-shimmer {
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-lc-skel {
+    animation: none;
+  }
+}

@@ -11,8 +11,8 @@ const titles: { match: (pathname: string) => boolean; title: string; subtitle?: 
     subtitle: "Display name and account",
   },
   {
-    match: (p) => p.startsWith("/progress"),
-    title: "Progress",
+    match: (p) => p.startsWith("/dashboard") || p.startsWith("/progress"),
+    title: "Dashboard",
     subtitle: "Solve history and skill scores",
   },
 ];

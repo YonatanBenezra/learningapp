@@ -37,7 +37,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   }, [menuOpen]);
 
   const profileLayout =
-    pathname === routes.progress || pathname.startsWith(`${routes.progress}/`);
+    pathname.startsWith("/dashboard") || pathname.startsWith("/progress");
 
   if (profileLayout) {
     return <main className="lp-dash-content lp-dash-content--profile">{children}</main>;

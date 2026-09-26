@@ -26,12 +26,6 @@ import { publicDisplayName } from '../profiles/profile-slug';
 import { itemScoreFromGrade } from './contest-score';
 import { sampleFromPool } from './contest-sample';
 
-const PRO_REQUIRED = {
-  message: 'Upgrade to Pro to enter contests.',
-  code: 'pro_required',
-  upgradePath: '/billing',
-} as const;
-
 export type ContestListItem = {
   slug: string;
   title: string;
@@ -281,12 +275,11 @@ export class ContestsService {
   ) {
     const contest = await this.loadContest(slug, expectedKind);
     const account = await this.accounts.usageFor(user.id);
-    if (account.tier !== AccountTier.pro) {
-      throw new ForbiddenException(
-        contest.kind === ContestKind.assessment
-          ? ASSESSMENT_PRO_REQUIRED
-          : PRO_REQUIRED,
-      );
+    if (
+      contest.kind === ContestKind.assessment &&
+      account.tier !== AccountTier.pro
+    ) {
+      throw new ForbiddenException(ASSESSMENT_PRO_REQUIRED);
     }
     const window = contestWindow(contest, now);
     if (window !== 'open') {
@@ -677,8 +670,10 @@ export class ContestsService {
     seasonSittingUsed = false,
   ): ContestListItem {
     const window = contestWindow(contest, now);
+    const tierEligible =
+      contest.kind !== ContestKind.assessment || tier === AccountTier.pro;
     const canEnter =
-      tier === AccountTier.pro &&
+      tierEligible &&
       window === 'open' &&
       !entered &&
       entryStatus !== ContestEntryStatus.finished &&

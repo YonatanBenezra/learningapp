@@ -14,7 +14,7 @@ import {
 const navLinks = [
   { href: routes.problems, label: "Problems", auth: false },
   { href: routes.contests, label: "Contest", auth: false },
-  { href: "#ai-engineer", label: "Simulators", auth: false },
+  { href: routes.simulations, label: "Simulators", auth: false },
 ] as const;
 
 const NAV_COLLAPSE_MQ = "(max-width: 859px)";

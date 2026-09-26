@@ -18,7 +18,7 @@ import "./dashboard-nav.css";
 const navLinks = [
   { href: routes.problems, label: "Problems" },
   { href: routes.contests, label: "Contest" },
-  { href: `${routes.home}#ai-engineer`, label: "Simulators" },
+  { href: routes.simulations, label: "Simulators" },
 ] as const;
 
 function isSignedInStatus(status: string) {

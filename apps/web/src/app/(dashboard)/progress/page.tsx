@@ -1,5 +1,6 @@
-import { ProgressView } from "@/features/progress/components/progress-view";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
-export default function ProgressPage() {
-  return <ProgressView />;
+export default function ProgressRedirectPage() {
+  redirect(routes.dashboard);
 }

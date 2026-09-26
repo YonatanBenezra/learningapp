@@ -1,7 +1,7 @@
 {
   "slug": "dogfood-s1",
   "title": "Dogfood Season 1",
-  "intent": "Internal timed contest. Pro only. Two problems sampled from a four-item pool.",
+  "intent": "Internal timed contest. Two problems sampled from a four-item pool.",
   "startsAt": "2026-09-01T00:00:00.000Z",
   "endsAt": "2026-12-31T23:59:59.000Z",
   "timeBoxMinutes": 90,

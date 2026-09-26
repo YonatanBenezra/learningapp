@@ -1,6 +1,6 @@
 html[data-workspace="dashboard"] {
   --lp-dash-nav-h: 3.25rem;
-  --lp-dash-nav-gap: 1.25rem;
+  --lp-dash-nav-gap: 2rem;
   --lp-dash-nav-offset: calc(
     var(--lp-dash-nav-h) + env(safe-area-inset-top, 0px) + var(--lp-dash-nav-gap)
   );

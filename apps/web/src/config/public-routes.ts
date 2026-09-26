@@ -4,6 +4,7 @@ import { routes } from "@/config/routes";
 export function isPublicAppPath(pathname: string): boolean {
   if (
     pathname === routes.problems ||
+    pathname === routes.simulations ||
     pathname === routes.contests ||
     pathname === routes.paths ||
     pathname === "/catalogue" ||

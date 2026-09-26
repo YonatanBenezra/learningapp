@@ -18,7 +18,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { href: routes.problems, label: "Problems", icon: ProblemsIcon },
-  { href: routes.progress, label: "Progress", icon: ProgressIcon },
+  { href: routes.dashboard, label: "Dashboard", icon: ProgressIcon },
 ];
 
 type DashboardSidebarProps = {

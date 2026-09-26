@@ -37,7 +37,7 @@ export function ContestStrip() {
       <div className="lp-path-strip-head">
         <p className="lp-panel-eyebrow">Contests</p>
         <p className="lp-cat-count lp-path-strip-lead">
-          Timed, novel problems. Pro only. Hints off.
+          Timed, novel problems. Free to enter. Hints off.
         </p>
       </div>
       <div className="lp-grid lp-grid-catalogue">

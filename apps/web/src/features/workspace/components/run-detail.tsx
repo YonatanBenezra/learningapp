@@ -165,7 +165,7 @@ export function RunDetail({ runId }: RunDetailProps) {
               <Link href={routes.exercise(run.exerciseSlug)}>Exercise</Link>
             ) : null}
             <Link href={routes.trace(run.id)}>Trace</Link>
-            <Link href={routes.progress}>Progress</Link>
+            <Link href={routes.dashboard}>Dashboard</Link>
           </nav>
         </header>
 

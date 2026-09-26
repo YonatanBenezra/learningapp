@@ -127,8 +127,11 @@ function sittingEnterTitle(
   if (contest.canEnter) {
     return labels.enterTitle;
   }
-  if (contest.window === "open") {
+  if (contest.window === "open" && variant === "assessment") {
     return labels.proOnlyTitle;
+  }
+  if (contest.window === "open") {
+    return labels.enterTitle;
   }
   if (variant === "assessment") {
     return "This assessment window is not open";
@@ -139,12 +142,16 @@ function sittingEnterTitle(
 function sittingEnterCopy(
   contest: ContestDetail,
   labels: ReturnType<typeof sittingConfig>["labels"],
+  variant: SittingVariant,
 ) {
   if (contest.canEnter) {
     return `${contest.sampledCount || 4} problems are sampled from a hidden pool of ${contest.problemCount}. Hints stay off for the whole ${contest.timeBoxMinutes}-minute box.`;
   }
-  if (contest.window === "open") {
+  if (contest.window === "open" && variant === "assessment") {
     return labels.proOnlyCopy;
+  }
+  if (contest.window === "open") {
+    return `${contest.sampledCount || 4} problems are sampled from a hidden pool of ${contest.problemCount}. Hints stay off for the whole ${contest.timeBoxMinutes}-minute box.`;
   }
   if (contest.window === "upcoming") {
     return `Opens ${formatDate(contest.startsAt)}.`;
@@ -157,12 +164,14 @@ function SittingEnterAction({
   pending,
   onEnter,
   labels,
+  variant,
   className = "lp-ct-btn",
 }: {
   contest: ContestDetail;
   pending: boolean;
   onEnter: () => void;
   labels: ReturnType<typeof sittingConfig>["labels"];
+  variant: SittingVariant;
   className?: string;
 }) {
   if (contest.canEnter) {
@@ -177,7 +186,7 @@ function SittingEnterAction({
       </button>
     );
   }
-  if (contest.window === "open") {
+  if (contest.window === "open" && variant === "assessment") {
     return (
       <Link href={routes.billing} className={className}>
         Upgrade to Pro
@@ -206,7 +215,7 @@ function SittingEnterGrid({
     <div className="lp-ctd-enter-grid">
       <article className="lp-ctd-enter-card">
         <h2 className="lp-ctd-enter-title">{sittingEnterTitle(contest, labels, variant)}</h2>
-        <p className="lp-ctd-enter-copy">{sittingEnterCopy(contest, labels)}</p>
+        <p className="lp-ctd-enter-copy">{sittingEnterCopy(contest, labels, variant)}</p>
       </article>
 
       <article className="lp-ctd-enter-card lp-ctd-enter-card--stat">
@@ -224,13 +233,14 @@ function SittingEnterGrid({
         <p className="lp-ctd-enter-card-note">
           {contest.canEnter || contest.window === "open"
             ? "Hints off · traces unlock when the sitting closes"
-            : sittingEnterCopy(contest, labels)}
+            : sittingEnterCopy(contest, labels, variant)}
         </p>
         <SittingEnterAction
           contest={contest}
           pending={pending}
           onEnter={onEnter}
           labels={labels}
+          variant={variant}
           className="lp-ct-btn lp-ctd-enter-card-btn"
         />
       </article>
@@ -399,7 +409,7 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
                   {sittingEnterTitle(contest, labels, variant)}
                 </h2>
                 <p className="lp-ctd-enter-copy">
-                  {sittingEnterCopy(contest, labels)}
+                  {sittingEnterCopy(contest, labels, variant)}
                 </p>
               </div>
               <SittingEnterAction
@@ -407,6 +417,7 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
                 pending={pending}
                 onEnter={() => void onEnter()}
                 labels={labels}
+                variant={variant}
               />
             </div>
           )}

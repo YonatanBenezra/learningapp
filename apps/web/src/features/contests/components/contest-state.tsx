@@ -120,8 +120,14 @@ export function contestProblemState(
     return {
       tone: "locked",
       title: `You have not started this ${sitting}`,
-      body: `Problems are drawn when you start. ${variant === "assessment" ? "Assessments" : "Contests"} are Pro only, and hints stay off for the whole time box.`,
-      action: { href: routes.billing, label: "See plans" },
+      body:
+        variant === "assessment"
+          ? "Assessments are Pro only, and hints stay off for the whole time box."
+          : "Enter the contest from the contest page first. Your problems are drawn when you start, and hints stay off for the whole time box.",
+      action:
+        variant === "assessment"
+          ? { href: routes.billing, label: "See plans" }
+          : undefined,
     };
   }
   if (status === 404) {

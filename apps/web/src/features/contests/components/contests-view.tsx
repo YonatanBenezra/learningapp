@@ -208,7 +208,7 @@ export function ContestsView() {
           <div>
             <h1 className="lp-ct-title">Contests</h1>
             <p className="lp-ct-lead">
-              Timed, ranked seasons with novel problems. Pro only.
+              Timed, ranked seasons with novel problems.
             </p>
           </div>
         </header>
@@ -231,14 +231,14 @@ export function ContestsView() {
           <h1 className="lp-ct-title">Contests</h1>
           <p className="lp-ct-lead">
             Timed, ranked seasons with novel problems sampled from a hidden pool.
-            Pro only. Hints are off during contest attempts.
+            Free to enter. Hints are off during contest attempts.
           </p>
         </div>
         <div className="lp-ct-meta">
           <span className="lp-ct-chip lp-ct-chip--brand">
             {items.length} contests
           </span>
-          <span className="lp-ct-chip">Pro only · hints off</span>
+          <span className="lp-ct-chip">Free · hints off</span>
         </div>
       </header>
 

@@ -8,7 +8,7 @@ import { HomeNav } from "@/features/home/home-nav";
 import { ProblemNav } from "@/features/workspace/components/problem-nav";
 import "@/features/home/home.css";
 
-const DASHBOARD_PREFIXES = [routes.progress, routes.account];
+const DASHBOARD_PREFIXES = [routes.dashboard, routes.account];
 
 function isDashboardPath(pathname: string) {
   return DASHBOARD_PREFIXES.some(

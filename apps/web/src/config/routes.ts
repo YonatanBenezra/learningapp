@@ -3,6 +3,7 @@ export const routes = {
   login: "/login",
   register: "/register",
   problems: "/problems",
+  simulations: "/simulations",
   paths: "/paths",
   path: (slug: string) => `/paths/${slug}`,
   onboarding: "/onboarding",
@@ -18,7 +19,9 @@ export const routes = {
   assessment: (slug: string) => `/assessments/${slug}`,
   assessmentProblem: (assessmentSlug: string, exerciseSlug: string) =>
     `/assessments/${assessmentSlug}/problems/${exerciseSlug}`,
-  progress: "/progress",
+  dashboard: "/dashboard",
+  /** Same URL as dashboard — kept for call sites that still use `routes.progress`. */
+  progress: "/dashboard",
   billing: "/billing",
   account: "/profile",
   profile: (slug: string) => `/u/${slug}`,

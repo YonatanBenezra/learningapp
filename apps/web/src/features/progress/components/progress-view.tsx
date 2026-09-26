@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { GlobalLoader } from "@/components/ui/global-loader";
+import { DashboardSkeleton } from "@/features/progress/components/dashboard-skeleton";
 import { routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
 import { LogoutButton } from "@/features/auth/logout-button";
@@ -274,7 +274,7 @@ export function ProgressView() {
       <div className="lp-lc-profile">
         <div className="lp-lc-empty">
           Sign in to view your dashboard.{" "}
-          <Link href={`${routes.login}?next=${encodeURIComponent(routes.progress)}`}>
+          <Link href={`${routes.login}?next=${encodeURIComponent(routes.dashboard)}`}>
             Sign in
           </Link>
         </div>
@@ -291,7 +291,7 @@ export function ProgressView() {
   }
 
   if (!progress || !user) {
-    return <GlobalLoader contained />;
+    return <DashboardSkeleton />;
   }
 
   const totalProblems = problems.length;

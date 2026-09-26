@@ -24,14 +24,14 @@ describe('Contests (e2e)', () => {
     expect(Array.isArray(response.body.items)).toBe(true);
   });
 
-  it('blocks Free users from entering with upgrade message', async () => {
+  it('lets Free users enter contests', async () => {
     const cookies = await signIn(app, `contest-free-${Date.now()}@labpath.test`);
     const response = await request(app.getHttpServer())
       .post(`/api/contests/${DOGFOOD_CONTEST}/enter`)
       .set('Cookie', cookies)
-      .expect(403);
-    expect(response.body.message.code).toBe('pro_required');
-    expect(response.body.message.upgradePath).toBe('/billing');
+      .expect(201);
+    expect(response.body.sampleSeed).toEqual(expect.any(String));
+    expect(response.body.entered).toBe(true);
   });
 
   it('lets Pro users enter, records sample_seed, and hides pool items', async () => {

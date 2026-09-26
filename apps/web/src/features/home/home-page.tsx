@@ -151,7 +151,7 @@ export function HomePage() {
                     <AuthLink href={routes.progress}>Profile</AuthLink>
                   </li>
                   <li>
-                    <AuthLink href={routes.progress}>Progress</AuthLink>
+                    <AuthLink href={routes.dashboard}>Dashboard</AuthLink>
                   </li>
                 </ul>
               </div>

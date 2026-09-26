@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { SIMULATOR_LABELS, SIMULATORS, type SimulatorSlug } from "@/config/simulators";
 import {
   ensureAuthSession,
@@ -91,7 +92,12 @@ function ListViewIcon() {
   );
 }
 
+function isSimulatorSlug(value: string): value is SimulatorSlug {
+  return (SIMULATORS as readonly string[]).includes(value);
+}
+
 export function ProblemsGrid() {
+  const searchParams = useSearchParams();
   const [items, setItems] = useState<Exercise[] | null>(null);
   const [error, setError] = useState<"load" | null>(null);
   const [track, setTrack] = useState<SimulatorSlug | "all">("all");
@@ -118,6 +124,13 @@ export function ProblemsGrid() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    const fromUrl = searchParams.get("track");
+    if (fromUrl && isSimulatorSlug(fromUrl)) {
+      setTrack(fromUrl);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     let cancelled = false;

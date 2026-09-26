@@ -1087,6 +1087,11 @@
   overflow: auto;
 }
 
+.lp-dash-content--profile > .lp-lc-profile {
+  flex: 1;
+  min-height: 0;
+}
+
 .lp-dash-content .lp-page {
   padding-top: 1.5rem;
 }
