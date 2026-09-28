@@ -3,18 +3,11 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { loadPublishedSlugs } from '../src/content/content-paths';
 import {
-  E1_SLUG,
-  E2_SLUG,
-  E3_SLUG,
-  G1_SLUG,
-  G2_SLUG,
-  G3_SLUG,
-  F1_SLUG,
   HIDDEN_EVAL_CANARY,
-  N1_SLUG,
   POC_CATALOGUE_TARGET,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
+import { describeLiveCatalogue } from './describe-live-catalogue';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
@@ -35,143 +28,82 @@ describe('Catalogue (e2e)', () => {
     await request(app.getHttpServer()).get('/api/exercises').expect(401);
   });
 
-  it('lists published R1 for an authenticated user', async () => {
+  it('lists an empty catalogue when nothing is published', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
 
     expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
-    expect(response.body.items).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          slug: R1_SLUG,
-          title: 'Chunk It Right',
-          simulator: 'rag',
-          difficulty: 'E',
-          skillTags: expect.arrayContaining(['chunking', 'retrieval-quality']),
-        }),
-        expect.objectContaining({
-          slug: 'rag-002-the-cost-ceiling',
-          title: 'The Cost Ceiling',
-        }),
-        expect.objectContaining({
-          slug: 'rag-003-the-citation-contract',
-          title: 'The Citation Contract',
-        }),
-        expect.objectContaining({
-          slug: 'rag-004-rerank-or-rethink',
-          title: 'Rerank or Re-think',
-        }),
-        expect.objectContaining({
-          slug: E1_SLUG,
-          title: 'Write the Assertion Suite',
-          simulator: 'evaluation',
-        }),
-        expect.objectContaining({
-          slug: E2_SLUG,
-          title: 'Judge the Judge',
-        }),
-        expect.objectContaining({
-          slug: E3_SLUG,
-          title: 'Catch the Regression',
-        }),
-        expect.objectContaining({
-          slug: G1_SLUG,
-          title: 'Break the Concierge',
-          simulator: 'guardrails',
-        }),
-        expect.objectContaining({
-          slug: G2_SLUG,
-          title: 'The Indirect Payload',
-        }),
-        expect.objectContaining({
-          slug: G3_SLUG,
-          title: 'Hold the Line',
-        }),
-        expect.objectContaining({
-          slug: N1_SLUG,
-          title: 'Read the Learning Curve',
-          simulator: 'neural_network',
-        }),
-        expect.objectContaining({
-          slug: F1_SLUG,
-          title: 'Tune or Prompt',
-          simulator: 'fine_tuning',
-        }),
-      ]),
-    );
+    expect(response.body.items).toEqual([]);
     expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
   });
 
-  it('lists the 28 curated exercises without hidden eval text', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/api/exercises?pageSize=200')
-      .set('Cookie', cookies)
-      .expect(200);
-
-    const published = loadPublishedSlugs();
-    const items = response.body.items as Array<{
-      slug: string;
-      simulator: string;
-    }>;
-    expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
-    expect(items).toHaveLength(POC_CATALOGUE_TARGET);
-    expect(items.map((item) => item.slug).sort()).toEqual([...published].sort());
-    expect(items.some((item) => item.slug.startsWith('ctst-'))).toBe(false);
-
-    const simulators = items.map((item) => item.simulator);
-    expect(simulators.filter((value) => value === 'rag')).toHaveLength(5);
-    expect(
-      simulators.filter((value) => value === 'prompt_engineering'),
-    ).toHaveLength(1);
-    expect(simulators.filter((value) => value === 'evaluation')).toHaveLength(3);
-    expect(simulators.filter((value) => value === 'guardrails')).toHaveLength(3);
-    expect(simulators.filter((value) => value === 'agent')).toHaveLength(5);
-    expect(simulators.filter((value) => value === 'benchmark')).toHaveLength(3);
-    expect(simulators.filter((value) => value === 'neural_network')).toHaveLength(4);
-    expect(simulators.filter((value) => value === 'fine_tuning')).toHaveLength(4);
-
-    const serialized = JSON.stringify(response.body);
-    expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);
-    expect(serialized).not.toContain('HIDDEN_EVAL');
-    expect(serialized).not.toContain('eval_hidden');
-
-    for (const item of response.body.items as { slug: string }[]) {
-      const detail = await request(app.getHttpServer())
-        .get(`/api/exercises/${item.slug}`)
+  describeLiveCatalogue('with published exercises', () => {
+    it('lists published exercises for an authenticated user', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/exercises?pageSize=200')
         .set('Cookie', cookies)
         .expect(200);
-      const body = JSON.stringify(detail.body);
-      expect(detail.body.hiddenEval).toBeUndefined();
-      expect(body).not.toContain('HIDDEN_EVAL');
-      expect(body).not.toContain('eval_hidden');
-    }
-  }, 30_000);
+
+      expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
+      expect(response.body.items.length).toBeGreaterThan(0);
+      expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
+    });
+
+    it('lists the curated catalogue without hidden eval text', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/exercises?pageSize=200')
+        .set('Cookie', cookies)
+        .expect(200);
+
+      const published = loadPublishedSlugs();
+      const items = response.body.items as Array<{
+        slug: string;
+        simulator: string;
+      }>;
+      expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
+      expect(items).toHaveLength(POC_CATALOGUE_TARGET);
+      expect(items.map((item) => item.slug).sort()).toEqual([...published].sort());
+
+      const serialized = JSON.stringify(response.body);
+      expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);
+      expect(serialized).not.toContain('HIDDEN_EVAL');
+      expect(serialized).not.toContain('eval_hidden');
+
+      for (const item of response.body.items as { slug: string }[]) {
+        const detail = await request(app.getHttpServer())
+          .get(`/api/exercises/${item.slug}`)
+          .set('Cookie', cookies)
+          .expect(200);
+        const body = JSON.stringify(detail.body);
+        expect(detail.body.hiddenEval).toBeUndefined();
+        expect(body).not.toContain('HIDDEN_EVAL');
+        expect(body).not.toContain('eval_hidden');
+      }
+    }, 30_000);
+
+    it('returns the public brief and sample without hidden eval items', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/exercises/${R1_SLUG}`)
+        .set('Cookie', cookies)
+        .expect(200);
+
+      expect(response.body.slug).toBe(R1_SLUG);
+      expect(response.body.hiddenEval).toBeUndefined();
+      expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
+      expect(JSON.stringify(response.body)).not.toContain('eval_hidden');
+    });
+  });
 
   it('hides unpublished filler exercises from the catalogue', async () => {
     await request(app.getHttpServer())
       .get('/api/exercises/rag-005-sentence-split')
       .set('Cookie', cookies)
       .expect(404);
-  });
-
-  it('returns the public brief and sample without hidden eval items', async () => {
-    const response = await request(app.getHttpServer())
-      .get(`/api/exercises/${R1_SLUG}`)
+    await request(app.getHttpServer())
+      .get('/api/exercises/grd-001-break-the-concierge')
       .set('Cookie', cookies)
-      .expect(200);
-
-    expect(response.body).toMatchObject({
-      slug: R1_SLUG,
-      title: 'Chunk It Right',
-      briefMd: expect.stringContaining('Fix the chunking'),
-    });
-    expect(response.body.publicSample).toEqual(
-      expect.arrayContaining([expect.objectContaining({ id: 'p1' })]),
-    );
-    expect(response.body.hiddenEval).toBeUndefined();
-    expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
-    expect(JSON.stringify(response.body)).not.toContain('eval_hidden');
+      .expect(404);
   });
 });

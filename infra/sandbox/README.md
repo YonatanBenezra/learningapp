@@ -15,7 +15,7 @@ Phase 2 Agent jobs reuse this image and network. Tool host: `import labpath_tool
 | Network | Internal network; only `sandbox-gateway` | Same |
 | Tools | — | `calculator`, `json_store`, `fixture_fetch` (log on stderr marker `LABPATH_TOOL_LOG:`) |
 
-Locked in [phase-1-decisions.md](../../docs/phase-1-decisions.md) and [phase-2-decisions.md](../../docs/phase-2-decisions.md).
+Locked in [LabPath-Specification.md](../../docs/Labpath%20specification/LabPath-Specification.md) (sandbox / agent limits).
 
 ## Local setup
 

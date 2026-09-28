@@ -17,6 +17,7 @@ import { BriefPanel, type BriefTab } from "./brief-panel";
 import { G1Chat } from "./g1-chat";
 import { RunPanel } from "./run-panel";
 import { RagLabPanel } from "./rag-lab-panel";
+import { RagFlowCanvas } from "./rag-flow-canvas";
 import { SubmissionSurface } from "./submission-surface";
 import { WorkspaceSplit } from "./workspace-split";
 import {
@@ -254,11 +255,9 @@ export function WorkspaceShell({
       ? "A starter config is filled in. Submit to see your first scorecard."
       : exercise?.simulator === "rag"
         ? "Adjust settings here, then Submit to grade. Simulation Lab is optional preview."
-        : exercise?.simulator === "evaluation"
-          ? "Author assertions, a judge, or a slice spec — then submit."
-          : exercise?.simulator === "guardrails"
-            ? "Author an attack, inject page, or defense stack — then submit."
-            : "Configure the fields below and submit to grade.";
+        : exercise?.simulator === "guardrails"
+          ? "Author an attack, inject page, or defense stack — then submit."
+          : "Configure the fields below and submit to grade.";
   const editorTitle = ragLabEnabled
     ? ragEditorTitle(exercise.submissionSchema)
     : exercise?.simulator === "rag"
@@ -346,6 +345,13 @@ export function WorkspaceShell({
                   className="lp-ws-work-pane"
                   hidden={showRagLab && workTab !== "configure"}
                 >
+                  {exercise?.simulator === "rag" ? (
+                    <RagFlowCanvas
+                      schema={exercise.submissionSchema}
+                      pending={pending}
+                      graded={grade !== null}
+                    />
+                  ) : null}
                   <SubmissionSurface
                     schema={exercise?.submissionSchema}
                     simulator={exercise?.simulator}

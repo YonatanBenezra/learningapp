@@ -4,51 +4,35 @@ import {
 import { runContentGrader } from './content-grader-runner';
 import { loadPublishedSlugs } from './content-paths';
 import {
-  A1_SLUG,
-  A2_SLUG,
-  A3_SLUG,
-  A4_SLUG,
-  A5_SLUG,
-  B1_SLUG,
-  B2_SLUG,
-  B3_SLUG,
-  F1_SLUG,
-  F2_SLUG,
-  F3_SLUG,
-  F4_SLUG,
-  N1_SLUG,
-  N2_SLUG,
-  N3_SLUG,
-  N5_SLUG,
   POC_CATALOGUE_TARGET,
+  R1_SLUG,
+  R2_SLUG,
+  R3_SLUG,
+  R4_SLUG,
+  SANDBOX_SLUG,
 } from '../modules/catalogue/exercises/exercises.constants';
 
 describe('content pipeline — reference solutions', () => {
-  it('runs reference pass and near-miss fail for every exercise', async () => {
-    const bundles = await loadAllExerciseBundles();
+  it('runs reference pass and near-miss fail for every published exercise', async () => {
     const published = loadPublishedSlugs();
     expect(published).toHaveLength(POC_CATALOGUE_TARGET);
+
+    const bundles = await loadAllExerciseBundles();
     expect(bundles.map((bundle) => bundle.meta.slug).sort()).toEqual(
       [...published].sort(),
     );
+
+    if (published.length === 0) {
+      return;
+    }
+
     expect(bundles.map((bundle) => bundle.meta.slug)).toEqual(
       expect.arrayContaining([
-        A1_SLUG,
-        A2_SLUG,
-        A3_SLUG,
-        A4_SLUG,
-        A5_SLUG,
-        B1_SLUG,
-        B2_SLUG,
-        B3_SLUG,
-        N1_SLUG,
-        N2_SLUG,
-        N3_SLUG,
-        N5_SLUG,
-        F1_SLUG,
-        F2_SLUG,
-        F3_SLUG,
-        F4_SLUG,
+        R1_SLUG,
+        R2_SLUG,
+        R3_SLUG,
+        R4_SLUG,
+        SANDBOX_SLUG,
       ]),
     );
 

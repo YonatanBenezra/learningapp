@@ -77,7 +77,7 @@ describe('Assessments (e2e)', () => {
       .set('Cookie', cookies)
       .expect(200);
     expect(contests.body.items.some((item: { slug: string }) => item.slug === DOGFOOD_CONTEST)).toBe(
-      true,
+      false,
     );
     expect(
       assessments.body.items.some((item: { slug: string }) => item.slug === ASSESSMENT_SLUG),

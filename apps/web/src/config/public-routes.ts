@@ -1,4 +1,5 @@
 import { routes } from "@/config/routes";
+import { DEMO_TRACE_RUN_ID } from "@/features/traces/demo/rag-trace-demo-data";
 
 /** App routes that work without signing in (submit still requires auth). */
 export function isPublicAppPath(pathname: string): boolean {
@@ -13,7 +14,14 @@ export function isPublicAppPath(pathname: string): boolean {
     return true;
   }
 
-  if (pathname.startsWith("/exercises/")) {
+  if (pathname.startsWith("/exercises/") || pathname.startsWith("/demo/")) {
+    return true;
+  }
+
+  if (
+    pathname === routes.demoRagTrace ||
+    pathname === routes.trace(DEMO_TRACE_RUN_ID)
+  ) {
     return true;
   }
 

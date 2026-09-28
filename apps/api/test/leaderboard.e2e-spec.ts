@@ -8,11 +8,12 @@ import {
   R2_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
 import { LEADERBOARD_RULE } from '../src/modules/leaderboard/leaderboard-rank';
+import { describeLiveCatalogue } from './describe-live-catalogue';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 import { seedPass } from './seed-pass';
 
-describe('Leaderboard (e2e)', () => {
+describeLiveCatalogue('Leaderboard (e2e)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
 

@@ -1,9 +1,12 @@
 "use client";
 
+import { PanelRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
+import { cn } from "@/lib/utils";
+import { FigmaRagScorecard } from "./figma-rag-scorecard";
 import { ScorecardIntervals } from "./scorecard-intervals";
 import { InfoTip } from "./info-tip";
 import { METRIC_TIPS, metricLabel } from "../rag-lab/rag-lab-copy";
@@ -20,6 +23,9 @@ type RunPanelProps = {
   simulator?: string;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
+  figmaScorecard?: boolean;
+  /** Mobile tab layout: no panel collapse control */
+  mobileChrome?: boolean;
 };
 
 export function RunPanel({
@@ -29,12 +35,43 @@ export function RunPanel({
   simulator,
   collapsed = false,
   onToggleCollapse,
+  figmaScorecard = false,
+  mobileChrome = false,
 }: RunPanelProps) {
   const isRag = simulator === "rag";
-  const isEval = simulator === "evaluation";
   const isGuard = simulator === "guardrails";
-  const isScorecard = isRag || isEval || isGuard;
+  const isScorecard = isRag || isGuard;
   if (collapsed) {
+    if (figmaScorecard) {
+      return (
+        <aside className="lp-ws-pane lp-ws-pane--run is-collapsed lp-ws-pane--run-rail">
+          <div className="lp-ws-run-rail">
+            <button
+              type="button"
+              className="lp-ws-run-rail-expand"
+              onClick={onToggleCollapse}
+              aria-expanded={false}
+              aria-label="Expand results panel"
+              title="Expand"
+            >
+              <IconChevronDown size={14} className="-rotate-90" aria-hidden />
+            </button>
+            <span className="lp-ws-run-rail-icon" aria-hidden>
+              <ShieldCheck className="size-4" strokeWidth={2.25} />
+            </span>
+            <span className="lp-ws-run-rail-label">Test Result</span>
+            {grade ? (
+              <span
+                className={`lp-ws-run-rail-verdict lp-ws-verdict lp-ws-verdict--${grade.verdict}`}
+              >
+                {grade.verdict}
+              </span>
+            ) : null}
+          </div>
+        </aside>
+      );
+    }
+
     return (
       <aside className="lp-ws-pane lp-ws-pane--run is-collapsed">
         <button
@@ -58,33 +95,69 @@ export function RunPanel({
     );
   }
 
+  const figmaRunHeader = figmaScorecard && isScorecard;
+
   return (
-    <aside className="lp-ws-pane lp-ws-pane--run">
-      <div className="lp-ws-run-toolbar">
-        <div className="lp-ws-run-toolbar-start">
-          <span className="lp-ws-run-icon">
-            <IconTestResult size={16} />
-          </span>
-          <h2 className="lp-ws-run-title">
-            {isScorecard ? "Test Result" : "Run"}
-          </h2>
-          {grade ? (
-            <span className={`lp-ws-verdict lp-ws-verdict--${grade.verdict}`}>
-              {grade.verdict}
+    <aside
+      className={cn(
+        "lp-ws-pane lp-ws-pane--run flex min-h-0 flex-col",
+        figmaScorecard && "lp-ws-pane--figma-run",
+      )}
+    >
+      {figmaRunHeader ? (
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-lp-border px-2.5 py-2">
+          <div className="inline-flex min-w-0 items-center gap-2 rounded-md border border-lp-brand/35 bg-[color-mix(in_srgb,var(--color-brand)_6%,var(--color-card))] px-2 py-1">
+            <span className="grid size-6 shrink-0 place-items-center rounded text-lp-brand">
+              <ShieldCheck className="size-3.5" strokeWidth={2.25} aria-hidden />
             </span>
+            <h2 className="m-0 truncate text-[0.8125rem] font-semibold text-lp-ink">
+              Test Result
+            </h2>
+          </div>
+          {!mobileChrome && onToggleCollapse ? (
+            <button
+              type="button"
+              className="grid size-7 shrink-0 place-items-center rounded-md border border-lp-border text-lp-muted transition-colors hover:bg-[color-mix(in_srgb,var(--color-ink)_6%,transparent)] hover:text-lp-ink"
+              aria-label="Minimize results panel"
+              title="Minimize"
+              onClick={onToggleCollapse}
+            >
+              <PanelRight className="size-3.5" strokeWidth={2} aria-hidden />
+            </button>
           ) : null}
         </div>
-        <button
-          type="button"
-          className="lp-ws-icon-btn"
-          aria-label="Minimize results panel"
-          title="Minimize"
-          onClick={onToggleCollapse}
-        >
-          <IconChevronDown size={14} />
-        </button>
-      </div>
-      <div className="lp-ws-pane-body">
+      ) : (
+        <div className="lp-ws-run-toolbar">
+          <div className="lp-ws-run-toolbar-start">
+            <span className="lp-ws-run-icon">
+              <IconTestResult size={16} />
+            </span>
+            <h2 className="lp-ws-run-title">
+              {isScorecard ? "Test Result" : "Run"}
+            </h2>
+            {grade ? (
+              <span className={`lp-ws-verdict lp-ws-verdict--${grade.verdict}`}>
+                {grade.verdict}
+              </span>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            className="lp-ws-icon-btn"
+            aria-label="Minimize results panel"
+            title="Minimize"
+            onClick={onToggleCollapse}
+          >
+            <IconChevronDown size={14} />
+          </button>
+        </div>
+      )}
+      <div
+        className={cn(
+          "lp-ws-pane-body",
+          figmaScorecard && isRag && "min-h-0 overflow-y-auto p-0",
+        )}
+      >
         {!run ? (
           <div className="lp-ws-empty">
             <span className="lp-ws-empty-mark" aria-hidden="true">
@@ -101,14 +174,12 @@ export function RunPanel({
             <p>
               {isRag
                 ? "Run a retrieval grade to see recall and failing samples."
-                : isEval
-                  ? "Run an evaluation grade to see metrics and failing samples."
-                  : isGuard
-                    ? "Run a guardrail grade to see block rates and failing samples."
-                    : "Submit a config to grade this exercise."}
+                : isGuard
+                  ? "Run a guardrail grade to see block rates and failing samples."
+                  : "Submit a config to grade this exercise."}
             </p>
           </div>
-        ) : (
+        ) : figmaScorecard && isRag ? null : (
           <p className="lp-ws-status">
             <span className={`lp-ws-status-dot${run.status === "succeeded" ? " is-live" : ""}`} />
             <span>
@@ -118,7 +189,7 @@ export function RunPanel({
             </span>
           </p>
         )}
-        {run ? (
+        {run && !(figmaScorecard && isRag) ? (
           <p className="lp-ws-links">
             <Link href={routes.run(run.id)} className="lp-link">
               Run
@@ -128,7 +199,11 @@ export function RunPanel({
             </Link>
           </p>
         ) : null}
-        {grade ? <Scorecard grade={grade} onboarding={onboarding} /> : null}
+        {grade && figmaScorecard && run && isRag ? (
+          <FigmaRagScorecard run={run} grade={grade} />
+        ) : grade ? (
+          <Scorecard grade={grade} onboarding={onboarding} />
+        ) : null}
       </div>
     </aside>
   );
@@ -138,11 +213,26 @@ function Scorecard({ grade, onboarding = false }: { grade: Grade; onboarding?: b
   const metrics = Object.entries(grade.metrics ?? {});
   const cases = Array.isArray(grade.failingCases) ? grade.failingCases : [];
 
+  const headline =
+    typeof grade.scorecard?.headline === "string"
+      ? grade.scorecard.headline
+      : grade.verdict === "fail"
+        ? "Below threshold"
+        : null;
+
   return (
     <div className="lp-ws-score">
-      <span className={`lp-ws-verdict lp-ws-verdict--${grade.verdict}`} data-testid="verdict">
-        {grade.verdict}
-      </span>
+      {headline ? (
+        <div className="lp-ws-score-hero">
+          <span className="lp-ws-score-hero-verdict">{grade.verdict}</span>
+          <p className="lp-ws-score-hero-title">{headline}</p>
+          <p className="lp-ws-score-hero-meta">Run succeeded · Grade complete · 2.4s</p>
+        </div>
+      ) : (
+        <span className={`lp-ws-verdict lp-ws-verdict--${grade.verdict}`} data-testid="verdict">
+          {grade.verdict}
+        </span>
+      )}
       {metrics.length > 0 ? (
         <dl className="lp-ws-metrics">
           {metrics.map(([key, metric]) => (

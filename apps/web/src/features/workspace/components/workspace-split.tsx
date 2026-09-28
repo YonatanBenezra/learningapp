@@ -4,7 +4,7 @@ import {
   PointerEvent as ReactPointerEvent,
   ReactNode,
   useCallback,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -17,6 +17,9 @@ type WorkspaceSplitProps = {
   defaultRatio?: number;
   minPrimary?: number;
   minSecondary?: number;
+  ratioMin?: number;
+  ratioMax?: number;
+  handleVariant?: "default" | "pill";
   primary: ReactNode;
   secondary: ReactNode;
   className?: string;
@@ -24,7 +27,7 @@ type WorkspaceSplitProps = {
   secondaryCollapsed?: boolean;
 };
 
-function readRatio(key: string, fallback: number) {
+function readRatio(key: string, fallback: number, min: number, max: number) {
   if (typeof window === "undefined") {
     return fallback;
   }
@@ -33,7 +36,7 @@ function readRatio(key: string, fallback: number) {
   if (!Number.isFinite(parsed)) {
     return fallback;
   }
-  return Math.min(0.72, Math.max(0.28, parsed));
+  return Math.min(max, Math.max(min, parsed));
 }
 
 export function WorkspaceSplit({
@@ -42,6 +45,9 @@ export function WorkspaceSplit({
   defaultRatio = direction === "horizontal" ? 0.42 : 0.62,
   minPrimary = direction === "horizontal" ? 280 : 220,
   minSecondary = direction === "horizontal" ? 360 : 160,
+  ratioMin = 0.22,
+  ratioMax = 0.78,
+  handleVariant = "default",
   primary,
   secondary,
   className = "",
@@ -49,17 +55,19 @@ export function WorkspaceSplit({
   secondaryCollapsed = false,
 }: WorkspaceSplitProps) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [ratio, setRatio] = useState(defaultRatio);
-  const ratioRef = useRef(defaultRatio);
+  const [ratio, setRatio] = useState(() =>
+    readRatio(storageKey, defaultRatio, ratioMin, ratioMax),
+  );
+  const ratioRef = useRef(ratio);
   const dragRef = useRef<{ start: number; startRatio: number; size: number } | null>(
     null,
   );
 
-  useEffect(() => {
-    const stored = readRatio(storageKey, defaultRatio);
+  useLayoutEffect(() => {
+    const stored = readRatio(storageKey, defaultRatio, ratioMin, ratioMax);
     ratioRef.current = stored;
-    setRatio(stored);
-  }, [storageKey, defaultRatio]);
+    setRatio((prev) => (prev === stored ? prev : stored));
+  }, [storageKey, defaultRatio, ratioMin, ratioMax]);
 
   const onPointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -94,11 +102,11 @@ export function WorkspaceSplit({
       if (primaryPx < minPrimary || secondaryPx < minSecondary) {
         return;
       }
-      const clamped = Math.min(0.72, Math.max(0.28, nextRatio));
+      const clamped = Math.min(ratioMax, Math.max(ratioMin, nextRatio));
       ratioRef.current = clamped;
       setRatio(clamped);
     },
-    [direction, minPrimary, minSecondary],
+    [direction, minPrimary, minSecondary, ratioMin, ratioMax],
   );
 
   const onPointerUp = useCallback(
@@ -115,30 +123,34 @@ export function WorkspaceSplit({
 
   const style =
     direction === "horizontal"
-      ? primaryCollapsed
-        ? ({ gridTemplateColumns: "3.25rem minmax(0, 1fr)" } as const)
-        : ({
-            gridTemplateColumns: `${ratio * 100}% 5px minmax(0, 1fr)`,
-          } as const)
+      ? secondaryCollapsed
+        ? ({ gridTemplateColumns: "minmax(0, 1fr) 3.25rem" } as const)
+        : primaryCollapsed
+          ? ({ gridTemplateColumns: "3.25rem minmax(0, 1fr)" } as const)
+          : ({
+              gridTemplateColumns: `minmax(0, ${ratio * 100}%) 9px minmax(0, 1fr)`,
+            } as const)
       : secondaryCollapsed
         ? ({ gridTemplateRows: "minmax(0, 1fr) 2.5rem" } as const)
         : ({
-            gridTemplateRows: `${ratio * 100}% 5px minmax(0, 1fr)`,
+            gridTemplateRows: `${ratio * 100}% 9px minmax(0, 1fr)`,
           } as const);
 
   const showHandle =
-    direction === "horizontal" ? !primaryCollapsed : !secondaryCollapsed;
+    direction === "horizontal"
+      ? !primaryCollapsed && !secondaryCollapsed
+      : !secondaryCollapsed;
 
   return (
     <div
       ref={rootRef}
-      className={`lp-ws-split lp-ws-split--${direction}${primaryCollapsed ? " is-primary-collapsed" : ""}${secondaryCollapsed ? " is-secondary-collapsed" : ""}${className ? ` ${className}` : ""}`}
+      className={`lp-ws-split lp-ws-split--${direction}${handleVariant === "pill" ? " lp-ws-split--pill-handle" : ""}${primaryCollapsed ? " is-primary-collapsed" : ""}${secondaryCollapsed ? " is-secondary-collapsed" : ""}${className ? ` ${className}` : ""}`}
       style={style}
     >
       <div className="lp-ws-split-primary">{primary}</div>
       {showHandle ? (
         <div
-          className="lp-ws-split-handle"
+          className={`lp-ws-split-handle${handleVariant === "pill" ? " lp-ws-split-handle--pill" : ""}`}
           role="separator"
           aria-orientation={direction === "horizontal" ? "vertical" : "horizontal"}
           aria-label={

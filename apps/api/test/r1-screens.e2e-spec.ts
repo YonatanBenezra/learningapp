@@ -6,11 +6,12 @@ import {
   HIDDEN_EVAL_CANARY,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
+import { describeLiveCatalogue } from './describe-live-catalogue';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 import { seedR1Trace } from './seed-trace';
 
-describe('R1 screens (e2e)', () => {
+describeLiveCatalogue('R1 screens (e2e)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let cookies: string;

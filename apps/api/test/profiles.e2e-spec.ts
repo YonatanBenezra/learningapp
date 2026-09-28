@@ -6,13 +6,14 @@ import {
   HIDDEN_EVAL_CANARY,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
+import { describeLiveCatalogue } from './describe-live-catalogue';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 import { seedPass } from './seed-pass';
 
 jest.setTimeout(30_000);
 
-describe('Public profile (e2e)', () => {
+describeLiveCatalogue('Public profile (e2e)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
 

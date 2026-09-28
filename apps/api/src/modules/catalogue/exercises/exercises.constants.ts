@@ -113,7 +113,10 @@ export function isSandboxRagSlug(slug: string): boolean {
 export const PHASE_1_CATALOGUE_TARGET = 50;
 export const PHASE_2_CATALOGUE_TARGET = 150;
 /** Live curated catalogue size — see `content/published-slugs.json`. */
-export const POC_CATALOGUE_TARGET = 28;
+export const POC_CATALOGUE_TARGET = 0;
+
+/** When false, e2e tests that require published exercises are skipped. */
+export const CATALOGUE_LIVE = POC_CATALOGUE_TARGET > 0;
 
 export const HIDDEN_EVAL_CANARY = 'HIDDEN_EVAL_R1_CANARY_PHRASE';
 

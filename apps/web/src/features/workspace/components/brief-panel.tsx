@@ -9,6 +9,13 @@ import type { HintList } from "@/types/hint";
 import { hintsApi } from "../hints-api";
 import { buildExerciseGuide } from "../exercise-brief-sections";
 import {
+  FigmaBriefBody,
+  FigmaBriefCollapsedRail,
+  FigmaBriefHeader,
+  FigmaBriefSubmissions,
+  FigmaBriefTabs,
+} from "./figma-brief-content";
+import {
   IconChevronLeft,
   IconChevronRight,
   IconDescription,
@@ -64,6 +71,24 @@ export const BRIEF_TABS = [
 
 export type BriefTab = (typeof BRIEF_TABS)[number]["id"];
 
+export type FigmaBriefContent = {
+  submissionCount: number;
+  meta: { id: string; duration: string; solved: string };
+  goal: string;
+  constraint: {
+    metric: string;
+    threshold: string;
+    footnote: string;
+    fields: string;
+  };
+  publicSampleNote: string;
+  publicRows: ReadonlyArray<{ question: string; file: string; tag: string }>;
+  hints: ReadonlyArray<
+    | { n: number; unlocked: true; text: string }
+    | { n: number; unlocked: false; unlockAfter: number }
+  >;
+};
+
 type BriefPanelProps = {
   exercise: Exercise | null;
   onboarding?: boolean;
@@ -75,6 +100,7 @@ type BriefPanelProps = {
   tab: BriefTab;
   onTabChange: (tab: BriefTab) => void;
   onToggleCollapse: () => void;
+  figmaBrief?: FigmaBriefContent;
 };
 
 export function BriefPanel({
@@ -88,7 +114,9 @@ export function BriefPanel({
   tab,
   onTabChange,
   onToggleCollapse,
+  figmaBrief,
 }: BriefPanelProps) {
+  const [figmaPane, setFigmaPane] = useState<"brief" | "submissions">("brief");
   const navHref =
     backHref ??
     (pathSlug ? routes.path(pathSlug) : onboarding ? routes.onboarding : routes.problems);
@@ -113,6 +141,16 @@ export function BriefPanel({
   }
 
   if (collapsed) {
+    if (figmaBrief) {
+      return (
+        <FigmaBriefCollapsedRail
+          pane={figmaPane}
+          onSelectPane={setFigmaPane}
+          onExpand={onToggleCollapse}
+        />
+      );
+    }
+
     return (
       <aside className="lp-ws-pane lp-ws-pane--brief is-collapsed">
         <div className="lp-ws-rail">
@@ -150,6 +188,31 @@ export function BriefPanel({
     );
   }
 
+  if (figmaBrief) {
+    return (
+      <aside className="lp-ws-pane lp-ws-pane--brief flex min-h-0 min-w-0 w-full max-w-full flex-col overflow-hidden">
+        <FigmaBriefTabs
+          pane={figmaPane}
+          submissionCount={figmaBrief.submissionCount}
+          onPaneChange={setFigmaPane}
+          onCollapse={onToggleCollapse}
+        />
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          {figmaPane === "submissions" ? (
+            <FigmaBriefSubmissions count={figmaBrief.submissionCount} />
+          ) : exercise ? (
+            <>
+              <FigmaBriefHeader exercise={exercise} content={figmaBrief} />
+              <FigmaBriefBody content={figmaBrief} />
+            </>
+          ) : (
+            <p className="px-3.5 py-4 text-[0.8125rem] text-lp-muted">Loading exercise…</p>
+          )}
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <aside className="lp-ws-pane lp-ws-pane--brief">
       <div className="lp-ws-brief-top">
@@ -168,61 +231,70 @@ export function BriefPanel({
           </button>
         </div>
         {exercise ? (
-          <div className="lp-ws-brief-title-row">
-            <h1 className="lp-ws-problem-title">{exercise.title}</h1>
-            <div className="lp-ws-meta">
-              <span
-                className={`lp-badge lp-badge--diff lp-badge--${exercise.difficulty.toLowerCase()}`}
-              >
-                {DIFFICULTY_LABELS[exercise.difficulty]}
-              </span>
-              <span className="lp-badge lp-badge--sim">
-                {SIMULATOR_LABELS[exercise.simulator]}
-              </span>
+          <>
+            <div className="lp-ws-brief-title-row">
+              <h1 className="lp-ws-problem-title">{exercise.title}</h1>
+              <div className="lp-ws-meta">
+                <span
+                  className={`lp-badge lp-badge--diff lp-badge--${exercise.difficulty.toLowerCase()}`}
+                >
+                  {DIFFICULTY_LABELS[exercise.difficulty]}
+                </span>
+                {exercise.skillTags.slice(0, 2).map((tag) => (
+                  <span key={tag} className="lp-badge lp-badge--skill">
+                    {tag}
+                  </span>
+                ))}
+                <span className="lp-badge lp-badge--sim">
+                  {SIMULATOR_LABELS[exercise.simulator]}
+                </span>
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           <h1 className="lp-ws-problem-title">Loading…</h1>
         )}
       </div>
-      <nav className="lp-ws-tabs" aria-label="Problem sections">
-        {visibleTabs.map((item) => {
-          const Icon = item.Icon;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              className={`lp-ws-tab lp-ws-tab--${item.tone}${tab === item.id ? " is-active" : ""}`}
-              onClick={() => onTabChange(item.id)}
-            >
-              <span className="lp-ws-tab-icon">
-                <Icon size={15} />
-              </span>
-              {item.label}
-            </button>
-          );
-        })}
-      </nav>
-      <div className="lp-ws-pane-body">
-        {!exercise ? (
-          <p className="lp-ws-pane-lead">Loading exercise…</p>
-        ) : null}
-        {exercise && tab === "description" ? (
-          <DescriptionTab exercise={exercise} goal={guide?.goal ?? ""} />
-        ) : null}
-        {exercise && tab === "how" && guide ? <HowTab guide={guide} /> : null}
-        {exercise && tab === "submit" && guide ? <SubmitTab guide={guide} /> : null}
-        {exercise && tab === "examples" ? (
-          <ExamplesTab samples={samples} guide={guide} />
-        ) : null}
-        {exercise && tab === "hints" ? (
-          hintsDisabled ? (
-            <p className="lp-ws-pane-lead">Hints are off for contest attempts.</p>
-          ) : (
-            <HintsBlock slug={exercise.slug} />
-          )
-        ) : null}
-      </div>
+      <>
+        <nav className="lp-ws-tabs" aria-label="Problem sections">
+            {visibleTabs.map((item) => {
+              const Icon = item.Icon;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`lp-ws-tab lp-ws-tab--${item.tone}${tab === item.id ? " is-active" : ""}`}
+                  onClick={() => onTabChange(item.id)}
+                >
+                  <span className="lp-ws-tab-icon">
+                    <Icon size={15} />
+                  </span>
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
+          <div className="lp-ws-pane-body">
+            {!exercise ? (
+              <p className="lp-ws-pane-lead">Loading exercise…</p>
+            ) : null}
+            {exercise && tab === "description" ? (
+              <DescriptionTab exercise={exercise} goal={guide?.goal ?? ""} />
+            ) : null}
+            {exercise && tab === "how" && guide ? <HowTab guide={guide} /> : null}
+            {exercise && tab === "submit" && guide ? <SubmitTab guide={guide} /> : null}
+            {exercise && tab === "examples" ? (
+              <ExamplesTab samples={samples} guide={guide} />
+            ) : null}
+            {exercise && tab === "hints" ? (
+              hintsDisabled ? (
+                <p className="lp-ws-pane-lead">Hints are off for contest attempts.</p>
+              ) : (
+                <HintsBlock slug={exercise.slug} />
+              )
+            ) : null}
+          </div>
+      </>
     </aside>
   );
 }

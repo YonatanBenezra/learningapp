@@ -5,6 +5,7 @@ import { brand } from "@/config/brand";
 import { themeInitScript } from "@/features/theme/theme-script";
 import { ThemeToggle } from "@/features/theme/theme-toggle";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -42,7 +43,13 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${jakarta.variable} ${figtree.variable} ${caveat.variable} ${geistMono.variable} h-full antialiased`}
+      className={cn(
+        "h-full antialiased font-sans",
+        jakarta.variable,
+        figtree.variable,
+        caveat.variable,
+        geistMono.variable,
+      )}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

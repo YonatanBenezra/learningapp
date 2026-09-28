@@ -3,6 +3,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { PrismaService } from '../src/core/prisma/prisma.service';
 import {
+  CATALOGUE_LIVE,
   R1_REFERENCE_PAYLOAD,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
@@ -46,7 +47,7 @@ describe('Accounts & tier (e2e)', () => {
     });
   });
 
-  it('increments quota counters on a graded submission', async () => {
+  (CATALOGUE_LIVE ? it : it.skip)('increments quota counters on a graded submission', async () => {
     const started = await request(app.getHttpServer())
       .post('/api/attempts')
       .set('Cookie', cookies)

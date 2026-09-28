@@ -93,36 +93,6 @@ function whatYouReceiveFor(simulator: Exercise["simulator"], label: string): str
       "The grader runs your chunking + retrieval config against questions you cannot see.",
       "You get recall/precision-style metrics and failing query notes — not the gold answers.",
     ],
-    evaluation: [
-      `A ${label} exercise: you receive labels metadata and a hidden eval set.`,
-      "Your assertion suite, judge rubric, or slice spec is run against held-out tickets.",
-      "You get F1, agreement, slice flags, and failing case snippets.",
-    ],
-    guardrails: [
-      `A ${label} exercise: attack prompts or defence stacks against a fixed concierge model.`,
-      "Probes run through your filters and system prompt on hidden scenarios.",
-      "You get block rates, levels cleared, and notes on probes that still succeed.",
-    ],
-    prompt_engineering: [
-      `A ${label} exercise with a fixed model and hidden ticket batch.`,
-      "Your prompt template is applied to each ticket; outputs are checked automatically.",
-    ],
-    agent: [
-      `An ${label} exercise with tool stubs and a hidden task set.`,
-      "Your plan or tool sequence is replayed; success is measured on completion criteria.",
-    ],
-    neural_network: [
-      `A ${label} lab with a training harness and hidden validation split.`,
-      "Hyperparameters you set drive a short training run; metrics come back in the scorecard.",
-    ],
-    fine_tuning: [
-      `A ${label} exercise with adapter/data choices and a hidden eval batch.`,
-      "Your fine-tune config is graded on quality and constraint adherence.",
-    ],
-    benchmark: [
-      `A ${label} run against a fixed benchmark slice.`,
-      "Config changes are scored on the hidden portion of the benchmark.",
-    ],
   };
 
   return bySimulator[simulator] ?? common;
@@ -144,19 +114,6 @@ function howToSolveFor(
       "Start from defaults, submit once to see baseline metrics.",
       "Adjust chunk size, overlap, or split strategy to raise recall without blowing cost.",
       "Submit again until the scorecard shows pass.",
-    ],
-    evaluation: [
-      "Read the goal and which eval mode this exercise uses (assertions, judge, or slice).",
-      fieldHint,
-      "Draft minimal checks that catch the described failure mode.",
-      "Submit to see F1, agreement, and failing tickets on the hidden set.",
-      "Iterate on YAML or rubric wording until metrics meet the threshold.",
-    ],
-    guardrails: [
-      "Identify whether you are authoring an attack, an inject page, or a defence stack.",
-      fieldHint,
-      "Submit to see which probe levels still succeed.",
-      "Tighten filters or system prompt, or refine the attack until the scorecard passes.",
     ],
   };
 

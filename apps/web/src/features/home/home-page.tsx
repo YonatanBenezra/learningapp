@@ -137,9 +137,6 @@ export function HomePage() {
                     <AuthLink href={routes.problems}>Problems</AuthLink>
                   </li>
                   <li>
-                    <AuthLink href={routes.contests}>Contests</AuthLink>
-                  </li>
-                  <li>
                     <Link href={routes.login}>Sign in</Link>
                   </li>
                 </ul>

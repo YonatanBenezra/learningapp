@@ -4,6 +4,9 @@ export const routes = {
   register: "/register",
   problems: "/problems",
   simulations: "/simulations",
+  /** Static UI preview — mocked grading, no API catalogue required. */
+  demoRagWorkspace: "/demo/rag-workspace",
+  demoRagTrace: "/demo/rag-trace",
   paths: "/paths",
   path: (slug: string) => `/paths/${slug}`,
   onboarding: "/onboarding",

@@ -8,7 +8,7 @@ Learners solve bounded, graded problems (chunking, retrieval, eval design, injec
 
 **This repo is the Phase 0 inner POC:** ten playable exercises across three simulators, a catalogue, a workspace, traces, and progress. It is not a public launch. Stripe, a code sandbox, contests, and a visual redesign are out of this phase.
 
-Product spec: [docs/Labpath specification/LabPath-Specification.md](./docs/Labpath%20specification/LabPath-Specification.md) · Phase plan: [docs/phase.md](./docs/phase.md) · Inner POC steps: [docs/phase-0.md](./docs/phase-0.md) · **Dogfood (current):** [docs/dogfood-plan.md](./docs/dogfood-plan.md)
+Product spec: [docs/Labpath specification/LabPath-Specification.md](./docs/Labpath%20specification/LabPath-Specification.md) · **RAG simulator (BN):** [docs/rag-simulator-design-bn.md](./docs/rag-simulator-design-bn.md)
 
 ---
 
@@ -365,4 +365,4 @@ Prefix: `/api`. Authenticated unless marked public.
 
 Code sandbox, Stripe, contests, streaks, public profiles, tutors, courses, i18n, and the Prompt Engineering / Agent / Benchmark / Neural Network / Fine-tune simulators. Role enum and durable traces ship now so those phases are not a rewrite.
 
-Full public bar (20 external testers, κ ≥ 0.70, 99% on 1,000 re-grades, blended €0.20) is **not** the inner POC sign-off. That list is in the spec §0.8 and [docs/phase.md](./docs/phase.md). Inner POC bar is Step 13 in [docs/phase-0.md](./docs/phase-0.md).
+Full public bar (20 external testers, κ ≥ 0.70, 99% on 1,000 re-grades, blended €0.20) is in the spec §0.8.

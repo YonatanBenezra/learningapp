@@ -74,5 +74,19 @@ export async function upsertAllContests(prisma) {
     });
     seeded.push(spec.slug);
   }
+
+  const active = [...new Set(seeded)];
+  if (active.length === 0) {
+    await prisma.contest.updateMany({
+      where: { kind: 'contest' },
+      data: { isPublished: false },
+    });
+  } else {
+    await prisma.contest.updateMany({
+      where: { kind: 'contest', slug: { notIn: active } },
+      data: { isPublished: false },
+    });
+  }
+
   return seeded;
 }

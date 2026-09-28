@@ -55,6 +55,24 @@ export function OnboardingPage() {
     return <p className="lp-page lp-pg-note">Preparing your first solve…</p>;
   }
 
+  if (!user.onboarding.exerciseSlug) {
+    return (
+      <div className="lp-page lp-pg-note">
+        <p>No onboarding exercise is published yet.</p>
+        <p>
+          <Link href={routes.problems} className="lp-link">
+            Go to problems
+          </Link>{" "}
+          or{" "}
+          <Link href={routes.simulations} className="lp-link">
+            simulators
+          </Link>
+          .
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="lp-onboard">
       <header className="lp-onboard-bar">

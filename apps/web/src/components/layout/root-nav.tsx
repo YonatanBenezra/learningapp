@@ -5,7 +5,6 @@ import { routes } from "@/config/routes";
 import { DashboardNav } from "@/components/layout/dashboard-nav";
 import { OnboardingProblemNav } from "@/features/onboarding/onboarding-problem-nav";
 import { HomeNav } from "@/features/home/home-nav";
-import { ProblemNav } from "@/features/workspace/components/problem-nav";
 import "@/features/home/home.css";
 
 const DASHBOARD_PREFIXES = [routes.dashboard, routes.account];
@@ -16,25 +15,38 @@ function isDashboardPath(pathname: string) {
   );
 }
 
-function exerciseSlugFromPath(pathname: string) {
-  const match = pathname.match(/^\/exercises\/([^/]+)/);
-  return match?.[1] ?? null;
+/** Figma-style app bar: Problems, Simulators, search, Dashboard (full width). */
+function usesCatalogueNav(pathname: string) {
+  if (pathname === routes.home) {
+    return true;
+  }
+  if (
+    pathname.startsWith("/exercises/") ||
+    pathname.startsWith("/demo/") ||
+    pathname.startsWith("/runs/")
+  ) {
+    return true;
+  }
+  if (
+    pathname === routes.problems ||
+    pathname === routes.simulations ||
+    pathname === routes.paths ||
+    pathname.startsWith(`${routes.paths}/`)
+  ) {
+    return true;
+  }
+  return isDashboardPath(pathname);
 }
 
-/** Persistent site navbar — problem workspace uses a dedicated bar. */
+/** Persistent site navbar */
 export function RootNav() {
   const pathname = usePathname();
-  const exerciseSlug = exerciseSlugFromPath(pathname);
-
-  if (exerciseSlug) {
-    return <ProblemNav slug={exerciseSlug} />;
-  }
 
   if (pathname === routes.onboarding) {
     return <OnboardingProblemNav />;
   }
 
-  if (isDashboardPath(pathname)) {
+  if (usesCatalogueNav(pathname)) {
     return <DashboardNav />;
   }
 

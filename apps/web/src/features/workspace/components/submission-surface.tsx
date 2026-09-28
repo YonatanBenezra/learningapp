@@ -7,6 +7,9 @@ import {
   asSubmissionSchema,
   validateSubmission,
 } from "../submission-validation";
+import { ChevronDown } from "lucide-react";
+import type { Grade } from "@/types/grade";
+import { cn } from "@/lib/utils";
 import { InfoTip } from "./info-tip";
 import { IconCode } from "./workspace-icons";
 
@@ -38,40 +41,13 @@ type SubmissionSurfaceProps = {
   onSubmit: (payload: Record<string, unknown>) => void;
   onValidityChange?: (valid: boolean) => void;
   onValuesChange?: (values: Record<string, unknown>) => void;
+  figmaLayout?: boolean;
+  figmaGrade?: Grade | null;
+  figmaAttempt?: number;
 };
 
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
-const EVAL_PIPELINE = ["Labels", "Checks", "Score", "Grade"] as const;
 const GUARD_PIPELINE = ["Probe", "Guard", "Model", "Grade"] as const;
-
-function evalModeFromFields(fields: string[]) {
-  if (fields.includes("suiteYaml")) {
-    return {
-      id: "assertion",
-      label: "Assertion DSL",
-      blurb: "RE2 checks that agree with hidden human fail labels.",
-    };
-  }
-  if (fields.includes("judgeRubric") || fields.includes("judgePrompt")) {
-    return {
-      id: "judge",
-      label: "LLM judge",
-      blurb: "Rubric + prompt; majority of 3 votes at fixed temperature.",
-    };
-  }
-  if (fields.includes("sliceSpecYaml")) {
-    return {
-      id: "slice",
-      label: "Slice Spec",
-      blurb: "Find the regressed slice with a corrected significance test.",
-    };
-  }
-  return {
-    id: "eval",
-    label: "Evaluation",
-    blurb: "Author checks, then grade against the hidden set.",
-  };
-}
 
 function guardModeFromFields(fields: string[]) {
   if (fields.includes("attackPrompt")) {
@@ -120,12 +96,14 @@ export function SubmissionSurface({
   onSubmit,
   onValidityChange,
   onValuesChange,
+  figmaLayout = false,
+  figmaGrade = null,
+  figmaAttempt = 3,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [validationError, setValidationError] = useState<string | null>(null);
   const isRag = simulator === "rag";
-  const isEval = simulator === "evaluation";
   const isGuard = simulator === "guardrails";
 
   useEffect(() => {
@@ -134,20 +112,12 @@ export function SubmissionSurface({
 
   const fields = Object.entries(parsed.properties ?? {});
   const fieldKeys = fields.map(([key]) => key);
-  const evalMode = isEval ? evalModeFromFields(fieldKeys) : null;
   const guardMode = isGuard ? guardModeFromFields(fieldKeys) : null;
-  const mode = evalMode ?? guardMode;
-  const pipeline = isRag
-    ? RAG_PIPELINE
-    : isEval
-      ? EVAL_PIPELINE
-      : isGuard
-        ? GUARD_PIPELINE
-        : null;
+  const pipeline = isRag ? RAG_PIPELINE : isGuard ? GUARD_PIPELINE : null;
   const showTextStats =
-    (isEval || isGuard) &&
+    isGuard &&
     fields.length > 0 &&
-    !(isGuard && guardMode?.id === "defend");
+    !(guardMode?.id === "defend");
 
   const validation = useMemo(
     () => validateSubmission(parsed, values),
@@ -176,16 +146,123 @@ export function SubmissionSurface({
 
   const defaultLead = isRag
     ? "Tune the retriever knobs, then grade against the hidden set."
-    : isEval
-      ? evalMode?.blurb ??
-        "Author your eval artifact, then grade against the hidden set."
-      : isGuard
-        ? guardMode?.blurb ??
-          "Author an attack or a defense, then grade against the hidden set."
-        : "Configure the public fields, then grade this run.";
+    : isGuard
+      ? guardMode?.blurb ??
+        "Author an attack or a defense, then grade against the hidden set."
+      : "Configure the public fields, then grade this run.";
+
+  const chunkSize =
+    typeof values.chunkSize === "number" && Number.isFinite(values.chunkSize)
+      ? values.chunkSize
+      : 0;
+  const overlapPct =
+    chunkSize > 0 && typeof values.overlap === "number"
+      ? Math.round((values.overlap / chunkSize) * 100)
+      : null;
+
+  if (figmaLayout && isRag) {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="min-h-0 flex-1 overflow-auto p-3">
+          <div className="rounded-lg border border-lp-border bg-[color-mix(in_srgb,var(--color-ink)_8%,var(--color-card))] p-3 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-ink)_6%,transparent)]">
+            <div className="mb-3 flex flex-wrap gap-2" aria-live="polite">
+              {fields.map(([key]) => (
+                <span
+                  key={key}
+                  className="inline-flex items-center rounded-md border border-lp-brand/35 bg-[color-mix(in_srgb,var(--color-brand)_12%,transparent)] px-2 py-1 text-[0.6875rem] font-semibold text-lp-brand"
+                >
+                  {figmaChipLabel(key, values[key])}
+                </span>
+              ))}
+            </div>
+            <form
+              id="lp-ws-submit-form"
+              className="grid grid-cols-3 gap-3 max-sm:grid-cols-1"
+              onSubmit={handleSubmit}
+            >
+              {fields.map(([key, property]) => (
+                <Field
+                  key={key}
+                  name={key}
+                  property={property}
+                  value={values[key]}
+                  required={
+                    parsed.required ? parsed.required.includes(key) : true
+                  }
+                  rag={isRag}
+                  figmaLayout
+                  overlapPct={overlapPct}
+                  onChange={(next) => {
+                    setValidationError(null);
+                    setValues((current) => ({ ...current, [key]: next }));
+                  }}
+                />
+              ))}
+              {validationError ? (
+                <p className="text-[0.8125rem] text-red-400 sm:col-span-3">{validationError}</p>
+              ) : null}
+              {error ? (
+                <p className="text-[0.8125rem] text-red-400 sm:col-span-3">
+                  {error}
+                  {errorHref ? (
+                    <>
+                      {" "}
+                      <Link href={errorHref} className="lp-link">
+                        {errorLinkLabel ?? "Open billing"}
+                      </Link>
+                    </>
+                  ) : null}
+                </p>
+              ) : null}
+            </form>
+          </div>
+        </div>
+        <footer className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-lp-border bg-lp-elevated px-3 py-2">
+          <button
+            type="button"
+            className="border-0 bg-transparent text-[0.75rem] font-semibold text-lp-muted underline-offset-2 hover:text-lp-ink hover:underline"
+            onClick={() => setValues({ ...defaultsFrom(parsed), ...initialValues })}
+          >
+            Reset to starter config
+          </button>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <span className="text-[0.6875rem] font-medium text-lp-muted">
+              attempt {figmaAttempt}
+            </span>
+            {figmaGrade ? (
+              <span className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold text-lp-muted">
+                Test Result
+                <span
+                  className={cn(
+                    "rounded px-1.5 py-0.5 text-[0.625rem] font-bold uppercase",
+                    figmaGrade.verdict === "pass"
+                      ? "bg-emerald-500/15 text-emerald-400"
+                      : "bg-red-500/15 text-red-400",
+                  )}
+                >
+                  {figmaGrade.verdict}
+                </span>
+              </span>
+            ) : null}
+            <button
+              type="submit"
+              form="lp-ws-submit-form"
+              className="inline-flex items-center gap-2 rounded-md bg-lp-brand px-3 py-1.5 text-[0.8125rem] font-bold text-lp-brand-on disabled:opacity-50"
+              disabled={disabled || pending || !isValid}
+            >
+              {pending ? "Submitting…" : "Submit for grading"}
+              <kbd className="rounded bg-black/15 px-1 py-0.5 font-mono text-[0.625rem] font-semibold">
+                ⌘↵
+              </kbd>
+            </button>
+          </div>
+        </footer>
+      </div>
+    );
+  }
 
   return (
-    <>
+    <div className={figmaLayout ? "lp-ws-editor-figma" : undefined}>
       <div className="lp-ws-editor-toolbar">
         <div className="lp-ws-editor-toolbar-start">
           <span className="lp-ws-editor-icon-badge">
@@ -194,14 +271,14 @@ export function SubmissionSurface({
           <h2 className="lp-ws-editor-title">{title}</h2>
         </div>
         <div className="lp-ws-editor-toolbar-end">
-          <span className="lp-ws-editor-lang">Simulator</span>
+          <span className="lp-ws-editor-lang">{figmaLayout ? "RAG" : "Simulator"}</span>
         </div>
       </div>
-      <p className="lp-ws-editor-lead">{lead ?? defaultLead}</p>
+      {!figmaLayout ? <p className="lp-ws-editor-lead">{lead ?? defaultLead}</p> : null}
       <section className="lp-ws-pane-body lp-ws-pane-body--editor">
-        {pipeline ? (
+        {pipeline && !isRag ? (
           <div
-            className={`lp-sim-pipe${isEval ? " lp-sim-pipe--eval" : ""}${isRag ? " lp-sim-pipe--rag" : ""}${isGuard ? " lp-sim-pipe--guard" : ""}`}
+            className={`lp-sim-pipe${isGuard ? " lp-sim-pipe--guard" : ""}`}
             aria-hidden="true"
           >
             {pipeline.map((step, index) => (
@@ -213,14 +290,14 @@ export function SubmissionSurface({
           </div>
         ) : null}
 
-        {(isEval || isGuard) && mode ? (
-          <div className={`lp-sim-mode${isGuard ? " lp-sim-mode--guard" : ""}`}>
-            <span className="lp-sim-mode-badge">{mode.label}</span>
-            <p className="lp-sim-mode-copy">{mode.blurb}</p>
+        {isGuard && guardMode ? (
+          <div className="lp-sim-mode lp-sim-mode--guard">
+            <span className="lp-sim-mode-badge">{guardMode.label}</span>
+            <p className="lp-sim-mode-copy">{guardMode.blurb}</p>
           </div>
         ) : null}
 
-        {isRag && fields.length > 0 ? (
+        {isRag && fields.length > 0 && !figmaLayout ? (
           <div className="lp-rag-summary" aria-live="polite">
             {fields.map(([key]) => (
               <span key={key} className="lp-rag-summary-chip">
@@ -270,7 +347,7 @@ export function SubmissionSurface({
 
         <form
           id="lp-ws-submit-form"
-          className={`lp-ws-form${isRag ? " lp-ws-form--rag" : ""}${isEval ? " lp-ws-form--eval" : ""}${isGuard ? " lp-ws-form--guard" : ""}`}
+          className={`lp-ws-form${isRag ? " lp-ws-form--rag" : ""}${isGuard ? " lp-ws-form--guard" : ""}`}
           onSubmit={handleSubmit}
         >
           {fields.map(([key, property]) => (
@@ -283,7 +360,7 @@ export function SubmissionSurface({
                 parsed.required ? parsed.required.includes(key) : true
               }
               rag={isRag}
-              codeLab={isEval || isGuard}
+              codeLab={isGuard}
               onChange={(next) => {
                 setValidationError(null);
                 setValues((current) => ({ ...current, [key]: next }));
@@ -310,8 +387,41 @@ export function SubmissionSurface({
           </div>
         </form>
       </section>
-    </>
+      {figmaLayout ? (
+        <footer className="lp-figma-submit-bar">
+          <button
+            type="button"
+            className="lp-figma-reset"
+            onClick={() => setValues({ ...defaultsFrom(parsed), ...initialValues })}
+          >
+            Reset to starter config
+          </button>
+          <button
+            type="submit"
+            form="lp-ws-submit-form"
+            className="lp-figma-submit"
+            disabled={disabled || pending || !isValid}
+          >
+            {pending ? "Submitting…" : "Submit for grading"}
+            <kbd aria-hidden>⌘↵</kbd>
+          </button>
+        </footer>
+      ) : null}
+    </div>
   );
+}
+
+function figmaChipLabel(key: string, value: unknown) {
+  if (key === "chunkSize") {
+    return `Chunk ${formatSummaryValue(value)}`;
+  }
+  if (key === "overlap") {
+    return `Overlap ${formatSummaryValue(value)}`;
+  }
+  if (key === "splitStrategy") {
+    return `Strategy ${formatSummaryValue(value)}`;
+  }
+  return `${labelFor(key)} ${formatSummaryValue(value)}`;
 }
 
 function Field({
@@ -321,6 +431,8 @@ function Field({
   required = false,
   rag,
   codeLab,
+  figmaLayout = false,
+  overlapPct,
   onChange,
 }: {
   name: string;
@@ -329,6 +441,9 @@ function Field({
   required?: boolean;
   rag?: boolean;
   codeLab?: boolean;
+  figmaLayout?: boolean;
+  chunkSize?: number;
+  overlapPct?: number | null;
   onChange: (value: unknown) => void;
 }) {
   const label = labelFor(name);
@@ -336,6 +451,42 @@ function Field({
   const lang = languageFor(name);
 
   if (property.enum && property.enum.length > 0) {
+    if (rag && figmaLayout) {
+      const options = property.enum.map(String);
+      return (
+        <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex items-center justify-between gap-2 font-mono text-[0.6875rem] text-lp-muted">
+            <span className="flex items-center gap-1 text-lp-ink/90">
+              {name}
+              {name === "splitStrategy" ? (
+                <InfoTip text="How documents are split into chunks before retrieval." />
+              ) : null}
+            </span>
+          </div>
+          <div className="relative">
+            <select
+              name={name}
+              value={String(value ?? property.enum[0] ?? "")}
+              onChange={(event) => onChange(event.target.value)}
+              className="h-10 w-full appearance-none rounded-md border border-lp-border bg-[color-mix(in_srgb,var(--color-ink)_12%,var(--color-card))] px-3 pr-8 font-mono text-[0.8125rem] font-medium text-lp-ink outline-none focus:border-lp-brand"
+            >
+              {property.enum.map((option) => (
+                <option key={String(option)} value={String(option)}>
+                  {String(option)}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              className="pointer-events-none absolute top-1/2 right-2 size-4 -translate-y-1/2 text-lp-muted"
+              aria-hidden
+            />
+          </div>
+          <span className="font-mono text-[0.625rem] text-lp-muted">
+            {options.join(" · ")}
+          </span>
+        </div>
+      );
+    }
     if (rag) {
       return (
         <fieldset className="lp-rag-seg lp-ws-field--wide">
@@ -418,6 +569,49 @@ function Field({
     const max = property.maximum ?? 100;
     const numeric =
       typeof value === "number" && Number.isFinite(value) ? value : min;
+    if (rag && figmaLayout && property.minimum != null && property.maximum != null) {
+      const rangeLabel = `${min} - ${max}`;
+      const footnote =
+        name === "overlap" && overlapPct != null
+          ? `${overlapPct}% of chunk`
+          : name === "chunkSize"
+            ? rangeLabel
+            : rangeLabel;
+      const boxBorder =
+        name === "chunkSize"
+          ? "border-lp-brand/55 focus-within:border-lp-brand"
+          : "border-lp-border focus-within:border-lp-brand/70";
+      return (
+        <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex items-center justify-between gap-2 font-mono text-[0.6875rem]">
+            <span className="text-lp-ink/90">{name}</span>
+            {name === "chunkSize" ? (
+              <span className="text-lp-muted">{rangeLabel}</span>
+            ) : null}
+          </div>
+          <div
+            className={cn(
+              "flex h-10 items-center gap-2 rounded-md border bg-[color-mix(in_srgb,var(--color-ink)_12%,var(--color-card))] px-2.5",
+              boxBorder,
+            )}
+          >
+            <input
+              type="number"
+              name={name}
+              min={min}
+              max={max}
+              step={1}
+              required={required}
+              value={numeric}
+              onChange={(event) => onChange(parseInteger(event.target.value))}
+              className="min-w-0 flex-1 bg-transparent font-mono text-[0.875rem] font-semibold text-lp-brand outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:opacity-100"
+            />
+            <span className="shrink-0 font-mono text-[0.6875rem] text-lp-muted">tokens</span>
+          </div>
+          <span className="font-mono text-[0.625rem] text-lp-muted">{footnote}</span>
+        </div>
+      );
+    }
     if (rag && property.minimum != null && property.maximum != null) {
       return (
         <label className="lp-field lp-rag-slider">

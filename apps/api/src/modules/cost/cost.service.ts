@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { PrismaService } from '../../core/prisma/prisma.service';
-import {
-  R1_REFERENCE_PAYLOAD,
-  R1_SLUG,
-} from '../catalogue/exercises/exercises.constants';
+import { R1_REFERENCE_PAYLOAD } from '../catalogue/exercises/exercises.constants';
 import { BudgetExceededError } from '../grading/budget/budget-exceeded.error';
 import { ModelGateway } from '../grading/gateway/model.gateway';
 import { PINNED_GEN_MODEL } from '../grading/gateway/pricing';
@@ -78,11 +75,11 @@ export class CostService {
 
   private async createProbeRun(user: AuthenticatedUser): Promise<string> {
     const exercise = await this.prisma.exercise.findFirst({
-      where: { slug: R1_SLUG, isPublished: true },
+      where: { isPublished: true },
       orderBy: { version: 'desc' },
     });
     if (!exercise) {
-      throw new Error('R1 is not seeded');
+      throw new Error('No published exercise is seeded');
     }
     const created = await this.prisma.$transaction(async (tx) => {
       const attempt = await tx.attempt.create({

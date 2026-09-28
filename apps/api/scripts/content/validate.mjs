@@ -85,8 +85,10 @@ export async function validateAllExercises(root = exercisesRoot) {
   try {
     const allowlist = JSON.parse(await readFile(allowlistPath, 'utf8'));
     const slugs = allowlist.slugs;
-    if (!Array.isArray(slugs) || slugs.length === 0) {
-      allowlistErrors.push('published-slugs.json has no slugs');
+    if (!Array.isArray(slugs)) {
+      allowlistErrors.push('published-slugs.json slugs must be an array');
+    } else if (slugs.length === 0) {
+      // Empty catalogue is valid while rebuilding simulators.
     } else {
       for (const slug of slugs) {
         if (!(await exists(path.join(root, slug, 'meta.json')))) {

@@ -1,4 +1,4 @@
-/** VA1 blueprint — [phase-3-decisions.md](../../../../docs/phase-3-decisions.md) */
+/** VA1 blueprint — see LabPath-Specification.md (assessments). */
 export const ASSESSMENT_TIME_BOX_MINUTES = 90;
 export const ASSESSMENT_SAMPLE_SIZE = 4;
 export const ASSESSMENT_SITTINGS_PER_SEASON = 1;

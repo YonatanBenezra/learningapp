@@ -1,0 +1,48 @@
+/**
+ * Full-viewport workspace sits below the fixed dashboard nav (+ small gap).
+ * Loaded from globals.css so layout is correct before feature CSS chunks load.
+ */
+html:has(.lp-ws) .lp-dash-nav-inner {
+  max-width: none;
+  padding-inline: 8px;
+}
+
+html:has(.lp-ws) {
+  --lp-ws-top-gap: 0.75rem;
+  --lp-ws-viewport-top: calc(
+    var(--lp-dash-nav-h, 3.25rem) + env(safe-area-inset-top, 0px) + var(--lp-ws-top-gap)
+  );
+}
+
+html:has(.lp-ws) body {
+  overflow: hidden;
+}
+
+html:has(.lp-ws) .lp-app {
+  position: fixed;
+  inset: var(--lp-ws-viewport-top) 0 0 0;
+  z-index: 10;
+  box-sizing: border-box;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow: hidden;
+  background: transparent;
+}
+
+html:has(.lp-ws) .lp-app > .lp-main.lp-app-main {
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0;
+  max-width: none;
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+}

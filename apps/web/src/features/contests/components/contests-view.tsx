@@ -230,8 +230,8 @@ export function ContestsView() {
         <div>
           <h1 className="lp-ct-title">Contests</h1>
           <p className="lp-ct-lead">
-            Timed, ranked seasons with novel problems sampled from a hidden pool.
-            Free to enter. Hints are off during contest attempts.
+            Contests are paused while we rebuild the catalogue. New timed seasons will appear here
+            when they are published.
           </p>
         </div>
         <div className="lp-ct-meta">
@@ -262,8 +262,10 @@ export function ContestsView() {
 
       {items.length === 0 ? (
         <div className="lp-ct-empty">
-          <strong>No contests yet</strong>
-          <p>When a season opens, it will show up here.</p>
+          <strong>No contests published</strong>
+          <p>
+            Add a JSON file under <code>apps/api/content/contests/</code>, run ingest, then refresh.
+          </p>
         </div>
       ) : visible.length === 0 ? (
         <div className="lp-ct-empty">

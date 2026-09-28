@@ -1,33 +1,4 @@
 {
-  "note": "Curated catalogue (O14). Ingest publishes only these slugs; other exercises stay on disk unpublished. Phase 3 Step 12: 20 → 28 (+4 NN, +4 FT).",
-  "slugs": [
-    "rag-001-chunk-it-right",
-    "rag-002-the-cost-ceiling",
-    "rag-003-the-citation-contract",
-    "rag-004-rerank-or-rethink",
-    "rag-009-python-retriever",
-    "pe-001-the-json-contract",
-    "eval-001-write-the-assertion-suite",
-    "eval-002-judge-the-judge",
-    "eval-003-catch-the-regression",
-    "grd-001-break-the-concierge",
-    "grd-002-the-indirect-payload",
-    "grd-003-hold-the-line",
-    "agt-001-call-the-right-tool",
-    "agt-002-recover-and-stop",
-    "agt-003-plan-the-sequence",
-    "agt-004-call-budget",
-    "agt-005-dedupe-and-halt",
-    "bnch-001-two-harnesses-one-score",
-    "bnch-002-same-checkpoint-decode",
-    "bnch-003-eval-overlap",
-    "nn-001-read-the-learning-curve",
-    "nn-002-size-the-model",
-    "nn-003-regularise-or-rethink",
-    "nn-005-capacity-cliff",
-    "ft-001-tune-or-prompt",
-    "ft-002-prep-the-dataset",
-    "ft-003-judge-the-tuned-model",
-    "ft-004-pick-the-adapter"
-  ]
+  "note": "Fresh start — add slugs here when new simulators and problems are ready.",
+  "slugs": []
 }

@@ -26,211 +26,27 @@ type Simulation = {
   tabs: SimulationTab[];
 };
 
-const SIMULATIONS: Simulation[] = [
-  {
-    id: "rag",
-    label: "RAG Pipeline",
-    problemTitle: "Chunk It Right",
-    slug: "rag-001-chunk-it-right",
-    difficulty: "Easy",
-    defaultTab: "python",
-    tabs: [
-      {
-        id: "python",
-        label: "Python",
-        fileName: "retriever.py",
-        runOutput: "recall@5 = 0.83  ✓ pass (threshold 0.80)",
-        code: `# Fix the retriever — tune chunking only
-config = {
-    "chunkSize": 400,
-    "overlap": 50,
-    "splitStrategy": "sentence",
-}
-
-# Baseline recall@5 = 0.41
-# Pass when recall@5 >= 0.80
-submit(config)`,
-      },
-      {
-        id: "json",
-        label: "JSON",
-        fileName: "config.json",
-        runOutput: "config validated · 3 fields · ready to submit",
-        code: `{
-  "chunkSize": 400,
-  "overlap": 50,
-  "splitStrategy": "sentence"
-}`,
-      },
-    ],
-  },
-  {
-    id: "neural-network",
-    label: "Neural Network",
-    problemTitle: "Regularise or Rethink",
-    slug: "nn-003-regularise-or-rethink",
-    difficulty: "Medium",
-    defaultTab: "python",
-    tabs: [
-      {
-        id: "python",
-        label: "Python",
-        fileName: "diagnose.py",
-        runOutput: "run-a flagged · overfitting · add_regularization ✓",
-        code: `# Three runs, same 256-unit architecture
-runs = {
-    "run-a": {"train": 0.98, "val": 0.67},  # memorises
-    "run-b": {"train": 0.86, "val": 0.84},
-    "run-c": {"train": 0.74, "val": 0.73},
-}
-
-diagnosis = {
-    "overfitRun": "run-a",
-    "diagnosis": "overfitting",
-    "nextKnob": "add_regularization",
-}
-submit(diagnosis)`,
-      },
-      {
-        id: "json",
-        label: "JSON",
-        fileName: "diagnosis.json",
-        runOutput: "diagnosis accepted · 3/3 gates pass",
-        code: `{
-  "overfitRun": "run-a",
-  "diagnosis": "overfitting",
-  "nextKnob": "add_regularization"
-}`,
-      },
-    ],
-  },
-  {
-    id: "evaluation",
-    label: "Evaluation",
-    problemTitle: "Write the Assertion Suite",
-    slug: "eval-001-write-the-assertion-suite",
-    difficulty: "Easy",
-    defaultTab: "yaml",
-    tabs: [
-      {
-        id: "yaml",
-        label: "YAML",
-        fileName: "assertions.yaml",
-        runOutput: "F1 = 0.74 · precision = 0.68 · recall = 0.71  ✓ pass",
-        code: `version: 1
-assertions:
-  - id: no-pii
-    match: re
-    pattern: "\\b\\d{3}-\\d{2}-\\d{4}\\b"
-    verdict: fail
-  - id: too-short
-    match: re
-    pattern: "^.{0,20}$"
-    verdict: fail
-verdict:
-  fail_if: any`,
-      },
-      {
-        id: "python",
-        label: "Python",
-        fileName: "grade.py",
-        runOutput: "suite loaded · 2 assertions · grading hidden set…",
-        code: `# Score the assertion suite on hidden labels
-suite = load_yaml("assertions.yaml")
-metrics = grade_suite(suite, labels=HIDDEN)
-
-# Pass: F1 >= 0.70, precision >= 0.65, recall >= 0.60
-print(metrics.f1, metrics.precision, metrics.recall)`,
-      },
-    ],
-  },
-  {
-    id: "agent",
-    label: "Agent & Tool Use",
-    problemTitle: "Call the Right Tool",
-    slug: "agt-001-call-the-right-tool",
-    difficulty: "Easy",
-    defaultTab: "python",
-    tabs: [
-      {
-        id: "python",
-        label: "Python",
-        fileName: "main.py",
-        runOutput: "t1 → calculator(4) · t2 → json_store ok  ✓ 2/2 tasks",
-        code: `import labpath_tools as tools
-
-def run_task(instruction: str) -> str:
-    if instruction.startswith("CALCULATOR"):
-        expr = instruction.split("expr=")[1]
-        return str(tools.calculator(expr))
-
-    if instruction.startswith("JSON_STORE"):
-        _, rest = instruction.split(" ", 1)
-        key = rest.split("key=")[1].split()[0]
-        val = rest.split("value=")[1]
-        tools.json_store("put", key, val)
-        return "ok"
-
-    raise ValueError("unknown instruction")`,
-      },
-      {
-        id: "json",
-        label: "JSON",
-        fileName: "tasks.json",
-        runOutput: "2 tasks queued · sandbox ready",
-        code: `{
-  "tasks": [
+const PLACEHOLDER_SIMULATION: Simulation = {
+  id: "preview",
+  label: "Coming soon",
+  problemTitle: "New simulators",
+  slug: "",
+  difficulty: "Easy",
+  defaultTab: "python",
+  tabs: [
     {
-      "id": "t1",
-      "instruction": "CALCULATOR expr=2+2"
+      id: "python",
+      label: "Python",
+      fileName: "pipeline.py",
+      runOutput: "Catalogue reset — publish exercises to enable live grading.",
+      code: `# Simulators and problems will land here.
+# Configure chunking, retrieval, guardrails, and more.`,
     },
-    {
-      "id": "t2",
-      "instruction": "JSON_STORE put key=ticket value={\\"id\\":\\"TCK-1001\\"}"
-    }
-  ]
-}`,
-      },
-    ],
-  },
-  {
-    id: "fine-tuning",
-    label: "Fine-tuning",
-    problemTitle: "Tune or Prompt",
-    slug: "ft-001-tune-or-prompt",
-    difficulty: "Easy",
-    defaultTab: "python",
-    tabs: [
-      {
-        id: "python",
-        label: "Python",
-        fileName: "economics.py",
-        runOutput: "prompt €920 · fine-tune €824 · fine_tune_wins ✓",
-        code: `# 500 tickets/month × 6 months
-volume = 500 * 6
+  ],
+};
 
-prompt_total = 200 + volume * 0.020   # €920
-tune_total   = 800 + volume * 0.008   # €824
-
-decision = {
-    "approachCall": "fine_tune",
-    "economicsCall": "fine_tune_wins",
-}
-submit(decision)`,
-      },
-      {
-        id: "json",
-        label: "JSON",
-        fileName: "decision.json",
-        runOutput: "economics verified · approach aligned ✓",
-        code: `{
-  "approachCall": "fine_tune",
-  "economicsCall": "fine_tune_wins"
-}`,
-      },
-    ],
-  },
-];
+/** Home preview simulators — add entries when the catalogue is live again. */
+const SIMULATIONS: Simulation[] = [];
 
 function CodeIcon() {
   return (
@@ -282,18 +98,22 @@ function ChevronRight() {
   );
 }
 
+function defaultSimulation(): Simulation {
+  return SIMULATIONS[0] ?? PLACEHOLDER_SIMULATION;
+}
+
 export function AiEngineerSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const [activeId, setActiveId] = useState(SIMULATIONS[0].id);
-  const [activeTab, setActiveTab] = useState<TabId>(SIMULATIONS[0].defaultTab);
+  const [activeId, setActiveId] = useState(() => defaultSimulation().id);
+  const [activeTab, setActiveTab] = useState<TabId>(() => defaultSimulation().defaultTab);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
   const [running, setRunning] = useState(false);
   const [runOutput, setRunOutput] = useState<string | null>(null);
 
   const active = useMemo(
-    () => SIMULATIONS.find((item) => item.id === activeId) ?? SIMULATIONS[0],
+    () => SIMULATIONS.find((item) => item.id === activeId) ?? defaultSimulation(),
     [activeId],
   );
 
@@ -362,6 +182,11 @@ export function AiEngineerSection() {
     setRunning(true);
     setRunOutput(null);
     try {
+      if (!active.slug) {
+        await new Promise((resolve) => window.setTimeout(resolve, 450));
+        setRunOutput(currentTab.runOutput);
+        return;
+      }
       const result = await simulatorPreviewApi.grade({
         simulationId: activeId,
         tabId: activeTab,
@@ -395,9 +220,8 @@ export function AiEngineerSection() {
             AI Engineer
           </h2>
           <p className="ag-lc-ai-lead">
-            Eight AI engineering simulators — RAG, evaluation, guardrails, prompt design,
-            agents, benchmarks, neural nets, and fine-tuning. Submit configs, run graders,
-            and read the scorecard.
+            Simulators are being rebuilt from scratch. Browse the hub for updates, or sign in
+            to see problems as they publish.
           </p>
         </header>
 
@@ -445,12 +269,18 @@ export function AiEngineerSection() {
                   <PlayIcon />
                   {running ? "Running…" : "Run"}
                 </button>
-                <AuthLink
-                  href={routes.exercise(active.slug)}
-                  className="ag-lc-ai-btn ag-lc-ai-btn--dark"
-                >
-                  Open Problem
-                </AuthLink>
+                {active.slug ? (
+                  <AuthLink
+                    href={routes.exercise(active.slug)}
+                    className="ag-lc-ai-btn ag-lc-ai-btn--dark"
+                  >
+                    Open Problem
+                  </AuthLink>
+                ) : (
+                  <AuthLink href={routes.simulations} className="ag-lc-ai-btn ag-lc-ai-btn--dark">
+                    Simulators
+                  </AuthLink>
+                )}
               </div>
             </div>
 

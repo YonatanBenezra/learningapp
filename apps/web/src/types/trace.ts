@@ -9,6 +9,8 @@ export type TraceQuery = {
   source: string;
   question: string;
   retrieved: TraceHit[];
+  queryId?: string;
+  timingLabel?: string;
 };
 
 export type TraceStep = {

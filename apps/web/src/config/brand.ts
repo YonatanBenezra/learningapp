@@ -3,5 +3,5 @@ export const brand = {
   endorsement: "by Bina",
   tagline: "Practice platform for AI engineering",
   description:
-    "Graded AI engineering exercises across RAG, prompt engineering, evaluation, and guardrails.",
+    "Graded RAG engineering exercises with hidden test sets and traces.",
 } as const;

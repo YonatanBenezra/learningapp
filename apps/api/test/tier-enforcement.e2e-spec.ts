@@ -7,6 +7,7 @@ import {
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
 import { HINT_UPGRADE_MESSAGE } from '../src/modules/accounts/account.quota';
+import { describeLiveCatalogue } from './describe-live-catalogue';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 import { seedR1Trace } from './seed-trace';
@@ -29,7 +30,7 @@ async function submitR1(
     .expect(expectedStatus);
 }
 
-describe('Tier enforcement (e2e)', () => {
+describeLiveCatalogue('Tier enforcement (e2e)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
 

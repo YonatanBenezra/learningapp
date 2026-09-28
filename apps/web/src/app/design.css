@@ -1,15 +1,26 @@
 :root {
   --lp-brand: var(--color-brand);
   --lp-brand-hover: var(--color-brand-hover);
+  --lp-brand-on: var(--color-brand-on);
   --lp-brand-soft: var(--color-brand-soft);
   --lp-surface: var(--color-bg);
   --lp-surface-elevated: var(--color-card);
+  --lp-inset: var(--color-bg-inset);
+  --lp-hover: var(--color-bg-hover);
   --lp-ink: var(--color-ink);
   --lp-muted: var(--color-muted);
+  --lp-subtle: var(--color-subtle);
   --lp-border: var(--color-line);
+  --lp-border-strong: var(--color-line-strong);
   --lp-ring: var(--color-ring);
   --lp-danger: var(--color-danger);
   --lp-danger-soft: var(--color-danger-soft);
+  --lp-status-pass: var(--color-status-pass);
+  --lp-status-pass-bg: var(--color-status-pass-bg);
+  --lp-status-fail: var(--color-status-fail);
+  --lp-status-fail-bg: var(--color-status-fail-bg);
+  --lp-status-warn: var(--color-status-warn);
+  --lp-status-warn-bg: var(--color-status-warn-bg);
 }
 
 .lp-shell {
@@ -106,9 +117,10 @@
 
 .lp-page {
   width: 100%;
-  max-width: 1350px;
+  max-width: var(--lp-page-max-width, 1350px);
   margin-inline: auto;
   padding: 2rem 1.5rem 3rem;
+  box-sizing: border-box;
 }
 
 .lp-page-catalogue {
@@ -313,26 +325,6 @@
 
 .lp-card-btn:hover {
   background: var(--lp-brand-hover);
-}
-
-.lp-card--evaluation .lp-badge:first-child {
-  background: color-mix(in srgb, var(--color-ink) 8%, transparent);
-  color: var(--color-ink);
-}
-
-.lp-card--guardrails .lp-badge:first-child {
-  background: color-mix(in srgb, var(--color-brand) 8%, transparent);
-  color: #b42318;
-}
-
-.lp-card--prompt_engineering .lp-badge:first-child {
-  background: color-mix(in srgb, var(--color-ink) 6%, transparent);
-  color: var(--color-muted);
-}
-
-.lp-card--benchmark .lp-badge:first-child {
-  background: color-mix(in srgb, var(--color-brand) 10%, transparent);
-  color: var(--color-ink);
 }
 
 .lp-path-strip {

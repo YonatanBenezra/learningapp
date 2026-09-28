@@ -1,0 +1,150 @@
+.lp-rag-flow {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 22%, var(--color-line));
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--color-brand) 6%, var(--color-card));
+}
+
+.lp-rag-flow-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.lp-rag-flow-head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.lp-rag-flow-mode {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.lp-rag-flow-kicker {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.lp-rag-flow-step-pill {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.lp-rag-flow-caption {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.lp-rag-flow-track {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0;
+}
+
+.lp-rag-flow-item-wrap {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.lp-rag-flow-connector {
+  width: 0.65rem;
+  height: 2px;
+  margin: 0 0.1rem;
+  background: var(--color-line);
+  border-radius: 1px;
+}
+
+.lp-rag-flow-connector.is-lit {
+  background: color-mix(in srgb, var(--color-brand) 70%, var(--color-line));
+}
+
+.lp-rag-flow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  min-width: 4.25rem;
+  max-width: 5.5rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid var(--color-line);
+  border-radius: 0.45rem;
+  background: var(--color-bg-soft);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.lp-rag-flow-node--wide {
+  max-width: 6.25rem;
+}
+
+.lp-rag-flow-node--active {
+  border-color: color-mix(in srgb, var(--color-brand) 55%, var(--color-line));
+  background: color-mix(in srgb, var(--color-brand) 12%, var(--color-card));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-brand) 25%, transparent);
+}
+
+.lp-rag-flow-node--done {
+  border-color: color-mix(in srgb, var(--color-brand) 35%, var(--color-line));
+}
+
+.lp-rag-flow-node--dim {
+  opacity: 0.55;
+}
+
+.lp-rag-flow-node-num {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--color-brand);
+}
+
+.lp-rag-flow-node-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.lp-rag-flow-node-sub {
+  font-size: 0.5625rem;
+  color: var(--color-muted);
+  line-height: 1.2;
+}
+
+.lp-rag-flow--compact .lp-rag-flow-track {
+  gap: 0.05rem;
+}
+
+.lp-rag-flow--compact .lp-rag-flow-node {
+  min-width: 3.5rem;
+  padding: 0.28rem 0.35rem;
+}
+
+.lp-rag-flow--compact .lp-rag-flow-caption {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .lp-rag-flow-track {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.25rem;
+    scrollbar-width: thin;
+  }
+}

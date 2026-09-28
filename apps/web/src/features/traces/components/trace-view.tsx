@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
+import {
+  DEMO_RAG_TRACE,
+  DEMO_TRACE_RUN_ID,
+} from "@/features/traces/demo/rag-trace-demo-data";
+import { RagTraceView } from "@/features/traces/components/rag-trace-view";
 import { tracesApi } from "@/features/traces/traces-api";
 import { workspaceApi } from "@/features/workspace/workspace-api";
 import { ApiError } from "@/lib/api-client";
@@ -16,6 +21,13 @@ type TraceViewProps = {
 };
 
 export function TraceView({ runId }: TraceViewProps) {
+  if (runId === DEMO_TRACE_RUN_ID) {
+    return <RagTraceView runId={runId} trace={DEMO_RAG_TRACE} />;
+  }
+  return <TraceViewLive runId={runId} />;
+}
+
+function TraceViewLive({ runId }: TraceViewProps) {
   const [trace, setTrace] = useState<RunTrace | null>(null);
   const [run, setRun] = useState<Run | null>(null);
   const [error, setError] = useState<"auth" | "missing" | "load" | null>(null);
@@ -173,6 +185,20 @@ export function TraceView({ runId }: TraceViewProps) {
   const steps = trace.steps ?? [];
   const gated = Boolean(trace.gated);
   const isAgent = trace.simulator === "agent" || steps.length > 0;
+
+  if (trace.simulator === "rag" && queries.length > 0) {
+    return (
+      <RagTraceView
+        runId={runId}
+        trace={trace}
+        meta={{
+          runIdDisplay: trace.runId,
+          exerciseSlug:
+            typeof trace.payload?.exercise === "string" ? trace.payload.exercise : undefined,
+        }}
+      />
+    );
+  }
 
   return (
     <div className="lp-page lp-page-trace">
@@ -334,15 +360,13 @@ function TraceHeader({
         <p className="lp-run-kicker">{waiting ? "Waiting" : "Inspection"}</p>
         <h1 className="lp-run-title">Trace</h1>
         <p className="lp-run-lead">
-          {simulator === "agent"
-            ? "Tool steps for this run. Duration is information, not a pass gate."
-            : simulator === "benchmark"
-              ? "Harness comparison for this run. Wall-clock is information, not a pass gate."
-              : simulator
-                ? `${simulator} retrieval steps for this run.`
-                : waiting
-                  ? "Trace unlocks when grading finishes."
-                  : "Retrieval steps for this run."}
+          {simulator === "guardrails"
+            ? "Probe and guard steps for this run."
+            : simulator === "rag"
+              ? "Retrieval steps for this run."
+              : waiting
+                ? "Trace unlocks when grading finishes."
+                : "Instrumentation for this run."}
         </p>
       </div>
       <nav className="lp-run-nav" aria-label="Trace links">

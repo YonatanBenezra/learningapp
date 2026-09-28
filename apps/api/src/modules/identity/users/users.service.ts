@@ -8,6 +8,7 @@ import {
   type ProfileSettings,
 } from '../../profiles/profile-settings';
 import type { PublicUser } from '../auth/auth.service';
+import { loadPublishedSlugs } from '../../../content/content-paths';
 import {
   elapsedMs,
   ONBOARDING_EXERCISE_SLUG,
@@ -84,10 +85,35 @@ export class UsersService {
         select: { createdAt: true },
       }),
     ]);
+    const published = loadPublishedSlugs();
+    const onboardingSlug = published.includes(ONBOARDING_EXERCISE_SLUG)
+      ? ONBOARDING_EXERCISE_SLUG
+      : (published[0] ?? null);
+
+    if (!onboardingSlug) {
+      return {
+        needed: false,
+        exerciseSlug: '',
+        starter: {},
+        createdAt: createdAt.toISOString(),
+        timeToFirstSubmitMs: firstSubmit
+          ? elapsedMs(createdAt, firstSubmit.createdAt)
+          : null,
+        timeToFirstPassMs: firstPass
+          ? elapsedMs(createdAt, firstPass.createdAt)
+          : null,
+      };
+    }
+
+    const starter =
+      onboardingSlug === ONBOARDING_EXERCISE_SLUG
+        ? { ...ONBOARDING_STARTER }
+        : {};
+
     return {
       needed: !firstSubmit,
-      exerciseSlug: ONBOARDING_EXERCISE_SLUG,
-      starter: { ...ONBOARDING_STARTER },
+      exerciseSlug: onboardingSlug,
+      starter,
       createdAt: createdAt.toISOString(),
       timeToFirstSubmitMs: firstSubmit
         ? elapsedMs(createdAt, firstSubmit.createdAt)

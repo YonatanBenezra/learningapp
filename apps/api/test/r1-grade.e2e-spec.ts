@@ -7,6 +7,7 @@ import {
   R1_REFERENCE_PAYLOAD,
   R1_SLUG,
 } from '../src/modules/catalogue/exercises/exercises.constants';
+import { describeLiveCatalogue } from './describe-live-catalogue';
 import { signInPro } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
@@ -57,7 +58,7 @@ async function submit(
   return grade.body as { verdict: string };
 }
 
-describe('R1 grade (e2e)', () => {
+describeLiveCatalogue('R1 grade (e2e)', () => {
   let app: INestApplication<App>;
   let cookies: string;
 

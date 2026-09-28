@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { SIMULATOR_LABELS, SIMULATORS, type SimulatorSlug } from "@/config/simulators";
+import {
+  SIMULATOR_LABELS,
+  SIMULATORS,
+  isActiveSimulator,
+  type SimulatorSlug,
+} from "@/config/simulators";
 import {
   ensureAuthSession,
   getAuthSnapshot,
@@ -92,9 +97,6 @@ function ListViewIcon() {
   );
 }
 
-function isSimulatorSlug(value: string): value is SimulatorSlug {
-  return (SIMULATORS as readonly string[]).includes(value);
-}
 
 export function ProblemsGrid() {
   const searchParams = useSearchParams();
@@ -127,7 +129,7 @@ export function ProblemsGrid() {
 
   useEffect(() => {
     const fromUrl = searchParams.get("track");
-    if (fromUrl && isSimulatorSlug(fromUrl)) {
+    if (fromUrl && isActiveSimulator(fromUrl)) {
       setTrack(fromUrl);
     }
   }, [searchParams]);
@@ -162,6 +164,9 @@ export function ProblemsGrid() {
     }
     const needle = query.trim().toLowerCase();
     return items.filter((exercise) => {
+      if (!isActiveSimulator(exercise.simulator)) {
+        return false;
+      }
       const trackOk = track === "all" || exercise.simulator === track;
       const levelOk = difficulty === "all" || exercise.difficulty === difficulty;
       if (!trackOk || !levelOk) {
@@ -215,8 +220,8 @@ export function ProblemsGrid() {
             </span>
           </div>
           <p className="lp-cat-lead">
-            AI engineering problems across RAG, prompts, evaluation, guardrails,
-            agents, benchmarks, and more. Pick one and submit for a grade.
+            RAG problems with hidden test sets. Pick one and submit for a graded
+            scorecard.
           </p>
         </div>
 
