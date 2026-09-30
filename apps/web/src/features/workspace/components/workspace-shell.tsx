@@ -13,12 +13,20 @@ import type { Run } from "@/types/run";
 import { onboardingApi } from "@/features/onboarding/onboarding-api";
 import { waitForGrade, waitForRun, workspaceApi } from "../workspace-api";
 import { WORKER_OFFLINE_MESSAGE } from "../worker-offline-message";
+import type { HintList } from "@/types/hint";
+import { hintsApi } from "../hints-api";
 import { BriefPanel, type BriefTab } from "./brief-panel";
 import { G1Chat } from "./g1-chat";
 import { RunPanel } from "./run-panel";
 import { RagLabPanel } from "./rag-lab-panel";
 import { RagFlowCanvas } from "./rag-flow-canvas";
 import { SubmissionSurface } from "./submission-surface";
+import { WorkspaceRagFigmaShell } from "./workspace-rag-figma-shell";
+import {
+  isRagSandboxSchema,
+  ragEditorTitle,
+  useRagFigmaWorkspace,
+} from "./workspace-rag-utils";
 import { WorkspaceSplit } from "./workspace-split";
 import {
   dispatchWorkspaceState,
@@ -45,37 +53,6 @@ function readFlag(key: string) {
   return window.localStorage.getItem(key) === "1";
 }
 
-function isRagSandboxSchema(schema: unknown) {
-  if (!schema || typeof schema !== "object") {
-    return false;
-  }
-  const properties = (schema as { properties?: Record<string, unknown> }).properties;
-  if (!properties) {
-    return false;
-  }
-  const keys = Object.keys(properties);
-  return keys.length === 1 && keys[0] === "source";
-}
-
-function ragEditorTitle(schema: unknown) {
-  const keys = Object.keys(
-    ((schema as { properties?: Record<string, unknown> })?.properties ?? {}) as Record<
-      string,
-      unknown
-    >,
-  );
-  if (keys.includes("generationPrompt")) {
-    return "Generation prompt";
-  }
-  if (keys.includes("reranker")) {
-    return "Reranker config";
-  }
-  if (keys.includes("topK")) {
-    return "Retriever budget";
-  }
-  return "Chunking config";
-}
-
 export function WorkspaceShell({
   slug,
   initialValues,
@@ -95,6 +72,7 @@ export function WorkspaceShell({
   const [resultsCollapsed, setResultsCollapsed] = useState(onboarding);
   const [submitValid, setSubmitValid] = useState(false);
   const [labPayload, setLabPayload] = useState<Record<string, unknown>>({});
+  const [hints, setHints] = useState<HintList | null>(null);
   const [workTab, setWorkTab] = useState<"configure" | "lab">("configure");
   const [labHintDismissed, setLabHintDismissed] = useState(() =>
     readFlag("lp-ws-lab-hint-dismissed"),
@@ -127,6 +105,29 @@ export function WorkspaceShell({
       cancelled = true;
     };
   }, [slug]);
+
+  useEffect(() => {
+    if (!exercise || !useRagFigmaWorkspace(exercise, onboarding)) {
+      setHints(null);
+      return;
+    }
+    let cancelled = false;
+    hintsApi
+      .list(slug)
+      .then((result) => {
+        if (!cancelled) {
+          setHints(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setHints(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, exercise, onboarding]);
 
   useEffect(() => {
     return () => {
@@ -247,6 +248,14 @@ export function WorkspaceShell({
     );
   }
 
+  if (!exercise) {
+    return (
+      <main className="lp-ws-state">
+        <p>Loading exercise…</p>
+      </main>
+    );
+  }
+
   const ragLabEnabled =
     exercise?.simulator === "rag" && !isRagSandboxSchema(exercise.submissionSchema);
   const showRagLab = ragLabEnabled && !onboarding;
@@ -263,6 +272,33 @@ export function WorkspaceShell({
     : exercise?.simulator === "rag"
       ? "Python retriever"
       : "Code";
+
+  const ragFigma = useRagFigmaWorkspace(exercise, onboarding);
+
+  if (ragFigma) {
+    return (
+      <WorkspaceRagFigmaShell
+        slug={slug}
+        exercise={exercise}
+        pathSlug={pathSlug}
+        hints={hints}
+        run={run}
+        grade={grade}
+        pending={pending}
+        submitError={submitError}
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        onValidityChange={setSubmitValid}
+        onValuesChange={setLabPayload}
+        labPayload={labPayload}
+        briefCollapsed={briefCollapsed}
+        onToggleBriefCollapsed={toggleBriefCollapsed}
+        resultsCollapsed={resultsCollapsed}
+        onToggleResultsCollapsed={toggleResultsCollapsed}
+        showSimulationLab
+      />
+    );
+  }
 
   return (
     <div className={`lp-ws${exercise ? ` lp-ws--${exercise.simulator}` : ""}`}>

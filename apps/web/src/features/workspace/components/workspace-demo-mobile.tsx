@@ -89,7 +89,13 @@ export function WorkspaceDemoMobile({
         {step === "submit" ? (
           <div className="lp-ws-mobile-submit flex min-h-0 flex-1 flex-col">
             <div className="lp-ws-mobile-flow shrink-0">
-              <RagFlowGraph className="lp-rag-graph--fill lp-rag-graph--mobile" />
+              <RagFlowGraph
+                className="lp-rag-graph--fill lp-rag-graph--mobile"
+                schema={exercise.submissionSchema}
+                pending={pending}
+                graded={Boolean(grade)}
+                verdict={grade?.verdict ?? null}
+              />
             </div>
             <div className="flex min-h-0 min-w-0 flex-1 flex-col">
               <SubmissionSurface

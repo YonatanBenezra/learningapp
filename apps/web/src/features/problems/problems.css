@@ -622,6 +622,13 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   margin: 0;
   color: var(--lp-muted);
   font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.lp-cat-empty-code {
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  font-size: 0.8125rem;
+  color: color-mix(in srgb, var(--lp-brand) 75%, var(--lp-muted));
 }
 
 .lp-cat-pager {

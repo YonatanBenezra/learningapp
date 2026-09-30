@@ -20,44 +20,62 @@ import {
   DEMO_RAG_TRACE_META,
   type RagTracePipelineStep,
 } from "@/features/traces/demo/rag-trace-demo-data";
+import {
+  buildRagPipeline,
+  buildRagTraceMeta,
+  enrichTraceQueries,
+  recallFromTraceAndGrade,
+  verdictFromTraceAndGrade,
+  type RagTraceViewMeta,
+} from "@/features/traces/rag-trace-meta";
+import type { Grade } from "@/types/grade";
+import type { Run } from "@/types/run";
 import type { RunTrace, TraceHit, TraceQuery } from "@/types/trace";
 import { cn } from "@/lib/utils";
 import "@/features/traces/trace-page.css";
 
-export type RagTraceViewMeta = {
-  exerciseSlug?: string;
-  verdict?: "pass" | "fail";
-  recallAt5?: number;
-  runIdDisplay?: string;
-  configDisplay?: string;
-  createdDisplay?: string;
-  hiddenQueryCount?: number;
-  publicSampleCount?: number;
-  pipelineNote?: string;
-  statFootnotes?: {
-    chunks?: string;
-    topK?: string;
-    tokens?: string;
-    cost?: string;
-  };
-  hiddenFooter?: string;
-};
+export type { RagTraceViewMeta };
 
 type RagTraceViewProps = {
   runId: string;
   trace: RunTrace;
-  meta?: RagTraceViewMeta;
+  meta?: Partial<RagTraceViewMeta>;
+  run?: Run | null;
+  grade?: Grade | null;
   pipeline?: RagTracePipelineStep[];
+  /** Demo-only: use fixed Figma meta + pipeline when true */
+  demoPresentation?: boolean;
 };
 
 export function RagTraceView({
   runId,
   trace,
-  meta = DEMO_RAG_TRACE_META,
-  pipeline = DEMO_RAG_PIPELINE,
+  meta: metaOverrides,
+  run = null,
+  grade = null,
+  pipeline: pipelineOverride,
+  demoPresentation = false,
 }: RagTraceViewProps) {
   const [payloadOpen, setPayloadOpen] = useState(false);
   const [openQueries, setOpenQueries] = useState<Record<number, boolean>>({ 0: true });
+
+  const meta = useMemo(() => {
+    if (demoPresentation) {
+      return { ...DEMO_RAG_TRACE_META, ...metaOverrides };
+    }
+    return buildRagTraceMeta(trace, { run, grade, overrides: metaOverrides });
+  }, [demoPresentation, metaOverrides, trace, run, grade]);
+
+  const pipeline = useMemo(() => {
+    if (demoPresentation && !pipelineOverride) {
+      return DEMO_RAG_PIPELINE;
+    }
+    if (pipelineOverride) {
+      return pipelineOverride;
+    }
+    const verdict = meta.verdict ?? verdictFromTraceAndGrade(trace, grade);
+    return buildRagPipeline(trace, verdict);
+  }, [demoPresentation, pipelineOverride, trace, grade, meta.verdict]);
 
   const payloadPretty = useMemo(
     () => (trace.payload ? JSON.stringify(trace.payload, null, 2) : "{}"),
@@ -68,29 +86,17 @@ export function RagTraceView({
     [payloadPretty],
   );
 
-  const queries = trace.queries ?? [];
-  const recall =
-    meta.recallAt5 ??
-    (typeof trace.payload?.grading === "object" &&
-    trace.payload.grading &&
-    "recallAt5" in trace.payload.grading &&
-    typeof (trace.payload.grading as { recallAt5: unknown }).recallAt5 === "number"
-      ? (trace.payload.grading as { recallAt5: number }).recallAt5
-      : undefined);
-  const verdict =
-    meta.verdict ??
-    (typeof trace.payload?.grading === "object" &&
-    trace.payload.grading &&
-    "verdict" in trace.payload.grading
-      ? ((trace.payload.grading as { verdict: string }).verdict as "pass" | "fail")
-      : undefined);
+  const queries = useMemo(() => enrichTraceQueries(trace), [trace]);
+  const recall = meta.recallAt5 ?? recallFromTraceAndGrade(trace, grade);
+  const verdict = meta.verdict ?? verdictFromTraceAndGrade(trace, grade);
 
   const created =
     meta.createdDisplay ??
     (trace.createdAt ? formatWhen(trace.createdAt) : "—");
-  const exercise =
-    meta.exerciseSlug ??
-    (typeof trace.payload?.exercise === "string" ? trace.payload.exercise : "—");
+  const exerciseSlug = meta.exerciseSlug;
+  const exerciseLabel =
+    meta.exerciseTitle ?? exerciseSlug ?? "—";
+  const hiddenBadgeCount = meta.hiddenQueryCount ?? "—";
 
   return (
     <div className="lp-page lp-page-catalogue lp-page-trace lp-trace-studio">
@@ -101,6 +107,21 @@ export function RagTraceView({
           <p className="lp-trace-lead">Retrieval steps for this run (RAG)</p>
           <div className="lp-trace-crumb-row">
             <nav className="lp-trace-crumb" aria-label="Trace links">
+              <Link href={routes.problems} className="text-lp-brand hover:underline">
+                Problems
+              </Link>
+              {exerciseSlug ? (
+                <>
+                  <span aria-hidden> · </span>
+                  <Link
+                    href={routes.exercise(exerciseSlug)}
+                    className="text-lp-brand hover:underline"
+                  >
+                    {exerciseLabel}
+                  </Link>
+                </>
+              ) : null}
+              <span aria-hidden> · </span>
               <Link href={routes.run(runId)} className="text-lp-brand hover:underline">
                 Run
               </Link>
@@ -109,10 +130,19 @@ export function RagTraceView({
                 Dashboard
               </Link>
             </nav>
-            {verdict && recall != null ? (
-              <span className="lp-trace-status-pill">
-                <span className="size-1.5 rounded-full bg-rose-200" aria-hidden />
-                {verdict} · recall@5 {recall.toFixed(2)}
+            {verdict ? (
+              <span
+                className={cn(
+                  "lp-trace-status-pill",
+                  verdict === "pass"
+                    ? "lp-trace-status-pill--pass"
+                    : "lp-trace-status-pill--fail",
+                )}
+              >
+                <span className="lp-trace-status-pill-dot" aria-hidden />
+                {recall != null
+                  ? `${verdict} · recall@5 ${recall.toFixed(2)}`
+                  : verdict}
               </span>
             ) : null}
           </div>
@@ -127,7 +157,7 @@ export function RagTraceView({
         </div>
       </header>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="lp-trace-stats-grid">
         <StatCard
           icon={Scissors}
           label="Chunks"
@@ -154,7 +184,7 @@ export function RagTraceView({
         />
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(16rem,22rem)_1fr]">
+      <div className="lp-trace-body-grid">
         <div className="flex flex-col gap-3">
           <section className="lp-trace-panel lp-trace-run-overview">
             <div className="lp-trace-run-overview-head">
@@ -164,20 +194,18 @@ export function RagTraceView({
             <dl className="lp-trace-overview">
               <OverviewRow label="Run ID" value={meta.runIdDisplay ?? trace.runId} mono />
               <OverviewRow label="Simulator" value={trace.simulator ?? "rag"} />
-              <OverviewRow label="Exercise" value={exercise} mono />
+              <OverviewRow
+                label="Exercise"
+                value={exerciseLabel}
+                mono={!meta.exerciseTitle}
+                href={exerciseSlug ? routes.exercise(exerciseSlug) : undefined}
+              />
               <OverviewRow label="Created" value={created} mono />
-              <OverviewRow label="Config" value={meta.configDisplay ?? "—"} mono />
-              <OverviewRow label="Chunks" value={String(trace.chunkCount ?? "—")} />
-              <OverviewRow label="Top-k" value={String(trace.k ?? "—")} />
               <OverviewRow
-                label="Tokens in"
-                value={formatInt(trace.tokensIn ?? 0)}
+                label="Config"
+                value={meta.configDisplay ?? "—"}
+                mono
               />
-              <OverviewRow
-                label="Tokens out"
-                value={formatInt(trace.tokensOut ?? 0)}
-              />
-              <OverviewRow label="Cost" value={formatCost(trace.costEurMicros)} />
             </dl>
 
             <div className="lp-trace-payload-wrap">
@@ -189,12 +217,8 @@ export function RagTraceView({
               >
                 <span className="flex min-w-0 items-center gap-2">
                   <Code2 className="size-3.5 shrink-0 text-lp-muted" aria-hidden />
-                  <span className="text-[0.8125rem] font-medium text-lp-muted">
-                    Raw payload
-                  </span>
-                  <span className="text-[0.8125rem] font-normal text-lp-muted/80">
-                    {payloadKb} KB
-                  </span>
+                  <span className="lp-trace-payload-toggle-label">Raw payload</span>
+                  <span className="lp-trace-payload-toggle-size">{payloadKb} KB</span>
                 </span>
                 {payloadOpen ? (
                   <ChevronDown className="size-4 shrink-0 text-lp-muted" aria-hidden />
@@ -227,7 +251,7 @@ export function RagTraceView({
                 public sample • {meta.publicSampleCount ?? queries.length}
               </span>
               <span className="lp-trace-queries-badge">
-                hidden • {meta.hiddenQueryCount ?? 40} redacted
+                hidden • {hiddenBadgeCount} redacted
               </span>
             </div>
           </div>
@@ -246,7 +270,7 @@ export function RagTraceView({
           </ul>
 
           <div className="lp-trace-queries-footer">
-            <Lock className="mt-0.5 size-3.5 shrink-0 opacity-70" aria-hidden />
+            <Lock className="shrink-0 opacity-75" aria-hidden />
             <p className="m-0">
               {meta.hiddenFooter ??
                 "Hidden-set queries are redacted in this view until grading policy allows full inspection."}
@@ -260,12 +284,12 @@ export function RagTraceView({
 
 function TracePipeline({ steps }: { steps: RagTracePipelineStep[] }) {
   return (
-    <div className="flex flex-wrap items-center gap-1" aria-label="Run pipeline">
+    <div className="lp-trace-pipeline" aria-label="Run pipeline">
       {steps.map((step, index) => (
         <span key={step.id} className="inline-flex items-center gap-1">
           <PipelinePill step={step} />
           {index < steps.length - 1 ? (
-            <ChevronRight className="size-3 shrink-0 text-lp-muted/60" aria-hidden />
+            <ChevronRight className="lp-trace-pipeline-chevron" aria-hidden />
           ) : null}
         </span>
       ))}
@@ -277,13 +301,16 @@ function PipelinePill({ step }: { step: RagTracePipelineStep }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.625rem] font-semibold whitespace-nowrap",
+        "lp-trace-pipeline-pill",
         step.state === "done" &&
           "border border-lp-brand/55 text-lp-brand bg-[color-mix(in_srgb,var(--color-brand)_8%,transparent)]",
         step.state === "skip" &&
           "border border-dashed border-lp-muted/45 text-lp-muted/90",
         step.state === "fail" &&
           "border border-rose-700 bg-rose-600 text-white",
+        step.id === "grade" &&
+          step.state === "done" &&
+          "border border-emerald-600/70 text-emerald-200 bg-emerald-900/35",
       )}
     >
       {step.state === "done" ? (
@@ -310,14 +337,12 @@ function StatCard({
 }) {
   return (
     <div className="lp-trace-stat">
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="text-[0.625rem] font-bold uppercase tracking-wide text-lp-muted">
-          {label}
-        </span>
-        <Icon className="size-3.5 text-lp-muted/80" aria-hidden />
+      <div className="flex items-center justify-between gap-2">
+        <span className="lp-trace-stat-label">{label}</span>
+        <Icon className="size-3.5 text-lp-muted/75" aria-hidden />
       </div>
-      <p className="text-[1.25rem] font-bold leading-none tracking-tight text-lp-ink">{value}</p>
-      {foot ? <p className="mt-1.5 text-[0.6875rem] text-lp-muted">{foot}</p> : null}
+      <p className="lp-trace-stat-value">{value}</p>
+      {foot ? <p className="lp-trace-stat-foot">{foot}</p> : null}
     </div>
   );
 }
@@ -326,15 +351,25 @@ function OverviewRow({
   label,
   value,
   mono,
+  href,
 }: {
   label: string;
   value: string;
   mono?: boolean;
+  href?: string;
 }) {
   return (
     <div className="lp-trace-overview-row">
       <dt>{label}</dt>
-      <dd className={mono ? "font-mono text-[0.6875rem]" : undefined}>{value}</dd>
+      <dd className={mono ? "font-mono text-[0.75rem]" : undefined}>
+        {href ? (
+          <Link href={href} className="text-lp-brand hover:underline">
+            {value}
+          </Link>
+        ) : (
+          value
+        )}
+      </dd>
     </div>
   );
 }
@@ -363,18 +398,12 @@ function QueryAccordion({
             <ChevronRight className="mt-1 size-4 shrink-0 text-lp-muted" aria-hidden />
           )}
           <span className="min-w-0">
-            <span className="font-mono text-[0.6875rem] font-semibold text-lp-muted">
-              {query.queryId ?? query.source}
-            </span>
-            <span className="mt-1 block text-[0.875rem] font-bold leading-snug text-lp-ink">
-              {query.question}
-            </span>
+            <span className="lp-trace-query-source">{query.source}</span>
+            <span className="lp-trace-query-question">{query.question}</span>
           </span>
         </span>
         {query.timingLabel ? (
-          <span className="shrink-0 pt-0.5 text-[0.6875rem] font-medium text-lp-muted">
-            {query.timingLabel}
-          </span>
+          <span className="lp-trace-query-timing">{query.timingLabel}</span>
         ) : null}
       </button>
       {open ? (
@@ -390,38 +419,40 @@ function QueryAccordion({
 
 function HitRow({ hit, topHit }: { hit: TraceHit; topHit?: boolean }) {
   const pct = Math.min(100, Math.max(0, hit.score * 100));
+  const chunkLabel = `${hit.docId} · ${hit.chunkId}`;
   return (
     <li className={cn("lp-trace-hit-row", topHit && "lp-trace-hit-row--top")}>
-      <div className="lp-trace-hit-id-col">
-        <span
-          className={cn(
-            "lp-trace-hit-id",
-            topHit ? "lp-trace-hit-id--top" : "lp-trace-hit-id--dim",
-          )}
-        >
-          [{hit.docId}#{hit.chunkId}]
-        </span>
-        {topHit ? <span className="lp-trace-hit-badge">top hit</span> : null}
-      </div>
-      <div className="lp-trace-hit-score-col">
-        <span
-          className={cn(
-            "lp-trace-hit-score-val",
-            topHit ? "lp-trace-hit-score-val--top" : "lp-trace-hit-score-val--dim",
-          )}
-        >
-          {hit.score.toFixed(2)}
-        </span>
-        <span className="lp-trace-hit-track">
+      <div className="lp-trace-hit-meta">
+        <div className="lp-trace-hit-meta-start">
           <span
-            className={cn("lp-trace-hit-fill", topHit && "lp-trace-hit-fill--top")}
-            style={{ width: `${pct}%` }}
-          />
-        </span>
+            className={cn(
+              "lp-trace-hit-id",
+              topHit ? "lp-trace-hit-id--top" : "lp-trace-hit-id--dim",
+            )}
+            title={chunkLabel}
+          >
+            {chunkLabel}
+          </span>
+          {topHit ? <span className="lp-trace-hit-badge">top hit</span> : null}
+        </div>
+        <div className="lp-trace-hit-score-group" aria-label={`Similarity ${hit.score.toFixed(2)}`}>
+          <span
+            className={cn(
+              "lp-trace-hit-score-val",
+              topHit ? "lp-trace-hit-score-val--top" : "lp-trace-hit-score-val--dim",
+            )}
+          >
+            {hit.score.toFixed(2)}
+          </span>
+          <span className="lp-trace-hit-track">
+            <span
+              className={cn("lp-trace-hit-fill", topHit && "lp-trace-hit-fill--top")}
+              style={{ width: `${pct}%` }}
+            />
+          </span>
+        </div>
       </div>
-      <div className={cn("lp-trace-hit-body", topHit && "lp-trace-hit-body--boxed")}>
-        <p className="lp-trace-hit-text">{hit.text}</p>
-      </div>
+      <p className="lp-trace-hit-text">{hit.text}</p>
     </li>
   );
 }
@@ -431,10 +462,6 @@ function formatCost(micros?: number) {
     return "—";
   }
   return `€${(micros / 1_000_000).toFixed(4)}`;
-}
-
-function formatInt(value: number) {
-  return new Intl.NumberFormat("en-US").format(value);
 }
 
 function HighlightedJson({ text }: { text: string }) {

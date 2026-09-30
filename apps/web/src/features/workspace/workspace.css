@@ -39,6 +39,19 @@
   overflow: hidden;
 }
 
+.lp-ws-split.is-resizing {
+  user-select: none;
+}
+
+.lp-ws-split.is-resizing .lp-ws-split-primary,
+.lp-ws-split.is-resizing .lp-ws-split-secondary {
+  pointer-events: none;
+}
+
+html.lp-ws-split-drag .lp-rag-graph .react-flow__viewport {
+  transition: none !important;
+}
+
 .lp-ws-split-handle {
   position: relative;
   z-index: 2;

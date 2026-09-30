@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { SPLIT_STRATEGY_TIPS } from "../rag-lab/rag-lab-copy";
 import {
@@ -129,8 +129,17 @@ export function SubmissionSurface({
     onValidityChange?.(isValid);
   }, [isValid, onValidityChange]);
 
+  const valuesEmitRef = useRef<string>("");
   useEffect(() => {
-    onValuesChange?.(values);
+    if (!onValuesChange) {
+      return;
+    }
+    const snapshot = JSON.stringify(values);
+    if (snapshot === valuesEmitRef.current) {
+      return;
+    }
+    valuesEmitRef.current = snapshot;
+    onValuesChange(values);
   }, [values, onValuesChange]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -165,16 +174,6 @@ export function SubmissionSurface({
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="min-h-0 flex-1 overflow-auto p-3">
           <div className="rounded-lg border border-lp-border bg-[color-mix(in_srgb,var(--color-ink)_8%,var(--color-card))] p-3 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-ink)_6%,transparent)]">
-            <div className="mb-3 flex flex-wrap gap-2" aria-live="polite">
-              {fields.map(([key]) => (
-                <span
-                  key={key}
-                  className="inline-flex items-center rounded-md border border-lp-brand/35 bg-[color-mix(in_srgb,var(--color-brand)_12%,transparent)] px-2 py-1 text-[0.6875rem] font-semibold text-lp-brand"
-                >
-                  {figmaChipLabel(key, values[key])}
-                </span>
-              ))}
-            </div>
             <form
               id="lp-ws-submit-form"
               className="grid grid-cols-3 gap-3 max-sm:grid-cols-1"
@@ -229,21 +228,6 @@ export function SubmissionSurface({
             <span className="text-[0.6875rem] font-medium text-lp-muted">
               attempt {figmaAttempt}
             </span>
-            {figmaGrade ? (
-              <span className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold text-lp-muted">
-                Test Result
-                <span
-                  className={cn(
-                    "rounded px-1.5 py-0.5 text-[0.625rem] font-bold uppercase",
-                    figmaGrade.verdict === "pass"
-                      ? "bg-emerald-500/15 text-emerald-400"
-                      : "bg-red-500/15 text-red-400",
-                  )}
-                >
-                  {figmaGrade.verdict}
-                </span>
-              </span>
-            ) : null}
             <button
               type="submit"
               form="lp-ws-submit-form"
@@ -409,19 +393,6 @@ export function SubmissionSurface({
       ) : null}
     </div>
   );
-}
-
-function figmaChipLabel(key: string, value: unknown) {
-  if (key === "chunkSize") {
-    return `Chunk ${formatSummaryValue(value)}`;
-  }
-  if (key === "overlap") {
-    return `Overlap ${formatSummaryValue(value)}`;
-  }
-  if (key === "splitStrategy") {
-    return `Strategy ${formatSummaryValue(value)}`;
-  }
-  return `${labelFor(key)} ${formatSummaryValue(value)}`;
 }
 
 function Field({
@@ -604,7 +575,7 @@ function Field({
               required={required}
               value={numeric}
               onChange={(event) => onChange(parseInteger(event.target.value))}
-              className="min-w-0 flex-1 bg-transparent font-mono text-[0.875rem] font-semibold text-lp-brand outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:opacity-100"
+              className="min-w-0 flex-1 bg-transparent font-mono text-[0.875rem] font-semibold text-lp-brand outline-none [appearance:textfield] [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-outer-spin-button]:m-0"
             />
             <span className="shrink-0 font-mono text-[0.6875rem] text-lp-muted">tokens</span>
           </div>

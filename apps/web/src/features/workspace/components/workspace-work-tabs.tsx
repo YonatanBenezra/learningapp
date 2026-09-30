@@ -9,12 +9,14 @@ type WorkspaceWorkTabsProps = {
   tab: WorkTab;
   onTabChange: (tab: WorkTab) => void;
   editedSinceRun?: boolean;
+  showLab?: boolean;
 };
 
 export function WorkspaceWorkTabs({
   tab,
   onTabChange,
   editedSinceRun = true,
+  showLab = true,
 }: WorkspaceWorkTabsProps) {
   return (
     <div
@@ -38,23 +40,25 @@ export function WorkspaceWorkTabs({
           <span className="font-mono text-[0.75rem] text-lp-brand" aria-hidden>
             {"<>"}
           </span>
-          Submission
+          Submit
         </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === "lab"}
-          className={cn(
-            "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[0.8125rem] font-medium transition-colors",
-            tab === "lab"
-              ? "text-lp-ink"
-              : "text-lp-muted hover:text-lp-ink",
-          )}
-          onClick={() => onTabChange("lab")}
-        >
-          <FlaskConical className="size-3.5 opacity-70" aria-hidden />
-          Simulation Lab
-        </button>
+        {showLab ? (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "lab"}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[0.8125rem] font-medium transition-colors",
+              tab === "lab"
+                ? "text-lp-ink"
+                : "text-lp-muted hover:text-lp-ink",
+            )}
+            onClick={() => onTabChange("lab")}
+          >
+            <FlaskConical className="size-3.5 opacity-70" aria-hidden />
+            Simulation Lab
+          </button>
+        ) : null}
       </div>
       {editedSinceRun && tab === "configure" ? (
         <p className="flex items-center gap-1.5 text-[0.6875rem] font-medium text-amber-400/90">

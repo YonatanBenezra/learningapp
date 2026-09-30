@@ -56,8 +56,7 @@ export const initialRagFlowNodes: Node<RagFlowNodeData>[] = [
     data: {
       title: "Vector",
       subtitle: "search",
-      state: "active",
-      badge: "control",
+      state: "neutral",
       icon: ragFlowIcon("vsearch"),
       iconAccent: ragFlowIconAccent("vsearch"),
     },
@@ -117,8 +116,7 @@ export const initialRagFlowNodes: Node<RagFlowNodeData>[] = [
     data: {
       title: "Vector DB",
       subtitle: "chunks",
-      state: "active",
-      badge: "control",
+      state: "neutral",
       icon: ragFlowIcon("vdb"),
       iconAccent: ragFlowIconAccent("vdb"),
     },

@@ -3,6 +3,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { loadPublishedSlugs } from '../src/content/content-paths';
 import {
+  CATALOGUE_LIVE,
   HIDDEN_EVAL_CANARY,
   POC_CATALOGUE_TARGET,
   R1_SLUG,
@@ -28,16 +29,19 @@ describe('Catalogue (e2e)', () => {
     await request(app.getHttpServer()).get('/api/exercises').expect(401);
   });
 
-  it('lists an empty catalogue when nothing is published', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/api/exercises?pageSize=200')
-      .set('Cookie', cookies)
-      .expect(200);
+  (CATALOGUE_LIVE ? it.skip : it)(
+    'lists an empty catalogue when nothing is published',
+    async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/exercises?pageSize=200')
+        .set('Cookie', cookies)
+        .expect(200);
 
-    expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
-    expect(response.body.items).toEqual([]);
-    expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
-  });
+      expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
+      expect(response.body.items).toEqual([]);
+      expect(JSON.stringify(response.body)).not.toContain(HIDDEN_EVAL_CANARY);
+    },
+  );
 
   describeLiveCatalogue('with published exercises', () => {
     it('lists published exercises for an authenticated user', async () => {

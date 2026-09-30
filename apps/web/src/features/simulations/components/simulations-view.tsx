@@ -72,10 +72,17 @@ export function SimulationsView() {
               <li key={tag}>{tag}</li>
             ))}
           </ul>
-          <Link href={card.problemsHref} className="lp-sim-hero-cta lp-sim-feature-cta">
-            Browse problems
-            <span aria-hidden>→</span>
-          </Link>
+          <div className="lp-sim-feature-cta-row">
+            <Link href={card.problemsHref} className="lp-sim-hero-cta lp-sim-feature-cta">
+              Browse live problems
+              <span aria-hidden>→</span>
+            </Link>
+            {"demoTraceHref" in card && card.demoTraceHref ? (
+              <Link href={card.demoTraceHref} className="lp-sim-feature-cta-secondary">
+                Sample trace UI
+              </Link>
+            ) : null}
+          </div>
         </div>
 
         <div className="lp-sim-feature-side">

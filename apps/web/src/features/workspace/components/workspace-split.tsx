@@ -39,6 +39,37 @@ function readRatio(key: string, fallback: number, min: number, max: number) {
   return Math.min(max, Math.max(min, parsed));
 }
 
+let splitDragDepth = 0;
+
+function beginSplitDrag() {
+  splitDragDepth += 1;
+  if (splitDragDepth === 1 && typeof document !== "undefined") {
+    document.documentElement.classList.add("lp-ws-split-drag");
+  }
+}
+
+function endSplitDrag() {
+  splitDragDepth = Math.max(0, splitDragDepth - 1);
+  if (splitDragDepth === 0 && typeof document !== "undefined") {
+    document.documentElement.classList.remove("lp-ws-split-drag");
+    window.dispatchEvent(new CustomEvent("lp-ws-split-resize-end"));
+  }
+}
+
+function gridStyleForRatio(
+  direction: SplitDirection,
+  ratio: number,
+): { gridTemplateColumns?: string; gridTemplateRows?: string } {
+  if (direction === "horizontal") {
+    return {
+      gridTemplateColumns: `minmax(0, ${ratio * 100}%) 9px minmax(0, 1fr)`,
+    };
+  }
+  return {
+    gridTemplateRows: `${ratio * 100}% 9px minmax(0, 1fr)`,
+  };
+}
+
 export function WorkspaceSplit({
   direction = "horizontal",
   storageKey,
@@ -62,12 +93,80 @@ export function WorkspaceSplit({
   const dragRef = useRef<{ start: number; startRatio: number; size: number } | null>(
     null,
   );
+  const rafRef = useRef<number | null>(null);
+  const pendingRatioRef = useRef<number | null>(null);
+
+  const applyRatioToDom = useCallback(
+    (next: number) => {
+      const root = rootRef.current;
+      if (!root) {
+        return;
+      }
+      const grid = gridStyleForRatio(direction, next);
+      if (grid.gridTemplateColumns) {
+        root.style.gridTemplateColumns = grid.gridTemplateColumns;
+      }
+      if (grid.gridTemplateRows) {
+        root.style.gridTemplateRows = grid.gridTemplateRows;
+      }
+    },
+    [direction],
+  );
 
   useLayoutEffect(() => {
     const stored = readRatio(storageKey, defaultRatio, ratioMin, ratioMax);
     ratioRef.current = stored;
     setRatio((prev) => (prev === stored ? prev : stored));
   }, [storageKey, defaultRatio, ratioMin, ratioMax]);
+
+  useLayoutEffect(() => {
+    if (dragRef.current) {
+      return;
+    }
+    if (primaryCollapsed || secondaryCollapsed) {
+      return;
+    }
+    applyRatioToDom(ratio);
+  }, [
+    ratio,
+    primaryCollapsed,
+    secondaryCollapsed,
+    applyRatioToDom,
+  ]);
+
+  const commitRatio = useCallback(
+    (clamped: number) => {
+      ratioRef.current = clamped;
+      pendingRatioRef.current = null;
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      applyRatioToDom(clamped);
+      setRatio(clamped);
+      window.localStorage.setItem(storageKey, String(clamped));
+    },
+    [applyRatioToDom, storageKey],
+  );
+
+  const scheduleRatioDuringDrag = useCallback(
+    (clamped: number) => {
+      ratioRef.current = clamped;
+      pendingRatioRef.current = clamped;
+      if (rafRef.current !== null) {
+        return;
+      }
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        const next = pendingRatioRef.current;
+        if (next === null) {
+          return;
+        }
+        applyRatioToDom(next);
+      });
+    },
+    [applyRatioToDom],
+  );
 
   const onPointerDown = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -80,61 +179,68 @@ export function WorkspaceSplit({
       const size = direction === "horizontal" ? rect.width : rect.height;
       dragRef.current = {
         start: direction === "horizontal" ? event.clientX : event.clientY,
-        startRatio: ratio,
+        startRatio: ratioRef.current,
         size,
       };
-      event.currentTarget.setPointerCapture(event.pointerId);
+      beginSplitDrag();
+      root.classList.add("is-resizing");
+
+      const onMove = (moveEvent: PointerEvent) => {
+        const drag = dragRef.current;
+        if (!drag) {
+          return;
+        }
+        const delta =
+          (direction === "horizontal" ? moveEvent.clientX : moveEvent.clientY) -
+          drag.start;
+        const nextRatio = drag.startRatio + delta / drag.size;
+        const primaryPx = nextRatio * drag.size;
+        const secondaryPx = drag.size - primaryPx;
+        if (primaryPx < minPrimary || secondaryPx < minSecondary) {
+          return;
+        }
+        const clamped = Math.min(ratioMax, Math.max(ratioMin, nextRatio));
+        scheduleRatioDuringDrag(clamped);
+      };
+
+      const onUp = (upEvent: PointerEvent) => {
+        dragRef.current = null;
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        root.classList.remove("is-resizing");
+        endSplitDrag();
+        commitRatio(ratioRef.current);
+        upEvent.preventDefault();
+      };
+
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
-    [direction, ratio],
+    [
+      direction,
+      minPrimary,
+      minSecondary,
+      ratioMin,
+      ratioMax,
+      scheduleRatioDuringDrag,
+      commitRatio,
+    ],
   );
 
-  const onPointerMove = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>) => {
-      const drag = dragRef.current;
-      if (!drag) {
-        return;
-      }
-      const delta =
-        (direction === "horizontal" ? event.clientX : event.clientY) - drag.start;
-      const nextRatio = drag.startRatio + delta / drag.size;
-      const primaryPx = nextRatio * drag.size;
-      const secondaryPx = drag.size - primaryPx;
-      if (primaryPx < minPrimary || secondaryPx < minSecondary) {
-        return;
-      }
-      const clamped = Math.min(ratioMax, Math.max(ratioMin, nextRatio));
-      ratioRef.current = clamped;
-      setRatio(clamped);
-    },
-    [direction, minPrimary, minSecondary, ratioMin, ratioMax],
-  );
-
-  const onPointerUp = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>) => {
-      if (!dragRef.current) {
-        return;
-      }
-      dragRef.current = null;
-      event.currentTarget.releasePointerCapture(event.pointerId);
-      window.localStorage.setItem(storageKey, String(ratioRef.current));
-    },
-    [storageKey],
-  );
-
-  const style =
+  const collapsed =
     direction === "horizontal"
+      ? primaryCollapsed || secondaryCollapsed
+      : secondaryCollapsed;
+
+  const style = collapsed
+    ? direction === "horizontal"
       ? secondaryCollapsed
         ? ({ gridTemplateColumns: "minmax(0, 1fr) 3.25rem" } as const)
-        : primaryCollapsed
-          ? ({ gridTemplateColumns: "3.25rem minmax(0, 1fr)" } as const)
-          : ({
-              gridTemplateColumns: `minmax(0, ${ratio * 100}%) 9px minmax(0, 1fr)`,
-            } as const)
-      : secondaryCollapsed
-        ? ({ gridTemplateRows: "minmax(0, 1fr) 2.5rem" } as const)
-        : ({
-            gridTemplateRows: `${ratio * 100}% 9px minmax(0, 1fr)`,
-          } as const);
+        : ({ gridTemplateColumns: "3.25rem minmax(0, 1fr)" } as const)
+      : ({ gridTemplateRows: "minmax(0, 1fr) 2.5rem" } as const)
+    : undefined;
 
   const showHandle =
     direction === "horizontal"
@@ -159,9 +265,6 @@ export function WorkspaceSplit({
               : "Resize results panel"
           }
           onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
         />
       ) : null}
       <div className="lp-ws-split-secondary">{secondary}</div>

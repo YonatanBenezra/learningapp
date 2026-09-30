@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 import {
   activeRagFlowStep,
   RAG_FLOW_STEPS,
+  ragFlowPhaseFromFlags,
+  ragFlowStepState,
   ragModeFromSchema,
   stepCaption,
-  type RagFlowStepId,
 } from "../rag/rag-flow-steps";
 import "../rag/rag-flow-canvas.css";
 
@@ -19,42 +20,6 @@ type RagFlowCanvasProps = {
   className?: string;
 };
 
-function phaseFromFlags(pending?: boolean, graded?: boolean): "idle" | "running" | "graded" {
-  if (pending) {
-    return "running";
-  }
-  if (graded) {
-    return "graded";
-  }
-  return "idle";
-}
-
-function stepState(
-  stepId: RagFlowStepId,
-  active: RagFlowStepId,
-  phase: "idle" | "running" | "graded",
-): "active" | "done" | "dim" {
-  const order = RAG_FLOW_STEPS.map((s) => s.id);
-  const ai = order.indexOf(active);
-  const si = order.indexOf(stepId);
-  if (si === ai) {
-    return phase === "graded" ? "done" : "active";
-  }
-  if (phase === "graded" && si < ai) {
-    return "done";
-  }
-  if (si < ai) {
-    return "done";
-  }
-  if (stepId === "plan" || stepId === "evaluate") {
-    return "dim";
-  }
-  if (stepId === "generate" && active !== "generate" && active !== "grade") {
-    return "dim";
-  }
-  return "dim";
-}
-
 export function RagFlowCanvas({
   schema,
   pending = false,
@@ -63,7 +28,7 @@ export function RagFlowCanvas({
   className,
 }: RagFlowCanvasProps) {
   const mode = useMemo(() => ragModeFromSchema(schema), [schema]);
-  const phase = phaseFromFlags(pending, graded);
+  const phase = ragFlowPhaseFromFlags(pending, graded);
   const active = activeRagFlowStep(mode, phase);
   const caption = stepCaption(mode, active);
   const modeLabel =
@@ -96,7 +61,7 @@ export function RagFlowCanvas({
       <p className="lp-rag-flow-caption">{caption}</p>
       <div className="lp-rag-flow-track" role="list">
         {RAG_FLOW_STEPS.map((step, index) => {
-          const state = stepState(step.id, active, phase);
+          const state = ragFlowStepState(step.id, active, phase);
           const isStores = step.id === "stores";
           return (
             <div key={step.id} className="lp-rag-flow-item-wrap" role="listitem">

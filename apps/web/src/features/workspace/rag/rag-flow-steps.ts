@@ -33,9 +33,58 @@ export function ragModeFromSchema(schema: unknown): RagExerciseMode {
   return "chunk";
 }
 
+export type RagFlowPhase = "idle" | "running" | "graded";
+
+export function ragFlowPhaseFromFlags(
+  pending?: boolean,
+  graded?: boolean,
+): RagFlowPhase {
+  if (pending) {
+    return "running";
+  }
+  if (graded) {
+    return "graded";
+  }
+  return "idle";
+}
+
+export function ragFlowStepState(
+  stepId: RagFlowStepId,
+  active: RagFlowStepId,
+  phase: RagFlowPhase,
+): "active" | "done" | "dim" {
+  const order = RAG_FLOW_STEPS.map((s) => s.id);
+  const ai = order.indexOf(active);
+  const si = order.indexOf(stepId);
+  if (si === ai) {
+    return phase === "graded" ? "done" : "active";
+  }
+  if (phase === "graded" && si < ai) {
+    return "done";
+  }
+  if (si < ai) {
+    return "done";
+  }
+  if (stepId === "plan" || stepId === "evaluate") {
+    return "dim";
+  }
+  if (stepId === "generate" && active !== "generate" && active !== "grade") {
+    return "dim";
+  }
+  return "dim";
+}
+
+/** Staged highlight while a submission is in flight. */
+export const RAG_FLOW_RUN_PULSE_STEPS: RagFlowStepId[] = [
+  "retrieve",
+  "stores",
+  "context",
+  "grade",
+];
+
 export function activeRagFlowStep(
   mode: RagExerciseMode,
-  phase: "idle" | "running" | "graded",
+  phase: RagFlowPhase,
 ): RagFlowStepId {
   if (phase === "running") {
     return "grade";
@@ -83,6 +132,12 @@ export function stepCaption(mode: RagExerciseMode, active: RagFlowStepId): strin
   if (active === "retrieve") {
     if (mode === "sandbox") {
       return "Your Python retriever runs against the hidden questions.";
+    }
+    if (mode === "budget") {
+      return "Tune top-k and chunking — budget gate runs on assembled context.";
+    }
+    if (mode === "rerank") {
+      return "Configure reranker and rewrite — vector + metadata paths both matter.";
     }
     return "Tune chunking and retrieval knobs before submit.";
   }

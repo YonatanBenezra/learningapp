@@ -6,6 +6,17 @@
   background: transparent;
 }
 
+.lp-ws--figma input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.lp-ws--figma input[type="number"]::-webkit-outer-spin-button,
+.lp-ws--figma input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 .lp-ws--figma .lp-ws-pane {
   border-radius: 0.65rem;
   border: 1px solid color-mix(in srgb, var(--lp-border) 85%, transparent);

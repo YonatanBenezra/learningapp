@@ -11,6 +11,7 @@ import { RagTraceView } from "@/features/traces/components/rag-trace-view";
 import { tracesApi } from "@/features/traces/traces-api";
 import { workspaceApi } from "@/features/workspace/workspace-api";
 import { ApiError } from "@/lib/api-client";
+import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import type { RunTrace, TraceQuery, TraceStep } from "@/types/trace";
 import "@/features/workspace/run-detail.css";
@@ -22,7 +23,9 @@ type TraceViewProps = {
 
 export function TraceView({ runId }: TraceViewProps) {
   if (runId === DEMO_TRACE_RUN_ID) {
-    return <RagTraceView runId={runId} trace={DEMO_RAG_TRACE} />;
+    return (
+      <RagTraceView runId={runId} trace={DEMO_RAG_TRACE} demoPresentation />
+    );
   }
   return <TraceViewLive runId={runId} />;
 }
@@ -30,6 +33,7 @@ export function TraceView({ runId }: TraceViewProps) {
 function TraceViewLive({ runId }: TraceViewProps) {
   const [trace, setTrace] = useState<RunTrace | null>(null);
   const [run, setRun] = useState<Run | null>(null);
+  const [grade, setGrade] = useState<Grade | null>(null);
   const [error, setError] = useState<"auth" | "missing" | "load" | null>(null);
   const [booting, setBooting] = useState(true);
 
@@ -44,9 +48,17 @@ function TraceViewLive({ runId }: TraceViewProps) {
           return;
         }
         setTrace(result);
-        setRun(null);
         setError(null);
         setBooting(false);
+        const [runResult, gradeResult] = await Promise.all([
+          workspaceApi.getRun(runId).catch(() => null),
+          workspaceApi.getGrade(runId).catch(() => null),
+        ]);
+        if (cancelled) {
+          return;
+        }
+        setRun(runResult);
+        setGrade(gradeResult);
       } catch (caught: unknown) {
         if (cancelled) {
           return;
@@ -68,6 +80,7 @@ function TraceViewLive({ runId }: TraceViewProps) {
           }
           setTrace(null);
           setRun(current);
+          setGrade(null);
           setBooting(false);
 
           const waiting =
@@ -186,17 +199,25 @@ function TraceViewLive({ runId }: TraceViewProps) {
   const gated = Boolean(trace.gated);
   const isAgent = trace.simulator === "agent" || steps.length > 0;
 
-  if (trace.simulator === "rag" && queries.length > 0) {
+  if (trace.simulator === "rag") {
+    if (queries.length === 0) {
+      return (
+        <div className="lp-page lp-page-trace">
+          <div className="lp-trace">
+            <TraceHeader runId={runId} simulator={trace.simulator} />
+            <p className="lp-run-note">
+              Retrieval detail is not available for this run yet. Try again after grading
+              finishes, or open the run summary.
+            </p>
+            <Link href={routes.run(runId)} className="lp-link">
+              Back to run
+            </Link>
+          </div>
+        </div>
+      );
+    }
     return (
-      <RagTraceView
-        runId={runId}
-        trace={trace}
-        meta={{
-          runIdDisplay: trace.runId,
-          exerciseSlug:
-            typeof trace.payload?.exercise === "string" ? trace.payload.exercise : undefined,
-        }}
-      />
+      <RagTraceView runId={runId} trace={trace} run={run} grade={grade} />
     );
   }
 

@@ -396,9 +396,28 @@
   color: var(--lp-muted);
 }
 
+.lp-sim-feature-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
 .lp-sim-feature-cta {
   gap: 0.35rem;
   text-decoration: none;
+}
+
+.lp-sim-feature-cta-secondary {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+  text-decoration: none;
+}
+
+.lp-sim-feature-cta-secondary:hover {
+  color: var(--lp-brand);
+  text-decoration: underline;
 }
 
 .lp-sim-feature-side {

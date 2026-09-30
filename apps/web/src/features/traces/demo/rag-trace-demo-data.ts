@@ -93,6 +93,7 @@ export const DEMO_RAG_TRACE: RunTrace = {
 
 export const DEMO_RAG_TRACE_META = {
   exerciseSlug: "rag-001-chunk-it-right",
+  exerciseTitle: "Chunk It Right",
   verdict: "fail" as const,
   recallAt5: 0.41,
   runIdDisplay: "run_7f3a9c2e…b41d",

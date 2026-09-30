@@ -337,7 +337,12 @@ export function ProblemsGrid() {
         {items.length === 0 ? (
           <div className="lp-cat-empty">
             <strong>No exercises published yet</strong>
-            <p>Seed problems from the API, then reload.</p>
+            <p>
+              From <code className="lp-cat-empty-code">apps/api</code>, run{" "}
+              <code className="lp-cat-empty-code">npm run content:sync-catalogue</code>{" "}
+              (uses <code className="lp-cat-empty-code">content/published-slugs.json</code>
+              ), then refresh.
+            </p>
           </div>
         ) : visible.length === 0 ? (
           <div className="lp-cat-empty">

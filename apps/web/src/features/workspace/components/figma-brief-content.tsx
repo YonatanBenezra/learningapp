@@ -70,11 +70,11 @@ type FigmaBriefBodyProps = {
 };
 
 export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
-  const [publicOpen, setPublicOpen] = useState(true);
+  const [publicOpen, setPublicOpen] = useState(false);
   const unlockedHints = content.hints.filter((h) => h.unlocked).length;
 
   return (
-    <div className="flex flex-col gap-5 px-3.5 pb-4">
+    <div className="flex flex-col gap-4 px-3.5 pb-4">
       <section>
         <h2 className="mb-1.5 text-[0.625rem] font-bold uppercase tracking-[0.06em] text-lp-muted">
           Goal

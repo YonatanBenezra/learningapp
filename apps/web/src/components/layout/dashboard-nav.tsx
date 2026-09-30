@@ -17,6 +17,7 @@ import "./dashboard-nav.css";
 const navLinks = [
   { href: routes.problems, label: "Problems" },
   { href: routes.contests, label: "Contest" },
+  { href: routes.leaderboard, label: "Leaderboard" },
   { href: routes.simulations, label: "Simulators" },
 ] as const;
 
@@ -50,6 +51,9 @@ function isActive(pathname: string, href: string) {
   }
   if (href === routes.simulations) {
     return pathname === routes.simulations || pathname.startsWith(`${routes.simulations}/`);
+  }
+  if (href === routes.leaderboard) {
+    return pathname === routes.leaderboard;
   }
   return pathname === href || pathname.startsWith(`${href}/`);
 }

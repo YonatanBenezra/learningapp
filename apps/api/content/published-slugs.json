@@ -1,4 +1,4 @@
 {
-  "note": "Fresh start — add slugs here when new simulators and problems are ready.",
-  "slugs": []
+  "note": "Curated live RAG catalogue — simulator v1 (chunking track).",
+  "slugs": ["rag-001-chunk-it-right", "rag-006-overlap-tune"]
 }

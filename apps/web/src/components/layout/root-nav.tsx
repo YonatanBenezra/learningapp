@@ -31,7 +31,10 @@ function usesCatalogueNav(pathname: string) {
     pathname === routes.problems ||
     pathname === routes.simulations ||
     pathname === routes.paths ||
-    pathname.startsWith(`${routes.paths}/`)
+    pathname.startsWith(`${routes.paths}/`) ||
+    pathname === routes.leaderboard ||
+    pathname === routes.contests ||
+    pathname.startsWith(`${routes.contests}/`)
   ) {
     return true;
   }

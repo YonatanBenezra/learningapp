@@ -5,5 +5,11 @@ import {
 } from "@/features/traces/demo/rag-trace-demo-data";
 
 export default function DemoRagTracePage() {
-  return <RagTraceView runId={DEMO_TRACE_RUN_ID} trace={DEMO_RAG_TRACE} />;
+  return (
+    <RagTraceView
+      runId={DEMO_TRACE_RUN_ID}
+      trace={DEMO_RAG_TRACE}
+      demoPresentation
+    />
+  );
 }

@@ -1,14 +1,15 @@
 "use client";
 
+import { Search, Target, Trophy, Users } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { routes } from "@/config/routes";
 import { ApiError } from "@/lib/api-client";
-import type { LeaderboardResponse } from "@/types/leaderboard";
+import type { LeaderboardEntry, LeaderboardResponse } from "@/types/leaderboard";
 import { leaderboardApi } from "../leaderboard-api";
 import "../leaderboard.css";
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 20;
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -21,103 +22,121 @@ function initials(name: string) {
   return `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase();
 }
 
-function buildPageItems(current: number, total: number): Array<number | "ellipsis"> {
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, index) => index + 1);
-  }
-
-  const pages = new Set<number>([1, total, current]);
-  for (let offset = 1; offset <= 1; offset += 1) {
-    pages.add(current - offset);
-    pages.add(current + offset);
-  }
-  if (current <= 3) {
-    pages.add(2);
-    pages.add(3);
-    pages.add(4);
-  }
-  if (current >= total - 2) {
-    pages.add(total - 1);
-    pages.add(total - 2);
-    pages.add(total - 3);
-  }
-
-  const sorted = [...pages].filter((page) => page >= 1 && page <= total).sort((a, b) => a - b);
-  const items: Array<number | "ellipsis"> = [];
-  for (const page of sorted) {
-    const last = items[items.length - 1];
-    if (typeof last === "number" && page - last > 1) {
-      items.push("ellipsis");
-    }
-    items.push(page);
-  }
-  return items;
+function formatNum(n: number) {
+  return n.toLocaleString("en-US");
 }
 
 function LeaderboardSkeleton() {
   return (
-    <div className="lp-lb lp-lb-skel" aria-busy="true" aria-live="polite">
-      <header className="lp-lb-hero">
-        <div>
-          <span className="lp-lb-skel-block lp-lb-skel-title" />
-          <span className="lp-lb-skel-block lp-lb-skel-lead" />
-          <span className="lp-lb-skel-block lp-lb-skel-lead lp-lb-skel-lead--short" />
-        </div>
-        <div className="lp-lb-meta">
-          <span className="lp-lb-skel-block lp-lb-skel-chip" />
-          <span className="lp-lb-skel-block lp-lb-skel-rule" />
-        </div>
-      </header>
-
-      <section className="lp-lb-podium" aria-hidden="true">
-        {[1, 2, 3].map((rank) => (
-          <div key={rank} className={`lp-lb-podium-card lp-lb-podium-card--${rank}`}>
-            <span className="lp-lb-skel-block lp-lb-skel-rank" />
-            <span className="lp-lb-skel-block lp-lb-skel-name" />
-            <span className="lp-lb-skel-block lp-lb-skel-slug" />
-            <div className="lp-lb-podium-stats">
-              {Array.from({ length: 3 }, (_, index) => (
-                <div key={index} className="lp-lb-podium-stat">
-                  <span className="lp-lb-skel-block lp-lb-skel-stat-value" />
-                  <span className="lp-lb-skel-block lp-lb-skel-stat-label" />
-                </div>
-              ))}
-            </div>
-          </div>
+    <div className="lp-lb2 lp-lb2--loading" aria-busy="true" aria-live="polite">
+      <div className="lp-lb2-skel lp-lb2-skel-title" />
+      <div className="lp-lb2-stats">
+        {Array.from({ length: 3 }, (_, i) => (
+          <div key={i} className="lp-lb2-stat lp-lb2-stat--skel" />
         ))}
-      </section>
-
-      <section className="lp-lb-board" aria-hidden="true">
-        <div className="lp-lb-board-head">
-          <span>Rank</span>
-          <span>Learner</span>
-          <span>Solves</span>
-          <span>Recent</span>
-          <span>Rating</span>
-        </div>
-        {Array.from({ length: 7 }, (_, index) => (
-          <div key={index} className="lp-lb-row lp-lb-row--skel">
-            <span className="lp-lb-skel-block lp-lb-skel-rank" />
-            <div className="lp-lb-learner">
-              <span className="lp-lb-skel-block lp-lb-skel-avatar" />
-              <div className="lp-lb-learner-copy">
-                <span className="lp-lb-skel-block lp-lb-skel-name" />
-                <span className="lp-lb-skel-block lp-lb-skel-slug" />
-              </div>
-            </div>
-            <span className="lp-lb-skel-block lp-lb-skel-metric" />
-            <span className="lp-lb-skel-block lp-lb-skel-metric" />
-            <span className="lp-lb-skel-block lp-lb-skel-metric" />
-          </div>
+      </div>
+      <div className="lp-lb2-podium">
+        {Array.from({ length: 3 }, (_, i) => (
+          <div key={i} className="lp-lb2-podium-card lp-lb2-podium-card--skel" />
         ))}
-      </section>
+      </div>
+      <div className="lp-lb2-panel lp-lb2-panel--skel" />
     </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  tone,
+  label,
+  value,
+}: {
+  icon: typeof Users;
+  tone: "brand" | "violet" | "amber";
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="lp-lb2-stat">
+      <div className={`lp-lb2-stat-icon lp-lb2-stat-icon--${tone}`} aria-hidden>
+        <Icon className="size-[1.125rem]" strokeWidth={2} />
+      </div>
+      <div className="lp-lb2-stat-copy">
+        <p className="lp-lb2-stat-label">{label}</p>
+        <p className="lp-lb2-stat-value">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function PodiumCard({ row }: { row: LeaderboardEntry }) {
+  const tier =
+    row.rank === 1 ? "gold" : row.rank === 2 ? "silver" : row.rank === 3 ? "bronze" : "default";
+
+  return (
+    <Link
+      href={routes.profile(row.slug)}
+      className={`lp-lb2-podium-card lp-lb2-podium-card--${tier}`}
+    >
+      <div className="lp-lb2-podium-head">
+        <span className={`lp-lb2-podium-avatar lp-lb2-podium-avatar--${tier}`}>
+          {initials(row.displayName)}
+          <span className="lp-lb2-podium-rank-badge">{row.rank}</span>
+        </span>
+        <div className="lp-lb2-podium-identity">
+          <p className="lp-lb2-podium-name">{row.displayName}</p>
+          <p className="lp-lb2-podium-handle">@{row.slug}</p>
+        </div>
+      </div>
+
+      {row.rank === 1 ? (
+        <div className="lp-lb2-podium-medal" aria-hidden>
+          <Trophy className="size-10 text-[#d4af37]" strokeWidth={1.75} />
+        </div>
+      ) : null}
+
+      <dl className="lp-lb2-podium-metrics">
+        <div>
+          <dt>Solves</dt>
+          <dd>{formatNum(row.solves)}</dd>
+        </div>
+        <div>
+          <dt>Recent</dt>
+          <dd>{formatNum(row.recentPasses)}</dd>
+        </div>
+        <div>
+          <dt>Rating</dt>
+          <dd>{formatNum(row.rating)}</dd>
+        </div>
+      </dl>
+    </Link>
+  );
+}
+
+function GlobalRow({ row }: { row: LeaderboardEntry }) {
+  return (
+    <Link href={routes.profile(row.slug)} className="lp-lb2-global-row">
+      <span className="lp-lb2-global-rank">{row.rank}</span>
+      <span className="lp-lb2-global-user">
+        <span className="lp-lb2-global-avatar">{initials(row.displayName)}</span>
+        <span className="lp-lb2-global-user-text">
+          <span className="lp-lb2-global-name">{row.displayName}</span>
+          <span className="lp-lb2-global-id">@{row.slug}</span>
+        </span>
+      </span>
+      <span className="lp-lb2-global-cell">{formatNum(row.solves)}</span>
+      <span className="lp-lb2-global-cell">{formatNum(row.recentPasses)}</span>
+      <span className="lp-lb2-global-cell lp-lb2-global-cell--accent">
+        {formatNum(row.rating)}
+      </span>
+    </Link>
   );
 }
 
 export function LeaderboardView() {
   const [board, setBoard] = useState<LeaderboardResponse | null>(null);
   const [error, setError] = useState<"load" | null>(null);
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -139,41 +158,58 @@ export function LeaderboardView() {
     };
   }, []);
 
-  const pageCount = Math.max(1, Math.ceil((board?.items.length ?? 0) / PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
-  const pageItems = useMemo(() => {
+  const filtered = useMemo(() => {
     if (!board) {
       return [];
     }
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      return board.items;
+    }
+    return board.items.filter(
+      (row) =>
+        row.displayName.toLowerCase().includes(q) ||
+        row.slug.toLowerCase().includes(q),
+    );
+  }, [board, query]);
+
+  const aggregates = useMemo(() => {
+    const items = board?.items ?? [];
+    return {
+      ranked: items.length,
+      solves: items.reduce((sum, row) => sum + row.solves, 0),
+      recent: items.reduce((sum, row) => sum + row.recentPasses, 0),
+    };
+  }, [board]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query]);
+
+  const searching = Boolean(query.trim());
+  const podium = searching ? [] : (board?.items.slice(0, 3) ?? []);
+
+  const globalSource = useMemo(() => {
+    if (searching) {
+      return filtered;
+    }
+    return filtered.filter((row) => row.rank > 3);
+  }, [filtered, searching]);
+
+  const pageCount = Math.max(1, Math.ceil(globalSource.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const globalRows = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
-    return board.items.slice(start, start + PAGE_SIZE);
-  }, [board, currentPage]);
-
-  const podium = currentPage === 1 ? pageItems.slice(0, 3) : [];
-  const rows = currentPage === 1 ? pageItems.slice(3) : pageItems;
-  const rangeStart =
-    (board?.items.length ?? 0) === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
-  const rangeEnd = Math.min(currentPage * PAGE_SIZE, board?.items.length ?? 0);
-
-  const setPageAndScroll = (next: number) => {
-    setPage(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    return globalSource.slice(start, start + PAGE_SIZE);
+  }, [globalSource, currentPage]);
 
   if (error === "load") {
     return (
-      <div className="lp-lb">
-        <header className="lp-lb-hero">
-          <div>
-            <h1 className="lp-lb-title">Leaderboard</h1>
-            <p className="lp-lb-lead">
-              Individual ranking for published Pro profiles. Free can view.
-            </p>
-          </div>
-        </header>
-        <div className="lp-lb-error">
-          <strong>Could not load the leaderboard</strong>
-          <p>Check that the API is running, then refresh this page.</p>
+      <div className="lp-lb2">
+        <h1 className="lp-lb2-page-title">Leaderboard</h1>
+        <div className="lp-lb2-empty lp-lb2-empty--error">
+          <strong>Could not load rankings</strong>
+          <p>Check that the API is running, then refresh.</p>
         </div>
       </div>
     );
@@ -184,164 +220,111 @@ export function LeaderboardView() {
   }
 
   return (
-    <div className="lp-lb">
-      <header className="lp-lb-hero">
-        <div>
-          <h1 className="lp-lb-title">Leaderboard</h1>
-          <p className="lp-lb-lead">
-            Individual ranking for published Pro profiles. Free can view. Opt out
-            from Progress and you leave the board.
-          </p>
-        </div>
-        <div className="lp-lb-meta">
-          <span className="lp-lb-chip lp-lb-chip--brand">
-            {board.items.length} ranked
-          </span>
-          {board.items.length > 0 ? (
-            <span className="lp-lb-chip">
-              Showing {rangeStart}–{rangeEnd}
-            </span>
-          ) : null}
-          <p className="lp-lb-rule">{board.rule}</p>
-        </div>
-      </header>
+    <div className="lp-lb2">
+      <h1 className="lp-lb2-page-title">Leaderboard</h1>
 
-      {board.items.length === 0 ? (
-        <div className="lp-lb-empty">
-          <strong>No published profiles yet</strong>
-          <p>When Pro learners publish their profile, they appear here.</p>
+      <div className="lp-lb2-stats">
+        <StatCard
+          icon={Users}
+          tone="brand"
+          label="Published profiles"
+          value={formatNum(aggregates.ranked)}
+        />
+        <StatCard
+          icon={Target}
+          tone="violet"
+          label="Passes (30 days)"
+          value={formatNum(aggregates.recent)}
+        />
+        <div className="lp-lb2-stat lp-lb2-stat--wide">
+          <div className="lp-lb2-stat-icon lp-lb2-stat-icon--amber" aria-hidden>
+            <Trophy className="size-[1.125rem]" strokeWidth={2} />
+          </div>
+          <div className="lp-lb2-stat-copy">
+            <p className="lp-lb2-stat-label">How ranking works</p>
+            <p className="lp-lb2-stat-note">{board.rule}</p>
+          </div>
         </div>
-      ) : (
-        <>
-          {podium.length > 0 ? (
-            <section className="lp-lb-podium" aria-label="Top ranked">
-              {podium.map((row) => (
-                <Link
-                  key={row.slug}
-                  href={routes.profile(row.slug)}
-                  className={`lp-lb-podium-card lp-lb-podium-card--${row.rank}`}
-                >
-                  <span className="lp-lb-podium-rank">#{row.rank}</span>
-                  <h2 className="lp-lb-podium-name">{row.displayName}</h2>
-                  <p className="lp-lb-podium-slug">/{row.slug}</p>
-                  <div className="lp-lb-podium-stats">
-                    <div className="lp-lb-podium-stat">
-                      <strong>{row.rating}</strong>
-                      <span>Rating</span>
-                    </div>
-                    <div className="lp-lb-podium-stat">
-                      <strong>{row.solves}</strong>
-                      <span>Solves</span>
-                    </div>
-                    <div className="lp-lb-podium-stat">
-                      <strong>{row.recentPasses}</strong>
-                      <span>Recent</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </section>
-          ) : null}
+      </div>
 
-          {rows.length > 0 ? (
-            <section className="lp-lb-board" aria-label="Rankings">
-              <div className="lp-lb-board-head" aria-hidden="true">
-                <span>Rank</span>
-                <span>Learner</span>
-                <span>Solves</span>
-                <span>Recent</span>
-                <span>Rating</span>
+      {podium.length > 0 ? (
+        <section className="lp-lb2-podium" aria-label="Top performers">
+          {podium.map((row) => (
+            <PodiumCard key={row.slug} row={row} />
+          ))}
+        </section>
+      ) : null}
+
+      <section className="lp-lb2-panel">
+        <div className="lp-lb2-panel-head">
+          <h2 className="lp-lb2-panel-title">Global ranking</h2>
+          <label className="lp-lb2-search">
+            <Search className="size-4 shrink-0 opacity-55" aria-hidden />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search learner…"
+              aria-label="Search leaderboard"
+            />
+          </label>
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="lp-lb2-empty">
+            <strong>{board.items.length === 0 ? "No one on the board yet" : "No matches"}</strong>
+            <p>
+              {board.items.length === 0
+                ? "Publish your Pro profile from Dashboard after your first pass."
+                : "Try a different search term."}
+            </p>
+            {board.items.length === 0 ? (
+              <Link href={routes.dashboard} className="lp-lb2-cta">
+                Open Dashboard
+              </Link>
+            ) : null}
+          </div>
+        ) : globalRows.length === 0 && !searching ? (
+          <p className="lp-lb2-panel-hint">Top three are shown above. More ranks appear as learners publish.</p>
+        ) : (
+          <>
+            <div className="lp-lb2-global" role="table" aria-label="Global ranking">
+              <div className="lp-lb2-global-head" role="row">
+                <span role="columnheader">Rank</span>
+                <span role="columnheader">User name</span>
+                <span role="columnheader">Solves</span>
+                <span role="columnheader">Recent (30d)</span>
+                <span role="columnheader">Rating</span>
               </div>
-              {rows.map((row) => (
-                <Link
-                  key={row.slug}
-                  href={routes.profile(row.slug)}
-                  className="lp-lb-row"
-                >
-                  <span className="lp-lb-rank">{row.rank}</span>
-                  <div className="lp-lb-learner">
-                    <span className="lp-lb-avatar" aria-hidden="true">
-                      {initials(row.displayName)}
-                    </span>
-                    <div className="lp-lb-learner-copy">
-                      <p className="lp-lb-learner-name">{row.displayName}</p>
-                      <p className="lp-lb-learner-slug">/{row.slug}</p>
-                    </div>
-                  </div>
-                  <span className="lp-lb-metric" data-label="Solves">
-                    {row.solves}
-                  </span>
-                  <span className="lp-lb-metric" data-label="Recent">
-                    {row.recentPasses}
-                  </span>
-                  <span className="lp-lb-metric lp-lb-metric--rating" data-label="Rating">
-                    {row.rating}
-                  </span>
-                </Link>
+              {globalRows.map((row) => (
+                <GlobalRow key={row.slug} row={row} />
               ))}
-            </section>
-          ) : null}
+            </div>
 
-          {pageCount > 1 ? (
-            <nav className="lp-lb-pager" aria-label="Leaderboard pages">
-              <button
-                type="button"
-                className="lp-lb-page"
-                disabled={currentPage <= 1}
-                aria-label="Previous page"
-                onClick={() => setPageAndScroll(Math.max(1, currentPage - 1))}
-              >
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path
-                    d="M10 3.5L5.5 8 10 12.5"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-
-              {buildPageItems(currentPage, pageCount).map((item, index) =>
-                item === "ellipsis" ? (
-                  <span key={`e-${index}`} className="lp-lb-page-ellipsis" aria-hidden="true">
-                    …
-                  </span>
-                ) : (
-                  <button
-                    key={item}
-                    type="button"
-                    className={`lp-lb-page${item === currentPage ? " is-active" : ""}`}
-                    aria-label={`Page ${item}`}
-                    aria-current={item === currentPage ? "page" : undefined}
-                    onClick={() => setPageAndScroll(item)}
-                  >
-                    {item}
-                  </button>
-                ),
-              )}
-
-              <button
-                type="button"
-                className="lp-lb-page"
-                disabled={currentPage >= pageCount}
-                aria-label="Next page"
-                onClick={() => setPageAndScroll(Math.min(pageCount, currentPage + 1))}
-              >
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path
-                    d="M6 3.5L10.5 8 6 12.5"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </nav>
-          ) : null}
-        </>
-      )}
+            {pageCount > 1 ? (
+              <nav className="lp-lb2-pager" aria-label="Pages">
+                <button
+                  type="button"
+                  disabled={currentPage <= 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  Previous
+                </button>
+                <span>
+                  Page {currentPage} of {pageCount}
+                </span>
+                <button
+                  type="button"
+                  disabled={currentPage >= pageCount}
+                  onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                >
+                  Next
+                </button>
+              </nav>
+            ) : null}
+          </>
+        )}
+      </section>
     </div>
   );
 }

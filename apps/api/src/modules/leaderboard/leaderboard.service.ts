@@ -63,6 +63,7 @@ export class LeaderboardService {
         profilePublic: true,
         profileSlug: { not: null },
         account: { tier: AccountTier.pro },
+        NOT: { email: { endsWith: '@labpath.test', mode: 'insensitive' } },
       },
       select: {
         id: true,
@@ -123,19 +124,21 @@ export class LeaderboardService {
     }
 
     const ranked = sortLeaderboardRows(
-      candidates.map((candidate) => {
-        const stats = byUser.get(candidate.id) ?? {
-          slugs: new Set<string>(),
-          recentPasses: 0,
-        };
-        return {
-          slug: candidate.profileSlug as string,
-          displayName: publicDisplayName(candidate.displayName),
-          solves: stats.slugs.size,
-          recentPasses: stats.recentPasses,
-          rating: leaderboardRating(stats.slugs.size, stats.recentPasses),
-        };
-      }),
+      candidates
+        .map((candidate) => {
+          const stats = byUser.get(candidate.id) ?? {
+            slugs: new Set<string>(),
+            recentPasses: 0,
+          };
+          return {
+            slug: candidate.profileSlug as string,
+            displayName: publicDisplayName(candidate.displayName),
+            solves: stats.slugs.size,
+            recentPasses: stats.recentPasses,
+            rating: leaderboardRating(stats.slugs.size, stats.recentPasses),
+          };
+        })
+        .filter((row) => row.solves > 0),
     );
 
     return {
