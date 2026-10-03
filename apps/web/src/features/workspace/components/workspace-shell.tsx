@@ -22,11 +22,13 @@ import { RagLabPanel } from "./rag-lab-panel";
 import { RagFlowCanvas } from "./rag-flow-canvas";
 import { SubmissionSurface } from "./submission-surface";
 import { WorkspaceRagFigmaShell } from "./workspace-rag-figma-shell";
+import { WorkspaceGuardrailsFigmaShell } from "./workspace-guardrails-figma-shell";
 import {
   isRagSandboxSchema,
   ragEditorTitle,
   useRagFigmaWorkspace,
 } from "./workspace-rag-utils";
+import { useGuardrailsFigmaWorkspace } from "../guardrails-workspace-data";
 import { WorkspaceSplit } from "./workspace-split";
 import {
   dispatchWorkspaceState,
@@ -99,6 +101,10 @@ export function WorkspaceShell({
         if (cancelled) {
           return;
         }
+        if (caught instanceof ApiError && caught.status === 401) {
+          router.replace(loginPath(routes.exercise(slug)));
+          return;
+        }
         setLoadError("load");
       });
     return () => {
@@ -107,7 +113,12 @@ export function WorkspaceShell({
   }, [slug]);
 
   useEffect(() => {
-    if (!exercise || !useRagFigmaWorkspace(exercise, onboarding)) {
+    const wantsHints =
+      exercise &&
+      !onboarding &&
+      (useRagFigmaWorkspace(exercise, onboarding) ||
+        useGuardrailsFigmaWorkspace(exercise, onboarding));
+    if (!wantsHints) {
       setHints(null);
       return;
     }
@@ -274,6 +285,29 @@ export function WorkspaceShell({
       : "Code";
 
   const ragFigma = useRagFigmaWorkspace(exercise, onboarding);
+  const guardrailsFigma = useGuardrailsFigmaWorkspace(exercise, onboarding);
+
+  if (guardrailsFigma) {
+    return (
+      <WorkspaceGuardrailsFigmaShell
+        slug={slug}
+        exercise={exercise}
+        pathSlug={pathSlug}
+        hints={hints}
+        run={run}
+        grade={grade}
+        pending={pending}
+        submitError={submitError}
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        onValidityChange={setSubmitValid}
+        briefCollapsed={briefCollapsed}
+        onToggleBriefCollapsed={toggleBriefCollapsed}
+        resultsCollapsed={resultsCollapsed}
+        onToggleResultsCollapsed={toggleResultsCollapsed}
+      />
+    );
+  }
 
   if (ragFigma) {
     return (

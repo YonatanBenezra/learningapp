@@ -1,7 +1,9 @@
 import type { Exercise } from "@/types/exercise";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
-import { RAG_DEMO_SLUG } from "@/features/simulations/simulations-demo-data";
+import { LIVE_RAG_PROBLEMS } from "@/config/live-rag-problems";
+
+const RAG_DEMO_SLUG = LIVE_RAG_PROBLEMS[0].slug;
 
 export const DEMO_STARTER = {
   chunkSize: 400,
@@ -99,6 +101,20 @@ export const DEMO_FIGMA = {
   ],
 } as const;
 
+export const DEMO_GRADE_PASS: Grade = {
+  verdict: "pass",
+  metrics: {
+    "recall@5": { value: 0.86, hits: 34, total: 40 },
+    meanTokens: { value: 288 },
+  },
+  scorecard: {
+    headline: "Accepted",
+    threshold: 0.8,
+    elapsedSeconds: 2.1,
+  },
+  failingCases: [],
+};
+
 export const DEMO_GRADE_FAIL: Grade = {
   verdict: "fail",
   metrics: {
@@ -110,8 +126,10 @@ export const DEMO_GRADE_FAIL: Grade = {
     message: "Below threshold",
     headline: "Below threshold",
     threshold: 0.8,
+    elapsedSeconds: 2.4,
     failingCount: 3,
     totalCases: 24,
+    caseIds: ["q_h_07", "q_h_12", "q_h_19"],
     failureDetail:
       "Chunks average 1,184 tokens and cross headings, so the relevant sentence is diluted and ranks below 5.",
   },

@@ -18,8 +18,8 @@ export function WorkspaceDemoShell() {
   const [briefCollapsed, setBriefCollapsed] = useState(false);
   const [resultsCollapsed, setResultsCollapsed] = useState(false);
   const [pending, setPending] = useState(false);
-  const [run, setRun] = useState<Run | null>(DEMO_RUN);
-  const [grade, setGrade] = useState<Grade | null>(DEMO_GRADE_FAIL);
+  const [run, setRun] = useState<Run | null>(null);
+  const [grade, setGrade] = useState<Grade | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const demoInitial = useMemo(() => ({ ...DEMO_STARTER }), []);
   const [labPayload, setLabPayload] = useState<Record<string, unknown>>(demoInitial);
@@ -28,11 +28,13 @@ export function WorkspaceDemoShell() {
     void payload;
     setPending(true);
     setSubmitError(null);
+    setGrade(null);
+    setRun({ ...DEMO_RUN, status: "running" });
     window.setTimeout(() => {
-      setRun(DEMO_RUN);
+      setRun({ ...DEMO_RUN, status: "succeeded" });
       setGrade(DEMO_GRADE_FAIL);
       setPending(false);
-    }, 900);
+    }, 2800);
   }, []);
 
   return (

@@ -101,6 +101,7 @@ type BriefPanelProps = {
   onTabChange: (tab: BriefTab) => void;
   onToggleCollapse: () => void;
   figmaBrief?: FigmaBriefContent;
+  briefFooter?: React.ReactNode;
 };
 
 export function BriefPanel({
@@ -115,6 +116,7 @@ export function BriefPanel({
   onTabChange,
   onToggleCollapse,
   figmaBrief,
+  briefFooter,
 }: BriefPanelProps) {
   const [figmaPane, setFigmaPane] = useState<"brief" | "submissions">("brief");
   const navHref =
@@ -204,6 +206,7 @@ export function BriefPanel({
             <>
               <FigmaBriefHeader exercise={exercise} content={figmaBrief} />
               <FigmaBriefBody content={figmaBrief} />
+              {briefFooter}
             </>
           ) : (
             <p className="px-3.5 py-4 text-[0.8125rem] text-lp-muted">Loading exercise…</p>

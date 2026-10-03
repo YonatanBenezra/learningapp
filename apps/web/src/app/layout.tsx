@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Caveat, Figtree, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { RootNav } from "@/components/layout/root-nav";
 import { brand } from "@/config/brand";
@@ -51,10 +52,10 @@ export default function RootLayout({
         geistMono.variable,
       )}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className={`${jakarta.className} flex min-h-full flex-col`}>
+        <Script id="labpath-theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
         <RootNav />
         {children}
         <ThemeToggle />

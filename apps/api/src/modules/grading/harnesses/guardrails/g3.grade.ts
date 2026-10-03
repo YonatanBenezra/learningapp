@@ -170,6 +170,7 @@ function scoreSample(
       benignCi,
       resampled,
       addedModelCalls: 0,
+      sampleSeed: seed,
     },
     failingCases: misses,
     trace: {

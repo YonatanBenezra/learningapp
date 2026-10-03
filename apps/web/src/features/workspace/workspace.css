@@ -1545,7 +1545,7 @@ html[data-theme="dark"] .lp-ws-verdict--pass {
 }
 
 .lp-ws--guardrails .lp-ws-pane--brief,
-.lp-ws--rag .lp-ws-pane--brief,
+.lp-ws--rag:not(.lp-ws--rag-figma) .lp-ws-pane--brief,
 .lp-ws--evaluation .lp-ws-pane--brief {
   background:
     linear-gradient(
@@ -1607,7 +1607,7 @@ html[data-theme="dark"] .lp-ws-verdict--pass {
   border-radius: 0.5rem;
 }
 
-.lp-ws--rag .lp-ws-pane--work {
+.lp-ws--rag:not(.lp-ws--rag-figma) .lp-ws-pane--work {
   background:
     radial-gradient(
       90% 60% at 0% 0%,

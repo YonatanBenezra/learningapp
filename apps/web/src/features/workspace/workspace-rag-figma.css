@@ -1,0 +1,922 @@
+/* RAG Figma workspace — align palette with Guardrails simulator */
+
+.lp-ws--rag-figma {
+  --lp-grd-teal: var(--color-brand);
+  --lp-grd-amber: var(--color-status-warn);
+  --lp-grd-red: var(--color-status-fail);
+  --lp-grd-fail-deep: #b91c1c;
+  --lp-grd-fail-deep-muted: #7f1d1d;
+  --lp-grd-fail-deep-ink: #450a0a;
+  --lp-grd-fail-accent: var(--color-status-fail);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 0;
+}
+
+.lp-ws--rag-figma .lp-ws-pane {
+  border: 1px solid color-mix(in srgb, var(--lp-border) 90%, transparent);
+  border-radius: 0.65rem;
+  background: var(--color-card);
+  box-shadow: none;
+}
+
+.lp-ws--rag-figma .lp-ws-pane--brief {
+  background: var(--color-card);
+}
+
+.lp-ws--rag-figma .lp-ws-pane--work {
+  background:
+    radial-gradient(
+      88% 55% at 0% 0%,
+      color-mix(in srgb, var(--lp-grd-teal) 7%, transparent),
+      transparent 58%
+    ),
+    var(--color-card);
+}
+
+.lp-ws--rag-figma .lp-ws-pane--run {
+  background: var(--color-card);
+}
+
+.lp-ws--rag-figma .lp-figma-constraint {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 32%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-teal) 5%, var(--color-card));
+}
+
+.lp-ws--rag-figma .lp-figma-constraint-metric {
+  color: var(--lp-ink);
+}
+
+.lp-ws--rag-figma .lp-figma-brief-tab.is-active {
+  background: color-mix(in srgb, var(--lp-ink) 5%, var(--color-card));
+  color: var(--lp-ink);
+}
+
+.lp-ws--rag-figma .lp-figma-brief-tabs {
+  background: color-mix(in srgb, var(--lp-ink) 6%, var(--color-card));
+}
+
+.lp-ws--rag-figma .lp-ws-work-tab.is-active {
+  color: var(--lp-ink);
+  border-bottom-color: var(--lp-grd-teal);
+}
+
+.lp-ws--rag-figma .lp-figma-submit-bar {
+  background: color-mix(in srgb, var(--lp-ink) 4%, var(--color-card));
+  border-top-color: var(--lp-border);
+}
+
+.lp-ws--rag-figma .lp-figma-submit {
+  background: var(--lp-grd-teal);
+  color: var(--color-brand-on, #fff);
+}
+
+.lp-ws--rag-figma .lp-rag-graph {
+  border-bottom-color: var(--lp-border);
+  background: color-mix(in srgb, var(--lp-ink) 4%, var(--color-card));
+}
+
+.lp-ws--rag-figma .lp-rag-graph-canvas,
+.lp-ws--rag-figma .lp-rag-graph-canvas .react-flow__background {
+  background: color-mix(in srgb, #080c12 55%, var(--color-card));
+}
+
+.lp-ws--rag-figma .lp-rag-graph-controls.react-flow__controls {
+  border-color: color-mix(in srgb, var(--lp-border) 85%, transparent);
+  background: color-mix(in srgb, var(--lp-ink) 12%, var(--color-card));
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--lp-ink) 22%, transparent);
+}
+
+.lp-ws--rag-figma .lp-rag-graph-controls .react-flow__controls-button {
+  border-color: color-mix(in srgb, var(--lp-border) 80%, transparent);
+  background: color-mix(in srgb, var(--lp-ink) 10%, var(--color-card));
+  color: var(--lp-muted);
+  fill: var(--lp-muted);
+}
+
+.lp-ws--rag-figma .lp-rag-graph-controls .react-flow__controls-button:hover {
+  background: color-mix(in srgb, var(--lp-ink) 16%, var(--color-card));
+  color: var(--lp-ink);
+  fill: var(--lp-ink);
+}
+
+.lp-ws--rag-figma .lp-rf-node {
+  border-color: color-mix(in srgb, var(--lp-muted) 28%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-ink) 6%, var(--color-card));
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--lp-ink) 12%, transparent);
+}
+
+.lp-ws--rag-figma .lp-rf-node--active {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 70%, #fff);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--lp-grd-teal) 38%, transparent),
+    0 0 20px color-mix(in srgb, var(--lp-grd-teal) 28%, transparent),
+    0 0 40px color-mix(in srgb, var(--lp-grd-teal) 10%, transparent);
+}
+
+.lp-ws--rag-figma .lp-rf-node--done {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 65%, #fff);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--lp-grd-teal) 30%, transparent),
+    0 0 16px color-mix(in srgb, var(--lp-grd-teal) 22%, transparent),
+    0 0 32px color-mix(in srgb, var(--lp-grd-teal) 8%, transparent);
+}
+
+.lp-ws--rag-figma .lp-rag-seg-btn.is-active {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 45%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-teal) 10%, var(--color-card));
+  color: var(--lp-ink);
+}
+
+.lp-ws--rag-figma .lp-rag-summary-chip {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 28%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-teal) 6%, var(--color-card));
+}
+
+.lp-ws--rag-figma .lp-rag-lab-tab.is-active {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 35%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-teal) 8%, var(--color-card));
+  color: var(--lp-ink);
+}
+
+.lp-ws--rag-figma .lp-rag-lab-frozen-chip {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 30%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-teal) 6%, var(--color-card));
+}
+
+.lp-ws--rag-figma .lp-rag-lab-frozen-label,
+.lp-ws--rag-figma .lp-rag-lab-status.is-busy {
+  color: var(--lp-grd-teal);
+}
+
+/* RAG scorecard metric accents (Guardrails tokens) */
+.lp-ws--rag-figma .lp-rag-score-metric-pass {
+  color: var(--lp-status-pass, var(--lp-grd-teal));
+}
+
+.lp-ws--rag-figma .lp-rag-score-metric-fail {
+  color: var(--lp-grd-fail-accent);
+}
+
+.lp-ws--rag-figma .lp-rag-score-bar-fill.is-pass {
+  background: color-mix(in srgb, var(--lp-grd-teal) 75%, var(--color-card));
+}
+
+.lp-ws--rag-figma .lp-rag-score-bar-fill.is-fail {
+  background: color-mix(
+    in srgb,
+    var(--lp-grd-fail-accent) 70%,
+    var(--lp-grd-fail-deep)
+  );
+}
+
+.lp-ws--rag-figma .lp-rag-score-pill.is-pass {
+  background: color-mix(in srgb, var(--lp-status-pass) 15%, var(--color-card));
+  color: var(--lp-status-pass, var(--lp-grd-teal));
+}
+
+.lp-ws--rag-figma .lp-rag-score-pill.is-fail {
+  background: color-mix(in srgb, var(--lp-grd-fail-deep-muted) 42%, var(--color-card));
+  color: var(--lp-grd-fail-accent);
+}
+
+/* RAG scorecard — grading in progress */
+.lp-rag-score-grading {
+  gap: 0.85rem;
+}
+
+.lp-rag-score-grading-hero {
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--lp-grd-amber) 42%, var(--lp-border));
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--lp-grd-amber) 14%, var(--color-card)) 0%,
+      color-mix(in srgb, var(--lp-ink) 6%, var(--color-card)) 48%,
+      color-mix(in srgb, var(--lp-ink) 4%, var(--color-card)) 100%
+    );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lp-grd-amber) 10%, transparent);
+}
+
+.lp-rag-score-grading-hero-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lp-rag-score-grading-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--lp-grd-amber) 45%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-amber) 10%, var(--color-card));
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: #fde68a;
+}
+
+.lp-rag-score-grading-spin {
+  width: 0.75rem;
+  height: 0.75rem;
+  animation: lp-rag-score-spin 0.9s linear infinite;
+}
+
+@keyframes lp-rag-score-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lp-rag-score-grading-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--lp-ink);
+}
+
+.lp-rag-score-grading-meta {
+  margin: 0.4rem 0 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+  font-family: ui-monospace, monospace;
+}
+
+.lp-rag-score-grading-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.lp-rag-score-grading-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-grading-step.is-done {
+  color: color-mix(in srgb, var(--lp-muted) 88%, var(--lp-ink));
+}
+
+.lp-rag-score-grading-step.is-active {
+  color: #fde68a;
+}
+
+.lp-rag-score-grading-step.is-pending {
+  opacity: 0.45;
+}
+
+.lp-rag-score-grading-step-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+}
+
+.lp-rag-score-grading-step.is-done .lp-rag-score-grading-step-icon {
+  color: var(--lp-grd-teal);
+}
+
+.lp-rag-score-grading-step.is-active .lp-rag-score-grading-step-icon {
+  color: #fde68a;
+}
+
+.lp-rag-score-grading-skel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.lp-rag-score-grading-skel span {
+  display: block;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-ink) 8%, var(--color-card));
+}
+
+.lp-rag-score-grading-skel span:nth-child(1) {
+  width: 92%;
+}
+
+.lp-rag-score-grading-skel span:nth-child(2) {
+  width: 78%;
+}
+
+.lp-rag-score-grading-skel span:nth-child(3) {
+  width: 64%;
+}
+
+.lp-rag-score-grading-skel span:nth-child(4) {
+  width: 48%;
+}
+
+/* RAG pass scorecard (Figma) */
+.lp-ws--rag-figma .lp-rag-score {
+  gap: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.lp-ws--rag-figma .lp-rag-score--pass .lp-grd-score-hero--pass.lp-rag-score-hero--accepted {
+  border: 1px solid color-mix(in srgb, var(--lp-grd-teal) 62%, var(--lp-border));
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--lp-grd-teal) 14%, var(--color-card)) 0%,
+      color-mix(in srgb, var(--lp-ink) 6%, var(--color-card)) 42%,
+      color-mix(in srgb, var(--lp-ink) 3%, var(--color-card)) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--lp-grd-teal) 22%, transparent),
+    0 0 24px color-mix(in srgb, var(--lp-grd-teal) 10%, transparent);
+}
+
+.lp-ws--rag-figma .lp-rag-score--pass .lp-grd-score-hero--pass .lp-grd-score-verdict-pill {
+  border-color: color-mix(in srgb, var(--lp-grd-teal) 48%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-teal) 12%, var(--color-card));
+  color: var(--lp-grd-teal);
+}
+
+.lp-ws--rag-figma .lp-rag-score--pass .lp-grd-score-hero--pass .lp-grd-score-verdict-dot {
+  background: var(--lp-grd-teal);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--lp-grd-teal) 65%, transparent);
+}
+
+/* RAG fail scorecard (Figma) */
+.lp-ws--rag-figma .lp-rag-score--fail .lp-grd-score-hero--fail.lp-rag-score-hero--fail {
+  border: 1px solid color-mix(in srgb, var(--lp-grd-fail-deep) 40%, var(--lp-border));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--lp-grd-fail-deep-ink) 28%, var(--color-card)) 0%,
+      color-mix(in srgb, var(--lp-grd-fail-deep) 22%, var(--color-card)) 40%,
+      color-mix(in srgb, var(--lp-grd-fail-deep-muted) 12%, var(--color-card)) 72%,
+      color-mix(in srgb, var(--lp-grd-fail-deep) 5%, var(--color-card)) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--lp-grd-fail-deep) 16%, transparent),
+    0 0 18px color-mix(in srgb, var(--lp-grd-fail-deep) 8%, transparent);
+}
+
+.lp-ws--rag-figma .lp-rag-score--fail .lp-grd-score-hero--fail .lp-grd-score-verdict-pill {
+  border-color: color-mix(in srgb, var(--lp-grd-fail-accent) 45%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-fail-deep-muted) 50%, var(--color-card));
+  color: var(--lp-grd-fail-accent);
+}
+
+.lp-ws--rag-figma .lp-rag-score--fail .lp-grd-score-hero--fail .lp-grd-score-verdict-dot {
+  background: var(--lp-grd-fail-accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--lp-grd-fail-accent) 55%, transparent);
+}
+
+.lp-ws--rag-figma .lp-rag-score--fail .lp-rag-score-threshold-fill.is-fail {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--lp-grd-fail-accent) 75%, var(--lp-grd-fail-deep)),
+    color-mix(in srgb, var(--lp-grd-fail-accent) 45%, var(--lp-grd-teal)) 55%,
+    color-mix(in srgb, var(--lp-grd-teal) 35%, transparent) 100%
+  );
+}
+
+.lp-rag-score-failure-block {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--lp-grd-fail-deep) 22%, var(--lp-border));
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--lp-ink) 5%, var(--color-card));
+}
+
+.lp-rag-score-failure-code {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--lp-grd-fail-deep) 24%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-fail-deep-muted) 38%, var(--color-card));
+  font-family: ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  color: var(--lp-grd-fail-accent);
+}
+
+.lp-rag-score-hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 0.85rem;
+  margin-top: 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.lp-rag-score-hero-links a {
+  color: var(--lp-grd-teal);
+  text-decoration: none;
+}
+
+.lp-rag-score-hero-links a:hover {
+  text-decoration: underline;
+}
+
+.lp-rag-score-table-wrap {
+  overflow-x: auto;
+}
+
+.lp-rag-score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.lp-rag-score-table th {
+  padding: 0 0.35rem 0.45rem 0;
+  border-bottom: 1px solid var(--lp-border);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-table td {
+  padding: 0.5rem 0.35rem 0.5rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--lp-border) 72%, transparent);
+  vertical-align: middle;
+}
+
+.lp-rag-score-table-status {
+  text-align: right;
+  width: 3.25rem;
+}
+
+.lp-rag-score-metric-name {
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--lp-ink);
+}
+
+.lp-rag-score-metric-value {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--lp-ink);
+}
+
+.lp-rag-score-metric-value.is-pass {
+  color: var(--lp-grd-teal);
+}
+
+.lp-rag-score-metric-value.is-fail {
+  color: var(--lp-grd-fail-accent);
+}
+
+.lp-rag-score-metric-sub {
+  margin-left: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-metric-threshold {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.14rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.5625rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.lp-rag-score-pill-dot {
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.lp-rag-score-pill.is-pass {
+  border: 1px solid color-mix(in srgb, var(--lp-grd-teal) 40%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-teal) 12%, var(--color-card));
+  color: var(--lp-grd-teal);
+}
+
+.lp-rag-score-pill.is-fail {
+  border: 1px solid color-mix(in srgb, var(--lp-grd-fail-accent) 35%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-grd-fail-deep-muted) 40%, var(--color-card));
+  color: var(--lp-grd-fail-accent);
+}
+
+.lp-rag-score-pill.is-info {
+  border: 1px solid color-mix(in srgb, var(--lp-border) 90%, transparent);
+  background: color-mix(in srgb, var(--lp-ink) 6%, var(--color-card));
+  color: var(--lp-muted);
+  text-transform: uppercase;
+}
+
+.lp-rag-score-threshold-track {
+  position: relative;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-ink) 10%, var(--color-card));
+  overflow: visible;
+}
+
+.lp-rag-score-threshold-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 999px;
+}
+
+.lp-rag-score-threshold-fill.is-pass {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--lp-grd-teal) 70%, #065f46),
+    var(--lp-grd-teal)
+  );
+}
+
+.lp-rag-score-threshold-fill.is-fail {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--lp-grd-fail-accent) 55%, var(--lp-grd-fail-deep)),
+    var(--lp-grd-teal)
+  );
+}
+
+.lp-rag-score-threshold-mark {
+  position: absolute;
+  top: -0.18rem;
+  width: 2px;
+  height: calc(100% + 0.36rem);
+  transform: translateX(-50%);
+  background: var(--lp-ink);
+  border-radius: 1px;
+}
+
+.lp-rag-score-threshold-labels {
+  position: relative;
+  height: 0.85rem;
+  margin-top: 0.35rem;
+  font-size: 0.5625rem;
+  font-weight: 650;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-threshold-labels span:first-child {
+  position: absolute;
+  left: 0;
+}
+
+.lp-rag-score-threshold-labels span:last-child {
+  position: absolute;
+  right: 0;
+}
+
+.lp-rag-score-threshold-labels span:nth-child(2) {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.lp-rag-score-section-label {
+  margin: 0;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--lp-border);
+}
+
+.lp-rag-score-footer-note {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.48rem 0.85rem;
+  border: none;
+  border-radius: 0.45rem;
+  background: var(--lp-grd-teal);
+  color: color-mix(in srgb, var(--lp-ink) 88%, #022c22);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--lp-grd-teal) 40%, transparent),
+    0 8px 22px color-mix(in srgb, var(--lp-grd-teal) 24%, transparent);
+}
+
+.lp-rag-score-next:hover {
+  filter: brightness(1.06);
+}
+
+.lp-rag-score-failures-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.lp-rag-score-failures-count {
+  font-size: 0.6875rem;
+  font-weight: 650;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-failures-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.lp-rag-score-failure-card {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--lp-ink) 4%, var(--color-card));
+}
+
+.lp-rag-score-failure-id {
+  font-family: ui-monospace, monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-failure-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.5625rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--lp-muted);
+}
+
+.lp-rag-score-failure-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.lp-rag-score-failure-q {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--lp-ink);
+}
+
+.lp-rag-score-failure-note {
+  display: flex;
+  gap: 0.35rem;
+  align-items: flex-start;
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--lp-grd-fail-accent);
+}
+
+.lp-rag-score-failures-empty,
+.lp-rag-score-failure-detail {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+/* Simulation Lab wireframe (Figma secondary tab) */
+.lp-ws--rag-figma .lp-ws-figma-work-tabs {
+  border-bottom: 1px solid color-mix(in srgb, var(--lp-border) 85%, transparent);
+}
+
+.lp-ws--rag-figma .lp-ws-pane--work:has(.lp-rag-lab--figma-wireframe) {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.lp-rag-lab--figma-wireframe {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 0;
+  margin: 0.65rem 1rem 1rem;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--lp-muted) 22%, var(--lp-border));
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--lp-ink) 5%, var(--color-card));
+}
+
+.lp-rag-lab-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--lp-muted) 18%, var(--lp-border));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-ink) 8%, var(--color-card));
+}
+
+.lp-rag-lab-seg-btn {
+  min-height: 2rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.lp-rag-lab-seg-btn.is-active {
+  border-color: color-mix(in srgb, var(--lp-muted) 28%, var(--lp-border));
+  background: color-mix(in srgb, var(--lp-ink) 6%, var(--color-card));
+  color: var(--lp-ink);
+}
+
+.lp-rag-lab-wf-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.lp-rag-lab-wf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-rag-lab-wf-row {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, auto) 1fr minmax(0, auto);
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--lp-muted) 16%, var(--lp-border));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--lp-ink) 4%, var(--color-card));
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+.lp-rag-lab-wf-id {
+  color: color-mix(in srgb, var(--lp-muted) 92%, var(--lp-ink));
+  white-space: nowrap;
+}
+
+.lp-rag-lab-wf-title {
+  color: var(--lp-ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lp-rag-lab-wf-bar {
+  display: block;
+  min-width: 2rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-ink) 22%, #080c12);
+}
+
+.lp-rag-lab-wf-tok {
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.lp-rag-lab-wf-foot {
+  margin: 0;
+  padding-top: 0.15rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--lp-muted) 95%, var(--lp-ink));
+}
+
+.lp-rag-lab-wf-query {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.lp-rag-lab-wf-query-field select {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--lp-ink) 6%, var(--color-card));
+  color: var(--lp-ink);
+  font-size: 0.8125rem;
+}
+
+.lp-rag-lab-wf-query-preview {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+/* Simulation Lab skeleton — Guardrails lp-skel-line tokens */
+.lp-ws--rag-figma .lp-rag-lab-wf-row--skel {
+  pointer-events: none;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-wf-row--skel .lp-skel-line {
+  display: block;
+  margin: 0;
+  border-radius: 0.35rem;
+  background: color-mix(in srgb, var(--color-line) 55%, transparent);
+  animation: lp-skel-pulse 1.2s ease-in-out infinite;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-wf-skel-id {
+  width: 4.25rem;
+  height: 0.65rem;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-wf-skel-title {
+  width: 5.5rem;
+  height: 0.65rem;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-wf-skel-bar {
+  width: 100% !important;
+  height: 0.45rem !important;
+  border-radius: 999px !important;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-wf-skel-tok {
+  width: 2.75rem;
+  height: 0.55rem;
+  margin-left: auto;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-seg--skel {
+  pointer-events: none;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-wf-skel-seg {
+  width: 72%;
+  height: 0.65rem;
+  margin: 0 auto;
+  border-radius: 0.35rem;
+}
+
+.lp-ws--rag-figma .lp-rag-lab-wf-skel-seg--active {
+  width: 82%;
+  opacity: 0.72;
+}

@@ -5,6 +5,7 @@ export type FailingCase = {
   goldSpan?: string;
   retrieved?: string[];
   note?: string;
+  output?: string;
 };
 
 export type MetricValue = {

@@ -121,6 +121,9 @@ export function WorkspaceDemoMobile({
             simulator="rag"
             collapsed={false}
             figmaScorecard
+            pending={pending}
+            attempt={3}
+            exerciseSlug={exercise.slug}
             mobileChrome
           />
         ) : null}

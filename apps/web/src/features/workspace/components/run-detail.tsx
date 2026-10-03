@@ -7,7 +7,19 @@ import { workspaceApi } from "@/features/workspace/workspace-api";
 import { ApiError } from "@/lib/api-client";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
+import {
+  DEMO_G1_RUN,
+  isG1DemoRun,
+} from "@/features/traces/demo/g1-run-demo-data";
+import {
+  buildG1RunDetailModel,
+  isGuardrailsG1Run,
+} from "../guardrails-g1-run-model";
 import { ScorecardIntervals } from "./scorecard-intervals";
+import {
+  GuardrailsG1RunDetail,
+  GuardrailsG1RunDetailSkeleton,
+} from "./guardrails-g1-run-detail";
 import { WorkerOfflineBanner } from "./worker-offline-banner";
 import "../run-detail.css";
 
@@ -16,13 +28,19 @@ type RunDetailProps = {
 };
 
 export function RunDetail({ runId }: RunDetailProps) {
-  const [run, setRun] = useState<Run | null>(null);
-  const [grade, setGrade] = useState<Grade | null>(null);
+  const demoG1 = isG1DemoRun(runId);
+  const [run, setRun] = useState<Run | null>(demoG1 ? DEMO_G1_RUN : null);
+  const [grade, setGrade] = useState<Grade | null>(
+    demoG1 ? { verdict: "pass" } : null,
+  );
   const [error, setError] = useState<"auth" | "missing" | "load" | null>(null);
   const [queuedSince, setQueuedSince] = useState<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
+    if (demoG1) {
+      return;
+    }
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -86,7 +104,7 @@ export function RunDetail({ runId }: RunDetailProps) {
         clearTimeout(timer);
       }
     };
-  }, [runId]);
+  }, [runId, demoG1]);
 
   useEffect(() => {
     if (!run || (run.status !== "queued" && run.status !== "running")) {
@@ -134,10 +152,27 @@ export function RunDetail({ runId }: RunDetailProps) {
   }
 
   if (!run) {
+    if (isG1DemoRun(runId)) {
+      return <GuardrailsG1RunDetailSkeleton />;
+    }
     return (
       <div className="lp-page lp-page-run">
         <RunDetailSkeleton />
       </div>
+    );
+  }
+
+  const g1Presentation = isGuardrailsG1Run(run, runId);
+  const inFlightEarly = run.status === "queued" || run.status === "running";
+
+  if (g1Presentation) {
+    const model = buildG1RunDetailModel(run, grade, runId);
+    return (
+      <GuardrailsG1RunDetail
+        model={model}
+        inFlight={inFlightEarly}
+        workerMaybeOffline={workerMaybeOffline}
+      />
     );
   }
 

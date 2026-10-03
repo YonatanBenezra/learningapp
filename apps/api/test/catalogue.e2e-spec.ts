@@ -106,7 +106,7 @@ describe('Catalogue (e2e)', () => {
       .set('Cookie', cookies)
       .expect(404);
     await request(app.getHttpServer())
-      .get('/api/exercises/grd-001-break-the-concierge')
+      .get('/api/exercises/grd-005-encoding-trick')
       .set('Cookie', cookies)
       .expect(404);
   });

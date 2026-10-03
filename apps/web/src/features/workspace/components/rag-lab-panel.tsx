@@ -10,18 +10,21 @@ import {
   SCORE_TIP,
   type LabTab,
 } from "../rag-lab/rag-lab-copy";
+import { chunkRowsFromPreview } from "../rag-lab/rag-lab-wireframe-data";
 import type { RagLabContext, RagLabPreview } from "../rag-lab/rag-lab-types";
+import { RagLabWireframeSkeleton } from "./rag-lab-wireframe-skeleton";
 import "../rag-lab.css";
 
 type RagLabPanelProps = {
   slug: string;
   payload: Record<string, unknown>;
+  figmaWireframe?: boolean;
 };
 
-export function RagLabPanel({ slug, payload }: RagLabPanelProps) {
+export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPanelProps) {
   const [context, setContext] = useState<RagLabContext | null>(null);
   const [preview, setPreview] = useState<RagLabPreview | null>(null);
-  const [tab, setTab] = useState<LabTab>("corpus");
+  const [tab, setTab] = useState<LabTab>(figmaWireframe ? "chunks" : "corpus");
   const [questionId, setQuestionId] = useState<string>("");
   const [customQuestion, setCustomQuestion] = useState("");
   const [loading, setLoading] = useState(true);
@@ -111,6 +114,9 @@ export function RagLabPanel({ slug, payload }: RagLabPanelProps) {
   }, [tab, visibleTabs]);
 
   if (loading) {
+    if (figmaWireframe) {
+      return <RagLabWireframeSkeleton />;
+    }
     return (
       <div className="lp-rag-lab lp-rag-lab--loading">
         <p>Loading simulation lab…</p>
@@ -127,6 +133,112 @@ export function RagLabPanel({ slug, payload }: RagLabPanelProps) {
   }
 
   const chunksByDoc = groupChunks(preview?.chunks ?? []);
+
+  if (figmaWireframe && !loading && context?.labEnabled) {
+    const corpusCount = context.corpus.length || 12;
+    const chunkCount = preview?.chunkCount ?? preview?.chunks.length ?? 212;
+    const chunksLoading = previewing && !preview?.chunks?.length;
+    const chunkRows = chunksLoading
+      ? []
+      : chunkRowsFromPreview(preview?.chunks ?? []);
+    const segTabs: LabTab[] = ["corpus", "chunks", "query"];
+
+    return (
+      <div className="lp-rag-lab lp-rag-lab--figma-wireframe">
+        <div className="lp-rag-lab-seg" role="tablist" aria-label="Simulation lab views">
+          {segTabs.map((item) => {
+            const label =
+              item === "corpus"
+                ? `Corpus · ${corpusCount}`
+                : item === "chunks"
+                  ? `Chunks · ${chunkCount}`
+                  : "Query";
+            return (
+              <button
+                key={item}
+                type="button"
+                role="tab"
+                aria-selected={tab === item}
+                className={`lp-rag-lab-seg-btn${tab === item ? " is-active" : ""}`}
+                onClick={() => setTab(item)}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="lp-rag-lab-wf-body">
+          {tab === "corpus" ? (
+            <ul className="lp-rag-lab-wf-list" aria-label="Corpus documents">
+              {context.corpus.map((doc) => (
+                <li key={doc.id} className="lp-rag-lab-wf-row">
+                  <span className="lp-rag-lab-wf-id">{doc.id}</span>
+                  <span className="lp-rag-lab-wf-title">## {doc.title}</span>
+                  <span className="lp-rag-lab-wf-bar" aria-hidden />
+                  <span className="lp-rag-lab-wf-tok">{doc.text.length} chars</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+
+          {tab === "chunks" ? (
+            chunksLoading ? (
+              <ul className="lp-rag-lab-wf-list" aria-busy="true" aria-label="Loading chunks">
+                {Array.from({ length: 4 }, (_, index) => (
+                  <li key={index} className="lp-rag-lab-wf-row lp-rag-lab-wf-row--skel">
+                    <span className="lp-rag-lab-wf-skel-id lp-skel-line" />
+                    <span className="lp-rag-lab-wf-skel-title lp-skel-line" />
+                    <span className="lp-rag-lab-wf-skel-bar lp-skel-line" />
+                    <span className="lp-rag-lab-wf-skel-tok lp-skel-line" />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="lp-rag-lab-wf-list" aria-label="Generated chunks">
+                {chunkRows.map((row) => (
+                  <li key={row.id} className="lp-rag-lab-wf-row">
+                    <span className="lp-rag-lab-wf-id">{row.id}</span>
+                    <span className="lp-rag-lab-wf-title">## {row.heading}</span>
+                    <span className="lp-rag-lab-wf-bar" aria-hidden />
+                    <span className="lp-rag-lab-wf-tok">{row.tokens} tok</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          ) : null}
+
+          {tab === "query" ? (
+            <div className="lp-rag-lab-wf-query">
+              <label className="lp-rag-lab-wf-query-field">
+                <span className="sr-only">Public query</span>
+                <select
+                  value={questionId}
+                  onChange={(event) => {
+                    setQuestionId(event.target.value);
+                    setCustomQuestion("");
+                  }}
+                >
+                  {context.questions.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.question}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="lp-rag-lab-wf-query-preview">{activeQuestion || "—"}</p>
+              <HitList hits={preview?.retrieved ?? []} />
+            </div>
+          ) : null}
+        </div>
+
+        <p className="lp-rag-lab-wf-foot">
+          Wireframe only: learners browse the corpus, inspect generated chunks and try a public
+          query. Not graded.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="lp-rag-lab">

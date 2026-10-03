@@ -8,6 +8,8 @@ export const LIVE_RAG_PROBLEMS = [
     title: "Chunk It Right",
     summary: "Fix chunk size, overlap, and split strategy for recall@5 on a hidden set.",
     href: routes.exercise("rag-001-chunk-it-right"),
+    /** Pass scorecard footer CTA (Figma) */
+    nextCta: "R2 Rerank",
   },
   {
     id: "R1b",

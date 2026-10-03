@@ -23,6 +23,8 @@ import {
 import { ragEditorTitle } from "./workspace-rag-utils";
 import "../workspace.css";
 import "../workspace-figma.css";
+import "../workspace-rag-figma.css";
+import "../workspace-guardrails-figma.css";
 
 type WorkspaceRagFigmaShellProps = {
   slug: string;
@@ -158,7 +160,7 @@ export function WorkspaceRagFigmaShell({
     onValuesChange(payload);
   };
 
-  const rootClass = `lp-ws lp-ws--rag lp-ws--figma${demoMode ? " lp-ws--demo" : ""}${isMobileLayout ? " lp-ws--mobile" : ""}`;
+  const rootClass = `lp-ws lp-ws--rag lp-ws--figma lp-ws--rag-figma${demoMode ? " lp-ws--demo" : ""}${isMobileLayout ? " lp-ws--mobile" : ""}`;
 
   if (isMobileLayout) {
     return (
@@ -217,6 +219,7 @@ export function WorkspaceRagFigmaShell({
                   onTabChange={setWorkTab}
                   showLab={showSimulationLab}
                   editedSinceRun={editedSinceRun}
+                  figmaStyle
                 />
                 <div className="lp-ws-work-pane" hidden={workTab !== "configure"}>
                   <WorkspaceSplit
@@ -261,7 +264,11 @@ export function WorkspaceRagFigmaShell({
                 </div>
                 {workTab === "lab" ? (
                   showSimulationLab ? (
-                    <RagLabPanel slug={slug} payload={labPayload ?? formDefaults} />
+                    <RagLabPanel
+                      slug={slug}
+                      payload={labPayload ?? formDefaults}
+                      figmaWireframe
+                    />
                   ) : (
                     labPlaceholder
                   )
@@ -276,6 +283,13 @@ export function WorkspaceRagFigmaShell({
                 collapsed={resultsCollapsed}
                 onToggleCollapse={onToggleResultsCollapsed}
                 figmaScorecard
+                pending={pending}
+                attempt={
+                  demoMode
+                    ? Math.max(attempt, (figmaBrief?.submissionCount ?? 0) + 1)
+                    : attempt
+                }
+                exerciseSlug={slug}
               />
             }
           />

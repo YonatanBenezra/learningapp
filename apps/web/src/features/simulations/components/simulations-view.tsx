@@ -1,16 +1,32 @@
+import {
+  Database,
+  Eye,
+  Lock,
+  MessageSquare,
+  Shield,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
 import { DotPattern } from "@/components/ui";
 import {
-  ragGuidedPath,
-  ragSimulatorCard,
+  guardrailsGuidedPath,
+  guardrailsSimulatorCard,
+  ragSimulatorRow,
   simulationsPageCopy,
 } from "../simulations-demo-data";
 import "../simulations.css";
 
+const pipelineIcons = {
+  chat: MessageSquare,
+  inject: Zap,
+  detect: Eye,
+  grade: Shield,
+} as const;
+
 export function SimulationsView() {
   const copy = simulationsPageCopy;
-  const card = ragSimulatorCard;
-  const path = ragGuidedPath;
+  const card = guardrailsSimulatorCard;
+  const path = guardrailsGuidedPath;
 
   return (
     <div className="lp-sim">
@@ -18,7 +34,7 @@ export function SimulationsView() {
         <div>
           <div className="lp-sim-page-title-row">
             <h1 className="lp-sim-title">{copy.title}</h1>
-            <span className="lp-sim-chip lp-sim-chip--brand">{copy.simulatorCountLabel}</span>
+            <span className="lp-sim-chip lp-sim-chip--brand">{copy.liveCountLabel}</span>
           </div>
           <p className="lp-sim-lead">{copy.lead}</p>
         </div>
@@ -32,7 +48,13 @@ export function SimulationsView() {
         />
         <div className="lp-sim-promo-inner">
           <div className="lp-sim-promo-copy">
-            <span className="lp-sim-promo-kicker">{copy.promoKicker}</span>
+            <div className="lp-sim-promo-badges">
+              {copy.promoBadges.map((badge) => (
+                <span key={badge} className="lp-sim-promo-badge">
+                  {badge}
+                </span>
+              ))}
+            </div>
             <h2 id="sim-promo-title" className="lp-sim-promo-title">
               {copy.promoTitle}
             </h2>
@@ -41,22 +63,31 @@ export function SimulationsView() {
           <dl className="lp-sim-promo-stats">
             <div>
               <dt>Run</dt>
-              <dd>{copy.promoRun.runId}</dd>
+              <dd>
+                <Link href={copy.promoRun.runHref} className="lp-sim-promo-run-link">
+                  {copy.promoRun.runId}
+                </Link>
+              </dd>
             </div>
             <div>
               <dt>Exercise</dt>
               <dd>{copy.promoRun.exercise}</dd>
             </div>
             <div>
-              <dt>recall@5</dt>
+              <dt>{copy.promoRun.canary.label}</dt>
               <dd className="lp-sim-promo-pass">
-                {copy.promoRun.recall.value}{" "}
-                <span>{copy.promoRun.recall.threshold}</span>
+                {copy.promoRun.canary.value}
+                {copy.promoRun.canary.pass ? (
+                  <span className="lp-sim-promo-check" aria-hidden>
+                    {" "}
+                    ✓
+                  </span>
+                ) : null}
               </dd>
             </div>
             <div>
-              <dt>Cost</dt>
-              <dd>{copy.promoRun.cost}</dd>
+              <dt>attempts</dt>
+              <dd>{copy.promoRun.attempts}</dd>
             </div>
           </dl>
         </div>
@@ -74,29 +105,29 @@ export function SimulationsView() {
           </ul>
           <div className="lp-sim-feature-cta-row">
             <Link href={card.problemsHref} className="lp-sim-hero-cta lp-sim-feature-cta">
-              Browse live problems
+              Browse problems
               <span aria-hidden>→</span>
             </Link>
-            {"demoTraceHref" in card && card.demoTraceHref ? (
-              <Link href={card.demoTraceHref} className="lp-sim-feature-cta-secondary">
-                Sample trace UI
-              </Link>
-            ) : null}
           </div>
         </div>
 
         <div className="lp-sim-feature-side">
           <div className="lp-sim-pipeline" aria-label="Pipeline preview">
-            {card.pipeline.map((step, index) => (
-              <div key={step} className="lp-sim-pipeline-step-wrap">
-                {index > 0 ? <span className="lp-sim-pipeline-arrow" aria-hidden /> : null}
-                <span
-                  className={`lp-sim-pipeline-step${index === card.activePipelineStep ? " is-active" : ""}`}
-                >
-                  {step}
-                </span>
-              </div>
-            ))}
+            {card.pipeline.map((step, index) => {
+              const Icon = pipelineIcons[step.id];
+              const active = index === card.activePipelineStep;
+              return (
+                <div key={step.id} className="lp-sim-pipeline-step-wrap">
+                  {index > 0 ? <span className="lp-sim-pipeline-arrow" aria-hidden /> : null}
+                  <span
+                    className={`lp-sim-pipeline-step${active ? " is-active" : ""}`}
+                  >
+                    {Icon ? <Icon className="size-3 shrink-0" strokeWidth={2} aria-hidden /> : null}
+                    {step.label}
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           <div className="lp-sim-stat-grid">
@@ -125,20 +156,29 @@ export function SimulationsView() {
           </div>
           <ol className="lp-sim-path-steps">
             {path.steps.map((step) => {
-              const href = "href" in step ? step.href : undefined;
-              const className = `lp-sim-path-step${step.active ? " is-active" : ""}`;
+              const className = `lp-sim-path-step${step.active ? " is-active" : ""}${step.locked ? " is-locked" : ""}`;
+              const inner = (
+                <>
+                  <span className="lp-sim-path-step-id">
+                    {step.locked ? (
+                      <Lock className="size-3" strokeWidth={2.25} aria-hidden />
+                    ) : (
+                      step.id
+                    )}
+                  </span>
+                  {step.label}
+                </>
+              );
               return (
                 <li key={step.id}>
-                  {href ? (
-                    <Link href={href} className={className}>
-                      <span className="lp-sim-path-step-id">{step.id}</span>
-                      {step.label}
-                    </Link>
-                  ) : (
-                    <span className={className}>
-                      <span className="lp-sim-path-step-id">{step.id}</span>
-                      {step.label}
+                  {step.locked ? (
+                    <span className={className} aria-disabled="true">
+                      {inner}
                     </span>
+                  ) : (
+                    <Link href={step.href} className={className}>
+                      {inner}
+                    </Link>
                   )}
                 </li>
               );
@@ -149,6 +189,30 @@ export function SimulationsView() {
           </Link>
         </footer>
       </article>
+
+      <section className="lp-sim-coming-soon lp-sim-coming-soon--live" aria-labelledby="sim-rag-live">
+        <div className="lp-sim-coming-soon-icon" aria-hidden>
+          <Database className="size-5" strokeWidth={1.75} />
+        </div>
+        <div className="lp-sim-coming-soon-copy">
+          <h2 id="sim-rag-live" className="lp-sim-coming-soon-title">
+            {ragSimulatorRow.title}
+          </h2>
+          <p className="lp-sim-coming-soon-lead">{ragSimulatorRow.description}</p>
+        </div>
+        <span className="lp-sim-coming-soon-pill lp-sim-coming-soon-pill--live">Live</span>
+        <div className="lp-sim-coming-soon-actions">
+          <Link href={ragSimulatorRow.problemsHref} className="lp-sim-hero-cta">
+            Browse problems
+          </Link>
+          <Link href={ragSimulatorRow.demoTraceHref} className="lp-sim-feature-cta-secondary">
+            Sample trace
+          </Link>
+          <Link href={ragSimulatorRow.startHref} className="lp-sim-path-cta">
+            {ragSimulatorRow.startLabel}
+          </Link>
+        </div>
+      </section>
 
       <p className="lp-sim-footnote">
         <span aria-hidden>💡</span> {copy.footnote}

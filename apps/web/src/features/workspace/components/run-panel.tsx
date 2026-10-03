@@ -6,7 +6,10 @@ import { routes } from "@/config/routes";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
+import { FigmaGuardScorecard } from "./figma-guard-scorecard";
 import { FigmaRagScorecard } from "./figma-rag-scorecard";
+import { FigmaRagScorecardGrading } from "./figma-rag-scorecard-grading";
+import { ScorecardEmptyState } from "./scorecard-empty-state";
 import { ScorecardIntervals } from "./scorecard-intervals";
 import { InfoTip } from "./info-tip";
 import { METRIC_TIPS, metricLabel } from "../rag-lab/rag-lab-copy";
@@ -24,6 +27,10 @@ type RunPanelProps = {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   figmaScorecard?: boolean;
+  figmaGuardScorecard?: boolean;
+  pending?: boolean;
+  attempt?: number;
+  exerciseSlug?: string;
   /** Mobile tab layout: no panel collapse control */
   mobileChrome?: boolean;
 };
@@ -36,6 +43,10 @@ export function RunPanel({
   collapsed = false,
   onToggleCollapse,
   figmaScorecard = false,
+  figmaGuardScorecard = false,
+  pending = false,
+  attempt = 1,
+  exerciseSlug,
   mobileChrome = false,
 }: RunPanelProps) {
   const isRag = simulator === "rag";
@@ -96,6 +107,12 @@ export function RunPanel({
   }
 
   const figmaRunHeader = figmaScorecard && isScorecard;
+  const ragGrading =
+    figmaScorecard &&
+    isRag &&
+    run &&
+    !grade &&
+    (pending || run.status === "queued" || run.status === "running");
 
   return (
     <aside
@@ -105,12 +122,12 @@ export function RunPanel({
       )}
     >
       {figmaRunHeader ? (
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-lp-border px-2.5 py-2">
-          <div className="inline-flex min-w-0 items-center gap-2 rounded-md border border-lp-brand/35 bg-[color-mix(in_srgb,var(--color-brand)_6%,var(--color-card))] px-2 py-1">
+        <div className="lp-grd-score-run-head flex shrink-0 items-center justify-between gap-2 border-b border-lp-border px-2.5 py-2">
+          <div className="lp-grd-score-run-title-chip inline-flex min-w-0 items-center gap-2 rounded-md px-2 py-1">
             <span className="grid size-6 shrink-0 place-items-center rounded text-lp-brand">
               <ShieldCheck className="size-3.5" strokeWidth={2.25} aria-hidden />
             </span>
-            <h2 className="m-0 truncate text-[0.8125rem] font-semibold text-lp-ink">
+            <h2 className="m-0 truncate text-[0.8125rem] font-semibold text-lp-muted">
               Test Result
             </h2>
           </div>
@@ -155,31 +172,43 @@ export function RunPanel({
       <div
         className={cn(
           "lp-ws-pane-body",
-          figmaScorecard && isRag && "min-h-0 overflow-y-auto p-0",
+          figmaScorecard &&
+            (isRag || (isGuard && figmaGuardScorecard)) &&
+            "min-h-0 flex-1 overflow-y-auto p-0",
         )}
       >
         {!run ? (
-          <div className="lp-ws-empty">
-            <span className="lp-ws-empty-mark" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
-                <path
-                  d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-            <p>
-              {isRag
-                ? "Run a retrieval grade to see recall and failing samples."
-                : isGuard
-                  ? "Run a guardrail grade to see block rates and failing samples."
-                  : "Submit a config to grade this exercise."}
-            </p>
-          </div>
-        ) : figmaScorecard && isRag ? null : (
+          figmaScorecard && (isRag || figmaGuardScorecard) ? (
+            <ScorecardEmptyState
+              lead={
+                isRag
+                  ? "Submit a config to grade against the hidden set."
+                  : "Submit your stack to grade against the hidden set."
+              }
+            />
+          ) : (
+            <div className="lp-ws-empty">
+              <span className="lp-ws-empty-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                  <path
+                    d="M5 12h14M13 6l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <p>
+                {isRag
+                  ? "Run a retrieval grade to see recall and failing samples."
+                  : isGuard
+                    ? "Run a guardrail grade to see block rates and failing samples."
+                    : "Submit a config to grade this exercise."}
+              </p>
+            </div>
+          )
+        ) : figmaScorecard && (isRag || figmaGuardScorecard) ? null : (
           <p className="lp-ws-status">
             <span className={`lp-ws-status-dot${run.status === "succeeded" ? " is-live" : ""}`} />
             <span>
@@ -189,7 +218,7 @@ export function RunPanel({
             </span>
           </p>
         )}
-        {run && !(figmaScorecard && isRag) ? (
+        {run && !(figmaScorecard && (isRag || figmaGuardScorecard)) ? (
           <p className="lp-ws-links">
             <Link href={routes.run(run.id)} className="lp-link">
               Run
@@ -199,8 +228,17 @@ export function RunPanel({
             </Link>
           </p>
         ) : null}
-        {grade && figmaScorecard && run && isRag ? (
-          <FigmaRagScorecard run={run} grade={grade} />
+        {ragGrading && run ? (
+          <FigmaRagScorecardGrading run={run} pending={pending} />
+        ) : grade && figmaScorecard && run && isRag ? (
+          <FigmaRagScorecard
+            run={run}
+            grade={grade}
+            attempt={attempt}
+            exerciseSlug={exerciseSlug}
+          />
+        ) : grade && figmaGuardScorecard && run && isGuard ? (
+          <FigmaGuardScorecard run={run} grade={grade} />
         ) : grade ? (
           <Scorecard grade={grade} onboarding={onboarding} />
         ) : null}
