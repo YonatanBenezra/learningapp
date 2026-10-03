@@ -4,7 +4,6 @@ import { Caveat, Figtree, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google
 import { RootNav } from "@/components/layout/root-nav";
 import { brand } from "@/config/brand";
 import { themeInitScript } from "@/features/theme/theme-script";
-import { ThemeToggle } from "@/features/theme/theme-toggle";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +32,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: brand.name,
   description: `${brand.description} ${brand.endorsement}.`,
+  icons: {
+    icon: "/brand/labpath-logo.png",
+    apple: "/brand/labpath-logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -44,8 +47,9 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
+      data-theme="dark"
       className={cn(
-        "h-full antialiased font-sans",
+        "dark h-full antialiased font-sans",
         jakarta.variable,
         figtree.variable,
         caveat.variable,
@@ -58,7 +62,6 @@ export default function RootLayout({
         </Script>
         <RootNav />
         {children}
-        <ThemeToggle />
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./design.css";
+@import "../components/layout/site-nav.css";
 @import "./workspace-chrome.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";

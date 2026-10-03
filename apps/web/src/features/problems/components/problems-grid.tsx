@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { Database, ShieldCheck } from "lucide-react";
 import {
   SIMULATOR_LABELS,
-  SIMULATORS,
   isActiveSimulator,
   type SimulatorSlug,
 } from "@/config/simulators";
@@ -14,19 +14,19 @@ import {
 } from "@/features/auth/auth-session";
 import { problemsApi } from "@/features/problems/problems-api";
 import type { Difficulty, Exercise } from "@/types/exercise";
+import { figmaMetaForSlug } from "../problems-figma-meta";
+import { ProblemsContestBanner } from "./problems-contest-banner";
+import { ProblemsFigmaRow } from "./problems-figma-row";
+import { ProblemsGenericRow } from "./problems-generic-row";
 import { ProblemsSkeleton } from "./problems-skeleton";
-import { ExerciseCard } from "./exercise-card";
-import { ExerciseRow } from "./exercise-row";
+import { ProblemsTrackPanel } from "./problems-track-panel";
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 10;
 
-type ExerciseView = "grid" | "list";
-
-const DIFFICULTY_FILTERS: { id: Difficulty | "all"; label: string }[] = [
-  { id: "all", label: "All levels" },
-  { id: "E", label: "Easy" },
-  { id: "M", label: "Medium" },
-  { id: "H", label: "Hard" },
+const GUARDRAILS_ORDER = [
+  "grd-001-break-the-concierge",
+  "grd-002-the-indirect-payload",
+  "grd-003-hold-the-line",
 ];
 
 function buildPageItems(current: number, total: number): Array<number | "ellipsis"> {
@@ -51,52 +51,55 @@ function buildPageItems(current: number, total: number): Array<number | "ellipsi
   }
 
   const sorted = [...pages].filter((page) => page >= 1 && page <= total).sort((a, b) => a - b);
-  const items: Array<number | "ellipsis"> = [];
+  const out: Array<number | "ellipsis"> = [];
   for (const page of sorted) {
-    const last = items[items.length - 1];
+    const last = out[out.length - 1];
     if (typeof last === "number" && page - last > 1) {
-      items.push("ellipsis");
+      out.push("ellipsis");
     }
-    items.push(page);
+    out.push(page);
   }
-  return items;
+  return out;
 }
 
-function SelectCaret() {
+function LightbulbFootnoteIcon() {
   return (
-    <svg className="lp-cat-select-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <svg className="lp-prob-footnote-icon" viewBox="0 0 20 20" fill="none" aria-hidden>
       <path
-        d="M2.5 4.5L6 8l3.5-3.5"
+        d="M10 2.5a4.5 4.5 0 0 0-2.2 8.4V13h4.4v-2.1A4.5 4.5 0 0 0 10 2.5Z"
         stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
+        strokeWidth="1.4"
         strokeLinejoin="round"
       />
+      <path d="M8.2 15h3.6M9 17h2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }
 
-function GridViewIcon() {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="1.75" y="1.75" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
-      <rect x="9.05" y="1.75" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
-      <rect x="1.75" y="9.05" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
-      <rect x="9.05" y="9.05" width="5.2" height="5.2" rx="1.1" fill="currentColor" />
-    </svg>
-  );
-}
+const DIFFICULTY_FILTERS: { id: Difficulty | "all"; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "E", label: "Easy" },
+  { id: "M", label: "Medium" },
+  { id: "H", label: "Hard" },
+];
 
-function ListViewIcon() {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="1.75" y="2.4" width="12.5" height="2.5" rx="1.1" fill="currentColor" />
-      <rect x="1.75" y="6.75" width="12.5" height="2.5" rx="1.1" fill="currentColor" />
-      <rect x="1.75" y="11.1" width="12.5" height="2.5" rx="1.1" fill="currentColor" />
-    </svg>
-  );
-}
 
+function sortExercises(items: Exercise[]): Exercise[] {
+  return [...items].sort((a, b) => {
+    const ai = GUARDRAILS_ORDER.indexOf(a.slug);
+    const bi = GUARDRAILS_ORDER.indexOf(b.slug);
+    if (ai !== -1 && bi !== -1) {
+      return ai - bi;
+    }
+    if (ai !== -1) {
+      return -1;
+    }
+    if (bi !== -1) {
+      return 1;
+    }
+    return a.title.localeCompare(b.title);
+  });
+}
 
 export function ProblemsGrid() {
   const searchParams = useSearchParams();
@@ -106,7 +109,6 @@ export function ProblemsGrid() {
   const [difficulty, setDifficulty] = useState<Difficulty | "all">("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [view, setView] = useState<ExerciseView>("list");
   const [signedIn, setSignedIn] = useState(
     () =>
       getAuthSnapshot().status === "authenticated" ||
@@ -131,6 +133,8 @@ export function ProblemsGrid() {
     const fromUrl = searchParams.get("track");
     if (fromUrl && isActiveSimulator(fromUrl)) {
       setTrack(fromUrl);
+    } else if (fromUrl === "all") {
+      setTrack("all");
     }
   }, [searchParams]);
 
@@ -143,11 +147,10 @@ export function ProblemsGrid() {
           setItems(result.items);
         }
       })
-      .catch((caught: unknown) => {
-        if (cancelled) {
-          return;
+      .catch(() => {
+        if (!cancelled) {
+          setError("load");
         }
-        setError("load");
       });
     return () => {
       cancelled = true;
@@ -163,7 +166,7 @@ export function ProblemsGrid() {
       return [];
     }
     const needle = query.trim().toLowerCase();
-    return items.filter((exercise) => {
+    const filtered = items.filter((exercise) => {
       if (!isActiveSimulator(exercise.simulator)) {
         return false;
       }
@@ -179,11 +182,13 @@ export function ProblemsGrid() {
         exercise.title,
         SIMULATOR_LABELS[exercise.simulator],
         ...exercise.skillTags,
+        figmaMetaForSlug(exercise.slug)?.code ?? "",
       ]
         .join(" ")
         .toLowerCase();
       return haystack.includes(needle);
     });
+    return sortExercises(filtered);
   }, [difficulty, items, query, track]);
 
   const pageCount = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
@@ -192,9 +197,15 @@ export function ProblemsGrid() {
     const start = (currentPage - 1) * PAGE_SIZE;
     return visible.slice(start, start + PAGE_SIZE);
   }, [currentPage, visible]);
-  const rangeStart = visible.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
-  const rangeEnd = Math.min(currentPage * PAGE_SIZE, visible.length);
-  const filtersActive = track !== "all" || difficulty !== "all" || query.trim().length > 0;
+
+  const showGuardrailsChrome = track === "guardrails";
+
+  const searchPlaceholder =
+    track === "guardrails"
+      ? "Search guardrails problems"
+      : track === "rag"
+        ? "Search RAG problems"
+        : "Search problems";
 
   if (error === "load") {
     return (
@@ -210,241 +221,207 @@ export function ProblemsGrid() {
   }
 
   return (
-    <div className="lp-cat">
-      <header className="lp-cat-hero">
-        <div className="lp-cat-hero-copy">
-          <div className="lp-cat-title-row">
-            <h1 className="lp-cat-title">Problems</h1>
-            <span className="lp-cat-count" aria-label={`${items.length} exercises`}>
-              {items.length} exercises
-            </span>
-          </div>
-          <p className="lp-cat-lead">
-            RAG problems with hidden test sets. Pick one and submit for a graded
-            scorecard.
-          </p>
-        </div>
+    <div className="lp-prob">
+      <header className="lp-prob-header">
+        <h1 className="lp-prob-title">Problems</h1>
+        <p className="lp-prob-lead">
+          Short, graded exercises. Pick a track and work through the levels.
+        </p>
+      </header>
 
-        <div className="lp-cat-controls">
-          <label className="lp-cat-search">
-            <span className="sr-only">Search exercises</span>
-            <svg className="lp-cat-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <div className="lp-prob-filters">
+        <div className="lp-prob-filter-toolbar">
+          <div className="lp-prob-filter-left">
+            <div className="lp-prob-track-pills" role="tablist" aria-label="Track">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={track === "all"}
+                className={track === "all" ? "is-active" : undefined}
+                onClick={() => setTrack("all")}
+              >
+                All tracks
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={track === "rag"}
+                className={track === "rag" ? "is-active" : undefined}
+                onClick={() => setTrack("rag")}
+              >
+                <Database className="size-3.5" strokeWidth={2} aria-hidden /> RAG
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={track === "guardrails"}
+                className={track === "guardrails" ? "is-active" : undefined}
+                onClick={() => setTrack("guardrails")}
+              >
+                <ShieldCheck className="size-3.5" strokeWidth={2} aria-hidden /> Guardrails
+              </button>
+            </div>
+
+            <span className="lp-prob-filter-divider" aria-hidden />
+
+            <div className="lp-prob-diff-segment" role="group" aria-label="Difficulty">
+              {DIFFICULTY_FILTERS.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={difficulty === item.id}
+                  className={difficulty === item.id ? "is-active" : undefined}
+                  onClick={() => setDifficulty(item.id)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <label className="lp-prob-search">
+            <span className="sr-only">{searchPlaceholder}</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
               <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8" />
-              <path
-                d="M16.2 16.2L20 20"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
+              <path d="M16.2 16.2 20 20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
             </svg>
             <input
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search title, track, skill…"
+              placeholder={searchPlaceholder}
               autoComplete="off"
             />
           </label>
+        </div>
+      </div>
 
-          <label className="lp-cat-field">
-            <span className="sr-only">Track</span>
-            <span className="lp-cat-select">
-              <select
-                value={track}
-                onChange={(event) => setTrack(event.target.value as SimulatorSlug | "all")}
-                aria-label="Track"
-              >
-                <option value="all">All tracks</option>
-                {SIMULATORS.map((slug) => (
-                  <option key={slug} value={slug}>
-                    {SIMULATOR_LABELS[slug]}
-                  </option>
-                ))}
-              </select>
-              <SelectCaret />
-            </span>
-          </label>
+      <div className={`lp-prob-main${showGuardrailsChrome ? " has-sidebar" : ""}`}>
+        <div className="lp-prob-table-wrap">
+          {visible.length === 0 ? (
+            <div className="lp-cat-empty">
+              <strong>No matches</strong>
+              <p>Try another track, level, or search.</p>
+            </div>
+          ) : (
+            <table className="lp-prob-table">
+              <thead>
+                <tr>
+                  <th scope="col">Problem</th>
+                  <th scope="col">Difficulty</th>
+                  <th scope="col">Mode</th>
+                  <th scope="col">Solve rate</th>
+                  <th scope="col">
+                    <span className="sr-only">Action</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {pageItems.map((exercise) => {
+                  const meta = figmaMetaForSlug(exercise.slug);
+                  if (meta) {
+                    return (
+                      <ProblemsFigmaRow
+                        key={exercise.slug}
+                        exercise={exercise}
+                        meta={meta}
+                        signedIn={signedIn}
+                      />
+                    );
+                  }
+                  return (
+                    <ProblemsGenericRow
+                      key={exercise.slug}
+                      exercise={exercise}
+                      signedIn={signedIn}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
 
-          <label className="lp-cat-field">
-            <span className="sr-only">Level</span>
-            <span className="lp-cat-select">
-              <select
-                value={difficulty}
-                onChange={(event) =>
-                  setDifficulty(event.target.value as Difficulty | "all")
-                }
-                aria-label="Level"
-              >
-                {DIFFICULTY_FILTERS.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.label}
-                  </option>
-                ))}
-              </select>
-              <SelectCaret />
-            </span>
-          </label>
-
-          {filtersActive ? (
-            <button
-              type="button"
-              className="lp-cat-clear"
-              onClick={() => {
-                setTrack("all");
-                setDifficulty("all");
-                setQuery("");
-                setPage(1);
-              }}
-            >
-              Clear
-            </button>
+          {showGuardrailsChrome ? (
+            <p className="lp-prob-footnote">
+              <LightbulbFootnoteIcon />
+              More Guardrails exercises ship after v1. Contest mode uses the same levels with a
+              timer.
+            </p>
           ) : null}
         </div>
-      </header>
 
-      <section aria-label="Exercises">
-        <div className="lp-ex-block-head">
-          <h2>Exercises</h2>
-          <div className="lp-ex-block-tools">
-            <p>
-              {visible.length === 0
-                ? "0 results"
-                : `Showing ${rangeStart}–${rangeEnd} of ${visible.length}`}
-            </p>
-            <div className="lp-view-toggle" role="group" aria-label="Exercise view">
-              <button
-                type="button"
-                aria-pressed={view === "grid"}
-                aria-label="Grid view"
-                title="Grid view"
-                onClick={() => setView("grid")}
-              >
-                <GridViewIcon />
-              </button>
-              <button
-                type="button"
-                aria-pressed={view === "list"}
-                aria-label="List view"
-                title="List view"
-                onClick={() => setView("list")}
-              >
-                <ListViewIcon />
-              </button>
-            </div>
-          </div>
-        </div>
+        {showGuardrailsChrome ? <ProblemsTrackPanel /> : null}
+      </div>
 
-        {items.length === 0 ? (
-          <div className="lp-cat-empty">
-            <strong>No exercises published yet</strong>
-            <p>
-              From <code className="lp-cat-empty-code">apps/api</code>, run{" "}
-              <code className="lp-cat-empty-code">npm run content:sync-catalogue</code>{" "}
-              (uses <code className="lp-cat-empty-code">content/published-slugs.json</code>
-              ), then refresh.
-            </p>
-          </div>
-        ) : visible.length === 0 ? (
-          <div className="lp-cat-empty">
-            <strong>No matches</strong>
-            <p>Try another track, level, or clear search.</p>
-          </div>
-        ) : (
-          <>
-            {view === "grid" ? (
-              <div className="lp-ex-grid">
-                {pageItems.map((exercise, index) => (
-                  <ExerciseCard
-                    key={exercise.slug}
-                    exercise={exercise}
-                    index={rangeStart + index}
-                    signedIn={signedIn}
-                  />
-                ))}
-              </div>
+      {showGuardrailsChrome ? <ProblemsContestBanner /> : null}
+
+      {visible.length > PAGE_SIZE ? (
+        <nav className="lp-cat-pager" aria-label="Problem pages">
+          <button
+            type="button"
+            className="lp-cat-page"
+            disabled={currentPage <= 1}
+            aria-label="Previous page"
+            onClick={() => {
+              setPage((value) => Math.max(1, value - 1));
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M10 3.5L5.5 8 10 12.5"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+
+          {buildPageItems(currentPage, pageCount).map((item, index) =>
+            item === "ellipsis" ? (
+              <span key={`e-${index}`} className="lp-cat-page-ellipsis" aria-hidden="true">
+                …
+              </span>
             ) : (
-              <div className="lp-ex-list">
-                {pageItems.map((exercise, index) => (
-                  <ExerciseRow
-                    key={exercise.slug}
-                    exercise={exercise}
-                    index={rangeStart + index}
-                    signedIn={signedIn}
-                  />
-                ))}
-              </div>
-            )}
+              <button
+                key={item}
+                type="button"
+                className={`lp-cat-page${item === currentPage ? " is-active" : ""}`}
+                aria-label={`Page ${item}`}
+                aria-current={item === currentPage ? "page" : undefined}
+                onClick={() => {
+                  setPage(item);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                {item}
+              </button>
+            ),
+          )}
 
-            {pageCount > 1 ? (
-              <nav className="lp-cat-pager" aria-label="Exercise pages">
-                <button
-                  type="button"
-                  className="lp-cat-page"
-                  disabled={currentPage <= 1}
-                  aria-label="Previous page"
-                  onClick={() => {
-                    setPage((value) => Math.max(1, value - 1));
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                >
-                  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path
-                      d="M10 3.5L5.5 8 10 12.5"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-
-                {buildPageItems(currentPage, pageCount).map((item, index) =>
-                  item === "ellipsis" ? (
-                    <span key={`e-${index}`} className="lp-cat-page-ellipsis" aria-hidden="true">
-                      …
-                    </span>
-                  ) : (
-                    <button
-                      key={item}
-                      type="button"
-                      className={`lp-cat-page${item === currentPage ? " is-active" : ""}`}
-                      aria-label={`Page ${item}`}
-                      aria-current={item === currentPage ? "page" : undefined}
-                      onClick={() => {
-                        setPage(item);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                    >
-                      {item}
-                    </button>
-                  ),
-                )}
-
-                <button
-                  type="button"
-                  className="lp-cat-page"
-                  disabled={currentPage >= pageCount}
-                  aria-label="Next page"
-                  onClick={() => {
-                    setPage((value) => Math.min(pageCount, value + 1));
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                >
-                  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path
-                      d="M6 3.5L10.5 8 6 12.5"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </nav>
-            ) : null}
-          </>
-        )}
-      </section>
+          <button
+            type="button"
+            className="lp-cat-page"
+            disabled={currentPage >= pageCount}
+            aria-label="Next page"
+            onClick={() => {
+              setPage((value) => Math.min(pageCount, value + 1));
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M6 3.5L10.5 8 6 12.5"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </nav>
+      ) : null}
     </div>
   );
 }

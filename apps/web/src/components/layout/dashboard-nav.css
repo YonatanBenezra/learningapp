@@ -1,12 +1,4 @@
-/* Dashboard workspace tokens (layout offsets); nav UI is Tailwind in dashboard-nav.tsx */
+/* Legacy alias — tokens live in site-nav.css */
 html[data-workspace="dashboard"] {
-  --lp-dash-nav-h: 3.25rem;
-  --lp-dash-nav-gap: 0.75rem;
-  --lp-dash-nav-offset: calc(
-    var(--lp-dash-nav-h) + env(safe-area-inset-top, 0px) + var(--lp-dash-nav-gap)
-  );
-}
-
-html[data-workspace="dashboard"] .lp-theme-switch {
-  display: none;
+  --lp-dash-nav-h: 3.5rem;
 }

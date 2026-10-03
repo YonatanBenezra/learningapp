@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Lock, Mail, UserRound } from "lucide-react";
 import { FormEvent, Suspense, useState } from "react";
+import { AuthInputWrap } from "./auth-input-wrap";
 import { postAuthPath, routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
 import { setAuthenticatedUser } from "@/features/auth/auth-session";
-import { AuthBrand } from "./auth-brand";
 import { AuthSocial } from "./auth-social";
 import "../auth.css";
 
@@ -61,55 +62,70 @@ function RegisterFormFields() {
 
   return (
     <div className="lc-auth-card">
-      <AuthBrand />
+      <header className="lc-auth-card-head">
+        <h2 className="lc-auth-card-title">Create your account</h2>
+        <p className="lc-auth-card-sub">Start practicing with simulators and graded runs.</p>
+      </header>
       <form className="lc-auth-form" onSubmit={onSubmit} noValidate>
         <label className="lc-auth-field">
-          <input
-            type="text"
-            name="username"
-            required
-            autoComplete="username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-            placeholder="Username"
-            className="lc-auth-input"
-          />
+          <span className="lc-auth-label">Username</span>
+          <AuthInputWrap icon={UserRound}>
+            <input
+              type="text"
+              name="username"
+              required
+              autoComplete="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="labpath-dev"
+              className="lc-auth-input"
+            />
+          </AuthInputWrap>
         </label>
         <label className="lc-auth-field">
-          <input
-            type="password"
-            name="password"
-            required
-            autoComplete="new-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Password"
-            className="lc-auth-input"
-          />
+          <span className="lc-auth-label">Email</span>
+          <AuthInputWrap icon={Mail}>
+            <input
+              type="email"
+              name="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@company.com"
+              className="lc-auth-input"
+            />
+          </AuthInputWrap>
         </label>
         <label className="lc-auth-field">
-          <input
-            type="password"
-            name="confirmPassword"
-            required
-            autoComplete="new-password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            placeholder="Confirm password"
-            className="lc-auth-input"
-          />
+          <span className="lc-auth-label">Password</span>
+          <AuthInputWrap icon={Lock}>
+            <input
+              type="password"
+              name="password"
+              required
+              autoComplete="new-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="At least 8 characters"
+              className="lc-auth-input"
+            />
+          </AuthInputWrap>
         </label>
         <label className="lc-auth-field">
-          <input
-            type="email"
-            name="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="E-mail address"
-            className="lc-auth-input"
-          />
+          <span className="lc-auth-label">Confirm password</span>
+          <AuthInputWrap icon={Lock}>
+            <input
+              type="password"
+              name="confirmPassword"
+              required
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              placeholder="Repeat password"
+              className="lc-auth-input"
+            />
+          </AuthInputWrap>
         </label>
         <button
           type="submit"
@@ -123,11 +139,11 @@ function RegisterFormFields() {
             {error}
           </p>
         ) : null}
-        <p className="lc-auth-switch">
-          Have an account? <Link href={routes.login}>Sign In</Link>
-        </p>
       </form>
       <AuthSocial />
+      <p className="lc-auth-card-foot">
+        Already have an account? <Link href={routes.login}>Sign in</Link>
+      </p>
     </div>
   );
 }

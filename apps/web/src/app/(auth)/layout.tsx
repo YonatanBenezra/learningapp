@@ -1,3 +1,4 @@
+import { AuthShell } from "@/features/auth/components/auth-shell";
 import "@/features/auth/auth.css";
 
 export default function AuthLayout({
@@ -5,5 +6,5 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="lc-auth-page">{children}</div>;
+  return <AuthShell>{children}</AuthShell>;
 }

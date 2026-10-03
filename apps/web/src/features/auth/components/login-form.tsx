@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Lock, UserRound } from "lucide-react";
 import { FormEvent, Suspense, useState } from "react";
+import { AuthInputWrap } from "./auth-input-wrap";
 import { postAuthPath, routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
 import { setAuthenticatedUser } from "@/features/auth/auth-session";
-import { AuthBrand } from "./auth-brand";
 import { AuthSocial } from "./auth-social";
 import "../auth.css";
 
@@ -51,31 +52,40 @@ function LoginFormFields() {
 
   return (
     <div className="lc-auth-card">
-      <AuthBrand />
+      <header className="lc-auth-card-head">
+        <h2 className="lc-auth-card-title">Welcome back</h2>
+        <p className="lc-auth-card-sub">Sign in to continue to your workspace.</p>
+      </header>
       <form className="lc-auth-form" onSubmit={onSubmit} noValidate>
         <label className="lc-auth-field">
-          <input
-            type="text"
-            name="login"
-            required
-            autoComplete="username"
-            value={login}
-            onChange={(event) => setLogin(event.target.value)}
-            placeholder="Username or E-mail"
-            className="lc-auth-input"
-          />
+          <span className="lc-auth-label">Username or email</span>
+          <AuthInputWrap icon={UserRound}>
+            <input
+              type="text"
+              name="login"
+              required
+              autoComplete="username"
+              value={login}
+              onChange={(event) => setLogin(event.target.value)}
+              placeholder="you@company.com"
+              className="lc-auth-input"
+            />
+          </AuthInputWrap>
         </label>
         <label className="lc-auth-field">
-          <input
-            type="password"
-            name="password"
-            required
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Password"
-            className="lc-auth-input"
-          />
+          <span className="lc-auth-label">Password</span>
+          <AuthInputWrap icon={Lock}>
+            <input
+              type="password"
+              name="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="••••••••"
+              className="lc-auth-input"
+            />
+          </AuthInputWrap>
         </label>
         <button
           type="submit"
@@ -95,6 +105,9 @@ function LoginFormFields() {
         </div>
       </form>
       <AuthSocial />
+      <p className="lc-auth-card-foot">
+        Don&apos;t have an account? <Link href={routes.register}>Sign up</Link>
+      </p>
     </div>
   );
 }

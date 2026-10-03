@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
@@ -142,19 +143,8 @@ export function HomeNav() {
   return (
     <header ref={headerRef} className={headerClass}>
       <div className={`ag-nav${menuOpen ? " is-open" : ""}`}>
-        <Link href={routes.home} className="ag-logo">
-          <span className="ag-mark" aria-hidden="true">
-            <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
-              <path
-                d="M5 6.5h6.2L7.8 13.5H14"
-                stroke="currentColor"
-                strokeWidth="2.1"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-          <span className="ag-logo-name">{brand.name}</span>
+        <Link href={routes.home} className="ag-logo" aria-label={brand.name}>
+          <LabpathLogo size="sm" showWordmark wordmarkClassName="ag-logo-name" />
         </Link>
 
         <div className="ag-nav-end">

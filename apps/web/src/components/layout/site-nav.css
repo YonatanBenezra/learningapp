@@ -1,0 +1,435 @@
+html[data-workspace="catalog"],
+html[data-workspace="practice"] {
+  --lp-dash-nav-h: 4rem;
+  --lp-dash-nav-gap: 0.85rem;
+  --lp-dash-nav-offset: calc(
+    var(--lp-dash-nav-h) + env(safe-area-inset-top, 0px) + var(--lp-dash-nav-gap)
+  );
+}
+
+html[data-workspace="dashboard"] {
+  --lp-dash-nav-h: 4rem;
+}
+
+.lp-site-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 55;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid color-mix(in srgb, var(--lp-border) 92%, transparent);
+  background: color-mix(in srgb, var(--color-card) 88%, var(--color-bg));
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-ink) 4%, transparent),
+    0 8px 30px -12px color-mix(in srgb, var(--color-ink) 12%, transparent);
+  backdrop-filter: blur(16px) saturate(1.25);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+}
+
+.lp-site-nav--catalog {
+  background: color-mix(in srgb, var(--color-card) 94%, var(--color-bg));
+}
+
+.lp-site-nav-glow {
+  pointer-events: none;
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-brand) 45%, transparent) 42%,
+    color-mix(in srgb, var(--color-brand-glow) 35%, transparent) 58%,
+    transparent
+  );
+  opacity: 0.7;
+}
+
+.lp-site-nav--practice {
+  background: color-mix(in srgb, var(--color-card) 90%, var(--color-bg));
+}
+
+.lp-site-nav-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--lp-dash-nav-h, 4rem);
+  max-width: var(--lp-page-max-width, 1350px);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.lp-site-nav-left {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.lp-site-nav-right {
+  display: flex;
+  shrink: 0;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.lp-site-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.lp-site-nav-mark {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.55rem;
+  color: #fff;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-brand-glow) 35%, var(--color-brand)),
+    var(--color-brand)
+  );
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-brand) 35%, transparent);
+}
+
+.lp-site-nav-mark--sm {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+}
+
+.lp-site-nav-wordmark {
+  font-size: 1.1875rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--lp-ink);
+}
+
+.lp-site-nav-vrule {
+  width: 1px;
+  align-self: stretch;
+  margin-block: 0.65rem;
+  background: color-mix(in srgb, var(--lp-border) 95%, transparent);
+  flex-shrink: 0;
+}
+
+.lp-site-nav-vrule--brand {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .lp-site-nav-vrule--brand {
+    display: block;
+    height: 1.75rem;
+    margin-block: auto;
+  }
+}
+
+/* —— SaaS nav links (flat on desktop) —— */
+.lp-nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.lp-nav-menu-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0.4rem 1.05rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--lp-ink) 68%, var(--lp-muted));
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.lp-nav-menu-link:hover {
+  color: var(--lp-ink);
+}
+
+.lp-nav-menu-link.is-active {
+  font-weight: 600;
+  color: var(--lp-ink);
+}
+
+.lp-nav-menu-link.is-active::after {
+  content: "";
+  position: absolute;
+  inset: auto 0.75rem 0.15rem;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--color-brand);
+  opacity: 0.85;
+}
+
+.lp-site-nav-search {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: min(16.5rem, 40vw);
+  min-height: 2.625rem;
+  padding: 0 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--lp-border) 88%, transparent);
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--color-bg) 35%, var(--color-card));
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.lp-site-nav-search:focus-within {
+  border-color: color-mix(in srgb, var(--color-brand) 45%, var(--lp-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 12%, transparent);
+}
+
+.lp-site-nav-search input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--lp-ink);
+  outline: none;
+}
+
+.lp-site-nav-search input::placeholder {
+  color: var(--lp-muted);
+  font-weight: 400;
+}
+
+.lp-site-nav-search kbd {
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.3rem;
+  border: 1px solid var(--lp-border);
+  color: var(--lp-muted);
+  background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.lp-site-nav-avatar {
+  display: grid;
+  place-items: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 28%, var(--lp-border));
+  background: color-mix(in srgb, var(--color-brand) 10%, var(--color-card));
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-brand);
+  text-decoration: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.lp-site-nav-avatar:hover {
+  box-shadow: 0 0 18px color-mix(in srgb, var(--color-brand) 30%, transparent);
+}
+
+a.lp-site-nav-signin,
+button.lp-site-nav-signin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.625rem;
+  padding: 0 1.15rem;
+  border-radius: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 35%, transparent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-brand-on) !important;
+  text-decoration: none;
+  background: var(--color-brand) !important;
+  box-shadow: none !important;
+  filter: none;
+  transition: background 0.15s ease;
+}
+
+a.lp-site-nav-signin:hover,
+button.lp-site-nav-signin:hover {
+  background: var(--color-brand-hover) !important;
+  box-shadow: none !important;
+  filter: none;
+}
+
+.lp-site-nav-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.625rem;
+  height: 2.625rem;
+  padding: 0;
+  border-radius: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--lp-border) 55%, transparent);
+  background: transparent;
+  color: var(--lp-ink);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.lp-site-nav-menu-btn:hover {
+  border-color: color-mix(in srgb, var(--color-brand) 30%, var(--lp-border));
+  background: color-mix(in srgb, var(--color-brand) 6%, var(--color-card));
+}
+
+.lp-site-nav-mobile {
+  display: none;
+  border-top: 1px solid color-mix(in srgb, var(--lp-border) 85%, transparent);
+  background: color-mix(in srgb, var(--color-card) 96%, var(--color-bg));
+  padding: 0.75rem 1rem 1rem;
+}
+
+.lp-site-nav-mobile.is-open {
+  display: block;
+}
+
+.lp-site-nav-mobile .lp-nav-menu {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  padding: 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--lp-border) 45%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--color-ink) 2%, transparent);
+}
+
+.lp-site-nav-mobile .lp-nav-menu-link {
+  justify-content: flex-start;
+  min-height: 2.75rem;
+  padding: 0.55rem 1rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--lp-ink) 80%, var(--lp-muted));
+}
+
+.lp-site-nav-mobile .lp-nav-menu-link.is-active {
+  color: var(--lp-ink);
+  font-weight: 600;
+}
+
+.lp-practice-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.5rem;
+  padding: 0 0.85rem 0 0.65rem;
+  border-radius: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--lp-border) 85%, transparent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--lp-muted);
+  text-decoration: none;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.lp-practice-back:hover {
+  color: var(--lp-ink);
+  border-color: color-mix(in srgb, var(--color-brand) 35%, var(--lp-border));
+}
+
+.lp-practice-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--lp-muted) 90%, var(--lp-ink));
+}
+
+.lp-practice-title {
+  max-width: min(32rem, 55vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--lp-ink);
+}
+
+.lp-practice-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+  background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-brand) 28%, transparent);
+}
+
+.lp-practice-exit {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--lp-ink) 70%, var(--lp-muted));
+  text-decoration: none;
+}
+
+.lp-practice-exit:hover {
+  color: var(--lp-brand);
+}
+
+@media (max-width: 899px) {
+  .lp-site-nav-menu-btn {
+    display: inline-flex;
+  }
+
+  .lp-site-nav-inner {
+    padding-inline: 1rem;
+  }
+
+  .lp-site-nav-search {
+    width: min(10.5rem, 32vw);
+    min-height: 2.375rem;
+    padding-inline: 0.75rem;
+  }
+
+  .lp-site-nav-search kbd {
+    display: none;
+  }
+
+  .lp-site-nav-search input {
+    font-size: 0.875rem;
+  }
+
+  .lp-site-nav-wordmark {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .lp-site-nav-mobile {
+    display: none !important;
+  }
+}

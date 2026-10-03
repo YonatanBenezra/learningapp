@@ -1,1 +1,2 @@
-export const themeInitScript = `(function(){try{var s=localStorage.getItem("labpath-theme");var t=s==="dark"||s==="light"?s:(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");var r=document.documentElement;r.setAttribute("data-theme",t);r.classList.toggle("dark",t==="dark");}catch(e){}})();`;
+/** LabPath uses dark theme only — no light / system toggle. */
+export const themeInitScript = `(function(){try{var r=document.documentElement;r.setAttribute("data-theme","dark");r.classList.add("dark");localStorage.setItem("labpath-theme","dark");}catch(e){}})();`;

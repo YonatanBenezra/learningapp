@@ -7,12 +7,11 @@ function syncDarkClass(theme: Theme) {
 }
 
 export function readTheme(): Theme {
-  const attr = document.documentElement.getAttribute("data-theme");
-  return attr === "dark" ? "dark" : "light";
+  return "dark";
 }
 
-export function applyTheme(theme: Theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  syncDarkClass(theme);
-  localStorage.setItem(THEME_KEY, theme);
+export function applyTheme(_theme: Theme) {
+  document.documentElement.setAttribute("data-theme", "dark");
+  syncDarkClass("dark");
+  localStorage.setItem(THEME_KEY, "dark");
 }
