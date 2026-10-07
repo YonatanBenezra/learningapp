@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "Benign Pass",
+  "title": "Control Mapping & Benign Pass",
   "difficulty": "H",
+  "catalogPhase": 6,
   "skills": [
     {
       "slug": "guardrail-design",
@@ -19,7 +20,7 @@
       "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Benign Pass\n\nKeep benign traffic passing while still blocking encoded attacks.",
+  "briefMd": "# Phase 6 · Control Mapping & Benign Pass\n\nMap filters to **SOC controls**: block ≥ **90%** of encoded attacks while **≥ 95%** of benign concierge traffic still passes. Tune **system prompt**, **input/output filter YAML**, and optional **tool policy** — the capstone blue-team exercise before sign-off.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

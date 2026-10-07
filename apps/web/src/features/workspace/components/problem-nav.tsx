@@ -143,7 +143,7 @@ export function ProblemNav({ slug, onboarding = false }: ProblemNavProps) {
           </Link>
 
           <Link
-            href={onboarding ? routes.onboarding : routes.problems}
+            href={routes.problems}
             className="lp-problem-link"
           >
             <span className="lp-problem-link-icon lp-problem-tone--blue" aria-hidden="true">
@@ -208,7 +208,7 @@ export function ProblemNav({ slug, onboarding = false }: ProblemNavProps) {
             onClick={() => {
               if (!signedIn) {
                 router.push(
-                  loginPath(onboarding ? routes.onboarding : routes.exercise(slug)),
+                  loginPath(routes.exercise(slug)),
                 );
                 return;
               }

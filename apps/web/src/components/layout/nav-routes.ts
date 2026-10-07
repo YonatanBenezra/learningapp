@@ -28,8 +28,6 @@ export function isAppCatalogPath(pathname: string): boolean {
   }
   if (
     pathname === routes.problems ||
-    pathname === routes.simulations ||
-    pathname.startsWith(`${routes.simulations}/`) ||
     pathname === routes.contests ||
     pathname.startsWith(`${routes.contests}/`) ||
     pathname === routes.leaderboard ||

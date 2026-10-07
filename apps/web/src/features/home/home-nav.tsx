@@ -12,10 +12,7 @@ import {
   getAuthSnapshot,
 } from "@/features/auth/auth-session";
 
-const navLinks = [
-  { href: routes.problems, label: "Problems", auth: false },
-  { href: routes.simulations, label: "Simulators", auth: false },
-] as const;
+const navLinks = [{ href: routes.problems, label: "Problems", auth: false }] as const;
 
 const NAV_COLLAPSE_MQ = "(max-width: 859px)";
 
@@ -179,7 +176,7 @@ export function HomeNav() {
             </button>
             {signedIn ? (
               <Link href={routes.progress} className="ag-nav-btn">
-                Dashboard
+                Profile
               </Link>
             ) : (
               <Link

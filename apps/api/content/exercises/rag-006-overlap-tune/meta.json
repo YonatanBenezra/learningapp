@@ -4,15 +4,20 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r1",
-  "title": "Overlap Tune",
+  "title": "Overlap & Sliding Windows",
   "difficulty": "E",
+  "catalogPhase": 1,
   "skills": [
     {
       "slug": "content-pipeline",
       "name": "Content pipeline"
+    },
+    {
+      "slug": "chunking",
+      "name": "Chunking"
     }
   ],
-  "briefMd": "# Overlap Tune\n\nHeading-aware chunking with generous overlap. Pass when recall@5 ≥ 0.80.",
+  "briefMd": "# Phase 1 · Overlap & Sliding Windows\n\nGold answers sit on chunk borders — a classic enterprise KB failure mode. Use **heading-aware** splitting and tune **overlap** so spans are not split across chunks.\n\n**Gate:** recall@5 ≥ 0.80 on the hidden set (production-aligned retrieval metric).\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

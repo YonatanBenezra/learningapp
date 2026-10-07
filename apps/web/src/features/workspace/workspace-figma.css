@@ -205,8 +205,8 @@
 }
 
 .lp-figma-hint.is-unlocked {
-  background: color-mix(in srgb, #22c55e 8%, var(--lp-surface-elevated));
-  border-color: color-mix(in srgb, #22c55e 35%, var(--lp-border));
+  background: color-mix(in srgb, var(--color-brand) 8%, var(--lp-surface-elevated));
+  border-color: color-mix(in srgb, var(--color-brand) 35%, var(--lp-border));
 }
 
 .lp-figma-hint.is-locked {

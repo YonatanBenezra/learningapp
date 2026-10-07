@@ -274,8 +274,8 @@ html.lp-ws-split-drag .lp-rag-graph .react-flow__viewport {
 }
 
 .lp-ws-rail-btn--green .lp-ws-rail-icon {
-  background: color-mix(in srgb, #22c55e 16%, transparent);
-  color: #22c55e;
+  background: color-mix(in srgb, var(--color-brand) 16%, transparent);
+  color: var(--color-brand);
 }
 
 .lp-ws-rail-btn--amber .lp-ws-rail-icon {
@@ -318,7 +318,7 @@ html[data-theme="dark"] .lp-ws-rail-btn--violet .lp-ws-rail-icon {
 }
 
 html[data-theme="dark"] .lp-ws-rail-btn--green .lp-ws-rail-icon {
-  color: #4ade80;
+  color: var(--color-brand);
 }
 
 html[data-theme="dark"] .lp-ws-rail-btn--amber .lp-ws-rail-icon {
@@ -396,8 +396,8 @@ html[data-theme="dark"] .lp-ws-rail-btn--rose .lp-ws-rail-icon {
 }
 
 .lp-ws-tab--green .lp-ws-tab-icon {
-  background: color-mix(in srgb, #22c55e 14%, transparent);
-  color: #22c55e;
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
+  color: var(--color-brand);
 }
 
 .lp-ws-tab--amber .lp-ws-tab-icon {
@@ -428,7 +428,7 @@ html[data-theme="dark"] .lp-ws-rail-btn--rose .lp-ws-rail-icon {
 }
 
 .lp-ws-tab--green.is-active {
-  border-bottom-color: #22c55e;
+  border-bottom-color: var(--color-brand);
 }
 
 .lp-ws-tab--amber.is-active {
@@ -477,7 +477,7 @@ html[data-theme="dark"] .lp-ws-rail-btn--rose .lp-ws-rail-icon {
 }
 
 .lp-ws-info-dot--green {
-  background: #22c55e;
+  background: var(--color-brand);
 }
 
 .lp-ws-info-dot--amber {
@@ -640,7 +640,7 @@ html[data-theme="dark"] .lp-ws-rail-btn--rose .lp-ws-rail-icon {
 }
 
 .lp-badge--e {
-  background: color-mix(in srgb, #22c55e 14%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
   color: #15803d;
 }
 
@@ -660,7 +660,7 @@ html[data-theme="dark"] .lp-ws-rail-btn--rose .lp-ws-rail-icon {
 }
 
 html[data-theme="dark"] .lp-badge--e {
-  color: #4ade80;
+  color: var(--color-brand);
 }
 
 html[data-theme="dark"] .lp-badge--m {
@@ -735,9 +735,9 @@ html[data-theme="dark"] .lp-badge--sim {
   gap: 0.4rem;
   min-height: 2rem;
   padding: 0.35rem 0.9rem;
-  border: 1px solid #16a34a;
+  border: 1px solid var(--color-brand-hover);
   border-radius: 4px;
-  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-brand-hover) 100%);
   color: #fff;
   font-size: 0.8125rem;
   font-weight: 650;
@@ -791,8 +791,8 @@ html[data-theme="dark"] .lp-badge--sim {
   width: 1.65rem;
   height: 1.65rem;
   border-radius: 5px;
-  background: color-mix(in srgb, #14b8a6 14%, transparent);
-  color: #14b8a6;
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
+  color: var(--color-brand);
 }
 
 .lp-ws-run-title {
@@ -848,8 +848,8 @@ html[data-theme="dark"] .lp-badge--sim {
   height: 1.65rem;
   margin-bottom: 0.35rem;
   border-radius: 5px;
-  background: color-mix(in srgb, #14b8a6 14%, transparent);
-  color: #14b8a6;
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
+  color: var(--color-brand);
 }
 
 .lp-ws-run-rail-label {
@@ -908,8 +908,8 @@ html[data-theme="dark"] .lp-badge--sim {
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 4px;
-  background: color-mix(in srgb, #14b8a6 14%, transparent);
-  color: #14b8a6;
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
+  color: var(--color-brand);
 }
 
 .lp-ws-run-collapsed-label {

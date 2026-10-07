@@ -14,11 +14,11 @@ export function useRagFigmaWorkspace(
   exercise: { simulator?: string; submissionSchema?: unknown } | null,
   onboarding: boolean,
 ) {
-  return (
-    exercise?.simulator === "rag" &&
-    !isRagSandboxSchema(exercise.submissionSchema) &&
-    !onboarding
-  );
+  return exercise?.simulator === "rag" && !onboarding;
+}
+
+export function ragShowsSimulationLab(schema: unknown) {
+  return !isRagSandboxSchema(schema);
 }
 
 export function ragEditorTitle(schema: unknown) {

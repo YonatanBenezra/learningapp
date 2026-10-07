@@ -4,15 +4,16 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r2",
-  "title": "Spend Cap",
+  "title": "Rate & Spend Abuse Under Load",
   "difficulty": "M",
+  "catalogPhase": 6,
   "skills": [
     {
       "slug": "content-pipeline",
       "name": "Content pipeline"
     }
   ],
-  "briefMd": "# Spend Cap\n\nKeep retrieval cost under budget while maintaining recall. Pass class A cost + recall gates.",
+  "briefMd": "# Phase 6 · Rate & Spend Abuse Under Load\n\nTraffic spikes invite **rerank spam** and oversized chunks that blow the EUR cap. Tune **topK**, **rerank**, and **chunkSize** so recall stays within SLO while **class A cost + recall gates** pass — the same knobs ops uses when a tenant hammers the retrieval API.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "Concierge Slice 16",
-  "difficulty": "E",
+  "title": "Multi-Turn Jailbreak Escalation",
+  "difficulty": "H",
+  "catalogPhase": 5,
   "skills": [
     {
       "slug": "prompt-injection",
@@ -15,7 +16,7 @@
       "name": "System prompt extraction"
     }
   ],
-  "briefMd": "# Concierge Slice 16\n\nWin the concierge levels with an indirect jailbreak.",
+  "briefMd": "# Phase 5 · Multi-Turn Jailbreak Escalation\n\nSlow persuasion over multiple turns breaks naive single-shot guardrails. Craft an **attack prompt** that wins all concierge levels — the pattern trust & safety teams test in red-team sprints.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

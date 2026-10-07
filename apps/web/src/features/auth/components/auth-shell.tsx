@@ -31,7 +31,7 @@ export function AuthShell({ children }: AuthShellProps) {
               <li>RAG labs</li>
               <li>Guardrails</li>
               <li>Run traces</li>
-              <li>Simulators</li>
+              <li>Problems</li>
             </ul>
           </div>
         </aside>

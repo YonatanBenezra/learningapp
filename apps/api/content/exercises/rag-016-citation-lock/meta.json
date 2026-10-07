@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Cost Slice 16",
-  "difficulty": "M",
+  "title": "Context Packing Under Token Budget",
+  "difficulty": "H",
+  "catalogPhase": 5,
   "corpusFile": "shared",
   "skills": [
     {
@@ -16,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Cost Slice 16\n\nKeep retrieval under budget with recall gates.",
+  "briefMd": "# Phase 5 · Context Packing Under Token Budget\n\nPack the **maximum signal** into a fixed context window: tune top-k, rerank, and chunk size so recall@k holds while **mean prompt tokens** stay under FinOps limits.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

@@ -56,9 +56,9 @@ html[data-workspace="problem"] .lp-theme-switch {
   width: 1.85rem;
   height: 1.85rem;
   border-radius: 4px;
-  background: linear-gradient(145deg, #14b8a6 0%, #0d9488 100%);
+  background: linear-gradient(145deg, var(--color-brand) 0%, var(--color-brand-hover) 100%);
   color: #fff;
-  box-shadow: 0 2px 8px color-mix(in srgb, #0d9488 35%, transparent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-brand-hover) 35%, transparent);
 }
 
 .lp-problem-link {
@@ -201,9 +201,9 @@ html[data-theme="dark"] .lp-problem-tone--indigo {
   gap: 0.45rem;
   min-height: 2.1rem;
   padding: 0.35rem 1rem 0.35rem 0.45rem;
-  border: 1px solid color-mix(in srgb, #22c55e 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-brand) 35%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, #22c55e 10%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 10%, transparent);
   color: #15803d;
   font-size: 0.875rem;
   font-weight: 700;
@@ -223,12 +223,12 @@ html[data-theme="dark"] .lp-problem-tone--indigo {
   border-radius: 999px;
   background: linear-gradient(145deg, #4ade80 0%, #16a34a 100%);
   color: #fff;
-  box-shadow: 0 2px 8px color-mix(in srgb, #22c55e 35%, transparent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-brand) 35%, transparent);
 }
 
 .lp-problem-submit:hover:not(:disabled) {
-  background: color-mix(in srgb, #22c55e 18%, transparent);
-  border-color: color-mix(in srgb, #22c55e 55%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-brand) 55%, transparent);
   transform: translateY(-1px);
 }
 
@@ -244,7 +244,7 @@ html[data-theme="dark"] .lp-problem-tone--indigo {
 
 html[data-theme="dark"] .lp-problem-submit {
   color: #86efac;
-  background: color-mix(in srgb, #22c55e 14%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
 }
 
 .lp-problem-auth-link {
@@ -267,18 +267,18 @@ html[data-theme="dark"] .lp-problem-submit {
 }
 
 .lp-problem-auth-link--dash {
-  background: color-mix(in srgb, #14b8a6 12%, var(--lp-surface-elevated));
-  border: 1px solid color-mix(in srgb, #14b8a6 28%, var(--lp-border));
-  color: #0f766e;
+  background: color-mix(in srgb, var(--color-brand) 12%, var(--lp-surface-elevated));
+  border: 1px solid color-mix(in srgb, var(--color-brand) 28%, var(--lp-border));
+  color: var(--color-brand-on);
 }
 
 .lp-problem-auth-link--dash:hover {
-  background: color-mix(in srgb, #14b8a6 20%, var(--lp-surface-elevated));
-  color: #0d9488;
+  background: color-mix(in srgb, var(--color-brand) 20%, var(--lp-surface-elevated));
+  color: var(--color-brand-hover);
 }
 
 html[data-theme="dark"] .lp-problem-auth-link--dash {
-  color: #5eead4;
+  color: var(--color-brand-glow);
 }
 
 @media (max-width: 768px) {

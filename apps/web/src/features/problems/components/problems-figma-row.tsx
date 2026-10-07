@@ -73,10 +73,19 @@ export function ProblemsFigmaRow({ exercise, meta, signedIn }: Props) {
       </td>
       <td className="lp-prob-row-rate">
         <div className="lp-prob-rate">
-          <span className="lp-prob-rate-val">{meta.solveRate}%</span>
-          <div className="lp-prob-rate-bar" aria-hidden>
-            <span style={{ width: `${meta.solveRate}%` }} />
-          </div>
+          {typeof meta.solveRate === "number" ? (
+            <>
+              <span className="lp-prob-rate-val">{meta.solveRate}%</span>
+              <div className="lp-prob-rate-bar" aria-hidden>
+                <span style={{ width: `${meta.solveRate}%` }} />
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="lp-prob-rate-val">—</span>
+              <div className="lp-prob-rate-bar is-empty" aria-hidden />
+            </>
+          )}
         </div>
       </td>
       <td className="lp-prob-row-action">

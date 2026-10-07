@@ -1,11 +1,6 @@
-import { GuardrailsG1RunDetail } from "@/features/workspace/components/guardrails-g1-run-detail";
-import { buildG1RunDetailModel } from "@/features/workspace/guardrails-g1-run-model";
-import {
-  DEMO_G1_RUN,
-  DEMO_G1_RUN_ID,
-} from "@/features/traces/demo/g1-run-demo-data";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
 export default function DemoG1RunPage() {
-  const model = buildG1RunDetailModel(DEMO_G1_RUN, { verdict: "pass" }, DEMO_G1_RUN_ID);
-  return <GuardrailsG1RunDetail model={model} />;
+  redirect(routes.exercise("grd-001-break-the-concierge"));
 }

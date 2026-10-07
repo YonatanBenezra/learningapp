@@ -1,7 +1,0 @@
-[
-  {
-    "id": "p1",
-    "input": "A vendor page about towels.",
-    "output": "No tool call."
-  }
-]

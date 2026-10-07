@@ -2,7 +2,6 @@ import Link from "next/link";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
-import { AiEngineerSection } from "@/features/home/components/ai-engineer-section";
 import "./home.css";
 
 function TileIcon({ d }: { d: string }) {
@@ -106,8 +105,6 @@ export function HomePage() {
             </div>
           </div>
         </section>
-
-        <AiEngineerSection />
       </main>
 
       <footer className="ag-footer">
@@ -146,9 +143,6 @@ export function HomePage() {
                 <ul>
                   <li>
                     <AuthLink href={routes.progress}>Profile</AuthLink>
-                  </li>
-                  <li>
-                    <AuthLink href={routes.dashboard}>Dashboard</AuthLink>
                   </li>
                 </ul>
               </div>

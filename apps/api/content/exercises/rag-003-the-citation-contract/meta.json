@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "The Citation Contract",
+  "title": "Citation-Grounded Answers",
   "difficulty": "M",
+  "catalogPhase": 3,
   "corpusFile": "shared",
   "skills": [
     {
@@ -20,7 +21,7 @@
       "name": "Refusal behaviour"
     }
   ],
-  "briefMd": "# The Citation Contract\n\nLegal will not sign off until every answer cites its source and the system says \"I don't know\" when it doesn't.\n\nYou author **only the generation prompt**. Retrieval is frozen (heading-aware, chunk 400, overlap 80, k=5).\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
+  "briefMd": "# Phase 3 · Citation-Grounded Answers\n\nLegal/compliance blocked launch: answers must cite sources and refuse when context is insufficient.\n\nYou author **only the generation prompt**. Retrieval is frozen (heading-aware, chunk 400, overlap 80, k=5).\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

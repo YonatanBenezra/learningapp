@@ -1,0 +1,13 @@
+{
+  "slug": "ai-engineer-phase-3",
+  "title": "Phase 3 — Trust, freshness & data leakage",
+  "intent": "Ground answers in citations, keep indexes fresh, and block tool/secret exfiltration.",
+  "sortOrder": 3,
+  "steps": [
+    "rag-003-the-citation-contract",
+    "rag-018-retriever-run",
+    "rag-005-sentence-split",
+    "grd-011-bcc-smuggle",
+    "grd-007-hex-extract"
+  ]
+}

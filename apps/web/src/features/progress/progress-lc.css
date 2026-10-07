@@ -49,11 +49,11 @@
   height: 4.5rem;
   margin: 0 auto 0.75rem;
   border-radius: 8px;
-  background: linear-gradient(145deg, #14b8a6 0%, #0d9488 100%);
+  background: linear-gradient(145deg, var(--color-brand) 0%, var(--color-brand-hover) 100%);
   color: #fff;
   font-size: 1.75rem;
   font-weight: 700;
-  box-shadow: 0 4px 14px color-mix(in srgb, #0d9488 30%, transparent);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-brand-hover) 30%, transparent);
 }
 
 .lp-lc-username {
@@ -92,7 +92,7 @@
   margin-top: 1rem;
   border: 0;
   border-radius: 6px;
-  background: color-mix(in srgb, #22c55e 14%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
   color: #15803d;
   font: inherit;
   font-size: 0.8125rem;
@@ -103,11 +103,11 @@
 }
 
 .lp-lc-edit-btn:hover {
-  background: color-mix(in srgb, #22c55e 22%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 22%, transparent);
 }
 
 html[data-theme="dark"] .lp-lc-edit-btn {
-  color: #4ade80;
+  color: var(--color-brand);
 }
 
 .lp-lc-profile-edit {
@@ -218,8 +218,8 @@ html[data-theme="dark"] .lp-lc-edit-btn {
 }
 
 .lp-lc-stat-icon--teal {
-  background: color-mix(in srgb, #14b8a6 16%, transparent);
-  color: #14b8a6;
+  background: color-mix(in srgb, var(--color-brand) 16%, transparent);
+  color: var(--color-brand);
 }
 
 .lp-lc-stat-icon--amber {
@@ -303,7 +303,7 @@ html[data-theme="dark"] .lp-lc-edit-btn {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #14b8a6 0%, #0d9488 100%);
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-hover) 100%);
 }
 
 .lp-lc-lang-count {
@@ -388,7 +388,7 @@ html[data-theme="dark"] .lp-lc-edit-btn {
 }
 
 .lp-lc-skill-dot--fund {
-  background: #22c55e;
+  background: var(--color-brand);
 }
 
 .lp-lc-skill-tags {
@@ -494,7 +494,7 @@ html[data-theme="dark"] .lp-lc-edit-btn {
 }
 
 .lp-lc-diff-label--easy {
-  color: #14b8a6;
+  color: var(--color-brand);
 }
 
 .lp-lc-diff-label--med {
@@ -520,7 +520,7 @@ html[data-theme="dark"] .lp-lc-edit-btn {
 }
 
 .lp-lc-diff-bar--easy span {
-  background: #14b8a6;
+  background: var(--color-brand);
 }
 
 .lp-lc-diff-bar--med span {
@@ -640,19 +640,19 @@ html[data-theme="dark"] .lp-lc-edit-btn {
 }
 
 .lp-lc-heat-cell[data-level="1"] {
-  background: color-mix(in srgb, #22c55e 35%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 35%, transparent);
 }
 
 .lp-lc-heat-cell[data-level="2"] {
-  background: color-mix(in srgb, #22c55e 55%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 55%, transparent);
 }
 
 .lp-lc-heat-cell[data-level="3"] {
-  background: color-mix(in srgb, #22c55e 75%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 75%, transparent);
 }
 
 .lp-lc-heat-cell[data-level="4"] {
-  background: #22c55e;
+  background: var(--color-brand);
 }
 
 .lp-lc-tabs-card {
@@ -710,8 +710,8 @@ html[data-theme="dark"] .lp-lc-edit-btn {
 }
 
 .lp-lc-tab-icon--ac {
-  background: color-mix(in srgb, #22c55e 14%, transparent);
-  color: #16a34a;
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
+  color: var(--color-brand);
 }
 
 .lp-lc-tab-icon--list {
@@ -829,7 +829,7 @@ html[data-theme="dark"] .lp-lc-empty-art {
 }
 
 .lp-lc-pill--pass {
-  background: color-mix(in srgb, #22c55e 16%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 16%, transparent);
   color: #15803d;
 }
 
@@ -839,7 +839,7 @@ html[data-theme="dark"] .lp-lc-empty-art {
 }
 
 html[data-theme="dark"] .lp-lc-pill--pass {
-  color: #4ade80;
+  color: var(--color-brand);
 }
 
 @media (max-width: 960px) {

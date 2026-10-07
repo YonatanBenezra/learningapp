@@ -11,7 +11,7 @@ import {
   G1_LEVELS,
   G2_LEVELS,
   G2_SAMPLE_PAGE,
-  guardrailsVariant,
+  guardrailsVariantForExercise,
   sampleIndexFromSeed,
 } from "../guardrails-workspace-data";
 import { defaultsFromSubmissionSchema } from "../figma-brief-from-exercise";
@@ -59,7 +59,7 @@ export function WorkspaceGuardrailsFigmaShell({
   resultsCollapsed,
   onToggleResultsCollapsed,
 }: WorkspaceGuardrailsFigmaShellProps) {
-  const variant = guardrailsVariant(exercise.slug)!;
+  const variant = guardrailsVariantForExercise(exercise)!;
   const [liveMode, setLiveMode] = useState(true);
   const [activeLevel, setActiveLevel] = useState(1);
   const [clearedLevels, setClearedLevels] = useState<Set<number>>(() => new Set());
@@ -276,7 +276,7 @@ export function WorkspaceGuardrailsFigmaShell({
               }
             />
           ) : (
-            workPrimary
+            <div className="lp-grd-center-host">{workPrimary}</div>
           )
         }
       />

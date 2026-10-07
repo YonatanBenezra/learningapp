@@ -3,14 +3,7 @@ import {
 } from './content-loader';
 import { runContentGrader } from './content-grader-runner';
 import { loadPublishedSlugs } from './content-paths';
-import {
-  POC_CATALOGUE_TARGET,
-  R1_SLUG,
-  R2_SLUG,
-  R3_SLUG,
-  R4_SLUG,
-  SANDBOX_SLUG,
-} from '../modules/catalogue/exercises/exercises.constants';
+import { POC_CATALOGUE_TARGET } from '../modules/catalogue/exercises/exercises.constants';
 
 describe('content pipeline — reference solutions', () => {
   it('runs reference pass and near-miss fail for every published exercise', async () => {
@@ -25,16 +18,6 @@ describe('content pipeline — reference solutions', () => {
     if (published.length === 0) {
       return;
     }
-
-    expect(bundles.map((bundle) => bundle.meta.slug)).toEqual(
-      expect.arrayContaining([
-        R1_SLUG,
-        R2_SLUG,
-        R3_SLUG,
-        R4_SLUG,
-        SANDBOX_SLUG,
-      ]),
-    );
 
     for (const bundle of bundles) {
       const passed = await runContentGrader(bundle, bundle.reference);

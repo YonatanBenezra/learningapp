@@ -212,8 +212,7 @@ async function main() {
     '/leaderboard',
     '/progress',
     '/billing',
-    '/onboarding',
-    '/exercises/rag-001-chunk-it-right',
+    '/exercises/rag-006-overlap-tune',
   ];
   for (const path of pages) {
     try {

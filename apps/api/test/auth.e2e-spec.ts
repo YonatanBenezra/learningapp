@@ -47,7 +47,7 @@ describe('Auth (e2e)', () => {
       email,
       role: 'learner',
       account: { tier: 'free', subscriptionStatus: 'none' },
-      onboarding: { needed: true, exerciseSlug: 'rag-001-chunk-it-right' },
+      onboarding: { needed: false, exerciseSlug: '' },
     });
 
     const loggedIn = await request(app.getHttpServer())

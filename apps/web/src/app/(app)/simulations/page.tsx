@@ -1,15 +1,7 @@
-import { SimulationsView } from "@/features/simulations/components/simulations-view";
-import "@/features/simulations/simulations.css";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
-export const metadata = {
-  title: "Simulators",
-  description: "Guardrails and RAG practice simulators — graded, level-based, contest-ready.",
-};
-
+/** Legacy URL — simulators live under Problems tracks now. */
 export default function SimulationsPage() {
-  return (
-    <div className="lp-page lp-page-simulations">
-      <SimulationsView />
-    </div>
-  );
+  redirect(routes.problems);
 }

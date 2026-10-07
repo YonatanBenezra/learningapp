@@ -1,5 +1,6 @@
-import { WorkspaceDemoShell } from "@/features/workspace/components/workspace-demo-shell";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
 export default function DemoRagWorkspacePage() {
-  return <WorkspaceDemoShell />;
+  redirect(routes.exercise("rag-001-chunk-it-right"));
 }

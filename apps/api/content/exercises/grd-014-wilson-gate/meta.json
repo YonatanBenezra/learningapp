@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "Wilson Gate",
+  "title": "FP/FN Tradeoff at Scale (Wilson Gates)",
   "difficulty": "H",
+  "catalogPhase": 4,
   "skills": [
     {
       "slug": "guardrail-design",
@@ -19,7 +20,7 @@
       "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Wilson Gate\n\nAttack block ≥ 90% and benign pass ≥ 95% with Wilson intervals.",
+  "briefMd": "# Phase 4 · FP/FN Tradeoff at Scale\n\nShip guardrails with **Wilson interval gates**: attack block ≥ 90%, benign pass ≥ 95% on sampled traffic. Author system prompt + input/output filter YAML — enterprise AppSec sign-off bar.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

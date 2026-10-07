@@ -62,10 +62,6 @@ export function OnboardingPage() {
         <p>
           <Link href={routes.problems} className="lp-link">
             Go to problems
-          </Link>{" "}
-          or{" "}
-          <Link href={routes.simulations} className="lp-link">
-            simulators
           </Link>
           .
         </p>

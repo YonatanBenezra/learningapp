@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Rerank Slice 21",
-  "difficulty": "M",
+  "title": "Hybrid Search & Rank Boost",
+  "difficulty": "H",
+  "catalogPhase": 4,
   "corpusFile": "shared",
   "skills": [
     {
@@ -20,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Rerank Slice 21\n\nImprove ranking with rerank or query rewrite.",
+  "briefMd": "# Phase 4 · Hybrid Search & Rank Boost\n\nRare tokens and SKUs fail on dense-only retrieval. Combine **lexical + vector** signals via reranker choice, rerank depth, and optional query rewrite — production hybrid search tuning.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

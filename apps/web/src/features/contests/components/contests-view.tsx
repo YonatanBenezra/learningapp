@@ -1,5 +1,6 @@
 "use client";
 
+import { Clock, ShieldCheck, Trophy, Zap } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { routes } from "@/config/routes";
@@ -48,6 +49,67 @@ function formatWindowRange(contest: ContestListItem) {
     day: "numeric",
   });
   return `${fmt.format(starts)} – ${fmt.format(ends)}`;
+}
+
+function ContestsHighlights() {
+  const items = [
+    {
+      icon: Trophy,
+      label: "Ranked seasons",
+      copy: "Fixed problem pools, live standings, and verify-ready results.",
+    },
+    {
+      icon: Clock,
+      label: "Time-boxed",
+      copy: "One sitting per entry — hints off, clock on, same rules for everyone.",
+    },
+    {
+      icon: ShieldCheck,
+      label: "Fair grading",
+      copy: "Hidden cases and automated graders — no manual review queue.",
+    },
+  ] as const;
+
+  return (
+    <div className="lp-ct-highlights" aria-label="How contests work">
+      {items.map(({ icon: Icon, label, copy }) => (
+        <article key={label} className="lp-ct-highlight">
+          <span className="lp-ct-highlight-icon" aria-hidden>
+            <Icon className="size-[1.125rem]" strokeWidth={2} />
+          </span>
+          <h2 className="lp-ct-highlight-title">{label}</h2>
+          <p className="lp-ct-highlight-copy">{copy}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function ContestsEmptyPanel() {
+  return (
+    <section className="lp-ct-panel lp-ct-panel--empty" aria-labelledby="ct-empty-title">
+      <div className="lp-ct-panel-glow" aria-hidden />
+      <span className="lp-ct-panel-icon" aria-hidden>
+        <Zap className="size-7" strokeWidth={1.75} />
+      </span>
+      <p className="lp-ct-panel-kicker">Season 1</p>
+      <h2 id="ct-empty-title" className="lp-ct-panel-title">
+        No open contests yet
+      </h2>
+      <p className="lp-ct-panel-lead">
+        We are finishing the rebuilt catalogue before the first timed Guardrails and RAG seasons
+        go live. Practice on Problems now — your account will be ready when entries open.
+      </p>
+      <div className="lp-ct-panel-actions">
+        <Link href={routes.problems} className="lp-ct-btn">
+          Browse problems
+        </Link>
+        <Link href={routes.leaderboard} className="lp-ct-btn lp-ct-btn--ghost">
+          View leaderboard
+        </Link>
+      </div>
+    </section>
+  );
 }
 
 function ContestsSkeleton() {
@@ -224,23 +286,29 @@ export function ContestsView() {
     return <ContestsSkeleton />;
   }
 
+  const catalogueEmpty = items.length === 0;
+
   return (
-    <div className="lp-ct">
+    <div className={`lp-ct${catalogueEmpty ? " lp-ct--idle" : ""}`}>
       <header className="lp-ct-hero">
-        <div>
+        <div className="lp-ct-hero-copy">
+          <p className="lp-ct-kicker">Timed seasons</p>
           <h1 className="lp-ct-title">Contests</h1>
           <p className="lp-ct-lead">
-            Contests are paused while we rebuild the catalogue. New timed seasons will appear here
-            when they are published.
+            {catalogueEmpty
+              ? "Ranked, time-boxed sprints on live Guardrails and RAG problems — built for portfolios and hiring loops."
+              : "Enter a season, solve your drawn pool before the clock stops, and climb the standings."}
           </p>
         </div>
         <div className="lp-ct-meta">
           <span className="lp-ct-chip lp-ct-chip--brand">
-            {items.length} contests
+            {catalogueEmpty ? "Opening soon" : `${items.length} live`}
           </span>
-          <span className="lp-ct-chip">Free · hints off</span>
+          <span className="lp-ct-chip">Free tier · Hints off in contest</span>
         </div>
       </header>
+
+      {catalogueEmpty ? <ContestsHighlights /> : null}
 
       {items.length > 0 ? (
         <div className="lp-ct-filters" role="tablist" aria-label="Filter contests">
@@ -260,15 +328,10 @@ export function ContestsView() {
         </div>
       ) : null}
 
-      {items.length === 0 ? (
-        <div className="lp-ct-empty">
-          <strong>No contests published</strong>
-          <p>
-            Add a JSON file under <code>apps/api/content/contests/</code>, run ingest, then refresh.
-          </p>
-        </div>
+      {catalogueEmpty ? (
+        <ContestsEmptyPanel />
       ) : visible.length === 0 ? (
-        <div className="lp-ct-empty">
+        <div className="lp-ct-empty lp-ct-empty--inline">
           <strong>No contests in this filter</strong>
           <p>Try another status, or switch back to All.</p>
         </div>

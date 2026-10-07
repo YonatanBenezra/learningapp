@@ -121,7 +121,7 @@ export function BriefPanel({
   const [figmaPane, setFigmaPane] = useState<"brief" | "submissions">("brief");
   const navHref =
     backHref ??
-    (pathSlug ? routes.path(pathSlug) : onboarding ? routes.onboarding : routes.problems);
+    (pathSlug ? routes.path(pathSlug) : routes.problems);
   const navLabel =
     backLabel ?? (pathSlug ? "Path" : onboarding ? "First solve" : "Problem List");
 

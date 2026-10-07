@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Cost Slice 17",
-  "difficulty": "M",
+  "title": "Query Routing & Retrieval Mix",
+  "difficulty": "H",
+  "catalogPhase": 4,
   "corpusFile": "shared",
   "skills": [
     {
@@ -16,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Cost Slice 17\n\nKeep retrieval under budget with recall gates.",
+  "briefMd": "# Phase 4 · Query Routing & Retrieval Mix\n\nFAQ vs policy vs procedural queries need different **top-k / rerank / chunk** profiles. Tune the retrieval stack so each query class hits recall@k under token budget — how platform teams route before generation.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

@@ -1,0 +1,13 @@
+{
+  "slug": "ai-engineer-phase-4",
+  "title": "Phase 4 — Production retrieval stack",
+  "intent": "Rerank, hybrid retrieval, query routing, and calibrated multi-layer guardrails.",
+  "sortOrder": 4,
+  "steps": [
+    "rag-004-rerank-or-rethink",
+    "rag-021-rank-boost",
+    "rag-017-rerank-pass",
+    "grd-014-wilson-gate",
+    "grd-013-filter-stack"
+  ]
+}

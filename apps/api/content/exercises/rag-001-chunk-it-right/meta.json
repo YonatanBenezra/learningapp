@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Chunk It Right",
+  "title": "Corpus Chunk Boundaries",
   "difficulty": "E",
+  "catalogPhase": 1,
   "skills": [
     {
       "slug": "chunking",
@@ -15,7 +16,7 @@
       "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Chunk It Right\n\nThe retriever is missing answers that are definitely in the corpus. Nothing is wrong with the model. Fix the chunking.\n\nYou control **only** chunk size, overlap, and splitting strategy (`fixed` / `sentence` / `recursive` / `heading-aware`).\n\nA baseline config scores recall@5 = 0.41. Pass when recall@5 is at least 0.80 on the hidden set.\n",
+  "briefMd": "# Phase 1 · Corpus Normalization & Chunk Boundaries\n\nProduction RAG is failing on an internal policy corpus: answers exist in source docs but **never appear in retrieved chunks**. The embedding model is fine — boundaries are wrong.\n\nTune **chunk size**, **overlap**, and **split strategy** (`fixed`, `sentence`, `recursive`, `heading-aware`). Baseline recall@5 ≈ 0.41 on the hidden eval.\n\n**Gate:** recall@5 ≥ 0.80 (same bar used for internal KB launch reviews).\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

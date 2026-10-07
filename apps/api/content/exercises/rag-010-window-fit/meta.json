@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Window Fit",
+  "title": "Metadata Scope & Window Fit",
   "difficulty": "E",
+  "catalogPhase": 2,
   "skills": [
     {
       "slug": "chunking",
@@ -13,9 +14,13 @@
     {
       "slug": "retrieval-quality",
       "name": "Retrieval quality"
+    },
+    {
+      "slug": "content-pipeline",
+      "name": "Content pipeline"
     }
   ],
-  "briefMd": "# Window Fit\n\nFit chunk windows to policy headings. Pass when recall@5 ≥ 0.80.",
+  "briefMd": "# Phase 2 · Metadata Scope & Window Fit\n\nMulti-tenant KBs fail when chunks span the wrong **policy sections** — the vector index returns plausible but out-of-scope text. Tune windows so each chunk aligns with document structure (heading-aware scope), mimicking metadata/ACL boundaries before retrieval.\n\n**Gate:** recall@5 ≥ 0.80 on the hidden support-KB eval.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

@@ -1,9 +1,7 @@
 import type { Exercise } from "@/types/exercise";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
-import { LIVE_RAG_PROBLEMS } from "@/config/live-rag-problems";
-
-const RAG_DEMO_SLUG = LIVE_RAG_PROBLEMS[0].slug;
+const RAG_DEMO_SLUG = "rag-001-chunk-it-right";
 
 export const DEMO_STARTER = {
   chunkSize: 400,

@@ -6,7 +6,6 @@ import { DEMO_TRACE_RUN_ID } from "@/features/traces/demo/rag-trace-demo-data";
 export function isPublicAppPath(pathname: string): boolean {
   if (
     pathname === routes.problems ||
-    pathname === routes.simulations ||
     pathname === routes.contests ||
     pathname === routes.paths ||
     pathname === "/catalogue" ||

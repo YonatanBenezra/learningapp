@@ -1,5 +1,7 @@
 export const R1_SLUG = 'rag-001-chunk-it-right';
 export const R2_SLUG = 'rag-002-the-cost-ceiling';
+/** R2 retrieval tuning; shares numeric prefix 003 with {@link R3_SLUG}. */
+export const R2_RETRIEVAL_TOP_K_SLUG = 'rag-003-retrieval-top-k';
 export const R3_SLUG = 'rag-003-the-citation-contract';
 export const R4_SLUG = 'rag-004-rerank-or-rethink';
 
@@ -11,7 +13,11 @@ export const RAG_R1_SLUGS = [
   'rag-010-window-fit',
 ] as const;
 
-export const RAG_R2_SLUGS = [R2_SLUG, 'rag-008-spend-cap'] as const;
+export const RAG_R2_SLUGS = [
+  R2_SLUG,
+  R2_RETRIEVAL_TOP_K_SLUG,
+  'rag-008-spend-cap',
+] as const;
 
 export const SANDBOX_SLUG = 'rag-009-python-retriever';
 
@@ -91,11 +97,17 @@ export function isRagR1Slug(slug: string): boolean {
 }
 
 export function isRagR2Slug(slug: string): boolean {
+  if ((RAG_R2_SLUGS as readonly string[]).includes(slug)) {
+    return true;
+  }
   const n = exerciseNumber(slug, 'rag');
   return n !== null && (n === 2 || n === 8 || (n >= 16 && n <= 18));
 }
 
 export function isRagR3Slug(slug: string): boolean {
+  if (slug === R2_RETRIEVAL_TOP_K_SLUG) {
+    return false;
+  }
   const n = exerciseNumber(slug, 'rag');
   return n !== null && (n === 3 || n === 19 || n === 20);
 }
@@ -113,7 +125,7 @@ export function isSandboxRagSlug(slug: string): boolean {
 export const PHASE_1_CATALOGUE_TARGET = 50;
 export const PHASE_2_CATALOGUE_TARGET = 150;
 /** Live curated catalogue size — see `content/published-slugs.json`. */
-export const POC_CATALOGUE_TARGET = 5;
+export const POC_CATALOGUE_TARGET = 30;
 
 /** When false, e2e tests that require published exercises are skipped. */
 export const CATALOGUE_LIVE = POC_CATALOGUE_TARGET > 0;

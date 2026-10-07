@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Rerank Slice 22",
-  "difficulty": "M",
+  "title": "Eval Slice Regression Gate",
+  "difficulty": "H",
+  "catalogPhase": 6,
   "corpusFile": "shared",
   "skills": [
     {
@@ -20,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Rerank Slice 22\n\nImprove ranking with rerank or query rewrite.",
+  "briefMd": "# Phase 6 · Eval Slice Regression Gate\n\nLast week’s rerank deploy **lifted aggregate nDCG** but regressed a **SKU-heavy eval slice**. Fix **reranker**, **rerankTopN**, and optional **query rewrite** so **nDCG@5 improves ≥ 0.15** vs baseline, **context tokens ≤ 3000**, and **≤ 2 model calls per question** — no shipping a global win that fails the slice gate.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -89,6 +90,5 @@
     "rotate": true
   },
   "attemptPolicy": null,
-  "graderArchetype": "rag-r4",
-  "isPublished": true
+  "graderArchetype": "rag-r4"
 }

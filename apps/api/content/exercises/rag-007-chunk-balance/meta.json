@@ -4,15 +4,20 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r1",
-  "title": "Chunk Balance",
+  "title": "Recall@k SLA on Policy KB",
   "difficulty": "M",
+  "catalogPhase": 2,
   "skills": [
     {
       "slug": "content-pipeline",
       "name": "Content pipeline"
+    },
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Chunk Balance\n\nBalance chunk size for policy retrieval. Pass when recall@5 ≥ 0.80.",
+  "briefMd": "# Phase 2 · Recall@k SLA on Policy KB\n\nYour internal bot has a **launch SLA**: recall@5 ≥ 0.80 on ticket-style questions drawn from HR/policy docs. Chunk sizes that work on demos are failing on long-form articles.\n\nBalance **chunk size**, **overlap**, and **split strategy** to hit the SLA without hand-tuning per document.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

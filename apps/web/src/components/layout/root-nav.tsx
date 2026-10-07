@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import { routes } from "@/config/routes";
 import { AppCatalogNav } from "@/components/layout/app-catalog-nav";
-import { PracticeNav } from "@/components/layout/practice-nav";
 import { isAppCatalogPath, isPracticePath } from "@/components/layout/nav-routes";
 import { OnboardingProblemNav } from "@/features/onboarding/onboarding-problem-nav";
 import { HomeNav } from "@/features/home/home-nav";
@@ -25,8 +24,9 @@ export function RootNav() {
     return <OnboardingProblemNav />;
   }
 
+  /* Simulator workspace: no global site nav — use lp-ws back tab + in-shell chrome. */
   if (isPracticePath(pathname)) {
-    return <PracticeNav />;
+    return null;
   }
 
   if (isAppCatalogPath(pathname)) {

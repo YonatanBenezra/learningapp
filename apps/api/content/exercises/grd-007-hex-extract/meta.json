@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "Hex Extract",
-  "difficulty": "E",
+  "title": "PII & Secret Canary Detection",
+  "difficulty": "M",
+  "catalogPhase": 3,
   "skills": [
     {
       "slug": "prompt-injection",
@@ -13,9 +14,13 @@
     {
       "slug": "system-prompt-extraction",
       "name": "System prompt extraction"
+    },
+    {
+      "slug": "defensive-prompting",
+      "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Hex Extract\n\nHex-encoded override extraction against the concierge.",
+  "briefMd": "# Phase 3 · PII & Secret Canary Detection\n\nOverride codes and canary tokens must **never** appear in model output — including **hex-encoded** forms. Red-team the concierge to extract the secret; filters on L2/L3 must block encoded leaks.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

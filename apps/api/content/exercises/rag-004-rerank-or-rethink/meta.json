@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Rerank or Re-think",
+  "title": "Two-Stage Retrieve + Rerank",
   "difficulty": "H",
+  "catalogPhase": 4,
   "corpusFile": "shared",
   "skills": [
     {
@@ -20,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Rerank or Re-think\n\nrecall@20 is high. Answer quality is not. The information is being retrieved and then buried. Fix the ordering.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN**, and an optional **query rewrite prompt**. Chunking is frozen.\n\nPass when **nDCG@5 improves by at least 0.15** over the lexical baseline, **context tokens ≤ 3000**, and **≤ 2 model calls per question**. Class B answer-correctness is advisory.\n",
+  "briefMd": "# Phase 4 · Two-Stage Retrieve + Rerank\n\nProduction logs show high recall@20 but poor nDCG@5 — relevant chunks are retrieved then **buried**. Fix second-stage ordering.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN**, and an optional **query rewrite prompt**. Chunking is frozen.\n\nPass when **nDCG@5 improves by at least 0.15** over the lexical baseline, **context tokens ≤ 3000**, and **≤ 2 model calls per question**. Class B answer-correctness is advisory.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

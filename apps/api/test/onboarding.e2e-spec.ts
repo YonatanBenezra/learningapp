@@ -1,13 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import {
-  CATALOGUE_LIVE,
-  HIDDEN_EVAL_CANARY,
-  R1_SLUG,
-} from '../src/modules/catalogue/exercises/exercises.constants';
-import { ONBOARDING_STARTER } from '../src/modules/identity/users/onboarding';
-import { describeLiveCatalogue } from './describe-live-catalogue';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
@@ -22,74 +15,26 @@ describe('Onboarding (e2e)', () => {
     await app.close();
   });
 
-  (!CATALOGUE_LIVE ? it : it.skip)(
-    'disables onboarding when the catalogue is empty',
-    async () => {
-      const cookies = await signIn(app, `onboard-empty-${Date.now()}@labpath.test`);
-      const me = await request(app.getHttpServer())
-        .get('/api/me')
-        .set('Cookie', cookies)
-        .expect(200);
+  it('does not assign a first-session onboarding exercise', async () => {
+    const cookies = await signIn(app, `onboard-${Date.now()}@labpath.test`);
+    const me = await request(app.getHttpServer())
+      .get('/api/me')
+      .set('Cookie', cookies)
+      .expect(200);
 
-      expect(me.body.onboarding).toMatchObject({
-        needed: false,
-        exerciseSlug: '',
-        starter: {},
-      });
-    },
-  );
-
-  describeLiveCatalogue('with onboarding exercise', () => {
-    it('sends a new user to the R1 starter without hidden eval text', async () => {
-      const cookies = await signIn(app, `onboard-${Date.now()}@labpath.test`);
-      const me = await request(app.getHttpServer())
-        .get('/api/me')
-        .set('Cookie', cookies)
-        .expect(200);
-
-      expect(me.body.onboarding).toMatchObject({
-        needed: true,
-        exerciseSlug: R1_SLUG,
-        starter: ONBOARDING_STARTER,
-        timeToFirstSubmitMs: null,
-        timeToFirstPassMs: null,
-      });
-      const serialized = JSON.stringify(me.body.onboarding);
-      expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);
-      expect(serialized).not.toContain('HIDDEN_EVAL');
-
-      const exercise = await request(app.getHttpServer())
-        .get(`/api/exercises/${me.body.onboarding.exerciseSlug}`)
-        .set('Cookie', cookies)
-        .expect(200);
-      expect(JSON.stringify(exercise.body)).not.toContain(HIDDEN_EVAL_CANARY);
+    expect(me.body.onboarding).toMatchObject({
+      needed: false,
+      exerciseSlug: '',
+      starter: {},
     });
+  });
 
-    it('records time-to-first-submit from signup and clears the first-session flag', async () => {
-      const cookies = await signIn(app, `onboard-event-${Date.now()}@labpath.test`);
-      await request(app.getHttpServer())
-        .post('/api/me/events')
-        .set('Cookie', cookies)
-        .send({ name: 'first_submit' })
-        .expect(201);
-
-      const started = await request(app.getHttpServer())
-        .post('/api/attempts')
-        .set('Cookie', cookies)
-        .send({ exerciseSlug: R1_SLUG })
-        .expect(201);
-      await request(app.getHttpServer())
-        .post(`/api/attempts/${started.body.id}/submissions`)
-        .set('Cookie', cookies)
-        .send({ payload: ONBOARDING_STARTER })
-        .expect(201);
-
-      const me = await request(app.getHttpServer())
-        .get('/api/me')
-        .set('Cookie', cookies)
-        .expect(200);
-      expect(me.body.onboarding.needed).toBe(false);
-      expect(me.body.onboarding.timeToFirstSubmitMs).toEqual(expect.any(Number));
-    });
+  it('still accepts onboarding analytics events', async () => {
+    const cookies = await signIn(app, `onboard-event-${Date.now()}@labpath.test`);
+    await request(app.getHttpServer())
+      .post('/api/me/events')
+      .set('Cookie', cookies)
+      .send({ name: 'first_submit' })
+      .expect(201);
   });
 });

@@ -1,0 +1,13 @@
+{
+  "slug": "ai-engineer-phase-1",
+  "title": "Phase 1 — Production foundations",
+  "intent": "Establish RAG ingestion quality and first-line LLM abuse controls before scaling to agentic systems.",
+  "sortOrder": 1,
+  "steps": [
+    "rag-001-chunk-it-right",
+    "rag-006-overlap-tune",
+    "rag-003-retrieval-top-k",
+    "grd-001-break-the-concierge",
+    "grd-004-polite-boundary"
+  ]
+}

@@ -16,10 +16,9 @@ import {
 import type { User } from "@/types/user";
 
 const navLinks = [
-  { href: routes.dashboard, label: "Dashboard" },
   { href: routes.problems, label: "Problems" },
   { href: routes.contests, label: "Contest" },
-  { href: routes.simulations, label: "Simulators" },
+  { href: routes.leaderboard, label: "Leaderboard" },
 ] as const;
 
 function isSignedInStatus(status: string) {
@@ -27,17 +26,14 @@ function isSignedInStatus(status: string) {
 }
 
 function isActive(pathname: string, href: string) {
-  if (href === routes.dashboard) {
-    return pathname === routes.dashboard || pathname.startsWith(`${routes.dashboard}/`);
-  }
   if (href === routes.problems) {
     return pathname === routes.problems;
   }
   if (href === routes.contests) {
     return pathname === routes.contests || pathname.startsWith("/contests/");
   }
-  if (href === routes.simulations) {
-    return pathname === routes.simulations || pathname.startsWith(`${routes.simulations}/`);
+  if (href === routes.leaderboard) {
+    return pathname === routes.leaderboard;
   }
   return pathname === href || pathname.startsWith(`${href}/`);
 }

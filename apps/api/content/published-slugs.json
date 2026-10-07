@@ -1,10 +1,35 @@
 {
-  "note": "Curated live catalogue — RAG chunking + Guardrails G1–G3.",
+  "note": "Phases 1–6 — 18 RAG + 1 Agent + 11 Guardrails (30 live).",
   "slugs": [
     "rag-001-chunk-it-right",
     "rag-006-overlap-tune",
+    "rag-003-retrieval-top-k",
     "grd-001-break-the-concierge",
+    "grd-004-polite-boundary",
+    "rag-010-window-fit",
+    "rag-007-chunk-balance",
+    "rag-002-the-cost-ceiling",
     "grd-002-the-indirect-payload",
-    "grd-003-hold-the-line"
+    "grd-005-encoding-trick",
+    "rag-003-the-citation-contract",
+    "rag-018-retriever-run",
+    "rag-005-sentence-split",
+    "grd-011-bcc-smuggle",
+    "grd-007-hex-extract",
+    "rag-004-rerank-or-rethink",
+    "rag-021-rank-boost",
+    "rag-017-rerank-pass",
+    "grd-014-wilson-gate",
+    "grd-013-filter-stack",
+    "rag-016-citation-lock",
+    "rag-009-python-retriever",
+    "agt-002-recover-and-stop",
+    "grd-016-policy-window",
+    "grd-010-page-inject",
+    "rag-024-query-fit",
+    "rag-023-span-match",
+    "rag-008-spend-cap",
+    "rag-022-score-gate",
+    "grd-015-benign-pass"
   ]
 }

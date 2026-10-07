@@ -4,8 +4,9 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-sandbox",
-  "title": "Python Retriever",
-  "difficulty": "M",
+  "title": "Custom Retriever (Code Sandbox)",
+  "difficulty": "H",
+  "catalogPhase": 5,
   "skills": [
     {
       "slug": "retrieval-quality",
@@ -16,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Python Retriever\n\nWrite a Python retriever. Your program reads `/workspace/input.json` (same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` contains the public corpus and the questions to answer. Hidden gold answers are **not** in the sandbox.\n\nFor each question return up to 5 passages. Pass when recall@5 is at least 0.80 on the hidden set.\n\nA keyword-overlap ranker over whole documents is enough. Returning the same short snippet for every question will fail.\n",
+  "briefMd": "# Phase 5 · Custom Retriever (Code Sandbox)\n\nShip a **Python retriever** to production standards. Your program reads `/workspace/input.json` (same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` contains the public corpus and the questions to answer. Hidden gold answers are **not** in the sandbox.\n\nFor each question return up to 5 passages. Pass when recall@5 is at least 0.80 on the hidden set.\n\nA keyword-overlap ranker over whole documents is enough. Returning the same short snippet for every question will fail.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

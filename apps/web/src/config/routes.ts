@@ -3,6 +3,7 @@ export const routes = {
   login: "/login",
   register: "/register",
   problems: "/problems",
+  /** Legacy — redirects to {@link routes.problems}. */
   simulations: "/simulations",
   /** Static UI preview — mocked grading, no API catalogue required. */
   demoRagWorkspace: "/demo/rag-workspace",

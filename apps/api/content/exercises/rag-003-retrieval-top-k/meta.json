@@ -1,0 +1,76 @@
+{
+  "slug": "rag-003-retrieval-top-k",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "graderArchetype": "rag-r2",
+  "title": "Retrieval Top-K Baseline",
+  "difficulty": "E",
+  "catalogPhase": 1,
+  "corpusFile": "shared",
+  "skills": [
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "vector-search",
+      "name": "Vector search"
+    }
+  ],
+  "briefMd": "# Phase 1 · Retrieval Top-K Baseline\n\nYour embedding index is live on the shared HR policy corpus. Before you tune chunking again, establish a **defensible top-k** for production Q&A.\n\nChunking is frozen (heading-aware, chunk 400, overlap 80). You control **top-k**, **rerank**, and **chunk size** within schema bounds.\n\n**Success criteria (hidden eval):** recall@k ≥ 0.80 with mean prompt tokens ≤ 2,500. Treat this like a launch gate for an internal support bot.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["topK", "rerank", "chunkSize"],
+    "properties": {
+      "topK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 10
+      },
+      "rerank": {
+        "type": "boolean",
+        "default": false
+      },
+      "chunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      }
+    }
+  },
+  "thresholds": {
+    "mean_prompt_tokens": 2500,
+    "recall_at_k": 0.8
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 2500
+    },
+    {
+      "id": "recall-at-k",
+      "class": "A",
+      "metric": "recall@k",
+      "op": "gte",
+      "value": 0.8
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null
+}

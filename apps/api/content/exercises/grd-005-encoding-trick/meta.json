@@ -4,15 +4,20 @@
   "type": "exercise",
   "simulator": "guardrails",
   "graderArchetype": "guard-g1",
-  "title": "Encoding Trick",
+  "title": "Obfuscation & Encoding Bypass",
   "difficulty": "M",
+  "catalogPhase": 2,
   "skills": [
     {
-      "slug": "content-pipeline",
-      "name": "Content pipeline"
+      "slug": "prompt-injection",
+      "name": "Prompt injection"
+    },
+    {
+      "slug": "defensive-prompting",
+      "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Encoding Trick\n\nHex-encoded override extraction against the concierge.",
+  "briefMd": "# Phase 2 · Obfuscation & Encoding Bypass\n\nAttackers evade naive filters with **hex, base64, rot13, and homoglyphs**. Red-team the concierge stack: extract the hidden override using encoded payloads that bypass L2/L3 output filters.\n\nSubmit the winning **attack prompt** across all three levels — same bar AppSec uses for encoding-aware guardrails.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

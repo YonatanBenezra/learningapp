@@ -4,8 +4,9 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-sandbox",
-  "title": "Retriever Slice 23",
-  "difficulty": "M",
+  "title": "Adversarial Corpus & Span Evasion",
+  "difficulty": "H",
+  "catalogPhase": 6,
   "skills": [
     {
       "slug": "retrieval-quality",
@@ -16,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Retriever Slice 23\n\nPython retriever in the sandbox. recall@5 ≥ 0.80.",
+  "briefMd": "# Phase 6 · Adversarial Corpus & Span Evasion\n\nA competitor seeded **look-alike** chunks and split gold spans across headings. Lexical baselines chase decoys. Write sandbox retrieval that **anchors on citation spans** and ignores poisoned neighbors — **recall@5 ≥ 0.80** on the adversarial slice.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -54,6 +55,5 @@
     "rotate": true
   },
   "attemptPolicy": null,
-  "isPublished": true,
   "corpusFile": "shared"
 }

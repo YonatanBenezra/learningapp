@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { loginPath, routes } from "@/config/routes";
@@ -10,22 +9,19 @@ import { ApiError } from "@/lib/api-client";
 import type { Exercise } from "@/types/exercise";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
-import { onboardingApi } from "@/features/onboarding/onboarding-api";
 import { waitForGrade, waitForRun, workspaceApi } from "../workspace-api";
 import { WORKER_OFFLINE_MESSAGE } from "../worker-offline-message";
 import type { HintList } from "@/types/hint";
 import { hintsApi } from "../hints-api";
+import { WorkspacePracticeFrame } from "@/components/layout/workspace-practice-frame";
 import { BriefPanel, type BriefTab } from "./brief-panel";
-import { G1Chat } from "./g1-chat";
 import { RunPanel } from "./run-panel";
-import { RagLabPanel } from "./rag-lab-panel";
-import { RagFlowCanvas } from "./rag-flow-canvas";
 import { SubmissionSurface } from "./submission-surface";
 import { WorkspaceRagFigmaShell } from "./workspace-rag-figma-shell";
 import { WorkspaceGuardrailsFigmaShell } from "./workspace-guardrails-figma-shell";
 import {
-  isRagSandboxSchema,
   ragEditorTitle,
+  ragShowsSimulationLab,
   useRagFigmaWorkspace,
 } from "./workspace-rag-utils";
 import { useGuardrailsFigmaWorkspace } from "../guardrails-workspace-data";
@@ -75,11 +71,14 @@ export function WorkspaceShell({
   const [submitValid, setSubmitValid] = useState(false);
   const [labPayload, setLabPayload] = useState<Record<string, unknown>>({});
   const [hints, setHints] = useState<HintList | null>(null);
-  const [workTab, setWorkTab] = useState<"configure" | "lab">("configure");
-  const [labHintDismissed, setLabHintDismissed] = useState(() =>
-    readFlag("lp-ws-lab-hint-dismissed"),
-  );
   const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    document.documentElement.dataset.workspace = "practice";
+    return () => {
+      delete document.documentElement.dataset.workspace;
+    };
+  }, []);
 
   useEffect(() => {
     setBriefCollapsed(readFlag("lp-ws-brief-collapsed"));
@@ -219,15 +218,9 @@ export function WorkspaceShell({
           setSubmitError(WORKER_OFFLINE_MESSAGE);
         },
       );
-      if (onboarding) {
-        void onboardingApi.track("first_submit").catch(() => undefined);
-      }
       if (finished.status === "succeeded") {
         const result = await waitForGrade(queued.runId, abort.signal);
         setGrade(result);
-        if (onboarding && result.verdict === "pass") {
-          void onboardingApi.track("first_pass").catch(() => undefined);
-        }
       } else {
         setSubmitError(
           finished.errorMessage
@@ -267,28 +260,20 @@ export function WorkspaceShell({
     );
   }
 
-  const ragLabEnabled =
-    exercise?.simulator === "rag" && !isRagSandboxSchema(exercise.submissionSchema);
-  const showRagLab = ragLabEnabled && !onboarding;
-  const editorLead =
-    onboarding
-      ? "A starter config is filled in. Submit to see your first scorecard."
-      : exercise?.simulator === "rag"
-        ? "Adjust settings here, then Submit to grade. Simulation Lab is optional preview."
-        : exercise?.simulator === "guardrails"
-          ? "Author an attack, inject page, or defense stack — then submit."
-          : "Configure the fields below and submit to grade.";
-  const editorTitle = ragLabEnabled
-    ? ragEditorTitle(exercise.submissionSchema)
-    : exercise?.simulator === "rag"
-      ? "Python retriever"
-      : "Code";
+  const editorLead = onboarding
+    ? "A starter config is filled in. Submit to see your first scorecard."
+    : "Configure the fields below and submit to grade.";
+  const editorTitle =
+    exercise.simulator === "rag"
+      ? ragEditorTitle(exercise.submissionSchema)
+      : "Submission";
 
   const ragFigma = useRagFigmaWorkspace(exercise, onboarding);
   const guardrailsFigma = useGuardrailsFigmaWorkspace(exercise, onboarding);
 
   if (guardrailsFigma) {
     return (
+      <WorkspacePracticeFrame>
       <WorkspaceGuardrailsFigmaShell
         slug={slug}
         exercise={exercise}
@@ -306,11 +291,13 @@ export function WorkspaceShell({
         resultsCollapsed={resultsCollapsed}
         onToggleResultsCollapsed={toggleResultsCollapsed}
       />
+      </WorkspacePracticeFrame>
     );
   }
 
   if (ragFigma) {
     return (
+      <WorkspacePracticeFrame>
       <WorkspaceRagFigmaShell
         slug={slug}
         exercise={exercise}
@@ -329,103 +316,47 @@ export function WorkspaceShell({
         onToggleBriefCollapsed={toggleBriefCollapsed}
         resultsCollapsed={resultsCollapsed}
         onToggleResultsCollapsed={toggleResultsCollapsed}
-        showSimulationLab
+        showSimulationLab={ragShowsSimulationLab(exercise.submissionSchema)}
       />
+      </WorkspacePracticeFrame>
     );
   }
 
   return (
-    <div className={`lp-ws${exercise ? ` lp-ws--${exercise.simulator}` : ""}`}>
-      <WorkspaceSplit
-        storageKey="lp-ws-brief-ratio"
-        defaultRatio={onboarding ? 0.36 : 0.44}
-        minPrimary={300}
-        minSecondary={380}
-        primaryCollapsed={briefCollapsed}
-        primary={
-          <BriefPanel
-            exercise={exercise}
-            onboarding={onboarding}
-            pathSlug={pathSlug}
-            collapsed={briefCollapsed}
-            tab={briefTab}
-            onTabChange={setBriefTab}
-            onToggleCollapse={toggleBriefCollapsed}
-          />
-        }
-        secondary={
-          <WorkspaceSplit
-            direction="vertical"
-            storageKey="lp-ws-editor-ratio"
-            defaultRatio={onboarding ? 0.78 : 0.68}
-            minPrimary={200}
-            minSecondary={140}
-            className="lp-ws-split--stack"
-            secondaryCollapsed={resultsCollapsed}
-            primary={
-              <div className="lp-ws-pane lp-ws-pane--work">
-                {exercise?.slug === "grd-001-break-the-concierge" ? (
-                  <G1Chat disabled={!exercise || pending} />
-                ) : null}
-                {showRagLab ? (
-                  <>
-                    {!labHintDismissed ? (
-                      <div className="lp-ws-lab-hint" role="note">
-                        <p>
-                          <strong>Configure</strong> is where you submit for a grade.{" "}
-                          <strong>Simulation Lab</strong> is optional — preview chunks and
-                          retrieval on the public corpus only.
-                        </p>
-                        <button
-                          type="button"
-                          className="lp-ws-lab-hint-dismiss"
-                          onClick={() => {
-                            setLabHintDismissed(true);
-                            window.localStorage.setItem("lp-ws-lab-hint-dismissed", "1");
-                          }}
-                        >
-                          Got it
-                        </button>
-                      </div>
-                    ) : null}
-                    <div className="lp-ws-work-tabs" role="tablist" aria-label="Workspace mode">
-                      <button
-                        type="button"
-                        role="tab"
-                        aria-selected={workTab === "configure"}
-                        className={`lp-ws-work-tab${workTab === "configure" ? " is-active" : ""}`}
-                        onClick={() => setWorkTab("configure")}
-                      >
-                        Configure
-                      </button>
-                      <button
-                        type="button"
-                        role="tab"
-                        aria-selected={workTab === "lab"}
-                        className={`lp-ws-work-tab${workTab === "lab" ? " is-active" : ""}`}
-                        onClick={() => setWorkTab("lab")}
-                      >
-                        Simulation Lab
-                        <span className="lp-ws-work-tab-tag">Optional</span>
-                      </button>
-                    </div>
-                  </>
-                ) : null}
-                <div
-                  className="lp-ws-work-pane"
-                  hidden={showRagLab && workTab !== "configure"}
-                >
-                  {exercise?.simulator === "rag" ? (
-                    <RagFlowCanvas
-                      schema={exercise.submissionSchema}
-                      pending={pending}
-                      graded={grade !== null}
-                    />
-                  ) : null}
+    <WorkspacePracticeFrame>
+      <div className={`lp-ws lp-ws--${exercise.simulator}`}>
+        <WorkspaceSplit
+          storageKey="lp-ws-brief-ratio"
+          defaultRatio={onboarding ? 0.36 : 0.44}
+          minPrimary={300}
+          minSecondary={380}
+          primaryCollapsed={briefCollapsed}
+          primary={
+            <BriefPanel
+              exercise={exercise}
+              onboarding={onboarding}
+              pathSlug={pathSlug}
+              collapsed={briefCollapsed}
+              tab={briefTab}
+              onTabChange={setBriefTab}
+              onToggleCollapse={toggleBriefCollapsed}
+            />
+          }
+          secondary={
+            <WorkspaceSplit
+              direction="vertical"
+              storageKey="lp-ws-editor-ratio"
+              defaultRatio={0.68}
+              minPrimary={200}
+              minSecondary={140}
+              className="lp-ws-split--stack"
+              secondaryCollapsed={resultsCollapsed}
+              primary={
+                <div className="lp-ws-pane lp-ws-pane--work">
                   <SubmissionSurface
-                    schema={exercise?.submissionSchema}
-                    simulator={exercise?.simulator}
-                    disabled={!exercise || pending}
+                    schema={exercise.submissionSchema}
+                    simulator={exercise.simulator}
+                    disabled={pending}
                     pending={pending}
                     error={submitError}
                     initialValues={initialValues}
@@ -433,27 +364,23 @@ export function WorkspaceShell({
                     lead={editorLead}
                     onSubmit={onSubmit}
                     onValidityChange={setSubmitValid}
-                    onValuesChange={showRagLab ? setLabPayload : undefined}
                   />
                 </div>
-                {showRagLab && workTab === "lab" ? (
-                  <RagLabPanel slug={slug} payload={labPayload} />
-                ) : null}
-              </div>
-            }
-            secondary={
-              <RunPanel
-                run={run}
-                grade={grade}
-                onboarding={onboarding}
-                simulator={exercise?.simulator}
-                collapsed={resultsCollapsed}
-                onToggleCollapse={toggleResultsCollapsed}
-              />
-            }
-          />
-        }
-      />
-    </div>
+              }
+              secondary={
+                <RunPanel
+                  run={run}
+                  grade={grade}
+                  onboarding={onboarding}
+                  simulator={exercise.simulator}
+                  collapsed={resultsCollapsed}
+                  onToggleCollapse={toggleResultsCollapsed}
+                />
+              }
+            />
+          }
+        />
+      </div>
+    </WorkspacePracticeFrame>
   );
 }

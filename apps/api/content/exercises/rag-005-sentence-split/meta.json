@@ -4,15 +4,20 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r1",
-  "title": "Sentence Split",
-  "difficulty": "E",
+  "title": "Public vs Hidden Eval Discipline",
+  "difficulty": "M",
+  "catalogPhase": 3,
   "skills": [
     {
       "slug": "content-pipeline",
       "name": "Content pipeline"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Sentence Split\n\nTune chunk size and overlap with sentence-aware splitting. Pass when recall@5 ≥ 0.80.",
+  "briefMd": "# Phase 3 · Public vs Hidden Eval Discipline\n\nYour team overfit to the **visible QA set**. Hidden eval still fails until chunking generalizes. Tune sentence-aware splits so recall@5 ≥ 0.80 on the **held-out** set — no tuning to public samples.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

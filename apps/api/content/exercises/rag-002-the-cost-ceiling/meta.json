@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "The Cost Ceiling",
+  "title": "Cost-Capped Retrieval",
   "difficulty": "M",
+  "catalogPhase": 2,
   "corpusFile": "shared",
   "skills": [
     {
@@ -16,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# The Cost Ceiling\n\nYour predecessor set top-k to 20 and called it done. Finance called. Keep the quality, cut the context.\n\nYou control **top-k**, **rerank** (boolean), and **chunk size**. Split is frozen: heading-aware with overlap 80.\n\nPass when **mean prompt tokens ≤ 2000** and **recall@k ≥ 0.80** on the hidden set. Class B answer-correctness is advisory only.\n",
+  "briefMd": "# Phase 2 · Cost-Capped Retrieval\n\nFinance flagged **runaway context costs** on the support bot: top-k=20 with rerank on every query. You must hold **recall@k ≥ 0.80** while keeping **mean prompt tokens ≤ 2,000** on the hidden eval.\n\nChunking is frozen (heading-aware, overlap 80). Tune **top-k**, **rerank**, and **chunk size** — the tradeoff every production RAG team negotiates with FinOps.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

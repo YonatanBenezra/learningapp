@@ -1,5 +1,0 @@
-{
-  "overfitRun": "run-a",
-  "diagnosis": "underfitting",
-  "nextKnob": "add_dropout"
-}

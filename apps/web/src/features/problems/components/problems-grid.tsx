@@ -14,8 +14,8 @@ import {
 } from "@/features/auth/auth-session";
 import { problemsApi } from "@/features/problems/problems-api";
 import type { Difficulty, Exercise } from "@/types/exercise";
-import { figmaMetaForSlug } from "../problems-figma-meta";
-import { ProblemsContestBanner } from "./problems-contest-banner";
+import { figmaMetaForSlug, RAG_PROBLEMS_ORDER } from "../problems-figma-meta";
+import { ProblemsRagTrackPanel } from "./problems-rag-track-panel";
 import { ProblemsFigmaRow } from "./problems-figma-row";
 import { ProblemsGenericRow } from "./problems-generic-row";
 import { ProblemsSkeleton } from "./problems-skeleton";
@@ -25,8 +25,16 @@ const PAGE_SIZE = 10;
 
 const GUARDRAILS_ORDER = [
   "grd-001-break-the-concierge",
+  "grd-004-polite-boundary",
   "grd-002-the-indirect-payload",
-  "grd-003-hold-the-line",
+  "grd-005-encoding-trick",
+  "grd-011-bcc-smuggle",
+  "grd-007-hex-extract",
+  "grd-014-wilson-gate",
+  "grd-013-filter-stack",
+  "grd-016-policy-window",
+  "grd-010-page-inject",
+  "grd-015-benign-pass",
 ];
 
 function buildPageItems(current: number, total: number): Array<number | "ellipsis"> {
@@ -84,18 +92,38 @@ const DIFFICULTY_FILTERS: { id: Difficulty | "all"; label: string }[] = [
 ];
 
 
-function sortExercises(items: Exercise[]): Exercise[] {
+function sortExercises(items: Exercise[], track: SimulatorSlug | "all"): Exercise[] {
+  const ragOrder = RAG_PROBLEMS_ORDER;
   return [...items].sort((a, b) => {
-    const ai = GUARDRAILS_ORDER.indexOf(a.slug);
-    const bi = GUARDRAILS_ORDER.indexOf(b.slug);
-    if (ai !== -1 && bi !== -1) {
-      return ai - bi;
+    if (track === "guardrails" || track === "all") {
+      const ai = GUARDRAILS_ORDER.indexOf(a.slug);
+      const bi = GUARDRAILS_ORDER.indexOf(b.slug);
+      if (ai !== -1 && bi !== -1) {
+        return ai - bi;
+      }
+      if (track === "guardrails") {
+        if (ai !== -1) {
+          return -1;
+        }
+        if (bi !== -1) {
+          return 1;
+        }
+      }
     }
-    if (ai !== -1) {
-      return -1;
-    }
-    if (bi !== -1) {
-      return 1;
+    if (track === "rag" || track === "all") {
+      const ai = ragOrder.indexOf(a.slug);
+      const bi = ragOrder.indexOf(b.slug);
+      if (ai !== -1 && bi !== -1) {
+        return ai - bi;
+      }
+      if (track === "rag") {
+        if (ai !== -1) {
+          return -1;
+        }
+        if (bi !== -1) {
+          return 1;
+        }
+      }
     }
     return a.title.localeCompare(b.title);
   });
@@ -188,7 +216,7 @@ export function ProblemsGrid() {
         .toLowerCase();
       return haystack.includes(needle);
     });
-    return sortExercises(filtered);
+    return sortExercises(filtered, track);
   }, [difficulty, items, query, track]);
 
   const pageCount = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
@@ -199,6 +227,7 @@ export function ProblemsGrid() {
   }, [currentPage, visible]);
 
   const showGuardrailsChrome = track === "guardrails";
+  const showRagChrome = track === "rag";
 
   const searchPlaceholder =
     track === "guardrails"
@@ -296,7 +325,9 @@ export function ProblemsGrid() {
         </div>
       </div>
 
-      <div className={`lp-prob-main${showGuardrailsChrome ? " has-sidebar" : ""}`}>
+      <div
+        className={`lp-prob-main${showGuardrailsChrome || showRagChrome ? " has-sidebar" : ""}`}
+      >
         <div className="lp-prob-table-wrap">
           {visible.length === 0 ? (
             <div className="lp-cat-empty">
@@ -344,16 +375,22 @@ export function ProblemsGrid() {
           {showGuardrailsChrome ? (
             <p className="lp-prob-footnote">
               <LightbulbFootnoteIcon />
-              More Guardrails exercises ship after v1. Contest mode uses the same levels with a
-              timer.
+              Red-team (G1-style) and blue-team (G3-style) problems open in the figma simulator
+              workspace. Contest mode reuses the same graders with a timer.
+            </p>
+          ) : null}
+          {showRagChrome ? (
+            <p className="lp-prob-footnote">
+              <LightbulbFootnoteIcon />
+              Config problems include Simulation Lab (corpus, chunks, query). Sandbox problems use
+              the Python retriever editor only.
             </p>
           ) : null}
         </div>
 
         {showGuardrailsChrome ? <ProblemsTrackPanel /> : null}
+        {showRagChrome ? <ProblemsRagTrackPanel /> : null}
       </div>
-
-      {showGuardrailsChrome ? <ProblemsContestBanner /> : null}
 
       {visible.length > PAGE_SIZE ? (
         <nav className="lp-cat-pager" aria-label="Problem pages">

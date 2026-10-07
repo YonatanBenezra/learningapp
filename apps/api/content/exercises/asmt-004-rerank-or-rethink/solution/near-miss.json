@@ -1,5 +1,0 @@
-{
-  "reranker": "none",
-  "rerankTopN": 20,
-  "queryRewritePrompt": ""
-}

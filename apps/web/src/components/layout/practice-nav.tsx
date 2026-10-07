@@ -89,8 +89,8 @@ export function PracticeNav() {
             <Radio className="size-4" strokeWidth={2.25} aria-hidden />
             Live session
           </span>
-          <Link href={routes.simulations} className="lp-practice-exit max-[640px]:hidden">
-            All simulators
+          <Link href={routes.problems} className="lp-practice-exit max-[640px]:hidden">
+            All problems
           </Link>
           <Link href={routes.home} aria-label={brand.name}>
             <LabpathLogo size="sm" />

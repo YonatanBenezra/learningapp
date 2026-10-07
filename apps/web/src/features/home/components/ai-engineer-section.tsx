@@ -277,8 +277,8 @@ export function AiEngineerSection() {
                     Open Problem
                   </AuthLink>
                 ) : (
-                  <AuthLink href={routes.simulations} className="ag-lc-ai-btn ag-lc-ai-btn--dark">
-                    Simulators
+                  <AuthLink href={routes.problems} className="ag-lc-ai-btn ag-lc-ai-btn--dark">
+                    Problems
                   </AuthLink>
                 )}
               </div>

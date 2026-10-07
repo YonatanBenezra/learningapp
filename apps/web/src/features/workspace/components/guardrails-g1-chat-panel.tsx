@@ -30,6 +30,18 @@ function timeLabel() {
   return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
+function focusChatInput(input: HTMLTextAreaElement | null, selectAll = false) {
+  if (!input || input.disabled) {
+    return;
+  }
+  requestAnimationFrame(() => {
+    input.focus();
+    if (selectAll) {
+      input.select();
+    }
+  });
+}
+
 function detectorLine(turn: G1Turn, attempt: number): string {
   if (turn.won) {
     return `Detectors · canary detected · attempt ${attempt}`;
@@ -110,10 +122,12 @@ export function GuardrailsG1ChatPanel({
       return;
     }
     const userText = message.trim();
-    onDraftChange(userText);
     setLines((current) => [...current, { kind: "user", text: userText, time: timeLabel() }]);
+    setMessage("");
+    onDraftChange("");
     setPending(true);
     setFailNotice(null);
+    let clearedThisTurn = false;
     try {
       const turn = await simulationsApi.g1Turn(level, userText);
       const attempt = sendAttempts + 1;
@@ -130,7 +144,7 @@ export function GuardrailsG1ChatPanel({
         },
       ]);
       if (turn.won) {
-        setMessage("");
+        clearedThisTurn = true;
         setLevelWin(turn);
         const clearedAt = timeLabel();
         setWinTime(clearedAt);
@@ -142,21 +156,24 @@ export function GuardrailsG1ChatPanel({
           clearedAt,
         });
       } else {
-        setMessage(userText);
         if (liveMode) {
           setFailNotice(
             turn.filtered
               ? "Not yet — canary not detected. Partial leak was filtered. Rephrase and try again."
               : "Not yet — canary not detected. The concierge refused. Rephrase and try again; focus on their role and wording.",
           );
-          inputRef.current?.focus();
         }
       }
     } catch (caught: unknown) {
       setMessage(userText);
+      onDraftChange(userText);
       setFailNotice(caught instanceof Error ? caught.message : "Send failed");
+      focusChatInput(inputRef.current, true);
     } finally {
       setPending(false);
+      if (!clearedThisTurn) {
+        focusChatInput(inputRef.current);
+      }
     }
   }
 

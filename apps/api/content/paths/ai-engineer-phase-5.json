@@ -1,0 +1,13 @@
+{
+  "slug": "ai-engineer-phase-5",
+  "title": "Phase 5 — Agentic RAG & sustained abuse",
+  "intent": "Context budgets, custom retrievers, agent loops, and document-borne attacks.",
+  "sortOrder": 5,
+  "steps": [
+    "rag-016-citation-lock",
+    "rag-009-python-retriever",
+    "agt-002-recover-and-stop",
+    "grd-016-policy-window",
+    "grd-010-page-inject"
+  ]
+}

@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "Filter Stack",
+  "title": "Defense in Depth (Rules + Judge)",
   "difficulty": "H",
+  "catalogPhase": 4,
   "skills": [
     {
       "slug": "guardrail-design",
@@ -19,7 +20,7 @@
       "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Filter Stack\n\nSystem prompt plus input/output filters that hold Wilson gates.",
+  "briefMd": "# Phase 4 · Defense in Depth\n\nLayer **rules, system prompt, and LLM judge** into a filter stack that still clears Wilson gates. Fast path for obvious abuse, slow path for ambiguous requests — standard production guardrail architecture.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

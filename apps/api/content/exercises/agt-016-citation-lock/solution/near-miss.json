@@ -1,3 +1,0 @@
-{
-  "source": "import labpath_tools as t\nt.calculator(\"1+1\")\nprint(\"done\")\n"
-}

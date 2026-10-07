@@ -1,10 +1,36 @@
-html[data-workspace="catalog"],
-html[data-workspace="practice"] {
+html[data-workspace="catalog"] {
   --lp-dash-nav-h: 4rem;
   --lp-dash-nav-gap: 0.85rem;
+  --lp-catalog-content-width: min(1350px, calc(100% - 3rem));
   --lp-dash-nav-offset: calc(
     var(--lp-dash-nav-h) + env(safe-area-inset-top, 0px) + var(--lp-dash-nav-gap)
   );
+}
+
+html[data-workspace="catalog"] .lp-site-nav--catalog .lp-site-nav-inner {
+  width: var(--lp-catalog-content-width);
+  max-width: none;
+  padding-inline: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 859px) {
+  html[data-workspace="catalog"] {
+    --lp-catalog-content-width: calc(100% - 2rem);
+  }
+}
+
+@media (max-width: 640px) {
+  html[data-workspace="catalog"] {
+    --lp-catalog-content-width: calc(100% - 1.5rem);
+  }
+}
+
+/* Practice routes render no RootNav — full-height simulator chrome only */
+html[data-workspace="practice"] {
+  --lp-dash-nav-h: 0px;
+  --lp-dash-nav-gap: 0px;
+  --lp-dash-nav-offset: env(safe-area-inset-top, 0px);
 }
 
 html[data-workspace="dashboard"] {

@@ -29,6 +29,14 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  height: 100%;
+}
+
+.lp-ws--grd-figma .lp-ws-split-secondary > .lp-grd-center-host,
+.lp-ws--grd-figma .lp-ws-split-secondary > .lp-grd-work {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
 }
 
 .lp-ws--grd-figma .lp-ws-split-secondary > .lp-ws-split {
@@ -183,10 +191,10 @@
   gap: 0.4rem;
   padding: 0.28rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, #4ade80 55%, #1e293b);
-  background: color-mix(in srgb, #4ade80 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-brand) 55%, #1e293b);
+  background: color-mix(in srgb, var(--color-brand) 6%, transparent);
   font-weight: 650;
-  color: #4ade80;
+  color: var(--color-brand);
   letter-spacing: 0.01em;
 }
 
@@ -200,8 +208,8 @@
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 999px;
-  background: #4ade80;
-  box-shadow: 0 0 8px color-mix(in srgb, #4ade80 90%, transparent);
+  background: var(--color-brand);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-brand) 90%, transparent);
 }
 
 .lp-grd-chrome-link {
@@ -317,7 +325,7 @@
 }
 
 .lp-grd-tag--easy {
-  border: 1px solid color-mix(in srgb, #4ade80 40%, var(--lp-border));
+  border: 1px solid color-mix(in srgb, var(--color-brand) 40%, var(--lp-border));
   color: #86efac;
   background: transparent;
 }
@@ -639,11 +647,11 @@
 }
 
 .lp-grd-level-card--g2.is-cleared {
-  border-color: color-mix(in srgb, #4ade80 45%, var(--lp-border));
+  border-color: color-mix(in srgb, var(--color-brand) 45%, var(--lp-border));
 }
 
 .lp-grd-level-card--g2.is-cleared .lp-grd-level-card-icon {
-  border-color: color-mix(in srgb, #4ade80 40%, var(--lp-border));
+  border-color: color-mix(in srgb, var(--color-brand) 40%, var(--lp-border));
   background: color-mix(in srgb, #14532d 35%, transparent);
 }
 
@@ -692,6 +700,13 @@
   flex: 1 1 0;
   min-height: 0;
   max-height: 100%;
+  height: 100%;
+}
+
+.lp-grd-work--g1 > .lp-grd-chat,
+.lp-grd-work--g2 > .lp-grd-g2 {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .lp-grd-chat-toolbar {
@@ -1371,7 +1386,7 @@
 }
 
 .lp-grd-g2-log-list .is-ok {
-  color: #4ade80;
+  color: var(--color-brand);
 }
 
 .lp-grd-g2-log-list .is-warn {
@@ -2123,7 +2138,7 @@
 }
 
 .lp-grd-metric-head strong.is-pass-text {
-  color: #4ade80;
+  color: var(--color-brand);
 }
 
 .lp-grd-metric-head strong.is-fail-text {
@@ -2159,7 +2174,7 @@
 }
 
 .lp-grd-outcomes-row .is-good {
-  color: #4ade80;
+  color: var(--color-brand);
   font-weight: 650;
 }
 

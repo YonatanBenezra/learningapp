@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Cost Slice 18",
+  "title": "Stale Index & Retriever Refresh",
   "difficulty": "M",
+  "catalogPhase": 3,
   "corpusFile": "shared",
   "skills": [
     {
@@ -16,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Cost Slice 18\n\nKeep retrieval under budget with recall gates.",
+  "briefMd": "# Phase 3 · Stale Index & Retriever Refresh\n\nPolicy docs updated last sprint but the bot still cites **old chunks**. Tune retrieval (top-k, rerank, chunk size) so answers track the **current index** and meet recall@k on the hidden set — the same drill after re-embed/re-index in production.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

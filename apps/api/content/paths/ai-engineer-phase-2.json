@@ -1,0 +1,13 @@
+{
+  "slug": "ai-engineer-phase-2",
+  "title": "Phase 2 — SLOs, cost & indirect attacks",
+  "intent": "Hit retrieval SLAs under cost caps and red-team indirect injection and encoding bypasses.",
+  "sortOrder": 2,
+  "steps": [
+    "rag-010-window-fit",
+    "rag-007-chunk-balance",
+    "rag-002-the-cost-ceiling",
+    "grd-002-the-indirect-payload",
+    "grd-005-encoding-trick"
+  ]
+}

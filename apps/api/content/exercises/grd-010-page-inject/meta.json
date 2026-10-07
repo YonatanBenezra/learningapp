@@ -3,8 +3,9 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "Page Inject",
-  "difficulty": "M",
+  "title": "Supply-Chain Prompts in Documents",
+  "difficulty": "H",
+  "catalogPhase": 5,
   "skills": [
     {
       "slug": "indirect-injection",
@@ -19,7 +20,7 @@
       "name": "Agent security"
     }
   ],
-  "briefMd": "# Page Inject\n\nIndirect injection that emails the attacker on all three levels.",
+  "briefMd": "# Phase 5 · Supply-Chain Prompts in Documents\n\nMalicious **instructions embedded in crawled pages** (supply-chain RAG). Author `pageContent` so the research agent emails **attacker@evil.test** while the user request stays benign — all three defence levels.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

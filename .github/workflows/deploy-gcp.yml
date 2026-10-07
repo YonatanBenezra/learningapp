@@ -1,0 +1,70 @@
+# Deploy LabPath to the GCP Compute Engine VM (PM2 + nginx on the server).
+# Server keeps apps/api/.env — this job never overwrites secrets.
+#
+# GitHub repo → Settings → Secrets and variables → Actions:
+#   GCP_DEPLOY_HOST     e.g. 34.165.94.58
+#   GCP_DEPLOY_USER     e.g. jewelmia_dev
+#   GCP_DEPLOY_SSH_KEY  private key (PEM) for that user
+#   GCP_PUBLIC_WEB_URL  e.g. http://34.165.94.58 (used for NEXT_PUBLIC_API_URL at build)
+
+name: Deploy GCP VM
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-gcp-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.GCP_DEPLOY_HOST }}
+          username: ${{ secrets.GCP_DEPLOY_USER }}
+          key: ${{ secrets.GCP_DEPLOY_SSH_KEY }}
+          command_timeout: 30m
+          script: |
+            set -euo pipefail
+            export PATH="/usr/bin:$PATH"
+            APP_DIR="$HOME/learningapp"
+            PUBLIC_WEB_URL="${{ secrets.GCP_PUBLIC_WEB_URL }}"
+            if [ -z "$PUBLIC_WEB_URL" ]; then
+              echo "GCP_PUBLIC_WEB_URL secret is required"
+              exit 1
+            fi
+            API_PUBLIC="${PUBLIC_WEB_URL%/}/api"
+
+            cd "$APP_DIR"
+            git fetch origin main
+            git checkout main
+            git pull --ff-only origin main
+
+            npm ci
+            npm run prisma:generate -w @labpath/api
+            npm run prisma:migrate:deploy -w @labpath/api
+            npm run build:api
+
+            cd apps/web
+            NEXT_PUBLIC_API_URL="$API_PUBLIC" npm run build
+            cd "$APP_DIR"
+
+            pm2 restart api web || {
+              pm2 start npm --name api --cwd "$APP_DIR/apps/api" -- run start:prod
+              pm2 start npm --name web --cwd "$APP_DIR/apps/web" -- run start
+            }
+            pm2 save
+
+            curl -fsS -o /dev/null -w "API /me → HTTP %{http_code}\n" \
+              http://127.0.0.1:3001/api/me || true

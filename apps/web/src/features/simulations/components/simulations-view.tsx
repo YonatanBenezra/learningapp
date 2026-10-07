@@ -206,7 +206,7 @@ export function SimulationsView() {
             Browse problems
           </Link>
           <Link href={ragSimulatorRow.demoTraceHref} className="lp-sim-feature-cta-secondary">
-            Sample trace
+            Open first problem
           </Link>
           <Link href={ragSimulatorRow.startHref} className="lp-sim-path-cta">
             {ragSimulatorRow.startLabel}

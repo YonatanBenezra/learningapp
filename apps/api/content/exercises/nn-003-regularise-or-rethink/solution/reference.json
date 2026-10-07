@@ -1,5 +1,0 @@
-{
-  "overfitRun": "run-a",
-  "diagnosis": "overfitting",
-  "nextKnob": "add_regularization"
-}
