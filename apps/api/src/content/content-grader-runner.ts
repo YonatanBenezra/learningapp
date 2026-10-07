@@ -38,7 +38,6 @@ import { gradeR4 } from '../modules/grading/harnesses/rag/r4.grade';
 import { gradeSandboxRetriever } from '../modules/grading/harnesses/sandbox/sandbox.grade';
 import { parseSandboxPayload } from '../modules/grading/harnesses/sandbox/sandbox.payloads';
 import { runLocalPython } from '../modules/sandbox/local-python';
-import type { GraderArchetype } from './content-paths';
 import type { ExerciseContentBundle } from './content-loader';
 
 export type GraderRunResult = {
@@ -56,7 +55,7 @@ export async function runContentGrader(
     await readFile(path.join(bundle.dir, 'eval_public.json'), 'utf8'),
   ) as unknown;
 
-  switch (bundle.meta.graderArchetype as GraderArchetype) {
+  switch (bundle.meta.graderArchetype) {
     case 'rag-r1': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
       return gradeR1(
@@ -110,8 +109,8 @@ export async function runContentGrader(
     case 'pe-p1':
       return gradeP1(
         {
-          systemPrompt: String(payload.systemPrompt ?? ''),
-          fewShotBlock: String(payload.fewShotBlock ?? ''),
+          systemPrompt: payloadText(payload, 'systemPrompt'),
+          fewShotBlock: payloadText(payload, 'fewShotBlock'),
         },
         hiddenRaw as PeItem[],
         publicQuestions(publicRaw),
@@ -147,12 +146,12 @@ export async function runContentGrader(
     case 'ft-f5':
       return gradeF5(payload, hiddenRaw, publicQuestions(publicRaw));
     case 'eval-e1':
-      return gradeE1(String(payload.suiteYaml ?? ''), hiddenRaw as EvalItem[]);
+      return gradeE1(payloadText(payload, 'suiteYaml'), hiddenRaw as EvalItem[]);
     case 'eval-e2':
       return gradeE2(
         {
-          judgeRubric: String(payload.judgeRubric ?? ''),
-          judgePrompt: String(payload.judgePrompt ?? ''),
+          judgeRubric: payloadText(payload, 'judgeRubric'),
+          judgePrompt: payloadText(payload, 'judgePrompt'),
         },
         hiddenRaw as EvalItem[],
         publicRaw as EvalItem[],
@@ -161,28 +160,28 @@ export async function runContentGrader(
       );
     case 'eval-e3':
       return gradeE3(
-        String(payload.sliceSpecYaml ?? ''),
+        payloadText(payload, 'sliceSpecYaml'),
         hiddenRaw as EvalItem[],
         publicRaw as EvalItem[],
       );
     case 'guard-g1':
       return gradeG1(
-        String(payload.attackPrompt ?? ''),
+        payloadText(payload, 'attackPrompt'),
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
       );
     case 'guard-g2':
       return gradeG2(
-        String(payload.pageContent ?? ''),
+        payloadText(payload, 'pageContent'),
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
       );
     case 'guard-g3':
       return gradeG3(
         {
-          systemPrompt: String(payload.systemPrompt ?? ''),
-          inputFilterYaml: String(payload.inputFilterYaml ?? ''),
-          outputFilterYaml: String(payload.outputFilterYaml ?? ''),
+          systemPrompt: payloadText(payload, 'systemPrompt'),
+          inputFilterYaml: payloadText(payload, 'inputFilterYaml'),
+          outputFilterYaml: payloadText(payload, 'outputFilterYaml'),
         },
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
@@ -228,6 +227,20 @@ function contentPipelineGateway(): ModelGateway {
         cacheHit: false,
       }),
   } as unknown as ModelGateway;
+}
+
+function payloadText(payload: Record<string, unknown>, key: string): string {
+  const value = payload[key];
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (value == null) {
+    return '';
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  return '';
 }
 
 function publicQuestions(value: unknown): { question: string }[] {
