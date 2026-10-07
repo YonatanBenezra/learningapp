@@ -10,7 +10,7 @@ const hidden = JSON.parse(
   readFileSync(
     path.join(
       process.cwd(),
-      'content/exercises/grd-003-hold-the-line/eval_hidden.json',
+      'content/exercises/grd-013-filter-stack/eval_hidden.json',
     ),
     'utf8',
   ),

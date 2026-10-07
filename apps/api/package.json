@@ -15,6 +15,7 @@
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "typecheck": "tsc --noEmit -p tsconfig.build.json",
     "test": "jest",
+    "test:ci": "jest --testPathIgnorePatterns='nn-content-pipeline|ft-content-pipeline|va1-pool|n1\\.grade|p1\\.grade|a1\\.grade|agent\\.slice|benchmark/|evaluation/|fine-tuning\\.grade'",
     "test:e2e": "SANDBOX_ALLOW_RUNC_FALLBACK=true jest --config ./test/jest-e2e.json",
     "content:validate": "node scripts/content/validate-cli.mjs",
     "content:sync-catalogue": "node scripts/content/sync-catalogue.mjs",

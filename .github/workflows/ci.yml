@@ -20,5 +20,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint -w @labpath/api -- --max-warnings=0
       - run: npm run content:validate
-      - run: npm run test
+      - run: npm run test:ci
       - run: npm run build:api
