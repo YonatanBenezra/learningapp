@@ -146,7 +146,10 @@ export async function runContentGrader(
     case 'ft-f5':
       return gradeF5(payload, hiddenRaw, publicQuestions(publicRaw));
     case 'eval-e1':
-      return gradeE1(payloadText(payload, 'suiteYaml'), hiddenRaw as EvalItem[]);
+      return gradeE1(
+        payloadText(payload, 'suiteYaml'),
+        hiddenRaw as EvalItem[],
+      );
     case 'eval-e2':
       return gradeE2(
         {
@@ -186,8 +189,10 @@ export async function runContentGrader(
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
       );
-    default:
-      throw new Error(`Unsupported grader archetype: ${bundle.meta.graderArchetype}`);
+    default: {
+      const archetype: string = bundle.meta.graderArchetype;
+      throw new Error(`Unsupported grader archetype: ${archetype}`);
+    }
   }
 }
 

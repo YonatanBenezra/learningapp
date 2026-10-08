@@ -32,16 +32,19 @@ describe('gradeNeuralNetwork', () => {
     [NEURAL_NETWORK_SLUGS[2], N3_REFERENCE_PAYLOAD, N3_NEAR_MISS_PAYLOAD],
     [NEURAL_NETWORK_SLUGS[3], N4_REFERENCE_PAYLOAD, N4_NEAR_MISS_PAYLOAD],
     [NEURAL_NETWORK_SLUGS[4], N5_REFERENCE_PAYLOAD, N5_NEAR_MISS_PAYLOAD],
-  ])('grades %s reference pass and near-miss fail', (slug, reference, nearMiss) => {
-    const hidden = loadHidden(slug);
-    const pass = gradeNeuralNetwork(reference, hidden, []);
-    expect(pass.verdict).toBe('pass');
-    expect(JSON.stringify(pass)).not.toContain('HIDDEN_EVAL');
+  ])(
+    'grades %s reference pass and near-miss fail',
+    (slug, reference, nearMiss) => {
+      const hidden = loadHidden(slug);
+      const pass = gradeNeuralNetwork(reference, hidden, []);
+      expect(pass.verdict).toBe('pass');
+      expect(JSON.stringify(pass)).not.toContain('HIDDEN_EVAL');
 
-    const fail = gradeNeuralNetwork(nearMiss, hidden, []);
-    expect(fail.verdict).toBe('fail');
-    expect(JSON.stringify(fail)).not.toContain('HIDDEN_EVAL');
-  });
+      const fail = gradeNeuralNetwork(nearMiss, hidden, []);
+      expect(fail.verdict).toBe('fail');
+      expect(JSON.stringify(fail)).not.toContain('HIDDEN_EVAL');
+    },
+  );
 
   it('fails a canary echo without putting the canary in the scorecard', () => {
     const hidden = loadHidden(NEURAL_NETWORK_SLUGS[0]);

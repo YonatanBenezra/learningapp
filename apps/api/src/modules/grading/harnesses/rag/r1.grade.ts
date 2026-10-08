@@ -50,7 +50,9 @@ export function gradeR1(
         goldSpan: gold,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
       });
-      failingQueries.push(toTraceQuery('failing_sample', item.question, ranked));
+      failingQueries.push(
+        toTraceQuery('failing_sample', item.question, ranked),
+      );
     }
   }
 

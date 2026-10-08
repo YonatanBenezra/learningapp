@@ -16,7 +16,10 @@ export class ContestsController {
   }
 
   @Get(':slug')
-  getBySlug(@CurrentUser() user: AuthenticatedUser, @Param('slug') slug: string) {
+  getBySlug(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('slug') slug: string,
+  ) {
     return this.contests.getBySlug(user, slug);
   }
 

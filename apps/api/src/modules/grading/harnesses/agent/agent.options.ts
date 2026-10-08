@@ -6,8 +6,6 @@ import {
   A5_SLUG,
   exerciseNumber,
 } from '../../../catalogue/exercises/exercises.constants';
-import type { AgentGradeOptions } from './a1.grade';
-
 export const AGENT_EXERCISE_SLUGS = [
   A1_SLUG,
   A2_SLUG,
@@ -40,7 +38,9 @@ const AGENT_TEMPLATE_BY_NUM = [
   A5_SLUG,
 ] as const;
 
-export function agentGradeOptions(slug: string): import('./a1.grade').AgentGradeOptions {
+export function agentGradeOptions(
+  slug: string,
+): import('./a1.grade').AgentGradeOptions {
   if (slug in AGENT_OPTION_TEMPLATES) {
     return AGENT_OPTION_TEMPLATES[slug];
   }
@@ -48,6 +48,7 @@ export function agentGradeOptions(slug: string): import('./a1.grade').AgentGrade
   if (n === null) {
     return {};
   }
-  const template = AGENT_TEMPLATE_BY_NUM[(n - 1) % AGENT_TEMPLATE_BY_NUM.length];
+  const template =
+    AGENT_TEMPLATE_BY_NUM[(n - 1) % AGENT_TEMPLATE_BY_NUM.length];
   return AGENT_OPTION_TEMPLATES[template] ?? {};
 }

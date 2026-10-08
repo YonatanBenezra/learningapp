@@ -1,10 +1,5 @@
 export type YamlValue =
-  | string
-  | number
-  | boolean
-  | null
-  | YamlValue[]
-  | { [key: string]: YamlValue };
+  string | number | boolean | null | YamlValue[] | { [key: string]: YamlValue };
 
 /** Indent-sensitive YAML subset: maps, lists, scalars. No tags, anchors, or merge. */
 export function parseSimpleYaml(text: string): YamlValue {
@@ -38,11 +33,11 @@ function parseBlock(
   if (start >= lines.length) {
     return [{}, start];
   }
-  const indent = leading(lines[start] as string);
+  const indent = leading(lines[start]);
   if (indent < minIndent) {
     return [{}, start];
   }
-  const trimmed = (lines[start] as string).trim();
+  const trimmed = lines[start].trim();
   if (trimmed.startsWith('- ')) {
     return parseList(lines, start, indent);
   }
@@ -57,7 +52,7 @@ function parseMap(
   const map: Record<string, YamlValue> = {};
   let i = start;
   while (i < lines.length) {
-    const line = lines[i] as string;
+    const line = lines[i];
     const lineIndent = leading(line);
     if (lineIndent < indent) {
       break;
@@ -80,7 +75,7 @@ function parseMap(
       map[key] = parseScalar(rest);
       continue;
     }
-    if (i >= lines.length || leading(lines[i] as string) <= indent) {
+    if (i >= lines.length || leading(lines[i]) <= indent) {
       map[key] = null;
       continue;
     }
@@ -99,7 +94,7 @@ function parseList(
   const list: YamlValue[] = [];
   let i = start;
   while (i < lines.length) {
-    const line = lines[i] as string;
+    const line = lines[i];
     const lineIndent = leading(line);
     if (lineIndent < indent) {
       break;
@@ -120,10 +115,15 @@ function parseList(
       const item: Record<string, YamlValue> = {
         [key]: value.length > 0 ? parseScalar(value) : null,
       };
-      if (i < lines.length && leading(lines[i] as string) > indent) {
-        const [child, next] = parseMap(lines, i, leading(lines[i] as string));
+      if (i < lines.length && leading(lines[i]) > indent) {
+        const [child, next] = parseMap(lines, i, leading(lines[i]));
         Object.assign(item, child as Record<string, YamlValue>);
-        if (value.length === 0 && item[key] === null && child && typeof child === 'object') {
+        if (
+          value.length === 0 &&
+          item[key] === null &&
+          child &&
+          typeof child === 'object'
+        ) {
           delete item[key];
         }
         i = next;

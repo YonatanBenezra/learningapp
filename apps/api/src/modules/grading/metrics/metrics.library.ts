@@ -52,7 +52,8 @@ export class MetricsLibrary {
       }
     }
     const po = agree / n;
-    const pe = (aTrue / n) * (bTrue / n) + ((n - aTrue) / n) * ((n - bTrue) / n);
+    const pe =
+      (aTrue / n) * (bTrue / n) + ((n - aTrue) / n) * ((n - bTrue) / n);
     if (pe === 1) {
       return 1;
     }

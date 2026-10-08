@@ -47,9 +47,9 @@ describe('gradeA1', () => {
     expect(result.trace.steps.some((step) => step.name === 'json_store')).toBe(
       true,
     );
-    expect(result.trace.steps.every((step) => step.argsSummary.length > 0)).toBe(
-      true,
-    );
+    expect(
+      result.trace.steps.every((step) => step.argsSummary.length > 0),
+    ).toBe(true);
     expect(result.trace.steps.every((step) => step.kind === 'tool')).toBe(true);
     expect(JSON.stringify(result.trace.steps)).not.toContain('"args":');
     expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL');

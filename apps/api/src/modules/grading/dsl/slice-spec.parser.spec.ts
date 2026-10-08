@@ -18,10 +18,10 @@ min_slice_n: 20
     expect(spec.correction).toBe('benjamini_hochberg');
     expect(spec.slices[0]?.name).toBe('hebrew-billing');
     expect(
-      evalWhere(spec.slices[0]!.where, { language: 'he', category: 'billing' }),
+      evalWhere(spec.slices[0].where, { language: 'he', category: 'billing' }),
     ).toBe(true);
     expect(
-      evalWhere(spec.slices[0]!.where, { language: 'en', category: 'billing' }),
+      evalWhere(spec.slices[0].where, { language: 'en', category: 'billing' }),
     ).toBe(false);
   });
 

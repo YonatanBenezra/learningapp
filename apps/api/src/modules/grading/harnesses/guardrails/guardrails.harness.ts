@@ -43,7 +43,12 @@ export class GuardrailsHarness {
       );
     }
     if (isGuardG3Slug(input.slug)) {
-      return gradeG3(parseG3(input.payload), input.hidden, publicItems, input.runId);
+      return gradeG3(
+        parseG3(input.payload),
+        input.hidden,
+        publicItems,
+        input.runId,
+      );
     }
     throw new Error(`Unsupported guardrails exercise: ${input.slug}`);
   }
@@ -78,8 +83,12 @@ function parseG3(payload: unknown): {
     inputFilterYaml:
       typeof record.inputFilterYaml === 'string' ? record.inputFilterYaml : '',
     outputFilterYaml:
-      typeof record.outputFilterYaml === 'string' ? record.outputFilterYaml : '',
+      typeof record.outputFilterYaml === 'string'
+        ? record.outputFilterYaml
+        : '',
     toolPolicyYaml:
-      typeof record.toolPolicyYaml === 'string' ? record.toolPolicyYaml : undefined,
+      typeof record.toolPolicyYaml === 'string'
+        ? record.toolPolicyYaml
+        : undefined,
   };
 }

@@ -66,7 +66,9 @@ export class StripeGateway {
     }
     const session = await this.postForm('/checkout/sessions', params);
     if (typeof session.url !== 'string' || !session.url) {
-      throw new ServiceUnavailableException('Stripe checkout did not return a URL');
+      throw new ServiceUnavailableException(
+        'Stripe checkout did not return a URL',
+      );
     }
     return { url: session.url };
   }
@@ -81,7 +83,9 @@ export class StripeGateway {
     });
     const session = await this.postForm('/billing_portal/sessions', params);
     if (typeof session.url !== 'string' || !session.url) {
-      throw new ServiceUnavailableException('Stripe portal did not return a URL');
+      throw new ServiceUnavailableException(
+        'Stripe portal did not return a URL',
+      );
     }
     return { url: session.url };
   }
@@ -89,7 +93,9 @@ export class StripeGateway {
   constructEvent(rawBody: Buffer, signatureHeader: string): StripeEvent {
     const secret = this.webhookSecret();
     if (!secret) {
-      throw new ServiceUnavailableException('Stripe webhook secret is not configured');
+      throw new ServiceUnavailableException(
+        'Stripe webhook secret is not configured',
+      );
     }
     const parts = Object.fromEntries(
       signatureHeader.split(',').map((part) => {

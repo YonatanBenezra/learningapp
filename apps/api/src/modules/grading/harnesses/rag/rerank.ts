@@ -20,10 +20,7 @@ export function titleBoost(
   return sortRanked(boosted);
 }
 
-export function mmrRerank(
-  ranked: RankedChunk[],
-  lambda = 0.7,
-): RankedChunk[] {
+export function mmrRerank(ranked: RankedChunk[], lambda = 0.7): RankedChunk[] {
   if (ranked.length <= 1) {
     return ranked;
   }
@@ -37,7 +34,10 @@ export function mmrRerank(
       const candidate = remaining[i];
       let maxSim = 0;
       for (const row of selected) {
-        maxSim = Math.max(maxSim, jaccard(candidate.chunk.text, row.chunk.text));
+        maxSim = Math.max(
+          maxSim,
+          jaccard(candidate.chunk.text, row.chunk.text),
+        );
       }
       const mmr = lambda * candidate.score - (1 - lambda) * maxSim * scale;
       if (mmr > bestScore) {
@@ -45,7 +45,7 @@ export function mmrRerank(
         bestIndex = i;
       }
     }
-    selected.push(remaining[bestIndex] as RankedChunk);
+    selected.push(remaining[bestIndex]);
     remaining.splice(bestIndex, 1);
   }
   return selected;

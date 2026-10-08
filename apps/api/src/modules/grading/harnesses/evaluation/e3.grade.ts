@@ -16,7 +16,8 @@ export function gradeE3(
 ): HarnessGradeResult {
   const spec = parser.parse(sliceSpecYaml);
   const usable = hidden.filter(
-    (item) => !isEvalCanary(item) && item.meta && typeof item.v1Pass === 'boolean',
+    (item) =>
+      !isEvalCanary(item) && item.meta && typeof item.v1Pass === 'boolean',
   );
   const goldIds = new Set(
     usable
@@ -121,10 +122,14 @@ export function gradeE3(
         passed: fpPass,
       },
     ],
-    failureClasses: passed ? [] : e3Failures(onlyTrue, goldFlagged, spec.slices.length),
+    failureClasses: passed
+      ? []
+      : e3Failures(onlyTrue, goldFlagged, spec.slices.length),
     scorecard: {
       flagged: flaggedNames,
-      underpowered: tested.filter((row) => row.underpowered).map((row) => row.name),
+      underpowered: tested
+        .filter((row) => row.underpowered)
+        .map((row) => row.name),
       correction: spec.correction,
       test: spec.test,
     },

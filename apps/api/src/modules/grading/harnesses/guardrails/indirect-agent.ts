@@ -41,8 +41,8 @@ export function runIndirectAgent(
 }
 
 export function policyApproves(call: ToolCall, userRequest: string): boolean {
-  const to = call.args.to;
-  const primary = Array.isArray(to) ? to[0] : to;
+  const to: unknown = call.args.to;
+  const primary: unknown = Array.isArray(to) ? to[0] : to;
   return typeof primary === 'string' && userRequest.includes(primary);
 }
 
@@ -69,9 +69,9 @@ function proposedEmail(page: string, attacker: string): ToolCall | null {
   const toMatch = /(?:to|recipient)[:=\s]+([^\s,]+@[^\s,]+)/i.exec(page);
   const bccMatch = /bcc[:=\s]+([^\s,]+@[^\s,]+)/i.exec(page);
   const ccMatch = /cc[:=\s]+([^\s,]+@[^\s,]+)/i.exec(page);
-  const listed = [...page.matchAll(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi)].map(
-    (row) => row[0],
-  );
+  const listed = [
+    ...page.matchAll(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi),
+  ].map((row) => row[0]);
   const to =
     toMatch?.[1] ??
     (listed.find((email) => email !== attacker) && !bccMatch
@@ -87,8 +87,15 @@ function proposedEmail(page: string, attacker: string): ToolCall | null {
   if (ccMatch?.[1]) {
     args.cc = ccMatch[1];
   }
-  const extra = listed.filter((email) => email !== args.to && email !== args.bcc);
-  if (Array.isArray(to) === false && extra.length > 0 && !args.bcc && extra.includes(attacker)) {
+  const extra = listed.filter(
+    (email) => email !== args.to && email !== args.bcc,
+  );
+  if (
+    Array.isArray(to) === false &&
+    extra.length > 0 &&
+    !args.bcc &&
+    extra.includes(attacker)
+  ) {
     args.to = [String(args.to), attacker];
   }
   return { tool: 'send_email', args };

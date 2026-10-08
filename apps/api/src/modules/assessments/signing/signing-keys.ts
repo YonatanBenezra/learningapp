@@ -29,12 +29,16 @@ export function generateDevSigningKeyring(keyId = 'labpath-dev-01'): {
       .export({ type: 'pkcs8', format: 'der' })
       .toString('base64'),
     publicKeysJson: JSON.stringify({
-      [keyId]: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'),
+      [keyId]: publicKey
+        .export({ type: 'spki', format: 'der' })
+        .toString('base64'),
     }),
   };
 }
 
-export function loadSigningKeyring(config: SigningKeyringConfig): SigningKeyring {
+export function loadSigningKeyring(
+  config: SigningKeyringConfig,
+): SigningKeyring {
   const publicKeys = parsePublicKeys(config.publicKeysJson);
   if (!publicKeys.has(config.activeKeyId)) {
     throw new Error(
@@ -83,10 +87,14 @@ export function parsePublicKeys(json: string): Map<string, KeyObject> {
   return map;
 }
 
-export function exportPublicKeysJson(keyring: SigningKeyring): Record<string, string> {
+export function exportPublicKeysJson(
+  keyring: SigningKeyring,
+): Record<string, string> {
   const out: Record<string, string> = {};
   for (const [keyId, publicKey] of keyring.publicKeys.entries()) {
-    out[keyId] = publicKey.export({ type: 'spki', format: 'der' }).toString('base64');
+    out[keyId] = publicKey
+      .export({ type: 'spki', format: 'der' })
+      .toString('base64');
   }
   return out;
 }

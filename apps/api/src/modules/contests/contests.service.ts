@@ -175,7 +175,9 @@ export class ContestsService {
     );
     const slugs =
       entry?.sampledSlugs ??
-      contest.problems.map((problem) => problem.exerciseSlug).slice(0, contest.sampleSize);
+      contest.problems
+        .map((problem) => problem.exerciseSlug)
+        .slice(0, contest.sampleSize);
     const exercises = await this.loadExerciseMeta(slugs);
     const gradeBySlug = new Map<string, { score: number; verdict: string }>();
     if (entry) {
@@ -517,6 +519,7 @@ export class ContestsService {
     contest: Pick<Contest, 'seasonKey' | 'startsAt'>,
     now: Date,
   ): Promise<void> {
+    void now;
     const seasonKey =
       contest.seasonKey ?? currentAssessmentSeasonKey(contest.startsAt);
     const used = await this.prisma.contestEntry.findFirst({
@@ -541,7 +544,9 @@ export class ContestsService {
   ) {
     const entry = await this.syncEntryByUser(contestId, userId, now);
     if (!entry) {
-      throw new ForbiddenException('Enter the contest before solving problems.');
+      throw new ForbiddenException(
+        'Enter the contest before solving problems.',
+      );
     }
     if (entry.status !== ContestEntryStatus.active) {
       throw new BadRequestException('This contest attempt is finished.');
@@ -556,10 +561,14 @@ export class ContestsService {
     if (!entry) {
       return null;
     }
-    return this.syncEntry(entry.id, await this.prisma.contest.findUniqueOrThrow({
-      where: { id: contestId },
-      include: { problems: true },
-    }), now);
+    return this.syncEntry(
+      entry.id,
+      await this.prisma.contest.findUniqueOrThrow({
+        where: { id: contestId },
+        include: { problems: true },
+      }),
+      now,
+    );
   }
 
   private async syncEntry(
@@ -591,7 +600,10 @@ export class ContestsService {
     if (current.status !== ContestEntryStatus.active) {
       return current;
     }
-    const scored = new Map<string, { score: number; finishedAt: Date | null }>();
+    const scored = new Map<
+      string,
+      { score: number; finishedAt: Date | null }
+    >();
     for (const attempt of current.attempts) {
       const run = attempt.submissions[0]?.runs[0];
       const grade = run?.grade;
@@ -618,7 +630,10 @@ export class ContestsService {
       finishTimes.length > 0
         ? new Date(Math.max(...finishTimes.map((value) => value.getTime())))
         : now;
-    const elapsedMs = Math.max(0, elapsedAnchor.getTime() - current.startedAt.getTime());
+    const elapsedMs = Math.max(
+      0,
+      elapsedAnchor.getTime() - current.startedAt.getTime(),
+    );
     const nextStatus =
       allGraded || expired
         ? expired && !allGraded

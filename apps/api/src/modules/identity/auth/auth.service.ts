@@ -92,7 +92,9 @@ export class AuthService {
     if (!user && trimmed.includes('@') === false) {
       try {
         const slug = parseProfileSlug(trimmed);
-        user = await this.prisma.user.findFirst({ where: { profileSlug: slug } });
+        user = await this.prisma.user.findFirst({
+          where: { profileSlug: slug },
+        });
       } catch {
         user = null;
       }
@@ -266,24 +268,24 @@ export class AuthService {
   }
 
   private cookieFlags() {
-    const domain = this.config.get("COOKIE_DOMAIN", { infer: true });
-    const cors = this.config.get("CORS_ORIGINS", { infer: true });
-    const crossSite = cors.split(",").some((origin) => {
+    const domain = this.config.get('COOKIE_DOMAIN', { infer: true });
+    const cors = this.config.get('CORS_ORIGINS', { infer: true });
+    const crossSite = cors.split(',').some((origin) => {
       try {
         const host = new URL(origin.trim()).hostname;
-        return host !== "localhost" && host !== "127.0.0.1";
+        return host !== 'localhost' && host !== '127.0.0.1';
       } catch {
         return false;
       }
     });
     const secure =
-      this.config.get("NODE_ENV", { infer: true }) === "production" ||
+      this.config.get('NODE_ENV', { infer: true }) === 'production' ||
       crossSite;
     return {
       secure,
       // Vercel (web) + Render (API) is cross-site; Lax cookies are dropped.
-      sameSite: (crossSite ? "none" : "lax") as "lax" | "none",
-      domain: !domain || domain === "localhost" ? undefined : domain,
+      sameSite: crossSite ? 'none' : 'lax',
+      domain: !domain || domain === 'localhost' ? undefined : domain,
     };
   }
 

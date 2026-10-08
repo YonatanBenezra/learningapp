@@ -15,10 +15,14 @@ export class IngestSignatureGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const secret = this.config.get<string>('INGEST_SIGNING_SECRET');
     if (!secret) {
-      throw new UnauthorizedException('Ingest signing secret is not configured');
+      throw new UnauthorizedException(
+        'Ingest signing secret is not configured',
+      );
     }
 
-    const request = context.switchToHttp().getRequest<Request & { rawBody?: Buffer }>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { rawBody?: Buffer }>();
     const provided = request.headers['x-ingest-signature'];
     if (typeof provided !== 'string' || provided.length === 0) {
       throw new UnauthorizedException('Missing ingest signature');

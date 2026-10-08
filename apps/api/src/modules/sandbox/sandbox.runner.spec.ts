@@ -5,7 +5,11 @@ import {
   parseDockerMemUsage,
   sandboxEnvArgs,
 } from './sandbox.runner';
-import { parseAgentToolLog, splitToolLogStderr, withAgentEnvelope } from './sandbox.agent';
+import {
+  parseAgentToolLog,
+  splitToolLogStderr,
+  withAgentEnvelope,
+} from './sandbox.agent';
 import {
   AGENT_SANDBOX_DEFAULTS,
   SANDBOX_DEFAULTS,
@@ -71,7 +75,9 @@ describe('sandbox runner helpers', () => {
 
   it('rejects hidden eval and secret files in the workspace', () => {
     expect(() =>
-      assertWorkspaceSafe({ 'labpath_tools.py': 'def calculator(x): return 0' }),
+      assertWorkspaceSafe({
+        'labpath_tools.py': 'def calculator(x): return 0',
+      }),
     ).toThrow(/forbidden file/);
     expect(() =>
       assertWorkspaceSafe({ 'eval_hidden.json': '{"id":1}' }),

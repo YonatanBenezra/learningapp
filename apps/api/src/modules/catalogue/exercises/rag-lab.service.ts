@@ -61,7 +61,9 @@ export class RagLabService {
   ) {
     const context = await this.getContext(slug);
     if (!context.labEnabled) {
-      throw new BadRequestException('RAG lab is not available for this exercise');
+      throw new BadRequestException(
+        'RAG lab is not available for this exercise',
+      );
     }
     const selected =
       question?.trim() ||
@@ -72,7 +74,9 @@ export class RagLabService {
       return previewRagLabWithCorpus(slug, payload, selected, context.corpus);
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Invalid RAG lab preview payload';
+        error instanceof Error
+          ? error.message
+          : 'Invalid RAG lab preview payload';
       throw new BadRequestException(message);
     }
   }
@@ -86,7 +90,9 @@ export class RagLabService {
       throw new NotFoundException();
     }
     if (exercise.simulator !== 'rag') {
-      throw new BadRequestException('RAG lab is only available for RAG exercises');
+      throw new BadRequestException(
+        'RAG lab is only available for RAG exercises',
+      );
     }
     return exercise;
   }
@@ -120,10 +126,13 @@ function publicQuestions(value: unknown): RagLabQuestion[] {
     return [];
   }
   return value
-    .filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === 'object')
+    .filter(
+      (item): item is Record<string, unknown> =>
+        Boolean(item) && typeof item === 'object',
+    )
     .map((item, index) => ({
       id: typeof item.id === 'string' ? item.id : `q${index + 1}`,
-      question: String(item.question ?? ''),
+      question: typeof item.question === 'string' ? item.question : '',
       answerable: item.answerable !== false,
       goldAnswer:
         typeof item.goldAnswer === 'string'

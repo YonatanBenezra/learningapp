@@ -46,6 +46,7 @@ export function pickDailyDrill(
   if (pool.length === 0) {
     return null;
   }
-  const index = ((dayOrdinal(dateKey) % pool.length) + pool.length) % pool.length;
+  const index =
+    ((dayOrdinal(dateKey) % pool.length) + pool.length) % pool.length;
   return pool[index] ?? null;
 }

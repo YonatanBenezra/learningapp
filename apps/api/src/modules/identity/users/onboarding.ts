@@ -1,4 +1,7 @@
-import { R1_REFERENCE_PAYLOAD, R1_SLUG } from '../../catalogue/exercises/exercises.constants';
+import {
+  R1_REFERENCE_PAYLOAD,
+  R1_SLUG,
+} from '../../catalogue/exercises/exercises.constants';
 
 export const ONBOARDING_EXERCISE_SLUG = R1_SLUG;
 

@@ -1,5 +1,8 @@
 import { runLocalPython } from './local-python';
-import { AGENT_SANDBOX_DEFAULTS, SANDBOX_ERROR_CODES } from './sandbox.constants';
+import {
+  AGENT_SANDBOX_DEFAULTS,
+  SANDBOX_ERROR_CODES,
+} from './sandbox.constants';
 
 describe('agent tool host (local python)', () => {
   it('runs a trivial agent loop through calculator and writes a tool log', async () => {
@@ -37,9 +40,9 @@ print(json.dumps(t.json_store("get", "ticket"), sort_keys=True))
     });
     expect(result.ok).toBe(true);
     expect(result.stdout.trim()).toBe('rejected\n{"id": "TCK-1"}');
-    expect(result.toolLog?.some((row) => row.name === 'calculator' && !row.ok)).toBe(
-      true,
-    );
+    expect(
+      result.toolLog?.some((row) => row.name === 'calculator' && !row.ok),
+    ).toBe(true);
     expect(
       result.toolLog?.some(
         (row) => row.name === 'json_store' && row.ok && row.args.op === 'get',
@@ -65,9 +68,9 @@ for path in ("http://example.com/", "//evil.test/x", "/../etc/passwd", "/x:80"):
       'blocked',
       'blocked',
     ]);
-    expect(result.toolLog?.every((row) => row.name === 'fixture_fetch' && !row.ok)).toBe(
-      true,
-    );
+    expect(
+      result.toolLog?.every((row) => row.name === 'fixture_fetch' && !row.ok),
+    ).toBe(true);
   });
 
   it('kills a tight tool loop after the Agent step ceiling', async () => {

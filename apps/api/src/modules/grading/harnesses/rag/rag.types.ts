@@ -1,8 +1,5 @@
 export type SplitStrategy =
-  | 'fixed'
-  | 'sentence'
-  | 'recursive'
-  | 'heading-aware';
+  'fixed' | 'sentence' | 'recursive' | 'heading-aware';
 
 export type RagPayload = {
   chunkSize: number;

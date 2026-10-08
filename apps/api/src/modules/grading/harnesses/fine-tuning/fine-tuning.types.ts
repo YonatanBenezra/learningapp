@@ -88,7 +88,11 @@ export type F3GradeResult = Omit<BenchmarkGradeResult, 'trace'> & {
   };
 };
 
-export function isFineTuningCanary(row: { prompt?: string; canary?: boolean; id?: string }): boolean {
+export function isFineTuningCanary(row: {
+  prompt?: string;
+  canary?: boolean;
+  id?: string;
+}): boolean {
   return (
     row.canary === true ||
     row.id === 'canary' ||

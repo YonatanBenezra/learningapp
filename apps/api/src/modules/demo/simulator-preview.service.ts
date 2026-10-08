@@ -46,18 +46,25 @@ export class SimulatorPreviewService {
       throw new BadRequestException('Unknown simulation slug');
     }
 
-    const harness = await this.tryHarness(input.simulationId, input.slug, input.code, input.tabId);
+    const harness = await this.tryHarness(
+      input.simulationId,
+      input.slug,
+      input.code,
+      input.tabId,
+    );
     if (harness) {
       return harness;
     }
 
-    const bundle = await loadExerciseBundle(path.join(exercisesRoot, input.slug));
+    const bundle = await loadExerciseBundle(
+      path.join(exercisesRoot, input.slug),
+    );
     const briefMd = await readBriefMd(bundle.dir);
     const aiOutput = await this.openRouter.chat([
       {
         role: 'system',
         content:
-          'You are LabPath\'s landing-page grader preview. Reply with 1-3 short terminal lines only — no markdown, no code fences. Use ✓ for pass and ✗ for fail when applicable. Be concrete about metrics or mistakes.',
+          "You are LabPath's landing-page grader preview. Reply with 1-3 short terminal lines only — no markdown, no code fences. Use ✓ for pass and ✗ for fail when applicable. Be concrete about metrics or mistakes.",
       },
       {
         role: 'user',
@@ -75,7 +82,10 @@ export class SimulatorPreviewService {
 
     return {
       output: normalizeLines(aiOutput),
-      verdict: aiOutput.includes('✓') || /\bpass\b/i.test(aiOutput) ? 'pass' : 'preview',
+      verdict:
+        aiOutput.includes('✓') || /\bpass\b/i.test(aiOutput)
+          ? 'pass'
+          : 'preview',
       source: 'ai',
     };
   }
@@ -104,7 +114,11 @@ export class SimulatorPreviewService {
           if (tabId !== 'yaml') {
             return null;
           }
-          const result = gradeE1(code, hiddenRaw as EvalItem[], publicRaw as EvalItem[]);
+          const result = gradeE1(
+            code,
+            hiddenRaw as EvalItem[],
+            publicRaw as EvalItem[],
+          );
           const passed = result.verdict === 'pass';
           const f1 = result.metrics.f1?.value;
           return {
@@ -145,7 +159,11 @@ export class SimulatorPreviewService {
           if (!payload) {
             return null;
           }
-          const result = gradeNeuralNetwork(payload, hiddenRaw, publicItems(publicRaw));
+          const result = gradeNeuralNetwork(
+            payload,
+            hiddenRaw,
+            publicItems(publicRaw),
+          );
           const passed = result.verdict === 'pass';
           return {
             output: passed
@@ -185,12 +203,16 @@ function publicItems(raw: unknown): { question: string }[] {
   }
   return raw
     .filter((item): item is { question: string } =>
-      Boolean(item && typeof item === 'object' && typeof (item as { question?: unknown }).question === 'string'),
+      Boolean(
+        item &&
+        typeof item === 'object' &&
+        typeof (item as { question?: unknown }).question === 'string',
+      ),
     )
     .map((item) => ({ question: item.question }));
 }
 
-function extractPayload(code: string, tabId: SimulationPreviewTab): unknown | null {
+function extractPayload(code: string, tabId: SimulationPreviewTab): unknown {
   if (tabId === 'json') {
     try {
       return JSON.parse(code);
@@ -221,12 +243,10 @@ function extractPayload(code: string, tabId: SimulationPreviewTab): unknown | nu
   return Object.keys(fields).length > 0 ? fields : null;
 }
 
-function extractYamlObject(code: string): unknown | null {
+function extractYamlObject(code: string): unknown {
   const lines = code.split('\n');
   const root: Record<string, unknown> = {};
   let currentList: Record<string, unknown>[] | null = null;
-  let currentListKey = '';
-
   for (const rawLine of lines) {
     const line = rawLine.trimEnd();
     if (!line.trim() || line.trim().startsWith('#')) {
@@ -248,7 +268,6 @@ function extractYamlObject(code: string): unknown | null {
 
     const [, key, rawValue] = keyVal;
     if (!rawValue) {
-      currentListKey = key;
       currentList = [];
       root[key] = currentList;
       continue;
@@ -301,12 +320,15 @@ function extractPythonFields(code: string): Record<string, unknown> {
   ];
 
   for (const [key, kind] of patterns) {
-    const match = code.match(new RegExp(`${key}\\s*[:=]\\s*("([^"]+)"|'([^']+)'|([^,\\n}]+))`));
+    const match = code.match(
+      new RegExp(`${key}\\s*[:=]\\s*("([^"]+)"|'([^']+)'|([^,\\n}]+))`),
+    );
     if (!match) {
       continue;
     }
     const raw = (match[2] ?? match[3] ?? match[4] ?? '').trim();
-    fields[key] = kind === 'number' ? Number(raw) : raw.replace(/^["']|["']$/g, '');
+    fields[key] =
+      kind === 'number' ? Number(raw) : raw.replace(/^["']|["']$/g, '');
   }
 
   return fields;

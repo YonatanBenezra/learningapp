@@ -67,7 +67,12 @@ export function gradeNeuralNetwork(
     },
     gateResults: [
       gate('target-run', 'target_run', runPass ? 1 : 0, runPass),
-      gate('diagnosis-ok', 'diagnosis_ok', diagnosisPass ? 1 : 0, diagnosisPass),
+      gate(
+        'diagnosis-ok',
+        'diagnosis_ok',
+        diagnosisPass ? 1 : 0,
+        diagnosisPass,
+      ),
       gate('knob-ok', 'knob_ok', knobPass ? 1 : 0, knobPass),
       gate('no-canary', 'no_canary', canaryPass ? 1 : 0, canaryPass),
     ],

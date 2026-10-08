@@ -10,11 +10,7 @@ import {
 } from './exercises.constants';
 
 type GraderArchetype =
-  | 'rag-r1'
-  | 'rag-r2'
-  | 'rag-r3'
-  | 'rag-r4'
-  | 'rag-sandbox';
+  'rag-r1' | 'rag-r2' | 'rag-r3' | 'rag-r4' | 'rag-sandbox';
 
 function harnessArchetype(slug: string): GraderArchetype | 'unknown' {
   if (isSandboxRagSlug(slug)) {
@@ -49,7 +45,9 @@ function metaArchetype(slug: string): GraderArchetype {
 }
 
 describe('RAG slug archetype routing (production harness + lab)', () => {
-  const ragSlugs = loadPublishedSlugs().filter((slug) => slug.startsWith('rag-'));
+  const ragSlugs = loadPublishedSlugs().filter((slug) =>
+    slug.startsWith('rag-'),
+  );
 
   it('matches meta.graderArchetype for every published RAG exercise', () => {
     for (const slug of ragSlugs) {

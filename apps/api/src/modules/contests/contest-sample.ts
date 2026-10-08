@@ -11,5 +11,7 @@ export function sampleFromPool(
       rank: createHash('sha256').update(`${seed}:${slug}`).digest('hex'),
     }))
     .sort((left, right) => left.rank.localeCompare(right.rank));
-  return ranked.slice(0, Math.min(sampleSize, pool.length)).map((row) => row.slug);
+  return ranked
+    .slice(0, Math.min(sampleSize, pool.length))
+    .map((row) => row.slug);
 }

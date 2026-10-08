@@ -1,6 +1,9 @@
 import { generateKeyPairSync } from 'node:crypto';
 import { canonicalJson } from './canonical-json';
-import { signAssessmentPayload, verifyAssessmentSignature } from './result-signer';
+import {
+  signAssessmentPayload,
+  verifyAssessmentSignature,
+} from './result-signer';
 import type { SignedAssessmentPayload } from './signed-payload';
 import { loadSigningKeyring } from './signing-keys';
 
@@ -15,7 +18,9 @@ function testKeyring() {
       .export({ type: 'pkcs8', format: 'der' })
       .toString('base64'),
     publicKeysJson: JSON.stringify({
-      [keyId]: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'),
+      [keyId]: publicKey
+        .export({ type: 'spki', format: 'der' })
+        .toString('base64'),
       [retiredId]: retiredPublic
         .export({ type: 'spki', format: 'der' })
         .toString('base64'),
@@ -108,8 +113,8 @@ describe('result-signer', () => {
         retiredKeyId,
         loadSigningKeyring({
           activeKeyId: 'test-key-next',
-          privateKeyDerBase64: generateKeyPairSync('ed25519').privateKey
-            .export({ type: 'pkcs8', format: 'der' })
+          privateKeyDerBase64: generateKeyPairSync('ed25519')
+            .privateKey.export({ type: 'pkcs8', format: 'der' })
             .toString('base64'),
           publicKeysJson: JSON.stringify({
             'test-key-next': newPublic

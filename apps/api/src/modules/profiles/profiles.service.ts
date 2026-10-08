@@ -58,47 +58,50 @@ export class ProfilesService {
 
     const [passRows, skills, contestRating, verifiedRows, attemptCount] =
       await Promise.all([
-      this.prisma.grade.findMany({
-        where: {
-          verdict: 'pass',
-          run: { submission: { attempt: { userId: user.id } } },
-        },
-        orderBy: { createdAt: 'desc' },
-        select: {
-          createdAt: true,
-          run: {
-            select: {
-              submission: {
-                select: {
-                  attempt: {
-                    select: {
-                      exercise: { select: { slug: true, title: true } },
+        this.prisma.grade.findMany({
+          where: {
+            verdict: 'pass',
+            run: { submission: { attempt: { userId: user.id } } },
+          },
+          orderBy: { createdAt: 'desc' },
+          select: {
+            createdAt: true,
+            run: {
+              select: {
+                submission: {
+                  select: {
+                    attempt: {
+                      select: {
+                        exercise: { select: { slug: true, title: true } },
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      }),
-      this.prisma.userSkillScore.findMany({
-        where: { userId: user.id },
-        include: { skill: true },
-        orderBy: { skill: { name: 'asc' } },
-      }),
-      this.bestContestRating(user.id),
-      this.prisma.signedAssessmentResult.findMany({
-        where: {
-          userId: user.id,
-          sharedPublicAt: { not: null },
-          revokedAt: null,
-        },
-        orderBy: { issuedAt: 'desc' },
-      }),
-      this.prisma.attempt.count({ where: { userId: user.id } }),
-    ]);
+        }),
+        this.prisma.userSkillScore.findMany({
+          where: { userId: user.id },
+          include: { skill: true },
+          orderBy: { skill: { name: 'asc' } },
+        }),
+        this.bestContestRating(user.id),
+        this.prisma.signedAssessmentResult.findMany({
+          where: {
+            userId: user.id,
+            sharedPublicAt: { not: null },
+            revokedAt: null,
+          },
+          orderBy: { issuedAt: 'desc' },
+        }),
+        this.prisma.attempt.count({ where: { userId: user.id } }),
+      ]);
 
-    const solved = new Map<string, { slug: string; title: string; passedAt: Date }>();
+    const solved = new Map<
+      string,
+      { slug: string; title: string; passedAt: Date }
+    >();
     // One clock for every decayed row in this response.
     const now = new Date();
     const recentCutoff = new Date(now.getTime() - RECENT_PASS_WINDOW_MS);
@@ -137,13 +140,11 @@ export class ProfilesService {
       },
       verifiedResults: verifiedRows.map((row) => toPublicVerifiedResult(row)),
       skills: skills.map((row) => toSkillScoreView(row, now)),
-      recent: [...solved.values()]
-        .slice(0, RECENT_SOLVE_LIMIT)
-        .map((row) => ({
-          slug: row.slug,
-          title: row.title,
-          passedAt: row.passedAt.toISOString(),
-        })),
+      recent: [...solved.values()].slice(0, RECENT_SOLVE_LIMIT).map((row) => ({
+        slug: row.slug,
+        title: row.title,
+        passedAt: row.passedAt.toISOString(),
+      })),
     };
   }
 
@@ -178,7 +179,9 @@ export class ProfilesService {
         throw new ForbiddenException(PRO_REQUIRED);
       }
       if (dto.enabled && !nextSlug) {
-        throw new BadRequestException('Choose a profile URL before publishing.');
+        throw new BadRequestException(
+          'Choose a profile URL before publishing.',
+        );
       }
       data.profilePublic = dto.enabled;
     }

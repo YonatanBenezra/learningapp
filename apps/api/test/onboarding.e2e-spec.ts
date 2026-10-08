@@ -30,7 +30,10 @@ describe('Onboarding (e2e)', () => {
   });
 
   it('still accepts onboarding analytics events', async () => {
-    const cookies = await signIn(app, `onboard-event-${Date.now()}@labpath.test`);
+    const cookies = await signIn(
+      app,
+      `onboard-event-${Date.now()}@labpath.test`,
+    );
     await request(app.getHttpServer())
       .post('/api/me/events')
       .set('Cookie', cookies)

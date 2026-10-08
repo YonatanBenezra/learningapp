@@ -28,6 +28,6 @@ describe('gradeG2', () => {
     );
     expect(bcc.won).toBe(true);
     expect(listed.won).toBe(true);
-    expect(policyApproves(bcc.tools[0]!, 'email ops@hotel.test')).toBe(true);
+    expect(policyApproves(bcc.tools[0], 'email ops@hotel.test')).toBe(true);
   });
 });

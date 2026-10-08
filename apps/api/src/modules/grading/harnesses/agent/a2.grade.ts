@@ -1,8 +1,4 @@
-import type {
-  AgentGradeResult,
-  AgentItem,
-  AgentPayload,
-} from './agent.types';
+import type { AgentGradeResult, AgentItem, AgentPayload } from './agent.types';
 import { isAgentCanary } from './agent.types';
 import { agentWorkspaceFiles } from './agent.input';
 import { finishAgentGrade, type AgentExecutor } from './a1.grade';

@@ -31,7 +31,9 @@ describe('Contests (e2e)', () => {
   });
 
   it('lists no published contests without a cookie', async () => {
-    const response = await request(app.getHttpServer()).get('/api/contests').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/api/contests')
+      .expect(200);
     expect(Array.isArray(response.body.items)).toBe(true);
     if (!CONTESTS_LIVE) {
       expect(response.body.items).toEqual([]);
@@ -40,7 +42,10 @@ describe('Contests (e2e)', () => {
 
   describeLiveContests('dogfood season', () => {
     it('lets Free users enter contests', async () => {
-      const cookies = await signIn(app, `contest-free-${Date.now()}@labpath.test`);
+      const cookies = await signIn(
+        app,
+        `contest-free-${Date.now()}@labpath.test`,
+      );
       const response = await request(app.getHttpServer())
         .post(`/api/contests/${DOGFOOD_CONTEST}/enter`)
         .set('Cookie', cookies)
@@ -50,7 +55,10 @@ describe('Contests (e2e)', () => {
     });
 
     it('lets Pro users enter, records sample_seed, and hides pool items', async () => {
-      const cookies = await signIn(app, `contest-pro-${Date.now()}@labpath.test`);
+      const cookies = await signIn(
+        app,
+        `contest-pro-${Date.now()}@labpath.test`,
+      );
       const me = await request(app.getHttpServer())
         .get('/api/me')
         .set('Cookie', cookies)
@@ -81,7 +89,10 @@ describe('Contests (e2e)', () => {
     });
 
     it('serves contest exercises only after entry', async () => {
-      const cookies = await signIn(app, `contest-ex-${Date.now()}@labpath.test`);
+      const cookies = await signIn(
+        app,
+        `contest-ex-${Date.now()}@labpath.test`,
+      );
       const me = await request(app.getHttpServer())
         .get('/api/me')
         .set('Cookie', cookies)

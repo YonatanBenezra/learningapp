@@ -65,10 +65,15 @@ export function gradeF2(
       ? [{ question: 'canary', note: 'canary-leak' }]
       : passed
         ? []
-        : [{ question: parsed.issue, note: 'Check train/eval overlap in the sample rows.' }],
+        : [
+            {
+              question: parsed.issue,
+              note: 'Check train/eval overlap in the sample rows.',
+            },
+          ],
     trace: {
       simulator: 'fine_tuning',
-      payload: parsed as unknown as Record<string, unknown>,
+      payload: parsed,
       sandbox: { durationMs, wallClock: 'information' },
       k: 0,
       chunkCount: 0,

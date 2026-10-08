@@ -34,7 +34,12 @@ export async function gradeR4(
   gateway: ModelGateway | undefined,
   runId: string,
 ): Promise<RagGradeResult> {
-  const chunks = chunkCorpus(docs, FROZEN_CHUNK, FROZEN_OVERLAP, 'heading-aware');
+  const chunks = chunkCorpus(
+    docs,
+    FROZEN_CHUNK,
+    FROZEN_OVERLAP,
+    'heading-aware',
+  );
   const answerable = answerableHidden(hidden);
   const rewrite = payload.queryRewritePrompt.trim();
   const callsPerQuestion = rewrite ? 1 : 0;
@@ -68,14 +73,17 @@ export async function gradeR4(
         goldSpan: item.goldSpan ?? undefined,
         retrieved: reranked.map((row) => row.chunk.text.slice(0, 220)),
       });
-      failingQueries.push(toTraceQuery('failing_sample', item.question, reranked));
+      failingQueries.push(
+        toTraceQuery('failing_sample', item.question, reranked),
+      );
     }
   }
 
   const meanImprovement =
     improvements.length === 0
       ? 0
-      : improvements.reduce((sum, value) => sum + value, 0) / improvements.length;
+      : improvements.reduce((sum, value) => sum + value, 0) /
+        improvements.length;
   const meanContext =
     contextTokens.length === 0
       ? 0
@@ -174,9 +182,9 @@ function rerankForR4(
 }
 
 function ndcgForGold(ranked: RankedChunk[], goldDocId: string): number {
-  const relevances = ranked.slice(0, K).map((row) =>
-    row.chunk.docId === goldDocId ? 1 : 0,
-  );
+  const relevances = ranked
+    .slice(0, K)
+    .map((row) => (row.chunk.docId === goldDocId ? 1 : 0));
   if (!relevances.includes(1)) {
     return 0;
   }

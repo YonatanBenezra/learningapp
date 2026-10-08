@@ -33,7 +33,12 @@ export function gradeF4(
     },
     gateResults: [
       gate('adapter-ok', 'adapter_ok', adapterPass ? 1 : 0, adapterPass),
-      gate('rationale-ok', 'rationale_ok', rationalePass ? 1 : 0, rationalePass),
+      gate(
+        'rationale-ok',
+        'rationale_ok',
+        rationalePass ? 1 : 0,
+        rationalePass,
+      ),
       gate('no-canary', 'no_canary', canaryPass ? 1 : 0, canaryPass),
     ],
     failureClasses: passed
@@ -54,10 +59,15 @@ export function gradeF4(
       ? [{ question: 'canary', note: 'canary-leak' }]
       : passed
         ? []
-        : [{ question: parsed.adapterChoice, note: 'Match adapter to dataset size and budget.' }],
+        : [
+            {
+              question: parsed.adapterChoice,
+              note: 'Match adapter to dataset size and budget.',
+            },
+          ],
     trace: {
       simulator: 'fine_tuning',
-      payload: parsed as unknown as Record<string, unknown>,
+      payload: parsed,
       sandbox: { durationMs, wallClock: 'information' },
       k: 0,
       chunkCount: 0,

@@ -38,7 +38,10 @@ export function parseNeuralNetworkPayload(
   ) {
     throw new Error('diagnosis must be overfitting, underfitting, or good_fit');
   }
-  if (typeof nextKnob !== 'string' || !KNOBS.has(nextKnob as NeuralNetworkKnob)) {
+  if (
+    typeof nextKnob !== 'string' ||
+    !KNOBS.has(nextKnob as NeuralNetworkKnob)
+  ) {
     throw new Error('nextKnob is invalid');
   }
   return {

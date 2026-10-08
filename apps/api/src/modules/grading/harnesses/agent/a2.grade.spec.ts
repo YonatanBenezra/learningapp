@@ -38,9 +38,9 @@ describe('gradeA2', () => {
     expect(result.metrics.recovered.value).toBe(1);
     expect(result.metrics.loop_ok.value).toBe(1);
     expect(result.trace.steps.some((step) => !step.ok)).toBe(true);
-    expect(result.trace.steps.some((step) => step.ok && step.name === 'calculator')).toBe(
-      true,
-    );
+    expect(
+      result.trace.steps.some((step) => step.ok && step.name === 'calculator'),
+    ).toBe(true);
     expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL');
     expect(JSON.stringify(result.trace)).not.toContain('HIDDEN_EVAL');
   });

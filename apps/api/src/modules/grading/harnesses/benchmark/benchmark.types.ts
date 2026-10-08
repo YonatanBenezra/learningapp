@@ -30,9 +30,7 @@ export type BenchmarkHidden = {
 
 export type BenchmarkRankingCall = 'noise' | 'a_wins' | 'b_wins';
 export type BenchmarkDeltaCause =
-  | 'ci_overlap'
-  | 'seed_or_wrapper'
-  | 'better_model';
+  'ci_overlap' | 'seed_or_wrapper' | 'better_model';
 
 export type BenchmarkPayload = {
   rankingCall: BenchmarkRankingCall;

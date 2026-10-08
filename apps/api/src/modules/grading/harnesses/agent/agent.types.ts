@@ -1,6 +1,7 @@
 import type { FailingCase, GateResult, MetricValue } from '../rag/rag.types';
 
-export type AgentToolName = 'calculator' | 'json_store' | 'fixture_fetch' | 'none';
+export type AgentToolName =
+  'calculator' | 'json_store' | 'fixture_fetch' | 'none';
 
 export type AgentItem = {
   id: string;
@@ -83,5 +84,7 @@ export type AgentGradeResult = {
 };
 
 export function isAgentCanary(item: AgentItem): boolean {
-  return item.gold.canary === true || JSON.stringify(item).includes('HIDDEN_EVAL');
+  return (
+    item.gold.canary === true || JSON.stringify(item).includes('HIDDEN_EVAL')
+  );
 }

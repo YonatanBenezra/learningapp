@@ -53,7 +53,8 @@ export class SliceSpecParser {
       }
       return { name, where: parseWhere(where), source: where };
     });
-    const test = record.test === 'bootstrap_diff' ? 'bootstrap_diff' : 'two_proportion_z';
+    const test =
+      record.test === 'bootstrap_diff' ? 'bootstrap_diff' : 'two_proportion_z';
     return {
       version: Number(record.version ?? 1),
       slices,
@@ -61,7 +62,8 @@ export class SliceSpecParser {
       test,
       alpha: typeof record.alpha === 'number' ? record.alpha : 0.05,
       correction,
-      minSliceN: typeof record.min_slice_n === 'number' ? record.min_slice_n : 20,
+      minSliceN:
+        typeof record.min_slice_n === 'number' ? record.min_slice_n : 20,
     };
   }
 }
@@ -141,7 +143,12 @@ export function parseWhere(input: string): SliceWhere {
       throw new Error(`illegal operator: ${op}`);
     }
     const raw = next();
-    return { type: 'cmp', path: path.slice('meta.'.length), op, value: parseValue(raw) };
+    return {
+      type: 'cmp',
+      path: path.slice('meta.'.length),
+      op,
+      value: parseValue(raw),
+    };
   }
 
   const expr = parseOr();
@@ -167,7 +174,7 @@ function tokenizeWhere(input: string): string[] {
         throw new Error(`illegal token in where: ${gap}`);
       }
     }
-    tokens.push(match[1] as string);
+    tokens.push(match[1]);
     consumed = match.index + match[0].length;
   }
   if (input.slice(consumed).trim()) {
@@ -199,7 +206,11 @@ function lookup(meta: Record<string, unknown>, field: string): unknown {
   return meta[field];
 }
 
-function compare(left: unknown, op: CmpOp, right: string | number | boolean): boolean {
+function compare(
+  left: unknown,
+  op: CmpOp,
+  right: string | number | boolean,
+): boolean {
   if (op === '==') {
     return left === right;
   }

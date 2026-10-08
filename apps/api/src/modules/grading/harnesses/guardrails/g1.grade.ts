@@ -49,7 +49,9 @@ export async function gradeG1(
     scorecard: {
       wins,
       debrief: passed
-        ? wins.map((row) => `L${row.level} carried via ${row.encoding ?? 'unknown'}`)
+        ? wins.map(
+            (row) => `L${row.level} carried via ${row.encoding ?? 'unknown'}`,
+          )
         : wins.filter((row) => !row.won).map((row) => `L${row.level} held`),
     },
     failingCases: wins

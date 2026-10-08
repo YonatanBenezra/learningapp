@@ -53,5 +53,5 @@ export function va1BandForTotalScore(totalScore: number): Va1Band {
       return band;
     }
   }
-  return VA1_BANDS[VA1_BANDS.length - 1]!;
+  return VA1_BANDS[VA1_BANDS.length - 1];
 }

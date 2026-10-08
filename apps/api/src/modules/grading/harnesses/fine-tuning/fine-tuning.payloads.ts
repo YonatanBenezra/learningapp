@@ -8,7 +8,10 @@ import type {
 } from './fine-tuning.types';
 
 const APPROACHES = new Set<FineTuningApproach>(['prompt', 'fine_tune']);
-const ECONOMICS = new Set<FineTuningEconomics>(['prompt_wins', 'fine_tune_wins']);
+const ECONOMICS = new Set<FineTuningEconomics>([
+  'prompt_wins',
+  'fine_tune_wins',
+]);
 const ISSUES = new Set<DatasetIssue>([
   'leakage',
   'duplicate',
@@ -55,10 +58,16 @@ export function parseF2Payload(payload: unknown): F2Payload {
     throw new Error('Fine-tuning payload must be an object');
   }
   const record = payload as Record<string, unknown>;
-  if (typeof record.issue !== 'string' || !ISSUES.has(record.issue as DatasetIssue)) {
+  if (
+    typeof record.issue !== 'string' ||
+    !ISSUES.has(record.issue as DatasetIssue)
+  ) {
     throw new Error('issue must be leakage, duplicate, label_noise, or format');
   }
-  if (!Array.isArray(record.rowIds) || record.rowIds.some((id) => typeof id !== 'string')) {
+  if (
+    !Array.isArray(record.rowIds) ||
+    record.rowIds.some((id) => typeof id !== 'string')
+  ) {
     throw new Error('rowIds must be a string array');
   }
   return {

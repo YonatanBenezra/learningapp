@@ -145,7 +145,10 @@ describeLiveCatalogue('Tier enforcement (e2e)', () => {
     expect(freeTrace.body.k).toBe(4);
     expect(JSON.stringify(freeTrace.body)).toMatch(/Pro/);
 
-    const proCookies = await signIn(app, `trace-pro-${Date.now()}@labpath.test`);
+    const proCookies = await signIn(
+      app,
+      `trace-pro-${Date.now()}@labpath.test`,
+    );
     const proMe = await request(app.getHttpServer())
       .get('/api/me')
       .set('Cookie', proCookies)

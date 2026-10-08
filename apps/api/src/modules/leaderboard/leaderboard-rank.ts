@@ -9,11 +9,16 @@ export type LeaderboardSortRow = {
   recentPasses: number;
 };
 
-export function leaderboardRating(solves: number, recentPasses: number): number {
+export function leaderboardRating(
+  solves: number,
+  recentPasses: number,
+): number {
   return solves * 100 + recentPasses;
 }
 
-export function sortLeaderboardRows<T extends LeaderboardSortRow>(rows: T[]): T[] {
+export function sortLeaderboardRows<T extends LeaderboardSortRow>(
+  rows: T[],
+): T[] {
   return [...rows].sort((left, right) => {
     if (right.solves !== left.solves) {
       return right.solves - left.solves;

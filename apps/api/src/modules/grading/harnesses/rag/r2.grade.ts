@@ -27,12 +27,7 @@ export function gradeR2(
   hidden: HiddenItem[],
   publicItems: { question: string }[] = [],
 ): RagGradeResult {
-  const chunks = chunkCorpus(
-    docs,
-    payload.chunkSize,
-    OVERLAP,
-    'heading-aware',
-  );
+  const chunks = chunkCorpus(docs, payload.chunkSize, OVERLAP, 'heading-aware');
   const answerable = answerableHidden(hidden);
   const misses: RagGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
@@ -59,7 +54,9 @@ export function gradeR2(
         goldSpan: gold,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
       });
-      failingQueries.push(toTraceQuery('failing_sample', item.question, ranked));
+      failingQueries.push(
+        toTraceQuery('failing_sample', item.question, ranked),
+      );
     }
   }
 
@@ -100,7 +97,9 @@ export function gradeR2(
       },
       advisoryClassB('answer-correctness', 'answer_correctness'),
     ],
-    failureClasses: passed ? [] : r2FailureClasses(payload, recallPass, costPass),
+    failureClasses: passed
+      ? []
+      : r2FailureClasses(payload, recallPass, costPass),
     scorecard: {
       recallAtK: recall,
       meanPromptTokens: meanTokens,

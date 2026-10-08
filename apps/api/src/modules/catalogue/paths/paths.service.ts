@@ -107,7 +107,9 @@ export class PathsService {
         run: {
           select: {
             submission: {
-              select: { attempt: { select: { exercise: { select: { slug: true } } } } },
+              select: {
+                attempt: { select: { exercise: { select: { slug: true } } } },
+              },
             },
           },
         },
@@ -121,7 +123,12 @@ export class PathsService {
   }
 
   private toListItem(
-    path: { slug: string; title: string; intent: string; steps: { exerciseSlug: string }[] },
+    path: {
+      slug: string;
+      title: string;
+      intent: string;
+      steps: { exerciseSlug: string }[];
+    },
     passed: ReadonlySet<string>,
   ): PathListItem {
     const steps = path.steps.map((step) => step.exerciseSlug);

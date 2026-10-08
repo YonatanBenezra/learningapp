@@ -96,10 +96,7 @@ describe('Neural network grading (e2e)', () => {
   });
 
   it('grades N1 reference and near-miss without leaking hidden eval', async () => {
-    const cookies = await signInPro(
-      app,
-      `nn-grade-${Date.now()}@labpath.test`,
-    );
+    const cookies = await signInPro(app, `nn-grade-${Date.now()}@labpath.test`);
 
     const pass = await submit(app, cookies, N1_SLUG, {
       ...N1_REFERENCE_PAYLOAD,

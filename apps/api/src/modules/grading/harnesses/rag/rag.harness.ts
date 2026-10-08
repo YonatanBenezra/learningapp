@@ -7,7 +7,12 @@ import {
 } from '../../../catalogue/exercises/exercises.constants';
 import { ModelGateway } from '../../gateway/model.gateway';
 import type { CorpusDoc } from './chunking';
-import { parseR1Payload, parseR2Payload, parseR3Payload, parseR4Payload } from './rag.payloads';
+import {
+  parseR1Payload,
+  parseR2Payload,
+  parseR3Payload,
+  parseR4Payload,
+} from './rag.payloads';
 import { gradeR1 } from './r1.grade';
 import { gradeR2 } from './r2.grade';
 import { gradeR3 } from './r3.grade';

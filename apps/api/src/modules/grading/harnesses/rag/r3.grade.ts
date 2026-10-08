@@ -90,7 +90,8 @@ export async function gradeR3(
         overlapSum += overlap;
         overlapCount += 1;
       }
-      const grounded = !refused && overlap >= OVERLAP_THRESHOLD && citations.length > 0;
+      const grounded =
+        !refused && overlap >= OVERLAP_THRESHOLD && citations.length > 0;
       if (!grounded && misses.length < FAILING_SAMPLE_LIMIT) {
         misses.push({
           question: item.question,
@@ -114,7 +115,9 @@ export async function gradeR3(
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
         note: 'under-refusal',
       });
-      failingQueries.push(toTraceQuery('failing_sample', item.question, ranked));
+      failingQueries.push(
+        toTraceQuery('failing_sample', item.question, ranked),
+      );
     }
   }
 
@@ -124,8 +127,7 @@ export async function gradeR3(
   const overlapPass = meanOverlap >= OVERLAP_THRESHOLD;
   const underRefusePass = unanswerableRefusals >= UNANSWERABLE_NEED;
   const overRefusePass = answerableRefusals <= ANSWERABLE_REFUSE_MAX;
-  const passed =
-    formatPass && overlapPass && underRefusePass && overRefusePass;
+  const passed = formatPass && overlapPass && underRefusePass && overRefusePass;
 
   return {
     verdict: passed ? 'pass' : 'fail',

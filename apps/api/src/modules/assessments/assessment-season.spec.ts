@@ -20,8 +20,8 @@ describe('assessmentSeasonKey', () => {
   });
 
   it('currentAssessmentSeasonKey uses now', () => {
-    expect(currentAssessmentSeasonKey(new Date('2026-09-14T00:00:00.000Z'))).toBe(
-      '2026-Q3',
-    );
+    expect(
+      currentAssessmentSeasonKey(new Date('2026-09-14T00:00:00.000Z')),
+    ).toBe('2026-Q3');
   });
 });

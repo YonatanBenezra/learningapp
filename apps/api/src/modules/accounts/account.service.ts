@@ -45,10 +45,7 @@ export class AccountService {
   ): Promise<Account> {
     const account = await this.ensureAccount(userId, db);
     const resetPeriod = shouldResetPeriod(account, now);
-    if (
-      !product.unlimitedPractice &&
-      remainingAttempts(account, now) <= 0
-    ) {
+    if (!product.unlimitedPractice && remainingAttempts(account, now) <= 0) {
       throw new QuotaExceededException(account.tier);
     }
     const resetDaily =
@@ -170,7 +167,10 @@ function mapStripeStatus(status: string): {
   switch (status) {
     case 'active':
     case 'trialing':
-      return { tier: AccountTier.pro, subscriptionStatus: SubscriptionStatus.active };
+      return {
+        tier: AccountTier.pro,
+        subscriptionStatus: SubscriptionStatus.active,
+      };
     case 'past_due':
     case 'unpaid':
       return {

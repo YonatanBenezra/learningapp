@@ -13,7 +13,9 @@ export class SimulationsService {
     const page =
       typeof payload.pageContent === 'string' ? payload.pageContent : '';
     const level =
-      typeof payload.level === 'number' ? Math.min(3, Math.max(1, payload.level)) : 1;
+      typeof payload.level === 'number'
+        ? Math.min(3, Math.max(1, payload.level))
+        : 1;
     return runIndirectAgent(level, page);
   }
 }

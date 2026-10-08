@@ -24,10 +24,16 @@ export function parseBenchmarkPayload(payload: unknown): BenchmarkPayload {
   const record = payload as Record<string, unknown>;
   const rankingCall = record.rankingCall;
   const deltaCause = record.deltaCause;
-  if (typeof rankingCall !== 'string' || !CALLS.has(rankingCall as BenchmarkRankingCall)) {
+  if (
+    typeof rankingCall !== 'string' ||
+    !CALLS.has(rankingCall as BenchmarkRankingCall)
+  ) {
     throw new Error('rankingCall must be noise, a_wins, or b_wins');
   }
-  if (typeof deltaCause !== 'string' || !CAUSES.has(deltaCause as BenchmarkDeltaCause)) {
+  if (
+    typeof deltaCause !== 'string' ||
+    !CAUSES.has(deltaCause as BenchmarkDeltaCause)
+  ) {
     throw new Error(
       'deltaCause must be ci_overlap, seed_or_wrapper, or better_model',
     );

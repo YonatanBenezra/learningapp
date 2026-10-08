@@ -47,26 +47,29 @@ describe('Accounts & tier (e2e)', () => {
     });
   });
 
-  (CATALOGUE_LIVE ? it : it.skip)('increments quota counters on a graded submission', async () => {
-    const started = await request(app.getHttpServer())
-      .post('/api/attempts')
-      .set('Cookie', cookies)
-      .send({ exerciseSlug: R1_SLUG })
-      .expect(201);
-    await request(app.getHttpServer())
-      .post(`/api/attempts/${started.body.id}/submissions`)
-      .set('Cookie', cookies)
-      .send({ payload: R1_REFERENCE_PAYLOAD })
-      .expect(201);
+  (CATALOGUE_LIVE ? it : it.skip)(
+    'increments quota counters on a graded submission',
+    async () => {
+      const started = await request(app.getHttpServer())
+        .post('/api/attempts')
+        .set('Cookie', cookies)
+        .send({ exerciseSlug: R1_SLUG })
+        .expect(201);
+      await request(app.getHttpServer())
+        .post(`/api/attempts/${started.body.id}/submissions`)
+        .set('Cookie', cookies)
+        .send({ payload: R1_REFERENCE_PAYLOAD })
+        .expect(201);
 
-    const me = await request(app.getHttpServer())
-      .get('/api/me')
-      .set('Cookie', cookies)
-      .expect(200);
-    expect(me.body.account.attemptsThisPeriod).toBe(1);
-    expect(me.body.account.dailyRunCount).toBe(1);
-    expect(me.body.account.lastAttemptAt).toEqual(expect.any(String));
-  });
+      const me = await request(app.getHttpServer())
+        .get('/api/me')
+        .set('Cookie', cookies)
+        .expect(200);
+      expect(me.body.account.attemptsThisPeriod).toBe(1);
+      expect(me.body.account.dailyRunCount).toBe(1);
+      expect(me.body.account.lastAttemptAt).toEqual(expect.any(String));
+    },
+  );
 
   it('hides the admin readout from learners', async () => {
     await request(app.getHttpServer())

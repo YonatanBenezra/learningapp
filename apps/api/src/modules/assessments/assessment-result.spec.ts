@@ -15,10 +15,7 @@ describe('buildAssessmentResult', () => {
     sampleSeed: 'seed-abc',
     elapsedMs: 1_800_000,
     skillsByProblem: new Map([
-      [
-        'asmt-001-chunk-it-right',
-        [{ slug: 'chunking', name: 'Chunking' }],
-      ],
+      ['asmt-001-chunk-it-right', [{ slug: 'chunking', name: 'Chunking' }]],
       [
         'asmt-007-write-the-assertion-suite',
         [{ slug: 'eval-design', name: 'Eval design' }],

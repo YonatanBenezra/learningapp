@@ -12,6 +12,7 @@ export function parseAgentPayload(payload: unknown): AgentPayload {
     source: record.source,
     systemPrompt:
       typeof record.systemPrompt === 'string' ? record.systemPrompt : '',
-    toolSchemas: typeof record.toolSchemas === 'string' ? record.toolSchemas : '',
+    toolSchemas:
+      typeof record.toolSchemas === 'string' ? record.toolSchemas : '',
   };
 }

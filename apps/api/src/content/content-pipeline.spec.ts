@@ -1,6 +1,4 @@
-import {
-  loadAllExerciseBundles,
-} from './content-loader';
+import { loadAllExerciseBundles } from './content-loader';
 import { runContentGrader } from './content-grader-runner';
 import { loadPublishedSlugs } from './content-paths';
 import { POC_CATALOGUE_TARGET } from '../modules/catalogue/exercises/exercises.constants';

@@ -12,10 +12,7 @@ import { runLocalPython } from '../../../sandbox/local-python';
 import { agentTasksJson } from './agent.input';
 import { gradeAgent } from './a1.grade';
 import { agentGradeOptions } from './agent.options';
-import {
-  callBudgetMessage,
-  ORDER_FAIL_MESSAGE,
-} from './agent.ceilings';
+import { callBudgetMessage, ORDER_FAIL_MESSAGE } from './agent.ceilings';
 import type { AgentItem } from './agent.types';
 
 function loadHidden(slug: string): AgentItem[] {

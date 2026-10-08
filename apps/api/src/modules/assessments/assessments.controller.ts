@@ -15,8 +15,16 @@ export class AssessmentsController {
   }
 
   @Get(':slug')
-  getBySlug(@CurrentUser() user: AuthenticatedUser, @Param('slug') slug: string) {
-    return this.contests.getBySlug(user, slug, undefined, ContestKind.assessment);
+  getBySlug(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('slug') slug: string,
+  ) {
+    return this.contests.getBySlug(
+      user,
+      slug,
+      undefined,
+      ContestKind.assessment,
+    );
   }
 
   @Post(':slug/enter')

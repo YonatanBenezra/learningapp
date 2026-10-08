@@ -24,7 +24,9 @@ export async function listExerciseDirs(
     .sort();
 }
 
-export async function loadExerciseBundle(dir: string): Promise<ExerciseContentBundle> {
+export async function loadExerciseBundle(
+  dir: string,
+): Promise<ExerciseContentBundle> {
   const meta = JSON.parse(
     await readFile(path.join(dir, 'meta.json'), 'utf8'),
   ) as ExerciseContentMeta;
@@ -37,7 +39,9 @@ export async function loadExerciseBundle(dir: string): Promise<ExerciseContentBu
   return { dir, meta, reference, nearMiss };
 }
 
-export async function loadAllExerciseBundles(): Promise<ExerciseContentBundle[]> {
+export async function loadAllExerciseBundles(): Promise<
+  ExerciseContentBundle[]
+> {
   const dirs = await listExerciseDirs();
   const published = new Set(loadPublishedSlugs());
   const bundles: ExerciseContentBundle[] = [];

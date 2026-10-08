@@ -11,8 +11,14 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 import { buildAssessmentResult } from './assessment-result';
 import { isResultId } from './result-id';
 import { itemScoreFromGrade } from '../contests/contest-score';
-import { signAssessmentPayload, verifyAssessmentSignature } from './signing/result-signer';
-import { toSignedPayload, type SignedAssessmentPayload } from './signing/signed-payload';
+import {
+  signAssessmentPayload,
+  verifyAssessmentSignature,
+} from './signing/result-signer';
+import {
+  toSignedPayload,
+  type SignedAssessmentPayload,
+} from './signing/signed-payload';
 import {
   exportPublicKeysJson,
   generateDevSigningKeyring,
@@ -194,7 +200,10 @@ export class SignedResultsService implements OnModuleInit {
     return this.toView(row);
   }
 
-  async getForUser(resultId: string, userId: string): Promise<SignedResultView> {
+  async getForUser(
+    resultId: string,
+    userId: string,
+  ): Promise<SignedResultView> {
     const row = await this.prisma.signedAssessmentResult.findFirst({
       where: { id: resultId, userId },
     });
@@ -238,7 +247,10 @@ export class SignedResultsService implements OnModuleInit {
     return { status: 'valid', result: view };
   }
 
-  async revoke(resultId: string, reasonCode: string): Promise<SignedResultView> {
+  async revoke(
+    resultId: string,
+    reasonCode: string,
+  ): Promise<SignedResultView> {
     if (!reasonCode.trim()) {
       throw new BadRequestException('revoke reason code is required');
     }
@@ -346,11 +358,15 @@ export class SignedResultsService implements OnModuleInit {
   }
 
   private loadKeyring(): SigningKeyring {
-    const activeKeyId = this.config.get<string>('LABPATH_SIGNING_ACTIVE_KEY_ID');
+    const activeKeyId = this.config.get<string>(
+      'LABPATH_SIGNING_ACTIVE_KEY_ID',
+    );
     const privateKeyDerBase64 = this.config.get<string>(
       'LABPATH_SIGNING_PRIVATE_KEY',
     );
-    const publicKeysJson = this.config.get<string>('LABPATH_SIGNING_PUBLIC_KEYS');
+    const publicKeysJson = this.config.get<string>(
+      'LABPATH_SIGNING_PUBLIC_KEYS',
+    );
 
     if (activeKeyId && privateKeyDerBase64 && publicKeysJson) {
       return loadSigningKeyring({

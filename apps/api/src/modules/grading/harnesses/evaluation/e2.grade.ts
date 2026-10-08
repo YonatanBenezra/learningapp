@@ -23,7 +23,7 @@ export async function gradeE2(
   let consistent = 0;
   let trapHits = 0;
   let trapTotal = 0;
-  let malformed = 0;
+  const malformed = 0;
   const misses: HarnessGradeResult['failingCases'] = [];
 
   for (const item of usable) {
@@ -136,7 +136,10 @@ export async function gradeE2(
   };
 }
 
-export function interpretJudge(rubric: string, output: string): 'pass' | 'fail' {
+export function interpretJudge(
+  rubric: string,
+  output: string,
+): 'pass' | 'fail' {
   const r = rubric.toLowerCase();
   const strict =
     /fail|reject|incorrect|wrong|pii|ssn|refund|verbose|length|trap|hallucin|ground|confident/.test(
@@ -174,7 +177,10 @@ function e2Failures(
   if (!trapPass) {
     classes.push('verbosity-bias');
   }
-  if (!kappaPass && /generous|helpful|always pass|lenient/.test(rubric.toLowerCase())) {
+  if (
+    !kappaPass &&
+    /generous|helpful|always pass|lenient/.test(rubric.toLowerCase())
+  ) {
     classes.push('judge-too-lenient');
   }
   if (!kappaPass && rubric.trim().length < 40) {

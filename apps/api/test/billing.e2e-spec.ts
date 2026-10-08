@@ -6,7 +6,10 @@ import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/bootstrap/configure-app';
 import type { Env } from '../src/core/config/env.schema';
-import { StripeGateway, stripeSignatureHeader } from '../src/modules/billing/stripe.gateway';
+import {
+  StripeGateway,
+  stripeSignatureHeader,
+} from '../src/modules/billing/stripe.gateway';
 import { signIn } from './auth-helper';
 
 const WEBHOOK_SECRET = 'whsec_test_billing';

@@ -93,7 +93,10 @@ export function exerciseNumber(slug: string, prefix: string): number | null {
 
 export function isRagR1Slug(slug: string): boolean {
   const n = exerciseNumber(slug, 'rag');
-  return n !== null && (n === 1 || (n >= 5 && n <= 7) || n === 10 || (n >= 11 && n <= 15));
+  return (
+    n !== null &&
+    (n === 1 || (n >= 5 && n <= 7) || n === 10 || (n >= 11 && n <= 15))
+  );
 }
 
 export function isRagR2Slug(slug: string): boolean {
@@ -162,7 +165,7 @@ export const R2_NEAR_MISS_PAYLOAD = {
 
 export const R3_REFERENCE_PAYLOAD = {
   generationPrompt:
-    'Answer only from the retrieved context. Cite each used source as [chunk:ID] using the retrieved chunk id. If the answer is not in the retrieved context, refuse with I don\'t know.',
+    "Answer only from the retrieved context. Cite each used source as [chunk:ID] using the retrieved chunk id. If the answer is not in the retrieved context, refuse with I don't know.",
 };
 
 export const R3_NEAR_MISS_PAYLOAD = {
@@ -213,7 +216,9 @@ export const EVAL_E3_SLUGS = [E3_SLUG, 'eval-015-slice-alert'] as const;
 
 export function isEvalE2Slug(slug: string): boolean {
   const n = exerciseNumber(slug, 'eval');
-  return n !== null && (n === 2 || n === 13 || n === 14 || (n >= 21 && n <= 23));
+  return (
+    n !== null && (n === 2 || n === 13 || n === 14 || (n >= 21 && n <= 23))
+  );
 }
 
 export function isEvalE3Slug(slug: string): boolean {
@@ -370,12 +375,16 @@ export const GUARD_G3_SLUGS = [
 
 export function isGuardG2Slug(slug: string): boolean {
   const n = exerciseNumber(slug, 'grd');
-  return n !== null && (n === 2 || (n >= 10 && n <= 12) || (n >= 21 && n <= 25));
+  return (
+    n !== null && (n === 2 || (n >= 10 && n <= 12) || (n >= 21 && n <= 25))
+  );
 }
 
 export function isGuardG3Slug(slug: string): boolean {
   const n = exerciseNumber(slug, 'grd');
-  return n !== null && (n === 3 || (n >= 13 && n <= 15) || (n >= 26 && n <= 30));
+  return (
+    n !== null && (n === 3 || (n >= 13 && n <= 15) || (n >= 26 && n <= 30))
+  );
 }
 
 export const G1_REFERENCE_PAYLOAD = {
@@ -904,4 +913,3 @@ export const F5_NEAR_MISS_PAYLOAD = {
   issue: 'leakage',
   rowIds: ['tr-02'],
 } as const;
-

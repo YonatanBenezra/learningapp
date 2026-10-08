@@ -67,7 +67,10 @@ describe('Assessments (e2e)', () => {
   });
 
   it('lists assessments separately from contests', async () => {
-    const cookies = await signIn(app, `assessment-list-${Date.now()}@labpath.test`);
+    const cookies = await signIn(
+      app,
+      `assessment-list-${Date.now()}@labpath.test`,
+    );
     const contests = await request(app.getHttpServer())
       .get('/api/contests')
       .set('Cookie', cookies)
@@ -76,19 +79,28 @@ describe('Assessments (e2e)', () => {
       .get('/api/assessments')
       .set('Cookie', cookies)
       .expect(200);
-    expect(contests.body.items.some((item: { slug: string }) => item.slug === DOGFOOD_CONTEST)).toBe(
-      false,
-    );
     expect(
-      assessments.body.items.some((item: { slug: string }) => item.slug === ASSESSMENT_SLUG),
+      contests.body.items.some(
+        (item: { slug: string }) => item.slug === DOGFOOD_CONTEST,
+      ),
+    ).toBe(false);
+    expect(
+      assessments.body.items.some(
+        (item: { slug: string }) => item.slug === ASSESSMENT_SLUG,
+      ),
     ).toBe(true);
     expect(
-      contests.body.items.some((item: { slug: string }) => item.slug === ASSESSMENT_SLUG),
+      contests.body.items.some(
+        (item: { slug: string }) => item.slug === ASSESSMENT_SLUG,
+      ),
     ).toBe(false);
   });
 
   it('blocks Free users from entering with upgrade message', async () => {
-    const cookies = await signIn(app, `assessment-free-${Date.now()}@labpath.test`);
+    const cookies = await signIn(
+      app,
+      `assessment-free-${Date.now()}@labpath.test`,
+    );
     const response = await request(app.getHttpServer())
       .post(`/api/assessments/${ASSESSMENT_SLUG}/enter`)
       .set('Cookie', cookies)
@@ -97,7 +109,10 @@ describe('Assessments (e2e)', () => {
   });
 
   it('samples four problems and refuses a second sitting in the same season', async () => {
-    const cookies = await signIn(app, `assessment-pro-${Date.now()}@labpath.test`);
+    const cookies = await signIn(
+      app,
+      `assessment-pro-${Date.now()}@labpath.test`,
+    );
     const me = await request(app.getHttpServer())
       .get('/api/me')
       .set('Cookie', cookies)
@@ -136,12 +151,15 @@ describe('Assessments (e2e)', () => {
         sampleSize: 4,
         isPublished: true,
         problems: {
-          create: ['ctst-001-priority-prompt', 'ctst-002-ticket-format', 'ctst-003-category-map', 'ctst-004-urgency-parse'].map(
-            (exerciseSlug, index) => ({
-              position: index + 1,
-              exerciseSlug,
-            }),
-          ),
+          create: [
+            'ctst-001-priority-prompt',
+            'ctst-002-ticket-format',
+            'ctst-003-category-map',
+            'ctst-004-urgency-parse',
+          ].map((exerciseSlug, index) => ({
+            position: index + 1,
+            exerciseSlug,
+          })),
         },
       },
       update: { seasonKey },
@@ -155,7 +173,10 @@ describe('Assessments (e2e)', () => {
   }, 30_000);
 
   it('does not leak hidden eval from assessment detail or exercise payloads', async () => {
-    const cookies = await signIn(app, `assessment-leak-${Date.now()}@labpath.test`);
+    const cookies = await signIn(
+      app,
+      `assessment-leak-${Date.now()}@labpath.test`,
+    );
     const me = await request(app.getHttpServer())
       .get('/api/me')
       .set('Cookie', cookies)

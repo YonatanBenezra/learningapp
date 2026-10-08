@@ -11,11 +11,7 @@ import { toSkillScoreView } from '../skills/skill-decay';
 export class ProgressService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMine(
-    user: AuthenticatedUser,
-    timezone?: string,
-    now = new Date(),
-  ) {
+  async getMine(user: AuthenticatedUser, timezone?: string, now = new Date()) {
     const tz = resolveTimeZone(timezone);
     const todayKey = calendarDateKey(now, tz);
 

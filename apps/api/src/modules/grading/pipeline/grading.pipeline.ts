@@ -174,7 +174,8 @@ export class GradingPipeline {
         publicItems: publicQuestions(exercise.publicSample),
       });
     } else {
-      throw new Error(`Unsupported simulator: ${exercise.simulator}`);
+      const simulator: string = exercise.simulator;
+      throw new Error(`Unsupported simulator: ${simulator}`);
     }
 
     const blobUri = await writeTraceBlob(runId, result.trace);

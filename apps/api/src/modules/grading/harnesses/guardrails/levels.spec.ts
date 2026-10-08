@@ -1,8 +1,4 @@
-import {
-  G1_LEVELS,
-  assertManifest,
-  winnableGapEncodings,
-} from './levels';
+import { G1_LEVELS, assertManifest, winnableGapEncodings } from './levels';
 
 describe('G1 level manifests', () => {
   it('keeps filter_catches a subset of detector_catches', () => {

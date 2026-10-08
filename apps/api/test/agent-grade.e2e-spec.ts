@@ -123,7 +123,8 @@ describe('A1/A2 agent grade (e2e)', () => {
   it('A1 reference passes with a step trace; near-miss fails without leaking hidden eval', async () => {
     const passed = await submit(app, cookies, A1_SLUG, A1_REFERENCE_PAYLOAD);
     expect(passed.grade.verdict).toBe('pass');
-    const steps = passed.trace.steps as Array<{ name: string; argsSummary: string }> | undefined;
+    const steps = passed.trace.steps as
+      Array<{ name: string; argsSummary: string }> | undefined;
     expect(steps?.some((step) => step.name === 'calculator')).toBe(true);
     expect(steps?.some((step) => step.argsSummary.length > 0)).toBe(true);
     expect(JSON.stringify(passed.grade)).not.toContain('HIDDEN_EVAL');

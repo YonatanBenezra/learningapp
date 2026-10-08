@@ -13,19 +13,19 @@ export type AuthCookieOptions = {
   accessMaxAgeMs: number;
   refreshMaxAgeMs: number;
   secure: boolean;
-  sameSite?: "lax" | "none";
+  sameSite?: 'lax' | 'none';
   domain?: string;
 };
 
 function baseOptions(
   maxAge: number,
-  options: Pick<AuthCookieOptions, "secure" | "domain" | "sameSite">,
+  options: Pick<AuthCookieOptions, 'secure' | 'domain' | 'sameSite'>,
 ): CookieOptions {
   return {
     httpOnly: true,
-    sameSite: options.sameSite ?? "lax",
+    sameSite: options.sameSite ?? 'lax',
     secure: options.secure,
-    path: "/",
+    path: '/',
     maxAge,
     ...(options.domain ? { domain: options.domain } : {}),
   };
@@ -50,7 +50,7 @@ export function setAuthCookies(
 
 export function clearAuthCookies(
   res: Response,
-  options: Pick<AuthCookieOptions, "secure" | "domain" | "sameSite">,
+  options: Pick<AuthCookieOptions, 'secure' | 'domain' | 'sameSite'>,
 ): void {
   res.clearCookie(ACCESS_COOKIE, baseOptions(0, options));
   res.clearCookie(REFRESH_COOKIE, baseOptions(0, options));

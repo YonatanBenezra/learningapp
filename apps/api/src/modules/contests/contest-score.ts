@@ -1,6 +1,8 @@
 import type { Grade } from '@prisma/client';
 
-export function itemScoreFromGrade(grade: Pick<Grade, 'verdict' | 'metrics'>): number {
+export function itemScoreFromGrade(
+  grade: Pick<Grade, 'verdict' | 'metrics'>,
+): number {
   const metrics = grade.metrics as Record<string, { value?: number }> | null;
   if (metrics && typeof metrics.field_accuracy?.value === 'number') {
     return Math.round(metrics.field_accuracy.value * 100);

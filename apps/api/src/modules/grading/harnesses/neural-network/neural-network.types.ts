@@ -22,9 +22,7 @@ export type NeuralNetworkHidden = {
 };
 
 export type NeuralNetworkDiagnosis =
-  | 'overfitting'
-  | 'underfitting'
-  | 'good_fit';
+  'overfitting' | 'underfitting' | 'good_fit';
 
 export type NeuralNetworkKnob =
   | 'add_dropout'

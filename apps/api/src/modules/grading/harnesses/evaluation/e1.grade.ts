@@ -17,8 +17,11 @@ export function gradeE1(
 ): HarnessGradeResult {
   const suite = dsl.parse(suiteYaml);
   const usable = hidden.filter((item) => !isEvalCanary(item) && item.output);
-  const flagged = usable.map((item) => dsl.evaluate(suite, item.output as string).flagged);
-  const rate = usable.length === 0 ? 0 : flagged.filter(Boolean).length / usable.length;
+  const flagged = usable.map(
+    (item) => dsl.evaluate(suite, item.output as string).flagged,
+  );
+  const rate =
+    usable.length === 0 ? 0 : flagged.filter(Boolean).length / usable.length;
   if (rate > 0.9 || rate < 0.1) {
     return result({
       verdict: 'fail',
@@ -163,7 +166,10 @@ function result(input: {
 
 function e1Failures(yaml: string, precision: number, recall: number): string[] {
   const classes: string[] = [];
-  if (/\\.\*|\\.\\+|\\[\\s\\S\\]/.test(yaml) || yaml.includes('length_between') && yaml.includes('max: 100000')) {
+  if (
+    /\\.\*|\\.\\+|\\[\\s\\S\\]/.test(yaml) ||
+    (yaml.includes('length_between') && yaml.includes('max: 100000'))
+  ) {
     classes.push('assertion-too-broad');
   }
   if (recall < RECALL && !yaml.includes('TCK-')) {

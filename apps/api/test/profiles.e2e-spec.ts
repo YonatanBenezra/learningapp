@@ -143,7 +143,9 @@ describeLiveCatalogue('Public profile (e2e)', () => {
       data: { profilePublic: true },
     });
     await request(app.getHttpServer()).get(`/api/profiles/${slug}`).expect(404);
-    await request(app.getHttpServer()).get('/api/profiles/no-such-user').expect(404);
+    await request(app.getHttpServer())
+      .get('/api/profiles/no-such-user')
+      .expect(404);
   });
 
   it('blocks Free users from publishing and rejects taken slugs', async () => {

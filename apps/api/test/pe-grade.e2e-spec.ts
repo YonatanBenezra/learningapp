@@ -86,7 +86,10 @@ describe('P1 prompt engineering grade (e2e)', () => {
       .get('/api/exercises?pageSize=200')
       .set('Cookie', cookies)
       .expect(200);
-    const items = response.body.items as Array<{ slug: string; simulator: string }>;
+    const items = response.body.items as Array<{
+      slug: string;
+      simulator: string;
+    }>;
     const p1 = items.find((item) => item.slug === P1_SLUG);
     expect(p1).toBeDefined();
     expect(p1?.simulator).toBe('prompt_engineering');

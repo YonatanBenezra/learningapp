@@ -65,7 +65,9 @@ describeLiveCatalogue('R1 screens (e2e)', () => {
         {
           source: 'hidden',
           question: HIDDEN_EVAL_CANARY,
-          retrieved: [{ chunkId: 'c', docId: 'd', score: 1, text: 'goldAnswer' }],
+          retrieved: [
+            { chunkId: 'c', docId: 'd', score: 1, text: 'goldAnswer' },
+          ],
         },
       ],
     });

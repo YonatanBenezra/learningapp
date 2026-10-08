@@ -118,7 +118,10 @@ describe('B1–B3 benchmark grade (e2e)', () => {
       expect(passed.grade.verdict).toBe('pass');
       expect(passed.grade.scorecard?.wallClock).toBe('information');
       expect(passed.grade.scorecard?.ciA).toEqual(
-        expect.objectContaining({ low: expect.any(Number), high: expect.any(Number) }),
+        expect.objectContaining({
+          low: expect.any(Number),
+          high: expect.any(Number),
+        }),
       );
       expect(JSON.stringify(passed.grade)).not.toContain('HIDDEN_EVAL');
       expect(JSON.stringify(passed.trace)).not.toContain('HIDDEN_EVAL');

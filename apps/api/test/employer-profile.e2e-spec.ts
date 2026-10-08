@@ -3,9 +3,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { ContestKind } from '@prisma/client';
 import { PrismaService } from '../src/core/prisma/prisma.service';
-import {
-  HIDDEN_EVAL_CANARY,
-} from '../src/modules/catalogue/exercises/exercises.constants';
+import { HIDDEN_EVAL_CANARY } from '../src/modules/catalogue/exercises/exercises.constants';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
@@ -85,7 +83,9 @@ describe('Employer profile (e2e)', () => {
             endsAt: '2026-09-30T23:59:59.000Z',
           },
           items: [],
-          skills: [{ slug: 'chunking', name: 'Chunking', score: 80, problems: 1 }],
+          skills: [
+            { slug: 'chunking', name: 'Chunking', score: 80, problems: 1 },
+          ],
         },
         signature: 'dGVzdA==',
         keyId: 'test-key',

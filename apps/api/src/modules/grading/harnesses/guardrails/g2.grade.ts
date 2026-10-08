@@ -20,7 +20,10 @@ export async function gradeG2(
     return runIndirectAgent(level, pageContent, attacker, userRequest);
   });
   if (gateway) {
-    await gateway.complete({ runId, prompt: `g2:${pageContent.slice(0, 200)}` });
+    await gateway.complete({
+      runId,
+      prompt: `g2:${pageContent.slice(0, 200)}`,
+    });
     await gateway.judge({
       runId,
       rubric:

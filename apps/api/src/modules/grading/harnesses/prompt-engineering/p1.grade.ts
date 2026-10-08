@@ -113,7 +113,10 @@ export function gradeP1(
   };
 }
 
-function auditPrompt(payload: P1Payload): { passed: boolean; reasons: string[] } {
+function auditPrompt(payload: P1Payload): {
+  passed: boolean;
+  reasons: string[];
+} {
   const reasons: string[] = [];
   const sys = payload.systemPrompt.toLowerCase();
 

@@ -38,7 +38,12 @@ export type GuardrailsGradeResult = {
     queries: {
       source: 'public' | 'failing_sample';
       question: string;
-      retrieved: { chunkId: string; docId: string; score: number; text: string }[];
+      retrieved: {
+        chunkId: string;
+        docId: string;
+        score: number;
+        text: string;
+      }[];
     }[];
     toolCalls?: unknown[];
   };

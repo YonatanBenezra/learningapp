@@ -16,7 +16,11 @@ export async function signIn(
   email: string,
   password = 'test-password-123',
 ): Promise<string> {
-  const username = email.split('@')[0].replace(/[^a-z0-9]/gi, '').slice(0, 20) || 'user';
+  const username =
+    email
+      .split('@')[0]
+      .replace(/[^a-z0-9]/gi, '')
+      .slice(0, 20) || 'user';
   const registered = await request(app.getHttpServer())
     .post('/api/auth/register')
     .send({ username: `${username}${Date.now()}`, email, password })

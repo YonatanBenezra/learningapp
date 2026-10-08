@@ -68,7 +68,9 @@ describe('Catalogue (e2e)', () => {
       }>;
       expect(response.body.total).toBe(POC_CATALOGUE_TARGET);
       expect(items).toHaveLength(POC_CATALOGUE_TARGET);
-      expect(items.map((item) => item.slug).sort()).toEqual([...published].sort());
+      expect(items.map((item) => item.slug).sort()).toEqual(
+        [...published].sort(),
+      );
 
       const serialized = JSON.stringify(response.body);
       expect(serialized).not.toContain(HIDDEN_EVAL_CANARY);

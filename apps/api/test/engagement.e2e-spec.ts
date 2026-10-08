@@ -143,7 +143,10 @@ describe('Engagement (e2e)', () => {
   });
 
   it('resets the streak when a calendar day is missed', async () => {
-    const cookies = await signIn(app, `streak-reset-${Date.now()}@labpath.test`);
+    const cookies = await signIn(
+      app,
+      `streak-reset-${Date.now()}@labpath.test`,
+    );
     const me = await request(app.getHttpServer())
       .get('/api/me')
       .set('Cookie', cookies)

@@ -39,7 +39,12 @@ export function gradeF1(
     },
     gateResults: [
       gate('approach-ok', 'approach_ok', approachPass ? 1 : 0, approachPass),
-      gate('economics-ok', 'economics_ok', economicsPass ? 1 : 0, economicsPass),
+      gate(
+        'economics-ok',
+        'economics_ok',
+        economicsPass ? 1 : 0,
+        economicsPass,
+      ),
       gate('no-canary', 'no_canary', canaryPass ? 1 : 0, canaryPass),
     ],
     failureClasses: passed
@@ -69,10 +74,15 @@ export function gradeF1(
       ? [{ question: 'canary', note: 'canary-leak' }]
       : passed
         ? []
-        : [{ question: 'economics', note: 'Compare setup + (volume × months × per-call).' }],
+        : [
+            {
+              question: 'economics',
+              note: 'Compare setup + (volume × months × per-call).',
+            },
+          ],
     trace: {
       simulator: 'fine_tuning',
-      payload: parsed as unknown as Record<string, unknown>,
+      payload: parsed,
       sandbox: { durationMs, wallClock: 'information' },
       k: 0,
       chunkCount: 0,

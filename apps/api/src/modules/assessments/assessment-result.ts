@@ -45,7 +45,11 @@ type BuildAssessmentResultInput = {
   skillsByProblem: Map<string, { slug: string; name: string }[]>;
 };
 
-const FORBIDDEN_RESULT_TOKENS = ['HIDDEN_EVAL', 'eval_hidden', 'canary'] as const;
+const FORBIDDEN_RESULT_TOKENS = [
+  'HIDDEN_EVAL',
+  'eval_hidden',
+  'canary',
+] as const;
 
 export function buildAssessmentResult(
   input: BuildAssessmentResultInput,

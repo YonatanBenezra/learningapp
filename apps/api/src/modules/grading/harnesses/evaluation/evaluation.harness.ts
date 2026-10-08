@@ -25,7 +25,11 @@ export class EvaluationHarness {
   async execute(input: EvalExecuteInput): Promise<HarnessGradeResult> {
     const publicItems = input.publicItems ?? [];
     if (isEvalE1Slug(input.slug)) {
-      return gradeE1(parseString(input.payload, 'suiteYaml'), input.hidden, publicItems);
+      return gradeE1(
+        parseString(input.payload, 'suiteYaml'),
+        input.hidden,
+        publicItems,
+      );
     }
     if (isEvalE2Slug(input.slug)) {
       return gradeE2(
@@ -58,12 +62,18 @@ function parseString(payload: unknown, key: string): string {
   return value;
 }
 
-function parseE2(payload: unknown): { judgeRubric: string; judgePrompt: string } {
+function parseE2(payload: unknown): {
+  judgeRubric: string;
+  judgePrompt: string;
+} {
   if (!payload || typeof payload !== 'object') {
     throw new Error('payload must be an object');
   }
   const record = payload as Record<string, unknown>;
-  if (typeof record.judgeRubric !== 'string' || typeof record.judgePrompt !== 'string') {
+  if (
+    typeof record.judgeRubric !== 'string' ||
+    typeof record.judgePrompt !== 'string'
+  ) {
     throw new Error('E2 payload needs judgeRubric and judgePrompt');
   }
   return { judgeRubric: record.judgeRubric, judgePrompt: record.judgePrompt };

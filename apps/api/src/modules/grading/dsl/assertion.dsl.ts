@@ -110,7 +110,10 @@ export class AssertionDsl {
         failedIds.push(assertion.id);
       }
     }
-    return { flagged: verdictFlags(suite.failIf, failedIds, suite.assertions.length), failedIds };
+    return {
+      flagged: verdictFlags(suite.failIf, failedIds, suite.assertions.length),
+      failedIds,
+    };
   }
 }
 
@@ -134,12 +137,15 @@ function parseAssertion(item: unknown, index: number): Assertion {
   return {
     id,
     when,
-    whenPattern: typeof record.when_pattern === 'string' ? record.when_pattern : undefined,
+    whenPattern:
+      typeof record.when_pattern === 'string' ? record.when_pattern : undefined,
     check: check as AssertionCheck,
     pattern: typeof record.pattern === 'string' ? record.pattern : undefined,
     flavor: record.flavor === 're2' ? 're2' : undefined,
     values: Array.isArray(record.values)
-      ? record.values.filter((value): value is string => typeof value === 'string')
+      ? record.values.filter(
+          (value): value is string => typeof value === 'string',
+        )
       : undefined,
     min: typeof record.min === 'number' ? record.min : undefined,
     max: typeof record.max === 'number' ? record.max : undefined,
@@ -149,7 +155,9 @@ function parseAssertion(item: unknown, index: number): Assertion {
         : undefined,
     value: typeof record.value === 'number' ? record.value : undefined,
     schema:
-      record.schema && typeof record.schema === 'object' && !Array.isArray(record.schema)
+      record.schema &&
+      typeof record.schema === 'object' &&
+      !Array.isArray(record.schema)
         ? (record.schema as Record<string, unknown>)
         : undefined,
     language: typeof record.language === 'string' ? record.language : undefined,

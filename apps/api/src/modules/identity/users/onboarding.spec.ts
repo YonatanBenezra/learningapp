@@ -9,11 +9,15 @@ describe('onboarding starter', () => {
       splitStrategy: 'heading-aware',
     });
     expect(JSON.stringify(ONBOARDING_STARTER)).not.toContain('HIDDEN_EVAL');
-    expect(JSON.stringify(ONBOARDING_STARTER)).not.toContain(HIDDEN_EVAL_CANARY);
+    expect(JSON.stringify(ONBOARDING_STARTER)).not.toContain(
+      HIDDEN_EVAL_CANARY,
+    );
   });
 
   it('measures elapsed milliseconds from signup', () => {
     const created = new Date('2026-08-31T00:00:00.000Z');
-    expect(elapsedMs(created, new Date('2026-08-31T00:02:30.000Z'))).toBe(150_000);
+    expect(elapsedMs(created, new Date('2026-08-31T00:02:30.000Z'))).toBe(
+      150_000,
+    );
   });
 });

@@ -1,5 +1,8 @@
 import path from 'node:path';
-import { loadExerciseBundle, listExerciseDirs } from '../../content/content-loader';
+import {
+  loadExerciseBundle,
+  listExerciseDirs,
+} from '../../content/content-loader';
 import { loadPublishedSlugs } from '../../content/content-paths';
 import { runContentGrader } from '../../content/content-grader-runner';
 

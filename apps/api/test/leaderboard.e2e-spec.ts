@@ -43,10 +43,16 @@ describeLiveCatalogue('Leaderboard (e2e)', () => {
     await request(app.getHttpServer())
       .patch('/api/me/profile')
       .set('Cookie', hiddenCookies)
-      .send({ displayName: 'Hidden', slug: `lb-hidden-${stamp}`, enabled: false })
+      .send({
+        displayName: 'Hidden',
+        slug: `lb-hidden-${stamp}`,
+        enabled: false,
+      })
       .expect(200);
 
-    const empty = await request(app.getHttpServer()).get('/api/leaderboard').expect(200);
+    const empty = await request(app.getHttpServer())
+      .get('/api/leaderboard')
+      .expect(200);
     expect(empty.body.rule).toBe(LEADERBOARD_RULE);
     expect(Array.isArray(empty.body.items)).toBe(true);
     expect(
@@ -75,13 +81,17 @@ describeLiveCatalogue('Leaderboard (e2e)', () => {
       .send({ displayName: 'Shown', slug, enabled: true })
       .expect(200);
 
-    const listed = await request(app.getHttpServer()).get('/api/leaderboard').expect(200);
-    const row = (listed.body.items as Array<{
-      slug: string;
-      displayName: string;
-      solves: number;
-      rating: number;
-    }>).find((item) => item.slug === slug);
+    const listed = await request(app.getHttpServer())
+      .get('/api/leaderboard')
+      .expect(200);
+    const row = (
+      listed.body.items as Array<{
+        slug: string;
+        displayName: string;
+        solves: number;
+        rating: number;
+      }>
+    ).find((item) => item.slug === slug);
     expect(row).toEqual(
       expect.objectContaining({
         slug,

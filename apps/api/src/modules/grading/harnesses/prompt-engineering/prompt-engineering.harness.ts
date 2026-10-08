@@ -14,14 +14,18 @@ export type PeExecuteInput = {
 
 @Injectable()
 export class PromptEngineeringHarness {
-  async execute(input: PeExecuteInput): Promise<PeHarnessGradeResult> {
+  execute(input: PeExecuteInput): Promise<PeHarnessGradeResult> {
     if (isPeP1Slug(input.slug)) {
-      return gradeP1(
-        parseP1Payload(input.payload),
-        input.hidden,
-        input.publicItems ?? [],
+      return Promise.resolve(
+        gradeP1(
+          parseP1Payload(input.payload),
+          input.hidden,
+          input.publicItems ?? [],
+        ),
       );
     }
-    throw new Error(`Unsupported prompt engineering exercise: ${input.slug}`);
+    return Promise.reject(
+      new Error(`Unsupported prompt engineering exercise: ${input.slug}`),
+    );
   }
 }

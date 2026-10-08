@@ -75,7 +75,10 @@ export function argsSummary(
 }
 
 export function resultBytesOf(call: AgentToolCall): number {
-  if (typeof call.resultBytes === 'number' && Number.isFinite(call.resultBytes)) {
+  if (
+    typeof call.resultBytes === 'number' &&
+    Number.isFinite(call.resultBytes)
+  ) {
     return call.resultBytes;
   }
   if (call.error) {

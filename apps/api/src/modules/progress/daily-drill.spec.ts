@@ -1,9 +1,5 @@
 import { addCalendarDays } from './calendar';
-import {
-  drillPool,
-  pickDailyDrill,
-  type DrillCandidate,
-} from './daily-drill';
+import { drillPool, pickDailyDrill, type DrillCandidate } from './daily-drill';
 
 const easyA: DrillCandidate = {
   slug: 'rag-001-chunk-it-right',
@@ -36,9 +32,9 @@ const taggedDrill: DrillCandidate = {
 
 describe('daily drill', () => {
   it('prefers type=drill, then Easy, then the full catalogue', () => {
-    expect(drillPool([easyA, hard, taggedDrill]).map((row) => row.slug)).toEqual(
-      [taggedDrill.slug],
-    );
+    expect(
+      drillPool([easyA, hard, taggedDrill]).map((row) => row.slug),
+    ).toEqual([taggedDrill.slug]);
     expect(drillPool([easyA, easyB, hard]).map((row) => row.slug)).toEqual([
       easyB.slug,
       easyA.slug,

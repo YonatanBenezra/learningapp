@@ -40,7 +40,12 @@ export function gradeB2(
       ci_separated: { value: scored.overlap ? 0 : 1 },
     },
     gateResults: [
-      gate('ranking-harness', 'ranking_harness', rankingPass ? 1 : 0, rankingPass),
+      gate(
+        'ranking-harness',
+        'ranking_harness',
+        rankingPass ? 1 : 0,
+        rankingPass,
+      ),
       gate('cause-ok', 'cause_ok', causePass ? 1 : 0, causePass),
       gate('no-canary', 'no_canary', canaryPass ? 1 : 0, canaryPass),
     ],

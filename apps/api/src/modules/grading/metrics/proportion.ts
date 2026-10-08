@@ -49,7 +49,7 @@ export function adjustPValues(
   const order = pvalues
     .map((p, index) => ({ p, index }))
     .sort((a, b) => a.p - b.p);
-  const pAdj = Array(m).fill(1);
+  const pAdj: number[] = Array.from({ length: m }, () => 1);
   let running = 1;
   for (let rank = m; rank >= 1; rank -= 1) {
     const item = order[rank - 1];

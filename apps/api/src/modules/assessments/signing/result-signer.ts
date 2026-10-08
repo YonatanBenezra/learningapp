@@ -8,7 +8,11 @@ export function signAssessmentPayload(
   payload: SignedAssessmentPayload,
 ): { signature: string; keyId: string; canonical: string } {
   const canonical = canonicalJson(payload);
-  const signature = sign(null, Buffer.from(canonical, 'utf8'), keyring.privateKey);
+  const signature = sign(
+    null,
+    Buffer.from(canonical, 'utf8'),
+    keyring.privateKey,
+  );
   return {
     signature: signature.toString('base64'),
     keyId: keyring.activeKeyId,

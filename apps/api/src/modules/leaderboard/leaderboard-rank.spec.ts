@@ -1,7 +1,4 @@
-import {
-  leaderboardRating,
-  sortLeaderboardRows,
-} from './leaderboard-rank';
+import { leaderboardRating, sortLeaderboardRows } from './leaderboard-rank';
 
 describe('leaderboard rank', () => {
   it('returns an empty board when nobody is eligible', () => {

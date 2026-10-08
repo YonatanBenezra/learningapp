@@ -13,11 +13,7 @@ import {
   RECOVERY_FAIL_MESSAGE,
 } from './agent.ceilings';
 import { buildAgentTrace } from './agent.trace';
-import type {
-  AgentGradeResult,
-  AgentItem,
-  AgentPayload,
-} from './agent.types';
+import type { AgentGradeResult, AgentItem, AgentPayload } from './agent.types';
 import { isAgentCanary } from './agent.types';
 
 const TOOL_HIT = 1;
@@ -94,17 +90,14 @@ export function finishAgentGrade(input: {
   }
 
   const hitCount = hits.filter(Boolean).length;
-  const rate =
-    input.usable.length === 0 ? 0 : hitCount / input.usable.length;
+  const rate = input.usable.length === 0 ? 0 : hitCount / input.usable.length;
   const loopPass = !inspection.killedLoop;
   const recoveryPass = input.requireRecovery
     ? inspection.recovered && !inspection.tightLoop
     : true;
   const budgetPass =
     input.maxCalls === undefined || inspection.stepsUsed <= input.maxCalls;
-  const orderPass = input.requireCalcBeforeStore
-    ? calcBeforeStore(log)
-    : true;
+  const orderPass = input.requireCalcBeforeStore ? calcBeforeStore(log) : true;
   const canaryPass = !leaked;
   const sandboxFailure = inspection.killedLoop
     ? 'killed_loop'
@@ -288,12 +281,8 @@ function callMatches(call: AgentToolCall, item: AgentItem): boolean {
 }
 
 function calcBeforeStore(log: AgentToolCall[]): boolean {
-  const calc = log.findIndex(
-    (call) => call.ok && call.name === 'calculator',
-  );
-  const store = log.findIndex(
-    (call) => call.ok && call.name === 'json_store',
-  );
+  const calc = log.findIndex((call) => call.ok && call.name === 'calculator');
+  const store = log.findIndex((call) => call.ok && call.name === 'json_store');
   return calc !== -1 && store !== -1 && calc < store;
 }
 

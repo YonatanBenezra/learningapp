@@ -39,7 +39,9 @@ export class BillingService {
       account.tier === AccountTier.pro &&
       account.subscriptionStatus === SubscriptionStatus.active
     ) {
-      throw new ConflictException('This account already has an active Pro plan');
+      throw new ConflictException(
+        'This account already has an active Pro plan',
+      );
     }
     const web = this.webUrl();
     return this.stripe.createCheckoutSession({
@@ -88,7 +90,8 @@ export class BillingService {
     const object = event.data.object;
     if (event.type === 'checkout.session.completed') {
       await this.accounts.applyStripeSubscription({
-        userId: stringField(object, 'client_reference_id') ?? metadataUserId(object),
+        userId:
+          stringField(object, 'client_reference_id') ?? metadataUserId(object),
         customerId: stringField(object, 'customer'),
         subscriptionId: stringField(object, 'subscription'),
         stripeStatus: 'active',
@@ -124,7 +127,9 @@ export class BillingService {
   }
 
   private webUrl(): string {
-    return this.config.get('PUBLIC_WEB_URL', { infer: true }).replace(/\/$/, '');
+    return this.config
+      .get('PUBLIC_WEB_URL', { infer: true })
+      .replace(/\/$/, '');
   }
 }
 
