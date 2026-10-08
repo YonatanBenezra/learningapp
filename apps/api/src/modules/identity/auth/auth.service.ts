@@ -15,7 +15,12 @@ import { ttlToMs } from '../../../common/utils/ttl';
 import type { Env } from '../../../core/config/env.schema';
 import { PrismaService } from '../../../core/prisma/prisma.service';
 import { parseProfileSlug } from '../../profiles/profile-slug';
-import { clearAuthCookies, readCookie, setAuthCookies } from './auth-cookies';
+import {
+  type AuthCookieOptions,
+  clearAuthCookies,
+  readCookie,
+  setAuthCookies,
+} from './auth-cookies';
 import { MAGIC_LINK_TTL_MS, REFRESH_COOKIE } from './auth.constants';
 import { hashPassword, verifyPassword } from './password';
 
@@ -267,7 +272,10 @@ export class AuthService {
     return { user: this.toPublicUser(user) };
   }
 
-  private cookieFlags() {
+  private cookieFlags(): Pick<
+    AuthCookieOptions,
+    'secure' | 'domain' | 'sameSite'
+  > {
     const domain = this.config.get('COOKIE_DOMAIN', { infer: true });
     const cors = this.config.get('CORS_ORIGINS', { infer: true });
     const crossSite = cors.split(',').some((origin) => {
