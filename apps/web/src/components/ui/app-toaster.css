@@ -1,0 +1,8 @@
+.lp-toast-host {
+  z-index: 9999;
+}
+
+.lp-toast {
+  font-family: var(--font-jakarta), var(--font-figtree), "Helvetica Neue", Arial, sans-serif;
+  max-width: min(22rem, calc(100vw - 1.5rem));
+}

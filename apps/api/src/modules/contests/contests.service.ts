@@ -10,10 +10,7 @@ import {
   ContestKind,
   type Contest,
 } from '@prisma/client';
-import {
-  ASSESSMENT_PRO_REQUIRED,
-  ASSESSMENT_SEASON_USED,
-} from '../assessments/assessments.constants';
+import { ASSESSMENT_SEASON_USED } from '../assessments/assessments.constants';
 import { buildAssessmentResult } from '../assessments/assessment-result';
 import { currentAssessmentSeasonKey } from '../assessments/assessment-season';
 import type { AssessmentResult } from '../assessments/assessment-result';
@@ -276,13 +273,6 @@ export class ContestsService {
     expectedKind: ContestKind = ContestKind.contest,
   ) {
     const contest = await this.loadContest(slug, expectedKind);
-    const account = await this.accounts.usageFor(user.id);
-    if (
-      contest.kind === ContestKind.assessment &&
-      account.tier !== AccountTier.pro
-    ) {
-      throw new ForbiddenException(ASSESSMENT_PRO_REQUIRED);
-    }
     const window = contestWindow(contest, now);
     if (window !== 'open') {
       throw new BadRequestException(
@@ -456,7 +446,6 @@ export class ContestsService {
           deletedAt: null,
           profilePublic: true,
           profileSlug: { not: null },
-          account: { tier: AccountTier.pro },
         },
       },
       select: {
@@ -679,16 +668,13 @@ export class ContestsService {
   private toListItem(
     contest: ContestWithProblems,
     entered: boolean,
-    tier: AccountTier,
+    _tier: AccountTier,
     now: Date,
     entryStatus: ContestEntryStatus | null = null,
     seasonSittingUsed = false,
   ): ContestListItem {
     const window = contestWindow(contest, now);
-    const tierEligible =
-      contest.kind !== ContestKind.assessment || tier === AccountTier.pro;
     const canEnter =
-      tierEligible &&
       window === 'open' &&
       !entered &&
       entryStatus !== ContestEntryStatus.finished &&

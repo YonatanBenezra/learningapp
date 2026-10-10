@@ -1,5 +1,5 @@
 export const LEADERBOARD_RULE =
-  'Unique verified solves, then pass count in the last 30 days. Contest rating replaces this after Step 10.';
+  'Unique published problem passes, then pass count in the last 30 days. Rating = solves × 100 + recent passes.';
 
 export const RECENT_PASS_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 

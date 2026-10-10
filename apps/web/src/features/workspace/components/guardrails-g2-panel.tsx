@@ -4,7 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Globe } from "lucide-react";
 import {
   G2_LEVELS,
-  G2_SAMPLE_PAGE,
+  type G2PageChrome,
   g2WinHeadline,
   pageContentHasHtmlComment,
 } from "../guardrails-workspace-data";
@@ -12,6 +12,9 @@ import { simulationsApi, type G2Run } from "../simulations-api";
 import { GuardrailsG2PageEditor } from "./guardrails-g2-page-editor";
 
 type GuardrailsG2PanelProps = {
+  exerciseSlug: string;
+  samplePage: string;
+  pageChrome: G2PageChrome;
   disabled?: boolean;
   liveMode: boolean;
   level: number;
@@ -39,6 +42,9 @@ function recipientFromRun(run: G2Run): string | null {
 }
 
 export function GuardrailsG2Panel({
+  exerciseSlug,
+  samplePage,
+  pageChrome,
   disabled,
   liveMode,
   level,
@@ -82,7 +88,7 @@ export function GuardrailsG2Panel({
       setPending(true);
       setRunError(null);
       try {
-        const result = await simulationsApi.g2Page(level, pageContent);
+        const result = await simulationsApi.g2Page(exerciseSlug, level, pageContent);
         setLastRun(result);
         onSimulate(result);
         onAttempt();
@@ -98,6 +104,7 @@ export function GuardrailsG2Panel({
     },
     [
       disabled,
+      exerciseSlug,
       level,
       levelCleared,
       onAttempt,
@@ -120,7 +127,7 @@ export function GuardrailsG2Panel({
   }, [runSim]);
 
   function resetPage() {
-    onPageContentChange(G2_SAMPLE_PAGE);
+    onPageContentChange(samplePage);
     setLastRun(null);
     setRunError(null);
     setLevelWin(false);
@@ -159,7 +166,7 @@ export function GuardrailsG2Panel({
         <div className="lp-grd-g2-url-row">
           <div className="lp-grd-g2-url-bar">
             <Globe className="size-3.5 shrink-0 opacity-70" strokeWidth={2} aria-hidden />
-            <span>https://notes.example/team-sync</span>
+            <span>{pageChrome.url}</span>
           </div>
           <span className="lp-grd-g2-untrusted">
             <span className="lp-grd-g2-untrusted-dot" aria-hidden />
@@ -168,9 +175,14 @@ export function GuardrailsG2Panel({
         </div>
       </div>
 
+      <p className="lp-grd-g2-user-request">
+        User request (fixed): <em>{pageChrome.userRequest}</em>
+      </p>
+
       <div className="lp-grd-g2-body">
         {tab === "edit" ? (
           <GuardrailsG2PageEditor
+            filename={pageChrome.filename}
             value={pageContent}
             disabled={disabled || levelCleared}
             onChange={onPageContentChange}

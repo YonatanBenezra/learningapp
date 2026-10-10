@@ -55,7 +55,7 @@ export function buildExerciseGuide(exercise: Exercise): ExerciseGuide {
   const simulatorLabel = SIMULATOR_LABELS[exercise.simulator] ?? exercise.simulator;
 
   return {
-    goal: goalFromBrief(exercise.briefMd ?? "", exercise.title),
+    goal: goalFromExerciseBrief(exercise.briefMd ?? "", exercise.title),
     whatYouReceive: whatYouReceiveFor(exercise.simulator, simulatorLabel),
     howToSolve: howToSolveFor(exercise.simulator, submitFields),
     submitFields,
@@ -63,7 +63,17 @@ export function buildExerciseGuide(exercise: Exercise): ExerciseGuide {
   };
 }
 
-function goalFromBrief(briefMd: string, title: string): string {
+/** First `# …` line from briefMd — used as guardrails track subtitle in the workspace. */
+export function subtitleFromExerciseBrief(briefMd: string): string | null {
+  const match = briefMd.match(/^#\s+(.+)$/m);
+  if (!match?.[1]) {
+    return null;
+  }
+  return match[1].replace(/\*\*([^*]+)\*\*/g, "$1").trim();
+}
+
+/** First prose paragraph from catalogue briefMd (skips markdown headings). */
+export function goalFromExerciseBrief(briefMd: string, title: string): string {
   const blocks = briefMd.trim().split(/\n\n+/);
   for (const block of blocks) {
     if (/^#+\s/.test(block)) {

@@ -52,7 +52,9 @@
 
 .lp-rag-graph--fill .lp-rag-graph-canvas {
   flex: 1;
-  min-height: 14rem;
+  min-height: 10rem;
+  height: auto;
+  max-height: none;
 }
 
 .lp-rag-graph-canvas {

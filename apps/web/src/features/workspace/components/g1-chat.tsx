@@ -4,10 +4,14 @@ import { FormEvent, useState } from "react";
 import { simulationsApi, type G1Turn } from "../simulations-api";
 
 type G1ChatProps = {
+  exerciseSlug?: string;
   disabled?: boolean;
 };
 
-export function G1Chat({ disabled }: G1ChatProps) {
+export function G1Chat({
+  exerciseSlug = "grd-001-break-the-concierge",
+  disabled,
+}: G1ChatProps) {
   const [level, setLevel] = useState(1);
   const [message, setMessage] = useState("");
   const [turns, setTurns] = useState<G1Turn[]>([]);
@@ -22,7 +26,11 @@ export function G1Chat({ disabled }: G1ChatProps) {
     setPending(true);
     setError(null);
     try {
-      const turn = await simulationsApi.g1Turn(level, message.trim());
+      const turn = await simulationsApi.g1Turn(
+        exerciseSlug,
+        level,
+        message.trim(),
+      );
       setTurns((current) => [...current, turn]);
       setMessage("");
     } catch (caught: unknown) {

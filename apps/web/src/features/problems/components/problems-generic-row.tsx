@@ -7,11 +7,20 @@ import { DIFFICULTY_LABELS } from "./exercise-card";
 type Props = {
   exercise: Exercise;
   signedIn: boolean;
+  cleared?: boolean;
+  solveRate?: number;
 };
 
-export function ProblemsGenericRow({ exercise, signedIn }: Props) {
+export function ProblemsGenericRow({
+  exercise,
+  signedIn,
+  cleared = false,
+  solveRate,
+}: Props) {
   const href = routes.exercise(exercise.slug);
-  const actionHref = signedIn ? href : loginPath(href);
+  const openHref = signedIn ? href : loginPath(href);
+  const actionHref = openHref;
+  const hasRate = signedIn && typeof solveRate === "number";
 
   return (
     <tr className="lp-prob-row">
@@ -19,7 +28,7 @@ export function ProblemsGenericRow({ exercise, signedIn }: Props) {
         <div className="lp-prob-row-problem-inner">
           <span className="lp-prob-row-glyph" aria-hidden />
           <div className="lp-prob-row-copy">
-            <Link href={href} className="lp-prob-row-title">
+            <Link href={openHref} className="lp-prob-row-title">
               {exercise.title}
             </Link>
             <p className="lp-prob-row-sub">
@@ -43,13 +52,27 @@ export function ProblemsGenericRow({ exercise, signedIn }: Props) {
       </td>
       <td className="lp-prob-row-rate">
         <div className="lp-prob-rate">
-          <span className="lp-prob-rate-val">—</span>
-          <div className="lp-prob-rate-bar is-empty" aria-hidden />
+          {hasRate ? (
+            <>
+              <span className="lp-prob-rate-val">{solveRate}%</span>
+              <div className="lp-prob-rate-bar" aria-hidden>
+                <span style={{ width: `${solveRate}%` }} />
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="lp-prob-rate-val">—</span>
+              <div className="lp-prob-rate-bar is-empty" aria-hidden />
+            </>
+          )}
         </div>
       </td>
       <td className="lp-prob-row-action">
-        <Link href={actionHref} className="lp-prob-start-btn">
-          Start →
+        <Link
+          href={actionHref}
+          className={cleared ? "lp-prob-start-btn is-cleared" : "lp-prob-start-btn"}
+        >
+          {cleared ? "Try again" : "Start →"}
         </Link>
       </td>
     </tr>

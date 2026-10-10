@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { G2_PAGE_FILENAME } from "../guardrails-workspace-data";
-
 type GuardrailsG2PageEditorProps = {
+  filename: string;
   value: string;
   disabled?: boolean;
   onChange: (value: string) => void;
@@ -25,6 +24,7 @@ function highlightComments(text: string): string {
 }
 
 export function GuardrailsG2PageEditor({
+  filename,
   value,
   disabled,
   onChange,
@@ -34,7 +34,7 @@ export function GuardrailsG2PageEditor({
   return (
     <div className="lp-grd-g2-editor-stack">
       <div className="lp-grd-g2-file-bar">
-        <span className="lp-grd-g2-file-name">{G2_PAGE_FILENAME}</span>
+        <span className="lp-grd-g2-file-name">{filename}</span>
       </div>
       <div className="lp-grd-g2-editor-wrap">
         <pre

@@ -176,9 +176,124 @@
   min-height: 31rem;
   padding: 2.35rem 2.35rem 2.1rem;
   border: 1px solid color-mix(in srgb, var(--color-line) 72%, transparent);
-  border-radius: 0.625rem;
+  border-radius: 0.875rem;
   background: color-mix(in srgb, var(--color-card) 94%, var(--color-bg-soft));
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-ink) 7%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-ink) 7%, transparent),
+    0 24px 48px color-mix(in srgb, #020617 28%, transparent);
+}
+
+.lc-auth-card--sim {
+  min-height: auto;
+  padding-top: 1.65rem;
+  border-color: color-mix(in srgb, var(--color-brand) 22%, var(--color-line));
+  background:
+    radial-gradient(
+      ellipse 90% 55% at 50% -10%,
+      color-mix(in srgb, var(--color-brand) 14%, transparent) 0%,
+      transparent 62%
+    ),
+    color-mix(in srgb, var(--color-card) 96%, #0b1220);
+}
+
+.lc-auth-sim-gate {
+  margin-bottom: 1.35rem;
+  padding: 1rem 1.05rem 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 28%, var(--color-line));
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--color-brand) 6%, var(--color-bg));
+}
+
+.lc-auth-sim-gate-icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 35%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+  color: var(--color-brand);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-brand) 22%, transparent);
+}
+
+.lc-auth-sim-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-brand) 88%, var(--color-ink));
+}
+
+.lc-auth-sim-target {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent);
+}
+
+.lc-auth-sim-target span {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-muted) 90%, var(--color-ink));
+}
+
+.lc-auth-sim-target strong {
+  font-size: 0.9375rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  line-height: 1.35;
+}
+
+.lc-auth-sim-points {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+  color: color-mix(in srgb, var(--color-ink) 78%, var(--color-muted));
+}
+
+.lc-auth-sim-points li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.lc-auth-sim-points svg {
+  flex-shrink: 0;
+  color: color-mix(in srgb, var(--color-brand) 75%, var(--color-muted));
+}
+
+.lc-auth-submit--sim.is-ready {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.lc-auth-sim-back {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--color-muted) 88%, var(--color-ink));
+  text-decoration: none;
+}
+
+.lc-auth-sim-back:hover {
+  color: var(--color-brand);
 }
 
 .lc-auth-card::before {
@@ -480,6 +595,14 @@
     min-height: auto;
     width: min(32rem, 100%);
     padding: 1.35rem 1.1rem 1.15rem;
+  }
+
+  .lc-auth-card--sim {
+    padding-top: 1.1rem;
+  }
+
+  .lc-auth-sim-gate {
+    padding: 0.85rem 0.9rem;
   }
 
   .lc-auth-card-head {

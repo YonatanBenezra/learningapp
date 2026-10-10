@@ -8,7 +8,7 @@ import {
 } from './account.periods';
 
 describe('account periods', () => {
-  it('aligns free quota to UTC Monday 00:00', () => {
+  it('aligns UTC Monday helpers for calendar features', () => {
     const wednesday = new Date('2026-09-02T15:30:00Z');
     expect(utcMondayStart(wednesday).toISOString()).toBe(
       '2026-08-31T00:00:00.000Z',
@@ -31,7 +31,7 @@ describe('account periods', () => {
     );
   });
 
-  it('resets Free on a new UTC week and Pro after 30 days', () => {
+  it('resets usage after 30 days', () => {
     const now = new Date('2026-09-02T12:00:00Z');
     expect(
       shouldResetPeriod(
@@ -40,7 +40,7 @@ describe('account periods', () => {
           tier: AccountTier.free,
           subscriptionStatus: SubscriptionStatus.none,
           attemptsThisPeriod: 3,
-          periodStartedAt: new Date('2026-08-24T00:00:00Z'),
+          periodStartedAt: new Date('2026-08-01T00:00:00Z'),
           dailyRunCount: 0,
           dailyRunDate: null,
           lastAttemptAt: null,
@@ -59,7 +59,7 @@ describe('account periods', () => {
           tier: AccountTier.pro,
           subscriptionStatus: SubscriptionStatus.active,
           attemptsThisPeriod: 10,
-          periodStartedAt: new Date('2026-08-02T12:00:00Z'),
+          periodStartedAt: new Date('2026-08-20T12:00:00Z'),
           dailyRunCount: 0,
           dailyRunDate: null,
           lastAttemptAt: null,
@@ -70,7 +70,7 @@ describe('account periods', () => {
         },
         now,
       ),
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('computes a rolling 30-day window start', () => {

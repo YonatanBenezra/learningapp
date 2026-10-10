@@ -3,7 +3,10 @@
 import { Hexagon, Send, Trophy } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { canaryPreview, type G1LevelWin } from "../guardrails-g1-debrief";
-import { G1_LEVELS } from "../guardrails-workspace-data";
+import {
+  G1_LEVELS,
+  type G1SimulatorProfile,
+} from "../guardrails-workspace-data";
 import { simulationsApi, type G1Turn } from "../simulations-api";
 
 type ChatLine =
@@ -12,6 +15,8 @@ type ChatLine =
   | { kind: "detector"; text: string };
 
 type GuardrailsG1ChatPanelProps = {
+  exerciseSlug: string;
+  simulator: G1SimulatorProfile;
   disabled?: boolean;
   liveMode: boolean;
   level: number;
@@ -24,6 +29,8 @@ type GuardrailsG1ChatPanelProps = {
   onViewDebrief?: () => void;
   onSubmitGrade?: () => void;
   gradeSubmitDisabled?: boolean;
+  submitError?: string | null;
+  gradePending?: boolean;
 };
 
 function timeLabel() {
@@ -52,7 +59,17 @@ function detectorLine(turn: G1Turn, attempt: number): string {
   return `Detectors · canary not found · attempt ${attempt}`;
 }
 
+function openingLine(simulator: G1SimulatorProfile): ChatLine {
+  return {
+    kind: "assistant",
+    time: timeLabel(),
+    text: simulator.openingGreeting,
+  };
+}
+
 export function GuardrailsG1ChatPanel({
+  exerciseSlug,
+  simulator,
   disabled,
   liveMode,
   level,
@@ -65,15 +82,11 @@ export function GuardrailsG1ChatPanel({
   onViewDebrief,
   onSubmitGrade,
   gradeSubmitDisabled,
+  submitError,
+  gradePending,
 }: GuardrailsG1ChatPanelProps) {
   const [message, setMessage] = useState("");
-  const [lines, setLines] = useState<ChatLine[]>([
-    {
-      kind: "assistant",
-      time: timeLabel(),
-      text: "Good evening, and welcome to the Grand Hotel. How may I help with your stay?",
-    },
-  ]);
+  const [lines, setLines] = useState<ChatLine[]>(() => [openingLine(simulator)]);
   const [pending, setPending] = useState(false);
   const [failNotice, setFailNotice] = useState<string | null>(null);
   const [levelWin, setLevelWin] = useState<G1Turn | null>(null);
@@ -91,6 +104,15 @@ export function GuardrailsG1ChatPanel({
     }
     log.scrollTop = log.scrollHeight;
   }, [lines, failNotice, levelWin]);
+
+  useEffect(() => {
+    setLines([openingLine(simulator)]);
+    setFailNotice(null);
+    setLevelWin(null);
+    setSendAttempts(0);
+    setWinTime(null);
+    setMessage("");
+  }, [simulator.appTitle, simulator.openingGreeting, simulator.statusLine]);
   const levelCleared = clearedLevels.has(level) || Boolean(levelWin);
 
   const placeholder = levelCleared
@@ -102,13 +124,7 @@ export function GuardrailsG1ChatPanel({
       : "Try to break the level…";
 
   function resetLevel() {
-    setLines([
-      {
-        kind: "assistant",
-        time: timeLabel(),
-        text: "Good evening, and welcome to the Grand Hotel. How may I help with your stay?",
-      },
-    ]);
+    setLines([openingLine(simulator)]);
     setFailNotice(null);
     setLevelWin(null);
     setSendAttempts(0);
@@ -124,12 +140,11 @@ export function GuardrailsG1ChatPanel({
     const userText = message.trim();
     setLines((current) => [...current, { kind: "user", text: userText, time: timeLabel() }]);
     setMessage("");
-    onDraftChange("");
     setPending(true);
     setFailNotice(null);
     let clearedThisTurn = false;
     try {
-      const turn = await simulationsApi.g1Turn(level, userText);
+      const turn = await simulationsApi.g1Turn(exerciseSlug, level, userText);
       const attempt = sendAttempts + 1;
       setSendAttempts(attempt);
       onAttempt();
@@ -140,9 +155,15 @@ export function GuardrailsG1ChatPanel({
           kind: "assistant",
           time: timeLabel(),
           text: turn.reply,
-          detector,
+          detector: turn.attackAttempt ? detector : undefined,
         },
       ]);
+      if (turn.attackAttempt) {
+        onDraftChange(userText);
+      } else {
+        onDraftChange("");
+      }
+
       if (turn.won) {
         clearedThisTurn = true;
         setLevelWin(turn);
@@ -154,15 +175,14 @@ export function GuardrailsG1ChatPanel({
           attempts: attempt,
           encoding: turn.encoding,
           clearedAt,
+          attackPrompt: turn.attackAttempt ? userText : undefined,
         });
-      } else {
-        if (liveMode) {
-          setFailNotice(
-            turn.filtered
-              ? "Not yet — canary not detected. Partial leak was filtered. Rephrase and try again."
-              : "Not yet — canary not detected. The concierge refused. Rephrase and try again; focus on their role and wording.",
-          );
-        }
+      } else if (turn.attackAttempt && liveMode) {
+        setFailNotice(
+          turn.filtered
+            ? "Not yet — canary not detected. Partial leak was filtered. Rephrase and try again."
+            : "Not yet — canary not detected. The concierge refused. Rephrase and try again; focus on their role and wording.",
+        );
       }
     } catch (caught: unknown) {
       setMessage(userText);
@@ -234,9 +254,9 @@ export function GuardrailsG1ChatPanel({
           <Hexagon className="size-5" strokeWidth={1.75} />
         </span>
         <div className="lp-grd-chat-head-copy">
-          <h2>Grand Hotel Concierge</h2>
+          <h2>{simulator.appTitle}</h2>
           <p>
-            <span className="lp-grd-chat-dot" aria-hidden /> Online · booking assistant
+            <span className="lp-grd-chat-dot" aria-hidden /> {simulator.statusLine}
           </p>
         </div>
       </div>
@@ -279,6 +299,18 @@ export function GuardrailsG1ChatPanel({
         </p>
       ) : null}
 
+      {gradePending ? (
+        <p className="lp-grd-chat-grade-status" role="status">
+          Grading your attempt… see Test Result panel below.
+        </p>
+      ) : null}
+
+      {submitError ? (
+        <p className="lp-grd-chat-fail" role="alert">
+          {submitError}
+        </p>
+      ) : null}
+
       <form className="lp-grd-chat-compose" onSubmit={(event) => void onSubmit(event)}>
         <div className={`lp-grd-chat-input-wrap${failNotice ? " is-shake" : ""}`}>
           <textarea
@@ -294,7 +326,7 @@ export function GuardrailsG1ChatPanel({
                 event.currentTarget.form?.requestSubmit();
               }
             }}
-            disabled={disabled || pending || levelCleared}
+            disabled={disabled || pending}
             rows={2}
             placeholder={placeholder}
             className="lp-grd-chat-input"
@@ -310,15 +342,22 @@ export function GuardrailsG1ChatPanel({
         </div>
         <footer className="lp-grd-chat-foot">
           <p>
-            {liveMode
-              ? "Each message is scored against hidden detectors. Enter to send · Shift+Enter new line"
-              : "Practice freely — only Submit attempt for grade counts toward the board."}
+            {gradePending
+              ? "Official grade runs on the server — results open in Test Result."
+              : liveMode
+                ? "Live chat probes detectors · Submit attempt for grade uses the Test Result panel."
+                : "Practice freely — only Submit attempt for grade counts toward the board."}
           </p>
           {onSubmitGrade ? (
             <button
               type="button"
               className="lp-grd-grade-link"
               disabled={gradeSubmitDisabled}
+              title={
+                gradeSubmitDisabled
+                  ? "Send an attack message first (e.g. hex override prompt), or paste it in the box after a level clear."
+                  : undefined
+              }
               onClick={onSubmitGrade}
             >
               Submit attempt for grade

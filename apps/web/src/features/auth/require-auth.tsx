@@ -16,10 +16,9 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   const publicPath = isPublicAppPath(pathname);
   const cached = getAuthSnapshot();
   const [ready, setReady] = useState(
-    publicPath ||
-      cached.status === "authenticated" ||
-      cached.status === "soft",
+    publicPath || cached.status === "authenticated",
   );
+  const [gateLabel, setGateLabel] = useState("Checking your session…");
 
   useEffect(() => {
     if (publicPath) {
@@ -32,11 +31,12 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
       if (cancelled) {
         return;
       }
-      if (session.status === "authenticated" || session.status === "soft") {
+      if (session.status === "authenticated") {
         setReady(true);
         return;
       }
       setReady(false);
+      setGateLabel("Redirecting to sign in…");
       router.replace(loginPath(pathname));
     });
 
@@ -50,7 +50,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   }
 
   if (!ready) {
-    return <GlobalLoader fullPage />;
+    return <GlobalLoader fullPage label={gateLabel} />;
   }
 
   return children;

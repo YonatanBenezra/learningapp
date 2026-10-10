@@ -5,6 +5,8 @@ export type G1LevelWin = {
   attempts: number;
   encoding: string | null;
   clearedAt: string;
+  /** Winning user message — used for “Submit attempt for grade”. */
+  attackPrompt?: string;
 };
 
 export type G1Debrief = {

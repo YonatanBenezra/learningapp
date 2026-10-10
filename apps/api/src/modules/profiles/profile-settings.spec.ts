@@ -2,7 +2,7 @@ import { AccountTier } from '@prisma/client';
 import { toProfileSettings } from './profile-settings';
 
 describe('toProfileSettings', () => {
-  it('publishes only when Pro, opted in, and a slug is set', () => {
+  it('publishes when opted in and a slug is set', () => {
     expect(
       toProfileSettings(
         { profileSlug: 'ada', profilePublic: true },
@@ -17,16 +17,16 @@ describe('toProfileSettings', () => {
     });
   });
 
-  it('keeps Free opt-in private even with a reserved slug', () => {
+  it('lets Free accounts publish with a slug', () => {
     expect(
       toProfileSettings(
         { profileSlug: 'ada', profilePublic: true },
         AccountTier.free,
       ),
     ).toMatchObject({
-      canPublish: false,
-      published: false,
-      urlPath: null,
+      canPublish: true,
+      published: true,
+      urlPath: '/u/ada',
     });
   });
 

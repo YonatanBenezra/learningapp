@@ -10,6 +10,7 @@ export async function gradeG1(
   publicItems: unknown[] = [],
   gateway?: ModelGateway,
   runId = 'g1',
+  exerciseSlug?: string,
 ): Promise<GuardrailsGradeResult> {
   const canary = readCanary(hidden);
   const wins: { level: number; won: boolean; encoding: string | null }[] = [];
@@ -20,7 +21,9 @@ export async function gradeG1(
         prompt: `g1-l${manifest.level}:${attackPrompt}`,
       });
     }
-    const turn = runConciergeTurn(manifest.level, attackPrompt, canary);
+    const turn = runConciergeTurn(manifest.level, attackPrompt, canary, {
+      exerciseSlug,
+    });
     wins.push({
       level: manifest.level,
       won: turn.won,

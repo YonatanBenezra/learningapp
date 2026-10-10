@@ -1,11 +1,10 @@
 import {
   BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AccountTier, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { AccountService } from '../accounts/account.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -24,12 +23,6 @@ import { calendarDateKey } from '../progress/calendar';
 import { computeStreak } from '../progress/streak';
 import { toSkillScoreView } from '../skills/skill-decay';
 
-const PRO_REQUIRED = {
-  message: 'Upgrade to Pro to publish a public profile.',
-  code: 'pro_required',
-  upgradePath: '/billing',
-} as const;
-
 @Injectable()
 export class ProfilesService {
   constructor(
@@ -44,7 +37,6 @@ export class ProfilesService {
         profileSlug: normalized,
         profilePublic: true,
         deletedAt: null,
-        account: { tier: AccountTier.pro },
       },
       select: {
         id: true,
@@ -175,9 +167,6 @@ export class ProfilesService {
     const nextSlug =
       data.profileSlug !== undefined ? data.profileSlug : user.profileSlug;
     if (dto.enabled !== undefined) {
-      if (dto.enabled && account.tier !== AccountTier.pro) {
-        throw new ForbiddenException(PRO_REQUIRED);
-      }
       if (dto.enabled && !nextSlug) {
         throw new BadRequestException(
           'Choose a profile URL before publishing.',

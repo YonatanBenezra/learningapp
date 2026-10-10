@@ -42,12 +42,12 @@ export function sittingConfig(variant: SittingVariant): {
         enterTitle: "Your problems are drawn when you start the sitting",
         enterAction: "Start sitting",
         enterPending: "Starting…",
-        proOnlyTitle: "Assessments are Pro only",
+        proOnlyTitle: "Season sitting already used",
         proOnlyCopy:
-          "One sitting per Pro season is included. Practice stays free either way.",
+          "You get one verified sitting per season. Practice problems stay open anytime.",
         problemsSection: "Assessment problems",
         scorecardSection: "Sitting scorecard",
-        upgradeError: "Upgrade to Pro to sit a verified assessment.",
+        upgradeError: "You cannot start another sitting this season.",
         enterError: "Could not start this sitting.",
       },
     };

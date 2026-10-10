@@ -96,16 +96,15 @@ describe('Assessments (e2e)', () => {
     ).toBe(false);
   });
 
-  it('blocks Free users from entering with upgrade message', async () => {
+  it('lets Free users enter an open assessment', async () => {
     const cookies = await signIn(
       app,
       `assessment-free-${Date.now()}@labpath.test`,
     );
-    const response = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post(`/api/assessments/${ASSESSMENT_SLUG}/enter`)
       .set('Cookie', cookies)
-      .expect(403);
-    expect(response.body.message.code).toBe('pro_required');
+      .expect(201);
   });
 
   it('samples four problems and refuses a second sitting in the same season', async () => {

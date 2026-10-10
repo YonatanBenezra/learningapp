@@ -28,38 +28,28 @@ function account(partial: Partial<Account>): Account {
 describe('account quota', () => {
   const wednesday = new Date('2026-09-02T12:00:00Z');
 
-  it('gives Free 3 attempts per UTC week and Pro 60 per rolling 30 days', () => {
-    expect(limitsFor(AccountTier.free)).toEqual({
-      attemptsPerPeriod: 3,
-      periodKind: 'calendar_week',
-    });
-    expect(limitsFor(AccountTier.pro)).toEqual({
+  it('uses the same rolling monthly fair-use cap for every tier', () => {
+    const expected = {
       attemptsPerPeriod: 60,
-      periodKind: 'rolling_30d',
-    });
+      periodKind: 'rolling_30d' as const,
+    };
+    expect(limitsFor(AccountTier.free)).toEqual(expected);
+    expect(limitsFor(AccountTier.pro)).toEqual(expected);
   });
 
-  it('resets Free usage after UTC Monday', () => {
-    const lastWeek = account({
-      attemptsThisPeriod: 3,
-      periodStartedAt: new Date('2026-08-24T00:00:00Z'),
-    });
-    expect(effectiveAttemptsThisPeriod(lastWeek, wednesday)).toBe(0);
-    expect(remainingAttempts(lastWeek, wednesday)).toBe(3);
-  });
-
-  it('blocks Free at 3 and Pro at 60 in the current window', () => {
-    const free = account({ attemptsThisPeriod: 3 });
-    expect(remainingAttempts(free, wednesday)).toBe(0);
-    expect(quotaExceededMessage(AccountTier.free)).toMatch(/3 free/);
-    expect(quotaExceededMessage(AccountTier.free)).toMatch(/Upgrade to Pro/);
-
-    const pro = account({
-      tier: AccountTier.pro,
+  it('resets usage after the rolling window', () => {
+    const stale = account({
       attemptsThisPeriod: 60,
-      periodStartedAt: new Date('2026-08-20T00:00:00Z'),
+      periodStartedAt: new Date('2026-08-01T00:00:00Z'),
     });
-    expect(remainingAttempts(pro, wednesday)).toBe(0);
-    expect(quotaExceededMessage(AccountTier.pro)).toMatch(/60 graded/);
+    expect(effectiveAttemptsThisPeriod(stale, wednesday)).toBe(0);
+    expect(remainingAttempts(stale, wednesday)).toBe(60);
+  });
+
+  it('blocks at the fair-use cap in the current window', () => {
+    const capped = account({ attemptsThisPeriod: 60 });
+    expect(remainingAttempts(capped, wednesday)).toBe(0);
+    expect(quotaExceededMessage(AccountTier.free)).toMatch(/60 graded/);
+    expect(quotaExceededMessage(AccountTier.free)).not.toMatch(/Upgrade to Pro/);
   });
 });

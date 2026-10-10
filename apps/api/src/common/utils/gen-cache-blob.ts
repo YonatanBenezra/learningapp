@@ -17,7 +17,7 @@ export async function writeGenCacheBlob(
   return `file:${filePath}`;
 }
 
-export async function readGenCacheBlob(uri: string): Promise<unknown> {
+function resolveGenCacheFilePath(uri: string): string {
   if (!uri.startsWith('file:')) {
     throw new Error(`Unsupported gen cache URI: ${uri}`);
   }
@@ -25,5 +25,45 @@ export async function readGenCacheBlob(uri: string): Promise<unknown> {
   if (!filePath.includes(CACHE_MARKER)) {
     throw new Error('Refusing to read a cache blob outside var/gen-cache');
   }
+  return filePath;
+}
+
+async function readJsonFile(filePath: string): Promise<unknown> {
   return JSON.parse(await readFile(filePath, 'utf8')) as unknown;
+}
+
+export async function readGenCacheBlob(uri: string): Promise<unknown> {
+  const filePath = resolveGenCacheFilePath(uri);
+  return readJsonFile(filePath);
+}
+
+/** Stale DB rows may point at an old repo path — fall back to basename under cwd. */
+export async function tryReadGenCacheBlob(
+  uri: string,
+): Promise<unknown | null> {
+  const filePath = resolveGenCacheFilePath(uri);
+  try {
+    return await readJsonFile(filePath);
+  } catch (error: unknown) {
+    const code =
+      error && typeof error === 'object' && 'code' in error
+        ? String((error as NodeJS.ErrnoException).code)
+        : '';
+    if (code !== 'ENOENT') {
+      throw error;
+    }
+  }
+  const fallback = path.join(genCacheDir(), path.basename(filePath));
+  try {
+    return await readJsonFile(fallback);
+  } catch (error: unknown) {
+    const code =
+      error && typeof error === 'object' && 'code' in error
+        ? String((error as NodeJS.ErrnoException).code)
+        : '';
+    if (code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  }
 }

@@ -6,19 +6,12 @@ import { useEffect, useId, useRef, useState } from "react";
 import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
+import { HomeNavAuthCta } from "@/components/layout/nav-auth-slot";
 import { AuthLink } from "@/features/auth/auth-link";
-import {
-  ensureAuthSession,
-  getAuthSnapshot,
-} from "@/features/auth/auth-session";
 
 const navLinks = [{ href: routes.problems, label: "Problems", auth: false }] as const;
 
 const NAV_COLLAPSE_MQ = "(max-width: 859px)";
-
-function isSignedInStatus(status: string) {
-  return status === "authenticated" || status === "soft";
-}
 
 function isActive(pathname: string, href: string) {
   if (href.startsWith("#")) {
@@ -29,25 +22,11 @@ function isActive(pathname: string, href: string) {
 
 export function HomeNav() {
   const pathname = usePathname();
-  const cached = getAuthSnapshot();
   const headerRef = useRef<HTMLElement>(null);
   const navId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [signedIn, setSignedIn] = useState(isSignedInStatus(cached.status));
-
-  useEffect(() => {
-    let cancelled = false;
-    ensureAuthSession().then((session) => {
-      if (!cancelled) {
-        setSignedIn(isSignedInStatus(session.status));
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -174,18 +153,10 @@ export function HomeNav() {
               <span />
               <span />
             </button>
-            {signedIn ? (
-              <Link href={routes.progress} className="ag-nav-btn">
-                Profile
-              </Link>
-            ) : (
-              <Link
-                href={routes.login}
-                className={`ag-nav-btn${pathname === routes.login ? " is-active" : ""}`}
-              >
-                Sign In
-              </Link>
-            )}
+            <HomeNavAuthCta
+              className="ag-nav-btn"
+              loginClassName={`ag-nav-btn${pathname === routes.login ? " is-active" : ""}`}
+            />
           </div>
         </div>
       </div>

@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { loginPath, routes } from "@/config/routes";
-import { ensureAuthSession } from "@/features/auth/auth-session";
+import {
+  ensureAuthSession,
+  getAuthSnapshot,
+} from "@/features/auth/auth-session";
 import { problemsApi } from "@/features/problems/problems-api";
 import { ApiError } from "@/lib/api-client";
 import type { Exercise } from "@/types/exercise";
@@ -13,6 +16,7 @@ import { waitForGrade, waitForRun, workspaceApi } from "../workspace-api";
 import { WORKER_OFFLINE_MESSAGE } from "../worker-offline-message";
 import type { HintList } from "@/types/hint";
 import { hintsApi } from "../hints-api";
+import { GlobalLoader } from "@/components/ui/global-loader";
 import { WorkspacePracticeFrame } from "@/components/layout/workspace-practice-frame";
 import { BriefPanel, type BriefTab } from "./brief-panel";
 import { RunPanel } from "./run-panel";
@@ -71,6 +75,9 @@ export function WorkspaceShell({
   const [submitValid, setSubmitValid] = useState(false);
   const [labPayload, setLabPayload] = useState<Record<string, unknown>>({});
   const [hints, setHints] = useState<HintList | null>(null);
+  const [authAllowed, setAuthAllowed] = useState<boolean | null>(() =>
+    getAuthSnapshot().status === "authenticated" ? true : null,
+  );
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -89,6 +96,29 @@ export function WorkspaceShell({
 
   useEffect(() => {
     let cancelled = false;
+    ensureAuthSession().then((session) => {
+      if (cancelled) {
+        return;
+      }
+      if (session.status === "authenticated") {
+        setAuthAllowed(true);
+        return;
+      }
+      setAuthAllowed(false);
+      router.replace(loginPath(routes.exercise(slug)));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, router]);
+
+  useEffect(() => {
+    if (authAllowed !== true) {
+      return;
+    }
+    let cancelled = false;
+    setExercise(null);
+    setLoadError(null);
     problemsApi
       .getBySlug(slug)
       .then((result) => {
@@ -109,7 +139,7 @@ export function WorkspaceShell({
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, authAllowed, router]);
 
   useEffect(() => {
     const wantsHints =
@@ -244,6 +274,10 @@ export function WorkspaceShell({
     }
   }
 
+  if (authAllowed !== true) {
+    return null;
+  }
+
   if (loadError === "load") {
     return (
       <main className="lp-ws-state">
@@ -253,11 +287,7 @@ export function WorkspaceShell({
   }
 
   if (!exercise) {
-    return (
-      <main className="lp-ws-state">
-        <p>Loading exercise…</p>
-      </main>
-    );
+    return <GlobalLoader fullPage label="Opening workspace…" />;
   }
 
   const editorLead = onboarding

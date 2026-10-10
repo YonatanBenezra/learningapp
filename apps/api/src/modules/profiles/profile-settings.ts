@@ -10,12 +10,10 @@ export type ProfileSettings = {
 
 export function toProfileSettings(
   user: { profileSlug: string | null; profilePublic: boolean },
-  tier: AccountTier,
+  _tier: AccountTier,
 ): ProfileSettings {
-  const canPublish = tier === AccountTier.pro;
-  const published = Boolean(
-    user.profilePublic && canPublish && user.profileSlug,
-  );
+  const canPublish = true;
+  const published = Boolean(user.profilePublic && user.profileSlug);
   return {
     slug: user.profileSlug,
     public: user.profilePublic,

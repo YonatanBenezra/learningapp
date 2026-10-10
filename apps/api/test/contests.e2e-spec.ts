@@ -6,6 +6,7 @@ import {
   CONTESTS_LIVE,
   DOGFOOD_CONTEST,
 } from '../src/modules/contests/contests.constants';
+import { LEADERBOARD_RULE } from '../src/modules/leaderboard/leaderboard-rank';
 import { signIn } from './auth-helper';
 import { createApiApp } from './create-api-app';
 
@@ -120,7 +121,7 @@ describe('Contests (e2e)', () => {
       expect(JSON.stringify(exercise.body)).not.toContain('eval_hidden');
     });
 
-    it('switches the leaderboard to contest scores after the window closes', async () => {
+    it('keeps practice solve stats on the leaderboard after a contest ends', async () => {
       const contest = await prisma.contest.findUniqueOrThrow({
         where: { slug: DOGFOOD_CONTEST },
       });
@@ -133,7 +134,7 @@ describe('Contests (e2e)', () => {
       const board = await request(app.getHttpServer())
         .get('/api/leaderboard')
         .expect(200);
-      expect(board.body.rule).toContain('Contest score');
+      expect(board.body.rule).toBe(LEADERBOARD_RULE);
 
       await prisma.contest.update({
         where: { id: contest.id },

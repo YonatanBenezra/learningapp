@@ -873,6 +873,17 @@
   color: #fecdd3;
 }
 
+.lp-grd-chat-grade-status {
+  flex-shrink: 0;
+  margin: 0 1rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--lp-teal, #2dd4bf) 35%, var(--lp-border));
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, #0f766e 12%, transparent);
+  font-size: var(--lp-grd-chat-fs-sm);
+  color: #99f6e4;
+}
+
 .lp-grd-chat-compose {
   flex-shrink: 0;
   padding: 0.75rem 1rem 0.85rem;
@@ -1172,6 +1183,22 @@
   border-radius: 999px;
   background: #fda4af;
   box-shadow: 0 0 6px color-mix(in srgb, #fda4af 65%, transparent);
+}
+
+.lp-grd-g2-user-request {
+  margin: 0 0.75rem 0.5rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--lp-border) 85%, #64748b);
+  background: color-mix(in srgb, var(--lp-ink) 8%, var(--color-card));
+  font-size: calc(var(--lp-grd-chat-fs, 0.8125rem) - 1px);
+  color: color-mix(in srgb, var(--lp-muted) 88%, #cbd5e1);
+  line-height: 1.35;
+}
+
+.lp-grd-g2-user-request em {
+  font-style: normal;
+  color: var(--lp-fg);
 }
 
 .lp-grd-g2-body {

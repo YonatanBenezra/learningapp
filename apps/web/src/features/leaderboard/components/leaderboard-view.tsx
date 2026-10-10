@@ -227,7 +227,7 @@ export function LeaderboardView() {
         <StatCard
           icon={Users}
           tone="brand"
-          label="Published profiles"
+          label="Ranked learners"
           value={formatNum(aggregates.ranked)}
         />
         <StatCard
@@ -275,7 +275,7 @@ export function LeaderboardView() {
             <strong>{board.items.length === 0 ? "No one on the board yet" : "No matches"}</strong>
             <p>
               {board.items.length === 0
-                ? "Publish your Pro profile from Dashboard after your first pass."
+                ? "Pass a published problem and enable your public profile (Dashboard → Profile) to appear here."
                 : "Try a different search term."}
             </p>
             {board.items.length === 0 ? (

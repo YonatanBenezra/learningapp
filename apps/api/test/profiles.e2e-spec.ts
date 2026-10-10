@@ -26,7 +26,7 @@ describeLiveCatalogue('Public profile (e2e)', () => {
     await app.close();
   });
 
-  it('lets anyone read a published Pro profile without auth', async () => {
+  it('lets anyone read a published profile without auth', async () => {
     const email = `pub-${Date.now()}@labpath.test`;
     const cookies = await signIn(app, email);
     const me = await request(app.getHttpServer())
@@ -36,15 +36,11 @@ describeLiveCatalogue('Public profile (e2e)', () => {
     expect(me.body.profile).toMatchObject({
       slug: null,
       public: false,
-      canPublish: false,
+      canPublish: true,
       published: false,
       urlPath: null,
     });
 
-    await prisma.account.update({
-      where: { userId: me.body.id as string },
-      data: { tier: 'pro', subscriptionStatus: 'active' },
-    });
     await seedPass(prisma, me.body.id as string, R1_SLUG, new Date());
     const skill = await prisma.skill.findFirst({ where: { slug: 'chunking' } });
     if (skill) {
@@ -110,16 +106,12 @@ describeLiveCatalogue('Public profile (e2e)', () => {
     expect(serialized).not.toContain('HIDDEN_EVAL');
   });
 
-  it('404s when the profile is private, Free, or unknown', async () => {
+  it('404s when the profile is private or unknown', async () => {
     const cookies = await signIn(app, `priv-${Date.now()}@labpath.test`);
     const me = await request(app.getHttpServer())
       .get('/api/me')
       .set('Cookie', cookies)
       .expect(200);
-    await prisma.account.update({
-      where: { userId: me.body.id as string },
-      data: { tier: 'pro', subscriptionStatus: 'active' },
-    });
     const slug = `hidden-${Date.now()}`;
     await request(app.getHttpServer())
       .patch('/api/me/profile')
@@ -134,37 +126,14 @@ describeLiveCatalogue('Public profile (e2e)', () => {
       .expect(200);
     await request(app.getHttpServer()).get(`/api/profiles/${slug}`).expect(404);
 
-    await prisma.account.update({
-      where: { userId: me.body.id as string },
-      data: { tier: 'free', subscriptionStatus: 'none' },
-    });
-    await prisma.user.update({
-      where: { id: me.body.id as string },
-      data: { profilePublic: true },
-    });
-    await request(app.getHttpServer()).get(`/api/profiles/${slug}`).expect(404);
     await request(app.getHttpServer())
       .get('/api/profiles/no-such-user')
       .expect(404);
   });
 
-  it('blocks Free users from publishing and rejects taken slugs', async () => {
+  it('lets Free users publish and rejects taken slugs', async () => {
     const first = await signIn(app, `slug-a-${Date.now()}@labpath.test`);
-    const me = await request(app.getHttpServer())
-      .get('/api/me')
-      .set('Cookie', first)
-      .expect(200);
     const slug = `taken-${Date.now()}`;
-    await request(app.getHttpServer())
-      .patch('/api/me/profile')
-      .set('Cookie', first)
-      .send({ slug, enabled: true })
-      .expect(403);
-
-    await prisma.account.update({
-      where: { userId: me.body.id as string },
-      data: { tier: 'pro', subscriptionStatus: 'active' },
-    });
     await request(app.getHttpServer())
       .patch('/api/me/profile')
       .set('Cookie', first)
@@ -175,14 +144,6 @@ describeLiveCatalogue('Public profile (e2e)', () => {
       app,
       `slug-b-${Date.now()}@labpath.test`,
     );
-    const second = await request(app.getHttpServer())
-      .get('/api/me')
-      .set('Cookie', secondCookies)
-      .expect(200);
-    await prisma.account.update({
-      where: { userId: second.body.id as string },
-      data: { tier: 'pro', subscriptionStatus: 'active' },
-    });
     await request(app.getHttpServer())
       .patch('/api/me/profile')
       .set('Cookie', secondCookies)

@@ -15,4 +15,9 @@ export class ProgressController {
   ) {
     return this.progressService.getMine(user, query.timezone);
   }
+
+  @Get('exercise-progress')
+  getExerciseProgress(@CurrentUser() user: AuthenticatedUser) {
+    return this.progressService.getExerciseProgress(user);
+  }
 }

@@ -9,9 +9,11 @@
   --lp-grd-fail-deep-ink: #450a0a;
   --lp-grd-fail-accent: var(--color-status-fail);
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 0.65rem;
   min-height: 0;
+  height: 100%;
 }
 
 .lp-ws--rag-figma .lp-ws-pane {

@@ -34,10 +34,6 @@ describeLiveCatalogue('Leaderboard (e2e)', () => {
       .get('/api/me')
       .set('Cookie', hiddenCookies)
       .expect(200);
-    await prisma.account.update({
-      where: { userId: hiddenMe.body.id as string },
-      data: { tier: 'pro', subscriptionStatus: 'active' },
-    });
     await seedPass(prisma, hiddenMe.body.id as string, R1_SLUG, new Date());
     await seedPass(prisma, hiddenMe.body.id as string, R2_SLUG, new Date());
     await request(app.getHttpServer())
@@ -69,10 +65,6 @@ describeLiveCatalogue('Leaderboard (e2e)', () => {
       .get('/api/me')
       .set('Cookie', shownCookies)
       .expect(200);
-    await prisma.account.update({
-      where: { userId: shownMe.body.id as string },
-      data: { tier: 'pro', subscriptionStatus: 'active' },
-    });
     await seedPass(prisma, shownMe.body.id as string, R1_SLUG, new Date());
     const slug = `lb-shown-${stamp}`;
     await request(app.getHttpServer())

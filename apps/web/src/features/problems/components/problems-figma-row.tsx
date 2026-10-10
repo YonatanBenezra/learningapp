@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, Shield, Swords } from "lucide-react";
+import { Activity, Check, Shield, Swords } from "lucide-react";
 import { loginPath, routes } from "@/config/routes";
 import type { Exercise } from "@/types/exercise";
 import type { ProblemFigmaMeta } from "../problems-figma-meta";
@@ -12,6 +12,13 @@ type Props = {
 };
 
 function StatusGlyph({ status }: { status: ProblemFigmaMeta["status"] }) {
+  if (status === "cleared") {
+    return (
+      <span className="lp-prob-row-glyph lp-prob-row-glyph--cleared" aria-hidden>
+        <Check className="size-3.5" strokeWidth={2.5} />
+      </span>
+    );
+  }
   if (status === "in_progress") {
     return (
       <span className="lp-prob-row-glyph lp-prob-row-glyph--active" aria-hidden>
@@ -42,8 +49,11 @@ export function ProblemsFigmaRow({ exercise, meta, signedIn }: Props) {
     ? baseTitle
     : `${meta.code} ${baseTitle}`;
 
-  const actionHref = signedIn ? href : loginPath(href);
+  const openHref = signedIn ? href : loginPath(href);
+  const actionHref = openHref;
   const showContinue = meta.status === "in_progress" && meta.continueLevel;
+  const cleared = meta.status === "cleared";
+  const actionLabel = cleared ? "Try again" : "Start →";
 
   return (
     <tr className="lp-prob-row">
@@ -51,7 +61,7 @@ export function ProblemsFigmaRow({ exercise, meta, signedIn }: Props) {
         <div className="lp-prob-row-problem-inner">
           <StatusGlyph status={meta.status} />
           <div className="lp-prob-row-copy">
-            <Link href={href} className="lp-prob-row-title">
+            <Link href={openHref} className="lp-prob-row-title">
               {title}
             </Link>
             <p className="lp-prob-row-sub">{meta.subtitle}</p>
@@ -73,7 +83,7 @@ export function ProblemsFigmaRow({ exercise, meta, signedIn }: Props) {
       </td>
       <td className="lp-prob-row-rate">
         <div className="lp-prob-rate">
-          {typeof meta.solveRate === "number" ? (
+          {signedIn && typeof meta.solveRate === "number" ? (
             <>
               <span className="lp-prob-rate-val">{meta.solveRate}%</span>
               <div className="lp-prob-rate-bar" aria-hidden>
@@ -99,8 +109,11 @@ export function ProblemsFigmaRow({ exercise, meta, signedIn }: Props) {
             </span>
           </div>
         ) : (
-          <Link href={actionHref} className="lp-prob-start-btn">
-            Start →
+          <Link
+            href={actionHref}
+            className={cleared ? "lp-prob-start-btn is-cleared" : "lp-prob-start-btn"}
+          >
+            {actionLabel}
           </Link>
         )}
       </td>

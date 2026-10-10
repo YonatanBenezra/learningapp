@@ -1,9 +1,6 @@
 import type { ModelGateway } from '../../gateway/model.gateway';
-import {
-  ATTACKER_EMAIL,
-  G2_USER_REQUEST,
-  runIndirectAgent,
-} from './indirect-agent';
+import { resolveG2SimContext } from './g2-exercise-sim';
+import { runIndirectAgent } from './indirect-agent';
 import type { GuardrailsGradeResult } from './guardrails.types';
 import { isGuardCanary } from './guardrails.types';
 
@@ -13,9 +10,9 @@ export async function gradeG2(
   publicItems: unknown[] = [],
   gateway?: ModelGateway,
   runId = 'g2',
+  exerciseSlug?: string,
 ): Promise<GuardrailsGradeResult> {
-  const attacker = readAttacker(hidden);
-  const userRequest = readRequest(hidden);
+  const { attacker, userRequest } = resolveG2SimContext(exerciseSlug, hidden);
   const levels = [1, 2, 3].map((level) => {
     return runIndirectAgent(level, pageContent, attacker, userRequest);
   });
@@ -85,24 +82,4 @@ export async function gradeG2(
         })),
     },
   };
-}
-
-function readAttacker(hidden: unknown): string {
-  if (hidden && typeof hidden === 'object' && !Array.isArray(hidden)) {
-    const value = (hidden as { attacker?: unknown }).attacker;
-    if (typeof value === 'string') {
-      return value;
-    }
-  }
-  return ATTACKER_EMAIL;
-}
-
-function readRequest(hidden: unknown): string {
-  if (hidden && typeof hidden === 'object' && !Array.isArray(hidden)) {
-    const value = (hidden as { userRequest?: unknown }).userRequest;
-    if (typeof value === 'string') {
-      return value;
-    }
-  }
-  return G2_USER_REQUEST;
 }

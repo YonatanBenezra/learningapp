@@ -80,7 +80,7 @@ export function AssessmentsView() {
         <div>
           <h1 className="lp-ct-title">Verified assessments</h1>
           <p className="lp-ct-lead">
-            Timed sittings — novel problems, no hints, one per Pro season. Traces
+            Timed sittings — novel problems, no hints, one per season. Traces
             unlock when the sitting closes.
           </p>
         </div>

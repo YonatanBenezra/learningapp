@@ -12,9 +12,16 @@ import {
   ensureAuthSession,
   getAuthSnapshot,
 } from "@/features/auth/auth-session";
-import { problemsApi } from "@/features/problems/problems-api";
+import {
+  problemsApi,
+  type UserExerciseSolveStat,
+} from "@/features/problems/problems-api";
 import type { Difficulty, Exercise } from "@/types/exercise";
-import { figmaMetaForSlug, RAG_PROBLEMS_ORDER } from "../problems-figma-meta";
+import {
+  figmaMetaForSlug,
+  problemFigmaMetaForExercise,
+  RAG_PROBLEMS_ORDER,
+} from "../problems-figma-meta";
 import { ProblemsRagTrackPanel } from "./problems-rag-track-panel";
 import { ProblemsFigmaRow } from "./problems-figma-row";
 import { ProblemsGenericRow } from "./problems-generic-row";
@@ -142,6 +149,10 @@ export function ProblemsGrid() {
       getAuthSnapshot().status === "authenticated" ||
       getAuthSnapshot().status === "soft",
   );
+  const [userStatsBySlug, setUserStatsBySlug] = useState<
+    Record<string, UserExerciseSolveStat>
+  >({});
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -173,6 +184,7 @@ export function ProblemsGrid() {
       .then((result) => {
         if (!cancelled) {
           setItems(result.items);
+          setError(null);
         }
       })
       .catch(() => {
@@ -183,6 +195,35 @@ export function ProblemsGrid() {
     return () => {
       cancelled = true;
     };
+  }, [reloadToken]);
+
+  useEffect(() => {
+    if (!signedIn) {
+      setUserStatsBySlug({});
+      return;
+    }
+    let cancelled = false;
+    problemsApi
+      .exerciseProgress()
+      .then((result) => {
+        if (!cancelled) {
+          setUserStatsBySlug(result.bySlug ?? {});
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setUserStatsBySlug({});
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [signedIn, reloadToken]);
+
+  useEffect(() => {
+    const onFocus = () => setReloadToken((n) => n + 1);
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
   }, []);
 
   useEffect(() => {
@@ -349,7 +390,15 @@ export function ProblemsGrid() {
               </thead>
               <tbody>
                 {pageItems.map((exercise) => {
-                  const meta = figmaMetaForSlug(exercise.slug);
+                  const userStat = signedIn ? userStatsBySlug[exercise.slug] : undefined;
+                  const showUserRate =
+                    signedIn &&
+                    userStat &&
+                    userStat.gradedAttempts > 0;
+                  const meta = problemFigmaMetaForExercise(exercise.slug, {
+                    solveRate: showUserRate ? userStat.solveRate : undefined,
+                    cleared: Boolean(userStat?.cleared),
+                  });
                   if (meta) {
                     return (
                       <ProblemsFigmaRow
@@ -365,6 +414,8 @@ export function ProblemsGrid() {
                       key={exercise.slug}
                       exercise={exercise}
                       signedIn={signedIn}
+                      cleared={Boolean(userStat?.cleared)}
+                      solveRate={showUserRate ? userStat!.solveRate : undefined}
                     />
                   );
                 })}

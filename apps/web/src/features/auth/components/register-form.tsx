@@ -8,6 +8,7 @@ import { AuthInputWrap } from "./auth-input-wrap";
 import { postAuthPath, routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
 import { setAuthenticatedUser } from "@/features/auth/auth-session";
+import { authToastError, authToastSuccess } from "@/features/auth/auth-toast";
 import { AuthSocial } from "./auth-social";
 import "../auth.css";
 
@@ -40,7 +41,9 @@ function RegisterFormFields() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      const message = "Passwords do not match.";
+      setError(message);
+      authToastError(message);
       return;
     }
 
@@ -49,12 +52,14 @@ function RegisterFormFields() {
       await authApi.register({ username, email, password });
       const me = await authApi.me();
       setAuthenticatedUser(me);
+      authToastSuccess("Account created — you’re signed in.");
       router.push(postAuthPath(Boolean(me.onboarding?.needed), searchParams.get("next")));
       router.refresh();
     } catch (caught: unknown) {
-      setError(
-        caught instanceof Error ? caught.message : "Could not create your account.",
-      );
+      const message =
+        caught instanceof Error ? caught.message : "Could not create your account.";
+      setError(message);
+      authToastError(message);
     } finally {
       setPending(false);
     }

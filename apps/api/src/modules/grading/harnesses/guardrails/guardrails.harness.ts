@@ -31,6 +31,7 @@ export class GuardrailsHarness {
         publicItems,
         this.gateway,
         input.runId,
+        input.slug,
       );
     }
     if (isGuardG2Slug(input.slug)) {
@@ -40,6 +41,7 @@ export class GuardrailsHarness {
         publicItems,
         this.gateway,
         input.runId,
+        input.slug,
       );
     }
     if (isGuardG3Slug(input.slug)) {

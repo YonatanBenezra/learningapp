@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { hashToken } from '../../../common/utils/token-hash';
 import {
-  readGenCacheBlob,
+  tryReadGenCacheBlob,
   writeGenCacheBlob,
 } from '../../../common/utils/gen-cache-blob';
 import { canonicalJson } from '../../../common/validation/json-schema';
@@ -78,21 +78,29 @@ export class ModelGateway {
       },
     });
     if (cached) {
-      await this.recordCacheHit(cached.id, 'gen');
-      await this.touchRun(input.runId, { cacheHit: true, modelVersion });
-      const blob = (await readGenCacheBlob(cached.blobUri)) as {
+      const blob = (await tryReadGenCacheBlob(cached.blobUri)) as {
         text?: unknown;
-      };
-      const text = typeof blob.text === 'string' ? blob.text : '';
-      this.logger.log(`gen cache hit model=${modelVersion} run=${input.runId}`);
-      return {
-        text,
-        modelVersion,
-        tokensIn: 0,
-        tokensOut: 0,
-        costEurMicros: 0,
-        cacheHit: true,
-      };
+      } | null;
+      if (blob) {
+        await this.recordCacheHit(cached.id, 'gen');
+        await this.touchRun(input.runId, { cacheHit: true, modelVersion });
+        const text = typeof blob.text === 'string' ? blob.text : '';
+        this.logger.log(
+          `gen cache hit model=${modelVersion} run=${input.runId}`,
+        );
+        return {
+          text,
+          modelVersion,
+          tokensIn: 0,
+          tokensOut: 0,
+          costEurMicros: 0,
+          cacheHit: true,
+        };
+      }
+      await this.prisma.genCache.delete({ where: { id: cached.id } });
+      this.logger.warn(
+        `gen cache blob missing — recompute model=${modelVersion} uri=${cached.blobUri}`,
+      );
     }
 
     const fake = fakeCompletion(input.prompt);

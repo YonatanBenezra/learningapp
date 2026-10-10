@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Caveat, Figtree, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { AppToaster } from "@/components/ui/app-toaster";
 import { RootNav } from "@/components/layout/root-nav";
 import { brand } from "@/config/brand";
 import { themeInitScript } from "@/features/theme/theme-script";
@@ -61,6 +62,7 @@ export default function RootLayout({
           {themeInitScript}
         </Script>
         <RootNav />
+        <AppToaster />
         {children}
       </body>
     </html>

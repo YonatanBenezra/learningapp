@@ -1,19 +1,16 @@
 import { AccountTier, type Account } from '@prisma/client';
 
-const PRO_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+const PERIOD_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
-export function periodStartFor(tier: AccountTier, now: Date): Date {
-  return tier === AccountTier.pro ? now : utcMondayStart(now);
+export function periodStartFor(_tier: AccountTier, now: Date): Date {
+  return now;
 }
 
 export function shouldResetPeriod(account: Account, now: Date): boolean {
   if (!account.periodStartedAt) {
     return true;
   }
-  if (account.tier === AccountTier.pro) {
-    return now.getTime() - account.periodStartedAt.getTime() >= PRO_WINDOW_MS;
-  }
-  return account.periodStartedAt.getTime() < utcMondayStart(now).getTime();
+  return now.getTime() - account.periodStartedAt.getTime() >= PERIOD_WINDOW_MS;
 }
 
 export function utcMondayStart(now = new Date()): Date {

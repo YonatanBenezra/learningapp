@@ -19,10 +19,10 @@ export function AuthShell({ children }: AuthShellProps) {
             <LabpathLogo size="md" showWordmark />
           </Link>
           <div className="lc-auth-hero-copy">
-            <h1 className="lc-auth-hero-title">The platform for AI engineering practice</h1>
+            <h1 className="lc-auth-hero-title">Train on simulators. Ship with confidence.</h1>
             <p className="lc-auth-hero-lead">
-              Observe, evaluate, and ship agentic systems. Practice with graded simulators and
-              hidden test sets—not toy demos.
+              Guardrails red-team levels, RAG engineering labs, and hidden evaluators—same graders
+              in practice and contest mode.
             </p>
           </div>
           <div className="lc-auth-hero-trust">

@@ -186,13 +186,6 @@ function SittingEnterAction({
       </button>
     );
   }
-  if (contest.window === "open" && variant === "assessment") {
-    return (
-      <Link href={routes.billing} className={className}>
-        Upgrade to Pro
-      </Link>
-    );
-  }
   return null;
 }
 

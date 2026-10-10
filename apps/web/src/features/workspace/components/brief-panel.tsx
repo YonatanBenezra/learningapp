@@ -209,7 +209,9 @@ export function BriefPanel({
               {briefFooter}
             </>
           ) : (
-            <p className="px-3.5 py-4 text-[0.8125rem] text-lp-muted">Loading exercise…</p>
+            <p className="px-3.5 py-4 text-[0.8125rem] text-lp-muted" aria-busy="true">
+              …
+            </p>
           )}
         </div>
       </aside>
@@ -255,7 +257,9 @@ export function BriefPanel({
             </div>
           </>
         ) : (
-          <h1 className="lp-ws-problem-title">Loading…</h1>
+          <h1 className="lp-ws-problem-title" aria-busy="true">
+            …
+          </h1>
         )}
       </div>
       <>
@@ -279,7 +283,9 @@ export function BriefPanel({
           </nav>
           <div className="lp-ws-pane-body">
             {!exercise ? (
-              <p className="lp-ws-pane-lead">Loading exercise…</p>
+              <p className="lp-ws-pane-lead" aria-busy="true">
+                …
+              </p>
             ) : null}
             {exercise && tab === "description" ? (
               <DescriptionTab exercise={exercise} goal={guide?.goal ?? ""} />

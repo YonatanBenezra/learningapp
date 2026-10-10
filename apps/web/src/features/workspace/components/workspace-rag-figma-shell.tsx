@@ -227,11 +227,11 @@ export function WorkspaceRagFigmaShell({
                     storageKey={
                       demoMode ? "lp-ws-demo-flow-ratio" : "lp-ws-live-flow-ratio-v1"
                     }
-                    defaultRatio={0.54}
-                    minPrimary={220}
-                    minSecondary={200}
-                    ratioMin={0.38}
-                    ratioMax={0.72}
+                    defaultRatio={0.5}
+                    minPrimary={180}
+                    minSecondary={220}
+                    ratioMin={0.32}
+                    ratioMax={0.68}
                     handleVariant="pill"
                     className="lp-ws-split--flow"
                     primary={

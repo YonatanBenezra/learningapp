@@ -3,7 +3,7 @@ import "@/features/leaderboard/leaderboard.css";
 
 export const metadata = {
   title: "Leaderboard",
-  description: "Practice rankings for published Pro profiles.",
+  description: "Practice rankings for learners with public profiles.",
 };
 
 export default function LeaderboardPage() {

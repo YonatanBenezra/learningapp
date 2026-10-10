@@ -41,8 +41,8 @@ export function QuotaUsage() {
     <section className="lp-panel lp-pg-panel">
       <div className="lp-pg-panel-top">
         <div>
-          <p className="lp-panel-eyebrow">Plan</p>
-          <h2 className="lp-panel-title">Quota</h2>
+          <p className="lp-panel-eyebrow">Usage</p>
+          <h2 className="lp-panel-title">Graded attempts</h2>
         </div>
       </div>
       {error === "auth" ? (
@@ -81,10 +81,8 @@ export function QuotaUsage() {
           </div>
           {account.quotaExceeded ? (
             <p className="lp-pg-note">
-              You are at the {account.tier === "pro" ? "fair-use" : "free"} cap.{" "}
-              <Link href={routes.billing} className="lp-link">
-                {account.tier === "pro" ? "Manage billing" : "Upgrade to Pro"}
-              </Link>
+              You&apos;ve hit the monthly fair-use cap. Your window resets when a
+              new period starts.
             </p>
           ) : null}
         </>

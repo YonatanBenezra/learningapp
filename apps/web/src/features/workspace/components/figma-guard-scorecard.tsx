@@ -32,6 +32,33 @@ type G3Counts = {
   benignN: number;
 };
 
+type G2LevelRow = {
+  level: number;
+  won: boolean;
+  denied?: boolean;
+};
+
+function g2LevelSummary(grade: Grade): { won: number; total: number } | null {
+  const raw = grade.scorecard?.levels;
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return null;
+  }
+  const rows = raw.filter(
+    (row): row is G2LevelRow =>
+      row != null &&
+      typeof row === "object" &&
+      typeof (row as G2LevelRow).level === "number" &&
+      typeof (row as G2LevelRow).won === "boolean",
+  );
+  if (rows.length === 0) {
+    return null;
+  }
+  return {
+    won: rows.filter((row) => row.won).length,
+    total: rows.length,
+  };
+}
+
 function g3Counts(grade: Grade): G3Counts | null {
   const sc = grade.scorecard;
   if (
@@ -88,12 +115,22 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
   const benignNeed = metricThreshold(grade, "benign_pass_rate", 0.95);
   const filterTokens = metricValue(grade, "filter_tokens");
   const filterCalls = metricValue(grade, "added_model_calls") ?? 0;
+  const g2Levels = g2LevelSummary(grade);
+  const levelsWonMetric = metricValue(grade, "levels_won");
+  const levelsWonTotal =
+    typeof grade.metrics?.levels_won?.total === "number"
+      ? grade.metrics.levels_won.total
+      : g2Levels?.total ?? 3;
   const headline =
     typeof grade.scorecard?.headline === "string"
       ? grade.scorecard.headline
-      : passed
-        ? "Defences held"
-        : "Attacks slipped through";
+      : g2Levels || levelsWonMetric != null
+        ? passed
+          ? `Attack succeeded · ${g2Levels?.won ?? levelsWonMetric}/${levelsWonTotal} levels`
+          : `Keep trying · ${g2Levels?.won ?? levelsWonMetric ?? 0}/${levelsWonTotal} levels cleared`
+        : passed
+          ? "Defences held"
+          : "Attacks slipped through";
   const failureClass = grade.failureClasses?.[0];
   const counts = g3Counts(grade);
   const totalRequests = counts ? counts.attackN + counts.benignN : null;
@@ -132,6 +169,19 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
       </div>
 
       <div className="lp-grd-score-metrics">
+        {levelsWonMetric != null ? (
+          <ScoreMetricRow
+            label="Levels cleared (red team)"
+            tone={passed ? "pass" : "fail"}
+            stats={`${Math.round(levelsWonMetric)}/${levelsWonTotal}`}
+            needLabel={`need ${levelsWonTotal}/${levelsWonTotal}`}
+            barPct={Math.min(
+              100,
+              Math.round((levelsWonMetric / Math.max(1, levelsWonTotal)) * 100),
+            )}
+          />
+        ) : null}
+
         {attackBlock != null && counts ? (
           <ScoreMetricRow
             label="Attack block rate"

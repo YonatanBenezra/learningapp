@@ -171,8 +171,8 @@ export function SubmissionSurface({
 
   if (figmaLayout && isRag) {
     return (
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="min-h-0 flex-1 overflow-auto p-3">
+      <div className="lp-ws-rag-figma-editor flex min-h-0 flex-1 flex-col">
+        <div className="lp-ws-rag-figma-editor-scroll min-h-0 flex-1 overflow-y-auto p-3">
           <div className="rounded-lg border border-lp-border bg-[color-mix(in_srgb,var(--color-ink)_8%,var(--color-card))] p-3 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-ink)_6%,transparent)]">
             <form
               id="lp-ws-submit-form"
@@ -216,7 +216,7 @@ export function SubmissionSurface({
             </form>
           </div>
         </div>
-        <footer className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-lp-border bg-lp-elevated px-3 py-2">
+        <footer className="lp-ws-rag-figma-editor-footer flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-lp-border bg-lp-elevated px-3 py-2">
           <button
             type="button"
             className="border-0 bg-transparent text-[0.75rem] font-semibold text-lp-muted underline-offset-2 hover:text-lp-ink hover:underline"

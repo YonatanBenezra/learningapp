@@ -8,4 +8,8 @@ export class G2PageDto {
   @IsInt()
   @Min(1)
   level?: number;
+
+  @IsOptional()
+  @IsString()
+  exerciseSlug?: string;
 }

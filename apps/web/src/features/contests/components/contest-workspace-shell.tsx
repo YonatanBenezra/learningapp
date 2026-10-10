@@ -176,7 +176,7 @@ export function ContestWorkspaceShell({
           pending={pending}
           error={submitError}
           errorHref={quotaHref}
-          errorLinkLabel="Upgrade"
+          errorLinkLabel="Usage"
           onSubmit={onSubmit}
         />
       </div>

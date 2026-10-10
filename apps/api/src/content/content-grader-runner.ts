@@ -172,12 +172,18 @@ export async function runContentGrader(
         payloadText(payload, 'attackPrompt'),
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
+        undefined,
+        contentRunId(bundle),
+        bundle.meta.slug,
       );
     case 'guard-g2':
       return gradeG2(
         payloadText(payload, 'pageContent'),
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
+        undefined,
+        contentRunId(bundle),
+        bundle.meta.slug,
       );
     case 'guard-g3':
       return gradeG3(

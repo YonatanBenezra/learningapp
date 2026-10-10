@@ -10,7 +10,9 @@ import { buildGuardrailsFigmaBrief } from "../guardrails-brief-from-exercise";
 import {
   G1_LEVELS,
   G2_LEVELS,
-  G2_SAMPLE_PAGE,
+  g2PageChrome,
+  g2SamplePage,
+  g1SimulatorProfile,
   guardrailsVariantForExercise,
   sampleIndexFromSeed,
 } from "../guardrails-workspace-data";
@@ -60,13 +62,18 @@ export function WorkspaceGuardrailsFigmaShell({
   onToggleResultsCollapsed,
 }: WorkspaceGuardrailsFigmaShellProps) {
   const variant = guardrailsVariantForExercise(exercise)!;
+  const g1Simulator = useMemo(
+    () => g1SimulatorProfile(exercise),
+    [exercise.slug, exercise.title],
+  );
   const [liveMode, setLiveMode] = useState(true);
   const [activeLevel, setActiveLevel] = useState(1);
   const [clearedLevels, setClearedLevels] = useState<Set<number>>(() => new Set());
   const [chatAttempts, setChatAttempts] = useState(0);
   const [gradeAttempts, setGradeAttempts] = useState(0);
   const [attackDraft, setAttackDraft] = useState("");
-  const [pageContent, setPageContent] = useState(G2_SAMPLE_PAGE);
+  const [gradeAttackPrompt, setGradeAttackPrompt] = useState("");
+  const [pageContent, setPageContent] = useState(() => g2SamplePage(exercise));
   const [g1WinsByLevel, setG1WinsByLevel] = useState<Record<number, G1LevelWin>>({});
   const [g1ShowDebrief, setG1ShowDebrief] = useState(false);
 
@@ -85,24 +92,34 @@ export function WorkspaceGuardrailsFigmaShell({
   );
 
   useEffect(() => {
-    if (variant === "g2" && typeof formDefaults.pageContent === "string") {
-      setPageContent(formDefaults.pageContent);
+    if (variant !== "g2") {
+      return;
     }
-  }, [formDefaults.pageContent, variant]);
+    if (
+      typeof formDefaults.pageContent === "string" &&
+      formDefaults.pageContent.trim()
+    ) {
+      setPageContent(formDefaults.pageContent);
+      return;
+    }
+    setPageContent(g2SamplePage(exercise));
+  }, [exercise.slug, formDefaults.pageContent, variant]);
 
   useEffect(() => {
     setG1ShowDebrief(false);
   }, [activeLevel]);
 
+  const submitAttackPrompt = attackDraft.trim() || gradeAttackPrompt.trim();
+
   useEffect(() => {
     if (variant === "g1") {
-      onValidityChange(Boolean(attackDraft.trim()));
+      onValidityChange(Boolean(submitAttackPrompt));
       return;
     }
     if (variant === "g2") {
       onValidityChange(Boolean(pageContent.trim()));
     }
-  }, [attackDraft, onValidityChange, pageContent, variant]);
+  }, [onValidityChange, pageContent, submitAttackPrompt, variant]);
 
   const levelRows = variant === "g2" ? G2_LEVELS : G1_LEVELS;
   const levelMeta = levelRows.find((row) => row.level === activeLevel) ?? levelRows[0];
@@ -121,10 +138,10 @@ export function WorkspaceGuardrailsFigmaShell({
   };
 
   const submitGrade = () => {
-    if (!attackDraft.trim()) {
+    if (!submitAttackPrompt) {
       return;
     }
-    handleGradeSubmit({ attackPrompt: attackDraft.trim() });
+    handleGradeSubmit({ attackPrompt: submitAttackPrompt });
   };
 
   const activeLevelCleared = clearedLevels.has(activeLevel);
@@ -157,6 +174,8 @@ export function WorkspaceGuardrailsFigmaShell({
     variant === "g1" ? (
       <div className="lp-grd-work lp-grd-work--g1">
         <GuardrailsG1ChatPanel
+          exerciseSlug={exercise.slug}
+          simulator={g1Simulator}
           disabled={pending}
           liveMode={liveMode}
           level={activeLevel}
@@ -169,15 +188,24 @@ export function WorkspaceGuardrailsFigmaShell({
           onDraftChange={setAttackDraft}
           onLevelWin={(win) => {
             setG1WinsByLevel((current) => ({ ...current, [win.level]: win }));
+            if (win.attackPrompt) {
+              setGradeAttackPrompt(win.attackPrompt);
+              setAttackDraft(win.attackPrompt);
+            }
           }}
           onViewDebrief={() => setG1ShowDebrief(true)}
           onSubmitGrade={submitGrade}
-          gradeSubmitDisabled={pending || !attackDraft.trim()}
+          gradeSubmitDisabled={pending || !submitAttackPrompt}
+          submitError={submitError}
+          gradePending={pending}
         />
       </div>
     ) : variant === "g2" ? (
       <div className="lp-grd-work lp-grd-work--g2">
         <GuardrailsG2Panel
+          exerciseSlug={exercise.slug}
+          samplePage={g2SamplePage(exercise)}
+          pageChrome={g2PageChrome(exercise)}
           disabled={pending}
           liveMode={liveMode}
           level={activeLevel}
@@ -210,7 +238,11 @@ export function WorkspaceGuardrailsFigmaShell({
       </div>
     );
 
-  const showResults = variant === "g3";
+  const showResults =
+    variant === "g3" ||
+    gradeAttempts > 0 ||
+    pending ||
+    Boolean(run || grade || submitError);
 
   const leftPanel = (
       <GuardrailsLeftPanel
@@ -268,6 +300,9 @@ export function WorkspaceGuardrailsFigmaShell({
                   run={run}
                   grade={grade}
                   simulator="guardrails"
+                  pending={pending}
+                  attempt={gradeAttempts || 1}
+                  exerciseSlug={exercise.slug}
                   collapsed={resultsCollapsed}
                   onToggleCollapse={onToggleResultsCollapsed}
                   figmaScorecard

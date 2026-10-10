@@ -26,7 +26,7 @@ export type ProblemFigmaMeta = {
   tags: string[];
   mode: ProblemMode;
   modeLabel: string;
-  /** Community pass rate from API — omit until wired; not personal progress. */
+  /** Your pass rate on this exercise (0–100) — only when signed in and graded. */
   solveRate?: number;
   status: ProblemRowStatus;
   continueLevel?: { current: number; total: number };
@@ -143,6 +143,24 @@ export const RAG_PROBLEMS_ORDER = LIVE_RAG_SLUGS;
 
 export function figmaMetaForSlug(slug: string): ProblemFigmaMeta | null {
   return GUARDRAILS_META[slug] ?? RAG_META[slug] ?? null;
+}
+
+export function problemFigmaMetaForExercise(
+  slug: string,
+  options: {
+    solveRate?: number;
+    cleared?: boolean;
+  },
+): ProblemFigmaMeta | null {
+  const base = figmaMetaForSlug(slug);
+  if (!base) {
+    return null;
+  }
+  return {
+    ...base,
+    solveRate: options.solveRate,
+    status: options.cleared ? "cleared" : base.status,
+  };
 }
 
 type TrackLevelState = "cleared" | "in_progress" | "locked" | "not_started";

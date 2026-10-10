@@ -8,22 +8,13 @@ import { NavbarMenu } from "@/components/aceternity/navbar-menu";
 import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
-import { authApi } from "@/features/auth/auth-api";
-import {
-  ensureAuthSession,
-  getAuthSnapshot,
-} from "@/features/auth/auth-session";
-import type { User } from "@/types/user";
+import { CatalogNavAuth } from "@/components/layout/nav-auth-slot";
 
 const navLinks = [
   { href: routes.problems, label: "Problems" },
   { href: routes.contests, label: "Contest" },
   { href: routes.leaderboard, label: "Leaderboard" },
 ] as const;
-
-function isSignedInStatus(status: string) {
-  return status === "authenticated" || status === "soft";
-}
 
 function isActive(pathname: string, href: string) {
   if (href === routes.problems) {
@@ -38,50 +29,17 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function userInitials(user: User | null) {
-  if (!user) {
-    return "?";
-  }
-  const source = user.displayName?.trim() || user.email.split("@")[0] || "U";
-  const parts = source.split(/\s+/).filter(Boolean);
-  if (parts.length >= 2) {
-    return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
-  }
-  return source.slice(0, 2).toUpperCase();
-}
-
 export function AppCatalogNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const cached = getAuthSnapshot();
   const searchRef = useRef<HTMLInputElement>(null);
-  const [user, setUser] = useState<User | null>(null);
   const [search, setSearch] = useState("");
-  const [signedIn, setSignedIn] = useState(isSignedInStatus(cached.status));
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.dataset.workspace = "catalog";
     return () => {
       delete document.documentElement.dataset.workspace;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([ensureAuthSession(), authApi.me().catch(() => null)]).then(
-      ([session, me]) => {
-        if (cancelled) {
-          return;
-        }
-        setSignedIn(isSignedInStatus(session.status));
-        if (me) {
-          setUser(me);
-        }
-      },
-    );
-    return () => {
-      cancelled = true;
     };
   }, []);
 
@@ -153,24 +111,7 @@ export function AppCatalogNav() {
             <kbd aria-hidden>/</kbd>
           </form>
 
-          {signedIn && user ? (
-            <Link
-              href={routes.progress}
-              className="lp-site-nav-avatar"
-              aria-label="Your profile"
-              title={user.displayName ?? user.email}
-            >
-              {userInitials(user)}
-            </Link>
-          ) : (
-            <Link
-              href={routes.login}
-              className="lp-site-nav-signin rounded-lg shadow-none hover:shadow-none max-[520px]:hidden"
-              title="Sign in"
-            >
-              Sign in
-            </Link>
-          )}
+          <CatalogNavAuth variant="desktop" />
 
           <button
             type="button"
@@ -198,15 +139,10 @@ export function AppCatalogNav() {
           className="lp-nav-menu--mobile"
           onNavigate={() => setMobileNavOpen(false)}
         />
-        {!signedIn ? (
-          <Link
-            href={routes.login}
-            className="lp-site-nav-signin mt-3 flex w-full justify-center rounded-lg shadow-none hover:shadow-none min-[520px]:hidden"
-            onClick={() => setMobileNavOpen(false)}
-          >
-            Sign in
-          </Link>
-        ) : null}
+        <CatalogNavAuth
+          variant="mobile"
+          onNavigate={() => setMobileNavOpen(false)}
+        />
       </div>
     </header>
   );

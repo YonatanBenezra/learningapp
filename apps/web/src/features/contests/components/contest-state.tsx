@@ -122,12 +122,8 @@ export function contestProblemState(
       title: `You have not started this ${sitting}`,
       body:
         variant === "assessment"
-          ? "Assessments are Pro only, and hints stay off for the whole time box."
+          ? "Start the assessment from the assessments page first. Hints stay off for the whole time box."
           : "Enter the contest from the contest page first. Your problems are drawn when you start, and hints stay off for the whole time box.",
-      action:
-        variant === "assessment"
-          ? { href: routes.billing, label: "See plans" }
-          : undefined,
     };
   }
   if (status === 404) {

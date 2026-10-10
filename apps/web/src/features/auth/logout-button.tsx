@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
+import { authToastSuccess } from "@/features/auth/auth-toast";
 import { clearAuthSnapshot } from "@/features/auth/auth-session";
 
 type LogoutButtonProps = {
@@ -30,6 +31,7 @@ export function LogoutButton({ className, onDone }: LogoutButtonProps) {
     // RequireAuth reads this snapshot before it calls the API, so a stale
     // "authenticated" here would walk the user straight back in.
     clearAuthSnapshot();
+    authToastSuccess("Signed out.");
     onDone?.();
     router.replace(routes.login);
     router.refresh();

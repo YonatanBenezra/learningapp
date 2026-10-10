@@ -1077,6 +1077,19 @@ html:not([data-theme="dark"]) .lp-ex-badge--H {
   box-shadow: 0 0 14px color-mix(in srgb, var(--lp-brand) 40%, transparent);
 }
 
+.lp-prob-row-glyph--cleared {
+  display: grid;
+  place-items: center;
+  border-color: color-mix(in srgb, #34d399 55%, var(--lp-border));
+  color: #6ee7b7;
+  background: color-mix(in srgb, #059669 14%, transparent);
+}
+
+.lp-prob-start-btn.is-cleared {
+  border-color: color-mix(in srgb, #34d399 45%, var(--lp-border));
+  color: #a7f3d0;
+}
+
 .lp-prob-row-title {
   font-size: 0.9375rem;
   font-weight: 600;

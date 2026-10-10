@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
+import { ExerciseSolveStatsService } from '../catalogue/exercises/exercise-solve-stats.service';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { calendarDateKey, resolveTimeZone } from './calendar';
 import { drillPool, pickDailyDrill } from './daily-drill';
@@ -9,7 +10,15 @@ import { toSkillScoreView } from '../skills/skill-decay';
 
 @Injectable()
 export class ProgressService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly solveStats: ExerciseSolveStatsService,
+  ) {}
+
+  async getExerciseProgress(user: AuthenticatedUser) {
+    const bySlug = await this.solveStats.userStatsBySlug(user.id);
+    return { bySlug };
+  }
 
   async getMine(user: AuthenticatedUser, timezone?: string, now = new Date()) {
     const tz = resolveTimeZone(timezone);

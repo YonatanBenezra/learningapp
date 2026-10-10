@@ -14,8 +14,8 @@ export const ASSESSMENT_SEASON_USED = {
 export const VA1_ASSESSMENT_SLUG = 'va1-q3-2026';
 
 export const ASSESSMENT_PRO_REQUIRED = {
-  message: 'Upgrade to Pro to sit a verified assessment.',
-  code: 'pro_required',
+  message: 'This assessment is not available for your account.',
+  code: 'assessment_unavailable',
   upgradePath: '/billing',
 } as const;
 
