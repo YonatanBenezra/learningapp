@@ -1,4 +1,4 @@
-import { env } from "./env";
+import { apiUrl } from "./env";
 
 export class ApiError extends Error {
   constructor(
@@ -16,7 +16,7 @@ async function tryRefreshSession(): Promise<boolean> {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       try {
-        const response = await fetch(`${env.apiUrl}/auth/refresh`, {
+        const response = await fetch(`${apiUrl()}/auth/refresh`, {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
@@ -38,7 +38,7 @@ export async function apiClient<T>(
   init?: RequestInit,
   retried = false,
 ): Promise<T> {
-  const response = await fetch(`${env.apiUrl}${path}`, {
+  const response = await fetch(`${apiUrl()}${path}`, {
     ...init,
     credentials: "include",
     headers: {

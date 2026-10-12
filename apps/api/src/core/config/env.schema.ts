@@ -19,6 +19,11 @@ export const envSchema = z.object({
   JWT_REFRESH_SECRET: z.string().min(16).default('change-me-refresh-secret'),
   JWT_REFRESH_TTL: z.string().default('7d'),
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
+  /** When false, auth cookies omit Secure (HTTP same-host deploys). Default: auto. */
+  COOKIE_SECURE: z
+    .enum(['true', 'false', 'auto'])
+    .default('auto')
+    .transform((value) => value as 'true' | 'false' | 'auto'),
   COOKIE_DOMAIN: z.string().optional().default(''),
   INGEST_SIGNING_SECRET: z.string().min(16).default('change-me-ingest-secret'),
   SANDBOX_IMAGE: z.string().default('labpath-sandbox:local'),

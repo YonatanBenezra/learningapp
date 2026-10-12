@@ -1,10 +1,10 @@
-import { env } from "./env";
+import { apiUrl } from "./env";
 
 export async function publicApiClient<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
-  const response = await fetch(`${env.apiUrl}${path}`, {
+  const response = await fetch(`${apiUrl()}${path}`, {
     ...init,
     credentials: "omit",
     headers: {

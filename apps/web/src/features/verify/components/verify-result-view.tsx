@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { GlobalLoader } from "@/components/ui/global-loader";
 import { routes } from "@/config/routes";
 import { verifyApi } from "@/features/verify/verify-api";
-import { env } from "@/lib/env";
+import { apiUrl } from "@/lib/env";
 import type {
   SignedResultView,
   VerifySignedResultResponse,
@@ -239,7 +239,7 @@ export function VerifyResultView({ resultId }: { resultId: string }) {
           </p>
           <div className="lp-vf-links">
             <a
-              href={`${env.apiUrl}/signing-keys`}
+              href={`${apiUrl()}/signing-keys`}
               className="lp-ct-btn lp-ct-btn--ghost"
               rel="noopener noreferrer"
             >

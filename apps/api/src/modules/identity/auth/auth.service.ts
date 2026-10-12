@@ -277,18 +277,67 @@ export class AuthService {
     'secure' | 'domain' | 'sameSite'
   > {
     const domain = this.config.get('COOKIE_DOMAIN', { infer: true });
+    const cookieSecureMode = this.config.get('COOKIE_SECURE', { infer: true });
+    if (cookieSecureMode === 'false') {
+      return {
+        secure: false,
+        sameSite: 'lax',
+        domain: !domain || domain === 'localhost' ? undefined : domain,
+      };
+    }
+
     const cors = this.config.get('CORS_ORIGINS', { infer: true });
-    const crossSite = cors.split(',').some((origin) => {
+    const publicWebUrl = this.config.get('PUBLIC_WEB_URL', { infer: true });
+
+    const corsOrigins = cors
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean);
+
+    let webHost: string | null = null;
+    let webIsHttps = false;
+    try {
+      const web = new URL(publicWebUrl);
+      webHost = web.host;
+      webIsHttps = web.protocol === 'https:';
+    } catch {
+      webHost = null;
+    }
+
+    const sameHostDeploy =
+      webHost !== null &&
+      corsOrigins.length > 0 &&
+      corsOrigins.every((origin) => {
+        try {
+          return new URL(origin).host === webHost;
+        } catch {
+          return false;
+        }
+      });
+
+    if (sameHostDeploy) {
+      const secure =
+        cookieSecureMode === 'true' ? true : webIsHttps;
+      return {
+        secure,
+        sameSite: 'lax',
+        domain: !domain || domain === 'localhost' ? undefined : domain,
+      };
+    }
+
+    const crossSite = corsOrigins.some((origin) => {
       try {
-        const host = new URL(origin.trim()).hostname;
+        const host = new URL(origin).hostname;
         return host !== 'localhost' && host !== '127.0.0.1';
       } catch {
         return false;
       }
     });
     const secure =
-      this.config.get('NODE_ENV', { infer: true }) === 'production' ||
-      crossSite;
+      cookieSecureMode === 'true'
+        ? true
+        : this.config.get('NODE_ENV', { infer: true }) === 'production' ||
+          crossSite;
     return {
       secure,
       // Vercel (web) + Render (API) is cross-site; Lax cookies are dropped.
