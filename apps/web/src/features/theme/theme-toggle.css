@@ -49,6 +49,48 @@ html[data-theme="dark"] .lp-theme-sun {
   opacity: 1;
 }
 
+.lp-theme-nav-btn {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--color-line) 88%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-ink) 5%, var(--color-card));
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.lp-theme-nav-btn:hover {
+  color: var(--color-ink);
+  border-color: color-mix(in srgb, var(--color-brand) 35%, var(--color-line));
+  background: color-mix(in srgb, var(--color-brand) 8%, var(--color-card));
+}
+
+html[data-theme="dark"] .lp-theme-nav-btn {
+  background: color-mix(in srgb, var(--color-ink) 8%, var(--color-card));
+}
+
+.lp-site-nav-right .lp-theme-nav-btn {
+  align-self: center;
+}
+
+.lp-site-nav-mobile-theme {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.35rem 0 0.75rem;
+}
+
+.ag-nav-cta .lp-theme-nav-btn {
+  align-self: center;
+}
+
 @media (max-width: 720px) {
   .lp-theme-switch {
     --lp-theme-travel: 1.6rem;

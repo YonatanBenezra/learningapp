@@ -67,9 +67,9 @@ export function ContestDetailSkeleton() {
   return (
     <div className="lp-ct lp-ct-skel" aria-busy="true" aria-live="polite">
       <header className="lp-ct-hero">
-        <div>
-          <span className="lp-ct-skel-block lp-ct-skel-eyebrow" />
-          <span className="lp-ct-skel-block lp-ct-skel-title" />
+        <div className="lp-ct-hero-copy">
+          <span className="lp-ct-skel-block lp-ct-skel-kicker" />
+          <span className="lp-ct-skel-block lp-ct-skel-title lp-ct-skel-title--detail" />
           <span className="lp-ct-skel-block lp-ct-skel-lead" />
           <span className="lp-ct-skel-block lp-ct-skel-lead lp-ct-skel-lead--short" />
         </div>
@@ -79,31 +79,28 @@ export function ContestDetailSkeleton() {
         </div>
       </header>
 
-      <div className="lp-ctd-facts">
+      <div className="lp-ctd-facts" aria-hidden>
         {Array.from({ length: 6 }, (_, index) => (
-          <span key={index} className="lp-ct-skel-block lp-ct-skel-fact" />
+          <div key={index} className="lp-ct-fact">
+            <span className="lp-ct-skel-block lp-ct-skel-fact-val" />
+            <span className="lp-ct-skel-block lp-ct-skel-fact-label" />
+          </div>
         ))}
       </div>
 
-      <section aria-hidden="true">
-        <div className="lp-ctd-section-head">
-          <div>
-            <span className="lp-ct-skel-block lp-ct-skel-section" />
-            <span className="lp-ct-skel-block lp-ct-skel-copy lp-ct-skel-copy--short" />
-          </div>
-          <span className="lp-ct-skel-block lp-ct-skel-btn" />
+      <section className="lp-ctd-enter-block" aria-hidden>
+        <div className="lp-ctd-enter-toolbar">
+          <span className="lp-ct-skel-block lp-ct-skel-toggle" />
         </div>
-
-        <div className="lp-ctd-grid">
-          {Array.from({ length: 2 }, (_, index) => (
-            <article key={index} className="lp-ctd-card">
-              <div className="lp-ct-card-top">
-                <span className="lp-ct-skel-block lp-ct-skel-badge" />
-                <span className="lp-ct-skel-block lp-ct-skel-badge" />
-              </div>
-              <span className="lp-ct-skel-block lp-ct-skel-name" />
+        <div className="lp-ctd-enter-grid">
+          {Array.from({ length: 4 }, (_, index) => (
+            <article key={index} className="lp-ctd-enter-card lp-ctd-enter-card--skel">
+              <span className="lp-ct-skel-block lp-ct-skel-enter-title" />
+              <span className="lp-ct-skel-block lp-ct-skel-copy" />
               <span className="lp-ct-skel-block lp-ct-skel-copy lp-ct-skel-copy--short" />
-              <span className="lp-ct-skel-block lp-ct-skel-btn lp-ctd-skel-btn" />
+              {index === 3 ? (
+                <span className="lp-ct-skel-block lp-ct-skel-btn lp-ctd-skel-btn" />
+              ) : null}
             </article>
           ))}
         </div>

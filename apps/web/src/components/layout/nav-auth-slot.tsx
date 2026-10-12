@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LogIn } from "lucide-react";
 import { routes } from "@/config/routes";
 import {
   authUserInitials,
@@ -20,9 +21,10 @@ export function CatalogNavAuth({ variant, onNavigate }: CatalogNavAuthProps) {
       return (
         <Link
           href={routes.login}
-          className="lp-site-nav-signin mt-3 flex w-full justify-center rounded-lg shadow-none hover:shadow-none min-[520px]:hidden"
+          className="lp-site-nav-signin mt-3 flex w-full justify-center min-[520px]:hidden"
           onClick={onNavigate}
         >
+          <LogIn className="size-4 shrink-0" strokeWidth={2.25} aria-hidden />
           Sign in
         </Link>
       );
@@ -47,9 +49,10 @@ export function CatalogNavAuth({ variant, onNavigate }: CatalogNavAuthProps) {
     return (
       <Link
         href={routes.login}
-        className="lp-site-nav-signin rounded-lg shadow-none hover:shadow-none max-[520px]:hidden"
+        className="lp-site-nav-signin max-[520px]:hidden"
         title="Sign in"
       >
+        <LogIn className="size-4 shrink-0" strokeWidth={2.25} aria-hidden />
         Sign in
       </Link>
     );

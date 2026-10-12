@@ -7,6 +7,7 @@ import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { HomeNavAuthCta } from "@/components/layout/nav-auth-slot";
+import { ThemeToggle } from "@/features/theme/theme-toggle";
 import { AuthLink } from "@/features/auth/auth-link";
 
 const navLinks = [{ href: routes.problems, label: "Problems", auth: false }] as const;
@@ -141,6 +142,7 @@ export function HomeNav() {
           </nav>
 
           <div className="ag-nav-cta">
+            <ThemeToggle variant="nav" />
             <button
               type="button"
               className="ag-nav-toggle"

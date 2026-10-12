@@ -308,6 +308,49 @@ html {
   position: relative;
   overflow: hidden;
   padding: max(11rem, calc(7.5rem + env(safe-area-inset-top))) 1.5rem 6.5rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ag-bg-soft) 70%, var(--ag-bg)) 0%,
+    var(--ag-bg) 55%
+  );
+}
+
+html:not([data-theme="dark"]) .ag-hero {
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--color-brand) 6%, var(--ag-bg)) 0%,
+    var(--ag-bg) 48%,
+    color-mix(in srgb, var(--ag-bg-soft) 90%, var(--ag-bg)) 100%
+  );
+}
+
+html:not([data-theme="dark"]) .ag-fx-grid {
+  opacity: 0.35;
+}
+
+html:not([data-theme="dark"]) .ag-fx-beam,
+html:not([data-theme="dark"]) .ag-fx-spark {
+  opacity: 0.45;
+}
+
+html:not([data-theme="dark"]) .ag-fx-scan {
+  opacity: 0.55;
+}
+
+html:not([data-theme="dark"]) .ag-rings i {
+  border-color: color-mix(in srgb, var(--ag-ink) 6%, transparent);
+}
+
+html:not([data-theme="dark"]) .ag-socials a,
+html:not([data-theme="dark"]) .ag-socials .ag-dot,
+html:not([data-theme="dark"]) .ag-foot-socials a,
+html:not([data-theme="dark"]) .ag-foot-socials .ag-dot {
+  background: color-mix(in srgb, var(--ag-ink) 6%, transparent);
+}
+
+html:not([data-theme="dark"]) .ag-header {
+  background: color-mix(in srgb, var(--ag-card) 92%, var(--ag-bg));
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--ag-line) 80%, transparent);
 }
 
 html[data-theme="dark"] .ag-hero {
@@ -358,18 +401,7 @@ html[data-theme="dark"] .ag-fx-grid {
 }
 
 .ag-fx-scan {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 18%;
-  top: -20%;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    color-mix(in srgb, var(--ag-orange) 8%, transparent),
-    transparent
-  );
-  animation: ag-scan-sweep 7.5s ease-in-out infinite;
+  display: none;
 }
 
 .ag-fx-beam {

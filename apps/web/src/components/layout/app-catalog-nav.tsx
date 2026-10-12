@@ -9,6 +9,7 @@ import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { CatalogNavAuth } from "@/components/layout/nav-auth-slot";
+import { ThemeToggle } from "@/features/theme/theme-toggle";
 
 const navLinks = [
   { href: routes.problems, label: "Problems" },
@@ -111,6 +112,7 @@ export function AppCatalogNav() {
             <kbd aria-hidden>/</kbd>
           </form>
 
+          <ThemeToggle variant="nav" />
           <CatalogNavAuth variant="desktop" />
 
           <button
@@ -139,6 +141,9 @@ export function AppCatalogNav() {
           className="lp-nav-menu--mobile"
           onNavigate={() => setMobileNavOpen(false)}
         />
+        <div className="lp-site-nav-mobile-theme">
+          <ThemeToggle variant="nav" />
+        </div>
         <CatalogNavAuth
           variant="mobile"
           onNavigate={() => setMobileNavOpen(false)}

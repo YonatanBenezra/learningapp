@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Caveat, Figtree, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { AppToaster } from "@/components/ui/app-toaster";
 import { RootNav } from "@/components/layout/root-nav";
@@ -57,10 +56,10 @@ export default function RootLayout({
         geistMono.variable,
       )}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className={`${jakarta.className} flex min-h-full flex-col`}>
-        <Script id="labpath-theme-init" strategy="beforeInteractive">
-          {themeInitScript}
-        </Script>
         <RootNav />
         <AppToaster />
         {children}

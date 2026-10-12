@@ -14,10 +14,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const publicPath = isPublicAppPath(pathname);
-  const cached = getAuthSnapshot();
-  const [ready, setReady] = useState(
-    publicPath || cached.status === "authenticated",
-  );
+  const [ready, setReady] = useState(publicPath);
   const [gateLabel, setGateLabel] = useState("Checking your session…");
 
   useEffect(() => {
@@ -26,6 +23,11 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
     }
 
     let cancelled = false;
+
+    const cached = getAuthSnapshot();
+    if (cached.status === "authenticated") {
+      setReady(true);
+    }
 
     ensureAuthSession().then((session) => {
       if (cancelled) {

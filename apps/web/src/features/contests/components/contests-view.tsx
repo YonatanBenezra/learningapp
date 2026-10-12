@@ -116,26 +116,30 @@ function ContestsSkeleton() {
   return (
     <div className="lp-ct lp-ct-skel" aria-busy="true" aria-live="polite">
       <header className="lp-ct-hero">
-        <div>
+        <div className="lp-ct-hero-copy">
+          <span className="lp-ct-skel-block lp-ct-skel-kicker" />
           <span className="lp-ct-skel-block lp-ct-skel-title" />
           <span className="lp-ct-skel-block lp-ct-skel-lead" />
           <span className="lp-ct-skel-block lp-ct-skel-lead lp-ct-skel-lead--short" />
         </div>
         <div className="lp-ct-meta">
           <span className="lp-ct-skel-block lp-ct-skel-chip" />
-          <span className="lp-ct-skel-block lp-ct-skel-chip" />
+          <span className="lp-ct-skel-block lp-ct-skel-chip lp-ct-skel-chip--wide" />
         </div>
       </header>
 
-      <div className="lp-ct-filters">
+      <div className="lp-ct-filters" aria-hidden>
         {Array.from({ length: 5 }, (_, index) => (
-          <span key={index} className="lp-ct-skel-block lp-ct-skel-filter" />
+          <span
+            key={index}
+            className={`lp-ct-skel-block lp-ct-skel-filter${index === 0 ? " lp-ct-skel-filter--active" : ""}`}
+          />
         ))}
       </div>
 
-      <div className="lp-ct-grid">
+      <section className="lp-ct-grid" aria-hidden>
         {Array.from({ length: 3 }, (_, index) => (
-          <article key={index} className="lp-ct-card">
+          <article key={index} className="lp-ct-card lp-ct-card--skel">
             <div className="lp-ct-card-top">
               <span className="lp-ct-skel-block lp-ct-skel-badge" />
               <span className="lp-ct-skel-block lp-ct-skel-badge" />
@@ -144,15 +148,22 @@ function ContestsSkeleton() {
             <span className="lp-ct-skel-block lp-ct-skel-copy" />
             <span className="lp-ct-skel-block lp-ct-skel-copy lp-ct-skel-copy--short" />
             <div className="lp-ct-card-facts">
-              <span className="lp-ct-skel-block lp-ct-skel-fact" />
-              <span className="lp-ct-skel-block lp-ct-skel-fact" />
+              <div className="lp-ct-fact">
+                <span className="lp-ct-skel-block lp-ct-skel-fact-val" />
+                <span className="lp-ct-skel-block lp-ct-skel-fact-label" />
+              </div>
+              <div className="lp-ct-fact">
+                <span className="lp-ct-skel-block lp-ct-skel-fact-val" />
+                <span className="lp-ct-skel-block lp-ct-skel-fact-label" />
+              </div>
             </div>
             <div className="lp-ct-card-actions">
               <span className="lp-ct-skel-block lp-ct-skel-btn" />
+              <span className="lp-ct-skel-block lp-ct-skel-chip lp-ct-skel-chip--date" />
             </div>
           </article>
         ))}
-      </div>
+      </section>
     </div>
   );
 }

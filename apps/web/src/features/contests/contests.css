@@ -589,17 +589,42 @@
   border-radius: 0.45rem;
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--lp-border) 70%, transparent) 25%,
-    color-mix(in srgb, var(--lp-muted) 18%, transparent) 37%,
-    color-mix(in srgb, var(--lp-border) 70%, transparent) 63%
+    color-mix(in srgb, var(--lp-border) 82%, transparent),
+    color-mix(in srgb, var(--lp-border) 42%, transparent),
+    color-mix(in srgb, var(--lp-border) 82%, transparent)
   );
   background-size: 200% 100%;
   animation: lp-ct-shimmer 1.3s ease-in-out infinite;
 }
 
+.lp-ct-skel .lp-ct-card--skel,
+.lp-ct-skel .lp-ctd-enter-card--skel {
+  transform: none;
+  box-shadow: none;
+}
+
+.lp-ct-skel .lp-ct-card--skel:hover,
+.lp-ct-skel .lp-ctd-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--lp-border);
+}
+
+.lp-ct-skel-kicker {
+  width: 5.5rem;
+  height: 0.62rem;
+  margin-bottom: 0.35rem;
+  border-radius: 0.25rem;
+}
+
 .lp-ct-skel-title {
-  width: 11rem;
-  height: 2.15rem;
+  width: 9.5rem;
+  height: clamp(1.85rem, 3.2vw, 2.35rem);
+  border-radius: 0.5rem;
+}
+
+.lp-ct-skel-title--detail {
+  width: min(18rem, 88%);
 }
 
 .lp-ct-skel-lead {
@@ -614,20 +639,38 @@
 }
 
 .lp-ct-skel-chip {
-  width: 5.75rem;
-  height: 2rem;
-  border-radius: 0.5rem;
+  width: 5.25rem;
+  height: 2.05rem;
+  border-radius: 999px;
+}
+
+.lp-ct-skel-chip--wide {
+  width: 11.5rem;
+}
+
+.lp-ct-skel-chip--date {
+  width: 7.25rem;
+  height: 2.05rem;
+  border-radius: 999px;
 }
 
 .lp-ct-skel-filter {
-  width: 5.5rem;
-  height: 2.25rem;
-  border-radius: 0.5rem;
+  width: 4.35rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.lp-ct-skel-filter--active {
+  width: 4.85rem;
+  background: color-mix(in srgb, var(--lp-ink) 10%, var(--lp-surface-elevated));
+  animation: none;
 }
 
 .lp-ct-skel-badge {
   width: 4.25rem;
   height: 1.55rem;
+  border-radius: 0.4rem;
 }
 
 .lp-ct-skel-name {
@@ -638,21 +681,48 @@
 .lp-ct-skel-copy {
   width: 94%;
   height: 0.75rem;
+  margin-top: 0.35rem;
 }
 
 .lp-ct-skel-copy--short {
   width: 70%;
 }
 
-.lp-ct-skel-fact {
-  height: 3.1rem;
-  border-radius: 0.5rem;
+.lp-ct-skel-fact-val {
+  width: 3.25rem;
+  height: 0.9rem;
+}
+
+.lp-ct-skel-fact-label {
+  width: 4.5rem;
+  height: 0.55rem;
+  margin-top: 0.2rem;
+  border-radius: 0.25rem;
 }
 
 .lp-ct-skel-btn {
   width: 5.5rem;
   height: 2.35rem;
   border-radius: 0.5rem;
+}
+
+.lp-ct-skel-toggle {
+  width: 5.75rem;
+  height: 2rem;
+  border-radius: 999px;
+}
+
+.lp-ct-skel-enter-title {
+  width: 85%;
+  height: 1.05rem;
+}
+
+.lp-ctd-enter-card--skel {
+  min-height: 10.5rem;
+}
+
+.lp-ctd-enter-card--skel .lp-ct-skel-copy:first-of-type {
+  margin-top: 0.15rem;
 }
 
 @keyframes lp-ct-shimmer {
@@ -1047,21 +1117,10 @@ html:not([data-theme="dark"]) .lp-ctd-verdict--fail {
   }
 }
 
-.lp-ct-skel-eyebrow {
-  width: 4.25rem;
-  height: 0.62rem;
-  margin-bottom: 0.55rem;
-}
-
-.lp-ct-skel-section {
-  width: 7rem;
-  height: 1rem;
-  margin-bottom: 0.4rem;
-}
-
 .lp-ctd-skel-btn {
   width: 100%;
-  margin-top: 0.3rem;
+  max-width: 9rem;
+  margin-top: auto;
 }
 
 .lp-ctd-notice {

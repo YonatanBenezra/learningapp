@@ -25,7 +25,6 @@ export function HomePage() {
         <section className="ag-hero">
           <div className="ag-fx" aria-hidden="true">
             <span className="ag-fx-grid" />
-            <span className="ag-fx-scan" />
             <span className="ag-fx-beam ag-fx-beam--a" />
             <span className="ag-fx-beam ag-fx-beam--b" />
             <span className="ag-fx-beam ag-fx-beam--c" />
