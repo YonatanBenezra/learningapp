@@ -1,0 +1,134 @@
+/**
+ * LabPath typography (Figma type scale).
+ * Fonts loaded in layout.tsx: Geist, Instrument Serif Italic, Geist Mono, Caveat.
+ */
+
+:root {
+  --lp-font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --lp-font-serif-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
+  --lp-font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --lp-font-hand: var(--font-caveat), "Segoe Script", cursive;
+
+  /* Display — Geist SemiBold 72/76, -3.5% */
+  --lp-text-display-size: clamp(2.75rem, 5.5vw, 4.5rem);
+  --lp-text-display-lh: 1.055;
+  --lp-text-display-tracking: -0.035em;
+
+  /* H1 — 48/56, -3% */
+  --lp-text-h1-size: clamp(2rem, 3.2vw, 3rem);
+  --lp-text-h1-lh: 1.167;
+  --lp-text-h1-tracking: -0.03em;
+
+  /* H2 — 36/44, -2.5% */
+  --lp-text-h2-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  --lp-text-h2-lh: 1.222;
+  --lp-text-h2-tracking: -0.025em;
+
+  /* H3 — 24/32, -1.5% */
+  --lp-text-h3-size: 1.5rem;
+  --lp-text-h3-lh: 1.333;
+  --lp-text-h3-tracking: -0.015em;
+
+  /* Body L — 18/30 */
+  --lp-text-body-lg-size: 1.125rem;
+  --lp-text-body-lg-lh: 1.667;
+
+  /* Body — 16/26 */
+  --lp-text-body-size: 1rem;
+  --lp-text-body-lh: 1.625;
+
+  /* Caption — 12/18 */
+  --lp-text-caption-size: 0.75rem;
+  --lp-text-caption-lh: 1.5;
+
+  /* Mono label — 12, +10% tracking, uppercase */
+  --lp-text-mono-label-size: 0.75rem;
+  --lp-text-mono-label-tracking: 0.1em;
+
+  /* Hand note — Caveat 22 */
+  --lp-text-hand-size: 1.375rem;
+}
+
+/* —— Roles (use on marketing + studio pages) —— */
+
+.lp-type-display {
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-display-size);
+  font-weight: 600;
+  line-height: var(--lp-text-display-lh);
+  letter-spacing: var(--lp-text-display-tracking);
+  color: var(--lp-text-primary);
+}
+
+.lp-type-display-accent {
+  font-family: var(--lp-font-serif-display);
+  font-size: inherit;
+  font-weight: 400;
+  font-style: italic;
+  line-height: inherit;
+  letter-spacing: -0.02em;
+  color: var(--color-brand);
+}
+
+.lp-type-h1 {
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-h1-size);
+  font-weight: 600;
+  line-height: var(--lp-text-h1-lh);
+  letter-spacing: var(--lp-text-h1-tracking);
+}
+
+.lp-type-h2 {
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-h2-size);
+  font-weight: 600;
+  line-height: var(--lp-text-h2-lh);
+  letter-spacing: var(--lp-text-h2-tracking);
+}
+
+.lp-type-h3 {
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-h3-size);
+  font-weight: 600;
+  line-height: var(--lp-text-h3-lh);
+  letter-spacing: var(--lp-text-h3-tracking);
+}
+
+.lp-type-body-lg {
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-body-lg-size);
+  font-weight: 400;
+  line-height: var(--lp-text-body-lg-lh);
+}
+
+.lp-type-body {
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-body-size);
+  font-weight: 400;
+  line-height: var(--lp-text-body-lh);
+}
+
+.lp-type-caption {
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-caption-size);
+  font-weight: 400;
+  line-height: var(--lp-text-caption-lh);
+  color: var(--lp-text-secondary);
+}
+
+.lp-type-mono-label {
+  font-family: var(--lp-font-mono);
+  font-size: var(--lp-text-mono-label-size);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: var(--lp-text-mono-label-tracking);
+  text-transform: uppercase;
+}
+
+.lp-type-hand {
+  font-family: var(--lp-font-hand);
+  font-size: var(--lp-text-hand-size);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-brand);
+}

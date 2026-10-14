@@ -1,20 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { Menu, Search, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ChevronRight, Menu, X } from "lucide-react";
 import { NavbarMenu } from "@/components/aceternity/navbar-menu";
 import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
-import { CatalogNavAuth } from "@/components/layout/nav-auth-slot";
+import { CatalogNavHeaderAuth, CatalogNavAuth } from "@/components/layout/nav-auth-slot";
 import { ThemeToggle } from "@/features/theme/theme-toggle";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: routes.problems, label: "Problems" },
-  { href: routes.contests, label: "Contest" },
-  { href: routes.leaderboard, label: "Leaderboard" },
+  {
+    href: routes.problems,
+    label: "Problems",
+    description: "20+ graded exercises",
+  },
+  {
+    href: routes.contests,
+    label: "Contest",
+    description: "Timed sprints with live standings",
+  },
+  {
+    href: routes.leaderboard,
+    label: "Leaderboard",
+    description: "Top scores this month",
+  },
 ] as const;
 
 function isActive(pathname: string, href: string) {
@@ -32,11 +45,11 @@ function isActive(pathname: string, href: string) {
 
 export function AppCatalogNav() {
   const pathname = usePathname();
-  const router = useRouter();
-  const searchRef = useRef<HTMLInputElement>(null);
-  const [search, setSearch] = useState("");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
+  const [scrolled, setScrolled] = useState(false);
+  const isHome = pathname === routes.home;
+  const isProblems = pathname === routes.problems;
+  const isLeaderboard = pathname === routes.leaderboard;
   useEffect(() => {
     document.documentElement.dataset.workspace = "catalog";
     return () => {
@@ -45,36 +58,15 @@ export function AppCatalogNav() {
   }, []);
 
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) {
-        return;
-      }
-      const target = event.target;
-      if (
-        target instanceof HTMLElement &&
-        (target.isContentEditable ||
-          target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.tagName === "SELECT")
-      ) {
-        return;
-      }
-      event.preventDefault();
-      searchRef.current?.focus();
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
-
-  useEffect(() => {
     setMobileNavOpen(false);
   }, [pathname]);
 
-  function onSearch(event: FormEvent) {
-    event.preventDefault();
-    const q = search.trim();
-    router.push(q ? `${routes.problems}?q=${encodeURIComponent(q)}` : routes.problems);
-  }
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [pathname]);
 
   const menuItems = navLinks.map((item) => ({
     href: item.href,
@@ -83,8 +75,15 @@ export function AppCatalogNav() {
   }));
 
   return (
-    <header className="lp-site-nav lp-site-nav--catalog">
-      <div className="lp-site-nav-glow" aria-hidden />
+    <header
+      className={cn(
+        "lp-site-nav lp-site-nav--catalog",
+        isHome && "lp-site-nav--hero",
+        isProblems && "lp-site-nav--problems",
+        isLeaderboard && "lp-site-nav--leaderboard",
+        (scrolled || isProblems || isLeaderboard) && "is-scrolled",
+      )}
+    >
       <div className="lp-site-nav-inner lp-dash-nav-inner">
         <div className="lp-site-nav-left">
           <Link href={routes.home} className="lp-site-nav-brand" aria-label={brand.name}>
@@ -92,28 +91,20 @@ export function AppCatalogNav() {
           </Link>
 
           <span className="lp-site-nav-vrule lp-site-nav-vrule--brand" aria-hidden />
+          <span className="lp-site-nav-endorsement max-[520px]:hidden">{brand.endorsement}</span>
 
-          <div className="max-[899px]:hidden">
+          <div className="max-[899px]:hidden lp-site-nav-links">
             <NavbarMenu items={menuItems} />
           </div>
         </div>
 
         <div className="lp-site-nav-right">
-          <form className="lp-site-nav-search" onSubmit={onSearch}>
-            <Search className="size-[1.125rem] shrink-0 text-lp-muted" strokeWidth={2} aria-hidden />
-            <input
-              ref={searchRef}
-              type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search problems"
-              aria-label="Search problems"
-            />
-            <kbd aria-hidden>/</kbd>
-          </form>
+          <div className="max-[899px]:hidden">
+            <ThemeToggle variant="nav" />
+          </div>
+          <span className="lp-site-nav-vrule lp-site-nav-vrule--actions max-[899px]:hidden" aria-hidden />
 
-          <ThemeToggle variant="nav" />
-          <CatalogNavAuth variant="desktop" />
+          <CatalogNavHeaderAuth />
 
           <button
             type="button"
@@ -124,9 +115,9 @@ export function AppCatalogNav() {
             onClick={() => setMobileNavOpen((open) => !open)}
           >
             {mobileNavOpen ? (
-              <X className="size-5" strokeWidth={2.25} aria-hidden />
+              <X className="lp-icon lp-icon--strong" strokeWidth={1.5} aria-hidden />
             ) : (
-              <Menu className="size-5" strokeWidth={2.25} aria-hidden />
+              <Menu className="lp-icon lp-icon--strong" strokeWidth={1.5} aria-hidden />
             )}
           </button>
         </div>
@@ -136,18 +127,33 @@ export function AppCatalogNav() {
         id="lp-catalog-mobile-nav"
         className={`lp-site-nav-mobile${mobileNavOpen ? " is-open" : ""}`}
       >
-        <NavbarMenu
-          items={menuItems}
-          className="lp-nav-menu--mobile"
-          onNavigate={() => setMobileNavOpen(false)}
-        />
-        <div className="lp-site-nav-mobile-theme">
+        <ul className="lp-site-nav-mobile-list">
+          {navLinks.map((item) => {
+            const active = isActive(pathname, item.href);
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`lp-site-nav-mobile-row${active ? " is-active" : ""}`}
+                  onClick={() => setMobileNavOpen(false)}
+                >
+                  <span className="lp-site-nav-mobile-row-copy">
+                    <span className="lp-site-nav-mobile-row-label">{item.label}</span>
+                    <span className="lp-site-nav-mobile-row-desc">{item.description}</span>
+                  </span>
+                  <ChevronRight className="lp-icon lp-icon--muted" strokeWidth={1.5} aria-hidden />
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="lp-site-nav-mobile-appearance">
+          <span className="lp-site-nav-mobile-appearance-label">Appearance</span>
           <ThemeToggle variant="nav" />
         </div>
-        <CatalogNavAuth
-          variant="mobile"
-          onNavigate={() => setMobileNavOpen(false)}
-        />
+
+        <CatalogNavAuth variant="mobile" onNavigate={() => setMobileNavOpen(false)} />
       </div>
     </header>
   );

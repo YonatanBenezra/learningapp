@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Caveat, Figtree, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Caveat, Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { AppToaster } from "@/components/ui/app-toaster";
 import { RootNav } from "@/components/layout/root-nav";
 import { brand } from "@/config/brand";
@@ -7,15 +7,17 @@ import { themeInitScript } from "@/features/theme/theme-script";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+const geistSans = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
 });
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
   subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
 });
 
 const caveat = Caveat({
@@ -27,6 +29,7 @@ const caveat = Caveat({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -50,8 +53,8 @@ export default function RootLayout({
       data-theme="dark"
       className={cn(
         "dark h-full antialiased font-sans",
-        jakarta.variable,
-        figtree.variable,
+        geistSans.variable,
+        instrumentSerif.variable,
         caveat.variable,
         geistMono.variable,
       )}
@@ -59,7 +62,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className={`${jakarta.className} flex min-h-full flex-col`}>
+      <body className={`${geistSans.className} flex min-h-full flex-col`}>
         <RootNav />
         <AppToaster />
         {children}

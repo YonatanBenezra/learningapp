@@ -7,6 +7,13 @@ import {
   leaderboardRating,
   sortLeaderboardRows,
 } from './leaderboard-rank';
+import {
+  emptyTrackCounts,
+  simulatorToTrack,
+  streakDaysFromPassDates,
+  strongestTracksFromCounts,
+  type LeaderboardTrackKey,
+} from './leaderboard-tracks';
 
 export type LeaderboardEntry = {
   rank: number;
@@ -15,6 +22,9 @@ export type LeaderboardEntry = {
   solves: number;
   recentPasses: number;
   rating: number;
+  streakDays: number;
+  trackPasses: Record<LeaderboardTrackKey, number>;
+  strongestTracks: LeaderboardTrackKey[];
 };
 
 @Injectable()
@@ -68,7 +78,13 @@ export class LeaderboardService {
                 attempt: {
                   select: {
                     userId: true,
-                    exercise: { select: { slug: true, isPublished: true } },
+                    exercise: {
+                      select: {
+                        slug: true,
+                        isPublished: true,
+                        simulator: true,
+                      },
+                    },
                   },
                 },
               },
@@ -80,10 +96,25 @@ export class LeaderboardService {
 
     const byUser = new Map<
       string,
-      { slugs: Set<string>; recentPasses: number }
+      {
+        slugs: Set<string>;
+        recentPasses: number;
+        trackSlugs: Record<LeaderboardTrackKey, Set<string>>;
+        passDates: Date[];
+      }
     >();
     for (const candidate of candidates) {
-      byUser.set(candidate.id, { slugs: new Set(), recentPasses: 0 });
+      byUser.set(candidate.id, {
+        slugs: new Set(),
+        recentPasses: 0,
+        trackSlugs: {
+          rag: new Set(),
+          eval: new Set(),
+          guard: new Set(),
+          prompt: new Set(),
+        },
+        passDates: [],
+      });
     }
     for (const row of passes) {
       const attempt = row.run.submission.attempt;
@@ -94,7 +125,13 @@ export class LeaderboardService {
       if (!bucket) {
         continue;
       }
-      bucket.slugs.add(attempt.exercise.slug);
+      const slug = attempt.exercise.slug;
+      bucket.slugs.add(slug);
+      bucket.passDates.push(row.createdAt);
+      const track = simulatorToTrack(attempt.exercise.simulator);
+      if (track) {
+        bucket.trackSlugs[track].add(slug);
+      }
       if (row.createdAt >= cutoff) {
         bucket.recentPasses += 1;
       }
@@ -106,13 +143,28 @@ export class LeaderboardService {
           const stats = byUser.get(candidate.id) ?? {
             slugs: new Set<string>(),
             recentPasses: 0,
+            trackSlugs: {
+              rag: new Set<string>(),
+              eval: new Set<string>(),
+              guard: new Set<string>(),
+              prompt: new Set<string>(),
+            },
+            passDates: [],
           };
+          const trackPasses = emptyTrackCounts();
+          for (const key of Object.keys(trackPasses) as LeaderboardTrackKey[]) {
+            trackPasses[key] = stats.trackSlugs[key].size;
+          }
+          const strongestTracks = strongestTracksFromCounts(trackPasses);
           return {
             slug: candidate.profileSlug as string,
             displayName: publicDisplayName(candidate.displayName),
             solves: stats.slugs.size,
             recentPasses: stats.recentPasses,
             rating: leaderboardRating(stats.slugs.size, stats.recentPasses),
+            streakDays: streakDaysFromPassDates(stats.passDates),
+            trackPasses,
+            strongestTracks,
           };
         })
         .filter((row) => row.solves > 0),
@@ -127,6 +179,9 @@ export class LeaderboardService {
         solves: row.solves,
         recentPasses: row.recentPasses,
         rating: row.rating,
+        streakDays: row.streakDays,
+        trackPasses: row.trackPasses,
+        strongestTracks: row.strongestTracks,
       })),
     };
   }

@@ -10,7 +10,13 @@ import "@/features/home/home.css";
 
 /** Persistent site navbar — catalogue vs simulator practice. */
 function isAuthPath(pathname: string) {
-  return pathname === routes.login || pathname === routes.register;
+  return (
+    pathname === routes.signIn ||
+    pathname === routes.signUp ||
+    pathname === routes.login ||
+    pathname === routes.register ||
+    pathname === "/magic-link"
+  );
 }
 
 export function RootNav() {

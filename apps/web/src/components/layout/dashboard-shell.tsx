@@ -36,8 +36,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
     };
   }, [menuOpen]);
 
-  const profileLayout =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/progress");
+  if (pathname.startsWith("/dashboard")) {
+    return <main className="lp-dash-content lp-dash-content--dashboard">{children}</main>;
+  }
+
+  const profileLayout = pathname.startsWith("/progress");
 
   if (profileLayout) {
     return <main className="lp-dash-content lp-dash-content--profile">{children}</main>;

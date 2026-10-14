@@ -29,7 +29,7 @@
   flex-direction: column;
   background: var(--lp-surface);
   color: var(--lp-ink);
-  font-family: var(--font-figtree), var(--font-geist-sans), "Segoe UI", sans-serif;
+  font-family: var(--lp-font-sans);
 }
 
 .lp-header {
@@ -733,7 +733,7 @@
   min-height: 100dvh;
   background: var(--lp-surface);
   color: var(--lp-ink);
-  font-family: var(--font-jakarta), var(--font-figtree), "Segoe UI", sans-serif;
+  font-family: var(--lp-font-sans);
 }
 
 .lp-dash-sidebar {

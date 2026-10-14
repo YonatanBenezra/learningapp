@@ -1,71 +1,87 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn } from "lucide-react";
 import { routes } from "@/config/routes";
+import { AuthLink } from "@/features/auth/auth-link";
 import {
   authUserInitials,
   useAuthSession,
 } from "@/features/auth/use-auth-session";
 
 type CatalogNavAuthProps = {
-  variant: "desktop" | "mobile";
+  variant: "header" | "mobile";
   onNavigate?: () => void;
 };
 
-export function CatalogNavAuth({ variant, onNavigate }: CatalogNavAuthProps) {
-  const { user, signedIn, resolved, status } = useAuthSession();
+const openProblemsCtaClass =
+  "lp-btn lp-btn--primary lp-btn--sm lp-site-nav-header-auth-cta";
 
-  if (variant === "mobile") {
-    if (status === "anonymous" && resolved) {
-      return (
-        <Link
-          href={routes.login}
-          className="lp-site-nav-signin mt-3 flex w-full justify-center min-[520px]:hidden"
-          onClick={onNavigate}
-        >
-          <LogIn className="size-4 shrink-0" strokeWidth={2.25} aria-hidden />
-          Sign in
-        </Link>
-      );
-    }
-    return null;
-  }
-
-  if (signedIn && user) {
-    return (
-      <Link
-        href={routes.progress}
-        className="lp-site-nav-avatar"
-        aria-label="Your profile"
-        title={user.displayName ?? user.email}
-      >
-        {authUserInitials(user)}
-      </Link>
-    );
-  }
-
-  if (status === "anonymous" && resolved) {
-    return (
-      <Link
-        href={routes.login}
-        className="lp-site-nav-signin max-[520px]:hidden"
-        title="Sign in"
-      >
-        <LogIn className="size-4 shrink-0" strokeWidth={2.25} aria-hidden />
-        Sign in
-      </Link>
-    );
-  }
+/** One auth cluster in the nav bar — no duplicate avatar (mobile + desktop). */
+export function CatalogNavHeaderAuth() {
+  const { user, signedIn } = useAuthSession();
 
   return (
-    <span
-      className="lp-site-nav-avatar lp-site-nav-avatar--pending"
-      aria-busy="true"
-      aria-label="Checking your session"
-      title="Checking your session"
-    />
+    <div className="lp-site-nav-header-auth">
+      {signedIn && user ? (
+        <Link
+          href={routes.progress}
+          className="lp-site-nav-avatar"
+          aria-label="Your profile"
+          title={user.displayName ?? user.email}
+        >
+          {authUserInitials(user)}
+        </Link>
+      ) : (
+        <Link href={routes.signIn} className="lp-site-nav-signin-link">
+          Sign in
+        </Link>
+      )}
+      <AuthLink href={routes.problems} className={openProblemsCtaClass}>
+        Open problems
+      </AuthLink>
+    </div>
   );
+}
+
+export function CatalogNavAuth({ variant, onNavigate }: CatalogNavAuthProps) {
+  const { user, signedIn } = useAuthSession();
+
+  if (variant === "header") {
+    return <CatalogNavHeaderAuth />;
+  }
+
+  if (variant === "mobile") {
+    return (
+      <div className="lp-site-nav-mobile-cta mt-3 flex flex-col gap-2">
+        <AuthLink
+          href={routes.problems}
+          className="lp-btn lp-btn--primary lp-btn--block"
+          onClick={onNavigate}
+        >
+          Open problems
+        </AuthLink>
+        {signedIn && user ? (
+          <Link
+            href={routes.progress}
+            className="lp-btn lp-btn--ghost lp-btn--block"
+            onClick={onNavigate}
+          >
+            Profile
+          </Link>
+        ) : (
+          <Link
+            href={routes.signIn}
+            className="lp-btn lp-btn--ghost lp-btn--block"
+            onClick={onNavigate}
+          >
+            Sign in
+          </Link>
+        )}
+      </div>
+    );
+  }
+
+  return null;
 }
 
 /** Home marketing header — text CTA instead of avatar circle. */
@@ -88,7 +104,7 @@ export function HomeNavAuthCta({
 
   if (status === "anonymous" && resolved) {
     return (
-      <Link href={routes.login} className={loginClassName ?? className}>
+      <Link href={routes.signIn} className={loginClassName ?? className}>
         Sign In
       </Link>
     );

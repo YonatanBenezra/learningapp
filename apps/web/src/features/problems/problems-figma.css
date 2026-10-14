@@ -1,0 +1,1443 @@
+/* Problems studio — Figma tokens */
+
+.lp-page.lp-page-problems {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding: 0;
+  min-height: auto;
+}
+
+.lp-pfigma {
+  --canvas: #0a0f1a;
+  --surface: #111826;
+  --raised: #172033;
+  --sunken: #080c15;
+  --border: #1e2738;
+  --border-strong: #2a3549;
+  --text: #eceef2;
+  --text-2: #97a1b2;
+  --text-3: #6a7487;
+  --ember: #ff7a45;
+  --on-ember: #1a0c05;
+  --ember-soft: #2a1710;
+  --teal: #2dd4bf;
+  --teal-soft: #0e2a2a;
+  --amber: #fbbf24;
+  --amber-soft: #2a2210;
+  --red: #f87171;
+  --red-soft: #2c1518;
+  --blue: #7cb4ff;
+  --blue-soft: #12213b;
+  --on-teal: #1a0c05;
+  --segment-active-bg: var(--surface);
+  --segment-active-fg: var(--text);
+  --segment-active-muted: var(--text-3);
+
+  box-sizing: border-box;
+  padding-bottom: 96px;
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--lp-font-sans);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma {
+  --canvas: #fcfbf9;
+  --surface: #ffffff;
+  --raised: #f5f3f0;
+  --sunken: #f5f3f0;
+  --border: #e8e4de;
+  --border-strong: #d1cdc7;
+  --text: #1a1614;
+  --text-2: #6e6761;
+  --text-3: #a39d96;
+  --ember: #ff7a45;
+  --on-ember: #ffffff;
+  --ember-soft: #fff7ed;
+  --teal: #0f766e;
+  --teal-soft: #f0fdfa;
+  --amber: #b45309;
+  --amber-soft: #fffbeb;
+  --red: #b91c1c;
+  --red-soft: #fef2f2;
+  --blue: #1d4ed8;
+  --blue-soft: #eff6ff;
+  --on-teal: #ffffff;
+  --segment-active-bg: #1a1614;
+  --segment-active-fg: #ffffff;
+  --segment-active-muted: rgb(255 255 255 / 70%);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-segment-pill {
+  background: var(--segment-active-bg);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-segment.is-active {
+  color: var(--segment-active-fg);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-segment.is-active .lp-pfigma-segment-count {
+  color: var(--segment-active-muted);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-search:focus-within {
+  box-shadow: 0 0 0 2px rgb(255 122 69 / 22%);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-menu {
+  box-shadow: 0 16px 40px -12px rgb(26 22 20 / 16%);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-row:focus-visible {
+  box-shadow: inset 0 0 0 2px rgb(255 122 69 / 40%);
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-action--primary {
+  background: #ff7a45;
+  color: #ffffff;
+}
+
+.lp-pfigma-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: var(--lp-catalog-content-width, min(1400px, calc(100% - 2.5rem)));
+  max-width: none;
+  margin-inline: auto;
+  padding-top: 12px;
+  box-sizing: border-box;
+}
+
+/* Head */
+
+.lp-pfigma-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px 24px;
+}
+
+.lp-pfigma-head-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 640px;
+}
+
+.lp-pfigma-eyebrow {
+  margin: 0;
+  font-family: var(--lp-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+.lp-pfigma-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.lp-pfigma-title {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 52px;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+
+.lp-pfigma-title-accent {
+  font-family: var(--lp-font-serif-display);
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--text-3);
+}
+
+.lp-pfigma-subtitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  color: var(--text-2);
+}
+
+.lp-pfigma-stat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lp-pfigma-stat-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.lp-pfigma-stat-value {
+  font-family: var(--lp-font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-pfigma-stat-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+/* Toolbar */
+
+.lp-pfigma-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+}
+
+.lp-pfigma-segments {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--sunken);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.lp-pfigma-segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lp-pfigma-segment.is-active {
+  color: var(--segment-active-fg);
+}
+
+.lp-pfigma-segment-count {
+  font-family: var(--lp-font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.lp-pfigma-segment-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: var(--segment-active-bg);
+  z-index: 0;
+}
+
+.lp-pfigma-segment-label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lp-pfigma-toolbar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.lp-pfigma-toolbar-extra {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.lp-pfigma-toolbar-filters {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.lp-pfigma-select-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.lp-pfigma-select-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  font-family: var(--lp-font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-2);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lp-pfigma-select-btn svg {
+  flex-shrink: 0;
+  color: var(--text-3);
+}
+
+.lp-pfigma-search {
+  display: inline-flex;
+  flex: 0 1 240px;
+  align-items: center;
+  gap: 8px;
+  width: 240px;
+  max-width: 100%;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.lp-pfigma-search-icon {
+  flex-shrink: 0;
+  color: var(--text-3);
+}
+
+.lp-pfigma-search:focus-within {
+  border-color: var(--ember);
+  box-shadow: 0 0 0 2px rgb(255 146 102 / 35%);
+}
+
+.lp-pfigma-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+}
+
+.lp-pfigma-search input::placeholder {
+  color: var(--text-3);
+}
+
+.lp-pfigma-kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  font-family: var(--lp-font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.lp-pfigma-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 40;
+  min-width: 160px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 16px 40px -12px rgb(0 0 0 / 60%);
+  transform-origin: top center;
+}
+
+.lp-pfigma-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.lp-pfigma-menu button:hover,
+.lp-pfigma-menu button.is-active {
+  background: var(--raised);
+  color: var(--text);
+}
+
+/* Body */
+
+.lp-pfigma-body {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.lp-pfigma-list-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.lp-pfigma-list {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.lp-pfigma-list-head {
+  display: grid;
+  grid-template-columns: 20px 1fr 92px 124px 96px 96px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--raised);
+  font-family: var(--lp-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lp-pfigma-list-head span:nth-child(2) {
+  grid-column: 2;
+}
+
+.lp-pfigma-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--canvas);
+}
+
+.lp-pfigma-group-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text-2);
+}
+
+.lp-pfigma-group-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lp-pfigma-group-count {
+  font-family: var(--lp-font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.lp-pfigma-group-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.lp-pfigma-group-bar {
+  width: 96px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--sunken);
+}
+
+.lp-pfigma-group-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--teal);
+  transform-origin: left center;
+}
+
+.lp-pfigma-group-solved {
+  font-family: var(--lp-font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.lp-pfigma-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px 1fr 92px 124px 96px 96px;
+  gap: 16px;
+  align-items: center;
+  min-height: 102px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease;
+}
+
+.lp-pfigma-row:hover {
+  background: var(--raised);
+}
+
+.lp-pfigma-row:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px #ff9466;
+  z-index: 1;
+}
+
+.lp-pfigma-row.is-current {
+  background: var(--raised);
+}
+
+.lp-pfigma-row-rail {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 70px;
+  border-radius: 2px;
+  background: var(--ember);
+  transform: translateY(-50%);
+}
+
+/* Status */
+
+.lp-pfigma-status--solved {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.lp-pfigma-status--progress {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--amber);
+}
+
+.lp-pfigma-status--progress::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--amber) 50%, transparent 50%);
+}
+
+.lp-pfigma-status--idle {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+}
+
+/* Problem cell */
+
+.lp-pfigma-problem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.lp-pfigma-problem-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.lp-pfigma-id {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--sunken);
+  font-family: var(--lp-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.lp-pfigma-problem-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lp-pfigma-row.is-current .lp-pfigma-problem-title {
+  color: var(--ember);
+}
+
+.lp-pfigma-problem-desc {
+  overflow: hidden;
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp-pfigma-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.lp-pfigma-tag {
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--canvas);
+  font-family: var(--lp-font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.lp-pfigma-mark {
+  background: rgb(255 122 69 / 18%);
+  border-radius: 2px;
+}
+
+/* Pills */
+
+.lp-pfigma-diff {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.lp-pfigma-diff--easy {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.lp-pfigma-diff--medium {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.lp-pfigma-diff--hard {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.lp-pfigma-signal {
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.lp-pfigma-signal span {
+  width: 3px;
+  border-radius: 1px;
+  background: currentcolor;
+}
+
+.lp-pfigma-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.lp-pfigma-mode--engineering {
+  background: var(--sunken);
+  color: var(--text-2);
+}
+
+.lp-pfigma-mode--red {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.lp-pfigma-mode--blue {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.lp-pfigma-rate {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lp-pfigma-rate-val {
+  font-family: var(--lp-font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.lp-pfigma-rate-bar {
+  width: 80px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--sunken);
+}
+
+.lp-pfigma-rate-fill {
+  height: 100%;
+  border-radius: 3px;
+  transform-origin: left center;
+}
+
+.lp-pfigma-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.lp-pfigma-action--secondary {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.lp-pfigma-action--primary {
+  border: none;
+  background: var(--ember);
+  color: var(--on-ember);
+}
+
+.lp-pfigma-row-pills {
+  display: contents;
+}
+
+.lp-pfigma-rate-suffix {
+  display: none;
+}
+
+.lp-pfigma-row-meta {
+  display: contents;
+}
+
+.lp-pfigma-toolbar-row--mobile {
+  display: none;
+}
+
+.lp-pfigma-toolbar-row--desktop {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lp-pfigma-search--mobile {
+  display: none;
+}
+
+.lp-pfigma-row:hover .lp-pfigma-action-arrow {
+  transform: translateX(3px);
+}
+
+.lp-pfigma-action-arrow {
+  transition: transform 0.15s ease;
+}
+
+/* Pagination */
+
+.lp-pfigma-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+}
+
+.lp-pfigma-pagination-meta {
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.lp-pfigma-pagination-spacer {
+  flex: 1;
+}
+
+.lp-pfigma-page-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-family: var(--lp-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.lp-pfigma-page-btn.is-active {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--surface);
+}
+
+.lp-pfigma-page-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.lp-pfigma-empty {
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.lp-pfigma-empty p {
+  margin: 0 0 16px;
+  color: var(--text-2);
+}
+
+.lp-pfigma-empty button {
+  padding: 10px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* Sidebar */
+
+.lp-pfigma-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 80px;
+}
+
+.lp-pfigma-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.lp-pfigma-card--continue {
+  border-color: rgb(255 122 69 / 35%);
+}
+
+.lp-pfigma-card-eyebrow {
+  margin: 0;
+  font-family: var(--lp-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+.lp-pfigma-card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lp-pfigma-meter-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--raised);
+}
+
+.lp-pfigma-meter-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.lp-pfigma-meter-val {
+  font-family: var(--lp-font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--amber);
+}
+
+.lp-pfigma-meter-track {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sunken);
+}
+
+.lp-pfigma-meter-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--amber);
+  transform-origin: left center;
+}
+
+.lp-pfigma-meter-tick {
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 12px;
+  background: var(--text);
+  transform: translate(-50%, -50%);
+}
+
+.lp-pfigma-btn-full {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.lp-pfigma-btn-ember {
+  border: none;
+  background: var(--ember);
+  color: var(--on-ember);
+}
+
+.lp-pfigma-btn-ghost {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.lp-pfigma-progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lp-pfigma-progress-title {
+  font-family: var(--lp-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lp-pfigma-progress-total {
+  font-family: var(--lp-font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.lp-pfigma-track-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lp-pfigma-track-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.lp-pfigma-seg-bar {
+  display: flex;
+  gap: 3px;
+}
+
+.lp-pfigma-seg-bar span {
+  flex: 1;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--sunken);
+}
+
+.lp-pfigma-seg-bar span.is-solved {
+  background: var(--teal);
+}
+
+.lp-pfigma-seg-bar span.is-progress {
+  background: var(--amber);
+}
+
+.lp-pfigma-contest-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--ember-soft);
+  color: var(--ember);
+}
+
+@media (max-width: 1199px) {
+  .lp-pfigma-body {
+    flex-direction: column;
+  }
+
+  .lp-pfigma-list-wrap {
+    max-width: none;
+    width: 100%;
+  }
+
+  .lp-pfigma-sidebar {
+    position: static;
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .lp-pfigma-card {
+    min-width: 280px;
+    scroll-snap-align: start;
+  }
+}
+
+/* Filter sheet (mobile) */
+
+.lp-pfigma-filter-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  border: none;
+  padding: 0;
+  background: rgb(8 12 21 / 55%);
+  cursor: pointer;
+}
+
+html:not([data-theme="dark"]) .lp-pfigma-filter-backdrop {
+  background: rgb(26 22 20 / 35%);
+}
+
+.lp-pfigma-filter-sheet {
+  position: fixed;
+  z-index: 121;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: min(78vh, 520px);
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  background: var(--surface);
+  box-shadow: 0 -20px 48px -16px rgb(0 0 0 / 35%);
+}
+
+.lp-pfigma-filter-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lp-pfigma-filter-sheet-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lp-pfigma-filter-sheet-close {
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--raised);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.lp-pfigma-filter-sheet-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.lp-pfigma-filter-sheet-body .lp-pfigma-select-wrap {
+  width: 100%;
+}
+
+.lp-pfigma-filter-sheet-body .lp-pfigma-select-btn {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.lp-pfigma-filter-btn {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.lp-pfigma-filter-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(255 146 102 / 45%);
+}
+
+@media (max-width: 899px) {
+  .lp-pfigma-inner {
+    gap: 20px;
+    width: 100%;
+    padding-inline: 16px;
+  }
+
+  .lp-pfigma {
+    padding-bottom: 48px;
+  }
+
+  .lp-pfigma-title {
+    font-size: 34px;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .lp-pfigma-title-accent,
+  .lp-pfigma-subtitle,
+  .lp-pfigma-stat-chips {
+    display: none;
+  }
+
+  .lp-pfigma-head {
+    align-items: flex-start;
+  }
+
+  .lp-pfigma-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .lp-pfigma-segments {
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lp-pfigma-segments::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lp-pfigma-toolbar-row--desktop {
+    display: none;
+  }
+
+  .lp-pfigma-toolbar-row--mobile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .lp-pfigma-search--desktop {
+    display: none;
+  }
+
+  .lp-pfigma-search--mobile {
+    display: inline-flex;
+    flex: 1 1 auto;
+    width: auto;
+    height: 44px;
+  }
+
+  .lp-pfigma-sidebar {
+    display: none;
+  }
+
+  .lp-pfigma-group {
+    display: none;
+  }
+
+  .lp-pfigma-list-head {
+    display: none;
+  }
+
+  .lp-pfigma-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .lp-pfigma-list-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lp-pfigma-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto auto;
+    gap: 8px 10px;
+    align-items: center;
+    min-height: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+  }
+
+  .lp-pfigma-row.is-current {
+    border-color: rgb(255 122 69 / 55%);
+    box-shadow: 0 0 0 1px rgb(255 122 69 / 35%);
+    background: var(--surface);
+  }
+
+  .lp-pfigma-row-rail {
+    display: none;
+  }
+
+  .lp-pfigma-row-status {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
+  }
+
+  .lp-pfigma-problem {
+    display: contents;
+  }
+
+  .lp-pfigma-problem-top {
+    display: contents;
+  }
+
+  .lp-pfigma-id {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .lp-pfigma-problem-title {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .lp-pfigma-problem-desc,
+  .lp-pfigma-tags {
+    display: none;
+  }
+
+  .lp-pfigma-row-meta {
+    display: contents;
+  }
+
+  .lp-pfigma-row-pills {
+    display: flex;
+    flex-wrap: wrap;
+    grid-row: 3;
+    grid-column: 1 / 3;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .lp-pfigma-rate {
+    display: inline-flex;
+    flex-direction: row;
+    grid-row: 1;
+    grid-column: 3;
+    gap: 4px;
+    align-items: baseline;
+    justify-self: end;
+  }
+
+  .lp-pfigma-rate-val {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-3);
+  }
+
+  .lp-pfigma-rate-suffix {
+    display: inline;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-3);
+  }
+
+  .lp-pfigma-rate-bar {
+    display: none;
+  }
+
+  .lp-pfigma-action {
+    grid-row: 3;
+    grid-column: 3;
+    justify-self: end;
+    width: auto;
+    height: 34px;
+    padding: 0 12px;
+    pointer-events: none;
+  }
+
+  .lp-pfigma-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 8px 0 0;
+    border: none;
+    background: transparent;
+  }
+
+  .lp-pfigma-pagination-meta {
+    flex: 1 1 100%;
+    text-align: center;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 900px) {
+  .lp-pfigma-filter-backdrop,
+  .lp-pfigma-filter-sheet {
+    display: none;
+  }
+}
+
+/* Loading skeleton */
+
+.lp-pfigma-skel-block {
+  display: block;
+  border-radius: 0.45rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--border) 85%, transparent),
+    color-mix(in srgb, var(--border) 45%, transparent),
+    color-mix(in srgb, var(--border) 85%, transparent)
+  );
+  background-size: 200% 100%;
+  animation: lp-pfigma-shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes lp-pfigma-shimmer {
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-pfigma-skel-block {
+    animation: none;
+  }
+}
+
+.lp-pfigma-skel .lp-pfigma-skel-list {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: none;
+  background: transparent;
+}
+
+.lp-pfigma-skel-search-row {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .lp-pfigma-skel-hide-mobile {
+    display: none !important;
+  }
+
+  .lp-pfigma-skel-search-row {
+    display: block;
+  }
+
+  .lp-pfigma-skel .lp-pfigma-toolbar {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.lp-pfigma-skel-toolbar-end {
+  margin-left: auto;
+}
+
+@media (max-width: 1199px) {
+  .lp-pfigma-skel .lp-pfigma-sidebar {
+    flex-direction: row;
+  }
+
+  .lp-pfigma-skel .lp-pfigma-sidebar .lp-pfigma-skel-block {
+    min-width: 280px;
+  }
+}

@@ -44,26 +44,30 @@
 
 .lp-ct-kicker {
   margin: 0 0 0.35rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-family: var(--lp-font-mono);
+  font-size: var(--lp-text-mono-label-size);
+  font-weight: 500;
+  letter-spacing: var(--lp-text-mono-label-tracking);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--lp-brand) 85%, var(--lp-muted));
+  color: color-mix(in srgb, var(--color-signal-teal) 85%, var(--lp-muted));
 }
 
 .lp-ct-title {
   margin: 0;
-  font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-h1-size);
   font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+  letter-spacing: var(--lp-text-h1-tracking);
+  line-height: var(--lp-text-h1-lh);
 }
 
 .lp-ct-lead {
   max-width: 40rem;
   margin: 0.5rem 0 0;
-  font-size: 0.9375rem;
-  line-height: 1.55;
+  font-family: var(--lp-font-sans);
+  font-size: var(--lp-text-body-lg-size);
+  font-weight: 400;
+  line-height: var(--lp-text-body-lg-lh);
   color: var(--lp-muted);
 }
 
@@ -315,10 +319,10 @@
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--lp-brand) 28%, var(--lp-border));
-  background: color-mix(in srgb, var(--lp-brand) 10%, transparent);
-  color: var(--lp-brand);
+  border-radius: var(--lp-radius-sm, 0.5rem);
+  border: 1px solid color-mix(in srgb, var(--color-signal-teal) 28%, var(--lp-border));
+  background: color-mix(in srgb, var(--color-signal-teal) 10%, transparent);
+  color: var(--color-signal-teal);
 }
 
 .lp-ct-highlight-title {

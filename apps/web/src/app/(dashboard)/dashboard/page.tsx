@@ -1,5 +1,5 @@
-import { ProgressView } from "@/features/progress/components/progress-view";
+import { DashboardFigmaView } from "@/features/dashboard/components/dashboard-figma-view";
 
 export default function DashboardPage() {
-  return <ProgressView />;
+  return <DashboardFigmaView />;
 }

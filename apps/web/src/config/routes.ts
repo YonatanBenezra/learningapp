@@ -1,6 +1,10 @@
 export const routes = {
   home: "/",
+  signIn: "/sign-in",
+  signUp: "/sign-up",
+  /** @deprecated Use {@link routes.signIn} */
   login: "/login",
+  /** @deprecated Use {@link routes.signUp} */
   register: "/register",
   problems: "/problems",
   /** Legacy — redirects to {@link routes.problems}. */
@@ -35,10 +39,10 @@ export const routes = {
 } as const;
 
 export function loginPath(next?: string) {
-  if (!next || next === routes.login) {
-    return routes.login;
+  if (!next || next === routes.signIn) {
+    return routes.signIn;
   }
-  return `${routes.login}?next=${encodeURIComponent(next)}`;
+  return `${routes.signIn}?next=${encodeURIComponent(next)}`;
 }
 
 export function safeNext(value: string | null | undefined): string {

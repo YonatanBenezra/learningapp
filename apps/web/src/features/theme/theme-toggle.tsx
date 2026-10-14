@@ -6,14 +6,13 @@ import {
   applyTheme,
   getThemeClientSnapshot,
   getThemeServerSnapshot,
-  readTheme,
   subscribeTheme,
   type Theme,
 } from "./theme";
 import "./theme-toggle.css";
 
 type ThemeToggleProps = {
-  /** Floating rail (legacy) vs compact navbar control */
+  /** Floating rail (legacy) vs navbar segmented control */
   variant?: "floating" | "nav";
 };
 
@@ -24,8 +23,7 @@ export function ThemeToggle({ variant = "nav" }: ThemeToggleProps) {
     getThemeServerSnapshot,
   );
 
-  function toggle() {
-    const next: Theme = readTheme() === "dark" ? "light" : "dark";
+  function setTheme(next: Theme) {
     applyTheme(next);
   }
 
@@ -35,7 +33,7 @@ export function ThemeToggle({ variant = "nav" }: ThemeToggleProps) {
         type="button"
         className="lp-theme-switch"
         aria-label="Toggle color theme"
-        onClick={toggle}
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       >
         <span className="lp-theme-knob" aria-hidden="true" />
         <svg className="lp-theme-sun" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
@@ -55,18 +53,25 @@ export function ThemeToggle({ variant = "nav" }: ThemeToggleProps) {
   const isDark = theme === "dark";
 
   return (
-    <button
-      type="button"
-      className="lp-theme-nav-btn"
-      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      aria-pressed={isDark}
-      onClick={toggle}
-    >
-      {isDark ? (
-        <Moon className="size-[1.05rem]" strokeWidth={2} aria-hidden />
-      ) : (
-        <Sun className="size-[1.05rem]" strokeWidth={2} aria-hidden />
-      )}
-    </button>
+    <div className="lp-theme-segment" role="group" aria-label="Appearance">
+      <button
+        type="button"
+        className={`lp-theme-segment-btn${!isDark ? " is-active" : ""}`}
+        aria-label="Light theme"
+        aria-pressed={!isDark}
+        onClick={() => setTheme("light")}
+      >
+        <Sun className="lp-icon lp-icon--sm" strokeWidth={1.5} aria-hidden />
+      </button>
+      <button
+        type="button"
+        className={`lp-theme-segment-btn${isDark ? " is-active" : ""}`}
+        aria-label="Dark theme"
+        aria-pressed={isDark}
+        onClick={() => setTheme("dark")}
+      >
+        <Moon className="lp-icon lp-icon--sm" strokeWidth={1.5} aria-hidden />
+      </button>
+    </div>
   );
 }

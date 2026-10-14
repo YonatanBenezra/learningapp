@@ -1,0 +1,70 @@
+/* LabPath buttons — Figma primary / ghost / sm */
+
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.625rem;
+  padding: 0 1.15rem;
+  border: 1px solid transparent;
+  border-radius: var(--lp-radius-md, 0.75rem);
+  font-family: var(--lp-font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.lp-btn--sm {
+  min-height: 2.375rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  border-radius: var(--lp-radius-sm, 0.5rem);
+}
+
+.lp-btn--primary {
+  color: var(--color-brand-on);
+  background: var(--color-brand);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-ink) 8%, transparent);
+}
+
+.lp-btn--primary:hover {
+  background: var(--color-brand-hover);
+}
+
+.lp-btn--ghost {
+  color: var(--lp-text-secondary);
+  background: transparent;
+}
+
+.lp-btn--ghost:hover {
+  color: var(--lp-text-primary);
+}
+
+.lp-btn--secondary {
+  color: var(--lp-text-primary);
+  background: color-mix(in srgb, var(--color-card) 90%, var(--color-bg));
+  border-color: var(--lp-border-subtle, var(--color-line));
+}
+
+.lp-btn--secondary:hover {
+  border-color: color-mix(in srgb, var(--color-ink) 18%, var(--lp-border-subtle));
+  background: var(--color-card);
+}
+
+html[data-theme="dark"] .lp-btn--secondary {
+  background: color-mix(in srgb, var(--color-ink) 8%, var(--color-card));
+}
+
+.lp-btn--block {
+  width: 100%;
+}

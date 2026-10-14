@@ -33,7 +33,7 @@ export function LogoutButton({ className, onDone }: LogoutButtonProps) {
     clearAuthSnapshot();
     authToastSuccess("Signed out.");
     onDone?.();
-    router.replace(routes.login);
+    router.replace(routes.signIn);
     router.refresh();
   }
 

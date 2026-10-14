@@ -1,5 +1,5 @@
-import { LeaderboardView } from "@/features/leaderboard/components/leaderboard-view";
-import "@/features/leaderboard/leaderboard.css";
+import { LeaderboardFigmaView } from "@/features/leaderboard/components/leaderboard-figma-view";
+import "@/features/leaderboard/leaderboard-figma.css";
 
 export const metadata = {
   title: "Leaderboard",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function LeaderboardPage() {
   return (
     <div className="lp-page lp-page-leaderboard">
-      <LeaderboardView />
+      <LeaderboardFigmaView />
     </div>
   );
 }

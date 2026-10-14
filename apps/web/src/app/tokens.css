@@ -1,0 +1,173 @@
+/**
+ * LabPath design tokens (Figma: Ember accent + signal teal).
+ * Legacy --color-* names map here so existing CSS keeps working.
+ */
+
+:root {
+  /* Canvas & surfaces */
+  --lp-bg-canvas: #f6f5f2;
+  --lp-bg-surface: #ffffff;
+  --lp-bg-raised: #f8faf8;
+
+  /* Borders */
+  --lp-border-subtle: #e6e3dc;
+  --lp-border-strong: #d3cfc6;
+
+  /* Text */
+  --lp-text-primary: #12151b;
+  --lp-text-secondary: #5b6270;
+  --lp-text-tertiary: #8a909b;
+
+  /* Accent — Ember (CTA, warm signal) */
+  --lp-accent-ember: #c2410c;
+  --lp-accent-ember-hover: #a8380a;
+  --lp-accent-on-ember: #ffffff;
+  --lp-accent-ember-soft: #fbe9e1;
+
+  /* Signal — teal (pass / eval / app link) */
+  --lp-signal-teal: #0f766e;
+  --lp-signal-teal-soft: #ddf2ef;
+
+  --lp-signal-amber: #b45309;
+  --lp-signal-red: #b91c1c;
+
+  /* Radius (8 / 12 / 20) */
+  --lp-radius-sm: 0.5rem;
+  --lp-radius-md: 0.75rem;
+  --lp-radius-lg: 1.25rem;
+  --lp-radius-pill: 999px;
+
+  /* Icons — 24px grid, 1.5 stroke */
+  --lp-icon-stroke: 1.5;
+  --lp-icon-size-sm: 1rem;
+  --lp-icon-size-md: 1.125rem;
+  --lp-icon-size-lg: 1.5rem;
+  --lp-icon-color: var(--lp-text-secondary);
+  --lp-icon-color-strong: var(--lp-text-primary);
+  --lp-icon-color-muted: var(--lp-text-tertiary);
+  --lp-icon-color-accent: var(--lp-accent-ember);
+  --lp-icon-color-signal: var(--lp-signal-teal);
+
+  /* Legacy aliases (used across the app) */
+  --color-bg: var(--lp-bg-canvas);
+  --color-bg-soft: var(--lp-bg-raised);
+  --color-card: var(--lp-bg-surface);
+  --color-bg-inset: var(--lp-bg-raised);
+  --color-bg-hover: color-mix(in srgb, var(--lp-text-primary) 4%, var(--lp-bg-surface));
+  --color-ink: var(--lp-text-primary);
+  --color-muted: var(--lp-text-secondary);
+  --color-subtle: var(--lp-text-tertiary);
+  --color-line: var(--lp-border-subtle);
+  --color-line-strong: var(--lp-border-strong);
+
+  --color-brand: var(--lp-accent-ember);
+  --color-brand-hover: var(--lp-accent-ember-hover);
+  --color-brand-on: var(--lp-accent-on-ember);
+  --color-brand-soft: var(--lp-accent-ember-soft);
+  --color-brand-glow: color-mix(in srgb, var(--lp-accent-ember) 55%, white);
+
+  --color-signal-teal: var(--lp-signal-teal);
+  --color-signal-teal-soft: var(--lp-signal-teal-soft);
+
+  --color-ring: color-mix(in srgb, var(--lp-accent-ember) 22%, transparent);
+  --color-danger: var(--lp-signal-red);
+  --color-danger-soft: #fef2f2;
+
+  --color-status-pass: var(--lp-signal-teal);
+  --color-status-pass-bg: var(--lp-signal-teal-soft);
+  --color-status-fail: var(--lp-signal-red);
+  --color-status-fail-bg: #fef2f2;
+  --color-status-warn: var(--lp-signal-amber);
+  --color-status-warn-bg: #fffbeb;
+}
+
+html[data-theme="dark"] {
+  --lp-bg-canvas: #0a0f1a;
+  --lp-bg-surface: #111826;
+  --lp-bg-raised: #172033;
+
+  --lp-border-subtle: #1e2738;
+  --lp-border-strong: #2a3549;
+
+  --lp-text-primary: #eceef2;
+  --lp-text-secondary: #97a1b2;
+  --lp-text-tertiary: #6a7487;
+
+  --lp-accent-ember: #ff7a45;
+  --lp-accent-ember-hover: #ff9466;
+  --lp-accent-on-ember: #1a0c05;
+  --lp-accent-ember-soft: #2a1710;
+
+  --lp-signal-teal: #2dd4bf;
+  --lp-signal-teal-soft: #0e2a2a;
+
+  --lp-signal-amber: #fbbf24;
+  --lp-signal-red: #f87171;
+
+  --color-bg-hover: color-mix(in srgb, var(--lp-text-primary) 6%, var(--lp-bg-surface));
+  --color-brand-glow: color-mix(in srgb, var(--lp-accent-ember) 45%, transparent);
+  --color-danger-soft: rgba(248, 113, 113, 0.12);
+  --color-status-pass-bg: var(--lp-signal-teal-soft);
+  --color-status-fail-bg: rgba(248, 113, 113, 0.12);
+  --color-status-warn-bg: rgba(251, 191, 36, 0.12);
+  --color-ring: color-mix(in srgb, var(--lp-accent-ember) 28%, transparent);
+}
+
+@layer base {
+  svg.lucide {
+    stroke-width: var(--lp-icon-stroke);
+  }
+
+  svg.lucide:not([class*="text-"]):not([class*="stroke-"]) {
+    color: inherit;
+  }
+}
+
+/* Icon utilities */
+.lp-icon {
+  width: var(--lp-icon-size-md);
+  height: var(--lp-icon-size-md);
+  flex-shrink: 0;
+  color: var(--lp-icon-color);
+}
+
+.lp-icon--sm {
+  width: var(--lp-icon-size-sm);
+  height: var(--lp-icon-size-sm);
+}
+
+.lp-icon--lg {
+  width: var(--lp-icon-size-lg);
+  height: var(--lp-icon-size-lg);
+}
+
+.lp-icon--strong {
+  color: var(--lp-icon-color-strong);
+}
+
+.lp-icon--muted {
+  color: var(--lp-icon-color-muted);
+}
+
+.lp-icon--accent {
+  color: var(--lp-icon-color-accent);
+}
+
+.lp-icon--signal {
+  color: var(--lp-icon-color-signal);
+}
+
+/* Nav & chrome icon defaults */
+.lp-site-nav-search svg.lucide,
+.lp-site-nav-actions svg.lucide,
+.lp-theme-toggle svg.lucide {
+  color: var(--lp-icon-color);
+}
+
+.lp-site-nav-search:focus-within svg.lucide {
+  color: var(--lp-icon-color-strong);
+}
+
+.lp-nav-menu-link.is-active svg.lucide {
+  color: var(--lp-icon-color-signal);
+}

@@ -1,6 +1,9 @@
 @import "tailwindcss";
+@import "./tokens.css";
+@import "./typography.css";
 @import "./design.css";
 @import "../components/layout/site-nav.css";
+@import "../components/ui/lp-buttons.css";
 @import "./workspace-chrome.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -8,31 +11,8 @@
 @custom-variant dark (&:is(.dark *, html[data-theme="dark"] *));
 
 :root {
-  --color-bg: #f4f4f2;
-  --color-bg-soft: #ecece8;
-  --color-card: #ffffff;
-  --color-bg-inset: #ecece8;
-  --color-bg-hover: #e3e3df;
-  --color-ink: #171717;
-  --color-muted: #6b6b6b;
-  --color-subtle: #8a8a8a;
-  --color-line: #d6d6d2;
-  --color-line-strong: #c8c8c4;
-  --color-brand: #0d9488;
-  --color-brand-hover: #0f766e;
-  --color-brand-on: #ffffff;
-  --color-brand-soft: rgba(13, 148, 136, 0.12);
-  --color-brand-glow: #5eead4;
-  --color-ring: rgba(13, 148, 136, 0.22);
-  --color-danger: #b91c1c;
-  --color-danger-soft: #fef2f2;
-  --color-status-pass: #059669;
-  --color-status-pass-bg: #ecfdf5;
-  --color-status-fail: #b91c1c;
-  --color-status-fail-bg: #fef2f2;
-  --color-status-warn: #d97706;
-  --color-status-warn-bg: #fffbeb;
-  --lp-page-max-width: 1350px;
+  --lp-page-max-width: 1200px;
+  --radius: var(--lp-radius-md);
   color-scheme: light;
   --background: var(--color-bg);
   --foreground: var(--color-ink);
@@ -57,7 +37,6 @@
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -69,30 +48,6 @@
 }
 
 html[data-theme="dark"] {
-  --color-bg: #070e1e;
-  --color-bg-soft: #0c1528;
-  --color-card: #101a2e;
-  --color-bg-inset: #0c1528;
-  --color-bg-hover: #131f38;
-  --color-ink: #e8eef8;
-  --color-muted: #8b9bb4;
-  --color-subtle: #6b7a94;
-  --color-line: #1c2a42;
-  --color-line-strong: #243550;
-  --color-brand: #2dd4bf;
-  --color-brand-hover: #5eead4;
-  --color-brand-on: #042f2e;
-  --color-brand-soft: rgba(45, 212, 191, 0.14);
-  --color-brand-glow: #99f6e4;
-  --color-ring: rgba(45, 212, 191, 0.28);
-  --color-danger: #fca5a5;
-  --color-danger-soft: rgba(185, 28, 28, 0.15);
-  --color-status-pass: #34d399;
-  --color-status-pass-bg: rgba(52, 211, 153, 0.12);
-  --color-status-fail: #fca5a5;
-  --color-status-fail-bg: rgba(185, 28, 28, 0.15);
-  --color-status-warn: #fbbf24;
-  --color-status-warn-bg: rgba(251, 191, 36, 0.12);
   --background: var(--color-bg);
   --foreground: var(--color-ink);
   color-scheme: dark;
@@ -112,15 +67,17 @@ html[data-theme="dark"] {
   --color-lp-brand: var(--color-brand);
   --color-lp-brand-hover: var(--color-brand-hover);
   --color-lp-brand-on: var(--color-brand-on);
+  --color-lp-signal: var(--color-signal-teal);
+  --color-lp-signal-soft: var(--color-signal-teal-soft);
   --color-lp-status-pass: var(--color-status-pass);
   --color-lp-status-fail: var(--color-status-fail);
   --color-lp-status-warn: var(--color-status-warn);
   --height-dash-nav: 3.25rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-jakarta), var(--font-figtree), "Segoe UI", sans-serif;
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--lp-font-sans);
+  --font-mono: var(--lp-font-mono);
+  --font-heading: var(--lp-font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

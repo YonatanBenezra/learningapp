@@ -1,7 +1,7 @@
 .lc-auth-page {
   min-height: 100dvh;
   color: var(--color-ink);
-  font-family: var(--font-jakarta), var(--font-figtree), "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--lp-font-sans);
   background:
     radial-gradient(
       ellipse 120% 80% at -20% 40%,
