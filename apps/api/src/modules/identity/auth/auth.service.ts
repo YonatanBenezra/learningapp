@@ -272,22 +272,52 @@ export class AuthService {
     return { user: this.toPublicUser(user) };
   }
 
+  private cookieDomainOption(domain: string): string | undefined {
+    const trimmed = domain.trim();
+    if (
+      !trimmed ||
+      trimmed === 'localhost' ||
+      trimmed === 'false' ||
+      trimmed === '0'
+    ) {
+      return undefined;
+    }
+    return trimmed;
+  }
+
   private cookieFlags(): Pick<
     AuthCookieOptions,
     'secure' | 'domain' | 'sameSite'
   > {
     const domain = this.config.get('COOKIE_DOMAIN', { infer: true });
     const cookieSecureMode = this.config.get('COOKIE_SECURE', { infer: true });
+    const publicWebUrl = this.config.get('PUBLIC_WEB_URL', { infer: true });
+
     if (cookieSecureMode === 'false') {
       return {
         secure: false,
         sameSite: 'lax',
-        domain: !domain || domain === 'localhost' ? undefined : domain,
+        domain: this.cookieDomainOption(domain),
       };
     }
 
+    // GCP VM / HTTP same-IP nginx: never Secure + SameSite=None (browser drops on http://).
+    try {
+      const web = new URL(publicWebUrl);
+      const isLocal =
+        web.hostname === 'localhost' || web.hostname === '127.0.0.1';
+      if (web.protocol === 'http:' && !isLocal && cookieSecureMode !== 'true') {
+        return {
+          secure: false,
+          sameSite: 'lax',
+          domain: this.cookieDomainOption(domain),
+        };
+      }
+    } catch {
+      /* ignore invalid PUBLIC_WEB_URL */
+    }
+
     const cors = this.config.get('CORS_ORIGINS', { infer: true });
-    const publicWebUrl = this.config.get('PUBLIC_WEB_URL', { infer: true });
 
     const corsOrigins = cors
       .split(',')
@@ -321,7 +351,7 @@ export class AuthService {
       return {
         secure,
         sameSite: 'lax',
-        domain: !domain || domain === 'localhost' ? undefined : domain,
+        domain: this.cookieDomainOption(domain),
       };
     }
 
@@ -342,7 +372,7 @@ export class AuthService {
       secure,
       // Vercel (web) + Render (API) is cross-site; Lax cookies are dropped.
       sameSite: crossSite ? 'none' : 'lax',
-      domain: !domain || domain === 'localhost' ? undefined : domain,
+      domain: this.cookieDomainOption(domain),
     };
   }
 

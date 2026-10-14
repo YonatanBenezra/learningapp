@@ -162,6 +162,10 @@
   flex: 1;
 }
 
+.lp-app > .lp-main > .lp-page-home {
+  flex: 1;
+}
+
 .lp-app > .lp-main > .lp-page-profile {
   flex: 1;
 }

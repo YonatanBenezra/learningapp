@@ -188,4 +188,4 @@ Spec অনুযায়ী layout:
 - **Result:** Worker-grade hidden eval → metrics → pass/fail → worst cases + taxonomy।  
 - **Visual:** Dark, ৩-pane, minimal distraction, engineering metrics upfront।  
 
-বিস্তারিত product rules: `Labpath specification/LabPath-Specification.md` — §6 (RAG), §7 (grading), §0.7 (UI scope)।
+বিস্তারিত product rules: `specification/LabPath-Specification.md` — §6 (RAG), §7 (grading), §0.7 (UI scope)।

@@ -8,7 +8,7 @@ Learners solve bounded, graded problems (chunking, retrieval, eval design, injec
 
 **This repo is the Phase 0 inner POC:** ten playable exercises across three simulators, a catalogue, a workspace, traces, and progress. It is not a public launch. Stripe, a code sandbox, contests, and a visual redesign are out of this phase.
 
-Product spec: [docs/Labpath specification/LabPath-Specification.md](./docs/Labpath%20specification/LabPath-Specification.md) · **RAG simulator (BN):** [docs/rag-simulator-design-bn.md](./docs/rag-simulator-design-bn.md)
+Product spec: [docs/specification/LabPath-Specification.md](./docs/specification/LabPath-Specification.md) · **RAG simulator (BN):** [docs/rag-simulator-design-bn.md](./docs/rag-simulator-design-bn.md) · **Repo layout:** [docs/REPOSITORY-STRUCTURE.md](./docs/REPOSITORY-STRUCTURE.md)
 
 ---
 
@@ -249,7 +249,8 @@ apps/web/                 Next.js App Router (Phase 0 screens)
   src/app/(app)           catalogue, workspace, run, trace, progress
   src/features/           auth, catalogue, workspace, traces, progress
 infra/                    Postgres init (pgvector)
-docs/                     product spec + phase plans
+docs/                     spec, structure doc, design notes, reports/
+apps/README.md            pointer to api + web packages
 ```
 
 ---

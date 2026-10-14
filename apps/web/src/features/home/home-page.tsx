@@ -1,182 +1,115 @@
+import { Code2, Layers, Target, Zap } from "lucide-react";
 import Link from "next/link";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
+import "@/features/contests/contests.css";
 import "./home.css";
 
-function TileIcon({ d }: { d: string }) {
+const TRACKS = ["RAG", "Eval", "Guard", "Prompt"] as const;
+
+const HIGHLIGHTS = [
+  {
+    icon: Target,
+    label: "Hidden eval sets",
+    copy: "Unreleased test cases drive your score — no grade inflation from public examples.",
+  },
+  {
+    icon: Code2,
+    label: "Live simulators",
+    copy: "Configure pipelines in-browser and submit runs against automated graders.",
+  },
+  {
+    icon: Layers,
+    label: "Four practice tracks",
+    copy: "RAG, Eval, Guardrails, and Prompt engineering — one account, one progress graph.",
+  },
+] as const;
+
+function HomeHighlights() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d={d}
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <div className="lp-ct-highlights" aria-label="Why LabPath">
+      {HIGHLIGHTS.map(({ icon: Icon, label, copy }) => (
+        <article key={label} className="lp-ct-highlight">
+          <span className="lp-ct-highlight-icon" aria-hidden>
+            <Icon className="size-[1.125rem]" strokeWidth={2} />
+          </span>
+          <h2 className="lp-ct-highlight-title">{label}</h2>
+          <p className="lp-ct-highlight-copy">{copy}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function HomeStartPanel() {
+  return (
+    <section className="lp-ct-panel lp-ct-panel--empty" aria-labelledby="home-start-title">
+      <div className="lp-ct-panel-glow" aria-hidden />
+      <span className="lp-ct-panel-icon" aria-hidden>
+        <Zap className="size-7" strokeWidth={1.75} />
+      </span>
+      <p className="lp-ct-panel-kicker">Public beta</p>
+      <h2 id="home-start-title" className="lp-ct-panel-title">
+        Start your first set
+      </h2>
+      <p className="lp-ct-panel-lead">
+        {brand.description} Hidden eval sets. A score that only moves when your work does.
+      </p>
+      <div className="lp-ct-panel-actions">
+        <AuthLink href={routes.problems} className="lp-ct-btn">
+          Open problems
+        </AuthLink>
+        <Link href={routes.login} className="lp-ct-btn lp-ct-btn--ghost">
+          Sign in
+        </Link>
+      </div>
+    </section>
   );
 }
 
 export function HomePage() {
   return (
-    <div className="ag-page">
-      <main>
-        <section className="ag-hero">
-          <div className="ag-fx" aria-hidden="true">
-            <span className="ag-fx-grid" />
-            <span className="ag-fx-beam ag-fx-beam--a" />
-            <span className="ag-fx-beam ag-fx-beam--b" />
-            <span className="ag-fx-beam ag-fx-beam--c" />
-            <span className="ag-fx-spark ag-fx-spark--1" />
-            <span className="ag-fx-spark ag-fx-spark--2" />
-            <span className="ag-fx-spark ag-fx-spark--3" />
-          </div>
-          <div className="ag-rings" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-            <i />
-            <i />
-          </div>
-          <div className="ag-orbit" aria-hidden="true">
-            <span className="ag-tile ag-tile-1">
-              <TileIcon d="M4 7h16M4 12h10M4 17h7" />
-            </span>
-            <span className="ag-tile ag-tile-2">
-              <TileIcon d="M8 7h8v10H8zM9.5 10h5M9.5 13h3.5" />
-            </span>
-            <span className="ag-tile ag-tile-3">
-              <TileIcon d="M12 4l7 3v5c0 4.2-2.8 7.2-7 8.5C7.8 19.2 5 16.2 5 12V7l7-3z" />
-            </span>
-            <span className="ag-tile ag-tile-4">
-              <TileIcon d="M8 8h8M8 12h5M7 16h10" />
-            </span>
-          </div>
-          <div className="ag-hero-inner">
-            <p className="ag-badge">
-              <span aria-hidden="true">›</span>
-              Public beta
-              <span aria-hidden="true">‹</span>
-            </p>
-            <h1 className="ag-title">
-              <span className="ag-title-line">The gym for AI</span>
-              <span className="ag-title-accent">engineers</span>
-            </h1>
-            <p className="ag-lead">
-              {brand.description} Hidden eval sets. A score that only moves when your work does.
-            </p>
-            <div className="ag-actions">
-              <div className="ag-note" aria-hidden="true">
-                <svg width="52" height="28" viewBox="0 0 52 28" fill="none">
-                  <path
-                    d="M4 22c10-2 18-12 24-16 4-2.5 10-4 18-2"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M38 3.5c4 1 8 2 10 3.5-3 .2-6.5.8-9 2.4"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <p>Start your first set now</p>
+    <div className="ag-page lp-app">
+      <div className="lp-main lp-app-main">
+        <div className="lp-page lp-page-contests lp-page-home">
+          <div className="lp-ct lp-ct--idle">
+            <header className="lp-ct-hero">
+              <div className="lp-ct-hero-copy">
+                <p className="lp-ct-kicker">Practice platform</p>
+                <h1 className="lp-ct-title lp-home-title">
+                  The gym for AI{" "}
+                  <span className="lp-home-title-accent">engineers</span>
+                </h1>
+                <p className="lp-ct-lead">
+                  Graded RAG engineering exercises with hidden test sets and traces. Built for
+                  reps, portfolios, and hiring loops — not slide decks.
+                </p>
               </div>
-              <AuthLink href={routes.problems} className="ag-btn ag-btn-lg ag-btn-orange">
-                Open problems
-              </AuthLink>
-              <Link href={routes.login} className="ag-btn ag-btn-lg ag-btn-dark">
-                Sign in
-              </Link>
-            </div>
-            <div className="ag-trust">
-              <p>
-                Graded across <strong>4</strong> practice tracks
-              </p>
-            </div>
-            <div className="ag-clients">
-              <span className="ag-client">RAG</span>
-              <span className="ag-client">Eval</span>
-              <span className="ag-client">Guard</span>
-              <span className="ag-client">Prompt</span>
-            </div>
-          </div>
-        </section>
-      </main>
+              <div className="lp-ct-meta">
+                <span className="lp-ct-chip lp-ct-chip--brand">Public beta</span>
+                <span className="lp-ct-chip">4 practice tracks · Free to start</span>
+              </div>
+            </header>
 
-      <footer className="ag-footer">
-        <div className="ag-footer-inner">
-          <div className="ag-cols">
-            <div>
-              <p className="ag-brand-name">{brand.name}</p>
-              <p className="ag-brand-copy">
-                {brand.tagline}. Sets, reps, and a number that goes up.
-              </p>
-              <p className="ag-news-title">Get started</p>
-              <form className="ag-news" action={routes.register}>
-                <input type="email" name="email" placeholder="Enter your email" />
-                <button type="submit" aria-label="Continue to register">
-                  →
-                </button>
-              </form>
-            </div>
-            <div className="ag-link-grid">
-              <div>
-                <p className="ag-col-title">Practice</p>
-                <ul>
-                  <li>
-                    <Link href={routes.home}>Home</Link>
-                  </li>
-                  <li>
-                    <AuthLink href={routes.problems}>Problems</AuthLink>
-                  </li>
-                  <li>
-                    <Link href={routes.login}>Sign in</Link>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="ag-col-title">Account</p>
-                <ul>
-                  <li>
-                    <AuthLink href={routes.progress}>Profile</AuthLink>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div>
-              <p className="ag-col-title">Get in touch</p>
-              <ul>
-                <li>{brand.endorsement}</li>
-                <li>
-                  <Link href={routes.login}>Sign in to start</Link>
-                </li>
-                <li>
-                  <AuthLink href={routes.problems}>Browse problems</AuthLink>
-                </li>
-              </ul>
-              <p className="ag-col-title" style={{ marginTop: "1.6rem" }}>
-                Follow us on
-              </p>
-              <div className="ag-foot-socials" aria-hidden="true">
-                <span className="ag-dot">f</span>
-                <span className="ag-dot">in</span>
-                <span className="ag-dot">ig</span>
-                <span className="ag-dot">x</span>
-              </div>
-            </div>
-          </div>
+            <HomeHighlights />
 
-          <div className="ag-legal-wrap">
-            <div className="ag-legal">
-              <p>© 2026 {brand.name}. All rights reserved</p>
-              <p>{brand.endorsement}</p>
+            <div className="lp-home-tracks" aria-label="Practice tracks">
+              {TRACKS.map((track) => (
+                <span key={track} className="lp-ct-chip">
+                  {track}
+                </span>
+              ))}
             </div>
+
+            <HomeStartPanel />
           </div>
         </div>
-      </footer>
+
+        <footer className="lp-app-foot">
+          © 2026 {brand.name}. {brand.endorsement}
+        </footer>
+      </div>
     </div>
   );
 }

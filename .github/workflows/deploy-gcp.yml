@@ -5,7 +5,7 @@
 #   GCP_DEPLOY_HOST     e.g. 34.165.94.58
 #   GCP_DEPLOY_USER     e.g. jewelmia_dev
 #   GCP_DEPLOY_SSH_KEY  private key (PEM) for that user
-#   GCP_PUBLIC_WEB_URL  e.g. http://34.165.94.58 (used for NEXT_PUBLIC_API_URL at build)
+#   GCP_PUBLIC_WEB_URL  e.g. https://www.aiwarss.com (documentation; web build uses same-origin /api)
 
 name: Deploy GCP VM
 
@@ -44,8 +44,6 @@ jobs:
               echo "GCP_PUBLIC_WEB_URL secret is required"
               exit 1
             fi
-            API_PUBLIC="${PUBLIC_WEB_URL%/}/api"
-
             cd "$APP_DIR"
             git fetch origin main
             git checkout main
@@ -54,15 +52,17 @@ jobs:
             npm ci
             npm run prisma:generate -w @labpath/api
             npm run prisma:migrate:deploy -w @labpath/api
+            npm run content:sync-catalogue -w @labpath/api
             npm run build:api
 
             cd apps/web
-            NEXT_PUBLIC_API_URL="$API_PUBLIC" npm run build
+            NEXT_PUBLIC_API_URL="/api" npm run build
             cd "$APP_DIR"
 
-            pm2 restart api web || {
+            pm2 restart api web worker 2>/dev/null || {
               pm2 start npm --name api --cwd "$APP_DIR/apps/api" -- run start:prod
               pm2 start npm --name web --cwd "$APP_DIR/apps/web" -- run start
+              pm2 start npm --name worker --cwd "$APP_DIR/apps/api" -- run start:worker:prod
             }
             pm2 save
 
