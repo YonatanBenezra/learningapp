@@ -1,0 +1,5 @@
+{
+  "reranker": "title-boost",
+  "rerankTopN": 20,
+  "queryRewritePrompt": ""
+}

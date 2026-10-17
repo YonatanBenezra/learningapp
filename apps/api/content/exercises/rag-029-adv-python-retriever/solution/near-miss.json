@@ -1,0 +1,3 @@
+{
+  "source": "import json\nfrom pathlib import Path\n\ndata = json.loads(Path(__file__).with_name(\"input.json\").read_text())\nsnippet = (data[\"corpus\"][0].get(\"text\") or \"\")[:24]\nprint(json.dumps({\n    \"results\": [{\"id\": q[\"id\"], \"passages\": [snippet]} for q in data[\"questions\"]]\n}))\n"
+}

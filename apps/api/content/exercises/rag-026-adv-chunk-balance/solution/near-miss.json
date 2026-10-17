@@ -1,0 +1,5 @@
+{
+  "chunkSize": 50,
+  "overlap": 0,
+  "splitStrategy": "fixed"
+}

@@ -9,13 +9,12 @@ import {
 } from "motion/react";
 import {
   ArrowRight,
-  BarChart3,
+  Bot,
   Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   FileText,
-  Image as ImageIcon,
   Layers,
   Search,
   Shield,
@@ -32,16 +31,21 @@ import {
 } from "react";
 import { routes } from "@/config/routes";
 import {
-  CONTINUE_PROBLEM,
-  FIGMA_CATALOG,
-  PROGRESS_BY_TRACK,
-  TRACK_COUNTS,
   hrefForProblem,
   type CatalogProblem,
   type ProblemDifficulty,
   type ProblemStatus,
   type ProblemTrack,
 } from "../problems-figma-catalog";
+import {
+  continueProblem,
+  groupMetaForTrack,
+  progressByTrack,
+  trackCounts,
+  useProblemsCatalog,
+} from "../use-problems-catalog";
+import { sortCatalogRecommended } from "../problems-figma-mapper";
+import { ProblemsFigmaSkeleton } from "./problems-figma-skeleton";
 
 const E: Transition["ease"] = [0.2, 0, 0, 1];
 const PAGE_SIZE = 10;
@@ -58,20 +62,9 @@ const TRACK_SEGMENTS: {
 }[] = [
   { id: "all", label: "All" },
   { id: "rag", label: "RAG", icon: FileText },
-  { id: "eval", label: "Eval", icon: BarChart3 },
   { id: "guard", label: "Guard", icon: Shield },
-  { id: "prompt", label: "Prompt", icon: ImageIcon },
+  { id: "agent", label: "Agent", icon: Bot },
 ];
-
-const GROUP_META: Record<
-  ProblemTrack,
-  { label: string; shownOf: string; solvedLabel: string; solvedFrac: number }
-> = {
-  rag: { label: "RAG", shownOf: "6 of 14", solvedLabel: "2/6 solved", solvedFrac: 2 / 6 },
-  eval: { label: "Eval", shownOf: "6 of 6", solvedLabel: "0/6 solved", solvedFrac: 0 },
-  guard: { label: "Guard", shownOf: "4 of 6", solvedLabel: "0/4 solved", solvedFrac: 0 },
-  prompt: { label: "Prompt", shownOf: "4 of 4", solvedLabel: "0/4 solved", solvedFrac: 0 },
-};
 
 function FadeUp({
   delay,
@@ -338,6 +331,7 @@ export function ProblemsFigmaView() {
   const reduceMotion = useReducedMotion();
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const catalogState = useProblemsCatalog();
 
   const [track, setTrack] = useState<TrackFilter>("all");
   const [level, setLevel] = useState<LevelFilter>("any");
@@ -391,8 +385,11 @@ export function ProblemsFigmaView() {
     };
   }, [filtersOpen]);
 
+  const catalog =
+    catalogState.phase === "ready" ? catalogState.catalog : [];
+
   const filtered = useMemo(() => {
-    let items = [...FIGMA_CATALOG];
+    let items = [...catalog];
     if (track !== "all") items = items.filter((p) => p.track === track);
     if (level !== "any") items = items.filter((p) => p.difficulty === level);
     if (status !== "any") items = items.filter((p) => p.status === status);
@@ -402,13 +399,53 @@ export function ProblemsFigmaView() {
         (p) =>
           p.title.toLowerCase().includes(q) ||
           p.id.toLowerCase().includes(q) ||
+          p.slug.toLowerCase().includes(q) ||
           p.tags.some((t) => t.toLowerCase().includes(q)),
       );
     }
     if (sort === "rate") items.sort((a, b) => b.solveRate - a.solveRate);
-    if (sort === "title") items.sort((a, b) => a.title.localeCompare(b.title));
+    else if (sort === "title") items.sort((a, b) => a.title.localeCompare(b.title));
+    else items.sort(sortCatalogRecommended);
     return items;
-  }, [track, level, status, sort, debouncedSearch]);
+  }, [catalog, track, level, status, sort, debouncedSearch]);
+
+  const counts = useMemo(() => trackCounts(catalog), [catalog]);
+  const trackProgress = useMemo(() => progressByTrack(catalog), [catalog]);
+  const continueItem = useMemo(() => continueProblem(catalog), [catalog]);
+  const solvedTotal = useMemo(
+    () => catalog.filter((p) => p.status === "solved").length,
+    [catalog],
+  );
+  const inProgressTotal = useMemo(
+    () => catalog.filter((p) => p.status === "in_progress").length,
+    [catalog],
+  );
+  const avgSolveRate = useMemo(() => {
+    const withRate = catalog.filter((p) => p.solveRate > 0);
+    if (withRate.length === 0) {
+      return "—";
+    }
+    const avg =
+      withRate.reduce((sum, p) => sum + p.solveRate, 0) / withRate.length;
+    return `${Math.round(avg)}%`;
+  }, [catalog]);
+
+  if (catalogState.phase === "loading") {
+    return <ProblemsFigmaSkeleton />;
+  }
+
+  if (catalogState.phase === "error") {
+    return (
+      <div className="lp-pfigma">
+        <div className="lp-pfigma-inner">
+          <div className="lp-pfigma-empty">
+            <p>Could not load exercises</p>
+            <p className="lp-pfigma-subtitle">Check that the API is running, then refresh.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
@@ -451,7 +488,7 @@ export function ProblemsFigmaView() {
       <div className="lp-pfigma-inner">
         <header className="lp-pfigma-head">
           <FadeUp delay={0} className="lp-pfigma-head-copy">
-            <p className="lp-pfigma-eyebrow">PRACTICE · 30 PROBLEMS</p>
+            <p className="lp-pfigma-eyebrow">PRACTICE · {counts.all} PROBLEMS</p>
             <div className="lp-pfigma-title-row">
               <h1 className="lp-pfigma-title">Problems</h1>
               <span className="lp-pfigma-title-accent">to train on</span>
@@ -462,9 +499,9 @@ export function ProblemsFigmaView() {
             </p>
           </FadeUp>
           <div className="lp-pfigma-stat-chips">
-            <StatChip value="2" label="solved" delay={0.15} />
-            <StatChip value="1" label="in progress" delay={0.2} />
-            <StatChip value="31%" label="avg. solve rate" delay={0.25} />
+            <StatChip value={String(solvedTotal)} label="solved" delay={0.15} />
+            <StatChip value={String(inProgressTotal)} label="in progress" delay={0.2} />
+            <StatChip value={avgSolveRate} label="avg. solve rate" delay={0.25} />
           </div>
         </header>
 
@@ -474,7 +511,7 @@ export function ProblemsFigmaView() {
               {TRACK_SEGMENTS.map((seg) => {
                 const active = track === seg.id;
                 const Icon = seg.icon;
-                const count = TRACK_COUNTS[seg.id];
+                const count = counts[seg.id];
                 return (
                   <button
                     key={seg.id}
@@ -691,15 +728,20 @@ export function ProblemsFigmaView() {
                     >
                       {grouped.map((entry) => {
                         if (entry.kind === "group") {
-                          const meta = GROUP_META[entry.track];
+                          const visibleOnPage = pageItems.filter(
+                            (p) => p.track === entry.track,
+                          ).length;
+                          const meta = groupMetaForTrack(
+                            entry.track,
+                            catalog,
+                            visibleOnPage,
+                          );
                           const Icon =
                             entry.track === "rag"
                               ? FileText
-                              : entry.track === "eval"
-                                ? BarChart3
-                                : entry.track === "guard"
-                                  ? Shield
-                                  : ImageIcon;
+                              : entry.track === "guard"
+                                ? Shield
+                                : Bot;
                           return (
                             <div key={`g-${entry.track}`} className="lp-pfigma-group">
                               <span className="lp-pfigma-group-icon">
@@ -777,60 +819,44 @@ export function ProblemsFigmaView() {
           </div>
 
           <aside className="lp-pfigma-sidebar">
-            <FadeUp delay={0.35}>
-              <div className="lp-pfigma-card lp-pfigma-card--continue">
-                <p className="lp-pfigma-card-eyebrow">Continue</p>
-                <div className="lp-pfigma-problem-top">
-                  <span className="lp-pfigma-id">{CONTINUE_PROBLEM.id}</span>
-                  <span className={`lp-pfigma-diff lp-pfigma-diff--medium`}>
-                    <SignalBars level="medium" />
-                    Medium
-                  </span>
-                </div>
-                <h2 className="lp-pfigma-card-title">{CONTINUE_PROBLEM.title}</h2>
-                <div className="lp-pfigma-meter-box">
-                  <div className="lp-pfigma-meter-row">
-                    <span>Last run · recall@5</span>
-                    <span>
-                      <span className="lp-pfigma-meter-val">0.74</span>
-                      <span> / 0.80</span>
+            {continueItem ? (
+              <FadeUp delay={0.35}>
+                <div className="lp-pfigma-card lp-pfigma-card--continue">
+                  <p className="lp-pfigma-card-eyebrow">Continue</p>
+                  <div className="lp-pfigma-problem-top">
+                    <span className="lp-pfigma-id">{continueItem.id}</span>
+                    <span className={`lp-pfigma-diff lp-pfigma-diff--${continueItem.difficulty}`}>
+                      <SignalBars level={continueItem.difficulty} />
+                      {continueItem.difficulty === "easy"
+                        ? "Easy"
+                        : continueItem.difficulty === "hard"
+                          ? "Hard"
+                          : "Medium"}
                     </span>
                   </div>
-                  <div className="lp-pfigma-meter-track">
-                    <motion.span
-                      className="lp-pfigma-meter-fill"
-                      initial={{ width: reduceMotion ? "73%" : "0%" }}
-                      animate={{ width: "73%" }}
-                      transition={{ duration: reduceMotion ? 0 : 0.9, ease: E }}
-                    />
-                    <motion.span
-                      className="lp-pfigma-meter-tick"
-                      style={{ left: "79%" }}
-                      initial={{ scale: 1 }}
-                      animate={{ scale: reduceMotion ? 1 : [1, 1.4, 1] }}
-                      transition={{ delay: 0.95, duration: 0.5 }}
-                    />
-                  </div>
-                  <p className="lp-pfigma-meter-row">3 attempts · 2 hours ago · 0.06 to go</p>
+                  <h2 className="lp-pfigma-card-title">{continueItem.title}</h2>
+                  <p className="lp-pfigma-problem-desc">{continueItem.description}</p>
+                  <Link
+                    href={hrefForProblem(continueItem.slug)}
+                    className="lp-pfigma-btn-full lp-pfigma-btn-ember"
+                  >
+                    {continueItem.action === "review" ? "Review" : "Continue"}
+                    <ArrowRight size={16} aria-hidden />
+                  </Link>
                 </div>
-                <Link
-                  href={hrefForProblem(CONTINUE_PROBLEM.slug)}
-                  className="lp-pfigma-btn-full lp-pfigma-btn-ember"
-                >
-                  Continue
-                  <ArrowRight size={16} aria-hidden />
-                </Link>
-              </div>
-            </FadeUp>
+              </FadeUp>
+            ) : null}
 
             <FadeUp delay={0.43}>
               <div className="lp-pfigma-card">
                 <div className="lp-pfigma-progress-head">
                   <span className="lp-pfigma-progress-title">Your progress</span>
-                  <span className="lp-pfigma-progress-total">2 / 30</span>
+                  <span className="lp-pfigma-progress-total">
+                    {solvedTotal} / {counts.all}
+                  </span>
                 </div>
                 <div className="lp-pfigma-track-progress">
-                  {PROGRESS_BY_TRACK.map((row, ti) => (
+                  {trackProgress.map((row, ti) => (
                     <div key={row.track}>
                       <div className="lp-pfigma-track-row-head">
                         <span>
@@ -877,13 +903,13 @@ export function ProblemsFigmaView() {
                   </span>
                   <div>
                     <p className="lp-pfigma-problem-title" style={{ fontSize: 14 }}>
-                      October Guard CTF
+                      Core 15 Advanced Championship
                     </p>
-                    <p className="lp-pfigma-group-count">Starts Oct 26 · 18:00 UTC+6</p>
+                    <p className="lp-pfigma-group-count">15 advanced · 180 min time box</p>
                   </div>
                 </div>
                 <p className="lp-pfigma-problem-desc" style={{ whiteSpace: "normal" }}>
-                  Same problems, timed, with a live leaderboard. Practice G1–G4 before it opens.
+                  Timed sitting on the new Core 15 advanced set — live leaderboard on Contests.
                 </p>
                 <Link href={routes.contests} className="lp-pfigma-btn-full lp-pfigma-btn-ghost">
                   View contest

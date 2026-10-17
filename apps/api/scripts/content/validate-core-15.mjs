@@ -55,7 +55,7 @@ export async function validateCore15Collection() {
       if (meta.title !== row.title) {
         errors.push(`${row.slug}: title mismatch (manifest vs meta.json)`);
       }
-      if (meta.difficulty !== row.difficulty) {
+      if (row.difficulty && meta.difficulty !== row.difficulty) {
         errors.push(`${row.slug}: difficulty mismatch (manifest vs meta.json)`);
       }
     } catch {

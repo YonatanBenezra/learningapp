@@ -1,111 +1,111 @@
 {
   "slug": "core-15",
-  "title": "LabPath Core 15",
-  "description": "Intermediate and advanced catalogue set — 6 RAG + 9 Guardrails. Used for paths, contests, and reporting.",
-  "version": 1,
+  "title": "LabPath Core 15 — Advanced",
+  "description": "15 new advanced exercises (6 RAG + 9 Guardrails). Contest pool and guided path use these slugs only.",
+  "version": 2,
   "problems": [
     {
       "position": 1,
-      "slug": "rag-002-the-cost-ceiling",
-      "title": "Cost-Capped Retrieval",
+      "slug": "rag-025-adv-cost-ceiling",
+      "title": "Cost-Capped Retrieval (Advanced)",
       "track": "rag",
-      "difficulty": "M"
+      "difficulty": "H"
     },
     {
       "position": 2,
-      "slug": "rag-007-chunk-balance",
-      "title": "Recall@k SLA on Policy KB",
+      "slug": "rag-026-adv-chunk-balance",
+      "title": "Recall@k SLA on Policy KB (Advanced)",
       "track": "rag",
-      "difficulty": "M"
+      "difficulty": "H"
     },
     {
       "position": 3,
-      "slug": "rag-003-the-citation-contract",
-      "title": "Citation-Grounded Answers",
+      "slug": "rag-027-adv-citation-contract",
+      "title": "Citation-Grounded Answers (Advanced)",
       "track": "rag",
-      "difficulty": "M"
+      "difficulty": "H"
     },
     {
       "position": 4,
-      "slug": "rag-004-rerank-or-rethink",
-      "title": "Two-Stage Retrieve + Rerank",
+      "slug": "rag-028-adv-rerank-rethink",
+      "title": "Two-Stage Retrieve + Rerank (Advanced)",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 5,
-      "slug": "rag-009-python-retriever",
-      "title": "Custom Retriever (Code Sandbox)",
+      "slug": "rag-029-adv-python-retriever",
+      "title": "Custom Retriever — Advanced Sandbox",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 6,
-      "slug": "rag-022-score-gate",
-      "title": "Eval Slice Regression Gate",
+      "slug": "rag-030-adv-score-gate",
+      "title": "Eval Slice Regression Gate (Advanced)",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 7,
-      "slug": "grd-002-the-indirect-payload",
-      "title": "Indirect Injection via Retrieved Content",
+      "slug": "grd-017-adv-indirect-payload",
+      "title": "Indirect Injection via Retrieval (Advanced)",
       "track": "guardrails",
-      "difficulty": "M"
+      "difficulty": "H"
     },
     {
       "position": 8,
-      "slug": "grd-005-encoding-trick",
-      "title": "Obfuscation & Encoding Bypass",
+      "slug": "grd-018-adv-encoding-trick",
+      "title": "Obfuscation & Encoding Bypass (Advanced)",
       "track": "guardrails",
-      "difficulty": "M"
+      "difficulty": "H"
     },
     {
       "position": 9,
-      "slug": "grd-007-hex-extract",
-      "title": "PII & Secret Canary Detection",
+      "slug": "grd-019-adv-hex-extract",
+      "title": "PII & Secret Canary Detection (Advanced)",
       "track": "guardrails",
-      "difficulty": "M"
+      "difficulty": "H"
     },
     {
       "position": 10,
-      "slug": "grd-011-bcc-smuggle",
-      "title": "Tool Argument Validation",
+      "slug": "grd-020-adv-bcc-smuggle",
+      "title": "Tool Argument Validation (Advanced)",
       "track": "guardrails",
-      "difficulty": "M"
+      "difficulty": "H"
     },
     {
       "position": 11,
-      "slug": "grd-010-page-inject",
-      "title": "Supply-Chain Prompts in Documents",
+      "slug": "grd-021-adv-page-inject",
+      "title": "Supply-Chain Prompts in Documents (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },
     {
       "position": 12,
-      "slug": "grd-013-filter-stack",
-      "title": "Defense in Depth (Rules + Judge)",
+      "slug": "grd-022-adv-filter-stack",
+      "title": "Defense in Depth — Advanced Stack",
       "track": "guardrails",
       "difficulty": "H"
     },
     {
       "position": 13,
-      "slug": "grd-014-wilson-gate",
-      "title": "FP/FN Tradeoff at Scale (Wilson Gates)",
+      "slug": "grd-023-adv-wilson-gate",
+      "title": "FP/FN Tradeoff at Scale (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },
     {
       "position": 14,
-      "slug": "grd-015-benign-pass",
-      "title": "Control Mapping & Benign Pass",
+      "slug": "grd-024-adv-benign-pass",
+      "title": "Control Mapping & Benign Pass (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },
     {
       "position": 15,
-      "slug": "grd-016-policy-window",
-      "title": "Multi-Turn Jailbreak Escalation",
+      "slug": "grd-025-adv-policy-window",
+      "title": "Multi-Turn Jailbreak Escalation (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     }

@@ -1,0 +1,78 @@
+{
+  "slug": "rag-026-adv-chunk-balance",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "graderArchetype": "rag-r1",
+  "title": "Recall@k SLA on Policy KB (Advanced)",
+  "difficulty": "H",
+  "catalogPhase": 7,
+  "skills": [
+    {
+      "slug": "content-pipeline",
+      "name": "Content pipeline"
+    },
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    }
+  ],
+  "briefMd": "# Advanced · Recall@k SLA\n\nHarder policy KB: chunk balance must clear recall@5 without oversizing context.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "chunkSize",
+      "overlap",
+      "splitStrategy"
+    ],
+    "properties": {
+      "chunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      },
+      "overlap": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 400,
+        "default": 50
+      },
+      "splitStrategy": {
+        "type": "string",
+        "enum": [
+          "fixed",
+          "sentence",
+          "recursive",
+          "heading-aware"
+        ],
+        "default": "sentence"
+      }
+    }
+  },
+  "thresholds": {
+    "pass": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "pass",
+      "class": "A",
+      "metric": "pass",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "isPublished": true
+}

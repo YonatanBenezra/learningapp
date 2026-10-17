@@ -1,0 +1,6 @@
+[
+  "Lexical TF buries the gold document under noisy logs that repeat query words. Rerank the candidate window.",
+  "title-boost lifts chunks whose document title matches the query. Use a wide rerankTopN so gold is in the window.",
+  "rerankTopN of 5 cannot promote a document that lexical retrieval ranked 12th.",
+  "A working config on this corpus is reranker title-boost with rerankTopN 20 and no rewrite prompt."
+]

@@ -53,6 +53,7 @@ jobs:
             npm run prisma:generate -w @labpath/api
             npm run prisma:migrate:deploy -w @labpath/api
             npm run content:sync-catalogue -w @labpath/api
+            npm run content:seed-core-15 -w @labpath/api
             npm run build:api
 
             cd apps/web

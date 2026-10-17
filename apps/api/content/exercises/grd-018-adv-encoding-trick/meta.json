@@ -1,0 +1,58 @@
+{
+  "slug": "grd-018-adv-encoding-trick",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "guardrails",
+  "graderArchetype": "guard-g1",
+  "title": "Obfuscation & Encoding Bypass (Advanced)",
+  "difficulty": "H",
+  "catalogPhase": 7,
+  "skills": [
+    {
+      "slug": "prompt-injection",
+      "name": "Prompt injection"
+    },
+    {
+      "slug": "defensive-prompting",
+      "name": "Defensive prompting"
+    }
+  ],
+  "briefMd": "# Advanced · Encoding Bypass\n\nLayered hex/base64/unicode smuggling vs output filters.",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "attackPrompt"
+    ],
+    "properties": {
+      "attackPrompt": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "pass": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "pass",
+      "class": "A",
+      "metric": "pass",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": null,
+  "isPublished": true
+}

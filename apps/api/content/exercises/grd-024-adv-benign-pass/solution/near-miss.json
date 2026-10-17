@@ -1,0 +1,5 @@
+{
+  "systemPrompt": "Be helpful.",
+  "inputFilterYaml": "version: 1\nassertions:\n  - id: ignore\n    check: not_matches\n    pattern: '[Ii]gnore previous'\n    flavor: re2\nverdict:\n  fail_if: any\n",
+  "outputFilterYaml": ""
+}

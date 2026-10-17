@@ -1,5 +1,5 @@
 {
-  "note": "Phases 1–6 — 18 RAG + 1 Agent + 11 Guardrails (30 live). Core 15 subset: see content/collections/core-15.json.",
+  "note": "Phases 1–7 — 30 catalogue + 15 Core 15 advanced (45 live). Core 15 contest uses advanced slugs only.",
   "slugs": [
     "rag-001-chunk-it-right",
     "rag-006-overlap-tune",
@@ -30,6 +30,21 @@
     "rag-023-span-match",
     "rag-008-spend-cap",
     "rag-022-score-gate",
-    "grd-015-benign-pass"
+    "grd-015-benign-pass",
+    "rag-025-adv-cost-ceiling",
+    "rag-026-adv-chunk-balance",
+    "rag-027-adv-citation-contract",
+    "rag-028-adv-rerank-rethink",
+    "rag-029-adv-python-retriever",
+    "rag-030-adv-score-gate",
+    "grd-017-adv-indirect-payload",
+    "grd-018-adv-encoding-trick",
+    "grd-019-adv-hex-extract",
+    "grd-020-adv-bcc-smuggle",
+    "grd-021-adv-page-inject",
+    "grd-022-adv-filter-stack",
+    "grd-023-adv-wilson-gate",
+    "grd-024-adv-benign-pass",
+    "grd-025-adv-policy-window"
   ]
 }
