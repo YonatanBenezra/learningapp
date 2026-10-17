@@ -7,6 +7,7 @@
     "apps/*"
   ],
   "scripts": {
+    "postinstall": "npm run prisma:generate -w @labpath/api",
     "dev": "node scripts/dev.mjs",
     "dev:api": "npm run start:dev -w @labpath/api",
     "dev:worker": "SANDBOX_ALLOW_RUNC_FALLBACK=true npm run start:worker:dev -w @labpath/api",
