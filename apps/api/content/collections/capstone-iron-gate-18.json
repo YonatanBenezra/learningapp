@@ -1,0 +1,156 @@
+{
+  "slug": "capstone-iron-gate-18",
+  "title": "Iron Gate — 18-Stage Production Marathon",
+  "description": "Capstone track framed as one mission (~2–3 hours): build and harden a RAG stack, then red-team and blue-team the assistant. Each stage is a graded LabPath exercise; the path preserves order and progress. Not a single combined grader (yet).",
+  "version": 1,
+  "estimatedMinutes": { "min": 120, "max": 200 },
+  "difficulty": "XH",
+  "pathSlug": "capstone-iron-gate-18",
+  "contestSlug": "iron-gate-marathon",
+  "stages": [
+    {
+      "stage": 1,
+      "slug": "rag-002-the-cost-ceiling",
+      "title": "Cost-Capped Retrieval",
+      "track": "rag",
+      "minutes": 12,
+      "goal": "Hit recall under a token/call budget — no brute-force retrieval."
+    },
+    {
+      "stage": 2,
+      "slug": "rag-007-chunk-balance",
+      "title": "Recall@k SLA on Policy KB",
+      "track": "rag",
+      "minutes": 12,
+      "goal": "Chunk size/overlap tradeoff for policy recall@5."
+    },
+    {
+      "stage": 3,
+      "slug": "rag-006-overlap-tune",
+      "title": "Overlap Tune",
+      "track": "rag",
+      "minutes": 10,
+      "goal": "Dial overlap without blowing context windows."
+    },
+    {
+      "stage": 4,
+      "slug": "rag-003-the-citation-contract",
+      "title": "Citation-Grounded Answers",
+      "track": "rag",
+      "minutes": 12,
+      "goal": "Answers must cite the right span; hallucinations fail Class B."
+    },
+    {
+      "stage": 5,
+      "slug": "rag-023-span-match",
+      "title": "Span Match",
+      "track": "rag",
+      "minutes": 14,
+      "goal": "Retrieve boundaries that exactly cover gold spans."
+    },
+    {
+      "stage": 6,
+      "slug": "rag-004-rerank-or-rethink",
+      "title": "Two-Stage Retrieve + Rerank",
+      "track": "rag",
+      "minutes": 15,
+      "goal": "Fix nDCG@5 with rerank/rewrite under call caps."
+    },
+    {
+      "stage": 7,
+      "slug": "rag-024-query-fit",
+      "title": "Query Fit",
+      "track": "rag",
+      "minutes": 12,
+      "goal": "Query rewriting/expansion that helps hard questions only."
+    },
+    {
+      "stage": 8,
+      "slug": "rag-009-python-retriever",
+      "title": "Custom Retriever (Sandbox)",
+      "track": "rag",
+      "minutes": 20,
+      "goal": "Ship Python retriever code to recall@5 ≥ 0.80."
+    },
+    {
+      "stage": 9,
+      "slug": "rag-008-spend-cap",
+      "title": "Spend Cap",
+      "track": "rag",
+      "minutes": 12,
+      "goal": "Pipeline must respect spend abuse limits."
+    },
+    {
+      "stage": 10,
+      "slug": "rag-022-score-gate",
+      "title": "Eval Slice Regression Gate",
+      "track": "rag",
+      "minutes": 15,
+      "goal": "Define eval slice; block regressions on Wilson gates."
+    },
+    {
+      "stage": 11,
+      "slug": "grd-002-the-indirect-payload",
+      "title": "Indirect Injection via Retrieval",
+      "track": "guardrails",
+      "minutes": 12,
+      "goal": "Red-team: poisoned chunks that hijack the agent."
+    },
+    {
+      "stage": 12,
+      "slug": "grd-005-encoding-trick",
+      "title": "Obfuscation & Encoding Bypass",
+      "track": "guardrails",
+      "minutes": 10,
+      "goal": "Break encodings; blue-team must still block."
+    },
+    {
+      "stage": 13,
+      "slug": "grd-007-hex-extract",
+      "title": "PII & Secret Canary Detection",
+      "track": "guardrails",
+      "minutes": 10,
+      "goal": "Extract/canary traps — block exfil without killing UX."
+    },
+    {
+      "stage": 14,
+      "slug": "grd-011-bcc-smuggle",
+      "title": "Tool Argument Validation",
+      "track": "guardrails",
+      "minutes": 12,
+      "goal": "Smuggled tool args must never reach execution."
+    },
+    {
+      "stage": 15,
+      "slug": "grd-010-page-inject",
+      "title": "Supply-Chain Prompts in Documents",
+      "track": "guardrails",
+      "minutes": 14,
+      "goal": "Document-embedded system prompts in the corpus."
+    },
+    {
+      "stage": 16,
+      "slug": "grd-013-filter-stack",
+      "title": "Defense in Depth (Rules + Judge)",
+      "track": "guardrails",
+      "minutes": 18,
+      "goal": "Layer rules + judge; pass Wilson on attacks and benign."
+    },
+    {
+      "stage": 17,
+      "slug": "grd-014-wilson-gate",
+      "title": "FP/FN Tradeoff at Scale",
+      "track": "guardrails",
+      "minutes": 15,
+      "goal": "Tune thresholds for production-scale Wilson gates."
+    },
+    {
+      "stage": 18,
+      "slug": "grd-016-policy-window",
+      "title": "Multi-Turn Jailbreak Escalation",
+      "track": "guardrails",
+      "minutes": 15,
+      "goal": "Final boss: slow multi-turn jailbreak vs your stack."
+    }
+  ]
+}

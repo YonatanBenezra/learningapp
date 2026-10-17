@@ -1,0 +1,23 @@
+{
+  "slug": "core-15-intermediate-advanced",
+  "title": "Core 15 — Intermediate & Advanced",
+  "intent": "Production RAG (cost, SLA, citations, rerank, code retriever, regression gates) plus Guardrails red/blue (injection, tools, Wilson, multi-turn).",
+  "sortOrder": 10,
+  "steps": [
+    "rag-002-the-cost-ceiling",
+    "rag-007-chunk-balance",
+    "rag-003-the-citation-contract",
+    "rag-004-rerank-or-rethink",
+    "rag-009-python-retriever",
+    "rag-022-score-gate",
+    "grd-002-the-indirect-payload",
+    "grd-005-encoding-trick",
+    "grd-007-hex-extract",
+    "grd-011-bcc-smuggle",
+    "grd-010-page-inject",
+    "grd-013-filter-stack",
+    "grd-014-wilson-gate",
+    "grd-015-benign-pass",
+    "grd-016-policy-window"
+  ]
+}

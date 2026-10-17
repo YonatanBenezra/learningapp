@@ -1,5 +1,5 @@
 {
-  "note": "Phases 1–6 — 18 RAG + 1 Agent + 11 Guardrails (30 live).",
+  "note": "Phases 1–6 — 18 RAG + 1 Agent + 11 Guardrails (30 live). Core 15 subset: see content/collections/core-15.json.",
   "slugs": [
     "rag-001-chunk-it-right",
     "rag-006-overlap-tune",

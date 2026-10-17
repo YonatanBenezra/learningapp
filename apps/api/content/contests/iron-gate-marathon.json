@@ -1,0 +1,30 @@
+{
+  "slug": "iron-gate-marathon",
+  "title": "Iron Gate Marathon",
+  "intent": "180-minute timed sitting on all 18 Iron Gate stages (10 RAG + 8 Guard). Intended for strong engineers; expect 2–3 hours to clear every gate.",
+  "startsAt": "2026-11-07T14:00:00.000Z",
+  "endsAt": "2026-11-14T14:00:00.000Z",
+  "timeBoxMinutes": 180,
+  "sampleSize": 18,
+  "isPublished": false,
+  "pool": [
+    "rag-002-the-cost-ceiling",
+    "rag-007-chunk-balance",
+    "rag-006-overlap-tune",
+    "rag-003-the-citation-contract",
+    "rag-023-span-match",
+    "rag-004-rerank-or-rethink",
+    "rag-024-query-fit",
+    "rag-009-python-retriever",
+    "rag-008-spend-cap",
+    "rag-022-score-gate",
+    "grd-002-the-indirect-payload",
+    "grd-005-encoding-trick",
+    "grd-007-hex-extract",
+    "grd-011-bcc-smuggle",
+    "grd-010-page-inject",
+    "grd-013-filter-stack",
+    "grd-014-wilson-gate",
+    "grd-016-policy-window"
+  ]
+}

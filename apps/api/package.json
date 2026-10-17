@@ -19,6 +19,7 @@
     "test:e2e": "SANDBOX_ALLOW_RUNC_FALLBACK=true jest --config ./test/jest-e2e.json",
     "content:validate": "node scripts/content/validate-cli.mjs",
     "content:sync-catalogue": "node scripts/content/sync-catalogue.mjs",
+    "content:seed-core-15": "node scripts/content/seed-core-15.mjs",
     "leaderboard:clean": "node scripts/leaderboard-clean.mjs",
     "leaderboard:demo-seed": "node scripts/leaderboard-demo-seed.mjs",
     "content:generate-step3": "node scripts/content/generate-step3-exercises.mjs",

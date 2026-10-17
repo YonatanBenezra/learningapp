@@ -1,0 +1,113 @@
+{
+  "slug": "core-15",
+  "title": "LabPath Core 15",
+  "description": "Intermediate and advanced catalogue set — 6 RAG + 9 Guardrails. Used for paths, contests, and reporting.",
+  "version": 1,
+  "problems": [
+    {
+      "position": 1,
+      "slug": "rag-002-the-cost-ceiling",
+      "title": "Cost-Capped Retrieval",
+      "track": "rag",
+      "difficulty": "M"
+    },
+    {
+      "position": 2,
+      "slug": "rag-007-chunk-balance",
+      "title": "Recall@k SLA on Policy KB",
+      "track": "rag",
+      "difficulty": "M"
+    },
+    {
+      "position": 3,
+      "slug": "rag-003-the-citation-contract",
+      "title": "Citation-Grounded Answers",
+      "track": "rag",
+      "difficulty": "M"
+    },
+    {
+      "position": 4,
+      "slug": "rag-004-rerank-or-rethink",
+      "title": "Two-Stage Retrieve + Rerank",
+      "track": "rag",
+      "difficulty": "H"
+    },
+    {
+      "position": 5,
+      "slug": "rag-009-python-retriever",
+      "title": "Custom Retriever (Code Sandbox)",
+      "track": "rag",
+      "difficulty": "H"
+    },
+    {
+      "position": 6,
+      "slug": "rag-022-score-gate",
+      "title": "Eval Slice Regression Gate",
+      "track": "rag",
+      "difficulty": "H"
+    },
+    {
+      "position": 7,
+      "slug": "grd-002-the-indirect-payload",
+      "title": "Indirect Injection via Retrieved Content",
+      "track": "guardrails",
+      "difficulty": "M"
+    },
+    {
+      "position": 8,
+      "slug": "grd-005-encoding-trick",
+      "title": "Obfuscation & Encoding Bypass",
+      "track": "guardrails",
+      "difficulty": "M"
+    },
+    {
+      "position": 9,
+      "slug": "grd-007-hex-extract",
+      "title": "PII & Secret Canary Detection",
+      "track": "guardrails",
+      "difficulty": "M"
+    },
+    {
+      "position": 10,
+      "slug": "grd-011-bcc-smuggle",
+      "title": "Tool Argument Validation",
+      "track": "guardrails",
+      "difficulty": "M"
+    },
+    {
+      "position": 11,
+      "slug": "grd-010-page-inject",
+      "title": "Supply-Chain Prompts in Documents",
+      "track": "guardrails",
+      "difficulty": "H"
+    },
+    {
+      "position": 12,
+      "slug": "grd-013-filter-stack",
+      "title": "Defense in Depth (Rules + Judge)",
+      "track": "guardrails",
+      "difficulty": "H"
+    },
+    {
+      "position": 13,
+      "slug": "grd-014-wilson-gate",
+      "title": "FP/FN Tradeoff at Scale (Wilson Gates)",
+      "track": "guardrails",
+      "difficulty": "H"
+    },
+    {
+      "position": 14,
+      "slug": "grd-015-benign-pass",
+      "title": "Control Mapping & Benign Pass",
+      "track": "guardrails",
+      "difficulty": "H"
+    },
+    {
+      "position": 15,
+      "slug": "grd-016-policy-window",
+      "title": "Multi-Turn Jailbreak Escalation",
+      "track": "guardrails",
+      "difficulty": "H"
+    }
+  ]
+}

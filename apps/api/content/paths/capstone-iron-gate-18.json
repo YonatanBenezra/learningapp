@@ -1,0 +1,26 @@
+{
+  "slug": "capstone-iron-gate-18",
+  "title": "Iron Gate — 18-Stage Marathon (≈2–3h)",
+  "intent": "Single capstone narrative: RAG pipeline (cost → chunks → citations → rerank → code retriever → eval gates) then Guardrails gauntlet (injection, tools, filter stack, Wilson, multi-turn). One stage = one exercise pass.",
+  "sortOrder": 11,
+  "steps": [
+    "rag-002-the-cost-ceiling",
+    "rag-007-chunk-balance",
+    "rag-006-overlap-tune",
+    "rag-003-the-citation-contract",
+    "rag-023-span-match",
+    "rag-004-rerank-or-rethink",
+    "rag-024-query-fit",
+    "rag-009-python-retriever",
+    "rag-008-spend-cap",
+    "rag-022-score-gate",
+    "grd-002-the-indirect-payload",
+    "grd-005-encoding-trick",
+    "grd-007-hex-extract",
+    "grd-011-bcc-smuggle",
+    "grd-010-page-inject",
+    "grd-013-filter-stack",
+    "grd-014-wilson-gate",
+    "grd-016-policy-window"
+  ]
+}

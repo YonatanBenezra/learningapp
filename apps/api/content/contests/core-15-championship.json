@@ -1,0 +1,27 @@
+{
+  "slug": "core-15-championship",
+  "title": "Core 15 Championship",
+  "intent": "Timed sitting on the Core 15 set — 6 RAG and 9 Guardrails (intermediate + advanced). Same pool for every entrant; sampleSize equals pool size.",
+  "startsAt": "2026-10-24T14:00:00.000Z",
+  "endsAt": "2026-10-31T14:00:00.000Z",
+  "timeBoxMinutes": 180,
+  "sampleSize": 15,
+  "isPublished": true,
+  "pool": [
+    "rag-002-the-cost-ceiling",
+    "rag-007-chunk-balance",
+    "rag-003-the-citation-contract",
+    "rag-004-rerank-or-rethink",
+    "rag-009-python-retriever",
+    "rag-022-score-gate",
+    "grd-002-the-indirect-payload",
+    "grd-005-encoding-trick",
+    "grd-007-hex-extract",
+    "grd-011-bcc-smuggle",
+    "grd-010-page-inject",
+    "grd-013-filter-stack",
+    "grd-014-wilson-gate",
+    "grd-015-benign-pass",
+    "grd-016-policy-window"
+  ]
+}
