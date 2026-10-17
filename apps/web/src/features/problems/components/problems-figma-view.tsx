@@ -430,26 +430,12 @@ export function ProblemsFigmaView() {
     return `${Math.round(avg)}%`;
   }, [catalog]);
 
-  if (catalogState.phase === "loading") {
-    return <ProblemsFigmaSkeleton />;
-  }
-
-  if (catalogState.phase === "error") {
-    return (
-      <div className="lp-pfigma">
-        <div className="lp-pfigma-inner">
-          <div className="lp-pfigma-empty">
-            <p>Could not load exercises</p>
-            <p className="lp-pfigma-subtitle">Check that the API is running, then refresh.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
-  const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageItems = useMemo(
+    () => filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    [currentPage, filtered],
+  );
 
   const grouped = useMemo(() => {
     const out: Array<
@@ -474,6 +460,23 @@ export function ProblemsFigmaView() {
     setListKey((k) => k + 1);
     listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
+
+  if (catalogState.phase === "loading") {
+    return <ProblemsFigmaSkeleton />;
+  }
+
+  if (catalogState.phase === "error") {
+    return (
+      <div className="lp-pfigma">
+        <div className="lp-pfigma-inner">
+          <div className="lp-pfigma-empty">
+            <p>Could not load exercises</p>
+            <p className="lp-pfigma-subtitle">Check that the API is running, then refresh.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const clearFilters = () => {
     setTrack("all");
