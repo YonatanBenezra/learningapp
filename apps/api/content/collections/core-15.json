@@ -2,6 +2,7 @@
   "slug": "core-15",
   "title": "LabPath Core 15 — Advanced",
   "description": "15 new advanced exercises (6 RAG + 9 Guardrails). Contest pool and guided path use these slugs only.",
+  "contestSlug": "weekly-advanced-1",
   "version": 2,
   "problems": [
     {

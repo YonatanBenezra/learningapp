@@ -1,8 +1,10 @@
 # Timed contests
 
+Phased LeetCode-style product plan: [LeetCode-Style-Contests-Phases.md](../../../docs/specification/LeetCode-Style-Contests-Phases.md).
+
 Add one JSON file per season (see the former `dogfood-s1` shape in git history).
 
-**Core 15:** `core-15-championship.json` — fixed pool of 15 catalogue slugs (6 RAG + 9 Guard). Manifest: `../collections/core-15.json`. Path: `../paths/core-15-intermediate-advanced.json`.
+**Weekly (LeetCode-style):** `weekly-advanced-1.json` — only published timed contest; same 15 advanced slugs for every entrant. Manifest: `../collections/core-15.json` (`contestSlug`). Old slugs (`core-15-championship`, `iron-gate-marathon`) removed — ingest unpublishes them in DB.
 
 After editing, run ingest so `isPublished` stays in sync:
 

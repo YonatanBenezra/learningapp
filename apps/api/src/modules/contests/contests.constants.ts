@@ -1,9 +1,9 @@
-/** Historical slug — re-enable when adding contest JSON under `content/contests/`. */
-export const DOGFOOD_CONTEST = 'dogfood-s1';
+/** Primary timed contest slug (see `content/contests/weekly-advanced-1.json`). */
+export const DOGFOOD_CONTEST = 'weekly-advanced-1';
 
 /** Live timed contests in `content/contests/*.json` (excluding assessments). */
-export const LIVE_CONTEST_COUNT = 0;
+export const LIVE_CONTEST_COUNT = 1;
 
 export const CONTESTS_LIVE = LIVE_CONTEST_COUNT > 0;
 
-export const CONTEST_POOL = [] as const;
+export const CONTEST_POOL = ['weekly-advanced-1'] as const;

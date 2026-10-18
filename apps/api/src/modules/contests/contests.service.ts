@@ -21,7 +21,7 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 import { AccountService } from '../accounts/account.service';
 import { publicDisplayName } from '../profiles/profile-slug';
 import { itemScoreFromGrade } from './contest-score';
-import { sampleFromPool } from './contest-sample';
+import { resolveSampledSlugs } from './contest-sample';
 
 export type ContestListItem = {
   slug: string;
@@ -300,7 +300,12 @@ export class ContestsService {
       .sort((left, right) => left.position - right.position)
       .map((problem) => problem.exerciseSlug);
     const sampleSeed = randomToken();
-    const sampledSlugs = sampleFromPool(pool, contest.sampleSize, sampleSeed);
+    const sampledSlugs = resolveSampledSlugs(
+      pool,
+      contest.sampleSize,
+      sampleSeed,
+      pool.length === contest.sampleSize ? 'fixed_pool' : 'per_user',
+    );
     await this.prisma.contestEntry.create({
       data: {
         contestId: contest.id,

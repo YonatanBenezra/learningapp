@@ -6,7 +6,6 @@
   "estimatedMinutes": { "min": 120, "max": 200 },
   "difficulty": "XH",
   "pathSlug": "capstone-iron-gate-18",
-  "contestSlug": "iron-gate-marathon",
   "stages": [
     {
       "stage": 1,

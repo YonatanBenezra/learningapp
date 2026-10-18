@@ -4,7 +4,6 @@ import { contentRoot, exercisesRoot } from './paths.mjs';
 
 const COLLECTION = path.join(contentRoot, 'collections', 'core-15.json');
 const PATH_FILE = path.join(contentRoot, 'paths', 'core-15-intermediate-advanced.json');
-const CONTEST_FILE = path.join(contentRoot, 'contests', 'core-15-championship.json');
 
 /** @returns {string[]} validation errors (empty if ok) */
 export async function validateCore15Collection() {
@@ -63,12 +62,27 @@ export async function validateCore15Collection() {
     }
   }
 
-  for (const file of [PATH_FILE, CONTEST_FILE]) {
-    try {
-      await readFile(file, 'utf8');
-    } catch {
-      errors.push(`missing ${path.relative(contentRoot, file)}`);
+  const contestSlug = raw.contestSlug ?? 'weekly-advanced-1';
+  const contestFile = path.join(contentRoot, 'contests', `${contestSlug}.json`);
+  try {
+    const contest = JSON.parse(await readFile(contestFile, 'utf8'));
+    if (contest.slug !== contestSlug) {
+      errors.push(`contest file slug mismatch: ${contest.slug} vs ${contestSlug}`);
     }
+    const pool = new Set(contest.pool ?? []);
+    for (const slug of slugs) {
+      if (!pool.has(slug)) {
+        errors.push(`contest pool missing core-15 slug ${slug}`);
+      }
+    }
+  } catch {
+    errors.push(`missing ${path.relative(contentRoot, contestFile)}`);
+  }
+
+  try {
+    await readFile(PATH_FILE, 'utf8');
+  } catch {
+    errors.push(`missing ${path.relative(contentRoot, PATH_FILE)}`);
   }
 
   return errors;

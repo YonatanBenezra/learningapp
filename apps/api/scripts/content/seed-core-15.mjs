@@ -83,11 +83,12 @@ async function main() {
     }
     console.log(`  path core-15-intermediate-advanced (${paths.length} paths synced)`);
 
+    const expectedContest = meta.contestSlug ?? 'weekly-advanced-1';
     const contests = await upsertAllContests(prisma);
-    if (!contests.includes('core-15-championship')) {
-      throw new Error('Contest core-15-championship was not upserted');
+    if (!contests.includes(expectedContest)) {
+      throw new Error(`Contest ${expectedContest} was not upserted`);
     }
-    console.log(`  contest core-15-championship (${contests.length} contest(s) synced)`);
+    console.log(`  contest ${expectedContest} (${contests.length} contest(s) synced)`);
 
     console.log('\nCore 15 seed complete.');
   } finally {

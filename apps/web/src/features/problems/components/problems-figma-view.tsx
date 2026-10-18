@@ -906,9 +906,9 @@ export function ProblemsFigmaView() {
                   </span>
                   <div>
                     <p className="lp-pfigma-problem-title" style={{ fontSize: 14 }}>
-                      Core 15 Advanced Championship
+                      Weekly Contest #1 — Advanced
                     </p>
-                    <p className="lp-pfigma-group-count">15 advanced · 180 min time box</p>
+                    <p className="lp-pfigma-group-count">15 problems · 180 min · same set for all</p>
                   </div>
                 </div>
                 <p className="lp-pfigma-problem-desc" style={{ whiteSpace: "normal" }}>

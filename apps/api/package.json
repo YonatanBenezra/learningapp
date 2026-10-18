@@ -20,6 +20,7 @@
     "content:validate": "node scripts/content/validate-cli.mjs",
     "content:sync-catalogue": "node scripts/content/sync-catalogue.mjs",
     "content:seed-core-15": "node scripts/content/seed-core-15.mjs",
+    "content:smoke-contest-p0": "node scripts/content/smoke-contest-p0.mjs",
     "content:generate-core-15-advanced": "node scripts/content/generate-core-15-advanced.mjs",
     "leaderboard:clean": "node scripts/leaderboard-clean.mjs",
     "leaderboard:demo-seed": "node scripts/leaderboard-demo-seed.mjs",

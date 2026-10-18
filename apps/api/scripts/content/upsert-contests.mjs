@@ -47,6 +47,7 @@ export async function upsertAllContests(prisma) {
         endsAt: new Date(spec.endsAt),
         timeBoxMinutes: spec.timeBoxMinutes ?? 90,
         sampleSize: spec.sampleSize ?? 2,
+        seasonKey: spec.seasonKey ?? null,
         isPublished: spec.isPublished !== false,
         problems: {
           create: spec.pool.map((exerciseSlug, index) => ({
@@ -62,6 +63,7 @@ export async function upsertAllContests(prisma) {
         endsAt: new Date(spec.endsAt),
         timeBoxMinutes: spec.timeBoxMinutes ?? 90,
         sampleSize: spec.sampleSize ?? 2,
+        seasonKey: spec.seasonKey ?? null,
         isPublished: spec.isPublished !== false,
         problems: {
           deleteMany: {},
