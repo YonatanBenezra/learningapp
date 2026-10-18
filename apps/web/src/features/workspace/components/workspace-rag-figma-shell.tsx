@@ -30,6 +30,7 @@ type WorkspaceRagFigmaShellProps = {
   slug: string;
   exercise: Exercise;
   pathSlug?: string;
+  backHref?: string;
   hints?: HintList | null;
   run: Run | null;
   grade: Grade | null;
@@ -54,6 +55,7 @@ export function WorkspaceRagFigmaShell({
   slug,
   exercise,
   pathSlug,
+  backHref,
   hints = null,
   run,
   grade,
@@ -194,12 +196,14 @@ export function WorkspaceRagFigmaShell({
           <BriefPanel
             exercise={exercise}
             pathSlug={pathSlug}
+            backHref={backHref}
             collapsed={briefCollapsed}
             tab={briefTab}
             onTabChange={setBriefTab}
             onToggleCollapse={onToggleBriefCollapsed}
             figmaBrief={figmaBrief}
-            backLabel="Problems"
+            backLabel={backHref ? "Contest" : "Problems"}
+            hintsDisabled={Boolean(backHref)}
           />
         }
         secondary={

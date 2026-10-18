@@ -1,5 +1,17 @@
-import { redirectToProblems } from "@/lib/redirect-to-problems";
+import { ContestWorkspaceShell } from "@/features/contests/components/contest-workspace-shell";
 
-export default function ContestProblemRedirectPage() {
-  redirectToProblems();
+export default async function ContestProblemPage({
+  params,
+}: {
+  params: Promise<{ slug: string; exerciseSlug: string }>;
+}) {
+  const { slug, exerciseSlug } = await params;
+  return (
+    <ContestWorkspaceShell
+      contestSlug={slug}
+      exerciseSlug={exerciseSlug}
+      variant="contest"
+      workspaceMode="live"
+    />
+  );
 }

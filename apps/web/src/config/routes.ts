@@ -24,6 +24,8 @@ export const routes = {
   contest: (slug: string) => `/contests/${slug}`,
   contestProblem: (contestSlug: string, exerciseSlug: string) =>
     `/contests/${contestSlug}/problems/${exerciseSlug}`,
+  contestPracticeProblem: (contestSlug: string, exerciseSlug: string) =>
+    `/contests/${contestSlug}/practice/${exerciseSlug}`,
   assessments: "/assessments",
   assessment: (slug: string) => `/assessments/${slug}`,
   assessmentProblem: (assessmentSlug: string, exerciseSlug: string) =>

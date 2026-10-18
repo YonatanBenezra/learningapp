@@ -11,6 +11,9 @@ import {
   type SittingVariant,
 } from "@/features/sittings/sitting-config";
 import { ViewToggle, type LayoutView } from "./view-toggle";
+import { ContestCountdown } from "./contest-countdown";
+import { ContestLeaderboardSection } from "./contest-leaderboard-section";
+import { ContestVirtualSection } from "./contest-virtual-section";
 import "../contests.css";
 
 type ContestViewProps = {
@@ -246,11 +249,13 @@ function ProblemCard({
   problem,
   entryOver,
   problemHref,
+  pointsPerProblem,
 }: {
   contestSlug: string;
   problem: ContestProblem;
   entryOver: boolean;
   problemHref: (contestSlug: string, exerciseSlug: string) => string;
+  pointsPerProblem: number;
 }) {
   return (
     <article
@@ -266,7 +271,7 @@ function ProblemCard({
               problem.verdict ?? "unknown"
             }`}
           >
-            {problem.verdict ?? "scored"} · {problem.score ?? 0} pts
+            {problem.verdict ?? "scored"} · {problem.score ?? 0}/{pointsPerProblem}
           </span>
         ) : (
           <span className="lp-ctd-verdict lp-ctd-verdict--todo">Not solved</span>
@@ -306,6 +311,10 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
       const next = await api.enter(contest.slug);
       setContest(next);
     } catch (caught: unknown) {
+      if (caught instanceof ApiError && caught.status === 401) {
+        setError("Sign in to enter this contest.");
+        return;
+      }
       if (caught instanceof ApiError && caught.status === 403) {
         setError(labels.upgradeError);
         return;
@@ -343,6 +352,9 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
               {STATUS_LABELS[contest.status ?? "active"] ?? "Entered"}
             </span>
           ) : null}
+          {contest.samplingMode === "fixed_pool" ? (
+            <span className="lp-ct-badge lp-ct-badge--entered">Same problems</span>
+          ) : null}
           <span className="lp-ct-chip">Hints off</span>
         </div>
       </header>
@@ -363,7 +375,11 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
           <span>Solved</span>
         </div>
         <div className="lp-ct-fact">
-          <strong>{score ?? "—"}</strong>
+          <strong>
+            {contest.entered && score != null
+              ? `${score} / ${contest.maxScore}`
+              : `${contest.maxScore} max`}
+          </strong>
           <span>Score</span>
         </div>
         <div className="lp-ct-fact">
@@ -376,7 +392,25 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
         </div>
       </div>
 
-      {error ? <p className="lp-ctd-alert">{error}</p> : null}
+      <ContestCountdown
+        window={contest.window}
+        windowDeadlineAt={contest.windowDeadlineAt}
+        personalDeadlineAt={contest.personalDeadlineAt}
+      />
+
+      {error ? (
+        <p className="lp-ctd-alert">
+          {error}
+          {error === "Sign in to enter this contest." ? (
+            <>
+              {" "}
+              <Link href={routes.login} className="lp-link">
+                Sign in
+              </Link>
+            </>
+          ) : null}
+        </p>
+      ) : null}
 
       {!contest.entered ? (
         <section className="lp-ctd-enter-block" aria-label={labels.enterAction}>
@@ -454,10 +488,26 @@ export function ContestView({ initial, variant = "contest" }: ContestViewProps) 
                 problem={problem}
                 entryOver={entryOver}
                 problemHref={problemHref}
+                pointsPerProblem={contest.pointsPerProblem}
               />
             ))}
           </div>
         </section>
+      ) : null}
+
+      {variant === "contest" ? (
+        <ContestLeaderboardSection
+          slug={contest.slug}
+          seasonWindow={contest.window}
+          exportCsv={contest.window === "closed"}
+        />
+      ) : null}
+
+      {variant === "contest" && contest.virtualPracticeAvailable ? (
+        <ContestVirtualSection
+          slug={contest.slug}
+          pointsPerProblem={contest.pointsPerProblem}
+        />
       ) : null}
 
       {contest.scorecard ? (

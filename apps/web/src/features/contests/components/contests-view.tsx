@@ -2,8 +2,12 @@
 
 import { Clock, ShieldCheck, Trophy, Zap } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { routes } from "@/config/routes";
+import {
+  formatCountdown,
+  useDeadlineCountdown,
+} from "@/features/contests/contest-clock";
 import type { ContestListItem, ContestWindow } from "@/types/contest";
 import { contestsApi } from "../contests-api";
 import "../contests.css";
@@ -35,6 +39,9 @@ function actionLabel(contest: ContestListItem) {
   if (contest.entered && contest.window === "open") {
     return "Continue";
   }
+  if (contest.entered && contest.window === "closed") {
+    return "View results";
+  }
   return "View";
 }
 
@@ -48,7 +55,20 @@ function formatWindowRange(contest: ContestListItem) {
     month: "short",
     day: "numeric",
   });
-  return `${fmt.format(starts)} – ${fmt.format(ends)}`;
+  return `${fmt.format(starts)} – ${fmt.format(ends)} UTC`;
+}
+
+function ContestCardCountdown({ contest }: { contest: ContestListItem }) {
+  const remaining = useDeadlineCountdown(contest.windowDeadlineAt);
+  if (contest.window === "closed" || remaining == null) {
+    return null;
+  }
+  const label = contest.window === "upcoming" ? "Starts in" : "Ends in";
+  return (
+    <span className="lp-ct-chip lp-ct-chip--live">
+      {label} {formatCountdown(remaining)}
+    </span>
+  );
 }
 
 function ContestsHighlights() {
@@ -200,6 +220,10 @@ function ContestStudioCard({ contest }: { contest: ContestListItem }) {
           <strong>Pool {contest.problemCount}</strong>
           <span>Problems</span>
         </div>
+        <div className="lp-ct-fact">
+          <strong>{contest.maxScore}</strong>
+          <span>Max pts</span>
+        </div>
       </div>
 
       <div className="lp-ct-card-actions">
@@ -209,6 +233,7 @@ function ContestStudioCard({ contest }: { contest: ContestListItem }) {
         >
           {actionLabel(contest)}
         </Link>
+        <ContestCardCountdown contest={contest} />
         <span className="lp-ct-chip">{formatWindowRange(contest)}</span>
       </div>
     </article>
@@ -219,6 +244,7 @@ export function ContestsView() {
   const [items, setItems] = useState<ContestListItem[] | null>(null);
   const [error, setError] = useState<"load" | null>(null);
   const [filter, setFilter] = useState<FilterId>("all");
+  const autoFilterDone = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -227,6 +253,13 @@ export function ContestsView() {
       .then((result) => {
         if (!cancelled) {
           setItems(result.items);
+          if (
+            !autoFilterDone.current &&
+            result.items.some((contest) => contest.window === "open")
+          ) {
+            autoFilterDone.current = true;
+            setFilter("open");
+          }
         }
       })
       .catch((caught: unknown) => {
@@ -298,6 +331,7 @@ export function ContestsView() {
   }
 
   const catalogueEmpty = items.length === 0;
+  const liveContests = items.filter((contest) => contest.window === "open");
 
   return (
     <div className={`lp-ct${catalogueEmpty ? " lp-ct--idle" : ""}`}>
@@ -320,6 +354,24 @@ export function ContestsView() {
       </header>
 
       {catalogueEmpty ? <ContestsHighlights /> : null}
+
+      {liveContests.length > 0 ? (
+        <aside className="lp-ct-live-banner" aria-label="Live contests">
+          <span className="lp-ct-live-dot" aria-hidden />
+          <p>
+            <strong>
+              {liveContests.length === 1
+                ? "1 contest live now"
+                : `${liveContests.length} contests live now`}
+            </strong>
+            {" — "}
+            {liveContests.map((contest) => contest.title).join(", ")}
+          </p>
+          <Link href={routes.contest(liveContests[0].slug)} className="lp-ct-btn lp-ct-btn--ghost">
+            {liveContests.length === 1 ? "Open" : "Enter first"}
+          </Link>
+        </aside>
+      ) : null}
 
       {items.length > 0 ? (
         <div className="lp-ct-filters" role="tablist" aria-label="Filter contests">

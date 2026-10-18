@@ -42,6 +42,12 @@ async function assertContestJson() {
   if (spec.samplingMode !== 'fixed_pool') {
     errors.push('samplingMode should be fixed_pool');
   }
+  if (spec.pointsPerProblem !== 100) {
+    errors.push('pointsPerProblem should be 100 for weekly-advanced-1');
+  }
+  if (spec.pool.length * spec.pointsPerProblem !== 1500) {
+    errors.push('max score should be 1500 (15 × 100)');
+  }
   if (typeof spec.timeBoxMinutes !== 'number' || spec.timeBoxMinutes < 1) {
     errors.push('timeBoxMinutes must be set');
   }
@@ -66,7 +72,14 @@ async function assertDb() {
   try {
     const published = await prisma.contest.findMany({
       where: { kind: 'contest', isPublished: true },
-      select: { slug: true, title: true, sampleSize: true, timeBoxMinutes: true },
+      select: {
+        slug: true,
+        title: true,
+        sampleSize: true,
+        timeBoxMinutes: true,
+        samplingMode: true,
+        pointsPerProblem: true,
+      },
     });
     const weekly = published.filter((row) => row.slug === CONTEST_SLUG);
     if (weekly.length !== 1) {
@@ -81,7 +94,14 @@ async function assertDb() {
         throw new Error(`Legacy contest still published: ${slug}. Re-run content:seed-core-15.`);
       }
     }
-    console.log(`OK  DB published contest: ${weekly[0].slug} (${weekly[0].timeBoxMinutes} min)`);
+    if (weekly[0].samplingMode !== 'fixed_pool' || weekly[0].pointsPerProblem !== 100) {
+      throw new Error(
+        `Contest scoring not ingested (samplingMode=${weekly[0].samplingMode}, pointsPerProblem=${weekly[0].pointsPerProblem}). Re-run content:seed-core-15 after migrate.`,
+      );
+    }
+    console.log(
+      `OK  DB published contest: ${weekly[0].slug} (${weekly[0].timeBoxMinutes} min, fixed_pool, 1500 max)`,
+    );
     console.log(`OK  legacy contests unpublished`);
   } finally {
     await prisma.$disconnect();

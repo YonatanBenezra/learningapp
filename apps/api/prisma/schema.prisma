@@ -306,6 +306,13 @@ model UserSkillScore {
   @@schema("public")
 }
 
+enum ContestSamplingMode {
+  per_user
+  fixed_pool
+
+  @@schema("public")
+}
+
 model Contest {
   id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   slug           String           @unique
@@ -317,6 +324,9 @@ model Contest {
   endsAt         DateTime
   timeBoxMinutes Int
   sampleSize     Int
+  samplingMode   ContestSamplingMode @default(per_user)
+  pointsPerProblem Int            @default(100)
+  rankingIncludesActive Boolean     @default(true)
   isPublished    Boolean          @default(true)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt

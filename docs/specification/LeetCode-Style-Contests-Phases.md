@@ -86,24 +86,24 @@ Reference implementation: `apps/api/src/modules/contests/contests.service.ts`, `
 
 ### 1.1 Web — contest hub
 
-- [ ] `/contests`: group or filter **Upcoming | Live | Past** using API `window`.
-- [ ] Contest cards: title, dates (UTC), duration, problem count, **Enter** / **Continue** / **View results**.
-- [ ] Dashboard / home: optional **“Live now”** strip linking to open contest(s).
+- [x] `/contests`: filter **Upcoming | Live | Past** using API `window` (defaults to Live when open).
+- [x] Contest cards: title, dates (UTC), duration, problem count, **Enter** / **Continue** / **View results**.
+- [x] Contests hub **“Live now”** banner when `window === open`.
 
 ### 1.2 Timers
 
-- [ ] **Global window:** “Starts in …” / “Ends in …” on contest detail.
-- [ ] **Personal time box:** after enter, show **time remaining** (from `startedAt` + `timeBoxMinutes`).
-- [ ] Contest workspace header: same countdown; disable actions when expired (match API).
+- [x] **Global window:** “Starts in …” / “Ends in …” on contest detail (+ list cards).
+- [x] **Personal time box:** after enter, show **time remaining** (`personalDeadlineAt` from API).
+- [x] Contest workspace: sitting countdown bar (submit still blocked by API when expired).
 
 ### 1.3 States & copy
 
-- [ ] Clear messages: not entered, active, finished, expired (reuse `ContestEntryStatus`).
-- [ ] Sign-in gate on enter (401 → sign-in link).
+- [x] Clear messages: not entered, active, finished, expired (reuse `ContestEntryStatus`).
+- [x] Sign-in gate on enter (401 → sign-in link).
 
 ### API changes
 
-- Minimal: expose `startedAt` on contest detail if not already; optional `timeRemainingMs` computed server-side for clock sync.
+- [x] `startedAt`, `windowDeadlineAt`, `personalDeadlineAt` on contest detail/list; `clock` on contest exercise payload.
 
 ### Acceptance
 
@@ -120,7 +120,7 @@ Reference implementation: `apps/api/src/modules/contests/contests.service.ts`, `
 
 1. **Primary:** `totalScore` descending.
 2. **Tie-break:** `elapsedMs` ascending (faster sitting wins).
-3. **Include rows:** `finished` and `expired` with at least one graded problem; optional: show `active` with partial score (flag).
+3. **Include rows:** `active`, `finished`, and `expired` entrants (partial scores while in progress).
 
 Partial score for **active** entries:
 
@@ -129,7 +129,7 @@ Partial score for **active** entries:
 
 ### 2.2 API
 
-- [ ] `GET /api/contests/:slug/leaderboard?page=&pageSize=`
+- [x] `GET /api/contests/:slug/leaderboard?page=&pageSize=`
   - Response: `{ items: [{ rank, displayName, totalScore, elapsedMs, solvedCount, totalCount, status }], total, contest: { slug, window } }`
   - Auth: public read for published contest (or signed-in only — decide in implementation).
 - [ ] Efficient query on `contest_entries` filtered by `contestId`; index review `(contestId, status, totalScore DESC)`.
@@ -137,9 +137,10 @@ Partial score for **active** entries:
 
 ### 2.3 Web
 
-- [ ] Contest detail: **Rankings** section (table + pagination).
-- [ ] Poll every 60s while contest `window === 'open'` and user on page (or manual Refresh).
-- [ ] Highlight **current user** row when signed in.
+- [x] Contest detail: **Rankings** section (table; page 1 default).
+- [x] Poll every 60s while contest `window === 'open'` (or manual Refresh).
+- [x] Highlight **current user** row when signed in.
+- [x] Pagination UI when `total > pageSize`.
 
 ### Acceptance
 
@@ -170,12 +171,12 @@ Extend contest JSON (backward compatible defaults):
 
 ### 3.2 Scorecard
 
-- [ ] `maxScore = sampledCount * pointsPerProblem`
-- [ ] UI: `totalScore / maxScore` on contest detail and workspace.
+- [x] `maxScore = sampledCount * pointsPerProblem`
+- [x] UI: `totalScore / maxScore` on contest detail and workspace.
 
 ### 3.3 Ingest
 
-- [ ] `upsert-contests.mjs` reads new fields → DB columns or JSON `settings` on `Contest`.
+- [x] `upsert-contests.mjs` → `samplingMode`, `pointsPerProblem`, `rankingIncludesActive` on `Contest`.
 
 ### Acceptance
 
@@ -186,9 +187,10 @@ Extend contest JSON (backward compatible defaults):
 
 ## Phase 4 — Virtual & past contests (optional, ≈1–2 weeks)
 
-- [ ] **Virtual:** After `window === 'closed'`, allow “Practice this contest” — attempts **not** linked to `ContestEntry` or leaderboard.
-- [ ] Past contest page: final standings frozen, problems read-only or practice links.
-- [ ] Export CSV of standings for hosts.
+- [x] **Virtual:** After `window === 'closed'`, `GET/POST .../virtual/*` — attempts **without** `contestEntryId`.
+- [x] Past contest page: final standings + **Virtual practice** grid (`/contests/[slug]/practice/...`).
+- [x] Export CSV: `GET /api/contests/:slug/leaderboard/export.csv` (published contests).
+- [x] Live contest workspace restored at `/contests/[slug]/problems/...` (was redirecting to `/problems`).
 
 ---
 
@@ -204,15 +206,13 @@ Extend contest JSON (backward compatible defaults):
 
 Today `Contest` has: `startsAt`, `endsAt`, `timeBoxMinutes`, `sampleSize`, `pool` via `contest_problems`.
 
-Phase 3 may add:
-
 | Field | Type | Purpose |
 |-------|------|---------|
 | `samplingMode` | enum | `per_user` \| `fixed_pool` |
 | `pointsPerProblem` | int | default 100 |
 | `rankingIncludesActive` | bool | show partial scores on leaderboard |
 
-Migration only when Phase 3 starts.
+Migration: `20261018120000_contest_scoring_settings`.
 
 ---
 

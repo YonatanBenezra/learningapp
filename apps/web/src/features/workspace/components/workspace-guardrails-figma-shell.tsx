@@ -31,6 +31,7 @@ type WorkspaceGuardrailsFigmaShellProps = {
   slug: string;
   exercise: Exercise;
   pathSlug?: string;
+  backHref?: string;
   hints?: HintList | null;
   run: Run | null;
   grade: Grade | null;
@@ -48,6 +49,7 @@ type WorkspaceGuardrailsFigmaShellProps = {
 export function WorkspaceGuardrailsFigmaShell({
   exercise,
   pathSlug,
+  backHref,
   hints = null,
   run,
   grade,
@@ -153,6 +155,8 @@ export function WorkspaceGuardrailsFigmaShell({
   const levelChrome = (
     <GuardrailsWorkspaceChrome
       exercise={exercise}
+      backHref={backHref}
+      backLabel={backHref ? "Contest" : "Problems"}
       levelTitle={
         activeLevelCleared
           ? variant === "g2"
@@ -266,6 +270,8 @@ export function WorkspaceGuardrailsFigmaShell({
       {variant === "g3" ? (
         <GuardrailsWorkspaceChrome
           exercise={exercise}
+          backHref={backHref}
+          backLabel={backHref ? "Contest" : "Problems"}
           levelTitle="Defence stack"
           levelProgress={grade?.verdict === "pass" ? 1 : 0.55}
           levelCleared={grade?.verdict === "pass"}

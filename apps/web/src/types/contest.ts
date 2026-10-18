@@ -13,6 +13,37 @@ export type ContestListItem = {
   window: ContestWindow;
   entered: boolean;
   canEnter: boolean;
+  startedAt: string | null;
+  windowDeadlineAt: string | null;
+  personalDeadlineAt: string | null;
+  samplingMode: "fixed_pool" | "per_user";
+  pointsPerProblem: number;
+  maxScore: number;
+};
+
+export type ContestScoring = {
+  pointsPerProblem: number;
+  maxScore: number;
+  entryTotalScore?: number;
+};
+
+export type ContestVirtualDetail = {
+  slug: string;
+  title: string;
+  mode: "virtual";
+  sampleSeed: string;
+  sampledCount: number;
+  pointsPerProblem: number;
+  maxScore: number;
+  problems: ContestProblem[];
+};
+
+export type ContestSittingClock = {
+  window: ContestWindow;
+  startedAt: string | null;
+  windowDeadlineAt: string | null;
+  personalDeadlineAt: string | null;
+  entryStatus: "active" | "finished" | "expired";
 };
 
 export type ContestProblem = {
@@ -26,6 +57,7 @@ export type ContestProblem = {
 };
 
 export type ContestDetail = ContestListItem & {
+  virtualPracticeAvailable: boolean;
   sampleSeed: string | null;
   sampledCount: number;
   totalScore: number | null;
@@ -76,6 +108,32 @@ export type ContestListResponse = {
   items: ContestListItem[];
 };
 
+export type ContestLeaderboardItem = {
+  rank: number;
+  displayName: string;
+  profileSlug: string | null;
+  totalScore: number;
+  elapsedMs: number | null;
+  solvedCount: number;
+  totalCount: number;
+  status: "active" | "finished" | "expired";
+  isYou: boolean;
+};
+
+export type ContestLeaderboard = {
+  contest: {
+    slug: string;
+    title: string;
+    window: ContestWindow;
+    pointsPerProblem: number;
+    maxScore: number;
+  };
+  page: number;
+  pageSize: number;
+  total: number;
+  items: ContestLeaderboardItem[];
+};
+
 export type ContestExercise = {
   slug: string;
   version: number;
@@ -88,4 +146,7 @@ export type ContestExercise = {
   publicSample: unknown;
   contestSlug: string;
   hintsDisabled: boolean;
+  mode?: "virtual";
+  clock?: ContestSittingClock;
+  scoring?: ContestScoring;
 };

@@ -1,6 +1,6 @@
 import type { Grade } from '@prisma/client';
 
-export function itemScoreFromGrade(
+export function gradeScore0to100(
   grade: Pick<Grade, 'verdict' | 'metrics'>,
 ): number {
   const metrics = grade.metrics as Record<string, { value?: number }> | null;
@@ -11,6 +11,23 @@ export function itemScoreFromGrade(
     return Math.round(metrics.pass.value * 100);
   }
   return grade.verdict === 'pass' ? 100 : 0;
+}
+
+export function scaleItemScore(
+  raw0to100: number,
+  pointsPerProblem: number,
+): number {
+  if (pointsPerProblem === 100) {
+    return raw0to100;
+  }
+  return Math.round((raw0to100 / 100) * pointsPerProblem);
+}
+
+export function itemScoreFromGrade(
+  grade: Pick<Grade, 'verdict' | 'metrics'>,
+  pointsPerProblem = 100,
+): number {
+  return scaleItemScore(gradeScore0to100(grade), pointsPerProblem);
 }
 
 export function sumItemScores(scores: number[]): number {

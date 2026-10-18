@@ -37,6 +37,12 @@ export async function upsertAllContests(prisma) {
       }
     }
 
+    const samplingMode =
+      spec.samplingMode === 'fixed_pool' ? 'fixed_pool' : 'per_user';
+    const pointsPerProblem =
+      typeof spec.pointsPerProblem === 'number' ? spec.pointsPerProblem : 100;
+    const rankingIncludesActive = spec.rankingIncludesActive !== false;
+
     await prisma.contest.upsert({
       where: { slug: spec.slug },
       create: {
@@ -47,6 +53,9 @@ export async function upsertAllContests(prisma) {
         endsAt: new Date(spec.endsAt),
         timeBoxMinutes: spec.timeBoxMinutes ?? 90,
         sampleSize: spec.sampleSize ?? 2,
+        samplingMode,
+        pointsPerProblem,
+        rankingIncludesActive,
         seasonKey: spec.seasonKey ?? null,
         isPublished: spec.isPublished !== false,
         problems: {
@@ -63,6 +72,9 @@ export async function upsertAllContests(prisma) {
         endsAt: new Date(spec.endsAt),
         timeBoxMinutes: spec.timeBoxMinutes ?? 90,
         sampleSize: spec.sampleSize ?? 2,
+        samplingMode,
+        pointsPerProblem,
+        rankingIncludesActive,
         seasonKey: spec.seasonKey ?? null,
         isPublished: spec.isPublished !== false,
         problems: {

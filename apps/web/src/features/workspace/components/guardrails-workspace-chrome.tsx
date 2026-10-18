@@ -8,6 +8,8 @@ import type { Exercise } from "@/types/exercise";
 
 type GuardrailsWorkspaceChromeProps = {
   exercise: Exercise;
+  backHref?: string;
+  backLabel?: string;
   levelTitle: string;
   levelProgress?: number;
   levelCleared?: boolean;
@@ -21,6 +23,8 @@ type GuardrailsWorkspaceChromeProps = {
 
 export function GuardrailsWorkspaceChrome({
   exercise,
+  backHref,
+  backLabel = "Problems",
   levelTitle,
   levelProgress = 0.55,
   levelCleared = false,
@@ -34,7 +38,7 @@ export function GuardrailsWorkspaceChrome({
   return (
     <header className="lp-grd-chrome">
       <nav className="lp-grd-chrome-crumb" aria-label="Breadcrumb">
-        <Link href={routes.problems}>Problems</Link>
+        <Link href={backHref ?? routes.problems}>{backLabel}</Link>
         <span aria-hidden>/</span>
         <Link href={`${routes.problems}?track=guardrails`}>{SIMULATOR_LABELS.guardrails}</Link>
         <span aria-hidden>/</span>
