@@ -2,14 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
-import { ContestView } from "@/features/contests/components/contest-view";
+import { EventLobby } from "@/components/arena/lobby/EventLobby";
+import { LobbySkeleton } from "@/components/arena/lobby/LobbySkeleton";
+import { EventPlay } from "@/components/arena/play/EventPlay";
+import { ArenaPage } from "@/components/arena/ArenaPage";
 import { contestsApi } from "@/features/contests/contests-api";
 import { ApiError } from "@/lib/api-client";
 import type { ContestDetail } from "@/types/contest";
 import "../contests.css";
 
-export function ContestDetailView({ slug }: { slug: string }) {
+function useContestDetail(slug: string) {
   const [contest, setContest] = useState<ContestDetail | null>(null);
   const [error, setError] = useState<"auth" | "load" | null>(null);
 
@@ -35,32 +39,93 @@ export function ContestDetailView({ slug }: { slug: string }) {
     };
   }, [slug]);
 
+  return { contest, error };
+}
+
+function ContestAuthError() {
+  return (
+    <main className="lp-ws-state">
+      <p>
+        Sign in to view contests.{" "}
+        <Link href={routes.login} className="lp-link">
+          Sign in
+        </Link>
+      </p>
+    </main>
+  );
+}
+
+function ContestLoadError() {
+  return (
+    <main className="lp-ws-state">
+      <p>Could not load this contest.</p>
+    </main>
+  );
+}
+
+/** Pre-join event lobby at `/contests/[slug]`. */
+export function ContestLobbyView({ slug }: { slug: string }) {
+  const router = useRouter();
+  const { contest, error } = useContestDetail(slug);
+
+  useEffect(() => {
+    if (contest?.entered) {
+      router.replace(routes.contestPlay(slug));
+    }
+  }, [contest?.entered, router, slug]);
+
   if (error === "auth") {
-    return (
-      <main className="lp-ws-state">
-        <p>
-          Sign in to view contests.{" "}
-          <Link href={routes.login} className="lp-link">
-            Sign in
-          </Link>
-        </p>
-      </main>
-    );
+    return <ContestAuthError />;
   }
-
   if (error === "load") {
+    return <ContestLoadError />;
+  }
+  if (!contest || contest.entered) {
     return (
-      <main className="lp-ws-state">
-        <p>Could not load this contest.</p>
-      </main>
+      <ArenaPage>
+        <LobbySkeleton />
+      </ArenaPage>
     );
   }
 
-  if (!contest) {
+  return (
+    <ArenaPage>
+      <EventLobby initialContest={contest} />
+    </ArenaPage>
+  );
+}
+
+/** Joined operator dashboard at `/contests/[slug]/play`. */
+export function ContestPlayView({ slug }: { slug: string }) {
+  const router = useRouter();
+  const { contest, error } = useContestDetail(slug);
+
+  useEffect(() => {
+    if (contest && !contest.entered) {
+      router.replace(routes.contest(slug));
+    }
+  }, [contest, router, slug]);
+
+  if (error === "auth") {
+    return <ContestAuthError />;
+  }
+  if (error === "load") {
+    return <ContestLoadError />;
+  }
+  if (!contest || !contest.entered) {
     return <ContestDetailSkeleton />;
   }
 
-  return <ContestView initial={contest} />;
+  return (
+    <ArenaPage>
+      <EventPlay initial={contest} />
+    </ArenaPage>
+  );
+}
+
+/** @deprecated Use {@link ContestLobbyView} or {@link ContestPlayView}. */
+export function ContestDetailView({ slug }: { slug: string }) {
+  return <ContestLobbyView slug={slug} />;
 }
 
 export function ContestDetailSkeleton() {

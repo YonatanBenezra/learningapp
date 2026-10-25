@@ -1,0 +1,114 @@
+/* Arena contests hub — responsive layout */
+
+html[data-workspace="catalog"]:has(.arena-page) {
+  overflow-x: clip;
+}
+
+.arena-page {
+  width: 100%;
+  min-width: 0;
+}
+
+.arena-hub {
+  --arena-hub-pad: 0.625rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--arena-hub-pad);
+}
+
+@media (min-width: 640px) {
+  .arena-hub {
+    --arena-hub-pad: 1.25rem;
+    max-width: min(1520px, calc(100% - 2rem));
+  }
+}
+
+@media (min-width: 768px) {
+  .arena-hub {
+    --arena-hub-pad: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .arena-hub {
+    --arena-hub-pad: 0px;
+    width: var(--lp-catalog-content-width, min(1520px, calc(100% - 2rem)));
+    max-width: none;
+  }
+}
+
+.arena-tabs-scroll {
+  margin-inline: calc(-1 * var(--arena-hub-pad));
+  padding-inline: var(--arena-hub-pad);
+}
+
+@media (min-width: 640px) {
+  .arena-tabs-scroll {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
+/* Event lobby — spec content shell (1360px, 40px padding desktop) */
+.arena-lobby.arena-hub {
+  gap: 1.75rem;
+}
+
+.arena-play.arena-hub {
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .arena-play.arena-hub {
+    width: 100%;
+    max-width: 1360px;
+    padding-inline: 2.5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .arena-lobby.arena-hub {
+    width: 100%;
+    max-width: 1360px;
+    padding-inline: 2.5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+    gap: 1.75rem;
+  }
+}
+
+.arena-lobby-columns {
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .arena-lobby-columns {
+    gap: 1.5rem;
+  }
+
+  .arena-lobby-main,
+  .arena-lobby-side {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 639px) {
+  html[data-workspace="catalog"]:has(.arena-page) {
+    --lp-catalog-content-width: calc(100% - 1.25rem);
+  }
+
+  html[data-workspace="catalog"]:has(.arena-page) .lp-site-nav-right {
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  html[data-workspace="catalog"]:has(.arena-page) .lp-site-nav-inner {
+    gap: 0.5rem;
+    max-width: calc(100% - 1.25rem);
+  }
+}

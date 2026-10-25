@@ -155,7 +155,7 @@ html[data-theme="dark"] .lp-site-nav--hero:not(.is-scrolled)::after {
 }
 
 .lp-site-nav--hero.is-scrolled,
-.lp-site-nav.is-scrolled:not(.lp-site-nav--hero) {
+.lp-site-nav.is-scrolled:not(.lp-site-nav--hero):not(.lp-site-nav--contests) {
   border-bottom-color: var(--lp-border-subtle, var(--color-line));
   background: color-mix(in srgb, var(--color-bg) 78%, transparent);
   backdrop-filter: blur(16px) saturate(1.15);
@@ -164,7 +164,8 @@ html[data-theme="dark"] .lp-site-nav--hero:not(.is-scrolled)::after {
 }
 
 html[data-theme="dark"] .lp-site-nav--hero.is-scrolled,
-html[data-theme="dark"] .lp-site-nav.is-scrolled:not(.lp-site-nav--hero) {
+html[data-theme="dark"]
+  .lp-site-nav.is-scrolled:not(.lp-site-nav--hero):not(.lp-site-nav--contests) {
   box-shadow: none;
 }
 
@@ -185,7 +186,7 @@ html[data-theme="dark"] .lp-site-nav.is-scrolled:not(.lp-site-nav--hero) {
   transition: height 0.25s ease;
 }
 
-.lp-site-nav.is-scrolled .lp-site-nav-inner {
+.lp-site-nav.is-scrolled:not(.lp-site-nav--contests) .lp-site-nav-inner {
   height: var(--lp-dash-nav-h-scrolled, 3.5rem);
 }
 
@@ -684,4 +685,95 @@ html[data-theme="dark"] .lp-site-nav.is-scrolled:not(.lp-site-nav--hero) {
   .lp-site-nav-mobile {
     display: none !important;
   }
+}
+
+/* Contests hub — match Arena page chrome */
+html[data-workspace="catalog"]:has(.arena-page) {
+  --lp-catalog-content-width: min(1520px, calc(100% - 2rem));
+  --lp-dash-nav-gap: 0px;
+}
+
+html[data-workspace="catalog"]:has(.arena-page) .ag-page,
+html[data-workspace="catalog"]:has(.arena-page) .lp-app,
+html[data-workspace="catalog"]:has(.arena-page) .lp-main {
+  background: var(--arena-bg);
+}
+
+html[data-workspace="catalog"]:has(.arena-page) .lp-main.lp-app-main {
+  padding-top: var(--lp-dash-nav-offset);
+}
+
+.lp-site-nav--contests {
+  border-bottom-color: transparent;
+  background: var(--arena-bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.lp-site-nav--contests.is-scrolled {
+  border-bottom-color: var(--arena-line);
+  background: color-mix(in srgb, var(--arena-bg) 94%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: none;
+}
+
+.lp-site-nav--contests.is-scrolled .lp-site-nav-inner,
+.lp-site-nav--contests .lp-site-nav-inner {
+  height: var(--lp-dash-nav-h, 4.5rem);
+}
+
+.lp-site-nav-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.65rem;
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, #ff4d4d 35%, #1e2738);
+  background: color-mix(in srgb, #ff4d4d 8%, #0d1117);
+  font-family: var(--lp-font-mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #f0f3f6;
+  max-width: min(22rem, 42vw);
+}
+
+.lp-site-nav-live-pill:hover {
+  filter: brightness(1.06);
+}
+
+.lp-site-nav-live-dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: #ff4d4d;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #ff4d4d 25%, transparent);
+  flex-shrink: 0;
+}
+
+.lp-site-nav-live-label {
+  color: #ff6b6b;
+}
+
+.lp-site-nav-live-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  color: color-mix(in srgb, #f0f3f6 88%, transparent);
+}
+
+.lp-site-nav-live-sep {
+  color: color-mix(in srgb, #8b949e 80%, transparent);
+}
+
+.lp-site-nav-live-time {
+  color: #a3ff12;
+  white-space: nowrap;
 }

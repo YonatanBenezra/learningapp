@@ -34,7 +34,6 @@ const FOOT_NAV = [
   {
     label: "Company",
     links: [
-      { label: "About Bina", href: "https://bina.inc" },
       { label: "Docs", href: "https://github.com/Bina-Labs/Labpath" },
       { label: "Contact", href: "mailto:hello@labpath.dev" },
     ],
@@ -167,8 +166,6 @@ export function HomeLandingFooter() {
             <div className="lp-home-foot-logo-row">
               <LabpathLogoMark />
               <span className="lp-home-foot-wordmark">{brand.name}</span>
-              <span className="lp-home-foot-divider" aria-hidden />
-              <span className="lp-home-foot-endorse">{brand.endorsement}</span>
             </div>
             <p className="lp-home-foot-desc">
               Practice platform for AI engineering. Graded exercises, hidden eval sets and full
@@ -271,7 +268,7 @@ export function HomeLandingFooter() {
         </div>
 
         <FadeUpBlock show={inView} delay={0.3} className="lp-home-foot-legal">
-          <span className="lp-home-foot-copy">© 2026 Bina</span>
+          <span className="lp-home-foot-copy">© 2026 LabPath</span>
           <div className="lp-home-foot-legal-links">
             {LEGAL_LINKS.map((link) => (
               <Link key={link.label} href={link.href} className="lp-home-foot-legal-link">

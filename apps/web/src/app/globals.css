@@ -11,6 +11,26 @@
 @custom-variant dark (&:is(.dark *, html[data-theme="dark"] *));
 
 :root {
+  /* Arena / contests hub */
+  --arena-bg: #f6f7f9;
+  --arena-surface: #ffffff;
+  --arena-surface-2: #ffffff;
+  --arena-terminal: #f1f4f7;
+  --arena-line: rgba(11, 18, 32, 0.09);
+  --arena-line-2: rgba(11, 18, 32, 0.15);
+  --arena-ink: #0b1220;
+  --arena-text-2: #4a5568;
+  --arena-text-3: #7b8597;
+  --arena-lime: #a6f23b;
+  --arena-lime-fg: #3f7a00;
+  --arena-cyan: #0891b2;
+  --arena-red: #e11d48;
+  --arena-amber: #b45309;
+  --arena-purple: #7c3aed;
+  --arena-medal-gold: #b7861a;
+  --arena-medal-silver: #8a94a6;
+  --arena-medal-bronze: #b5672e;
+
   --lp-page-max-width: 1200px;
   --radius: var(--lp-radius-md);
   color-scheme: light;
@@ -48,6 +68,25 @@
 }
 
 html[data-theme="dark"] {
+  --arena-bg: #070b12;
+  --arena-surface: #0f1622;
+  --arena-surface-2: #141d2b;
+  --arena-terminal: #05080d;
+  --arena-line: rgba(255, 255, 255, 0.07);
+  --arena-line-2: rgba(255, 255, 255, 0.12);
+  --arena-ink: #e6edf5;
+  --arena-text-2: #8f9bb0;
+  --arena-text-3: #5b677c;
+  --arena-lime: #a6f23b;
+  --arena-lime-fg: #a6f23b;
+  --arena-cyan: #3bd5f2;
+  --arena-red: #ff4d6d;
+  --arena-amber: #ffb547;
+  --arena-purple: #b07cff;
+  --arena-medal-gold: #f5c451;
+  --arena-medal-silver: #c9d1dc;
+  --arena-medal-bronze: #d9925b;
+
   --background: var(--color-bg);
   --foreground: var(--color-ink);
   color-scheme: dark;
@@ -72,6 +111,11 @@ html[data-theme="dark"] {
   --color-lp-status-pass: var(--color-status-pass);
   --color-lp-status-fail: var(--color-status-fail);
   --color-lp-status-warn: var(--color-status-warn);
+  --color-arena-bg: var(--arena-bg);
+  --color-arena-surface: var(--arena-surface);
+  --color-arena-ink: var(--arena-ink);
+  --color-arena-lime: var(--arena-lime);
+  --color-arena-lime-fg: var(--arena-lime-fg);
   --height-dash-nav: 3.25rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);

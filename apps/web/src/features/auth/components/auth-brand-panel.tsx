@@ -65,8 +65,6 @@ export function AuthBrandPanel() {
         <Link href={routes.home} className="lp-auth-figma-logo-row">
           <LabpathLogoMark />
           <span className="lp-auth-figma-wordmark">LabPath</span>
-          <span className="lp-auth-figma-logo-divider" aria-hidden />
-          <span className="lp-auth-figma-byline">by Bina</span>
         </Link>
 
         <div className="lp-auth-figma-brand-spacer" />

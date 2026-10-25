@@ -28,8 +28,6 @@ export function AuthMobileHero() {
         <Link href={routes.home} className="lp-auth-figma-logo-row">
           <LabpathLogoMark />
           <span className="lp-auth-figma-wordmark">LabPath</span>
-          <span className="lp-auth-figma-logo-divider" aria-hidden />
-          <span className="lp-auth-figma-byline">by Bina</span>
         </Link>
 
         <h1 className="lp-auth-figma-headline lp-auth-figma-headline--mobile">

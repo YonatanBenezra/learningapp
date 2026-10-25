@@ -86,7 +86,11 @@ export function ContestLeaderboardSection({
   }
 
   return (
-    <section className="lp-ctd-leaderboard" aria-label="Rankings">
+    <section
+      id="scoreboard"
+      className="lp-ctd-leaderboard scroll-mt-24"
+      aria-label="Rankings"
+    >
       <div className="lp-ctd-section-head">
         <div>
           <h2 className="lp-ctd-section-title">Rankings</h2>

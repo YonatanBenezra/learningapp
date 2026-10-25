@@ -13,12 +13,15 @@ function windowLabel(window: ContestListItem["window"]): string {
 }
 
 export function ContestCard({ contest }: { contest: ContestListItem }) {
-  const href = routes.contest(contest.slug);
+  let href = routes.contest(contest.slug);
   let action = "View";
   if (contest.canEnter) {
     action = "Enter";
   } else if (contest.entered && contest.window === "open") {
     action = "Continue";
+    href = routes.contestPlay(contest.slug);
+  } else if (contest.entered) {
+    href = routes.contestPlay(contest.slug);
   }
 
   return (

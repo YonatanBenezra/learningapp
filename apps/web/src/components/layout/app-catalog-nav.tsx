@@ -9,6 +9,7 @@ import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 import { CatalogNavHeaderAuth, CatalogNavAuth } from "@/components/layout/nav-auth-slot";
+import { LiveEventPill } from "@/components/nav/LiveEventPill";
 import { ThemeToggle } from "@/features/theme/theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -50,6 +51,8 @@ export function AppCatalogNav() {
   const isHome = pathname === routes.home;
   const isProblems = pathname === routes.problems;
   const isLeaderboard = pathname === routes.leaderboard;
+  const isContests =
+    pathname === routes.contests || pathname.startsWith("/contests/");
   useEffect(() => {
     document.documentElement.dataset.workspace = "catalog";
     return () => {
@@ -81,6 +84,7 @@ export function AppCatalogNav() {
         isHome && "lp-site-nav--hero",
         isProblems && "lp-site-nav--problems",
         isLeaderboard && "lp-site-nav--leaderboard",
+        isContests && "lp-site-nav--contests",
         (scrolled || isProblems || isLeaderboard) && "is-scrolled",
       )}
     >
@@ -90,15 +94,13 @@ export function AppCatalogNav() {
             <LabpathLogo size="md" showWordmark wordmarkClassName="max-[380px]:hidden" />
           </Link>
 
-          <span className="lp-site-nav-vrule lp-site-nav-vrule--brand" aria-hidden />
-          <span className="lp-site-nav-endorsement max-[520px]:hidden">{brand.endorsement}</span>
-
           <div className="max-[899px]:hidden lp-site-nav-links">
             <NavbarMenu items={menuItems} />
           </div>
         </div>
 
         <div className="lp-site-nav-right">
+          <LiveEventPill />
           <div className="max-[899px]:hidden">
             <ThemeToggle variant="nav" />
           </div>

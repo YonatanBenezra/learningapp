@@ -1,0 +1,30 @@
+{
+  "slug": "weekly-advanced-2",
+  "title": "Weekly Contest #2 — Advanced",
+  "intent": "Second weekly sprint: same fixed pool for all entrants, 180-minute personal timer, dynamic scoring on solve order.",
+  "seasonKey": "2026-W44",
+  "samplingMode": "fixed_pool",
+  "pointsPerProblem": 100,
+  "startsAt": "2026-10-27T12:00:00.000Z",
+  "endsAt": "2026-11-03T12:00:00.000Z",
+  "timeBoxMinutes": 180,
+  "sampleSize": 15,
+  "isPublished": true,
+  "pool": [
+    "rag-025-adv-cost-ceiling",
+    "rag-026-adv-chunk-balance",
+    "rag-027-adv-citation-contract",
+    "rag-028-adv-rerank-rethink",
+    "rag-029-adv-python-retriever",
+    "rag-030-adv-score-gate",
+    "grd-017-adv-indirect-payload",
+    "grd-018-adv-encoding-trick",
+    "grd-019-adv-hex-extract",
+    "grd-020-adv-bcc-smuggle",
+    "grd-021-adv-page-inject",
+    "grd-022-adv-filter-stack",
+    "grd-023-adv-wilson-gate",
+    "grd-024-adv-benign-pass",
+    "grd-025-adv-policy-window"
+  ]
+}

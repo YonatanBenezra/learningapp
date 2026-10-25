@@ -22,6 +22,8 @@ export const routes = {
   leaderboard: "/leaderboard",
   contests: "/contests",
   contest: (slug: string) => `/contests/${slug}`,
+  contestPlay: (slug: string) => `/contests/${slug}/play`,
+  contestScoreboard: (slug: string) => `/contests/${slug}#scoreboard`,
   contestProblem: (contestSlug: string, exerciseSlug: string) =>
     `/contests/${contestSlug}/problems/${exerciseSlug}`,
   contestPracticeProblem: (contestSlug: string, exerciseSlug: string) =>

@@ -34,7 +34,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: brand.name,
-  description: `${brand.description} ${brand.endorsement}.`,
+  description: brand.description,
   icons: {
     icon: "/brand/labpath-logo.png",
     apple: "/brand/labpath-logo.png",
