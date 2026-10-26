@@ -36,6 +36,24 @@ function categoryFromSlug(slug: string): ArenaCategoryId {
   return "retrieval";
 }
 
+export function mockSolveTime(slug: string): string {
+  let h = 0;
+  for (let i = 0; i < slug.length; i += 1) {
+    h = (h + slug.charCodeAt(i) * 13) % 3600;
+  }
+  const m = Math.floor(h / 60);
+  const s = h % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+export function mockAttemptTries(slug: string): number {
+  let h = 0;
+  for (let i = 0; i < slug.length; i += 1) {
+    h = (h + slug.charCodeAt(i)) % 5;
+  }
+  return 2 + h;
+}
+
 function mockSolves(slug: string): number {
   let h = 0;
   for (let i = 0; i < slug.length; i += 1) {

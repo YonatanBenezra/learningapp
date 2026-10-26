@@ -693,6 +693,11 @@ html[data-workspace="catalog"]:has(.arena-page) {
   --lp-dash-nav-gap: 0px;
 }
 
+/* Play dashboard — same content width as navbar (no extra 1360px cap) */
+html[data-workspace="catalog"]:has(.arena-play) {
+  --lp-catalog-content-width: min(1520px, calc(100% - 2rem));
+}
+
 html[data-workspace="catalog"]:has(.arena-page) .ag-page,
 html[data-workspace="catalog"]:has(.arena-page) .lp-app,
 html[data-workspace="catalog"]:has(.arena-page) .lp-main {

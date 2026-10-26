@@ -1,0 +1,199 @@
+.play-hero-bar {
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--arena-line);
+  background: var(--arena-surface);
+}
+
+.play-hero-bar__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+@media (min-width: 960px) {
+  .play-hero-bar__row {
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 92px;
+  }
+}
+
+.play-hero-bar__seg {
+  position: relative;
+  min-width: 0;
+  padding: 0.9rem 1.15rem;
+}
+
+@media (min-width: 960px) {
+  .play-hero-bar__seg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.85rem 1.35rem;
+  }
+
+  .play-hero-bar__seg:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 1px;
+    background: var(--arena-line);
+  }
+
+  .play-hero-bar__seg--title {
+    flex: 0 1 220px;
+    min-width: 200px;
+    max-width: 280px;
+  }
+
+  .play-hero-bar__seg--stat {
+    flex: 0 0 auto;
+  }
+
+  .play-hero-bar__seg--clock {
+    flex: 1.35 1 360px;
+    min-width: 280px;
+  }
+
+  .play-hero-bar__seg--pair {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 1.75rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .play-hero-bar__seg + .play-hero-bar__seg {
+    border-top: none;
+  }
+}
+
+@media (max-width: 959px) {
+  .play-hero-bar__seg + .play-hero-bar__seg {
+    border-top: 1px solid var(--arena-line);
+  }
+}
+
+.play-hero-stat__label {
+  margin: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--arena-text-3);
+}
+
+.play-hero-stat__value {
+  margin-top: 0.4rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--arena-ink);
+}
+
+.play-hero-stat__value--points {
+  color: var(--arena-lime-fg);
+}
+
+.play-hero-stat__suffix {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--arena-text-3);
+}
+
+.play-hero-stat__delta {
+  margin-left: 0.15rem;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--arena-lime-fg);
+  vertical-align: middle;
+}
+
+.play-hero-live {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--arena-red);
+}
+
+.play-hero-live__dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  background: var(--arena-red);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--arena-red) 55%, transparent);
+}
+
+.play-hero-title {
+  margin: 0.55rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--arena-ink);
+}
+
+@media (min-width: 640px) {
+  .play-hero-title {
+    font-size: 1.0625rem;
+  }
+}
+
+.play-hero-clock__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.play-hero-clock__of {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--arena-text-3);
+  white-space: nowrap;
+}
+
+.play-hero-clock__time {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: clamp(1.625rem, 2.2vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: var(--arena-cyan);
+  font-variant-numeric: tabular-nums;
+}
+
+.play-hero-clock__track {
+  margin-top: 0.7rem;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--arena-ink) 12%, transparent);
+}
+
+.play-hero-clock__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--arena-cyan);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--arena-cyan) 45%, transparent);
+  transition: width 1s linear;
+}

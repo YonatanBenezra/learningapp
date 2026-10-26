@@ -1,0 +1,60 @@
+.arena-play .play-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
+}
+
+@media (min-width: 1024px) {
+  .arena-play .play-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .arena-play .play-filters {
+    width: 230px;
+    flex-shrink: 0;
+  }
+
+  .arena-play .play-rail {
+    width: 320px;
+    flex-shrink: 0;
+  }
+}
+
+.arena-play .play-filters .filter-cat-btn.is-active {
+  border: 1px solid color-mix(in srgb, var(--arena-lime) 40%, var(--arena-line));
+  background: color-mix(in srgb, var(--arena-ink) 6%, transparent);
+}
+
+.arena-play .play-challenge-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .arena-play .play-challenge-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .arena-play .play-challenge-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  .arena-play .play-rail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 639px) {
+  .arena-play .play-rail {
+    grid-template-columns: 1fr;
+  }
+}

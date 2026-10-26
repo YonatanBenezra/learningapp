@@ -15,6 +15,8 @@
   --arena-bg: #f6f7f9;
   --arena-surface: #ffffff;
   --arena-surface-2: #ffffff;
+  --arena-panel: #ffffff;
+  --arena-overlay: rgba(11, 18, 32, 0.35);
   --arena-terminal: #f1f4f7;
   --arena-line: rgba(11, 18, 32, 0.09);
   --arena-line-2: rgba(11, 18, 32, 0.15);
@@ -71,6 +73,8 @@ html[data-theme="dark"] {
   --arena-bg: #070b12;
   --arena-surface: #0f1622;
   --arena-surface-2: #141d2b;
+  --arena-panel: #0b111c;
+  --arena-overlay: rgba(3, 6, 10, 0.72);
   --arena-terminal: #05080d;
   --arena-line: rgba(255, 255, 255, 0.07);
   --arena-line-2: rgba(255, 255, 255, 0.12);

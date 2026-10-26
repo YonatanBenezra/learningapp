@@ -7,6 +7,7 @@ import { routes } from "@/config/routes";
 import { EventLobby } from "@/components/arena/lobby/EventLobby";
 import { LobbySkeleton } from "@/components/arena/lobby/LobbySkeleton";
 import { EventPlay } from "@/components/arena/play/EventPlay";
+import { PlaySkeleton } from "@/components/arena/play/PlaySkeleton";
 import { ArenaPage } from "@/components/arena/ArenaPage";
 import { contestsApi } from "@/features/contests/contests-api";
 import { ApiError } from "@/lib/api-client";
@@ -113,7 +114,11 @@ export function ContestPlayView({ slug }: { slug: string }) {
     return <ContestLoadError />;
   }
   if (!contest || !contest.entered) {
-    return <ContestDetailSkeleton />;
+    return (
+      <ArenaPage>
+        <PlaySkeleton />
+      </ArenaPage>
+    );
   }
 
   return (

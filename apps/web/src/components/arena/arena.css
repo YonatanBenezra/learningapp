@@ -63,9 +63,9 @@ html[data-workspace="catalog"]:has(.arena-page) {
 
 @media (min-width: 1024px) {
   .arena-play.arena-hub {
-    width: 100%;
-    max-width: 1360px;
-    padding-inline: 2.5rem;
+    width: var(--lp-catalog-content-width, min(1520px, calc(100% - 2rem)));
+    max-width: none;
+    padding-inline: 0;
     padding-top: 2.5rem;
     padding-bottom: 5rem;
   }
