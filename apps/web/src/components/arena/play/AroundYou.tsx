@@ -64,7 +64,7 @@ export function AroundYou({
             <span className="min-w-0 flex-1 truncate text-[13.5px] text-[var(--arena-ink)]">
               {row.name}
               {row.isYou ? (
-                <span className="ml-1.5 rounded bg-[#a6f23b] px-1 py-0.5 font-mono text-[9px] font-bold uppercase text-[#070b12]">
+                <span className="ml-1.5 rounded bg-[var(--arena-lime)] px-1 py-0.5 font-mono text-[9px] font-bold uppercase text-[var(--color-brand-on)]">
                   you
                 </span>
               ) : null}

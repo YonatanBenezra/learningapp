@@ -23,8 +23,9 @@
   --arena-ink: #0b1220;
   --arena-text-2: #4a5568;
   --arena-text-3: #7b8597;
-  --arena-lime: #a6f23b;
-  --arena-lime-fg: #3f7a00;
+  /* Primary arena accent = LabPath ember brand (legacy token names: arena-lime) */
+  --arena-lime: var(--color-brand);
+  --arena-lime-fg: var(--color-brand);
   --arena-cyan: #0891b2;
   --arena-red: #e11d48;
   --arena-amber: #b45309;
@@ -81,8 +82,8 @@ html[data-theme="dark"] {
   --arena-ink: #e6edf5;
   --arena-text-2: #8f9bb0;
   --arena-text-3: #5b677c;
-  --arena-lime: #a6f23b;
-  --arena-lime-fg: #a6f23b;
+  --arena-lime: var(--color-brand);
+  --arena-lime-fg: var(--color-brand);
   --arena-cyan: #3bd5f2;
   --arena-red: #ff4d6d;
   --arena-amber: #ffb547;

@@ -1,0 +1,509 @@
+/* Contest problem HUD + flag captured modal (CTF-05b) */
+
+.lp-ct-problem-hud {
+  --lp-ctf-success: #c5ff4a;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: 0.5rem 8px 0.35rem;
+  background: var(--arena-bg, #070b12);
+}
+
+.lp-ct-problem-hud-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--arena-line, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  background: var(--arena-surface, #0f1622);
+}
+
+.lp-ct-problem-hud-identity {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 14rem;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.lp-ct-problem-hud-lab-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--arena-line, rgba(255, 255, 255, 0.07));
+  background: color-mix(in srgb, var(--arena-ink, #e6edf5) 4%, transparent);
+  color: var(--arena-cyan, #3bd5f2);
+}
+
+.lp-ct-problem-hud-back {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.1rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--arena-text-2, #8f9bb0);
+  text-decoration: none;
+}
+
+.lp-ct-problem-hud-back:hover {
+  color: var(--arena-ink, #e6edf5);
+}
+
+.lp-ct-problem-hud-title-wrap {
+  min-width: 0;
+}
+
+.lp-ct-problem-hud-title {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--arena-ink, #e6edf5);
+}
+
+.lp-ct-problem-hud-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+}
+
+.lp-ct-hud-diff {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.lp-ct-hud-diff--hard {
+  color: var(--arena-red, #ff4d6d);
+  background: color-mix(in srgb, var(--arena-red, #ff4d6d) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--arena-red, #ff4d6d) 35%, transparent);
+}
+
+.lp-ct-hud-diff--medium {
+  color: var(--arena-amber, #ffb547);
+  background: color-mix(in srgb, var(--arena-amber, #ffb547) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--arena-amber, #ffb547) 35%, transparent);
+}
+
+.lp-ct-hud-diff--easy {
+  color: var(--color-status-pass, var(--lp-signal-teal));
+  background: color-mix(in srgb, var(--color-status-pass, var(--lp-signal-teal)) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-status-pass, var(--lp-signal-teal)) 35%, transparent);
+}
+
+.lp-ct-hud-diff--insane {
+  color: var(--arena-purple, #b07cff);
+  background: color-mix(in srgb, var(--arena-purple, #b07cff) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--arena-purple, #b07cff) 35%, transparent);
+}
+
+.lp-ct-problem-hud-pts {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--lp-ctf-success);
+}
+
+.lp-ct-problem-hud-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.lp-ct-problem-hud-operation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  white-space: nowrap;
+}
+
+.lp-ct-problem-hud-operation-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.lp-ct-problem-hud-clock--expired .lp-ct-problem-hud-operation-label {
+  text-transform: none;
+  font-size: 8.5px;
+}
+
+.lp-ct-problem-hud-operation-time {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.lp-ct-problem-hud-stat-group {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 0;
+  margin: 0;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--arena-line, rgba(255, 255, 255, 0.08));
+  background: color-mix(in srgb, var(--arena-panel, #0b111c) 85%, transparent);
+}
+
+.lp-ct-problem-hud-stat-group .lp-ct-problem-hud-stat {
+  min-width: 3.75rem;
+  padding: 0 0.55rem;
+  text-align: center;
+}
+
+.lp-ct-problem-hud-stat-group .lp-ct-problem-hud-stat:not(:last-child) {
+  border-right: 1px solid var(--arena-line, rgba(255, 255, 255, 0.08));
+}
+
+.lp-ct-problem-hud-stat-pts {
+  color: var(--lp-ctf-success) !important;
+}
+
+.lp-ct-problem-hud-hints-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.25rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--arena-line, rgba(255, 255, 255, 0.08));
+  background: color-mix(in srgb, var(--arena-panel, #0b111c) 85%, transparent);
+}
+
+.lp-ct-problem-hud-hints-label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--arena-text-3, #5b677c);
+}
+
+.lp-ct-problem-hud-hints-value {
+  margin-top: 0.12rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--arena-text-2, #8f9bb0);
+}
+
+.lp-ct-problem-hud-stat dt {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--arena-text-3, #5b677c);
+}
+
+.lp-ct-problem-hud-stat dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--arena-ink, #e6edf5);
+}
+
+.lp-ct-hud-clock-ico {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.lp-ct-problem-hud-clock--active {
+  border-color: color-mix(in srgb, var(--arena-cyan, #3bd5f2) 55%, transparent);
+  background: color-mix(in srgb, var(--arena-cyan, #3bd5f2) 10%, var(--arena-surface, #0f1622));
+  box-shadow: 0 0 20px -6px color-mix(in srgb, var(--arena-cyan, #3bd5f2) 55%, transparent);
+}
+
+.lp-ct-problem-hud-clock--active .lp-ct-problem-hud-operation-label,
+.lp-ct-problem-hud-clock--active .lp-ct-problem-hud-operation-time,
+.lp-ct-problem-hud-clock--active .lp-ct-hud-clock-ico {
+  color: var(--arena-cyan, #3bd5f2);
+}
+
+.lp-ct-problem-hud-clock--low {
+  border-color: color-mix(in srgb, var(--arena-amber, #ffb547) 55%, transparent);
+  background: color-mix(in srgb, var(--arena-amber, #ffb547) 12%, var(--arena-surface, #0f1622));
+  box-shadow: 0 0 20px -6px color-mix(in srgb, var(--arena-amber, #ffb547) 45%, transparent);
+}
+
+.lp-ct-problem-hud-clock--low .lp-ct-problem-hud-operation-label,
+.lp-ct-problem-hud-clock--low .lp-ct-problem-hud-operation-time,
+.lp-ct-problem-hud-clock--low .lp-ct-hud-clock-ico {
+  color: var(--arena-amber, #ffb547);
+}
+
+.lp-ct-problem-hud-clock--expired {
+  border-color: color-mix(in srgb, var(--arena-red, #ff4d6d) 55%, transparent);
+  background: color-mix(in srgb, var(--arena-red, #ff4d6d) 12%, var(--arena-surface, #0f1622));
+}
+
+.lp-ct-problem-hud-clock--expired .lp-ct-problem-hud-operation-label,
+.lp-ct-problem-hud-clock--expired .lp-ct-problem-hud-operation-time,
+.lp-ct-problem-hud-clock--expired .lp-ct-hud-clock-ico {
+  color: var(--arena-red, #ff4d6d);
+}
+
+/* Flag captured modal — LabPath ember brand (not arena lime) */
+
+.lp-flag-cap-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgb(0 0 0 / 72%);
+  backdrop-filter: blur(6px);
+}
+
+.lp-flag-cap-dialog {
+  position: relative;
+  width: min(420px, 100%);
+  margin: 0;
+  padding: 1.5rem 1.5rem 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--lp-brand, var(--color-brand)) 38%, transparent);
+  border-radius: 14px;
+  background: var(--arena-surface, #0f1622);
+  color: var(--arena-ink, #e6edf5);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 40%),
+    0 24px 80px rgb(0 0 0 / 55%),
+    0 0 48px color-mix(in srgb, var(--lp-brand, var(--color-brand)) 22%, transparent);
+}
+
+.lp-flag-cap-glow {
+  pointer-events: none;
+  position: absolute;
+  inset: -40px;
+  z-index: -1;
+  border-radius: 24px;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    color-mix(in srgb, var(--lp-brand, var(--color-brand)) 26%, transparent),
+    transparent 65%
+  );
+}
+
+.lp-flag-cap-head {
+  text-align: center;
+}
+
+.lp-flag-cap-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--lp-brand, var(--color-brand));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--lp-brand, var(--color-brand)) 48%, transparent);
+}
+
+.lp-flag-cap-icon svg {
+  color: var(--color-brand-on, #fff);
+}
+
+.lp-flag-cap-kicker {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lp-brand, var(--color-brand));
+}
+
+.lp-flag-cap-points {
+  margin: 0.35rem 0 0;
+  font-size: 2rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.lp-flag-cap-sub {
+  margin: 0.35rem 0 0;
+  font-size: 13px;
+  color: var(--arena-text-2, #8f9bb0);
+}
+
+.lp-flag-cap-token {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.15rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px dashed color-mix(in srgb, var(--lp-brand, var(--color-brand)) 45%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--lp-brand, var(--color-brand)) 8%, transparent);
+}
+
+.lp-flag-cap-token-text {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--lp-brand, var(--color-brand)) 92%, var(--arena-ink, #e6edf5));
+}
+
+.lp-flag-cap-copy {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--arena-text-2, #8f9bb0);
+  cursor: pointer;
+}
+
+.lp-flag-cap-copy:hover {
+  color: var(--arena-ink, #e6edf5);
+  background: color-mix(in srgb, var(--arena-ink, #fff) 6%, transparent);
+}
+
+.lp-flag-cap-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 1.15rem 0 0;
+  border-top: 1px solid var(--arena-line, rgba(255, 255, 255, 0.07));
+  border-bottom: 1px solid var(--arena-line, rgba(255, 255, 255, 0.07));
+}
+
+.lp-flag-cap-stats > div {
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+}
+
+.lp-flag-cap-stats > div:not(:last-child) {
+  border-right: 1px solid var(--arena-line, rgba(255, 255, 255, 0.07));
+}
+
+.lp-flag-cap-stats dt {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--arena-text-3, #5b677c);
+}
+
+.lp-flag-cap-stats dd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lp-flag-cap-rank-up {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-status-pass, var(--lp-signal-teal));
+}
+
+.lp-flag-cap-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 1.15rem;
+}
+
+.lp-flag-cap-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: filter 0.15s ease;
+}
+
+.lp-flag-cap-btn--primary {
+  border: none;
+  background: linear-gradient(
+    180deg,
+    var(--lp-brand, var(--color-brand)) 0%,
+    var(--color-brand-hover, var(--lp-accent-ember-hover)) 100%
+  );
+  color: var(--color-brand-on, #fff);
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--lp-brand, var(--color-brand)) 32%, transparent),
+    0 1px 0 color-mix(in srgb, var(--color-brand-glow) 35%, transparent);
+}
+
+.lp-flag-cap-btn--primary:hover {
+  filter: brightness(1.06);
+}
+
+.lp-flag-cap-btn--ghost {
+  border: 1px solid var(--arena-line-2, rgba(255, 255, 255, 0.12));
+  background: transparent;
+  color: var(--arena-ink, #e6edf5);
+}
+
+.lp-flag-cap-btn--ghost:hover {
+  background: color-mix(in srgb, var(--arena-ink, #fff) 5%, transparent);
+}
+
+@media (max-width: 900px) {
+  .lp-ct-problem-hud-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lp-ct-problem-hud-right {
+    justify-content: flex-start;
+  }
+
+  .lp-ct-problem-hud-title {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}

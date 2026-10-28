@@ -85,7 +85,7 @@ export function ChallengeCard({
           className="absolute right-3 top-3 flex size-7 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--arena-lime)_45%,transparent)] bg-[color-mix(in_srgb,var(--arena-lime)_12%,transparent)]"
           aria-hidden
         >
-          <Flag className="size-3.5 fill-[#070b12] text-[#070b12]" />
+          <Flag className="size-3.5 fill-[var(--color-brand-on)] text-[var(--color-brand-on)]" />
         </span>
       ) : null}
 

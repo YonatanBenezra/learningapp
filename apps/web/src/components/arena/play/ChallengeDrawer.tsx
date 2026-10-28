@@ -308,7 +308,7 @@ export function ChallengeDrawer({
             ) : (
               <Link
                 href={launchHref}
-                className="flex flex-1 items-center justify-center gap-2 rounded-md bg-[#a6f23b] py-3 font-mono text-[12.5px] font-bold uppercase text-[#070b12] shadow-[0_0_18px_rgba(166,242,59,0.25)] hover:opacity-95"
+                className="flex flex-1 items-center justify-center gap-2 rounded-md bg-[var(--arena-lime)] py-3 font-mono text-[12.5px] font-bold uppercase text-[var(--color-brand-on)] shadow-[0_0_18px_color-mix(in_srgb,var(--arena-lime)_25%,transparent)] hover:opacity-95"
               >
                 <Terminal className="size-[15px]" aria-hidden />
                 Launch lab

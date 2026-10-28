@@ -12,7 +12,7 @@ export type PlayFilterState = {
 };
 
 const DIFF_COLORS: Record<string, string> = {
-  Easy: "var(--arena-lime-fg)",
+  Easy: "var(--color-status-pass)",
   Medium: "var(--arena-amber)",
   Hard: "var(--arena-red)",
   Insane: "var(--arena-purple)",

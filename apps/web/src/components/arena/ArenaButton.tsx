@@ -9,7 +9,7 @@ const base =
   "inline-flex items-center justify-center gap-2 font-mono font-bold uppercase tracking-[0.04em] transition-[transform,box-shadow,filter] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--arena-lime)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--arena-bg)]";
 
 const variants: Record<Variant, string> = {
-  lime: "bg-[var(--arena-lime)] text-[#070B12] shadow-[0_0_18px_color-mix(in_srgb,var(--arena-lime)_25%,transparent)] hover:-translate-y-px hover:shadow-[0_0_28px_color-mix(in_srgb,var(--arena-lime)_35%,transparent)]",
+  lime: "bg-[var(--arena-lime)] text-[var(--color-brand-on)] shadow-[0_0_18px_color-mix(in_srgb,var(--arena-lime)_25%,transparent)] hover:-translate-y-px hover:shadow-[0_0_28px_color-mix(in_srgb,var(--arena-lime)_35%,transparent)]",
   ghost:
     "border border-[var(--arena-line-2)] bg-transparent text-[var(--arena-ink)] hover:bg-[color-mix(in_srgb,var(--arena-ink)_4%,transparent)]",
   subtle:

@@ -3,8 +3,8 @@
 import { motion, useReducedMotion } from "motion/react";
 
 const BAR_COLORS = [
-  "var(--arena-lime-fg)",
-  "var(--arena-lime-fg)",
+  "var(--color-status-pass)",
+  "var(--color-status-pass)",
   "var(--arena-amber)",
   "var(--arena-amber)",
   "var(--arena-red)",

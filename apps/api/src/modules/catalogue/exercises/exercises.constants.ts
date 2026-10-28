@@ -21,6 +21,14 @@ export const RAG_R2_SLUGS = [
 
 export const SANDBOX_SLUG = 'rag-009-python-retriever';
 
+/** Python sandbox retrievers — do not use numeric bands (rag-025-adv collides with 23–25). */
+export const SANDBOX_RAG_SLUGS = new Set([
+  SANDBOX_SLUG,
+  'rag-023-span-match',
+  'rag-024-query-fit',
+  'rag-029-adv-python-retriever',
+]);
+
 export const SANDBOX_REFERENCE_SOURCE = `import json
 from pathlib import Path
 
@@ -91,7 +99,15 @@ export function exerciseNumber(slug: string, prefix: string): number | null {
   return match ? Number(match[1]) : null;
 }
 
+function isCore15AdvRag(slug: string, slot: number): boolean {
+  const n = exerciseNumber(slug, 'rag');
+  return n === slot && slug.includes('-adv-');
+}
+
 export function isRagR1Slug(slug: string): boolean {
+  if (isCore15AdvRag(slug, 26)) {
+    return true;
+  }
   const n = exerciseNumber(slug, 'rag');
   return (
     n !== null &&
@@ -100,6 +116,9 @@ export function isRagR1Slug(slug: string): boolean {
 }
 
 export function isRagR2Slug(slug: string): boolean {
+  if (isCore15AdvRag(slug, 25)) {
+    return true;
+  }
   if ((RAG_R2_SLUGS as readonly string[]).includes(slug)) {
     return true;
   }
@@ -108,6 +127,9 @@ export function isRagR2Slug(slug: string): boolean {
 }
 
 export function isRagR3Slug(slug: string): boolean {
+  if (isCore15AdvRag(slug, 27)) {
+    return true;
+  }
   if (slug === R2_RETRIEVAL_TOP_K_SLUG) {
     return false;
   }
@@ -116,13 +138,15 @@ export function isRagR3Slug(slug: string): boolean {
 }
 
 export function isRagR4Slug(slug: string): boolean {
+  if (isCore15AdvRag(slug, 28) || isCore15AdvRag(slug, 30)) {
+    return true;
+  }
   const n = exerciseNumber(slug, 'rag');
   return n !== null && (n === 4 || n === 21 || n === 22);
 }
 
 export function isSandboxRagSlug(slug: string): boolean {
-  const n = exerciseNumber(slug, 'rag');
-  return n !== null && (n === 9 || (n >= 23 && n <= 25));
+  return SANDBOX_RAG_SLUGS.has(slug);
 }
 
 export const PHASE_1_CATALOGUE_TARGET = 50;

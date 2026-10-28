@@ -51,7 +51,7 @@ function OperatorCell({ row }: { row: ScoreRowType }) {
         {row.user}
       </span>
       {row.isYou ? (
-        <span className="shrink-0 rounded bg-[var(--arena-lime)] px-[7px] py-[3px] font-mono text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#070B12]">
+        <span className="shrink-0 rounded bg-[var(--arena-lime)] px-[7px] py-[3px] font-mono text-[10.5px] font-bold uppercase tracking-[0.08em] text-[var(--color-brand-on)]">
           YOU
         </span>
       ) : null}

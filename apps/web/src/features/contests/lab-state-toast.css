@@ -1,0 +1,126 @@
+/* Lab states & toasts — CTF-05b */
+
+.lp-lab-toast-stack {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 85;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.5rem;
+  width: min(400px, calc(100vw - 2rem));
+  pointer-events: none;
+}
+
+.lp-lab-toast {
+  --lp-ctf-success: #c5ff4a;
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.6rem 0.7rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--lp-lab-toast-accent) 42%, rgba(255, 255, 255, 0.1));
+  background: color-mix(in srgb, var(--arena-panel, #0b111c) 96%, transparent);
+  box-shadow:
+    0 10px 32px rgb(0 0 0 / 42%),
+    inset 0 1px 0 color-mix(in srgb, var(--lp-lab-toast-accent) 8%, transparent);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+.lp-lab-toast-icon {
+  display: flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--lp-lab-toast-accent) 16%, transparent);
+  color: var(--lp-lab-toast-accent);
+}
+
+.lp-lab-toast-body {
+  min-width: 0;
+}
+
+.lp-lab-toast-title {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--lp-lab-toast-accent);
+}
+
+.lp-lab-toast-detail {
+  margin: 0.18rem 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--arena-text-2, #8f9bb0);
+}
+
+.lp-lab-toast-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.lp-lab-toast-points {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--lp-lab-toast-accent);
+}
+
+.lp-lab-toast-badge {
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid color-mix(in srgb, var(--lp-lab-toast-accent) 40%, transparent);
+  color: var(--lp-lab-toast-accent);
+  background: color-mix(in srgb, var(--lp-lab-toast-accent) 12%, transparent);
+}
+
+.lp-lab-toast--running {
+  --lp-lab-toast-accent: var(--arena-cyan, #3bd5f2);
+}
+
+.lp-lab-toast--flag {
+  --lp-lab-toast-accent: var(--lp-ctf-success, #c5ff4a);
+}
+
+.lp-lab-toast--first-blood {
+  --lp-lab-toast-accent: var(--arena-red, #ff4d6d);
+}
+
+.lp-lab-toast--fail {
+  --lp-lab-toast-accent: var(--arena-text-2, #8f9bb0);
+}
+
+.lp-lab-toast--warn {
+  --lp-lab-toast-accent: var(--arena-amber, #ffb547);
+}
+
+.lp-lab-toast--expired {
+  --lp-lab-toast-accent: #e85d6f;
+}
+
+a.lp-lab-toast-badge {
+  text-decoration: none;
+}
+
+a.lp-lab-toast-badge:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 640px) {
+  .lp-lab-toast-stack {
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+  }
+}

@@ -12,6 +12,11 @@ html:has(.lp-ws) {
   --lp-ws-viewport-top: calc(env(safe-area-inset-top, 0px) + var(--lp-ws-top-gap));
 }
 
+/* Contest/assessment problems keep catalog nav — sit simulator below nav, not under it */
+html[data-workspace="catalog"]:has(.lp-ws) {
+  --lp-ws-viewport-top: var(--lp-dash-nav-offset);
+}
+
 html:has(.lp-ws) body {
   overflow: hidden;
 }
