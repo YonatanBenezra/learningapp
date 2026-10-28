@@ -362,7 +362,7 @@ function FeaturedHero({
             {contest.canEnter ? "JOIN EVENT" : contest.entered ? "CONTINUE" : "OPEN EVENT"}
           </Link>
           <Link
-            href={routes.contest(contest.slug)}
+            href={routes.contestScoreboard(contest.slug)}
             className="lp-ct-hub-btn lp-ct-hub-btn--scoreboard"
           >
             <Trophy className="size-4" aria-hidden />

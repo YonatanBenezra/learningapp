@@ -60,7 +60,7 @@ export function ArenaHero({
           </ArenaButton>
           <ArenaButton
             variant="ghost"
-            href={routes.contest(event.slug)}
+            href={routes.contestScoreboard(event.slug)}
             className="w-full sm:w-auto"
           >
             <Trophy className="size-4" aria-hidden />

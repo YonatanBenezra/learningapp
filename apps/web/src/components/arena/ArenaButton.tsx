@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type Variant = "lime" | "ghost";
+type Variant = "lime" | "ghost" | "subtle";
 type Size = "md" | "sm";
 
 const base =
@@ -12,6 +12,8 @@ const variants: Record<Variant, string> = {
   lime: "bg-[var(--arena-lime)] text-[#070B12] shadow-[0_0_18px_color-mix(in_srgb,var(--arena-lime)_25%,transparent)] hover:-translate-y-px hover:shadow-[0_0_28px_color-mix(in_srgb,var(--arena-lime)_35%,transparent)]",
   ghost:
     "border border-[var(--arena-line-2)] bg-transparent text-[var(--arena-ink)] hover:bg-[color-mix(in_srgb,var(--arena-ink)_4%,transparent)]",
+  subtle:
+    "border border-transparent bg-[color-mix(in_srgb,var(--arena-ink)_6%,transparent)] text-[var(--arena-ink)] hover:bg-[color-mix(in_srgb,var(--arena-ink)_9%,transparent)] dark:bg-[color-mix(in_srgb,var(--arena-ink)_6%,transparent)]",
 };
 
 const sizes: Record<Size, string> = {

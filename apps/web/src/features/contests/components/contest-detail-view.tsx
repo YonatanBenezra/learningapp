@@ -8,6 +8,7 @@ import { EventLobby } from "@/components/arena/lobby/EventLobby";
 import { LobbySkeleton } from "@/components/arena/lobby/LobbySkeleton";
 import { EventPlay } from "@/components/arena/play/EventPlay";
 import { PlaySkeleton } from "@/components/arena/play/PlaySkeleton";
+import { EventScoreboard } from "@/components/arena/scoreboard/EventScoreboard";
 import { ArenaPage } from "@/components/arena/ArenaPage";
 import { contestsApi } from "@/features/contests/contests-api";
 import { ApiError } from "@/lib/api-client";
@@ -92,6 +93,31 @@ export function ContestLobbyView({ slug }: { slug: string }) {
   return (
     <ArenaPage>
       <EventLobby initialContest={contest} />
+    </ArenaPage>
+  );
+}
+
+/** Live scoreboard at `/contests/[slug]/scoreboard`. */
+export function ContestScoreboardView({ slug }: { slug: string }) {
+  const { contest, error } = useContestDetail(slug);
+
+  if (error === "auth") {
+    return <ContestAuthError />;
+  }
+  if (error === "load") {
+    return <ContestLoadError />;
+  }
+  if (!contest) {
+    return (
+      <ArenaPage>
+        <div className="arena-hub arena-scoreboard px-4 py-10" aria-busy="true" />
+      </ArenaPage>
+    );
+  }
+
+  return (
+    <ArenaPage>
+      <EventScoreboard slug={slug} eventTitle={contest.title} />
     </ArenaPage>
   );
 }

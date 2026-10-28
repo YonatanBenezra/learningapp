@@ -1,0 +1,222 @@
+.arena-scoreboard.arena-hub {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-top: 1rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 640px) {
+  .arena-scoreboard.arena-hub {
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+    gap: 1.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .arena-scoreboard.arena-hub {
+    width: var(--lp-catalog-content-width, min(1520px, calc(100% - 2rem)));
+    max-width: none;
+    padding-inline: 0;
+  }
+}
+
+.arena-scoreboard-top {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .arena-scoreboard-top {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  .arena-scoreboard-podium-wrap {
+    width: 560px;
+    max-width: 100%;
+    flex-shrink: 0;
+  }
+
+  .arena-scoreboard-chart-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.arena-scoreboard-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 1024px) {
+  .arena-scoreboard-table-scroll {
+    overflow-x: visible;
+  }
+}
+
+.arena-scoreboard-table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+}
+
+@media (min-width: 1024px) {
+  .arena-scoreboard-table {
+    min-width: 0;
+  }
+}
+
+.arena-scoreboard-table th,
+.arena-scoreboard-table td {
+  padding: 0 1rem;
+  vertical-align: middle;
+}
+
+.arena-scoreboard-table thead th {
+  height: 2.5rem;
+  background: color-mix(in srgb, var(--arena-ink) 2.5%, transparent);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--arena-text-3);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.arena-scoreboard-table tbody tr {
+  height: 50px;
+  border-top: 1px solid var(--arena-line);
+}
+
+.arena-scoreboard-table tbody tr:hover:not(.arena-scoreboard-gap-row):not(.arena-scoreboard-you-row) {
+  background: color-mix(in srgb, var(--arena-ink) 2%, transparent);
+}
+
+.arena-scoreboard-table .col-rank {
+  width: 64px;
+}
+
+.arena-scoreboard-table .col-points {
+  width: 120px;
+}
+
+.arena-scoreboard-table .col-flags,
+.arena-scoreboard-table .col-bloods {
+  width: 100px;
+}
+
+.arena-scoreboard-table .col-capture {
+  width: 140px;
+}
+
+.arena-scoreboard-table .col-categories {
+  width: 230px;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .arena-scoreboard-table .col-rank,
+  .arena-scoreboard-table .col-operator {
+    position: sticky;
+    z-index: 2;
+    background: var(--arena-surface);
+  }
+
+  .arena-scoreboard-table .col-rank {
+    left: 0;
+  }
+
+  .arena-scoreboard-table .col-operator {
+    left: 64px;
+    box-shadow: 4px 0 8px -4px color-mix(in srgb, var(--arena-bg) 40%, transparent);
+  }
+
+  .arena-scoreboard-table thead .col-rank,
+  .arena-scoreboard-table thead .col-operator {
+    background: color-mix(in srgb, var(--arena-ink) 2.5%, var(--arena-surface));
+  }
+}
+
+.arena-scoreboard-you-row {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background: color-mix(in srgb, var(--arena-lime) 7%, var(--arena-surface));
+  box-shadow: 0 -4px 12px color-mix(in srgb, var(--arena-bg) 30%, transparent);
+}
+
+.arena-scoreboard-you-row td:first-child {
+  box-shadow: inset 3px 0 0 0 var(--arena-lime);
+}
+
+.arena-scoreboard-you-row.arena-scoreboard-flash {
+  animation: arena-scoreboard-pulse 0.6s ease-in-out 2;
+}
+
+@keyframes arena-scoreboard-pulse {
+  0%,
+  100% {
+    outline: none;
+  }
+  50% {
+    outline: 2px solid var(--arena-lime);
+    outline-offset: -2px;
+  }
+}
+
+.arena-scoreboard-points-flash {
+  animation: arena-scoreboard-points 1.2s ease-out 1;
+}
+
+@keyframes arena-scoreboard-points {
+  0%,
+  100% {
+    color: var(--arena-ink);
+  }
+  30% {
+    color: var(--arena-lime-fg);
+  }
+}
+
+.arena-scoreboard-mobile-cards {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .arena-scoreboard-mobile-cards {
+    display: none;
+  }
+}
+
+.arena-scoreboard-desktop-table {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .arena-scoreboard-desktop-table {
+    display: block;
+  }
+}
+
+.arena-scoreboard-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+@media (max-width: 639px) {
+  .arena-scoreboard-header-row {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .arena-scoreboard-header-actions {
+    width: 100%;
+  }
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Caveat, Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { AppToaster } from "@/components/ui/app-toaster";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { RootNav } from "@/components/layout/root-nav";
 import { brand } from "@/config/brand";
 import { themeInitScript } from "@/features/theme/theme-script";
@@ -63,9 +64,11 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className={`${geistSans.className} flex min-h-full flex-col`}>
-        <RootNav />
-        <AppToaster />
-        {children}
+        <QueryProvider>
+          <RootNav />
+          <AppToaster />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

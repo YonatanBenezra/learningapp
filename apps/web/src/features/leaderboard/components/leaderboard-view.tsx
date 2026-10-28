@@ -222,6 +222,13 @@ export function LeaderboardView() {
   return (
     <div className="lp-lb2">
       <h1 className="lp-lb2-page-title">Leaderboard</h1>
+      <p className="lp-lb2-page-lead">
+        Practice-wide rankings across simulators.{" "}
+        <Link href={routes.contests} className="lp-link">
+          Contest standings
+        </Link>{" "}
+        are separate for each event.
+      </p>
 
       <div className="lp-lb2-stats">
         <StatCard

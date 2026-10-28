@@ -23,7 +23,9 @@ export const routes = {
   contests: "/contests",
   contest: (slug: string) => `/contests/${slug}`,
   contestPlay: (slug: string) => `/contests/${slug}/play`,
-  contestScoreboard: (slug: string) => `/contests/${slug}#scoreboard`,
+  contestScoreboard: (slug: string) => `/contests/${slug}/scoreboard`,
+  /** Alias — redirects to {@link routes.contestScoreboard}. */
+  contestLeaderboard: (slug: string) => `/contests/${slug}/leaderboard`,
   contestProblem: (contestSlug: string, exerciseSlug: string) =>
     `/contests/${contestSlug}/problems/${exerciseSlug}`,
   contestPracticeProblem: (contestSlug: string, exerciseSlug: string) =>
