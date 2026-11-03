@@ -3,10 +3,7 @@
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
-import {
-  authUserInitials,
-  useAuthSession,
-} from "@/features/auth/use-auth-session";
+import { useAuthSession } from "@/features/auth/use-auth-session";
 
 type CatalogNavAuthProps = {
   variant: "header" | "mobile";
@@ -24,12 +21,11 @@ export function CatalogNavHeaderAuth() {
     <div className="lp-site-nav-header-auth">
       {signedIn && user ? (
         <Link
-          href={routes.progress}
-          className="lp-site-nav-avatar"
-          aria-label="Your profile"
+          href={routes.account}
+          className="lp-site-nav-signin-link"
           title={user.displayName ?? user.email}
         >
-          {authUserInitials(user)}
+          Account
         </Link>
       ) : (
         <Link href={routes.signIn} className="lp-site-nav-signin-link">
@@ -37,7 +33,7 @@ export function CatalogNavHeaderAuth() {
         </Link>
       )}
       <AuthLink href={routes.problems} className={openProblemsCtaClass}>
-        Open problems
+        Get started
       </AuthLink>
     </div>
   );
@@ -58,15 +54,15 @@ export function CatalogNavAuth({ variant, onNavigate }: CatalogNavAuthProps) {
           className="lp-btn lp-btn--primary lp-btn--block"
           onClick={onNavigate}
         >
-          Open problems
+          Get started
         </AuthLink>
         {signedIn && user ? (
           <Link
-            href={routes.progress}
+            href={routes.account}
             className="lp-btn lp-btn--ghost lp-btn--block"
             onClick={onNavigate}
           >
-            Profile
+            Account
           </Link>
         ) : (
           <Link

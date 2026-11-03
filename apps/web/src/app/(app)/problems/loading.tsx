@@ -3,7 +3,7 @@ import "@/features/problems/problems-figma.css";
 
 export default function ProblemsLoading() {
   return (
-    <div className="lp-page lp-page-catalogue lp-page-problems">
+    <div className="lp-page lp-page-catalogue lp-page-problems lp-page-problems--htb">
       <ProblemsFigmaSkeleton />
     </div>
   );

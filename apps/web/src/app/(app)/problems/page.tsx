@@ -6,7 +6,7 @@ export default async function ProblemsPage() {
   await headers();
 
   return (
-    <div className="lp-page lp-page-catalogue lp-page-problems">
+    <div className="lp-page lp-page-catalogue lp-page-problems lp-page-problems--htb">
       <ProblemsPageContent />
     </div>
   );

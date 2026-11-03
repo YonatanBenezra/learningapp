@@ -1,60 +1,73 @@
 /**
- * LabPath typography (Figma type scale).
- * Fonts loaded in layout.tsx: Geist, Instrument Serif Italic, Geist Mono, Caveat.
+ * LabPath typography — production site scale (Neue Haas Unica).
+ * Loaded via Adobe Fonts when NEXT_PUBLIC_ADOBE_FONTS_KIT_ID is set; see config/fonts.ts.
+ * Accents: Instrument Serif, Caveat (layout.tsx).
  */
 
 :root {
-  --lp-font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --lp-font-sans: neue-haas-unica, "Neue Haas Unica", var(--font-dm-sans), "DM Sans", sans-serif;
+  /* Third-party UI (e.g. cookie banners) — intentional generic sans */
+  --lp-font-system-sans: ui-sans-serif, system-ui, sans-serif;
   --lp-font-serif-display: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
-  --lp-font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --lp-font-mono: var(--lp-font-sans);
   --lp-font-hand: var(--font-caveat), "Segoe Script", cursive;
 
-  /* Display — Geist SemiBold 72/76, -3.5% */
-  --lp-text-display-size: clamp(2.75rem, 5.5vw, 4.5rem);
-  --lp-text-display-lh: 1.055;
-  --lp-text-display-tracking: -0.035em;
+  --font-geist: var(--lp-font-sans);
+  --font-geist-mono: var(--lp-font-mono);
 
-  /* H1 — 48/56, -3% */
-  --lp-text-h1-size: clamp(2rem, 3.2vw, 3rem);
-  --lp-text-h1-lh: 1.167;
+  /* H1 — 60px, weight 400 */
+  --lp-text-h1-size: 3.75rem;
+  --lp-text-h1-lh: 1.1;
   --lp-text-h1-tracking: -0.03em;
+  --lp-text-h1-weight: 400;
 
-  /* H2 — 36/44, -2.5% */
-  --lp-text-h2-size: clamp(1.75rem, 2.5vw, 2.25rem);
-  --lp-text-h2-lh: 1.222;
+  /* H2 — 48px, weight 500 */
+  --lp-text-h2-size: 3rem;
+  --lp-text-h2-lh: 1.15;
   --lp-text-h2-tracking: -0.025em;
+  --lp-text-h2-weight: 500;
 
-  /* H3 — 24/32, -1.5% */
-  --lp-text-h3-size: 1.5rem;
-  --lp-text-h3-lh: 1.333;
+  /* H3 — 20px, weight 700 */
+  --lp-text-h3-size: 1.25rem;
+  --lp-text-h3-lh: 1.35;
   --lp-text-h3-tracking: -0.015em;
+  --lp-text-h3-weight: 700;
 
-  /* Body L — 18/30 */
-  --lp-text-body-lg-size: 1.125rem;
-  --lp-text-body-lg-lh: 1.667;
+  /* Body — 15px, weight 400 */
+  --lp-text-body-size: 0.9375rem;
+  --lp-text-body-lh: 1.6;
 
-  /* Body — 16/26 */
-  --lp-text-body-size: 1rem;
-  --lp-text-body-lh: 1.625;
+  /* Marketing hero / display (same scale as H1 on live site) */
+  --lp-text-display-size: var(--lp-text-h1-size);
+  --lp-text-display-lh: var(--lp-text-h1-lh);
+  --lp-text-display-tracking: var(--lp-text-h1-tracking);
+  --lp-text-display-weight: var(--lp-text-h1-weight);
 
-  /* Caption — 12/18 */
+  --lp-text-body-lg-size: 1.0625rem;
+  --lp-text-body-lg-lh: 1.55;
+
   --lp-text-caption-size: 0.75rem;
   --lp-text-caption-lh: 1.5;
 
-  /* Mono label — 12, +10% tracking, uppercase */
   --lp-text-mono-label-size: 0.75rem;
   --lp-text-mono-label-tracking: 0.1em;
 
-  /* Hand note — Caveat 22 */
   --lp-text-hand-size: 1.375rem;
 }
 
-/* —— Roles (use on marketing + studio pages) —— */
+@media (max-width: 767px) {
+  :root {
+    --lp-text-h1-size: clamp(2.25rem, 8vw, 3.75rem);
+    --lp-text-h2-size: clamp(1.875rem, 6vw, 3rem);
+  }
+}
+
+/* —— Roles (marketing + studio) —— */
 
 .lp-type-display {
   font-family: var(--lp-font-sans);
   font-size: var(--lp-text-display-size);
-  font-weight: 600;
+  font-weight: var(--lp-text-display-weight);
   line-height: var(--lp-text-display-lh);
   letter-spacing: var(--lp-text-display-tracking);
   color: var(--lp-text-primary);
@@ -73,7 +86,7 @@
 .lp-type-h1 {
   font-family: var(--lp-font-sans);
   font-size: var(--lp-text-h1-size);
-  font-weight: 600;
+  font-weight: var(--lp-text-h1-weight);
   line-height: var(--lp-text-h1-lh);
   letter-spacing: var(--lp-text-h1-tracking);
 }
@@ -81,7 +94,7 @@
 .lp-type-h2 {
   font-family: var(--lp-font-sans);
   font-size: var(--lp-text-h2-size);
-  font-weight: 600;
+  font-weight: var(--lp-text-h2-weight);
   line-height: var(--lp-text-h2-lh);
   letter-spacing: var(--lp-text-h2-tracking);
 }
@@ -89,7 +102,7 @@
 .lp-type-h3 {
   font-family: var(--lp-font-sans);
   font-size: var(--lp-text-h3-size);
-  font-weight: 600;
+  font-weight: var(--lp-text-h3-weight);
   line-height: var(--lp-text-h3-lh);
   letter-spacing: var(--lp-text-h3-tracking);
 }
@@ -131,4 +144,49 @@
   font-weight: 600;
   line-height: 1.2;
   color: var(--color-brand);
+}
+
+/** Embed / consent widgets that must stay on system sans */
+.lp-font-system-sans {
+  font-family: var(--lp-font-system-sans);
+}
+
+@layer base {
+  h1 {
+    font-family: var(--lp-font-sans);
+    font-size: var(--lp-text-h1-size);
+    font-weight: var(--lp-text-h1-weight);
+    line-height: var(--lp-text-h1-lh);
+    letter-spacing: var(--lp-text-h1-tracking);
+    color: var(--lp-text-heading, var(--lp-text-primary));
+  }
+
+  h2 {
+    font-family: var(--lp-font-sans);
+    font-size: var(--lp-text-h2-size);
+    font-weight: var(--lp-text-h2-weight);
+    line-height: var(--lp-text-h2-lh);
+    letter-spacing: var(--lp-text-h2-tracking);
+    color: var(--lp-text-heading, var(--lp-text-primary));
+  }
+
+  h3 {
+    font-family: var(--lp-font-sans);
+    font-size: var(--lp-text-h3-size);
+    font-weight: var(--lp-text-h3-weight);
+    line-height: var(--lp-text-h3-lh);
+    letter-spacing: var(--lp-text-h3-tracking);
+    color: var(--lp-text-heading, var(--lp-text-primary));
+  }
+
+  p {
+    font-family: var(--lp-font-sans);
+    font-size: var(--lp-text-body-size);
+    font-weight: 400;
+    line-height: var(--lp-text-body-lh);
+  }
+
+  a {
+    font-family: inherit;
+  }
 }

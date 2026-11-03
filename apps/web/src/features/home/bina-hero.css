@@ -1,0 +1,96 @@
+/* Flush with fixed navbar — no #141D2B strip (nav #1E2939 vs old hero bg) */
+html[data-workspace="catalog"]:has(.bina-hero) {
+  --lp-dash-nav-gap: 0;
+}
+
+.bina-hero {
+  margin-top: calc(-1 * var(--lp-dash-nav-h, 85px));
+  padding-top: var(--lp-dash-nav-h, 85px);
+  background-color: var(--lp-home-section-bg, var(--lp-bg-canvas));
+}
+
+/* Same left edge as .lp-home-hiw-inner and other 1320px sections */
+.bina-hero-inner {
+  width: var(--lp-catalog-content-width);
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: 0;
+  box-sizing: border-box;
+}
+
+html:has(.bina-hero) .lp-site-nav--catalog {
+  box-shadow: none;
+}
+
+/* Scrim — lighter toward bottom so section canvas can show through */
+.bina-hero-overlay-scrim {
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 38%) 0%,
+    rgb(0 0 0 / 42%) 45%,
+    rgb(0 0 0 / 28%) 72%,
+    rgb(0 0 0 / 12%) 100%
+  );
+}
+
+@media (max-width: 639px) {
+  .bina-hero-overlay-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 52%) 0%,
+      rgb(0 0 0 / 48%) 50%,
+      rgb(0 0 0 / 22%) 100%
+    );
+  }
+}
+
+/* Fade hero photo into the next section (--lp-bg-canvas) */
+.bina-hero-blend-bottom {
+  z-index: 8;
+  height: min(38vh, 360px);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--lp-home-section-bg, var(--lp-bg-canvas)) 45%, transparent) 42%,
+    color-mix(in srgb, var(--lp-home-section-bg, var(--lp-bg-canvas)) 88%, transparent) 72%,
+    var(--lp-home-section-bg, var(--lp-bg-canvas)) 100%
+  );
+}
+
+.lp-page-home .lp-home-hiw {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes bina-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bina-hero-anim {
+  opacity: 0;
+  animation: bina-hero-rise 500ms ease forwards;
+}
+
+.bina-hero-anim-delay-1 {
+  animation-delay: 100ms;
+}
+
+.bina-hero-anim-delay-2 {
+  animation-delay: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bina-hero-anim {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

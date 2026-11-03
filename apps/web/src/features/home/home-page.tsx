@@ -5,7 +5,7 @@ import { HomeLivePracticeSection } from "@/features/home/components/home-live-pr
 import { HomeStatsSection } from "@/features/home/components/home-stats-section";
 import { HomeFinalCtaSection } from "@/features/home/components/home-final-cta-section";
 import "./home.css";
-import "./home-hero.css";
+import "./bina-hero.css";
 import "./home-how-it-works.css";
 import "./home-live-practice.css";
 import "./home-stats-cta.css";

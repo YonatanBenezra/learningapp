@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { ContestPlayView } from "@/features/contests/components/contest-detail-view";
-import { PlaySkeleton } from "@/components/arena/play/PlaySkeleton";
-import { ArenaPage } from "@/components/arena/ArenaPage";
+import { PlaySkeleton } from "@/features/contests/arena/play/PlaySkeleton";
+import { ArenaPage } from "@/features/contests/arena/ArenaPage";
 
 export default async function ContestPlayPage({
   params,

@@ -1,7 +1,7 @@
 /* Leaderboard — reference-style layout (stats · top 3 · global table) */
 
 .lp-page-leaderboard {
-  width: min(1280px, calc(100% - 3rem));
+  width: var(--lp-catalog-content-width, min(1320px, calc(100% - 3rem)));
   max-width: none;
   margin-inline: auto;
   padding: 0.25rem 0 3.5rem;

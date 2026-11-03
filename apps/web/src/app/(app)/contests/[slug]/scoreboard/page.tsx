@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ArenaPage } from "@/components/arena/ArenaPage";
+import { ArenaPage } from "@/features/contests/arena/ArenaPage";
 import { ContestScoreboardView } from "@/features/contests/components/contest-detail-view";
 
 export default async function ContestScoreboardPage({

@@ -21,10 +21,7 @@ export function isAppCatalogPath(pathname: string): boolean {
     return true;
   }
   if (pathname === routes.dashboard || pathname.startsWith(`${routes.dashboard}/`)) {
-    return true;
-  }
-  if (pathname === routes.account || pathname.startsWith(`${routes.account}/`)) {
-    return true;
+    return false;
   }
   if (
     pathname === routes.problems ||

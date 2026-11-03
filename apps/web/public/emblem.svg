@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 110 110" fill="none">
+  <defs>
+    <linearGradient id="shieldLight" x1="20" y1="15" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4F4F4"/>
+      <stop offset="0.45" stop-color="#D8DEE8"/>
+      <stop offset="1" stop-color="#A8B2C4"/>
+    </linearGradient>
+    <linearGradient id="shieldFacet" x1="55" y1="18" x2="55" y2="92" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path d="M55 12L88 28V58C88 76 72 92 55 98C38 92 22 76 22 58V28L55 12Z" fill="url(#shieldLight)" stroke="#C5CFDD" stroke-width="1.2"/>
+  <path d="M55 12L55 98L22 58V28L55 12Z" fill="#B8C0CE" fill-opacity="0.45"/>
+  <path d="M55 28L70 48L55 78L40 48L55 28Z" fill="#E8ECF2"/>
+  <path d="M55 28L70 48L55 58V28Z" fill="#CED6E2"/>
+  <path d="M40 48L55 58L55 78L40 48Z" fill="#B0BAC8"/>
+  <path d="M55 12L88 28L55 58L22 28L55 12Z" fill="url(#shieldFacet)"/>
+</svg>

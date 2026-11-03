@@ -1,35 +1,32 @@
 /* Live practice — Figma tokens */
 
 .lp-home-live {
-  --live-band: #080c15;
-  --live-border: #1e2738;
-  --live-text: #eceef2;
-  --live-text-2: #97a1b2;
-  --live-ember: #ff7a45;
-  --live-ember-hover: #ff9466;
-  --live-ember-on: #1a0c05;
-  --live-teal: #2dd4bf;
-  --live-check-bg: #0e2a2a;
-  --live-surface: #111826;
-  --live-surface-hover: #172033;
-  --live-border-strong: #2a3549;
-  --live-preview-bg: #0b111c;
-  --live-preview-border: #1f2735;
+  --live-band: var(--lp-bg-canvas);
+  --live-border: var(--lp-border-subtle);
+  --live-text: var(--lp-text-heading);
+  --live-text-2: var(--lp-text-primary);
+  --live-ember: var(--lp-accent-ember);
+  --live-ember-hover: var(--lp-accent-ember-hover);
+  --live-ember-on: var(--lp-accent-on-ember);
+  --live-teal: var(--lp-signal-teal);
+  --live-check-bg: var(--lp-signal-teal-soft);
+  --live-surface: var(--lp-bg-surface);
+  --live-surface-hover: var(--lp-bg-raised);
+  --live-border-strong: var(--lp-border-strong);
+  --live-preview-bg: var(--lp-bg-sunken);
+  --live-preview-border: var(--lp-border-subtle);
   --live-code-text: #d6dce6;
   --live-code-muted: #6b7689;
-  --live-code-kw: #7dd3c7;
-  --live-code-str: #fdba74;
+  --live-code-kw: #88c9f7;
+  --live-code-str: #aced2c;
   --live-code-cmt: #6b7689;
 
   box-sizing: border-box;
-  padding: 8rem 0;
   background: var(--live-band);
-  border-top: 1px solid var(--live-border);
-  border-bottom: 1px solid var(--live-border);
 }
 
 html:not([data-theme="dark"]) .lp-home-live {
-  --live-band: var(--color-bg-inset);
+  --live-band: var(--lp-bg-canvas);
   --live-border: var(--lp-border-subtle);
   --live-text: var(--lp-text-primary);
   --live-text-2: var(--lp-text-secondary);
@@ -51,7 +48,7 @@ html:not([data-theme="dark"]) .lp-home-live {
 }
 
 .lp-home-live-inner {
-  width: var(--lp-catalog-content-width, min(1400px, calc(100% - 2.5rem)));
+  width: var(--lp-catalog-content-width, min(var(--lp-page-catalog-max, 1320px), calc(100% - var(--lp-catalog-gutter, 2.5rem))));
   max-width: none;
   margin-inline: auto;
   box-sizing: border-box;
@@ -177,27 +174,24 @@ html:not([data-theme="dark"]) .lp-home-live {
   height: 14px;
 }
 
-/* Preview window */
+/* Preview shell — border/bg/shadow via Tailwind on .lp-home-live-preview */
 
-.lp-home-live-preview {
-  width: 100%;
-  min-width: 0;
-  border: 1px solid var(--live-preview-border);
-  border-radius: 20px;
-  background: var(--live-preview-bg);
-  overflow: hidden;
-  box-shadow:
-    0 4px 8px rgb(0 0 0 / 39%),
-    0 24px 64px -8px rgb(0 0 0 / 50%);
+.lp-home-live--htb {
+  --live-ember: #9fef00;
+  --live-ember-hover: #aced2c;
+  --live-ember-on: #121c2b;
+  --live-code-str: #9fef00;
+  --live-code-kw: #88c9f7;
+  --live-teal: #88c9f7;
+  --live-check-bg: color-mix(in srgb, #9fef00 14%, #141d2b);
 }
 
-.lp-home-live-chrome {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 48px;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--live-preview-border);
+.lp-home-live--htb .lp-home-live-title {
+  font-weight: 500;
+}
+
+.lp-home-live--htb .lp-home-live-check-icon {
+  color: #9fef00;
 }
 
 .lp-home-live-dots {
@@ -248,8 +242,12 @@ html:not([data-theme="dark"]) .lp-home-live {
 }
 
 .lp-home-live-tab.is-active {
-  background: var(--live-preview-bg);
+  background: rgb(255 255 255 / 6%);
   color: var(--live-code-text);
+}
+
+.lp-home-live--htb .lp-home-live-tab.is-active {
+  color: #f4f4f4;
 }
 
 .lp-home-live-path {
@@ -351,33 +349,7 @@ html:not([data-theme="dark"]) .lp-home-live {
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  border-top: 1px solid var(--live-preview-border);
-}
-
-.lp-home-live-run-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 12px;
-  border: none;
-  border-radius: 8px;
-  background: var(--live-ember);
-  font-family: var(--lp-font-sans);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--live-ember-on);
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.lp-home-live-run-btn:hover:not(:disabled) {
-  background: var(--live-ember-hover);
-}
-
-.lp-home-live-run-btn:disabled {
-  cursor: default;
+  border-top: 1px solid rgb(244 244 244 / 10%);
 }
 
 .lp-home-live-run-btn svg {
@@ -414,18 +386,18 @@ html:not([data-theme="dark"]) .lp-home-live {
   gap: 6px;
   padding: 3px 9px;
   border-radius: 999px;
-  background: rgb(45 212 191 / 16%);
+  background: color-mix(in srgb, #9fef00 14%, transparent);
   font-family: var(--lp-font-mono);
   font-size: 12px;
   font-weight: 500;
-  color: var(--live-teal);
+  color: #9fef00;
 }
 
 .lp-home-live-pass-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--live-teal);
+  background: #9fef00;
 }
 
 .lp-home-live-recall {
@@ -464,10 +436,6 @@ html:not([data-theme="dark"]) .lp-home-live {
 }
 
 @media (max-width: 639px) {
-  .lp-home-live {
-    padding: 4rem 0;
-  }
-
   .lp-home-live-inner {
     width: var(--lp-catalog-content-width, calc(100% - 2rem));
   }

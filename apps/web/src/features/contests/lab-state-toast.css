@@ -13,7 +13,7 @@
 }
 
 .lp-lab-toast {
-  --lp-ctf-success: #c5ff4a;
+  --lp-ctf-success: #9fef00;
   pointer-events: auto;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -90,7 +90,7 @@
 }
 
 .lp-lab-toast--flag {
-  --lp-lab-toast-accent: var(--lp-ctf-success, #c5ff4a);
+  --lp-lab-toast-accent: var(--lp-ctf-success, #9fef00);
 }
 
 .lp-lab-toast--first-blood {

@@ -8,8 +8,9 @@ import {
 } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { routes } from "@/config/routes";
+import { cn } from "@/lib/utils";
 
 const E: Transition["ease"] = [0.2, 0, 0, 1];
 
@@ -21,38 +22,9 @@ const DOCS_HREF = "https://github.com/Bina-Labs/Labpath";
 export function HomeFinalCtaSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const introInView = useInView(sectionRef, { once: true, amount: 0.3 });
-  const breatheInView = useInView(sectionRef, { once: false, amount: 0.15 });
   const reduceMotion = useReducedMotion();
 
-  const [attentionPulse, setAttentionPulse] = useState(false);
-  const [hoverPulse, setHoverPulse] = useState(false);
-  const [glowPhase, setGlowPhase] = useState<"idle" | "intro" | "breathe">("idle");
-  const pulsePlayed = useRef(false);
-
   const introActive = introInView || reduceMotion;
-
-  useEffect(() => {
-    if (!introInView || reduceMotion) return;
-    setGlowPhase("intro");
-    const t = window.setTimeout(() => setGlowPhase("breathe"), 1400);
-    return () => window.clearTimeout(t);
-  }, [introInView, reduceMotion]);
-
-  useEffect(() => {
-    if (!introInView || reduceMotion || pulsePlayed.current) return;
-    const t = window.setTimeout(() => {
-      pulsePlayed.current = true;
-      setAttentionPulse(true);
-      window.setTimeout(() => setAttentionPulse(false), 1600);
-    }, 1800);
-    return () => window.clearTimeout(t);
-  }, [introInView, reduceMotion]);
-
-  const runHoverPulse = useCallback(() => {
-    if (reduceMotion || !pulsePlayed.current) return;
-    setHoverPulse(true);
-    window.setTimeout(() => setHoverPulse(false), 1600);
-  }, [reduceMotion]);
 
   const titleWords = useMemo(
     () =>
@@ -89,31 +61,26 @@ export function HomeFinalCtaSection() {
     [introActive, introInView, reduceMotion],
   );
 
-  const primaryShadow =
-    attentionPulse || hoverPulse
-      ? [
-          "0 8px 28px -6px rgb(255 122 69 / 30%)",
-          "0 0 0 6px rgb(255 122 69 / 45%)",
-          "0 8px 28px -6px rgb(255 122 69 / 30%)",
-          "0 0 0 10px rgb(255 122 69 / 0%)",
-          "0 8px 28px -6px rgb(255 122 69 / 30%)",
-        ]
-      : "0 8px 28px -6px rgb(255 122 69 / 30%)";
-
   return (
-    <section ref={sectionRef} className="lp-home-cta-section" aria-labelledby="home-final-cta-title">
+    <section
+      ref={sectionRef}
+      className="lp-home-cta-section lp-home-cta-section--htb"
+      aria-labelledby="home-final-cta-title"
+    >
       <div className="lp-home-cta-wrap">
         <motion.div
-          className="lp-home-cta-card"
+          className={cn(
+            "lp-home-cta-card relative flex flex-col items-center gap-5 overflow-hidden",
+            "rounded-xl border border-white/10 bg-[#111827] px-12 py-[72px] text-center shadow-sm",
+            "max-md:px-6 max-md:py-12",
+          )}
           initial={{
             opacity: reduceMotion ? 1 : 0,
-            y: reduceMotion ? 0 : 40,
-            scale: reduceMotion ? 1 : 0.97,
+            y: reduceMotion ? 0 : 24,
           }}
           animate={{
             opacity: introActive ? 1 : 0,
-            y: introActive ? 0 : 40,
-            scale: introActive ? 1 : 0.97,
+            y: introActive ? 0 : 24,
           }}
           transition={
             reduceMotion
@@ -121,44 +88,9 @@ export function HomeFinalCtaSection() {
               : { duration: 0.9, ease: E, delay: introInView ? 0.1 : 0 }
           }
         >
-          <motion.div
-            className="lp-home-cta-glow"
-            aria-hidden
-            initial={{ opacity: reduceMotion ? 1 : 0, scale: reduceMotion ? 1 : 0.6 }}
-            animate={
-              reduceMotion
-                ? { opacity: 1, scale: 1 }
-                : glowPhase === "idle"
-                  ? { opacity: 0, scale: 0.6 }
-                  : glowPhase === "intro"
-                    ? { opacity: 1, scale: 1 }
-                    : breatheInView
-                      ? { opacity: 1, scale: [1, 1.12, 1] }
-                      : { opacity: 1, scale: 1 }
-            }
-            transition={
-              reduceMotion
-                ? { duration: 0 }
-                : glowPhase === "intro"
-                  ? {
-                      opacity: { duration: 1, delay: 0.2, ease: "easeOut" },
-                      scale: { duration: 1.2, delay: 0.2, ease: E },
-                    }
-                  : glowPhase === "breathe" && breatheInView
-                    ? {
-                        scale: {
-                          duration: 3.6,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        },
-                      }
-                    : { duration: 0.3 }
-            }
-          />
-
           <div className="lp-home-cta-content">
             <motion.p
-              className="lp-home-cta-eyebrow"
+              className="m-0 flex items-center justify-center gap-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9fef00]"
               initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 10 }}
               animate={{ opacity: introActive ? 1 : 0, y: introActive ? 0 : 10 }}
               transition={
@@ -172,6 +104,7 @@ export function HomeFinalCtaSection() {
                     }
               }
             >
+              <span className="h-[1.05em] w-[3px] shrink-0 rounded-sm bg-[#9fef00]" aria-hidden />
               YOUR FIRST SET TAKES 15 MINUTES
             </motion.p>
 
@@ -213,23 +146,13 @@ export function HomeFinalCtaSection() {
                       }
                 }
               >
-                <motion.div
-                  animate={{
-                    boxShadow: primaryShadow,
-                  }}
-                  transition={
-                    attentionPulse || hoverPulse
-                      ? { duration: 1.6, times: [0, 0.375, 0.625, 1, 1] }
-                      : { duration: 0.2 }
-                  }
-                  onHoverStart={runHoverPulse}
-                  style={{ display: "inline-block", borderRadius: 12 }}
+                <Link
+                  href={routes.problems}
+                  className="lp-home-cta-btn-primary inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#9fef00] px-[22px] text-[15px] font-medium text-[#121c2b] no-underline shadow-sm transition-colors hover:bg-[#aced2c]"
                 >
-                  <Link href={routes.problems} className="lp-home-cta-btn-primary">
-                    Open problems
-                    <ArrowRight strokeWidth={2} aria-hidden />
-                  </Link>
-                </motion.div>
+                  Open problems
+                  <ArrowRight strokeWidth={2} aria-hidden />
+                </Link>
               </motion.div>
 
               <motion.div
@@ -248,7 +171,7 @@ export function HomeFinalCtaSection() {
               >
                 <a
                   href={DOCS_HREF}
-                  className="lp-home-cta-btn-ghost"
+                  className="inline-flex h-12 items-center justify-center rounded-lg px-[22px] text-[15px] font-medium text-[#8799b5] no-underline transition-colors hover:bg-white/5 hover:text-[#f4f4f4]"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

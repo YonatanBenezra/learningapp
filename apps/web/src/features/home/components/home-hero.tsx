@@ -1,9 +1,5 @@
-import { HomeHeroSection } from "@/features/home/components/home-hero-section";
+import { BinaHero } from "@/features/home/components/bina-hero";
 
 export function HomeHero() {
-  return (
-    <section className="lp-home-hero" aria-labelledby="home-hero-title">
-      <HomeHeroSection />
-    </section>
-  );
+  return <BinaHero />;
 }

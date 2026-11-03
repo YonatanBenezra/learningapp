@@ -35,10 +35,19 @@ export const routes = {
   assessmentProblem: (assessmentSlug: string, exerciseSlug: string) =>
     `/assessments/${assessmentSlug}/problems/${exerciseSlug}`,
   dashboard: "/dashboard",
+  dashboardProfile: "/dashboard/profile",
+  dashboardSettings: "/dashboard/settings",
+  /** HTB-style contests workspace (dashboard shell, not under /dashboard/*). */
+  contestHub: "/contest",
+  /** Hands-on labs listing (dashboard workspace, CTF-style hub). */
+  practiceHub: "/practice",
+  /** CTF event detail from listing cards (redirects to contest lobby). */
+  ctfEvent: (id: string) => `/events/${id}`,
   /** Same URL as dashboard — kept for call sites that still use `routes.progress`. */
   progress: "/dashboard",
   billing: "/billing",
-  account: "/profile",
+  /** Account / edit profile (dashboard workspace). */
+  account: "/dashboard/profile",
   profile: (slug: string) => `/u/${slug}`,
   profileReport: (slug: string) => `/u/${slug}/report`,
   verifyResult: (resultId: string) => `/verify/${resultId}`,

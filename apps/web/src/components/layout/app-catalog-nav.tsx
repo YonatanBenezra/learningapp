@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ChevronRight, Menu, X } from "lucide-react";
 import { NavbarMenu } from "@/components/aceternity/navbar-menu";
 import { LabpathLogo } from "@/components/brand/labpath-logo";
@@ -53,7 +53,7 @@ export function AppCatalogNav() {
   const isLeaderboard = pathname === routes.leaderboard;
   const isContests =
     pathname === routes.contests || pathname.startsWith("/contests/");
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.dataset.workspace = "catalog";
     return () => {
       delete document.documentElement.dataset.workspace;
@@ -88,25 +88,26 @@ export function AppCatalogNav() {
         (scrolled || isProblems || isLeaderboard) && "is-scrolled",
       )}
     >
-      <div className="lp-site-nav-inner lp-dash-nav-inner">
-        <div className="lp-site-nav-left">
+      <div className="lp-site-nav-inner lp-site-nav-inner--htb lp-dash-nav-inner">
+        <div className="lp-site-nav-zone lp-site-nav-zone--brand">
           <Link href={routes.home} className="lp-site-nav-brand" aria-label={brand.name}>
-            <LabpathLogo size="md" showWordmark wordmarkClassName="max-[380px]:hidden" />
+            <LabpathLogo
+              size="md"
+              showWordmark
+              wordmarkClassName="lp-site-nav-wordmark--htb max-[420px]:hidden"
+            />
           </Link>
-
-          <div className="max-[899px]:hidden lp-site-nav-links">
-            <NavbarMenu items={menuItems} />
-          </div>
         </div>
 
-        <div className="lp-site-nav-right">
-          <LiveEventPill />
-          <div className="max-[899px]:hidden">
-            <ThemeToggle variant="nav" />
-          </div>
-          <span className="lp-site-nav-vrule lp-site-nav-vrule--actions max-[899px]:hidden" aria-hidden />
+        <div className="lp-site-nav-zone lp-site-nav-zone--center max-[899px]:hidden">
+          <NavbarMenu items={menuItems} />
+        </div>
 
-          <CatalogNavHeaderAuth />
+        <div className="lp-site-nav-zone lp-site-nav-zone--actions">
+          <LiveEventPill />
+          <div className="lp-site-nav-actions-desktop max-[899px]:hidden">
+            <CatalogNavHeaderAuth />
+          </div>
 
           <button
             type="button"

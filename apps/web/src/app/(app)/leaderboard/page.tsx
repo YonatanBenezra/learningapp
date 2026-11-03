@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function LeaderboardPage() {
   return (
-    <div className="lp-page lp-page-leaderboard">
+    <div className="lp-page lp-page-leaderboard lp-page-leaderboard--htb">
       <LeaderboardFigmaView />
     </div>
   );

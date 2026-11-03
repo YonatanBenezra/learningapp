@@ -26,6 +26,15 @@ export function RootNav() {
     return null;
   }
 
+  if (
+    pathname === routes.dashboard ||
+    pathname.startsWith(`${routes.dashboard}/`) ||
+    pathname === routes.contestHub ||
+    pathname === routes.practiceHub
+  ) {
+    return null;
+  }
+
   if (pathname === routes.onboarding) {
     return <OnboardingProblemNav />;
   }

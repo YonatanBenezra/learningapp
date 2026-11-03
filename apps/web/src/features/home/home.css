@@ -29,7 +29,7 @@ html {
   margin-inline: auto;
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--ag-line);
-  background: var(--ag-card);
+  background: var(--lp-nav-bar-bg, var(--ag-card));
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     background-color 0.3s ease,
@@ -43,11 +43,11 @@ html {
 }
 
 .ag-header.is-scrolled {
-  border-bottom-color: color-mix(in srgb, var(--ag-line) 85%, transparent);
-  background: color-mix(in srgb, var(--ag-card) 94%, transparent);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--ag-line) 70%, transparent);
-  backdrop-filter: blur(10px) saturate(1.1);
-  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  border-bottom-color: var(--lp-border-subtle, var(--ag-line));
+  background: var(--lp-nav-bar-bg-solid, color-mix(in srgb, var(--ag-card) 94%, transparent));
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .ag-nav {
@@ -55,8 +55,8 @@ html {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  width: min(1200px, calc(100% - 3rem));
-  min-height: 3.75rem;
+  width: var(--lp-catalog-content-width, min(1320px, calc(100% - 3rem)));
+  min-height: 3.625rem;
   margin-inline: auto;
   padding: 0;
   overflow: visible;
@@ -123,7 +123,7 @@ html {
   position: relative;
   padding: 0;
   border-radius: 0;
-  color: var(--ag-muted);
+  color: var(--lp-text-secondary, var(--ag-muted));
   font-size: 0.9375rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -147,11 +147,11 @@ html {
 }
 
 .ag-nav-link:hover {
-  color: var(--ag-ink);
+  color: var(--lp-text-heading, var(--ag-ink));
 }
 
 .ag-nav-link.is-active {
-  color: var(--ag-ink);
+  color: var(--ag-orange);
   font-weight: 600;
 }
 
@@ -180,7 +180,7 @@ html {
   border: 1px solid var(--ag-orange);
   border-radius: 3px;
   background: var(--ag-orange);
-  color: #fff;
+  color: var(--color-brand-on, #0b121f);
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -351,6 +351,23 @@ html:not([data-theme="dark"]) .ag-foot-socials .ag-dot {
 html:not([data-theme="dark"]) .ag-header {
   background: color-mix(in srgb, var(--ag-card) 92%, var(--ag-bg));
   box-shadow: 0 1px 0 color-mix(in srgb, var(--ag-line) 80%, transparent);
+}
+
+html[data-theme="dark"] .ag-header {
+  border-bottom-color: var(--lp-border-subtle);
+  background: #101927;
+}
+
+html[data-theme="dark"] .ag-header.is-scrolled {
+  background: #141d2b;
+}
+
+html[data-theme="dark"] .ag-nav-cta {
+  border-left-color: var(--lp-border-subtle);
+}
+
+html[data-theme="dark"] .ag-logo-name {
+  color: #f4f4f4;
 }
 
 html[data-theme="dark"] .ag-hero {
@@ -829,7 +846,7 @@ html[data-theme="dark"] .ag-rings i {
 .ag-footer-inner {
   position: relative;
   z-index: 1;
-  width: min(1200px, calc(100% - 3rem));
+  width: var(--lp-catalog-content-width, min(1320px, calc(100% - 3rem)));
   margin-inline: auto;
 }
 
@@ -1502,7 +1519,7 @@ html[data-theme="dark"] .ag-cols {
 .ag-lc-ai-inner {
   position: relative;
   z-index: 1;
-  width: min(1200px, calc(100% - 3rem));
+  width: var(--lp-catalog-content-width, min(1320px, calc(100% - 3rem)));
   margin-inline: auto;
 }
 
@@ -2259,7 +2276,20 @@ html[data-theme="dark"] .ag-page .ag-lc-ai-tab.is-active {
 /* Home — Figma hero layout */
 
 .lp-main--home {
-  padding-top: 0;
+  padding-top: 0 !important;
+  margin-top: 0;
+  --lp-home-section-gap: 8rem;
+  --lp-home-section-py: calc(var(--lp-home-section-gap) / 2);
+}
+
+@media (max-width: 767px) {
+  .lp-main--home {
+    --lp-home-section-gap: 4rem;
+  }
+}
+
+html:has(.bina-hero) .ag-page {
+  background: var(--lp-bg-canvas);
 }
 
 .lp-page-home {
@@ -2267,4 +2297,17 @@ html[data-theme="dark"] .ag-page .ag-lc-ai-tab.is-active {
   width: 100%;
   min-height: 100dvh;
   box-sizing: border-box;
+  background: var(--lp-home-section-bg, var(--lp-bg-canvas));
+}
+
+.lp-page-home .bina-hero,
+.lp-page-home .lp-home-hiw,
+.lp-page-home .lp-home-live,
+.lp-page-home .lp-home-stats,
+.lp-page-home .lp-home-cta-section {
+  background: var(--lp-home-section-bg, var(--lp-bg-canvas));
+}
+
+.lp-main--home > .lp-home-foot {
+  background: var(--lp-home-section-bg, var(--lp-bg-canvas));
 }
