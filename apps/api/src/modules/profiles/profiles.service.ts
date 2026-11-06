@@ -253,6 +253,9 @@ export class ProfilesService {
     const next: ProfileMeta = {
       ...current,
       ...dto,
+      accountSettings: dto.accountSettings
+        ? { ...current.accountSettings, ...dto.accountSettings }
+        : current.accountSettings,
       socials: dto.socials ?? current.socials,
       interests: dto.interests ?? current.interests,
       skills: dto.skills ?? current.skills,

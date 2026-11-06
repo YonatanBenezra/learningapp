@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { Flame, Shield } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -8,8 +9,7 @@ import { ProfilePlatformSkeleton } from "@/features/profile/platform/profile-pla
 import { routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
 import { useAuthSession } from "@/features/auth/use-auth-session";
-import { DashboardWorkspaceShell } from "@/features/dashboard/components/dashboard-workspace-shell";
-import { BadgesGrid } from "@/features/profile/platform/components/badges-grid";
+import { BadgesGrid, BadgeCategoryIcon } from "@/features/profile/platform/components/badges-grid";
 import {
   GhostAddButton,
   PlatformCard,
@@ -198,8 +198,8 @@ export function ProfilePlatformView() {
       : aggregateDaysIntoWeeks(data.xpHistory);
 
   return (
-    <DashboardWorkspaceShell user={user}>
-      <main className="lp-dash-figma-main !gap-6 !pb-24 !pt-6 text-platform-text">
+    <Fragment>
+    <main className="lp-dash-figma-main !gap-6 !pb-24 !pt-6 text-platform-text">
         <ProfileHeader
           data={data}
           onEdit={() => setEditOpen(true)}
@@ -338,19 +338,52 @@ export function ProfilePlatformView() {
               </PlatformCard>
 
               <PlatformCard title="Badges">
-                <p className="text-sm text-platform-muted">
-                  Earn badges from <Link href={routes.problems} className="text-platform-accent">Labs</Link> and{" "}
-                  <Link href={routes.problems} className="text-platform-accent">Academy</Link>.
-                </p>
-                <div className="mt-4 grid grid-cols-4 gap-2">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="aspect-square rounded-lg bg-platform-input opacity-40"
-                      aria-hidden
-                    />
-                  ))}
-                </div>
+                {data.badges.length > 0 ? (
+                  <>
+                    <div className="mt-1 grid grid-cols-4 gap-2">
+                      {data.badges.slice(0, 8).map((b) => (
+                        <div
+                          key={b.id}
+                          className="flex min-h-[4.5rem] flex-col items-center justify-center gap-1 rounded-lg border border-platform-border bg-platform-input/60 px-1 py-2"
+                          title={b.name}
+                        >
+                          <BadgeCategoryIcon category={b.category} className="size-5 text-platform-accent" />
+                          <span className="line-clamp-2 w-full text-center text-[10px] font-medium leading-tight text-platform-text">
+                            {b.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    {data.badges.length > 8 ? (
+                      <p className="mt-2 text-xs text-platform-muted">
+                        +{data.badges.length - 8} more — open the Badges tab to see all.
+                      </p>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => setTab("badges")}
+                      className="mt-3 w-full rounded border border-dashed border-platform-border px-3 py-2 text-sm font-semibold text-platform-muted transition-colors duration-150 hover:border-platform-muted hover:text-platform-text"
+                    >
+                      View all badges
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-platform-muted">
+                      Complete challenges in{" "}
+                      <Link href={routes.practiceHub} className="text-platform-accent hover:underline">
+                        Practice
+                      </Link>{" "}
+                      to earn your first badges.
+                    </p>
+                    <Link
+                      href={routes.practiceHub}
+                      className="mt-4 inline-flex h-10 w-full items-center justify-center rounded bg-platform-input text-sm font-semibold text-platform-text transition-colors hover:bg-[#2a3548]"
+                    >
+                      Go to Practice
+                    </Link>
+                  </>
+                )}
               </PlatformCard>
 
               <PlatformCard title="Skills">
@@ -398,6 +431,6 @@ export function ProfilePlatformView() {
         onSave={onEditSave}
         pending={pending}
       />
-    </DashboardWorkspaceShell>
+    </Fragment>
   );
 }

@@ -15,7 +15,15 @@ import { OutlinedField, OutlinedSelect } from "@/features/account-settings/compo
 import { SectionCard } from "@/features/account-settings/components/section-card";
 import { SettingsButton } from "@/features/account-settings/components/settings-button";
 import { Toggle } from "@/features/account-settings/components/toggle";
+import {
+  persistBasicInfo,
+  persistCareer,
+  persistIsc2,
+  persistSocial,
+} from "@/features/account-settings/lib/persist-account-settings";
 import { showSettingsSaved } from "@/features/account-settings/lib/settings-toast";
+import { ApiError } from "@/lib/api-client";
+import toast from "react-hot-toast";
 import {
   CALLING_CODE_OPTIONS,
   getTimezoneOptions,
@@ -31,16 +39,23 @@ import {
   type CareerValues,
   type SocialValues,
 } from "@/features/account-settings/schemas/user-settings-schemas";
-import { delaySave, mockUser, type MockUserSettings } from "@/lib/mock-user";
+import { mockUser, type MockUserSettings } from "@/lib/mock-user";
 
 const timezoneOptions = getTimezoneOptions();
 
 type UserSettingsTabProps = {
   initial: MockUserSettings;
   onPatch: (patch: Partial<MockUserSettings>) => void;
+  onReload?: () => Promise<void>;
 };
 
-export function UserSettingsTab({ initial, onPatch }: UserSettingsTabProps) {
+function settingsSaveError(caught: unknown) {
+  const message =
+    caught instanceof ApiError ? caught.message : "Could not save settings. Try again.";
+  toast.error(message);
+}
+
+export function UserSettingsTab({ initial, onPatch, onReload }: UserSettingsTabProps) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(initial.avatarUrl);
   const [avatarDirty, setAvatarDirty] = useState(false);
   const [secondaryEmails, setSecondaryEmails] = useState(initial.secondaryEmails);
@@ -99,37 +114,56 @@ export function UserSettingsTab({ initial, onPatch }: UserSettingsTabProps) {
   }, []);
 
   async function saveBasic(values: BasicInfoValues) {
-    await delaySave();
-    onPatch({ ...values, avatarUrl });
-    basicForm.reset(values);
-    setAvatarDirty(false);
-    showSettingsSaved();
+    try {
+      await persistBasicInfo(values, avatarUrl);
+      await onReload?.();
+      onPatch({ ...values, avatarUrl });
+      basicForm.reset(values);
+      setAvatarDirty(false);
+      showSettingsSaved();
+    } catch (caught) {
+      settingsSaveError(caught);
+    }
   }
 
   async function saveSocial(values: SocialValues) {
-    await delaySave();
-    onPatch({ social: values });
-    socialForm.reset(values);
-    showSettingsSaved();
+    try {
+      await persistSocial(values);
+      await onReload?.();
+      onPatch({ social: values });
+      socialForm.reset(values);
+      showSettingsSaved();
+    } catch (caught) {
+      settingsSaveError(caught);
+    }
   }
 
   async function saveIsc2(values: { isc2MemberId: string }) {
-    await delaySave();
-    onPatch(values);
-    isc2Form.reset(values);
-    showSettingsSaved();
+    try {
+      await persistIsc2(values.isc2MemberId);
+      await onReload?.();
+      onPatch(values);
+      isc2Form.reset(values);
+      showSettingsSaved();
+    } catch (caught) {
+      settingsSaveError(caught);
+    }
   }
 
   async function saveCareer(values: CareerValues) {
-    await delaySave();
-    onPatch(values);
-    careerForm.reset(values);
-    showSettingsSaved();
+    try {
+      await persistCareer(values);
+      await onReload?.();
+      onPatch(values);
+      careerForm.reset(values);
+      showSettingsSaved();
+    } catch (caught) {
+      settingsSaveError(caught);
+    }
   }
 
   async function addSecondary(values: { email: string }) {
     setAddingEmail(true);
-    await delaySave();
     const next = [...secondaryEmails, { id: crypto.randomUUID(), email: values.email }];
     setSecondaryEmails(next);
     onPatch({ secondaryEmails: next });
@@ -148,6 +182,8 @@ export function UserSettingsTab({ initial, onPatch }: UserSettingsTabProps) {
   return (
     <div className="flex flex-col gap-6">
       <SectionCard
+        id="basic-information"
+        className="scroll-mt-[calc(var(--height-platform-topbar,60px)+1rem)]"
         title="Basic Information"
         description={`Basic details that represent you across the ${brand.name} ecosystem.`}
       >
@@ -323,7 +359,11 @@ export function UserSettingsTab({ initial, onPatch }: UserSettingsTabProps) {
         </form>
       </SectionCard>
 
-      <SectionCard title="Career">
+      <SectionCard
+        id="career"
+        className="scroll-mt-[calc(var(--height-platform-topbar,60px)+1rem)]"
+        title="Career"
+      >
         <form onSubmit={careerForm.handleSubmit(saveCareer)} className="space-y-6">
           <Controller
             control={careerForm.control}

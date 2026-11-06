@@ -1,5 +1,10 @@
-import { redirectToProblems } from "@/lib/redirect-to-problems";
+import { PublicProfilePage } from "./public-profile-page";
 
-export default function PublicProfileRedirectPage() {
-  redirectToProblems();
+export default async function PublicProfilePageRoute({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  return <PublicProfilePage slug={slug} />;
 }

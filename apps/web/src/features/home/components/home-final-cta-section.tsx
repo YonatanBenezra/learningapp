@@ -147,7 +147,7 @@ export function HomeFinalCtaSection() {
                 }
               >
                 <Link
-                  href={routes.problems}
+                  href={routes.signUp}
                   className="lp-home-cta-btn-primary inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#9fef00] px-[22px] text-[15px] font-medium text-[#121c2b] no-underline shadow-sm transition-colors hover:bg-[#aced2c]"
                 >
                   Open problems

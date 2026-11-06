@@ -1,2 +1,5 @@
-/** Runs synchronously in <head> before paint — keep in sync with theme.ts */
-export const themeInitScript = `(function(){try{var k="labpath-theme";var t=localStorage.getItem(k);var theme=(t==="light"||t==="dark")?t:"dark";var r=document.documentElement;r.setAttribute("data-theme",theme);r.classList.toggle("dark",theme==="dark");r.style.colorScheme=theme;if(theme==="dark"){r.style.backgroundColor="#070e1e";}else{r.style.backgroundColor="#f4f4f2";}}catch(e){}})();`;
+/**
+ * Theme bootstrap runs from `/theme-init.js` (beforeInteractive in root layout).
+ * Keep logic in sync with {@link @/features/theme/theme}.
+ */
+export const themeInitPublicPath = "/theme-init.js";

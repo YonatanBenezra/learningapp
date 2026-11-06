@@ -57,13 +57,27 @@ export type ProfileWorkspace = {
   achievements: ProfileAchievement[];
   events: ProfileEvent[];
   badges: ProfileBadge[];
+  accountSettings?: {
+    timezone?: string;
+    city?: string;
+    phone?: string;
+    callingCode?: string;
+    website?: string;
+    isc2MemberId?: string;
+    openToWork?: boolean;
+    jobTitle?: string;
+    yearsExperience?: string;
+  };
 };
+
+export type ProfileAccountSettings = ProfileWorkspace["accountSettings"];
 
 export type ProfileMeta = {
   summary?: string;
   country?: string;
   avatarUrl?: string;
   coverUrl?: string;
+  accountSettings?: ProfileAccountSettings;
   socials?: ProfileSocial[];
   interests?: string[];
   skills?: string[];

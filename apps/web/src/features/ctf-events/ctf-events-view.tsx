@@ -2,7 +2,8 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CtfNavbar } from "@/features/ctf-events/components/ctf-navbar";
+import { GlobalLoader } from "@/components/ui/global-loader";
+import { useAuthSession } from "@/features/auth/use-auth-session";
 import { EventGrid } from "@/features/ctf-events/components/event-grid";
 import { EventSearch } from "@/features/ctf-events/components/event-search";
 import { EventTabs } from "@/features/ctf-events/components/event-tabs";
@@ -11,7 +12,6 @@ import { mapArenaToCtfEvent } from "@/features/ctf-events/map-arena-to-ctf";
 import { ctfTabCounts } from "@/features/ctf-events/tab-counts";
 import { useCtfContests } from "@/features/ctf-events/use-ctf-contests";
 import type { CtfEventTab } from "@/features/ctf-events/types";
-import { GlobalLoader } from "@/components/ui/global-loader";
 
 const TAB_IDS: CtfEventTab[] = ["live", "upcoming", "joined", "past"];
 
@@ -34,6 +34,7 @@ export function CtfEventsView() {
   const searchParams = useSearchParams();
   const tab = parseTab(searchParams.get("tab"));
   const [query, setQuery] = useState("");
+  const { user: sessionUser, resolved: sessionResolved } = useAuthSession();
   const { events: arenaEvents, apiFailed, error, loading } = useCtfContests();
 
   useEffect(() => {
@@ -65,33 +66,32 @@ export function CtfEventsView() {
     return filterArenaEvents(arenaEvents, tab, query).map(mapArenaToCtfEvent);
   }, [arenaEvents, query, tab]);
 
+  const bootstrapping = !sessionResolved || !sessionUser || loading;
+
+  if (bootstrapping) {
+    return <GlobalLoader platform fullPage label="Loading contests…" />;
+  }
+
   return (
-    <div className="min-h-screen bg-platform-page pt-[var(--height-platform-topbar)] text-sm tracking-[0.14px] text-platform-text">
-      <CtfNavbar />
-      <main className="mx-auto w-[var(--lp-catalog-content-width)] max-w-[1320px] px-0 pb-16 pt-6">
-        <EventTabs tab={tab} counts={tabCounts ?? undefined} onTab={setTab} />
-        {apiFailed && arenaEvents && arenaEvents.length > 0 ? (
-          <p className="mt-4 rounded border border-platform-border bg-platform-card px-3 py-2 text-sm text-platform-muted">
-            Could not reach the contest API — showing cached catalog events. Refresh when the API is back.
-          </p>
-        ) : null}
-        <EventSearch
-          value={query}
-          onChange={setQuery}
-          placeholder={SEARCH_PLACEHOLDER[tab]}
-        />
-        {loading ? (
-          <div className="py-20">
-            <GlobalLoader />
-          </div>
-        ) : error ? (
-          <p className="py-16 text-center text-sm text-platform-muted">
-            Could not load contests. Check the API and refresh.
-          </p>
-        ) : (
-          <EventGrid events={events} />
-        )}
-      </main>
-    </div>
+    <main className="lp-dash-figma-main lp-ctf-events !gap-0 !pb-16 !pt-6">
+      <EventTabs tab={tab} counts={tabCounts ?? undefined} onTab={setTab} />
+      {apiFailed && arenaEvents && arenaEvents.length > 0 ? (
+        <p className="mt-4 rounded border border-platform-border bg-platform-card px-3 py-2 text-sm text-platform-muted">
+          Could not reach the contest API — showing cached catalog events. Refresh when the API is back.
+        </p>
+      ) : null}
+      <EventSearch
+        value={query}
+        onChange={setQuery}
+        placeholder={SEARCH_PLACEHOLDER[tab]}
+      />
+      {error ? (
+        <p className="py-16 text-center text-sm text-platform-muted">
+          Could not load contests. Check the API and refresh.
+        </p>
+      ) : (
+        <EventGrid events={events} />
+      )}
+    </main>
   );
 }

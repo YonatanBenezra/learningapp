@@ -26,6 +26,11 @@ export function RootNav() {
     return null;
   }
 
+  /** Public profiles (`/u/:slug`) use {@link DashboardHtbShell} chrome only — hide global marketing nav. */
+  if (pathname === "/u" || pathname.startsWith("/u/")) {
+    return null;
+  }
+
   if (
     pathname === routes.dashboard ||
     pathname.startsWith(`${routes.dashboard}/`) ||

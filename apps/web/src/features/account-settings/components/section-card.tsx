@@ -7,6 +7,7 @@ type SectionCardProps = {
   children: ReactNode;
   className?: string;
   danger?: boolean;
+  id?: string;
 };
 
 export function SectionCard({
@@ -15,9 +16,11 @@ export function SectionCard({
   children,
   className,
   danger,
+  id,
 }: SectionCardProps) {
   return (
     <section
+      id={id}
       className={cn(
         "rounded-lg bg-[#151F2E] px-4 py-6",
         danger && "border border-[#F35E5E40]",

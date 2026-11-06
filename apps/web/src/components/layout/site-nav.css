@@ -208,6 +208,13 @@ html[data-theme="dark"]
   transition: height 0.25s ease;
 }
 
+/** Catalog + HTB nav — same horizontal rail as `.bina-hero-inner` / `lp-catalog-content-width` */
+html[data-workspace="catalog"] .lp-site-nav-inner.lp-site-nav-inner--htb {
+  box-sizing: border-box;
+  width: var(--lp-catalog-content-width);
+  max-width: none;
+}
+
 html[data-workspace="catalog"] .lp-site-nav-inner:not(.lp-site-nav-inner--htb) {
   max-width: var(--lp-nav-content-width);
 }
@@ -797,12 +804,40 @@ html[data-theme="dark"] .lp-site-nav--catalog .lp-site-nav-mobile-row.is-active 
     --lp-dash-nav-h: 4rem;
   }
 
+  /* Catalog HTB: logo + menu only — hide desktop auth row even if utility classes fail to load */
+  .lp-site-nav-actions-desktop {
+    display: none !important;
+  }
+
+  html[data-workspace="catalog"] .lp-site-nav-inner.lp-site-nav-inner--htb {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding-inline: max(1rem, env(safe-area-inset-left, 0px))
+      max(1rem, env(safe-area-inset-right, 0px));
+    box-sizing: border-box;
+  }
+
+  .lp-site-nav-zone--brand {
+    min-width: 0;
+    flex: 1 1 0%;
+  }
+
+  .lp-site-nav-zone--actions {
+    flex-shrink: 0;
+  }
+
   .lp-site-nav-menu-btn {
     display: inline-flex;
+    flex-shrink: 0;
   }
 
   .lp-site-nav-inner {
     max-width: calc(100% - 2rem);
+  }
+
+  html[data-workspace="catalog"] .lp-site-nav-inner.lp-site-nav-inner--htb {
+    max-width: none;
   }
 
   .lp-site-nav-mobile {

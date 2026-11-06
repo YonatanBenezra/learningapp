@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsIn,
   IsNumber,
   IsOptional,
@@ -60,6 +61,52 @@ class EventDto {
   date?: string;
 }
 
+class AccountSettingsDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  timezone?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(8)
+  callingCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  website?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  isc2MemberId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  openToWork?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  jobTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  yearsExperience?: string;
+}
+
 class BadgeDto {
   @IsString()
   @MaxLength(80)
@@ -91,6 +138,11 @@ export class UpdateProfileMetaDto {
   @IsString()
   @MaxLength(80)
   country?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AccountSettingsDto)
+  accountSettings?: AccountSettingsDto;
 
   @IsOptional()
   @IsUrl()

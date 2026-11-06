@@ -6,6 +6,7 @@ import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { postAuthPath, routes } from "@/config/routes";
+import { cn } from "@/lib/utils";
 import { authApi } from "@/features/auth/auth-api";
 import { setAuthenticatedUser } from "@/features/auth/auth-session";
 import { authToastError } from "@/features/auth/auth-toast";
@@ -61,7 +62,7 @@ function SignUpFormInner() {
   const strength =
     metCount === 0 ? "weak" : metCount === 1 ? "weak" : metCount === 2 ? "fair" : "strong";
   const strengthColor =
-    strength === "weak" ? "var(--red)" : strength === "fair" ? "var(--amber)" : "var(--teal)";
+    strength === "weak" ? "#F35E5E" : strength === "fair" ? "#fbbf24" : "#9FEF00";
 
   useEffect(() => {
     const slug = username.trim().toLowerCase();
@@ -128,7 +129,7 @@ function SignUpFormInner() {
       <AuthEmailDivider index={2} />
 
       <motion.form
-        className="lp-auth-figma-fields"
+        className="flex flex-col gap-5"
         onSubmit={onSubmit}
         noValidate
         animate={shake ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
@@ -142,7 +143,7 @@ function SignUpFormInner() {
           state={usernameState === "valid" ? "valid" : usernameState === "error" ? "error" : "default"}
           helper={
             usernameState === "valid"
-              ? "Available · shown on the leaderboard"
+              ? "Available · shown on rankings"
               : usernameState === "error"
                 ? "That username is taken"
                 : usernameState === "checking"
@@ -154,7 +155,7 @@ function SignUpFormInner() {
           }
           trail={
             usernameState === "valid" ? (
-              <Check size={16} color="var(--teal)" aria-hidden />
+              <Check size={16} className="text-[#9FEF00]" aria-hidden />
             ) : null
           }
         >
@@ -271,13 +272,13 @@ function PasswordStrength({
 
   return (
     <motion.div
-      className="lp-auth-figma-strength"
+      className="space-y-3 rounded-[4px] border border-[#2A3547] bg-[#151F2E]/80 p-3"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: E, delay: 0.38 }}
     >
-      <div className="lp-auth-figma-strength-head">
-        <div className="lp-auth-figma-strength-bars">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-1 gap-1.5">
           {[0, 1, 2, 3].map((i) => {
             const filled =
               strength === "strong"
@@ -288,9 +289,9 @@ function PasswordStrength({
                     ? i < 1
                     : false;
             return (
-              <span key={i} className="lp-auth-figma-strength-seg">
+              <span key={i} className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#1E2939]">
                 <motion.span
-                  className="lp-auth-figma-strength-seg-fill"
+                  className="block h-full origin-left rounded-full"
                   style={{ background: strengthColor }}
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: filled ? 1 : 0 }}
@@ -300,11 +301,11 @@ function PasswordStrength({
             );
           })}
         </div>
-        <span className="lp-auth-figma-strength-label" style={{ color: strengthColor }}>
+        <span className="text-xs font-semibold capitalize" style={{ color: strengthColor }}>
           {strength === "weak" ? "Weak" : strength === "fair" ? "Fair" : "Strong"}
         </span>
       </div>
-      <div className="lp-auth-figma-rules">
+      <div className="flex flex-wrap gap-2">
         {labels.map((rule) => (
           <Rule key={rule.key} label={rule.label} met={rule.met} />
         ))}
@@ -316,7 +317,10 @@ function PasswordStrength({
 function Rule({ label, met }: { label: string; met: boolean }) {
   return (
     <motion.span
-      className={`lp-auth-figma-rule${met ? " is-met" : ""}`}
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
+        met ? "bg-[#9FEF00]/15 text-[#9FEF00]" : "bg-[#1E2939] text-[#8799B5]",
+      )}
       animate={met ? { scale: [1, 1.06, 1] } : { scale: 1 }}
       transition={{ duration: 0.2 }}
     >

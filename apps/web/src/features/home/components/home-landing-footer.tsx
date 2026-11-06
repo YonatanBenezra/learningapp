@@ -17,9 +17,9 @@ const FOOT_COLUMNS: readonly FootGroup[][] = [
     {
       heading: "Practice",
       links: [
-        { label: "Problems", href: routes.problems },
-        { label: "Contest", href: routes.contests },
-        { label: "Leaderboard", href: routes.leaderboard },
+        { label: "Practice", href: routes.practiceHub },
+        { label: "Contests", href: routes.contestHub },
+        { label: "Ranking", href: routes.dashboardRanking },
         { label: "Dashboard", href: routes.dashboard },
         { label: "Paths", href: routes.paths },
       ],
@@ -29,10 +29,10 @@ const FOOT_COLUMNS: readonly FootGroup[][] = [
     {
       heading: "Tracks",
       links: [
-        { label: "RAG", href: `${routes.problems}?track=rag` },
-        { label: "Eval", href: `${routes.problems}?track=eval` },
-        { label: "Guardrails", href: `${routes.problems}?track=guard` },
-        { label: "Prompt", href: `${routes.problems}?track=prompt` },
+        { label: "RAG", href: `${routes.practiceHub}?track=rag` },
+        { label: "Eval", href: `${routes.practiceHub}?track=eval` },
+        { label: "Guardrails", href: `${routes.practiceHub}?track=guard` },
+        { label: "Prompt", href: `${routes.practiceHub}?track=prompt` },
       ],
     },
   ],
@@ -58,7 +58,7 @@ const FOOT_COLUMNS: readonly FootGroup[][] = [
     {
       heading: "Company",
       links: [
-        { label: "Contact", href: "mailto:hello@labpath.dev" },
+        { label: "Contact", href: routes.contact },
         { label: "Privacy", href: "/privacy" },
         { label: "Terms", href: "/terms" },
         { label: "Security", href: "/security" },

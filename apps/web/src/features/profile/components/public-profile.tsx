@@ -8,8 +8,6 @@ import { EmployerProfileContent } from "@/features/profile/components/employer-p
 import { profileApi } from "@/features/profile/profile-api";
 import { ApiError } from "@/lib/api-client";
 import type { PublicProfile } from "@/types/profile";
-import "../public-profile.css";
-
 export function PublicProfileView({ slug }: { slug: string }) {
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [error, setError] = useState<"missing" | "load" | null>(null);
@@ -40,31 +38,21 @@ export function PublicProfileView({ slug }: { slug: string }) {
 
   if (error === "missing") {
     return (
-      <div className="lp-page lp-page-catalogue lp-page-profile">
-        <div className="lp-pp">
-          <header className="lp-pp-hero">
-            <div className="lp-pp-copy">
-              <p className="lp-pp-kicker">Employer view</p>
-              <h1 className="lp-pp-title">Profile unavailable</h1>
-              <p className="lp-pp-lead">
-                This profile is private or does not exist.
-              </p>
-            </div>
-          </header>
-        </div>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center bg-[#07090D] px-6 py-16 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B6F23A]">Employer view</p>
+        <h1 className="mt-3 text-2xl font-bold text-[#EDEFF3]" style={{ fontFamily: "var(--font-ep-heading), sans-serif" }}>
+          Profile unavailable
+        </h1>
+        <p className="mt-2 max-w-md text-sm text-[#8A93A3]">This profile is private or does not exist.</p>
       </div>
     );
   }
 
   if (error === "load") {
     return (
-      <div className="lp-page lp-page-catalogue lp-page-profile">
-        <div className="lp-pp">
-          <div className="lp-pp-error">
-            <strong>Could not load this profile</strong>
-            <p>Check that the API is running, then refresh this page.</p>
-          </div>
-        </div>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center bg-[#07090D] px-6 py-16 text-center">
+        <strong className="text-[#EDEFF3]">Could not load this profile</strong>
+        <p className="mt-2 max-w-md text-sm text-[#8A93A3]">Check that the API is running, then refresh this page.</p>
       </div>
     );
   }
@@ -73,11 +61,7 @@ export function PublicProfileView({ slug }: { slug: string }) {
     return <GlobalLoader fullPage />;
   }
 
-  return (
-    <div className="lp-page lp-page-catalogue lp-page-profile">
-      <EmployerProfileContent profile={profile} />
-    </div>
-  );
+  return <EmployerProfileContent profile={profile} />;
 }
 
 export function EmployerReportView({ slug }: { slug: string }) {
@@ -133,9 +117,5 @@ export function EmployerReportView({ slug }: { slug: string }) {
     );
   }
 
-  return (
-    <div className="lp-page lp-page-catalogue lp-page-profile lp-page-report">
-      <EmployerProfileContent profile={profile} printable />
-    </div>
-  );
+  return <EmployerProfileContent profile={profile} printable />;
 }

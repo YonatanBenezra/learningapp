@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SettingsButton } from "@/features/account-settings/components/settings-button";
 function initialsFromName(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -18,6 +18,10 @@ type AvatarUploaderProps = {
 export function AvatarUploader({ fullName, avatarUrl, onAvatarChange }: AvatarUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(avatarUrl);
+
+  useEffect(() => {
+    setPreview(avatarUrl);
+  }, [avatarUrl]);
 
   const initials = initialsFromName(fullName);
 

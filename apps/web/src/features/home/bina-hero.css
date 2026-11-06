@@ -3,10 +3,28 @@ html[data-workspace="catalog"]:has(.bina-hero) {
   --lp-dash-nav-gap: 0;
 }
 
+/**
+ * Pull the section up under the fixed nav (full-bleed bg) but keep copy below the bar:
+ * border-top ends up ~`-navH` in the viewport, so padding-top must be 2×navH for content to start at +navH.
+ */
 .bina-hero {
+  /* Space above hero photo (below nav) — push art + scrims down */
+  --bina-hero-media-inset-top: clamp(2.75rem, 8.5vw, 6rem);
   margin-top: calc(-1 * var(--lp-dash-nav-h, 85px));
-  padding-top: var(--lp-dash-nav-h, 85px);
+  padding-top: calc(2 * var(--lp-dash-nav-h, 85px));
   background-color: var(--lp-home-section-bg, var(--lp-bg-canvas));
+}
+
+/**
+ * Photo/scrim layers must not use `inset-0`: absolutely positioned children ignore
+ * block padding, so they were flush under the nav. Offset `top` by --bina-hero-media-inset-top.
+ */
+.bina-hero-media-layer {
+  position: absolute;
+  top: var(--bina-hero-media-inset-top);
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 /* Same left edge as .lp-home-hiw-inner and other 1320px sections */
@@ -16,6 +34,20 @@ html[data-workspace="catalog"]:has(.bina-hero) {
   margin-inline: auto;
   padding-inline: 0;
   box-sizing: border-box;
+}
+
+/* Tighter hero: align copy to top (not vertically centered) so less dead space above How it works */
+.bina-hero-inner--layout {
+  min-height: clamp(26rem, 58vh, 40rem);
+  /* Extra air below fixed nav + headline (in addition to `.bina-hero` 2× nav offset) */
+  padding-top: clamp(3.25rem, 9vw, 6rem);
+  padding-bottom: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+@media (max-width: 639px) {
+  .bina-hero-inner--layout {
+    min-height: min(32rem, 78svh);
+  }
 }
 
 html:has(.bina-hero) .lp-site-nav--catalog {
@@ -45,6 +77,32 @@ html:has(.bina-hero) .lp-site-nav--catalog {
 }
 
 /* Fade hero photo into the next section (--lp-bg-canvas) */
+/* Subtle photo entrance — keeps focus on copy; respects reduced motion */
+.bina-hero-bg-wrap {
+  z-index: 0;
+}
+
+.bina-hero-bg-img {
+  transform: scale(1.045);
+  opacity: 0;
+  animation: bina-hero-bg-in 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  /* Nudge focal crop slightly down vs default right/center */
+  object-position: 78% 46%;
+}
+
+@media (max-width: 639px) {
+  .bina-hero-bg-img {
+    object-position: 70% 48%;
+  }
+}
+
+@keyframes bina-hero-bg-in {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .bina-hero-blend-bottom {
   z-index: 8;
   height: min(38vh, 360px);
@@ -65,7 +123,7 @@ html:has(.bina-hero) .lp-site-nav--catalog {
 @keyframes bina-hero-rise {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
 
   to {
@@ -76,18 +134,24 @@ html:has(.bina-hero) .lp-site-nav--catalog {
 
 .bina-hero-anim {
   opacity: 0;
-  animation: bina-hero-rise 500ms ease forwards;
+  animation: bina-hero-rise 640ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .bina-hero-anim-delay-1 {
-  animation-delay: 100ms;
+  animation-delay: 120ms;
 }
 
 .bina-hero-anim-delay-2 {
-  animation-delay: 200ms;
+  animation-delay: 220ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .bina-hero-bg-img {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
   .bina-hero-anim {
     animation: none;
     opacity: 1;

@@ -455,7 +455,7 @@ export function HomeLivePracticeSection() {
 
             <FadeUp show={inView} delay={0.7} y={10} className="lp-home-live-cta-wrap">
               <Link
-                href={routes.problems}
+                href={routes.signUp}
                 className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#1e2939] px-4 text-sm font-medium text-[#f4f4f4] no-underline transition-colors hover:bg-[#242f40]"
               >
                 Browse problems

@@ -167,6 +167,7 @@ export function buildWorkspacePayload(input: {
     achievements: input.meta.achievements,
     events: input.meta.events,
     badges: input.meta.badges,
+    accountSettings: input.meta.accountSettings ?? {},
   };
 }
 

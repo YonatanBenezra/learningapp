@@ -17,17 +17,14 @@ export function isAppCatalogPath(pathname: string): boolean {
   if (isPracticePath(pathname)) {
     return false;
   }
-  if (pathname === routes.home) {
+  if (pathname === routes.home || pathname === routes.contact) {
     return true;
   }
   if (pathname === routes.dashboard || pathname.startsWith(`${routes.dashboard}/`)) {
     return false;
   }
   if (
-    pathname === routes.problems ||
-    pathname === routes.contests ||
     pathname.startsWith(`${routes.contests}/`) ||
-    pathname === routes.leaderboard ||
     pathname === routes.paths ||
     pathname.startsWith(`${routes.paths}/`)
   ) {

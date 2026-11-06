@@ -1,8 +1,21 @@
 "use client";
 
+import { CalendarDays, FlaskConical, GraduationCap } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { ProfileBadge } from "@/features/profile/platform/types";
 import { cn } from "@/lib/utils";
+
+export function BadgeCategoryIcon({
+  category,
+  className,
+}: {
+  category: ProfileBadge["category"];
+  className?: string;
+}) {
+  const Icon =
+    category === "labs" ? FlaskConical : category === "academy" ? GraduationCap : CalendarDays;
+  return <Icon className={cn("size-6 shrink-0", className)} aria-hidden strokeWidth={2} />;
+}
 
 type BadgesGridProps = {
   badges: ProfileBadge[];
@@ -48,7 +61,7 @@ export function BadgesGrid({ badges }: BadgesGridProps) {
               className="rounded-lg border border-platform-border bg-platform-card p-5 transition-colors duration-150 hover:border-[#2a3548]"
             >
               <div className="mb-3 flex size-12 items-center justify-center rounded-lg bg-platform-input text-platform-accent">
-                ★
+                <BadgeCategoryIcon category={badge.category} className="size-6" />
               </div>
               <h3 className="font-semibold text-platform-text">{badge.name}</h3>
               {badge.earnedAt ? (

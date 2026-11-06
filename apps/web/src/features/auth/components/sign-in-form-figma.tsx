@@ -84,7 +84,7 @@ function SignInFormInner() {
       <AuthEmailDivider index={2} />
 
       <motion.form
-        className="lp-auth-figma-fields"
+        className="flex flex-col gap-5"
         onSubmit={onSubmit}
         noValidate
         animate={shake ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
@@ -109,9 +109,11 @@ function SignInFormInner() {
           icon={Lock}
           index={4}
           labelRight={
-            <Link href="/magic-link" className="lp-auth-figma-field-link">
-              <span className="lp-auth-figma-forgot-long">Forgot password?</span>
-              <span className="lp-auth-figma-forgot-short">Forgot?</span>
+            <Link
+              href="/magic-link"
+              className="text-xs font-semibold text-[#B2F233] hover:underline"
+            >
+              Forgot password?
             </Link>
           }
           trail={

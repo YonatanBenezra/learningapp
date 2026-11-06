@@ -1,4 +1,5 @@
 import { Inter, Oswald } from "next/font/google";
+import { DashboardHtbShell } from "@/features/dashboard/components/dashboard-htb-shell";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({
@@ -16,7 +17,7 @@ const oswald = Oswald({
 export default function PracticeHubLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={cn(inter.variable, oswald.variable, "font-[family-name:var(--font-inter)]")}>
-      {children}
+      <DashboardHtbShell>{children}</DashboardHtbShell>
     </div>
   );
 }

@@ -206,7 +206,7 @@ export function LeaderboardView() {
   if (error === "load") {
     return (
       <div className="lp-lb2">
-        <h1 className="lp-lb2-page-title">Leaderboard</h1>
+        <h1 className="lp-lb2-page-title">Ranking</h1>
         <div className="lp-lb2-empty lp-lb2-empty--error">
           <strong>Could not load rankings</strong>
           <p>Check that the API is running, then refresh.</p>
@@ -221,7 +221,7 @@ export function LeaderboardView() {
 
   return (
     <div className="lp-lb2">
-      <h1 className="lp-lb2-page-title">Leaderboard</h1>
+      <h1 className="lp-lb2-page-title">Ranking</h1>
       <p className="lp-lb2-page-lead">
         Practice-wide rankings across simulators.{" "}
         <Link href={routes.contests} className="lp-link">

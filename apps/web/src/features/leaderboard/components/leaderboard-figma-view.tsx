@@ -473,7 +473,7 @@ function copyInviteLink() {
 function PodiumOpenSpotCard({ rank, delay }: { rank: 2 | 3; delay: number }) {
   const reduceMotion = useReducedMotion();
   const href =
-    rank === 2 ? routes.exercise(PODIUM_OPEN_SPOT_START_SLUG) : routes.problems;
+    rank === 2 ? routes.exercise(PODIUM_OPEN_SPOT_START_SLUG) : routes.practiceHub;
   const ctaLabel = rank === 2 ? "Start P1-R3" : "Browse problems";
 
   return (
@@ -555,7 +555,7 @@ function PodiumSoonCard({ rank, delay }: { rank: 1 | 2 | 3; delay: number }) {
 
 function LeaderboardSkeleton() {
   return (
-    <div className="lp-lb lp-lb--htb lp-lb--loading" aria-busy="true" aria-label="Loading leaderboard">
+    <div className="lp-lb lp-lb--htb lp-lb--loading" aria-busy="true" aria-label="Loading rankings">
       <div className="lp-lb-inner">
         <header className="lp-lb-head lp-lb-head--htb">
           <div className="lp-lb-head-copy">
@@ -767,7 +767,7 @@ export function LeaderboardFigmaView() {
     return (
       <div className="lp-lb lp-lb--htb">
         <div className="lp-lb-inner">
-          <h1 className="lp-lb-title">Rankings</h1>
+          <h1 className="lp-lb-title">Ranking</h1>
           <div className="lp-lb-empty">
             <strong>Could not load rankings</strong>
             <p>Check that the API is running, then refresh.</p>
@@ -789,7 +789,7 @@ export function LeaderboardFigmaView() {
       <div className="lp-lb-inner">
         <header className="lp-lb-head lp-lb-head--htb">
           <FadeUp delay={0} className="lp-lb-head-copy">
-            <h1 className="lp-lb-title">Rankings</h1>
+            <h1 className="lp-lb-title">Ranking</h1>
             <p className="lp-lb-subtitle">{LEADERBOARD_PAGE_SUBTITLE}</p>
           </FadeUp>
           <FadeUp delay={0.1} className="lp-lb-global-rank" aria-label="Your global ranking">
@@ -850,7 +850,7 @@ export function LeaderboardFigmaView() {
           </label>
         </FadeUp>
 
-        <section className="lp-lb-stats" aria-label="Leaderboard stats">
+        <section className="lp-lb-stats" aria-label="Ranking stats">
           <FadeUp delay={0.15}>
             <div className="lp-lb-stat">
               <div className="lp-lb-stat-icon" aria-hidden>
@@ -951,7 +951,7 @@ export function LeaderboardFigmaView() {
                   : "Try a different search term."}
               </p>
               {board.items.length === 0 ? (
-                <Link href={routes.problems}>Open problems</Link>
+                <Link href={routes.practiceHub}>Open practice</Link>
               ) : null}
             </div>
           ) : (
@@ -964,8 +964,8 @@ export function LeaderboardFigmaView() {
                   <p className="lp-lb-table-sparse-title">{LEADERBOARD_SPARSE_TABLE_TITLE}</p>
                   <p className="lp-lb-table-sparse-body">{LEADERBOARD_SPARSE_TABLE_BODY}</p>
                   <div className="lp-lb-table-sparse-actions">
-                    <Link href={routes.problems} className="lp-lb-table-sparse-primary">
-                      Open problems
+                    <Link href={routes.practiceHub} className="lp-lb-table-sparse-primary">
+                      Open practice
                       <ArrowRight size={14} aria-hidden />
                     </Link>
                     <button type="button" className="lp-lb-table-sparse-link" onClick={copyInviteLink}>

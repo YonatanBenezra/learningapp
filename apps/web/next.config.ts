@@ -12,6 +12,15 @@ const apiProxyTarget =
   "http://localhost:3001/api";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      { source: "/problems", destination: "/practice", permanent: false },
+      { source: "/catalogue", destination: "/practice", permanent: false },
+      { source: "/simulations", destination: "/practice", permanent: false },
+      { source: "/contests", destination: "/contest", permanent: false },
+      { source: "/leaderboard", destination: "/dashboard/ranking", permanent: false },
+    ];
+  },
   async rewrites() {
     return [
       {

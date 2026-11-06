@@ -1,11 +1,9 @@
 "use client";
 
 import {
-  CircleHelp,
-  Grid3X3,
+  BarChart3,
   Home,
   LayoutGrid,
-  Megaphone,
   Settings,
   Trophy,
   User,
@@ -14,29 +12,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
+import { workspaceContests, workspacePractice, workspaceRanking } from "@/config/product-nav";
 import { routes } from "@/config/routes";
-import { authUserInitials } from "@/features/auth/use-auth-session";
+import { DashboardNavApps } from "@/features/dashboard/components/dashboard-nav-apps";
+import { DashboardNavHelp } from "@/features/dashboard/components/dashboard-nav-help";
+import { DashboardNavNotifications } from "@/features/dashboard/components/dashboard-nav-notifications";
+import { DashboardNavUserMenu } from "@/features/dashboard/components/dashboard-nav-user-menu";
 import type { User as AppUser } from "@/types/user";
 
 type DashboardHtbNavProps = {
   user: AppUser;
 };
-
-function HexAvatar({ initials }: { initials: string }) {
-  return (
-    <span className="lp-dash-htb-nav-hex" aria-hidden>
-      <svg viewBox="0 0 40 40" className="h-10 w-10">
-        <path
-          d="M20 4l14 8v16l-14 8-14-8V12L20 4z"
-          fill="#151F2E"
-          stroke="#9FEF00"
-          strokeWidth="1.5"
-        />
-      </svg>
-      <span className="lp-dash-htb-nav-hex-text">{initials}</span>
-    </span>
-  );
-}
 
 export function DashboardHtbNav({ user }: DashboardHtbNavProps) {
   const pathname = usePathname();
@@ -47,6 +33,9 @@ export function DashboardHtbNav({ user }: DashboardHtbNavProps) {
     pathname === routes.dashboardSettings || pathname.startsWith(`${routes.dashboardSettings}/`);
   const labsActive = pathname === routes.practiceHub;
   const contestsActive = pathname === routes.contestHub;
+  const rankingActive =
+    pathname === routes.dashboardRanking ||
+    pathname.startsWith(`${routes.dashboardRanking}/`);
 
   const navIconProps = {
     className: "lp-dash-htb-nav-link-icon",
@@ -86,35 +75,34 @@ export function DashboardHtbNav({ user }: DashboardHtbNavProps) {
             Settings
           </Link>
           <Link
-            href={routes.practiceHub}
+            href={workspacePractice.href}
             className={`lp-dash-htb-nav-link${labsActive ? " is-active" : ""}`}
           >
             <LayoutGrid {...navIconProps} />
-            Labs
+            {workspacePractice.label}
           </Link>
           <Link
-            href={routes.contestHub}
+            href={workspaceContests.href}
             className={`lp-dash-htb-nav-link${contestsActive ? " is-active" : ""}`}
           >
             <Trophy {...navIconProps} />
-            Contests
+            {workspaceContests.label}
+          </Link>
+          <Link
+            href={workspaceRanking.href}
+            className={`lp-dash-htb-nav-link${rankingActive ? " is-active" : ""}`}
+          >
+            <BarChart3 {...navIconProps} />
+            {workspaceRanking.label}
           </Link>
           </nav>
         </div>
 
         <div className="lp-dash-htb-nav-actions">
-          <button type="button" className="lp-dash-htb-nav-icon-btn" aria-label="Announcements">
-            <Megaphone className="lp-dash-htb-nav-action-icon" strokeWidth={2.25} aria-hidden />
-          </button>
-          <button type="button" className="lp-dash-htb-nav-icon-btn max-md:hidden" aria-label="Help">
-            <CircleHelp className="lp-dash-htb-nav-action-icon" strokeWidth={2.25} aria-hidden />
-          </button>
-          <button type="button" className="lp-dash-htb-nav-icon-btn max-lg:hidden" aria-label="Apps">
-            <Grid3X3 className="lp-dash-htb-nav-action-icon" strokeWidth={2.25} aria-hidden />
-          </button>
-          <Link href={routes.dashboardProfile} className="lp-dash-htb-nav-user" aria-label="Account">
-            <HexAvatar initials={authUserInitials(user)} />
-          </Link>
+          <DashboardNavNotifications />
+          <DashboardNavHelp className="max-md:hidden" />
+          <DashboardNavApps className="max-lg:hidden" />
+          <DashboardNavUserMenu user={user} />
         </div>
       </div>
     </header>

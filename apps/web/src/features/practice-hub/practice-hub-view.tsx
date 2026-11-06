@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GlobalLoader } from "@/components/ui/global-loader";
 import { useAuthSession } from "@/features/auth/use-auth-session";
-import { DashboardWorkspaceShell } from "@/features/dashboard/components/dashboard-workspace-shell";
 import {
   filterPracticeProblems,
   practiceTabCounts,
@@ -37,7 +36,7 @@ export function PracticeHubView() {
   const searchParams = useSearchParams();
   const tab = parseTab(searchParams.get("tab"));
   const [query, setQuery] = useState("");
-  const { user: sessionUser } = useAuthSession();
+  const { user: sessionUser, resolved: sessionResolved } = useAuthSession();
   const { problems, error, loading } = usePracticeProblems();
 
   useEffect(() => {
@@ -69,31 +68,27 @@ export function PracticeHubView() {
     return filterPracticeProblems(problems, tab, query);
   }, [problems, query, tab]);
 
-  if (!sessionUser) {
-    return <GlobalLoader platform />;
+  const bootstrapping = !sessionResolved || !sessionUser || loading;
+
+  if (bootstrapping) {
+    return <GlobalLoader platform fullPage label="Loading labs…" />;
   }
 
   return (
-    <DashboardWorkspaceShell user={sessionUser}>
-      <main className="lp-dash-figma-main lp-practice-hub !gap-0 !pb-16 !pt-6">
-        <ProblemTabs tab={tab} counts={tabCounts ?? undefined} onTab={setTab} />
-        <ProblemSearch
-          value={query}
-          onChange={setQuery}
-          placeholder={SEARCH_PLACEHOLDER[tab]}
-        />
-        {loading ? (
-          <div className="py-20">
-            <GlobalLoader platform contained label="Loading labs…" />
-          </div>
-        ) : error ? (
-          <p className="py-16 text-center text-sm text-platform-muted">
-            Could not load problems. Check the API and refresh.
-          </p>
-        ) : (
-          <ProblemGrid problems={filtered} />
-        )}
-      </main>
-    </DashboardWorkspaceShell>
+    <main className="lp-dash-figma-main lp-practice-hub !gap-0 !pb-16 !pt-6">
+      <ProblemTabs tab={tab} counts={tabCounts ?? undefined} onTab={setTab} />
+      <ProblemSearch
+        value={query}
+        onChange={setQuery}
+        placeholder={SEARCH_PLACEHOLDER[tab]}
+      />
+      {error ? (
+        <p className="py-16 text-center text-sm text-platform-muted">
+          Could not load problems. Check the API and refresh.
+        </p>
+      ) : (
+        <ProblemGrid problems={filtered} />
+      )}
+    </main>
   );
 }

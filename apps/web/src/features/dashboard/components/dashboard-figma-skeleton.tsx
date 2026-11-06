@@ -26,10 +26,6 @@ function Skel({ width, height, className = "", style, circle }: SkelProps) {
   );
 }
 
-function NavLinkSkel({ w }: { w: number }) {
-  return <Skel width={w} height={36} style={{ borderRadius: 8 }} />;
-}
-
 export function DashboardFigmaSkeleton() {
   useEffect(() => {
     document.documentElement.dataset.workspace = "dashboard";
@@ -40,32 +36,11 @@ export function DashboardFigmaSkeleton() {
 
   return (
     <div
-      className="lp-dash-figma lp-dash-figma--htb lp-dash-figma-skel"
+      className="lp-dash-figma-page lp-dash-figma-skel"
       aria-hidden="true"
       aria-busy="true"
       aria-label="Loading dashboard"
     >
-      <header className="lp-dash-htb-nav">
-        <div className="lp-dash-htb-nav-inner">
-          <div className="lp-dash-htb-nav-start">
-            <Skel width={118} height={28} style={{ borderRadius: 6 }} />
-            <span className="lp-dash-htb-nav-divider" aria-hidden />
-            <nav className="lp-dash-htb-nav-center" aria-hidden>
-              <NavLinkSkel w={88} />
-              <NavLinkSkel w={92} />
-              <NavLinkSkel w={96} />
-              <NavLinkSkel w={100} />
-            </nav>
-          </div>
-          <div className="lp-dash-htb-nav-actions">
-            <Skel width={40} height={40} style={{ borderRadius: 8 }} />
-            <Skel width={40} height={40} style={{ borderRadius: 8 }} className="max-md:hidden" />
-            <Skel width={40} height={40} style={{ borderRadius: 8 }} className="max-lg:hidden" />
-            <Skel width={40} height={40} circle />
-          </div>
-        </div>
-      </header>
-
       <div className="lp-dash-figma-main">
         <header className="lp-dash-htb-welcome">
           <div>
@@ -76,15 +51,24 @@ export function DashboardFigmaSkeleton() {
         </header>
 
         <section className="lp-dash-htb-recommended" aria-hidden>
-          <Skel width={200} height={26} style={{ marginBottom: 16, borderRadius: 6 }} />
+          <div className="lp-dash-htb-recommended-header">
+            <Skel width={200} height={26} style={{ borderRadius: 6 }} />
+            <div className="lp-dash-htb-rec-scroll-group">
+              <Skel width={36} height={36} style={{ borderRadius: 8 }} />
+              <Skel width={36} height={36} style={{ borderRadius: 8 }} />
+            </div>
+          </div>
           <div className="lp-dash-htb-recommended-track">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <div
                 key={i}
-                className={`lp-dash-htb-rec-card lp-dash-htb-rec-card--${(i - 1) % 4} flex flex-col`}
+                className={`lp-dash-htb-rec-card lp-dash-htb-rec-card--${(i - 1) % 6} flex flex-col`}
                 style={{ pointerEvents: "none" }}
               >
-                <Skel width={72} height={14} style={{ borderRadius: 4 }} />
+                <div className="lp-dash-htb-rec-card-head">
+                  <Skel width={72} height={14} style={{ borderRadius: 4 }} />
+                  <Skel width={40} height={40} style={{ borderRadius: 10 }} />
+                </div>
                 <Skel width="100%" height={18} style={{ marginTop: 12, borderRadius: 4 }} />
                 <Skel width="85%" height={18} style={{ marginTop: 8, borderRadius: 4 }} />
                 <Skel width={48} height={14} style={{ marginTop: "auto", borderRadius: 4 }} />
@@ -149,28 +133,34 @@ export function DashboardFigmaSkeleton() {
         <div className="lp-dash-figma-grid">
           <div className="lp-dash-figma-col lp-dash-figma-col--main">
             <div className="lp-dash-figma-row1">
-              <div className="lp-dash-figma-card lp-dash-figma-card--pad-lg lp-dash-figma-solved">
-                <Skel width={72} height={16} />
-                <div className="lp-dash-figma-solved-body">
-                  <Skel width={132} height={132} circle className="lp-dash-figma-skel-ring" />
-                  <div className="lp-dash-figma-diff-rows" style={{ flex: 1 }}>
-                    {[1, 2, 3].map((i) => (
-                      <Skel key={i} width="100%" height={36} style={{ borderRadius: 8 }} />
-                    ))}
+              <div className="lp-dash-figma-panel lp-dash-figma-panel--solved lp-dash-figma-card lp-dash-figma-card--pad-lg lp-dash-figma-solved">
+                <div className="lp-dash-figma-solved-grow">
+                  <Skel width={72} height={16} />
+                  <div className="lp-dash-figma-solved-body">
+                    <Skel width={132} height={132} circle className="lp-dash-figma-skel-ring" />
+                    <div className="lp-dash-figma-diff-rows" style={{ flex: 1 }}>
+                      {[1, 2, 3].map((i) => (
+                        <Skel key={i} width="100%" height={36} style={{ borderRadius: 8 }} />
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <Skel width={140} height={36} style={{ borderRadius: 10 }} />
               </div>
 
-              <div className="lp-dash-figma-card lp-dash-figma-card--pad-lg lp-dash-figma-drill">
-                <Skel width={100} height={16} />
-                <Skel width="100%" height={120} style={{ borderRadius: 14 }} />
-                <Skel width="100%" height={40} style={{ borderRadius: 10 }} />
-                <Skel width={72} height={14} style={{ marginTop: 4 }} />
-                <div className="lp-dash-figma-badge-slots">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Skel key={i} width={40} height={40} style={{ borderRadius: 10 }} />
-                  ))}
+              <div className="lp-dash-figma-panel lp-dash-figma-panel--drill lp-dash-figma-card lp-dash-figma-card--pad-lg lp-dash-figma-drill">
+                <div className="lp-dash-figma-drill-main">
+                  <Skel width={100} height={16} />
+                  <Skel width="100%" height={120} style={{ borderRadius: 14 }} />
+                  <Skel width="100%" height={40} style={{ borderRadius: 10 }} />
+                </div>
+                <div className="lp-dash-figma-drill-footer">
+                  <Skel width={72} height={14} />
+                  <div className="lp-dash-figma-badge-slots">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Skel key={i} width={40} height={40} style={{ borderRadius: 10 }} />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

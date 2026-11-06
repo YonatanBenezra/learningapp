@@ -8,24 +8,25 @@ export function BinaHero() {
       className="bina-hero relative w-full overflow-hidden"
       aria-labelledby="hero-title"
     >
-      <img
-        src="/images/hero-bg.webp"
-        alt=""
-        aria-hidden
-        fetchPriority="high"
-        loading="eager"
-        decoding="async"
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[right_center] max-sm:object-[70%_center]"
-      />
+      <div className="bina-hero-bg-wrap bina-hero-media-layer pointer-events-none overflow-hidden" aria-hidden>
+        <img
+          src="/images/hero-bg.webp"
+          alt=""
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          className="bina-hero-bg-img h-full w-full object-cover"
+        />
+      </div>
 
-      <div className="bina-hero-overlay-scrim pointer-events-none absolute inset-0" aria-hidden />
+      <div className="bina-hero-overlay-scrim bina-hero-media-layer pointer-events-none" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[rgba(20,29,43,0.85)] from-0% via-transparent via-55% to-transparent"
+        className="bina-hero-media-layer pointer-events-none bg-gradient-to-r from-[rgba(20,29,43,0.85)] from-0% via-transparent via-55% to-transparent"
         aria-hidden
       />
       <div className="bina-hero-blend-bottom pointer-events-none absolute inset-x-0 bottom-0" aria-hidden />
 
-      <div className="bina-hero-inner relative z-10 flex min-h-[max(720px,85vh)] w-full items-center">
+      <div className="bina-hero-inner bina-hero-inner--layout relative z-10 flex w-full flex-col justify-start">
         <div className="max-w-[800px]">
           <h1
             id="hero-title"
@@ -53,7 +54,7 @@ export function BinaHero() {
               Get started
             </Link>
             <Link
-              href={routes.problems}
+              href={routes.signUp}
               className="bina-hero-btn-secondary inline-flex h-12 w-full items-center justify-center rounded-[4px] bg-[#242F40] px-6 py-3 text-base font-medium text-[#F4F4F4] transition-all duration-200 ease-in-out hover:bg-[#2E3B50] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00] sm:w-auto"
             >
               Browse problems

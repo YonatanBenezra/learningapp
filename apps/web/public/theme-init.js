@@ -1,0 +1,16 @@
+(function () {
+  try {
+    var k = "labpath-theme";
+    var t = localStorage.getItem(k);
+    var theme = t === "light" || t === "dark" ? t : "dark";
+    var r = document.documentElement;
+    r.setAttribute("data-theme", theme);
+    r.classList.toggle("dark", theme === "dark");
+    r.style.colorScheme = theme;
+    if (theme === "dark") {
+      r.style.backgroundColor = "#070e1e";
+    } else {
+      r.style.backgroundColor = "#f4f4f2";
+    }
+  } catch (e) {}
+})();

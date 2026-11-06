@@ -7,7 +7,6 @@ import { CountrySelect } from "@/components/ui/country-select";
 import { GlobalLoader } from "@/components/ui/global-loader";
 import { routes } from "@/config/routes";
 import { authApi } from "@/features/auth/auth-api";
-import { DashboardWorkspaceShell } from "@/features/dashboard/components/dashboard-workspace-shell";
 import { useAuthSession } from "@/features/auth/use-auth-session";
 import { profileWorkspaceApi } from "@/features/profile/platform/profile-workspace-api";
 import {
@@ -132,7 +131,6 @@ export function SettingsPlatformView() {
   }
 
   return (
-    <DashboardWorkspaceShell user={user}>
       <main className="lp-dash-figma-main !gap-8 !pb-28 !pt-6">
         <header className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-platform-accent">
@@ -167,7 +165,7 @@ export function SettingsPlatformView() {
           <div className="flex flex-col gap-6">
             <SettingsSection
               title="Public profile"
-              description="This information is shown on your profile and leaderboard entries."
+              description="This information is shown on your profile and ranking entries."
             >
               <SettingsField label="Display name" htmlFor="settings-display-name">
                 <input
@@ -302,6 +300,5 @@ export function SettingsPlatformView() {
           </div>
         </form>
       </main>
-    </DashboardWorkspaceShell>
   );
 }

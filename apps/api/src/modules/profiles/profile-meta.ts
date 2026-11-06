@@ -28,11 +28,24 @@ export type ProfileBadge = {
   category: 'labs' | 'academy' | 'event';
 };
 
+export type ProfileAccountSettings = {
+  timezone?: string;
+  city?: string;
+  phone?: string;
+  callingCode?: string;
+  website?: string;
+  isc2MemberId?: string;
+  openToWork?: boolean;
+  jobTitle?: string;
+  yearsExperience?: string;
+};
+
 export type ProfileMeta = {
   summary?: string;
   country?: string;
   avatarUrl?: string;
   coverUrl?: string;
+  accountSettings?: ProfileAccountSettings;
   socials: ProfileSocialLink[];
   interests: string[];
   skills: string[];
@@ -66,6 +79,10 @@ export function parseProfileMeta(raw: unknown): ProfileMeta {
     country: typeof o.country === 'string' ? o.country : undefined,
     avatarUrl: typeof o.avatarUrl === 'string' ? o.avatarUrl : undefined,
     coverUrl: typeof o.coverUrl === 'string' ? o.coverUrl : undefined,
+    accountSettings:
+      o.accountSettings && typeof o.accountSettings === 'object'
+        ? (o.accountSettings as ProfileAccountSettings)
+        : undefined,
     socials: Array.isArray(o.socials) ? (o.socials as ProfileSocialLink[]) : [],
     interests: Array.isArray(o.interests) ? (o.interests as string[]) : [],
     skills: Array.isArray(o.skills) ? (o.skills as string[]) : [],

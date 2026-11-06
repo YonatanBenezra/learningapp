@@ -277,7 +277,7 @@ export function AiEngineerSection() {
                     Open Problem
                   </AuthLink>
                 ) : (
-                  <AuthLink href={routes.problems} className="ag-lc-ai-btn ag-lc-ai-btn--dark">
+                  <AuthLink href={routes.signUp} className="ag-lc-ai-btn ag-lc-ai-btn--dark">
                     Problems
                   </AuthLink>
                 )}
@@ -368,7 +368,7 @@ export function AiEngineerSection() {
               })}
             </ul>
 
-            <AuthLink href={routes.problems} className="ag-lc-ai-more">
+            <AuthLink href={routes.signUp} className="ag-lc-ai-more">
               Browse all problems
               <ChevronRight />
             </AuthLink>

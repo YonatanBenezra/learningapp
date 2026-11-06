@@ -106,8 +106,10 @@ html {
   justify-content: flex-end;
   align-self: stretch;
   flex-wrap: nowrap;
+  flex: 0 0 auto;
+  flex-shrink: 0;
   gap: 0 1.75rem;
-  min-width: 0;
+  min-width: min-content;
   overflow-x: auto;
   scrollbar-width: none;
 }

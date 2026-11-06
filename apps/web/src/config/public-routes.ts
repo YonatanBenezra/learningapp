@@ -4,13 +4,7 @@ import { DEMO_TRACE_RUN_ID } from "@/features/traces/demo/rag-trace-demo-data";
 
 /** App routes that work without signing in. Exercise workspaces require login. */
 export function isPublicAppPath(pathname: string): boolean {
-  if (
-    pathname === routes.problems ||
-    pathname === routes.contests ||
-    pathname === routes.paths ||
-    pathname === "/catalogue" ||
-    pathname === routes.leaderboard
-  ) {
+  if (pathname === routes.paths) {
     return true;
   }
 
