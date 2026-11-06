@@ -467,7 +467,7 @@ export function ProblemsFigmaView() {
 
   if (catalogState.phase === "error") {
     return (
-      <div className="lp-pfigma">
+      <div className="lp-pfigma lp-pfigma--htb">
         <div className="lp-pfigma-inner">
           <div className="lp-pfigma-empty">
             <p>Could not load exercises</p>
@@ -487,15 +487,15 @@ export function ProblemsFigmaView() {
   };
 
   return (
-    <div className="lp-pfigma">
+    <div className="lp-pfigma lp-pfigma--htb">
       <div className="lp-pfigma-inner">
         <header className="lp-pfigma-head">
           <FadeUp delay={0} className="lp-pfigma-head-copy">
-            <p className="lp-pfigma-eyebrow">PRACTICE · {counts.all} PROBLEMS</p>
-            <div className="lp-pfigma-title-row">
-              <h1 className="lp-pfigma-title">Problems</h1>
-              <span className="lp-pfigma-title-accent">to train on</span>
-            </div>
+            <p className="lp-pfigma-eyebrow">
+              <span className="lp-pfigma-eyebrow-bar" aria-hidden />
+              Practice · {counts.all} problems
+            </p>
+            <h1 className="lp-pfigma-title">Problems</h1>
             <p className="lp-pfigma-subtitle">
               Short, graded exercises. Pick a track, work through the levels, and let the hidden
               eval move your score.

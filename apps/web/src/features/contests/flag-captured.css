@@ -1,7 +1,7 @@
 /* Contest problem HUD + flag captured modal (CTF-05b) */
 
 .lp-ct-problem-hud {
-  --lp-ctf-success: #c5ff4a;
+  --lp-ctf-success: #9fef00;
   flex-shrink: 0;
   box-sizing: border-box;
   padding: 0.5rem 8px 0.35rem;

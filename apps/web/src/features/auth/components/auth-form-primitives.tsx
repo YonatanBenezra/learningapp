@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import type { LucideIcon } from "lucide-react";
 import type { InputHTMLAttributes, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 const E = [0.2, 0, 0, 1] as const;
 
@@ -22,34 +24,80 @@ export function AuthFormIntro({
 }) {
   return (
     <motion.header
-      className="lp-auth-figma-form-head"
+      className="mb-8"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: E, delay: 0.1 + index * 0.05 }}
     >
-      <p className="lp-auth-figma-eyebrow lp-auth-figma-eyebrow--desktop">{eyebrow}</p>
-      <h2 className="lp-auth-figma-title">{title}</h2>
-      <p className="lp-auth-figma-subtitle lp-auth-figma-subtitle--desktop">{subtitle}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9FEF00]">{eyebrow}</p>
+      <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#F4F4F4] sm:text-[1.75rem]">
+        {title}
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-[#8799B5]">{subtitle}</p>
       {subtitleShort ? (
-        <p className="lp-auth-figma-subtitle lp-auth-figma-subtitle--mobile">{subtitleShort}</p>
+        <p className="mt-1 text-sm text-[#8799B5] sm:hidden">{subtitleShort}</p>
       ) : null}
     </motion.header>
+  );
+}
+
+export function AuthModeSwitch({
+  prompt,
+  href,
+  label,
+  className,
+}: {
+  prompt: string;
+  href: string;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <motion.p
+      className={cn("text-center text-sm text-[#8799B5]", className)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, ease: E, delay: 0.06 }}
+    >
+      {prompt}{" "}
+      <Link
+        href={href}
+        className="group inline-flex items-center gap-1 font-semibold text-[#B2F233] underline-offset-2 hover:text-[#9FEF00] hover:underline"
+      >
+        {label}
+        <ArrowRight
+          className="size-3.5 transition-transform group-hover:translate-x-0.5"
+          strokeWidth={2.25}
+          aria-hidden
+        />
+      </Link>
+    </motion.p>
   );
 }
 
 export function AuthOAuthRow({ index = 1 }: { index?: number }) {
   return (
     <motion.div
-      className="lp-auth-figma-oauth-row"
+      className="mb-6 grid grid-cols-2 gap-3"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: E, delay: 0.1 + index * 0.05 }}
     >
-      <button type="button" className="lp-auth-figma-oauth-btn" disabled aria-label="Sign in with Google">
+      <button
+        type="button"
+        disabled
+        aria-label="Sign in with Google"
+        className="inline-flex h-11 items-center justify-center gap-2 rounded-[4px] border border-[#3A4559] bg-[#242F40] text-sm font-medium text-[#F4F4F4] opacity-70"
+      >
         <GoogleGlyph />
         Google
       </button>
-      <button type="button" className="lp-auth-figma-oauth-btn" disabled aria-label="Sign in with GitHub">
+      <button
+        type="button"
+        disabled
+        aria-label="Sign in with GitHub"
+        className="inline-flex h-11 items-center justify-center gap-2 rounded-[4px] border border-[#3A4559] bg-[#242F40] text-sm font-medium text-[#F4F4F4] opacity-70"
+      >
         <GitHubGlyph />
         GitHub
       </button>
@@ -59,14 +107,16 @@ export function AuthOAuthRow({ index = 1 }: { index?: number }) {
 
 export function AuthEmailDivider({ index = 2 }: { index?: number }) {
   return (
-    <motion.p
-      className="lp-auth-figma-divider"
+    <motion.div
+      className="relative mb-6 flex items-center gap-3"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: E, delay: 0.1 + index * 0.05 }}
     >
-      Or with email
-    </motion.p>
+      <span className="h-px flex-1 bg-[#2A3547]" aria-hidden />
+      <span className="text-xs font-medium uppercase tracking-wide text-[#526177]">Or with email</span>
+      <span className="h-px flex-1 bg-[#2A3547]" aria-hidden />
+    </motion.div>
   );
 }
 
@@ -96,32 +146,39 @@ export function AuthField({
   const helperId = helper ? `${labelFor}-helper` : undefined;
   return (
     <motion.div
-      className="lp-auth-figma-field"
+      className="space-y-2"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: E, delay: 0.1 + index * 0.05 }}
     >
-      <div className="lp-auth-figma-field-head">
-        <label className="lp-auth-figma-label" htmlFor={labelFor}>
+      <div className="flex items-center justify-between gap-2">
+        <label className="text-sm font-medium text-[#F4F4F4]" htmlFor={labelFor}>
           {label}
         </label>
         {labelRight}
       </div>
       <div
-        className={`lp-auth-figma-control${state === "valid" ? " is-valid" : ""}${
-          state === "error" ? " is-error" : ""
-        }`}
+        className={cn(
+          "flex h-12 items-center gap-3 rounded-[4px] border bg-[#1E2939] px-3 transition-colors",
+          "focus-within:border-[#9FEF00] focus-within:ring-1 focus-within:ring-[#9FEF00]/25",
+          state === "valid" && "border-[#9FEF00]/50",
+          state === "error" && "border-[#F35E5E]",
+          state === "default" && "border-[#3A4559]",
+        )}
       >
-        <Icon size={16} className="lp-auth-figma-control-icon" aria-hidden />
-        {children}
-        {trail ? <span className="lp-auth-figma-control-trail">{trail}</span> : null}
+        <Icon size={16} className="shrink-0 text-[#8799B5]" aria-hidden />
+        <div className="min-w-0 flex-1">{children}</div>
+        {trail ? <span className="shrink-0">{trail}</span> : null}
       </div>
       {helper ? (
         <p
           id={helperId}
-          className={`lp-auth-figma-helper${
-            helperState === "valid" ? " is-valid" : helperState === "error" ? " is-error" : ""
-          }`}
+          className={cn(
+            "text-xs",
+            helperState === "valid" && "text-[#9FEF00]",
+            helperState === "error" && "text-[#F35E5E]",
+            helperState === "default" && "text-[#8799B5]",
+          )}
         >
           {helper}
         </p>
@@ -131,7 +188,12 @@ export function AuthField({
 }
 
 export function AuthTextInput(props: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className="lp-auth-figma-input" {...props} />;
+  return (
+    <input
+      className="h-full w-full bg-transparent text-sm text-[#F4F4F4] outline-none placeholder:text-[#526177]"
+      {...props}
+    />
+  );
 }
 
 export function AuthPasswordToggle({
@@ -144,7 +206,7 @@ export function AuthPasswordToggle({
   return (
     <button
       type="button"
-      className="lp-auth-figma-toggle"
+      className="text-xs font-semibold text-[#8799B5] transition-colors hover:text-[#F4F4F4]"
       aria-pressed={visible}
       onClick={onToggle}
     >
@@ -167,15 +229,20 @@ export function AuthCheckbox({
   error?: boolean;
 }) {
   return (
-    <div className={`lp-auth-figma-check-row${error ? " is-error" : ""}`}>
+    <div
+      className={cn(
+        "flex items-start gap-3 rounded-[4px] border border-transparent p-1",
+        error && "border-[#F35E5E]/40 bg-[#F35E5E]/5",
+      )}
+    >
       <input
         id={id}
         type="checkbox"
-        className="lp-auth-figma-check"
+        className="mt-0.5 size-4 shrink-0 rounded border-[#3A4559] bg-[#1E2939] accent-[#9FEF00]"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
-      <label className="lp-auth-figma-check-label" htmlFor={id}>
+      <label className="text-sm leading-snug text-[#8799B5] [&_a]:font-medium [&_a]:text-[#B2F233] [&_a]:hover:underline" htmlFor={id}>
         {label}
       </label>
     </div>
@@ -197,10 +264,17 @@ export function AuthSubmitButton({
   disabled?: boolean;
   index?: number;
 }) {
+  const active = !disabled && !pending && !success;
   return (
     <motion.button
       type="submit"
-      className={`lp-auth-figma-submit${success ? " is-success" : ""}`}
+      className={cn(
+        "mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-[4px] text-sm font-bold transition-colors",
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]",
+        success && "bg-[#9FEF00] text-[#121C2B]",
+        !success && active && "bg-[#9FEF00] text-[#121C2B] hover:bg-[#b2f233]",
+        !success && !active && "cursor-not-allowed bg-[#242F40] text-[#526177]",
+      )}
       disabled={disabled || pending || success}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
@@ -213,7 +287,7 @@ export function AuthSubmitButton({
         </>
       ) : pending ? (
         <>
-          <span className="lp-auth-figma-spinner" aria-hidden />
+          <Loader2 className="size-4 animate-spin" aria-hidden />
           {pendingLabel}
         </>
       ) : (
@@ -230,7 +304,7 @@ export function AuthInlineError({ message }: { message: string }) {
   return (
     <motion.p
       role="alert"
-      className="lp-auth-figma-inline-error"
+      className="rounded-[4px] border border-[#F35E5E]/30 bg-[#F35E5E]/10 px-3 py-2 text-sm text-[#F35E5E]"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
     >

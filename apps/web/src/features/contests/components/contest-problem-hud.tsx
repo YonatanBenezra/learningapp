@@ -10,7 +10,7 @@ import {
 } from "@/features/contests/contest-elapsed";
 import { useDeadlineCountdown } from "@/features/contests/contest-clock";
 import type { ContestExercise, ContestSittingClock } from "@/types/contest";
-import { normalizeDifficulty } from "@/lib/arena/categories";
+import { normalizeDifficulty } from "@/features/contests/arena/lib/categories";
 import "../flag-captured.css";
 
 const DIFFICULTY_CLASS: Record<string, string> = {

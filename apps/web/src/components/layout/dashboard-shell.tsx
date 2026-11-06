@@ -36,7 +36,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
     };
   }, [menuOpen]);
 
-  if (pathname.startsWith("/dashboard")) {
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname === routes.contestHub ||
+    pathname === routes.practiceHub
+  ) {
     return <main className="lp-dash-content lp-dash-content--dashboard">{children}</main>;
   }
 

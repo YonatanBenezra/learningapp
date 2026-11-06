@@ -3,5 +3,5 @@ import { routes } from "@/config/routes";
 
 /** Legacy URL — simulators live under Problems tracks now. */
 export default function SimulationsPage() {
-  redirect(routes.problems);
+  redirect(routes.practiceHub);
 }

@@ -8,7 +8,19 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { AccountService } from '../accounts/account.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdateProfileMetaDto } from './dto/update-profile-meta.dto';
+import { parseProfileMeta, type ProfileMeta } from './profile-meta';
 import { toProfileSettings } from './profile-settings';
+import {
+  buildWorkspacePayload,
+  buildXpDays,
+  computePracticeRating,
+  mergeMetaSkills,
+  qualifiedDaysFromPasses,
+} from './profile-workspace';
+import { calendarDateKey } from '../progress/calendar';
+import { computeStreak } from '../progress/streak';
+import { toSkillScoreView } from '../skills/skill-decay';
 import {
   leaderboardRating,
   RECENT_PASS_WINDOW_MS,
@@ -19,9 +31,6 @@ import {
   RECENT_SOLVE_LIMIT,
 } from './profile-slug';
 import { toPublicVerifiedResult } from '../assessments/public-verified-result';
-import { calendarDateKey } from '../progress/calendar';
-import { computeStreak } from '../progress/streak';
-import { toSkillScoreView } from '../skills/skill-decay';
 
 @Injectable()
 export class ProfilesService {
@@ -138,6 +147,130 @@ export class ProfilesService {
         passedAt: row.passedAt.toISOString(),
       })),
     };
+  }
+
+  async getWorkspace(userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId, deletedAt: null },
+    });
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const account = await this.accounts.usageFor(userId);
+
+    const [passWithExercise, attemptRows, skills, attemptCount] =
+      await Promise.all([
+        this.prisma.grade.findMany({
+          where: {
+            verdict: 'pass',
+            run: { submission: { attempt: { userId } } },
+          },
+          select: {
+            createdAt: true,
+            run: {
+              select: {
+                submission: {
+                  select: {
+                    attempt: {
+                      select: { exercise: { select: { slug: true } } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        }),
+        this.prisma.attempt.findMany({
+          where: { userId },
+          select: { startedAt: true },
+          orderBy: { startedAt: 'desc' },
+          take: 500,
+        }),
+        this.prisma.userSkillScore.findMany({
+          where: { userId },
+          include: { skill: true },
+        }),
+        this.prisma.attempt.count({ where: { userId } }),
+      ]);
+
+    const solvedSlugs = new Set<string>();
+    for (const row of passWithExercise) {
+      solvedSlugs.add(row.run.submission.attempt.exercise.slug);
+    }
+    const passRows = passWithExercise;
+
+    const now = new Date();
+    const { rating } = computePracticeRating(
+      solvedSlugs.size,
+      passRows,
+      now,
+    );
+    const contestRating = await this.bestContestRating(userId);
+    const effectiveRating = contestRating ?? rating;
+
+    const qualifiedDays = qualifiedDaysFromPasses(passRows);
+    const streak = computeStreak(
+      qualifiedDays,
+      calendarDateKey(now, 'UTC'),
+    );
+
+    const meta = parseProfileMeta(user.profileMeta);
+    const skillNames = skills.map((row) =>
+      toSkillScoreView(row, now).name,
+    );
+    const mergedMeta = mergeMetaSkills(meta, skillNames);
+
+    const xpDays = buildXpDays(
+      attemptRows.map((r) => r.startedAt.toISOString()),
+      passRows.map((r) => r.createdAt.toISOString()),
+    );
+
+    return buildWorkspacePayload({
+      email: user.email,
+      displayName: user.displayName,
+      profileSlug: user.profileSlug,
+      profilePublic: user.profilePublic,
+      imageUrl: user.imageUrl,
+      meta: mergedMeta,
+      solves: solvedSlugs.size,
+      attempts: attemptCount,
+      rating: effectiveRating,
+      streakCurrent: streak.current,
+      streakLongest: streak.longest,
+      xpDays,
+      tier: account.tier,
+    });
+  }
+
+  async updateMeta(userId: string, dto: UpdateProfileMetaDto) {
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId, deletedAt: null },
+    });
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const current = parseProfileMeta(user.profileMeta);
+    const next: ProfileMeta = {
+      ...current,
+      ...dto,
+      accountSettings: dto.accountSettings
+        ? { ...current.accountSettings, ...dto.accountSettings }
+        : current.accountSettings,
+      socials: dto.socials ?? current.socials,
+      interests: dto.interests ?? current.interests,
+      skills: dto.skills ?? current.skills,
+      tools: dto.tools ?? current.tools,
+      languages: dto.languages ?? current.languages,
+      certifications: dto.certifications ?? current.certifications,
+      achievements: dto.achievements ?? current.achievements,
+      events: dto.events ?? current.events,
+      badges: dto.badges ?? current.badges,
+    };
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { profileMeta: next as object },
+    });
+    return next;
   }
 
   async update(userId: string, dto: UpdateProfileDto) {

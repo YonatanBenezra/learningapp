@@ -1,0 +1,85 @@
+/**
+ * Self-hosted Neue Haas Unica — fallback when Adobe Fonts kit is not configured.
+ * Prefer Typekit: set NEXT_PUBLIC_ADOBE_FONTS_KIT_ID (weights 400–800 on the kit).
+ * WOFF2 files: public/fonts/neue-haas-unica/ (see README).
+ */
+
+@font-face {
+  font-family: "Neue Haas Unica";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Roman.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Neue Haas Unica";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Neue Haas Unica";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Neue Haas Unica";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Black.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Neue Haas Unica";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Black.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: neue-haas-unica;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Roman.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: neue-haas-unica;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: neue-haas-unica;
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: neue-haas-unica;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Black.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: neue-haas-unica;
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/neue-haas-unica/NeueHaasUnica-Black.woff2") format("woff2");
+}

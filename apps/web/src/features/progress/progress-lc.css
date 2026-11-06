@@ -17,7 +17,7 @@
   gap: 1.25rem;
   flex: 1;
   width: 100%;
-  max-width: 1280px;
+  max-width: var(--lp-page-catalog-max, 1320px);
   min-height: 0;
   margin-inline: auto;
   align-items: stretch;

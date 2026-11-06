@@ -2,6 +2,7 @@
 
 import { motion, useInView, useReducedMotion, type Transition } from "motion/react";
 import { useRef } from "react";
+import { cn } from "@/lib/utils";
 
 const E: Transition["ease"] = [0.2, 0, 0, 1];
 const ODOMETER_EASE: Transition["ease"] = [0.16, 1, 0.3, 1];
@@ -135,7 +136,10 @@ function StatCard({
 
   return (
     <motion.article
-      className="lp-home-stat-card"
+      className={cn(
+        "lp-home-stat-card flex flex-col gap-0.5 rounded-lg border border-white/10",
+        "bg-[#111827] px-[18px] py-3.5 shadow-sm",
+      )}
       initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 20 }}
       animate={{ opacity: show ? 1 : 0, y: show ? 0 : 20 }}
       transition={
@@ -162,7 +166,11 @@ export function HomeStatsSection() {
   const inView = useInView(sectionRef, { once: true, amount: 0.3 });
 
   return (
-    <section ref={sectionRef} className="lp-home-stats" aria-label="Platform stats">
+    <section
+      ref={sectionRef}
+      className="lp-home-stats lp-home-stats--htb"
+      aria-label="Platform stats"
+    >
       <div className="lp-home-stats-inner">
         <div className="lp-home-stats-grid">
           {STATS.map((stat, index) => (

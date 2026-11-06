@@ -10,6 +10,7 @@ import {
 import {
   ArrowRight,
   BarChart3,
+  Box,
   Check,
   ChevronDown,
   FileText,
@@ -29,8 +30,13 @@ import {
   mapLeaderboardEntry,
   buildPodiumSlots,
   LEADERBOARD_NEXT_GOAL,
+  HTB_RANKING_TABS,
+  HTB_RANKING_TABS_PLACEHOLDER,
   LEADERBOARD_PAGE_SUBTITLE,
   LEADERBOARD_SPARSE_TABLE_BODY,
+  primaryTrackLabel,
+  rankTitleFromRating,
+  totalTrackPasses,
   LEADERBOARD_SPARSE_TABLE_TITLE,
   LEADERBOARD_SUMMARY_COPY,
   PODIUM_OPEN_SPOT_MESSAGE,
@@ -81,11 +87,28 @@ function PodiumStrongestIn({ tracks }: { tracks: TrackId[] }) {
   );
 }
 
-const PERIOD_SEGMENTS: { id: PeriodFilter; label: string }[] = [
-  { id: "30d", label: "30 days" },
-  { id: "season", label: "Season" },
-  { id: "all", label: "All time" },
-];
+function RankTrendArrow({ trend }: { trend: Trend }) {
+  if (trend.dir === "flat") {
+    return <span className="lp-lb-rank-trend lp-lb-rank-trend--flat" aria-hidden />;
+  }
+  return (
+    <span className={`lp-lb-rank-trend lp-lb-rank-trend--${trend.dir}`} aria-hidden>
+      {trend.dir === "up" ? "▲" : "▼"}
+    </span>
+  );
+}
+
+function HtbStatCell({ value, sub }: { value: number; sub: number }) {
+  return (
+    <span className="lp-lb-htb-stat">
+      <span className="lp-lb-htb-stat-main">{value.toLocaleString("en-US")}</span>
+      <span className="lp-lb-htb-stat-pwn" aria-hidden>
+        <span className="lp-lb-htb-stat-pwn-icon" />
+        <span className="lp-lb-htb-stat-sub">{sub.toLocaleString("en-US")}</span>
+      </span>
+    </span>
+  );
+}
 
 function avatarClass(tone: RankingRow["tone"]) {
   return `lp-lb-avatar--${tone}`;
@@ -208,20 +231,6 @@ function TrackDropdown({
   );
 }
 
-function formatUpdatedAgo(fetchedAt: Date | null): string {
-  if (!fetchedAt) {
-    return "live from practice passes";
-  }
-  const mins = Math.max(0, Math.floor((Date.now() - fetchedAt.getTime()) / 60_000));
-  if (mins < 1) {
-    return "updated just now";
-  }
-  if (mins === 1) {
-    return "updated 1 min ago";
-  }
-  return `updated ${mins} min ago`;
-}
-
 const TRACK_BARS_CAP = 8;
 
 function trackBarCount(uniquePasses: number): number {
@@ -298,25 +307,6 @@ function YouNextGoal({ currentRank }: { currentRank: number }) {
   );
 }
 
-function TrendCell({ trend, index }: { trend: Trend; index: number }) {
-  const reduceMotion = useReducedMotion();
-  const text =
-    trend.dir === "flat" ? "–" : trend.dir === "up" ? `▲ ${trend.delta}` : `▼ ${trend.delta}`;
-  const cls =
-    trend.dir === "up" ? "lp-lb-trend--up" : trend.dir === "down" ? "lp-lb-trend--down" : "lp-lb-trend--flat";
-
-  return (
-    <motion.span
-      className={`lp-lb-col-trend ${cls}`}
-      initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : trend.dir === "down" ? -4 : 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: reduceMotion ? 0 : 0.65 + index * 0.035 + 0.2, duration: 0.35, ease: E }}
-    >
-      {text}
-    </motion.span>
-  );
-}
-
 function RankingTableRow({
   row,
   index,
@@ -348,26 +338,12 @@ function RankingTableRow({
           flash === "down" ? " lp-lb-table-row--flash-down" : ""
         }`}
       >
-        {row.isYou && youRail ? (
-          <motion.span
-            aria-hidden
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: 3,
-              background: "var(--ember)",
-              transformOrigin: "top center",
-            }}
-            initial={{ scaleY: reduceMotion ? 1 : 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ delay: reduceMotion ? 0 : 0.65 + index * 0.035 + 0.35, duration: 0.4, ease: E }}
-          />
-        ) : null}
-        <span className={`lp-lb-col-rank${row.isYou ? " lp-lb-col-rank--you" : ""}`}>
-          #{row.rank}
-        </span>
+        <div className="lp-lb-rank-cell">
+          <RankTrendArrow trend={row.trend} />
+          <span className={`lp-lb-col-rank${row.isYou ? " lp-lb-col-rank--you" : ""}`}>
+            {row.rank}
+          </span>
+        </div>
         <div className="lp-lb-learner">
           <span className={`lp-lb-learner-avatar ${avatarClass(row.tone)}`}>{row.initials}</span>
           <div className="lp-lb-learner-text">
@@ -375,18 +351,20 @@ function RankingTableRow({
               <span className="lp-lb-learner-name">{row.name}</span>
               {row.isYou ? <span className="lp-lb-you-chip">YOU</span> : null}
             </div>
-            <span className="lp-lb-learner-handle">{row.handle}</span>
+            <span className="lp-lb-learner-rank-title">{rankTitleFromRating(row.rating)}</span>
           </div>
         </div>
-        <span className="lp-lb-col-mono lp-lb-col-solves">{row.solves}</span>
-        <span className="lp-lb-col-mono lp-lb-col-recent">{row.recent}</span>
-        <span className="lp-lb-col-tracks">
-          <TrackBars trackPasses={row.trackPasses} />
+        <span className="lp-lb-col-country">
+          <span className="lp-lb-country-flag" aria-hidden />
+          {primaryTrackLabel(row.trackPasses)}
         </span>
-        <span className={`lp-lb-col-rating${row.isYou ? " lp-lb-col-rating--you" : ""}`}>
+        <span className={`lp-lb-col-points${row.isYou ? " lp-lb-col-points--you" : ""}`}>
           {row.rating.toLocaleString("en-US")}
         </span>
-        <TrendCell trend={row.trend} index={index} />
+        <HtbStatCell value={row.solves} sub={row.solves} />
+        <HtbStatCell value={row.recent} sub={row.recent} />
+        <HtbStatCell value={totalTrackPasses(row.trackPasses)} sub={row.solves} />
+        <HtbStatCell value={row.recent} sub={totalTrackPasses(row.trackPasses)} />
       </Link>
     </motion.div>
   );
@@ -495,7 +473,7 @@ function copyInviteLink() {
 function PodiumOpenSpotCard({ rank, delay }: { rank: 2 | 3; delay: number }) {
   const reduceMotion = useReducedMotion();
   const href =
-    rank === 2 ? routes.exercise(PODIUM_OPEN_SPOT_START_SLUG) : routes.problems;
+    rank === 2 ? routes.exercise(PODIUM_OPEN_SPOT_START_SLUG) : routes.practiceHub;
   const ctaLabel = rank === 2 ? "Start P1-R3" : "Browse problems";
 
   return (
@@ -577,21 +555,40 @@ function PodiumSoonCard({ rank, delay }: { rank: 1 | 2 | 3; delay: number }) {
 
 function LeaderboardSkeleton() {
   return (
-    <div className="lp-lb lp-lb--loading" aria-busy="true" aria-label="Loading leaderboard">
+    <div className="lp-lb lp-lb--htb lp-lb--loading" aria-busy="true" aria-label="Loading rankings">
       <div className="lp-lb-inner">
-        <span className="lp-lb-skel-block" style={{ width: "12rem", height: "0.75rem" }} />
-        <span className="lp-lb-skel-block" style={{ width: "min(22rem, 100%)", height: "3rem", marginTop: 12 }} />
-        <div className="lp-lb-stats" style={{ marginTop: 24 }}>
-          {[1, 2, 3, 4].map((i) => (
-            <span key={i} className="lp-lb-skel-block" style={{ height: "6.5rem" }} />
-          ))}
-        </div>
-        <div className="lp-lb-podium" style={{ marginTop: 24 }}>
+        <header className="lp-lb-head lp-lb-head--htb">
+          <div className="lp-lb-head-copy">
+            <span className="lp-lb-skel-line lp-lb-skel-title" />
+            <span className="lp-lb-skel-line lp-lb-skel-subtitle" />
+          </div>
+          <span className="lp-lb-skel-line lp-lb-skel-global-rank" />
+        </header>
+        <div className="lp-lb-tabs lp-lb-tabs--skel">
           {[1, 2, 3].map((i) => (
-            <span key={i} className="lp-lb-skel-block lp-lb-podium-card" />
+            <span key={i} className="lp-lb-skel-line lp-lb-skel-tab" />
           ))}
         </div>
-        <span className="lp-lb-skel-block" style={{ height: "24rem", marginTop: 24, borderRadius: 20 }} />
+        <span className="lp-lb-skel-line lp-lb-skel-search" />
+        <div className="lp-lb-ranking lp-lb-ranking--htb">
+          <div className="lp-lb-table-head lp-lb-skel-table-head">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <span key={i} className="lp-lb-skel-line lp-lb-skel-head-cell" />
+            ))}
+          </div>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="lp-lb-skel-table-row">
+              <span className="lp-lb-skel-line lp-lb-skel-rank-cell" />
+              <span className="lp-lb-skel-line lp-lb-skel-player" />
+              <span className="lp-lb-skel-line lp-lb-skel-country" />
+              <span className="lp-lb-skel-line lp-lb-skel-num" />
+              <span className="lp-lb-skel-line lp-lb-skel-num" />
+              <span className="lp-lb-skel-line lp-lb-skel-num lp-lb-skel-hide-mobile" />
+              <span className="lp-lb-skel-line lp-lb-skel-num lp-lb-skel-hide-mobile" />
+              <span className="lp-lb-skel-line lp-lb-skel-num lp-lb-skel-hide-mobile" />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -768,9 +765,9 @@ export function LeaderboardFigmaView() {
 
   if (loadError) {
     return (
-      <div className="lp-lb">
+      <div className="lp-lb lp-lb--htb">
         <div className="lp-lb-inner">
-          <h1 className="lp-lb-title">Leaderboard</h1>
+          <h1 className="lp-lb-title">Ranking</h1>
           <div className="lp-lb-empty">
             <strong>Could not load rankings</strong>
             <p>Check that the API is running, then refresh.</p>
@@ -784,57 +781,76 @@ export function LeaderboardFigmaView() {
     return <LeaderboardSkeleton />;
   }
 
+  const globalRankLabel =
+    yourRankDisplay === "Sign in" || yourRankDisplay === "—" ? "#unranked" : yourRankDisplay;
+
   return (
-    <div className="lp-lb">
+    <div className="lp-lb lp-lb--htb">
       <div className="lp-lb-inner">
-        <header className="lp-lb-head">
+        <header className="lp-lb-head lp-lb-head--htb">
           <FadeUp delay={0} className="lp-lb-head-copy">
-            <p className="lp-lb-eyebrow">SEASON 1 · OCTOBER 2026</p>
-            <div className="lp-lb-title-row">
-              <h1 className="lp-lb-title">Leaderboard</h1>
-              <motion.span
-                className="lp-lb-title-accent"
-                initial={{ opacity: reduceMotion ? 1 : 0, filter: reduceMotion ? "none" : "blur(6px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={{ duration: reduceMotion ? 0 : 0.55, ease: E, delay: 0.06 }}
-              >
-                this month
-              </motion.span>
-            </div>
+            <h1 className="lp-lb-title">Ranking</h1>
             <p className="lp-lb-subtitle">{LEADERBOARD_PAGE_SUBTITLE}</p>
           </FadeUp>
-          <FadeUp delay={0.12} className="lp-lb-head-controls">
-            <LayoutGroup>
-              <div className="lp-lb-segments" role="tablist" aria-label="Ranking period">
-                {PERIOD_SEGMENTS.map((seg) => {
-                  const active = period === seg.id;
-                  return (
-                    <button
-                      key={seg.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={active}
-                      className={`lp-lb-segment${active ? " is-active" : ""}`}
-                      onClick={() => setPeriod(seg.id)}
-                    >
-                      {active ? (
-                        <motion.span
-                          layoutId="lb-period-pill"
-                          className="lp-lb-segment-pill"
-                          transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                        />
-                      ) : null}
-                      <span className="lp-lb-segment-label">{seg.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </LayoutGroup>
-            <TrackDropdown value={trackFilter} onChange={setTrackFilter} />
+          <FadeUp delay={0.1} className="lp-lb-global-rank" aria-label="Your global ranking">
+            <span className="lp-lb-global-rank-icon" aria-hidden>
+              <Box size={22} strokeWidth={1.75} />
+            </span>
+            <div className="lp-lb-global-rank-text">
+              <p className="lp-lb-global-rank-value">{globalRankLabel}</p>
+              <p className="lp-lb-global-rank-label">Global Ranking</p>
+            </div>
           </FadeUp>
         </header>
 
-        <section className="lp-lb-stats" aria-label="Leaderboard stats">
+        <FadeUp delay={0.14} className="lp-lb-tabs-wrap">
+          <div className="lp-lb-tabs" role="tablist" aria-label="Ranking views">
+            {HTB_RANKING_TABS.map((seg) => {
+              const active = period === seg.id;
+              return (
+                <button
+                  key={seg.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  className={`lp-lb-tab${active ? " is-active" : ""}`}
+                  onClick={() => setPeriod(seg.id)}
+                >
+                  {seg.label}
+                </button>
+              );
+            })}
+            {HTB_RANKING_TABS_PLACEHOLDER.map((seg) => (
+              <button
+                key={seg.id}
+                type="button"
+                className="lp-lb-tab lp-lb-tab--disabled"
+                disabled
+                aria-disabled
+              >
+                {seg.label}
+              </button>
+            ))}
+          </div>
+          <div className="lp-lb-tabs-tools lp-lb-tabs-tools--sr">
+            <TrackDropdown value={trackFilter} onChange={setTrackFilter} />
+          </div>
+        </FadeUp>
+
+        <FadeUp delay={0.18} className="lp-lb-search-row">
+          <label className="lp-lb-search lp-lb-search--htb">
+            <Search size={16} className="lp-lb-search-icon" aria-hidden />
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search players..."
+              autoComplete="off"
+            />
+          </label>
+        </FadeUp>
+
+        <section className="lp-lb-stats" aria-label="Ranking stats">
           <FadeUp delay={0.15}>
             <div className="lp-lb-stat">
               <div className="lp-lb-stat-icon" aria-hidden>
@@ -925,27 +941,7 @@ export function LeaderboardFigmaView() {
           </section>
         ) : null}
 
-        <FadeUp delay={0.65} className="lp-lb-ranking">
-          <div className="lp-lb-ranking-top">
-            <div>
-              <h2 className="lp-lb-ranking-title">Global ranking</h2>
-              <p className="lp-lb-ranking-meta">
-                {aggregates.ranked} learner{aggregates.ranked === 1 ? "" : "s"} ·{" "}
-                {formatUpdatedAgo(boardFetchedAt)}
-              </p>
-            </div>
-            <label className="lp-lb-search">
-              <Search size={15} className="lp-lb-search-icon" aria-hidden />
-              <input
-                type="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search learner"
-                autoComplete="off"
-              />
-            </label>
-          </div>
-
+        <FadeUp delay={0.65} className="lp-lb-ranking lp-lb-ranking--htb">
           {filteredItems.length === 0 ? (
             <div className="lp-lb-empty">
               <strong>{board.items.length === 0 ? "No one on the board yet" : "No matches"}</strong>
@@ -955,7 +951,7 @@ export function LeaderboardFigmaView() {
                   : "Try a different search term."}
               </p>
               {board.items.length === 0 ? (
-                <Link href={routes.problems}>Open problems</Link>
+                <Link href={routes.practiceHub}>Open practice</Link>
               ) : null}
             </div>
           ) : (
@@ -968,8 +964,8 @@ export function LeaderboardFigmaView() {
                   <p className="lp-lb-table-sparse-title">{LEADERBOARD_SPARSE_TABLE_TITLE}</p>
                   <p className="lp-lb-table-sparse-body">{LEADERBOARD_SPARSE_TABLE_BODY}</p>
                   <div className="lp-lb-table-sparse-actions">
-                    <Link href={routes.problems} className="lp-lb-table-sparse-primary">
-                      Open problems
+                    <Link href={routes.practiceHub} className="lp-lb-table-sparse-primary">
+                      Open practice
                       <ArrowRight size={14} aria-hidden />
                     </Link>
                     <button type="button" className="lp-lb-table-sparse-link" onClick={copyInviteLink}>
@@ -981,12 +977,13 @@ export function LeaderboardFigmaView() {
                 <>
                   <div className="lp-lb-table-head">
                     <span>Rank</span>
-                    <span>Learner</span>
-                    <span>Solves</span>
-                    <span className="lp-lb-col-recent">Recent 30d</span>
-                    <span className="lp-lb-col-tracks">Tracks</span>
-                    <span>Rating</span>
-                    <span>Trend</span>
+                    <span>Player</span>
+                    <span>Country</span>
+                    <span>Points</span>
+                    <span>Users</span>
+                    <span>Systems</span>
+                    <span>Challenges</span>
+                    <span>Fortresses</span>
                   </div>
 
                   <LayoutGroup>
@@ -1046,20 +1043,6 @@ export function LeaderboardFigmaView() {
               ) : null}
 
               <div className="lp-lb-ranking-foot">
-                {showTableBody && !showSparseTableEmpty ? (
-                  <div className="lp-lb-legend" aria-label="Track legend">
-                    {TRACK_ORDER.map((track) => (
-                      <span key={track} className="lp-lb-legend-item">
-                        <span
-                          className="lp-lb-legend-swatch"
-                          style={{ background: TRACK_COLORS[track] }}
-                          aria-hidden
-                        />
-                        {TRACK_LABELS[track]}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
                 <span className="lp-lb-foot-meta">
                   {visibleRows.length > 0
                     ? `Showing ${showingFrom}–${showingTo} of ${aggregates.ranked}`

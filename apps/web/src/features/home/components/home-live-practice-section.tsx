@@ -24,6 +24,7 @@ import {
   type ReactNode,
 } from "react";
 import { routes } from "@/config/routes";
+import { cn } from "@/lib/utils";
 
 const E: Transition["ease"] = [0.2, 0, 0, 1];
 const EASE_BACK: Transition["ease"] = [0.34, 1.56, 0.64, 1];
@@ -399,14 +400,17 @@ export function HomeLivePracticeSection() {
   return (
     <section
       ref={sectionRef}
-      className="lp-home-live"
+      className="lp-home-live lp-home-live--htb"
       aria-labelledby="home-live-practice-title"
     >
       <div className="lp-home-live-inner">
         <div className="lp-home-live-row">
           <div className="lp-home-live-copy">
             <FadeUp show={inView} delay={0.1} y={14}>
-              <p className="lp-home-live-eyebrow">LIVE PRACTICE</p>
+              <p className="flex items-center gap-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9fef00]">
+                <span className="h-[1.05em] w-[3px] shrink-0 rounded-sm bg-[#9fef00]" aria-hidden />
+                LIVE PRACTICE
+              </p>
             </FadeUp>
 
             <h2 id="home-live-practice-title" className="lp-home-live-title">
@@ -450,7 +454,10 @@ export function HomeLivePracticeSection() {
             </ul>
 
             <FadeUp show={inView} delay={0.7} y={10} className="lp-home-live-cta-wrap">
-              <Link href={routes.problems} className="lp-home-live-cta">
+              <Link
+                href={routes.signUp}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#1e2939] px-4 text-sm font-medium text-[#f4f4f4] no-underline transition-colors hover:bg-[#242f40]"
+              >
                 Browse problems
                 <ArrowRight strokeWidth={2} aria-hidden />
               </Link>
@@ -458,16 +465,17 @@ export function HomeLivePracticeSection() {
           </div>
 
           <motion.div
-            className="lp-home-live-preview"
+            className={cn(
+              "lp-home-live-preview w-full min-w-0 overflow-hidden rounded-lg border border-white/10",
+              "bg-[#0b121f] shadow-sm",
+            )}
             initial={{
               opacity: reduceMotion ? 1 : 0,
-              y: reduceMotion ? 0 : 44,
-              scale: reduceMotion ? 1 : 0.96,
+              y: reduceMotion ? 0 : 24,
             }}
             animate={{
               opacity: inView || reduceMotion ? 1 : 0,
-              y: inView || reduceMotion ? 0 : 44,
-              scale: inView || reduceMotion ? 1 : 0.96,
+              y: inView || reduceMotion ? 0 : 24,
             }}
             transition={
               reduceMotion
@@ -476,7 +484,7 @@ export function HomeLivePracticeSection() {
             }
           >
             <motion.div
-              className="lp-home-live-chrome"
+              className="flex h-12 items-center gap-4 border-b border-white/10 px-4"
               initial={{ opacity: reduceMotion ? 1 : 0 }}
               animate={{ opacity: inView || reduceMotion ? 1 : 0 }}
               transition={
@@ -561,7 +569,7 @@ export function HomeLivePracticeSection() {
             <div className="lp-home-live-run-strip">
               <motion.button
                 type="button"
-                className="lp-home-live-run-btn"
+                className="inline-flex h-8 items-center justify-center gap-1.5 rounded-md border-0 bg-[#9fef00] px-3 text-[13px] font-medium text-[#121c2b] transition-colors hover:bg-[#aced2c] disabled:cursor-default"
                 aria-label="Run code"
                 disabled={isRunning}
                 animate={{ scale: runScale }}

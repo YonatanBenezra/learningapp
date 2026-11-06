@@ -1,25 +1,25 @@
 /* Auth — Figma dark studio (sign-in / sign-up) */
 
 .lp-auth-figma {
-  --canvas: #0a0f1a;
-  --surface: #111826;
-  --raised: #172033;
-  --sunken: #080c15;
-  --border: #1e2738;
-  --border-strong: #2a3549;
-  --text: #eceef2;
-  --text-2: #97a1b2;
-  --text-3: #6a7487;
-  --ember: #ff7a45;
-  --on-ember: #1a0c05;
-  --ember-soft: #2a1710;
-  --teal: #2dd4bf;
-  --teal-soft: #0e2a2a;
+  --canvas: var(--lp-bg-canvas);
+  --surface: var(--lp-bg-surface);
+  --raised: var(--lp-bg-raised);
+  --sunken: var(--lp-bg-sunken);
+  --border: var(--lp-border-subtle);
+  --border-strong: var(--lp-border-strong);
+  --text: var(--lp-text-heading);
+  --text-2: var(--lp-text-primary);
+  --text-3: var(--lp-text-secondary);
+  --ember: var(--lp-accent-ember);
+  --on-ember: var(--lp-accent-on-ember);
+  --ember-soft: var(--lp-accent-ember-soft);
+  --teal: var(--lp-signal-teal);
+  --teal-soft: var(--lp-signal-teal-soft);
   --amber: #fbbf24;
   --red: #f87171;
   --red-soft: #2c1518;
-  --lp-font-sans: var(--font-geist, ui-sans-serif, system-ui, sans-serif);
-  --lp-font-mono: var(--font-geist-mono, ui-monospace, monospace);
+  --lp-font-sans: neue-haas-unica, "Neue Haas Unica", var(--font-dm-sans), "DM Sans", sans-serif;
+  --lp-font-mono: var(--lp-font-sans);
   --lp-font-serif: var(--font-instrument-serif, ui-serif, Georgia, serif);
 
   display: grid;
@@ -31,21 +31,21 @@
 }
 
 .lp-auth-figma-brand {
-  /* Brand column stays dark in light mode */
-  --canvas: #0a0f1a;
-  --surface: #111826;
-  --raised: #172033;
-  --sunken: #080c15;
-  --border: #1e2738;
-  --border-strong: #2a3549;
-  --text: #eceef2;
-  --text-2: #97a1b2;
-  --text-3: #6a7487;
-  --ember: #ff7a45;
-  --on-ember: #1a0c05;
-  --ember-soft: #2a1710;
-  --teal: #2dd4bf;
-  --teal-soft: #0e2a2a;
+  /* Brand column stays on HTB dark palette in light mode */
+  --canvas: #141d2b;
+  --surface: #1e2939;
+  --raised: #242f40;
+  --sunken: #0b121f;
+  --border: #263243;
+  --border-strong: #263243;
+  --text: #f4f4f4;
+  --text-2: #a4b1cd;
+  --text-3: #8799b5;
+  --ember: #9fef00;
+  --on-ember: #0b121f;
+  --ember-soft: color-mix(in srgb, #9fef00 14%, #141d2b);
+  --teal: #88c9f7;
+  --teal-soft: color-mix(in srgb, #88c9f7 16%, #141d2b);
 
   position: relative;
   display: flex;
@@ -824,12 +824,12 @@
     flex-shrink: 0;
     overflow: hidden;
     padding: 40px 24px 28px;
-    --text: #eceef2;
-    --text-2: #97a1b2;
-    --text-3: #6a7487;
-    --border-strong: #2a3549;
-    --ember: #ff7a45;
-    background: #0a0f1a;
+    --text: var(--lp-text-heading);
+    --text-2: var(--lp-text-primary);
+    --text-3: var(--lp-text-secondary);
+    --border-strong: var(--lp-border-strong);
+    --ember: var(--lp-accent-ember);
+    background: var(--lp-bg-canvas);
     color: var(--text);
   }
 
@@ -1018,20 +1018,20 @@ html:not([data-theme="dark"]) .lp-auth-figma-form-panel .lp-auth-figma-submit.is
   }
 
   html[data-theme="dark"] .lp-auth-figma-form-panel {
-    --surface: #111826;
-    --raised: #172033;
-    --sunken: #080c15;
-    --border: #1e2738;
-    --border-strong: #2a3549;
-    --text: #eceef2;
-    --text-2: #97a1b2;
-    --text-3: #6a7487;
-    --on-ember: #1a0c05;
-    --teal: #2dd4bf;
-    --teal-soft: #0e2a2a;
+    --surface: var(--lp-bg-surface);
+    --raised: var(--lp-bg-raised);
+    --sunken: var(--lp-bg-sunken);
+    --border: var(--lp-border-subtle);
+    --border-strong: var(--lp-border-strong);
+    --text: var(--lp-text-heading);
+    --text-2: var(--lp-text-primary);
+    --text-3: var(--lp-text-secondary);
+    --on-ember: var(--lp-accent-on-ember);
+    --teal: var(--lp-signal-teal);
+    --teal-soft: var(--lp-signal-teal-soft);
     --red: #f87171;
     --red-soft: #2c1518;
-    background: #0a0f1a;
+    background: var(--lp-bg-canvas);
     color: var(--text);
   }
 }

@@ -52,7 +52,7 @@ export function StartExploringSection() {
             providing structure to guide your progress towards the next step in your AI
             engineering career.
           </p>
-          <AuthLink href={routes.problems} className="ag-lc-explore-cta">
+          <AuthLink href={routes.signUp} className="ag-lc-explore-cta">
             Get Started
             <span aria-hidden="true">›</span>
           </AuthLink>

@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.85rem;
+  gap: 1.1rem;
   padding: 2rem 1rem;
   text-align: center;
 }
@@ -15,89 +15,259 @@
   min-height: 100dvh;
   width: 100%;
   padding: 0;
-  background: color-mix(in srgb, var(--lp-surface, #f4f4f2) 92%, transparent);
-  backdrop-filter: blur(2px);
+  background: color-mix(in srgb, var(--lp-surface, #f4f4f2) 94%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.lp-loader--page.lp-loader--platform {
+  background: #101927;
+  backdrop-filter: none;
 }
 
 .lp-loader--content {
   min-height: min(60vh, 26rem);
 }
 
-.lp-loader-shell {
-  display: grid;
-  place-items: center;
+.lp-loader--content.lp-loader--platform {
+  min-height: min(48vh, 22rem);
+}
+
+/* Document scan scene (ref: docs + magnifier carousel) */
+.lp-loader-scan {
+  position: relative;
+  width: min(280px, 78vw);
+  height: 7.5rem;
+  overflow: hidden;
+}
+
+.lp-loader-scan-vignette {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    var(--lp-loader-vignette, #f4f4f2) 0%,
+    transparent 22%,
+    transparent 78%,
+    var(--lp-loader-vignette, #f4f4f2) 100%
+  );
+}
+
+.lp-loader--platform .lp-loader-scan-vignette {
+  --lp-loader-vignette: #101927;
+}
+
+.lp-loader-scan-track-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.lp-loader-scan-track {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+  padding-left: 1rem;
+  animation: lp-loader-doc-scroll 2.8s linear infinite;
+  will-change: transform;
+}
+
+.lp-loader-doc {
+  flex-shrink: 0;
   width: 3rem;
-  height: 3rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--lp-surface-elevated, #fff) 88%, transparent);
-  box-shadow:
-    0 1px 2px color-mix(in srgb, var(--lp-ink, #111) 6%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--lp-border, #ddd) 70%, transparent);
+  height: 3.5rem;
+  opacity: 0.35;
+  filter: saturate(0.85);
+  animation: lp-loader-doc-pulse 2.8s ease-in-out infinite;
 }
 
-.lp-loader-svg {
-  display: block;
-  width: 2.15rem;
-  height: 2.15rem;
+.lp-loader-doc:nth-child(3),
+.lp-loader-doc:nth-child(11) {
+  opacity: 0.55;
 }
 
-.lp-loader-track,
-.lp-loader-arc {
-  fill: none;
-  stroke-width: 3;
-  stroke-linecap: round;
+.lp-loader-doc:nth-child(4),
+.lp-loader-doc:nth-child(12) {
+  opacity: 0.85;
+  transform: scale(1.05);
 }
 
-.lp-loader-track {
-  stroke: color-mix(in srgb, var(--lp-muted, #6b6b6b) 22%, transparent);
+.lp-loader-doc-sheet {
+  fill: #e8ecf1;
+  stroke: #c5ced9;
+  stroke-width: 1.25;
 }
 
-.lp-loader-arc {
-  stroke: var(--lp-brand, #0d9488);
-  stroke-dasharray: 80 200;
-  stroke-dashoffset: 0;
-  transform-origin: center;
-  animation: lp-loader-spin 0.95s cubic-bezier(0.45, 0.05, 0.25, 0.95) infinite;
+.lp-loader-doc-fold {
+  fill: #d8dee8;
+  stroke: #c5ced9;
+  stroke-width: 1.25;
+}
+
+.lp-loader-doc-line {
+  fill: #b8c2d0;
+}
+
+.lp-loader--platform .lp-loader-doc-sheet {
+  fill: #1e2939;
+  stroke: #3a4559;
+}
+
+.lp-loader--platform .lp-loader-doc-fold {
+  fill: #151f2e;
+  stroke: #3a4559;
+}
+
+.lp-loader--platform .lp-loader-doc-line {
+  fill: #526177;
+}
+
+.lp-loader--platform .lp-loader-doc:nth-child(4),
+.lp-loader--platform .lp-loader-doc:nth-child(12) {
+  filter: saturate(1) drop-shadow(0 0 12px rgb(159 239 0 / 12%));
+}
+
+.lp-loader-scan-lens {
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: 5.5rem;
+  height: 5.5rem;
+  transform: translate(-50%, -52%);
+  animation: lp-loader-lens-float 2.4s ease-in-out infinite;
+}
+
+.lp-loader-magnifier-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lp-loader-mag-ring {
+  stroke: #9aa8bc;
+}
+
+.lp-loader-mag-handle {
+  stroke: #9aa8bc;
+}
+
+.lp-loader-mag-glass {
+  fill: rgb(255 255 255 / 8%);
+  stroke: rgb(255 255 255 / 12%);
+  stroke-width: 1;
+}
+
+.lp-loader--platform .lp-loader-mag-ring {
+  stroke: #8799b5;
+  animation: lp-loader-mag-glow 2.4s ease-in-out infinite;
+}
+
+.lp-loader--platform .lp-loader-mag-handle {
+  stroke: #8799b5;
+}
+
+.lp-loader--platform .lp-loader-mag-glass {
+  fill: rgb(159 239 0 / 6%);
+  stroke: rgb(159 239 0 / 22%);
 }
 
 .lp-loader-label {
   margin: 0;
   color: var(--lp-muted, var(--color-muted, #6b6b6b));
   font-size: 0.8125rem;
-  font-weight: 550;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  animation: lp-loader-label-pulse 2.4s ease-in-out infinite;
 }
 
-@keyframes lp-loader-spin {
+.lp-loader--platform .lp-loader-label {
+  color: #8799b5;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+@keyframes lp-loader-doc-scroll {
   0% {
-    transform: rotate(0deg);
-    stroke-dashoffset: 0;
-  }
-  50% {
-    stroke-dashoffset: -42;
+    transform: translateX(0);
   }
   100% {
-    transform: rotate(360deg);
-    stroke-dashoffset: -125;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes lp-loader-doc-pulse {
+  0%,
+  100% {
+    opacity: 0.32;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes lp-loader-lens-float {
+  0%,
+  100% {
+    transform: translate(-50%, -52%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -54%) scale(1.03);
+  }
+}
+
+@keyframes lp-loader-mag-glow {
+  0%,
+  100% {
+    stroke: #8799b5;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    stroke: #9fef00;
+    filter: drop-shadow(0 0 8px rgb(159 239 0 / 45%));
+  }
+}
+
+@keyframes lp-loader-label-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lp-loader-arc {
-    animation: lp-loader-spin-static 1.6s linear infinite;
+  .lp-loader-scan-track {
+    animation: none;
+    transform: translateX(-18%);
+  }
+
+  .lp-loader-doc {
+    animation: none;
+    opacity: 0.5;
+  }
+
+  .lp-loader-scan-lens {
+    animation: none;
+  }
+
+  .lp-loader-label {
+    animation: none;
+    opacity: 1;
+  }
+
+  .lp-loader--platform .lp-loader-mag-ring {
+    animation: none;
+    stroke: #9fef00;
   }
 }
 
-@keyframes lp-loader-spin-static {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-html[data-theme="dark"] .lp-loader-shell {
-  background: color-mix(in srgb, var(--lp-surface-elevated, #1a1f2e) 92%, transparent);
-  box-shadow:
-    0 1px 2px color-mix(in srgb, #000 35%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--lp-border, #334155) 85%, transparent);
+html:not([data-theme="dark"]) .lp-loader--page:not(.lp-loader--platform) {
+  background: color-mix(in srgb, var(--lp-surface, #f4f4f2) 92%, transparent);
 }

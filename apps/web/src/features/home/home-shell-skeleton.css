@@ -42,14 +42,14 @@ html[data-theme="dark"] .lp-home-skel {
   justify-content: space-between;
   gap: 1rem;
   height: var(--lp-dash-nav-h, 4.5rem);
-  max-width: min(var(--lp-page-max-width, 1200px), calc(100% - 3rem));
+  max-width: var(--lp-catalog-content-width, min(var(--lp-page-catalog-max, 1320px), calc(100% - 3rem)));
   margin-inline: auto;
   padding-inline: 0;
   box-sizing: border-box;
 }
 
 html[data-workspace="catalog"] .lp-home-nav-skeleton-inner {
-  width: var(--lp-catalog-content-width);
+  width: var(--lp-nav-content-width);
   max-width: none;
 }
 
@@ -147,7 +147,7 @@ html[data-workspace="catalog"] .lp-home-nav-skeleton-inner {
   width: 100%;
   max-width: var(
     --lp-catalog-content-width,
-    min(var(--lp-page-max-width, 1200px), calc(100% - 3rem))
+    var(--lp-catalog-content-width, min(var(--lp-page-catalog-max, 1320px), calc(100% - 3rem)))
   );
 }
 

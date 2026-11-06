@@ -6,9 +6,14 @@ import { routes } from "@/config/routes";
 
 const titles: { match: (pathname: string) => boolean; title: string; subtitle?: string }[] = [
   {
-    match: (p) => p.startsWith("/profile"),
+    match: (p) => p.startsWith("/dashboard/profile"),
     title: "Profile",
-    subtitle: "Display name and account",
+    subtitle: "Display name and public profile",
+  },
+  {
+    match: (p) => p.startsWith("/dashboard/settings"),
+    title: "Settings",
+    subtitle: "Account and visibility",
   },
   {
     match: (p) => p.startsWith("/dashboard") || p.startsWith("/progress"),

@@ -1,13 +1,7 @@
-import { headers } from "next/headers";
-import { ProblemsPageContent } from "@/features/problems/components/problems-page-content";
-import "@/features/problems/problems-figma.css";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
-export default async function ProblemsPage() {
-  await headers();
-
-  return (
-    <div className="lp-page lp-page-catalogue lp-page-problems">
-      <ProblemsPageContent />
-    </div>
-  );
+/** Legacy public catalog — product flow is sign-in → Practice hub. */
+export default function ProblemsRedirectPage() {
+  redirect(routes.practiceHub);
 }

@@ -1,7 +1,7 @@
 /* Problems — studio layout */
 
 .lp-page-problems {
-  width: var(--lp-catalog-content-width, min(1350px, calc(100% - 3rem)));
+  width: var(--lp-catalog-content-width, min(1320px, calc(100% - 3rem)));
   max-width: none;
   margin-inline: auto;
   padding-inline: 0;
@@ -17,7 +17,7 @@
 
 
 .lp-page-catalogue {
-  max-width: 1350px;
+  max-width: 1320px;
 }
 
 .lp-cat {

@@ -5,7 +5,48 @@ export const LEADERBOARD_SUMMARY_COPY =
   "Unique problems first, recent activity breaks ties.";
 
 export const LEADERBOARD_PAGE_SUBTITLE =
-  "Ranked by unique problems passed, then passes in the last 30 days. Only hidden-set passes count.";
+  "LabPath rankings throughout the platform";
+
+/** HTB-style tab labels mapped to period filters. */
+export const HTB_RANKING_TABS: { id: PeriodFilter; label: string }[] = [
+  { id: "30d", label: "Hall Of Fame" },
+  { id: "season", label: "Teams" },
+  { id: "all", label: "Universities" },
+];
+
+export const HTB_RANKING_TABS_PLACEHOLDER = [
+  { id: "countries", label: "Countries" },
+  { id: "vip", label: "Vip" },
+] as const;
+
+/** Display tier under player name (HTB rank title). */
+export function rankTitleFromRating(rating: number): string {
+  if (rating >= 5000) return "Omniscient";
+  if (rating >= 3500) return "Guru";
+  if (rating >= 2500) return "Wizard";
+  if (rating >= 1500) return "Expert";
+  if (rating >= 800) return "Pro";
+  if (rating >= 400) return "Script Kiddie";
+  return "Noob";
+}
+
+export function primaryTrackLabel(trackPasses: Record<TrackId, number>): string {
+  let best: TrackId = "rag";
+  let max = -1;
+  for (const track of TRACK_ORDER) {
+    const n = trackPasses[track] ?? 0;
+    if (n > max) {
+      max = n;
+      best = track;
+    }
+  }
+  if (max <= 0) return "Global";
+  return TRACK_LABELS[best];
+}
+
+export function totalTrackPasses(trackPasses: Record<TrackId, number>): number {
+  return TRACK_ORDER.reduce((sum, track) => sum + (trackPasses[track] ?? 0), 0);
+}
 
 /** First problem CTA on open podium slot #2 (Figma). */
 export const PODIUM_OPEN_SPOT_START_SLUG = "rag-003-retrieval-top-k";

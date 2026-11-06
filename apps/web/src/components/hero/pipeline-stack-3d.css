@@ -60,7 +60,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #ff7a45;
+  background: var(--color-brand);
   filter: blur(160px);
 }
 
@@ -73,8 +73,8 @@ html[data-theme="dark"] .pipeline-stack-stage {
   border-radius: 50%;
   background: radial-gradient(
     ellipse 95% 90% at 50% 8%,
-    rgb(255 122 69 / 28%),
-    rgb(255 122 69 / 12%) 40%,
+    rgb(159 239 0 / 28%),
+    rgb(159 239 0 / 12%) 40%,
     transparent 72%
   );
   filter: blur(48px);
@@ -131,7 +131,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
 }
 
 .pipeline-iso-face {
-  background: #111826;
+  background: var(--lp-bg-surface);
   border: 1px solid #2a3549;
   border-radius: 22px;
   padding: 18px;
@@ -168,7 +168,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
   margin: -4.5px 0 0 -4.5px;
   border-radius: 50%;
   background: rgb(255 122 69 / 88%);
-  border: 2px solid #111826;
+  border: 2px solid var(--lp-bg-surface);
   box-shadow:
     0 0 5px 1px rgb(255 122 69 / 32%),
     0 0 10px 2px rgb(255 122 69 / 16%);
@@ -239,7 +239,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
 }
 
 .pipeline-corpus-key.is-hit {
-  background: #ff7a45;
+  background: var(--color-brand);
   box-shadow: 0 0 10px rgb(255 122 69 / 45%);
 }
 
@@ -249,7 +249,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
 }
 
 .pipeline-retriever-line {
-  stroke: #2dd4bf;
+  stroke: #88c9f7;
   stroke-width: 1.2;
   opacity: 0.6;
 }
@@ -259,16 +259,16 @@ html[data-theme="dark"] .pipeline-stack-stage {
 }
 
 .pipeline-retriever-dot.is-hit {
-  fill: #2dd4bf;
+  fill: #88c9f7;
 }
 
 .pipeline-retriever-query {
-  fill: #ff7a45;
+  fill: var(--color-brand);
 }
 
 .pipeline-retriever-query-ring {
   fill: none;
-  stroke: #111826;
+  stroke: var(--lp-bg-surface);
   stroke-width: 2;
 }
 
@@ -321,7 +321,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
 .pipeline-gen-pill-icon {
   width: 12px;
   height: 12px;
-  color: #2dd4bf;
+  color: #88c9f7;
   flex-shrink: 0;
 }
 
@@ -346,7 +346,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
   font-family: var(--lp-font-mono, ui-monospace, monospace);
   font-size: 12px;
   font-weight: 500;
-  color: #2dd4bf;
+  color: #88c9f7;
 }
 
 .pipeline-grader-meta {
@@ -425,7 +425,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
 }
 
 .pipeline-side-num.is-accent {
-  color: #ff7a45;
+  color: var(--color-brand);
 }
 
 .pipeline-side-name {
@@ -450,7 +450,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 12px;
-  background: #111826;
+  background: var(--lp-bg-surface);
   border: 1px solid #1e2738;
   font-family: var(--lp-font-mono, ui-monospace, monospace);
   font-size: 11px;
@@ -467,7 +467,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
 }
 
 .pipeline-float-dot.is-teal {
-  background: #2dd4bf;
+  background: #88c9f7;
 }
 
 .pipeline-float-dot.is-amber {
@@ -477,7 +477,7 @@ html[data-theme="dark"] .pipeline-stack-stage {
 .pipeline-chip-activity {
   width: 13px;
   height: 13px;
-  color: #2dd4bf;
+  color: #88c9f7;
   flex-shrink: 0;
 }
 

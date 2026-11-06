@@ -51,8 +51,12 @@ apps/api/
 
 ## `apps/web` (frontend)
 
+**Architecture:** [Feature-Based Modular Architecture](../apps/web/docs/FEATURE-ARCHITECTURE.md) — vertical slices under `features/`, thin App Router pages.
+
 ```
 apps/web/
+  docs/
+    FEATURE-ARCHITECTURE.md     # feature module rules (canonical)
   src/
     app/                        # routes only (thin pages)
       page.tsx                  # marketing home
@@ -62,10 +66,11 @@ apps/web/
       u/, verify/               # public profile, verify result
     features/                   # feature modules: UI + *-api.ts + *.css
       workspace/                # simulators (largest surface)
-      problems/, contests/, auth/, …
-    components/                 # shared UI: layout, brand, shadcn wrappers
+      contests/                 # hub, workspace, arena/ (play, lobby, scoreboard)
+      problems/, auth/, …
+    components/                 # shared UI: layout, brand, shadcn wrappers (not domain)
     config/                     # routes, brand
-    lib/                        # api client, env, utils
+    lib/                        # api client, env, utils (generic only)
     types/                      # DTO shapes aligned with API
   public/                       # static assets
 ```
@@ -73,7 +78,8 @@ apps/web/
 **Design rules**
 
 - **Route groups** `(app)`, `(auth)`, `(dashboard)` control layout and auth gates without affecting URLs.
-- **Features own** their API calls and styles; `app/**/page.tsx` imports views from `features/`.
+- **Features own** their API calls, styles, and domain UI; `app/**/page.tsx` imports one view from `features/`.
+- **No cross-feature deep imports** — shared code goes in `components/`, `lib/`, or `types/`.
 - **Browser API base**: prefer same-origin `NEXT_PUBLIC_API_URL=/api` behind nginx in production.
 
 ---

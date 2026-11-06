@@ -1,102 +1,113 @@
 "use client";
 
-import { AnimatePresence, motion, useInView, useReducedMotion, type Transition } from "motion/react";
-import { ArrowRight, Check, Loader2, Mail } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { LabpathLogoMark } from "@/components/brand/labpath-logo";
-import { brand } from "@/config/brand";
+import type { ReactNode } from "react";
+import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { routes } from "@/config/routes";
 
-const E: Transition["ease"] = [0.2, 0, 0, 1];
+type FootLink = { label: string; href: string };
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+type FootGroup = {
+  heading: string;
+  links: readonly FootLink[];
+};
 
-const FOOT_NAV = [
+const FOOT_COLUMNS: readonly FootGroup[][] = [
+  [
+    {
+      heading: "Practice",
+      links: [
+        { label: "Practice", href: routes.practiceHub },
+        { label: "Contests", href: routes.contestHub },
+        { label: "Ranking", href: routes.dashboardRanking },
+        { label: "Dashboard", href: routes.dashboard },
+        { label: "Paths", href: routes.paths },
+      ],
+    },
+  ],
+  [
+    {
+      heading: "Tracks",
+      links: [
+        { label: "RAG", href: `${routes.practiceHub}?track=rag` },
+        { label: "Eval", href: `${routes.practiceHub}?track=eval` },
+        { label: "Guardrails", href: `${routes.practiceHub}?track=guard` },
+        { label: "Prompt", href: `${routes.practiceHub}?track=prompt` },
+      ],
+    },
+  ],
+  [
+    {
+      heading: "Resources",
+      links: [
+        { label: "Documentation", href: "https://github.com/Bina-Labs/Labpath" },
+        { label: "Changelog", href: "https://github.com/Bina-Labs/Labpath/releases" },
+        { label: "RAG demo", href: routes.demoRagWorkspace },
+        { label: "Help", href: "mailto:hello@labpath.dev" },
+      ],
+    },
+    {
+      heading: "Community",
+      links: [
+        { label: "GitHub", href: "https://github.com/Bina-Labs/Labpath" },
+        { label: "Report an issue", href: "https://github.com/Bina-Labs/Labpath/issues" },
+      ],
+    },
+  ],
+  [
+    {
+      heading: "Company",
+      links: [
+        { label: "Contact", href: routes.contact },
+        { label: "Privacy", href: "/privacy" },
+        { label: "Terms", href: "/terms" },
+        { label: "Security", href: "/security" },
+      ],
+    },
+    {
+      heading: "Account",
+      links: [
+        { label: "Sign in", href: routes.signIn },
+        { label: "Get started", href: routes.signUp },
+      ],
+    },
+  ],
+] as const;
+
+const SOCIAL_LINKS = [
   {
-    label: "Product",
-    links: [
-      { label: "Problems", href: routes.problems },
-      { label: "Contest", href: routes.contests },
-      { label: "Leaderboard", href: routes.leaderboard },
-      { label: "Changelog", href: "https://github.com/Bina-Labs/Labpath/releases" },
-    ],
+    label: "GitHub",
+    href: "https://github.com/Bina-Labs/Labpath",
   },
   {
-    label: "Tracks",
-    links: [
-      { label: "RAG", href: `${routes.problems}?track=rag` },
-      { label: "Eval", href: `${routes.problems}?track=eval` },
-      { label: "Guard", href: `${routes.problems}?track=guard` },
-      { label: "Prompt", href: `${routes.problems}?track=prompt` },
-    ],
+    label: "LinkedIn",
+    href: "https://www.linkedin.com",
   },
   {
-    label: "Company",
-    links: [
-      { label: "Docs", href: "https://github.com/Bina-Labs/Labpath" },
-      { label: "Contact", href: "mailto:hello@labpath.dev" },
-    ],
+    label: "X",
+    href: "https://x.com",
   },
 ] as const;
 
-const LEGAL_LINKS = [
-  { label: "Privacy", href: "/privacy" },
-  { label: "Terms", href: "/terms" },
+const BAR_LEGAL = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Use", href: "/terms" },
   { label: "Security", href: "/security" },
 ] as const;
 
-function FadeUpBlock({
-  show,
-  delay,
-  children,
-  className,
-}: {
-  show: boolean;
-  delay: number;
-  children: ReactNode;
-  className?: string;
-}) {
-  const reduceMotion = useReducedMotion();
-  const visible = show || reduceMotion;
-
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 16 }}
-      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16 }}
-      transition={
-        reduceMotion
-          ? { duration: 0 }
-          : {
-              duration: 0.6,
-              ease: E,
-              delay: show ? delay : 0,
-              opacity: { duration: 0.56, ease: "easeOut", delay: show ? delay : 0 },
-            }
-      }
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function FooterLink({
-  href,
-  children,
-  external,
-}: {
-  href: string;
-  children: ReactNode;
-  external?: boolean;
-}) {
+function FooterLink({ href, children }: { href: string; children: ReactNode }) {
   const className = "lp-home-foot-link";
-  if (external || href.startsWith("http") || href.startsWith("mailto:")) {
+  const external =
+    href.startsWith("http") || href.startsWith("mailto:");
+
+  if (external) {
     return (
       <a
         href={href}
         className={className}
-        {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        {...(href.startsWith("http")
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
       >
         {children}
       </a>
@@ -109,175 +120,107 @@ function FooterLink({
   );
 }
 
-function StatusPill({ pingActive }: { pingActive: boolean }) {
-  const reduceMotion = useReducedMotion();
-
+function SocialIcon({ name, className }: { name: string; className?: string }) {
+  const cn = className ?? "lp-home-foot-social-svg";
+  if (name === "GitHub") {
+    return (
+      <svg className={cn} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.653 1.652.242 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z" />
+      </svg>
+    );
+  }
+  if (name === "LinkedIn") {
+    return (
+      <svg className={cn} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.063 2.063 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    );
+  }
   return (
-    <div className="lp-home-foot-status" role="status">
-      <span className="lp-home-foot-status-dot-wrap" aria-hidden>
-        <span className="lp-home-foot-status-dot" />
-        {pingActive && !reduceMotion ? (
-          <motion.span
-            className="lp-home-foot-status-ping"
-            animate={{ scale: [1, 2.4], opacity: [0.5, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
-          />
-        ) : null}
-      </span>
-      Graders online
-    </div>
+    <svg className={cn} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
   );
 }
 
 export function HomeLandingFooter() {
-  const footerRef = useRef<HTMLElement>(null);
-  const inView = useInView(footerRef, { once: true, amount: 0.2 });
-  const pingInView = useInView(footerRef, { once: false, amount: 0.1 });
-  const reduceMotion = useReducedMotion();
-
-  const [email, setEmail] = useState("");
-  const [formState, setFormState] = useState<"idle" | "error" | "loading" | "success">("idle");
-  const [shake, setShake] = useState(false);
-
-  const onSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (formState === "loading" || formState === "success") return;
-
-      const value = email.trim();
-      if (!EMAIL_RE.test(value)) {
-        setFormState("error");
-        setShake(true);
-        window.setTimeout(() => setShake(false), 350);
-        return;
-      }
-
-      setFormState("loading");
-      window.setTimeout(() => setFormState("success"), 600);
-    },
-    [email, formState],
-  );
+  const year = new Date().getFullYear();
 
   return (
-    <footer ref={footerRef} className="lp-home-foot">
+    <footer className="lp-home-foot">
       <div className="lp-home-foot-inner">
-        <div className="lp-home-foot-top">
-          <FadeUpBlock show={inView} delay={0} className="lp-home-foot-brand">
-            <div className="lp-home-foot-logo-row">
-              <LabpathLogoMark />
-              <span className="lp-home-foot-wordmark">{brand.name}</span>
+        <div className="lp-home-foot-panel">
+          <div className="lp-home-foot-grid">
+            <div className="lp-home-foot-brand">
+              <Link href={routes.home} className="lp-home-foot-logo-link">
+                <LabpathLogo
+                  size="md"
+                  showWordmark
+                  wordmarkClassName="lp-home-foot-wordmark"
+                />
+              </Link>
+              <p className="lp-home-foot-desc">
+                The practice platform for AI engineering teams—graded labs, hidden
+                eval sets, and full traces.
+              </p>
+              <Link href={routes.signUp} className="lp-home-foot-cta">
+                Get started
+              </Link>
+              <div className="lp-home-foot-trust" aria-hidden>
+                <span className="lp-home-foot-trust-item">Graded runs</span>
+                <span className="lp-home-foot-trust-item">Hidden test sets</span>
+                <span className="lp-home-foot-trust-item">Full traces</span>
+              </div>
             </div>
-            <p className="lp-home-foot-desc">
-              Practice platform for AI engineering. Graded exercises, hidden eval sets and full
-              traces.
-            </p>
-            <p className="lp-home-foot-signup-label">Get started</p>
-            <div className="lp-home-foot-form-wrap">
-              <AnimatePresence mode="wait" initial={false}>
-                {formState === "success" ? (
-                  <motion.div
-                    key="success"
-                    className="lp-home-foot-success"
-                    initial={{ opacity: reduceMotion ? 1 : 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.2 }}
-                    aria-live="polite"
-                  >
-                    <span className="lp-home-foot-success-icon">
-                      <Check strokeWidth={2.5} aria-hidden />
-                    </span>
-                    <span className="lp-home-foot-success-text">
-                      You&apos;re on the list — check your inbox.
-                    </span>
-                  </motion.div>
-                ) : (
-                  <motion.form
-                    key="form"
-                    className={`lp-home-foot-form${formState === "error" ? " is-error" : ""}`}
-                    onSubmit={onSubmit}
-                    animate={shake ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
-                    transition={{ duration: 0.35 }}
-                    initial={{ opacity: reduceMotion ? 1 : 0 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <label htmlFor="home-foot-email" className="lp-home-foot-sr">
-                      Email address
-                    </label>
-                    <Mail className="lp-home-foot-form-icon" strokeWidth={1.75} aria-hidden />
-                    <input
-                      id="home-foot-email"
-                      type="email"
-                      name="email"
-                      autoComplete="email"
-                      className="lp-home-foot-input"
-                      placeholder="you@company.com"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (formState === "error") setFormState("idle");
-                      }}
-                      disabled={formState === "loading"}
-                    />
-                    <button
-                      type="submit"
-                      className="lp-home-foot-submit"
-                      disabled={formState === "loading"}
-                      aria-label="Get started"
-                    >
-                      {formState === "loading" ? (
-                        <Loader2 className="lp-home-foot-submit-spinner" strokeWidth={2.5} aria-hidden />
-                      ) : (
-                        <>
-                          <span className="lp-home-foot-submit-label">Get started</span>
-                          <ArrowRight strokeWidth={2} aria-hidden />
-                        </>
-                      )}
-                    </button>
-                  </motion.form>
-                )}
-              </AnimatePresence>
-              {formState === "error" ? (
-                <p className="lp-home-foot-form-error" role="alert">
-                  Enter a valid email
-                </p>
-              ) : null}
-            </div>
-          </FadeUpBlock>
 
-          <span className="lp-home-foot-spacer" aria-hidden />
-
-          <div className="lp-home-foot-links-row">
-            {FOOT_NAV.map((col, i) => (
-              <FadeUpBlock key={col.label} show={inView} delay={0.08 + i * 0.06}>
-                <nav className="lp-home-foot-nav" aria-label={col.label}>
-                  <p className="lp-home-foot-nav-title">{col.label}</p>
-                  <ul className="lp-home-foot-nav-list">
-                    {col.links.map((link) => (
-                      <li key={link.label}>
-                        <FooterLink href={link.href} external={link.href.startsWith("http")}>
-                          {link.label}
-                        </FooterLink>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              </FadeUpBlock>
+            {FOOT_COLUMNS.map((column, colIndex) => (
+              <div key={colIndex} className="lp-home-foot-col">
+                {column.map((group) => (
+                  <nav
+                    key={group.heading}
+                    className="lp-home-foot-group"
+                    aria-label={group.heading}
+                  >
+                    <p className="lp-home-foot-group-title">{group.heading}</p>
+                    <ul className="lp-home-foot-nav-list">
+                      {group.links.map((link) => (
+                        <li key={link.label}>
+                          <FooterLink href={link.href}>{link.label}</FooterLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                ))}
+              </div>
             ))}
           </div>
         </div>
 
-        <FadeUpBlock show={inView} delay={0.3} className="lp-home-foot-legal">
-          <span className="lp-home-foot-copy">© 2026 LabPath</span>
-          <div className="lp-home-foot-legal-links">
-            {LEGAL_LINKS.map((link) => (
-              <Link key={link.label} href={link.href} className="lp-home-foot-legal-link">
+        <div className="lp-home-foot-bar">
+          <div className="lp-home-foot-social">
+            {SOCIAL_LINKS.map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                className="lp-home-foot-social-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+              >
+                <SocialIcon name={label} />
+              </a>
+            ))}
+          </div>
+
+          <div className="lp-home-foot-bar-end">
+            {BAR_LEGAL.map((link) => (
+              <Link key={link.label} href={link.href} className="lp-home-foot-bar-link">
                 {link.label}
               </Link>
             ))}
+            <span className="lp-home-foot-copy">© {year} LabPath</span>
           </div>
-          <StatusPill pingActive={pingInView} />
-        </FadeUpBlock>
+        </div>
       </div>
     </footer>
   );

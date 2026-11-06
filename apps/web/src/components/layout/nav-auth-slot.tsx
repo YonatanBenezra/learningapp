@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { catalogPrimaryCta } from "@/config/product-nav";
 import { routes } from "@/config/routes";
 import { AuthLink } from "@/features/auth/auth-link";
-import {
-  authUserInitials,
-  useAuthSession,
-} from "@/features/auth/use-auth-session";
+import { useAuthSession } from "@/features/auth/use-auth-session";
 
 type CatalogNavAuthProps = {
   variant: "header" | "mobile";
@@ -22,22 +20,27 @@ export function CatalogNavHeaderAuth() {
 
   return (
     <div className="lp-site-nav-header-auth">
+      <Link href={routes.contact} className="lp-site-nav-utility-link">
+        Contact
+      </Link>
       {signedIn && user ? (
         <Link
-          href={routes.progress}
-          className="lp-site-nav-avatar"
-          aria-label="Your profile"
+          href={routes.dashboard}
+          className="lp-site-nav-signin-link"
           title={user.displayName ?? user.email}
         >
-          {authUserInitials(user)}
+          Account
         </Link>
       ) : (
         <Link href={routes.signIn} className="lp-site-nav-signin-link">
           Sign in
         </Link>
       )}
-      <AuthLink href={routes.problems} className={openProblemsCtaClass}>
-        Open problems
+      <AuthLink
+        href={signedIn ? catalogPrimaryCta.signedIn.href : catalogPrimaryCta.signedOut.href}
+        className={openProblemsCtaClass}
+      >
+        {signedIn ? catalogPrimaryCta.signedIn.label : catalogPrimaryCta.signedOut.label}
       </AuthLink>
     </div>
   );
@@ -54,19 +57,19 @@ export function CatalogNavAuth({ variant, onNavigate }: CatalogNavAuthProps) {
     return (
       <div className="lp-site-nav-mobile-cta mt-3 flex flex-col gap-2">
         <AuthLink
-          href={routes.problems}
+          href={signedIn ? catalogPrimaryCta.signedIn.href : catalogPrimaryCta.signedOut.href}
           className="lp-btn lp-btn--primary lp-btn--block"
           onClick={onNavigate}
         >
-          Open problems
+          {signedIn ? catalogPrimaryCta.signedIn.label : catalogPrimaryCta.signedOut.label}
         </AuthLink>
         {signedIn && user ? (
           <Link
-            href={routes.progress}
+            href={routes.dashboard}
             className="lp-btn lp-btn--ghost lp-btn--block"
             onClick={onNavigate}
           >
-            Profile
+            Account
           </Link>
         ) : (
           <Link
@@ -96,8 +99,8 @@ export function HomeNavAuthCta({
 
   if (signedIn) {
     return (
-      <Link href={routes.progress} className={className}>
-        Profile
+      <Link href={routes.dashboard} className={className}>
+        Dashboard
       </Link>
     );
   }
@@ -115,7 +118,7 @@ export function HomeNavAuthCta({
       className={`${className ?? ""} lp-site-nav-auth-pending`.trim()}
       aria-busy="true"
     >
-      Profile
+      Dashboard
     </span>
   );
 }

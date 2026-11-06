@@ -9,11 +9,18 @@ import { clearAuthSnapshot } from "@/features/auth/auth-session";
 
 type LogoutButtonProps = {
   className?: string;
+  label?: string;
+  pendingLabel?: string;
   /** Runs before the redirect — the sidebar uses it to close the mobile menu. */
   onDone?: () => void;
 };
 
-export function LogoutButton({ className, onDone }: LogoutButtonProps) {
+export function LogoutButton({
+  className,
+  label = "Sign out",
+  pendingLabel = "Signing out…",
+  onDone,
+}: LogoutButtonProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
 
@@ -44,7 +51,7 @@ export function LogoutButton({ className, onDone }: LogoutButtonProps) {
       onClick={() => void signOut()}
       disabled={busy}
     >
-      {busy ? "Signing out…" : "Sign out"}
+      {busy ? pendingLabel : label}
     </button>
   );
 }

@@ -37,7 +37,7 @@
 
 .lp-ct-hub {
   width: 100%;
-  max-width: var(--lp-catalog-content-width, min(1350px, calc(100% - 3rem)));
+  max-width: var(--lp-catalog-content-width);
   margin: 0 auto;
   padding: 1.25rem 0 3rem;
   display: flex;

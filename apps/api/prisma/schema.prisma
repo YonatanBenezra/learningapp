@@ -129,6 +129,7 @@ model User {
   imageUrl      String?
   profileSlug   String?   @unique
   profilePublic Boolean   @default(false)
+  profileMeta   Json?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?

@@ -2,45 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ChevronRight, Menu, X } from "lucide-react";
 import { NavbarMenu } from "@/components/aceternity/navbar-menu";
 import { LabpathLogo } from "@/components/brand/labpath-logo";
 import { brand } from "@/config/brand";
+import { catalogNavItems } from "@/config/product-nav";
 import { routes } from "@/config/routes";
 import { CatalogNavHeaderAuth, CatalogNavAuth } from "@/components/layout/nav-auth-slot";
 import { LiveEventPill } from "@/components/nav/LiveEventPill";
-import { ThemeToggle } from "@/features/theme/theme-toggle";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
-  {
-    href: routes.problems,
-    label: "Problems",
-    description: "20+ graded exercises",
-  },
-  {
-    href: routes.contests,
-    label: "Contest",
-    description: "Timed sprints with live standings",
-  },
-  {
-    href: routes.leaderboard,
-    label: "Leaderboard",
-    description: "Top scores this month",
-  },
-] as const;
+const navLinks = catalogNavItems;
 
 function isActive(pathname: string, href: string) {
-  if (href === routes.problems) {
-    return pathname === routes.problems;
-  }
-  if (href === routes.contests) {
-    return pathname === routes.contests || pathname.startsWith("/contests/");
-  }
-  if (href === routes.leaderboard) {
-    return pathname === routes.leaderboard;
-  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -50,10 +25,10 @@ export function AppCatalogNav() {
   const [scrolled, setScrolled] = useState(false);
   const isHome = pathname === routes.home;
   const isProblems = pathname === routes.problems;
-  const isLeaderboard = pathname === routes.leaderboard;
+  const isLeaderboard = pathname === routes.dashboardRanking;
   const isContests =
     pathname === routes.contests || pathname.startsWith("/contests/");
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.dataset.workspace = "catalog";
     return () => {
       delete document.documentElement.dataset.workspace;
@@ -88,25 +63,26 @@ export function AppCatalogNav() {
         (scrolled || isProblems || isLeaderboard) && "is-scrolled",
       )}
     >
-      <div className="lp-site-nav-inner lp-dash-nav-inner">
-        <div className="lp-site-nav-left">
+      <div className="lp-site-nav-inner lp-site-nav-inner--htb lp-dash-nav-inner">
+        <div className="lp-site-nav-zone lp-site-nav-zone--brand">
           <Link href={routes.home} className="lp-site-nav-brand" aria-label={brand.name}>
-            <LabpathLogo size="md" showWordmark wordmarkClassName="max-[380px]:hidden" />
+            <LabpathLogo
+              size="md"
+              showWordmark
+              wordmarkClassName="lp-site-nav-wordmark--htb max-[420px]:hidden"
+            />
           </Link>
-
-          <div className="max-[899px]:hidden lp-site-nav-links">
-            <NavbarMenu items={menuItems} />
-          </div>
         </div>
 
-        <div className="lp-site-nav-right">
-          <LiveEventPill />
-          <div className="max-[899px]:hidden">
-            <ThemeToggle variant="nav" />
-          </div>
-          <span className="lp-site-nav-vrule lp-site-nav-vrule--actions max-[899px]:hidden" aria-hidden />
+        <div className="lp-site-nav-zone lp-site-nav-zone--center max-[899px]:hidden">
+          <NavbarMenu items={menuItems} />
+        </div>
 
-          <CatalogNavHeaderAuth />
+        <div className="lp-site-nav-zone lp-site-nav-zone--actions">
+          <LiveEventPill />
+          <div className="lp-site-nav-actions-desktop max-[899px]:hidden">
+            <CatalogNavHeaderAuth />
+          </div>
 
           <button
             type="button"
@@ -130,6 +106,21 @@ export function AppCatalogNav() {
         className={`lp-site-nav-mobile${mobileNavOpen ? " is-open" : ""}`}
       >
         <ul className="lp-site-nav-mobile-list">
+          <li>
+            <Link
+              href={routes.contact}
+              className={`lp-site-nav-mobile-row${pathname === routes.contact ? " is-active" : ""}`}
+              onClick={() => setMobileNavOpen(false)}
+            >
+              <span className="lp-site-nav-mobile-row-copy">
+                <span className="lp-site-nav-mobile-row-label">Contact</span>
+                <span className="lp-site-nav-mobile-row-desc">
+                  Email and questions
+                </span>
+              </span>
+              <ChevronRight className="lp-icon lp-icon--muted" strokeWidth={1.5} aria-hidden />
+            </Link>
+          </li>
           {navLinks.map((item) => {
             const active = isActive(pathname, item.href);
             return (
@@ -149,11 +140,6 @@ export function AppCatalogNav() {
             );
           })}
         </ul>
-
-        <div className="lp-site-nav-mobile-appearance">
-          <span className="lp-site-nav-mobile-appearance-label">Appearance</span>
-          <ThemeToggle variant="nav" />
-        </div>
 
         <CatalogNavAuth variant="mobile" onNavigate={() => setMobileNavOpen(false)} />
       </div>

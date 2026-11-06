@@ -73,7 +73,7 @@ export function CorpusFace() {
 export function RetrieverFace() {
   return (
     <div className="pipeline-face-inner">
-      <FaceHeader icon={Search} iconColor="#2dd4bf" label="RETRIEVER" tag="top-k 5" />
+      <FaceHeader icon={Search} iconColor="#88c9f7" label="RETRIEVER" tag="top-k 5" />
       <svg className="pipeline-retriever-svg" width={214} height={170} viewBox="0 0 214 170" aria-hidden>
         {RETRIEVER_DOTS.map((dot, i) =>
           RETRIEVER_HITS.has(i) ? (
@@ -133,7 +133,7 @@ type GraderFaceProps = {
 export function GraderFace({ score, barsVisible, showDelta = false }: GraderFaceProps) {
   return (
     <div className="pipeline-face-inner pipeline-face-inner--grader">
-      <FaceHeader icon={Shield} iconColor="#ff7a45" label="GRADER" tag="hidden set" />
+      <FaceHeader icon={Shield} iconColor="#9fef00" label="GRADER" tag="hidden set" />
       <div className="pipeline-grader-score-row">
         <span className="pipeline-grader-score">{score}</span>
         {showDelta ? <span className="pipeline-grader-delta">▲ 0.06</span> : null}

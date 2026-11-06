@@ -55,7 +55,7 @@ export function HomeHeroSection() {
         </p>
 
         <div className="lp-home-hero-actions">
-          <AuthLink href={routes.problems} className="lp-btn lp-btn--primary">
+          <AuthLink href={routes.signUp} className="lp-btn lp-btn--primary">
             Open problems
             <ArrowRight className="lp-icon lp-icon--sm" strokeWidth={1.5} aria-hidden />
           </AuthLink>
