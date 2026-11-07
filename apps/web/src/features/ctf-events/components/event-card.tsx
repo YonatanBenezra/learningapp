@@ -1,17 +1,14 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState, type MouseEvent } from "react";
+import { useCallback, type MouseEvent } from "react";
 import { routes, loginPath } from "@/config/routes";
 import { useAuthSession } from "@/features/auth/use-auth-session";
 import { CtfBadge } from "@/features/ctf-events/components/badge";
 import { BannerPlaceholder } from "@/features/ctf-events/components/banner-placeholder";
 import { formatEventDateRange } from "@/features/ctf-events/format-event-date";
 import type { CtfEvent } from "@/features/ctf-events/types";
-import { contestsApi } from "@/features/contests/contests-api";
-import { ApiError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 
 function playersLabel(event: CtfEvent) {
@@ -24,40 +21,23 @@ function playersLabel(event: CtfEvent) {
 export function EventCard({ event }: { event: CtfEvent }) {
   const router = useRouter();
   const { signedIn, resolved: authResolved } = useAuthSession();
-  const [pending, setPending] = useState(false);
   const isLive = event.status === "live";
-  const showEnrollHover = isLive && !event.joined;
+  const showOpenHover = isLive && !event.joined;
 
-  const lobbyHref = routes.contest(event.id);
-  const playHref = routes.contestPlay(event.id);
+  const lobbyHref = routes.ctfEvent(event.id);
   const signInHref = loginPath(lobbyHref);
 
-  const onEnroll = useCallback(
-    async (e: MouseEvent<HTMLButtonElement>) => {
+  const onOpen = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
-      if (pending) {
-        return;
-      }
       if (!signedIn && authResolved) {
         router.push(signInHref);
         return;
       }
-      setPending(true);
-      try {
-        await contestsApi.enter(event.id);
-        router.push(playHref);
-      } catch (caught: unknown) {
-        if (caught instanceof ApiError && caught.status === 401) {
-          router.push(signInHref);
-          return;
-        }
-        router.push(lobbyHref);
-      } finally {
-        setPending(false);
-      }
+      router.push(lobbyHref);
     },
-    [authResolved, event.id, lobbyHref, pending, playHref, router, signInHref, signedIn],
+    [authResolved, lobbyHref, router, signInHref, signedIn],
   );
 
   return (
@@ -93,21 +73,13 @@ export function EventCard({ event }: { event: CtfEvent }) {
           ) : null}
         </div>
       </div>
-      {showEnrollHover ? (
+      {showOpenHover ? (
         <button
           type="button"
-          disabled={pending}
-          onClick={onEnroll}
-          className="pointer-events-auto absolute bottom-1.5 right-3 z-[2] inline-flex h-10 min-w-[120px] items-center justify-center gap-2 rounded-sm bg-platform-accent px-5 text-sm font-medium text-platform-accent-on opacity-0 shadow-md transition-[opacity,transform] duration-150 hover:opacity-90 group-hover:opacity-100 group-focus-within:opacity-100 disabled:opacity-70"
+          onClick={onOpen}
+          className="pointer-events-auto absolute bottom-1.5 right-3 z-[2] inline-flex h-10 min-w-[120px] items-center justify-center rounded-sm bg-platform-accent px-5 text-sm font-medium text-platform-accent-on opacity-0 shadow-md transition-[opacity,transform] duration-150 hover:opacity-90 group-hover:opacity-100 group-focus-within:opacity-100"
         >
-          {pending ? (
-            <>
-              <Loader2 className="size-4 animate-spin" aria-hidden />
-              Enrolling…
-            </>
-          ) : (
-            "Enroll"
-          )}
+          Open
         </button>
       ) : null}
     </article>

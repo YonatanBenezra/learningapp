@@ -1,14 +1,11 @@
-import { ContestLobbyView } from "@/features/contests/components/contest-detail-view";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
-export default async function ContestLobbyPage({
+export default async function ContestLobbyRedirectPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  return (
-    <div className="flex min-h-0 w-full max-w-none flex-1 flex-col">
-      <ContestLobbyView slug={slug} />
-    </div>
-  );
+  redirect(routes.ctfEvent(slug));
 }

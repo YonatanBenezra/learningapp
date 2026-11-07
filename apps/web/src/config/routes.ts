@@ -49,7 +49,7 @@ export const routes = {
   /** Hands-on labs listing (dashboard workspace, CTF-style hub). */
   /** Practice workspace — label: "Practice" ({@link workspacePractice}). */
   practiceHub: "/practice",
-  /** CTF event detail from listing cards (redirects to contest lobby). */
+  /** CTF event details (first stop after picking an event from the hub). */
   ctfEvent: (id: string) => `/events/${id}`,
   /** Same URL as dashboard — kept for call sites that still use `routes.progress`. */
   progress: "/dashboard",

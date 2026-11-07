@@ -13,7 +13,7 @@ function windowLabel(window: ContestListItem["window"]): string {
 }
 
 export function ContestCard({ contest }: { contest: ContestListItem }) {
-  let href = routes.contest(contest.slug);
+  let href = routes.ctfEvent(contest.slug);
   let action = "View";
   if (contest.canEnter) {
     action = "Enter";
