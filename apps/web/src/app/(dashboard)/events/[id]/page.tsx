@@ -1,11 +1,10 @@
-import { redirect } from "next/navigation";
-import { routes } from "@/config/routes";
+import { EventDetailsView } from "@/features/contests/event-details/event-details-view";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function CtfEventDetailRedirectPage({ params }: PageProps) {
+export default async function CtfEventDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  redirect(routes.contest(id));
+  return <EventDetailsView slug={id} />;
 }

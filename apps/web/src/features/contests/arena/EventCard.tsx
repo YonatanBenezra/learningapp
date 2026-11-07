@@ -140,19 +140,19 @@ export function EventCard({ event, index }: { event: ArenaEvent; index: number }
         <div className="mt-auto flex flex-col gap-2.5 border-t border-[var(--arena-line)] pt-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
           <span className={cn("font-mono text-xs font-semibold", statusColor)}>{status}</span>
           {event.status === "live" ? (
-            <ArenaButton size="sm" href={routes.contest(event.slug)}>
+            <ArenaButton size="sm" href={routes.ctfEvent(event.slug)}>
               <Play className="size-3.5" aria-hidden />
               JOIN
             </ArenaButton>
           ) : null}
           {event.status === "upcoming" ? (
-            <ArenaButton size="sm" variant="ghost" href={routes.contest(event.slug)}>
+            <ArenaButton size="sm" variant="ghost" href={routes.ctfEvent(event.slug)}>
               <Bell className="size-3.5" aria-hidden />
               NOTIFY ME
             </ArenaButton>
           ) : null}
           {event.status === "archived" ? (
-            <ArenaButton size="sm" variant="ghost" href={routes.contest(event.slug)}>
+            <ArenaButton size="sm" variant="ghost" href={routes.ctfEvent(event.slug)}>
               <Trophy className="size-3.5" aria-hidden />
               RESULTS
             </ArenaButton>

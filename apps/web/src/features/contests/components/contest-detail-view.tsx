@@ -99,27 +99,7 @@ export function ContestLobbyView({ slug }: { slug: string }) {
 
 /** Live scoreboard at `/contests/[slug]/scoreboard`. */
 export function ContestScoreboardView({ slug }: { slug: string }) {
-  const { contest, error } = useContestDetail(slug);
-
-  if (error === "auth") {
-    return <ContestAuthError />;
-  }
-  if (error === "load") {
-    return <ContestLoadError />;
-  }
-  if (!contest) {
-    return (
-      <ArenaPage>
-        <div className="arena-hub arena-scoreboard px-4 py-10" aria-busy="true" />
-      </ArenaPage>
-    );
-  }
-
-  return (
-    <ArenaPage>
-      <EventScoreboard slug={slug} eventTitle={contest.title} />
-    </ArenaPage>
-  );
+  return <EventScoreboard slug={slug} />;
 }
 
 /** Joined operator dashboard at `/contests/[slug]/play`. */

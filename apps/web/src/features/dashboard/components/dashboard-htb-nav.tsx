@@ -32,7 +32,8 @@ export function DashboardHtbNav({ user }: DashboardHtbNavProps) {
   const settingsActive =
     pathname === routes.dashboardSettings || pathname.startsWith(`${routes.dashboardSettings}/`);
   const labsActive = pathname === routes.practiceHub;
-  const contestsActive = pathname === routes.contestHub;
+  const contestsActive =
+    pathname === routes.contestHub || pathname.startsWith("/events/");
   const rankingActive =
     pathname === routes.dashboardRanking ||
     pathname.startsWith(`${routes.dashboardRanking}/`);

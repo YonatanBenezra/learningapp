@@ -35,7 +35,8 @@ export function RootNav() {
     pathname === routes.dashboard ||
     pathname.startsWith(`${routes.dashboard}/`) ||
     pathname === routes.contestHub ||
-    pathname === routes.practiceHub
+    pathname === routes.practiceHub ||
+    pathname.startsWith("/events/")
   ) {
     return null;
   }
