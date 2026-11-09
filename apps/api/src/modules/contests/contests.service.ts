@@ -31,13 +31,18 @@ import {
   samplingModeFromDb,
 } from './contest-scoring';
 import { buildContestClock } from './contest-clock';
-import { resolveSampledSlugs } from './contest-sample';
+import {
+  entrantSlugs,
+  resolveSampledSlugs,
+  sameSlugList,
+} from './contest-sample';
 import { leaderboardToCsv } from './contest-leaderboard-csv';
 import {
   resolveVirtualSampledSlugs,
   virtualSampleSeed,
 } from './contest-virtual';
 import type { ContestLeaderboardQueryDto } from './dto/contest-leaderboard-query.dto';
+import { arenaCategoryForExercise } from './contest-arena-category';
 
 export type ContestListItem = {
   slug: string;
@@ -65,9 +70,11 @@ export type ContestProblemView = {
   title: string;
   difficulty: string;
   simulator: string;
+  arenaCategory: ReturnType<typeof arenaCategoryForExercise>;
   scored: boolean;
   score: number | null;
   verdict: string | null;
+  solvedElapsedMs: number | null;
 };
 
 export type ContestLeaderboardItem = {
@@ -216,6 +223,7 @@ export class ContestsService {
     });
     if (entry) {
       entry = await this.syncEntry(entry.id, contest, now);
+      entry = await this.syncFixedPoolSlugs(entry, contest);
     }
     const entered = Boolean(entry);
     const seasonSittingUsed =
@@ -230,23 +238,30 @@ export class ContestsService {
       entry?.status ?? null,
       seasonSittingUsed,
     );
-    const slugs =
-      entry?.sampledSlugs ??
-      contest.problems
-        .map((problem) => problem.exerciseSlug)
-        .slice(0, contest.sampleSize);
+    const slugs = entrantSlugs(contest, entry);
     const exercises = await this.loadExerciseMeta(slugs);
-    const gradeBySlug = new Map<string, { score: number; verdict: string }>();
+    const gradeBySlug = new Map<
+      string,
+      { score: number; verdict: string; solvedElapsedMs: number | null }
+    >();
     if (entry) {
+      const startedMs = entry.startedAt.getTime();
       for (const attempt of entry.attempts) {
         const run = attempt.submissions[0]?.runs[0];
         const grade = run?.grade;
         if (!grade) {
           continue;
         }
+        const finishedAt = run?.finishedAt ?? run?.createdAt;
+        const pass = grade.verdict === 'pass';
+        const solvedElapsedMs =
+          pass && finishedAt
+            ? Math.max(0, finishedAt.getTime() - startedMs)
+            : null;
         gradeBySlug.set(attempt.exercise.slug, {
           score: itemScoreFromGrade(grade, contest.pointsPerProblem),
           verdict: grade.verdict,
+          solvedElapsedMs,
         });
       }
     }
@@ -255,16 +270,22 @@ export class ContestsService {
       if (!exercise) {
         return [];
       }
-      const scored = gradeBySlug.get(exerciseSlug);
+      const graded = gradeBySlug.get(exerciseSlug);
+      const passed = graded?.verdict === 'pass';
       return [
         {
           slug: exercise.slug,
           title: exercise.title,
           difficulty: exercise.difficulty,
           simulator: exercise.simulator,
-          scored: Boolean(scored),
-          score: scored?.score ?? null,
-          verdict: scored?.verdict ?? null,
+          arenaCategory: arenaCategoryForExercise(
+            exercise.slug,
+            exercise.simulator,
+          ),
+          scored: passed,
+          score: passed ? (graded?.score ?? null) : null,
+          verdict: graded?.verdict ?? null,
+          solvedElapsedMs: passed ? (graded?.solvedElapsedMs ?? null) : null,
         },
       ];
     });
@@ -276,7 +297,7 @@ export class ContestsService {
     }));
     let scorecard: ContestDetail['scorecard'] = null;
     if (entry && (entry.status === 'finished' || entry.status === 'expired')) {
-      const skillsByProblem = await this.loadExerciseSkills(entry.sampledSlugs);
+      const skillsByProblem = await this.loadExerciseSkills(slugs);
       const result = buildAssessmentResult({
         kind: contest.kind,
         seasonKey: contest.seasonKey,
@@ -407,7 +428,8 @@ export class ContestsService {
     const entry = await this.requireActiveEntry(contest.id, user.id, now);
     const window = contestWindow(contest, now);
     const clock = buildContestClock(contest, window, entry, now);
-    if (!entry.sampledSlugs.includes(exerciseSlug)) {
+    const boardSlugs = entrantSlugs(contest, entry);
+    if (!boardSlugs.includes(exerciseSlug)) {
       throw new NotFoundException('Contest problem not found');
     }
     const exercise = await this.prisma.exercise.findFirst({
@@ -438,7 +460,7 @@ export class ContestsService {
         entryStatus: entry.status,
       },
       scoring: {
-        ...contestScoringMeta(contest, entry.sampledSlugs.length),
+        ...contestScoringMeta(contest, boardSlugs.length),
         entryTotalScore: entry.totalScore,
       },
     };
@@ -453,7 +475,8 @@ export class ContestsService {
   ) {
     const contest = await this.loadContest(contestSlug, expectedKind);
     const entry = await this.requireActiveEntry(contest.id, user.id, now);
-    if (!entry.sampledSlugs.includes(exerciseSlug)) {
+    const boardSlugs = entrantSlugs(contest, entry);
+    if (!boardSlugs.includes(exerciseSlug)) {
       throw new NotFoundException('Contest problem not found');
     }
     assertTimeBoxOpen(contest, entry, now);
@@ -504,9 +527,14 @@ export class ContestsService {
           title: exercise.title,
           difficulty: exercise.difficulty,
           simulator: exercise.simulator,
+          arenaCategory: arenaCategoryForExercise(
+            exercise.slug,
+            exercise.simulator,
+          ),
           scored: false,
           score: null,
           verdict: null,
+          solvedElapsedMs: null,
         },
       ];
     });
@@ -730,8 +758,11 @@ export class ContestsService {
           : null,
       totalScore: this.entryLiveTotalScore(entry, contest.pointsPerProblem),
       elapsedMs: entry.elapsedMs,
-      solvedCount: countGradedSlugs(entry.sampledSlugs, entry.attempts),
-      totalCount: entry.sampledSlugs.length,
+      solvedCount: countGradedSlugs(
+        entrantSlugs(contest, entry),
+        entry.attempts,
+      ),
+      totalCount: entrantSlugs(contest, entry).length,
       status: entry.status,
       startedAt: entry.startedAt,
     }));
@@ -809,6 +840,24 @@ export class ContestsService {
         'Virtual practice opens after the contest window closes.',
       );
     }
+  }
+
+  private async syncFixedPoolSlugs<
+    T extends { id: string; sampledSlugs: string[] },
+  >(entry: T, contest: ContestWithProblems): Promise<T> {
+    if (samplingModeFromDb(contest.samplingMode) !== 'fixed_pool') {
+      return entry;
+    }
+    const pool = entrantSlugs(contest, entry);
+    if (!pool.length || sameSlugList(entry.sampledSlugs, pool)) {
+      return entry;
+    }
+    await this.prisma.contestEntry.update({
+      where: { id: entry.id },
+      data: { sampledSlugs: pool },
+    });
+    entry.sampledSlugs = pool;
+    return entry;
   }
 
   private async loadContest(

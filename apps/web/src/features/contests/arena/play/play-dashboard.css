@@ -1,60 +1,69 @@
+
+.arena-play .play-layout-htb {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .arena-play .play-layout-htb {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+  .arena-play .play-col-left {
+    width: 200px;
+    overflow: visible;
+  }
+}
+
+@media (min-width: 1280px) {
+  .arena-play .play-layout-htb {
+    grid-template-columns: 200px minmax(0, 1fr) 340px;
+  }
+
+  .arena-play .play-col-right {
+    width: 340px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .arena-play .play-layout-htb {
+    grid-template-columns: 220px minmax(0, 1fr) 360px;
+    gap: 1.75rem;
+  }
+
+  .arena-play .play-col-left {
+    width: 220px;
+  }
+
+  .arena-play .play-col-right {
+    width: 360px;
+  }
+}
+
+/* legacy grid (storybook / old routes) */
 .arena-play .play-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: stretch;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  align-items: start;
 }
 
 @media (min-width: 1024px) {
   .arena-play .play-layout {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .arena-play .play-filters {
-    width: 230px;
-    flex-shrink: 0;
-  }
-
-  .arena-play .play-rail {
-    width: 320px;
-    flex-shrink: 0;
+    grid-template-columns: 240px minmax(0, 1fr);
   }
 }
 
-.arena-play .play-filters .filter-cat-btn.is-active {
-  border: 1px solid color-mix(in srgb, var(--arena-lime) 40%, var(--arena-line));
-  background: color-mix(in srgb, var(--arena-ink) 6%, transparent);
-}
-
-.arena-play .play-challenge-grid {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 640px) {
-  .arena-play .play-challenge-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (min-width: 1280px) {
+  .arena-play .play-layout {
+    grid-template-columns: 240px minmax(0, 1fr) 320px;
   }
 }
 
-@media (min-width: 1024px) {
-  .arena-play .play-challenge-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 1023px) {
-  .arena-play .play-rail {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-}
-
-@media (max-width: 639px) {
-  .arena-play .play-rail {
-    grid-template-columns: 1fr;
+@media (prefers-reduced-motion: reduce) {
+  .arena-play .play-challenge-grid button {
+    transition: none;
   }
 }

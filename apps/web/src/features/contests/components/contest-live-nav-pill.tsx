@@ -57,7 +57,7 @@ export function ContestLiveNavPill() {
 
   return (
     <Link
-      href={routes.contest(live.slug)}
+      href={live.entered ? routes.contestPlay(live.slug) : routes.ctfEvent(live.slug)}
       className={cn(
         "inline-flex max-w-[min(100%,20rem)] items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--arena-red)_35%,transparent)] bg-[color-mix(in_srgb,var(--arena-red)_10%,transparent)] py-[7px] pl-2.5 pr-3",
         "max-sm:max-w-none max-sm:gap-1.5 max-sm:px-2 max-sm:py-1.5",

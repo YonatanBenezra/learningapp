@@ -1,46 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { routes } from "@/config/routes";
+import {
+  LABPATH_CHANGELOG_RSS_URL,
+  LABPATH_CHANGELOG_URL,
+  platformUpdates,
+} from "@/features/dashboard/data/platform-updates";
 
-export type UpdateKind = "new" | "improved";
-
-export type DashboardUpdate = {
-  id: string;
-  kind: UpdateKind;
-  title: string;
-  body: string;
-};
-
-const LATEST_UPDATES: DashboardUpdate[] = [
-  {
-    id: "practice-nav",
-    kind: "new",
-    title: "Practice & contest hubs",
-    body: "Unified workspace nav, loaders, and 1320px layout across Labs and Contests.",
-  },
-  {
-    id: "settings-save",
-    kind: "improved",
-    title: "Account settings persistence",
-    body: "Basic info, social links, and security preferences now save to your profile API.",
-  },
-  {
-    id: "auth-ui",
-    kind: "new",
-    title: "Sign-in refresh",
-    body: "Cleaner auth flow with dashboard redirect after login and a wider form layout.",
-  },
-  {
-    id: "rag-lab",
-    kind: "improved",
-    title: "RAG lab workspace",
-    body: "Corpus, chunks, query, and generate tabs in one traced grading workspace.",
-  },
-];
+export type { PlatformUpdate as DashboardUpdate, PlatformUpdateKind as UpdateKind } from "@/features/dashboard/data/platform-updates";
 
 type DashboardNotificationsPanelProps = {
   open: boolean;
@@ -101,38 +70,54 @@ export function DashboardNotificationsPanel({
               Latest Updates
             </h2>
 
-            <ul className="lp-dash-updates-list">
-              {LATEST_UPDATES.map((item) => (
-                <li
-                  key={item.id}
-                  className={`lp-dash-updates-item lp-dash-updates-item--${item.kind}`}
-                >
-                  <div className="lp-dash-updates-item-inner">
-                    <p className="lp-dash-updates-item-heading">
-                      <span className={`lp-dash-updates-badge lp-dash-updates-badge--${item.kind}`}>
-                        {item.kind === "new" ? "New" : "Improved"}
-                      </span>
-                      <span className="lp-dash-updates-item-title">{item.title}</span>
-                    </p>
-                    <p className="lp-dash-updates-item-body">{item.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {platformUpdates.length > 0 ? (
+              <ul className="lp-dash-updates-list">
+                {platformUpdates.map((item) => (
+                  <li
+                    key={item.id}
+                    className={`lp-dash-updates-item lp-dash-updates-item--${item.kind}`}
+                  >
+                    <div className="lp-dash-updates-item-inner">
+                      <p className="lp-dash-updates-item-heading">
+                        <span
+                          className={`lp-dash-updates-badge lp-dash-updates-badge--${item.kind}`}
+                        >
+                          {item.kind === "new" ? "New" : "Improved"}
+                        </span>
+                        <span className="lp-dash-updates-item-title">{item.title}</span>
+                      </p>
+                      <p className="lp-dash-updates-item-body">{item.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="lp-dash-updates-empty">
+                No in-app release notes yet. Follow the changelog on GitHub for releases.
+              </p>
+            )}
 
             <footer className="lp-dash-updates-foot">
               <span className="lp-dash-updates-foot-muted">LabPath changelog</span>
               <span className="lp-dash-updates-foot-links">
-                <Link href={routes.home} className="lp-dash-updates-foot-link" onClick={onClose}>
-                  RSS
-                </Link>
-                <Link
-                  href={routes.dashboard}
+                <a
+                  href={LABPATH_CHANGELOG_RSS_URL}
                   className="lp-dash-updates-foot-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onClose}
+                >
+                  RSS
+                </a>
+                <a
+                  href={LABPATH_CHANGELOG_URL}
+                  className="lp-dash-updates-foot-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={onClose}
                 >
                   See all changes
-                </Link>
+                </a>
               </span>
             </footer>
           </motion.section>

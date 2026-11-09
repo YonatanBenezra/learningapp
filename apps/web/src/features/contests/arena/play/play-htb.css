@@ -1,0 +1,60 @@
+html[data-workspace="catalog"]:has(.arena-play) {
+  --lp-catalog-gutter: 2.5rem;
+}
+
+/* Match catalog navbar rail: --lp-nav-content-width (1400px max) */
+.lp-play-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(100%, 1536px);
+  margin-inline: auto;
+}
+
+.lp-play-bleed {
+  width: 100%;
+}
+
+.play-activity-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #232c3d transparent;
+}
+
+.play-activity-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.play-activity-scroll::-webkit-scrollbar-thumb {
+  background: #232c3d;
+  border-radius: 999px;
+}
+
+.play-mobile-chips {
+  scrollbar-width: none;
+}
+
+.play-mobile-chips::-webkit-scrollbar {
+  display: none;
+}
+
+/* Flatter, less saturated challenge cards */
+.arena-play .play-challenge-grid button {
+  box-shadow: none;
+}
+
+/* Sharp, minimal corners — cards, rails, inputs */
+.arena-play :is(section, button[type="button"].group) {
+  border-radius: 0.125rem;
+}
+
+.arena-play .play-category-tile {
+  background: #1c2537;
+  color: #6b7891;
+}
+
+.arena-play .play-difficulty-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7891;
+}

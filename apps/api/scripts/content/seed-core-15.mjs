@@ -16,12 +16,18 @@ import { upsertAllContests } from './upsert-contests.mjs';
 const require = createRequire(import.meta.url);
 const { PrismaClient } = require('@prisma/client');
 
-const COLLECTION_FILE = path.join(contentRoot, 'collections', 'core-15.json');
+const collectionName =
+  process.env.LABPATH_CONTEST_COLLECTION ?? 'ctf-tryout-15';
+const COLLECTION_FILE = path.join(
+  contentRoot,
+  'collections',
+  `${collectionName}.json`,
+);
 
 async function loadCollection() {
   const raw = JSON.parse(await readFile(COLLECTION_FILE, 'utf8'));
   if (!Array.isArray(raw.problems) || raw.problems.length !== 15) {
-    throw new Error('core-15.json must define exactly 15 problems');
+    throw new Error(`${collectionName}.json must define exactly 15 problems`);
   }
   const slugs = raw.problems.map((p) => p.slug);
   if (new Set(slugs).size !== 15) {

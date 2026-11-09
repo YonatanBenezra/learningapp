@@ -1,84 +1,95 @@
 import Link from "next/link";
-import { Zap } from "lucide-react";
 import { routes } from "@/config/routes";
-import { avatarColorForName } from "@/features/contests/arena/lib/categories";
 import type { AroundYouRow } from "@/features/contests/arena/lib/play-types";
 import { cn } from "@/lib/utils";
 
 export function AroundYou({
   rows,
   contestSlug,
+  embedded,
 }: {
   rows: AroundYouRow[];
   contestSlug: string;
+  embedded?: boolean;
 }) {
   const youIdx = rows.findIndex((r) => r.isYou);
   const ahead = youIdx > 0 ? rows[youIdx - 1] : null;
-  const you = rows[youIdx];
+  const you = youIdx >= 0 ? rows[youIdx] : null;
   const hint =
     ahead && you
       ? `+${(ahead.score - you.score + 1).toLocaleString()} pts to pass ${ahead.name}`
-      : "+56 pts to pass nusrat.k";
+      : null;
 
   return (
-    <section className="overflow-hidden rounded-xl border border-[var(--arena-line)] bg-[var(--arena-surface)]">
-      <div className="flex items-center justify-between gap-2 border-b border-[var(--arena-line)] px-4 py-3.5">
-        <h2 className="font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-[var(--arena-text-3)]">
-          Around you
-        </h2>
-        <Link
-          href={routes.contestScoreboard(contestSlug)}
-          className="font-mono text-[11.5px] text-[var(--arena-lime-fg)] hover:underline"
-        >
-          board →
-        </Link>
-      </div>
+    <section
+      className={cn(
+        "overflow-hidden bg-[#151C2B]",
+        !embedded && "rounded-sm border border-[#232C3D]",
+      )}
+    >
+      {embedded ? null : (
+        <div className="flex h-12 items-center justify-between gap-2 px-5">
+          <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[#6B7891]">
+            Around you
+          </h2>
+          <Link
+            href={routes.contestScoreboard(contestSlug)}
+            className="text-xs text-[#6B7891] transition-colors hover:text-[#A4B1CD]"
+          >
+            Scoreboard →
+          </Link>
+        </div>
+      )}
       <ul>
+        {rows.length === 0 ? (
+          <li className="border-t border-[#232C3D] px-5 py-8 text-center text-sm text-[#6B7891]">
+            Join and climb the board to see operators near your rank.
+          </li>
+        ) : null}
         {rows.map((row) => (
           <li
             key={row.rank}
             className={cn(
-              "flex h-10 items-center gap-2 border-t border-[var(--arena-line)] px-4",
-              row.isYou &&
-                "border-l-[3px] border-l-[var(--arena-lime-fg)] bg-[color-mix(in_srgb,var(--arena-lime)_7%,transparent)] pl-[calc(1rem-3px)]",
+              "relative flex h-11 items-center gap-3 border-t border-[#232C3D] px-5",
+              row.isYou && "bg-[#9FEF00]/[0.03]",
             )}
           >
+            {row.isYou ? (
+              <span className="absolute left-0 top-2 bottom-2 w-0.5 bg-[#9FEF00]/70" aria-hidden />
+            ) : null}
             <span
               className={cn(
-                "w-10 font-mono text-[13px] font-bold",
-                row.isYou ? "text-[var(--arena-lime-fg)]" : "text-[var(--arena-text-2)]",
+                "w-7 font-mono text-sm tabular-nums",
+                row.isYou ? "text-[#9FEF00]" : "text-[#6B7891]",
               )}
             >
               {row.rank}
             </span>
-            <span
-              className="flex size-[26px] shrink-0 items-center justify-center rounded-md border font-mono text-[9px] font-bold"
-              style={{
-                color: avatarColorForName(row.name),
-                backgroundColor: `color-mix(in srgb, ${avatarColorForName(row.name)} 16%, transparent)`,
-                borderColor: `color-mix(in srgb, ${avatarColorForName(row.name)} 40%, transparent)`,
-              }}
-            >
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#1C2537] text-[10px] font-medium text-[#A4B1CD]">
               {row.name.slice(0, 2).toUpperCase()}
             </span>
-            <span className="min-w-0 flex-1 truncate text-[13.5px] text-[var(--arena-ink)]">
+            <span className="flex min-w-0 flex-1 items-center gap-2 truncate text-sm text-[#A4B1CD]">
               {row.name}
               {row.isYou ? (
-                <span className="ml-1.5 rounded bg-[var(--arena-lime)] px-1 py-0.5 font-mono text-[9px] font-bold uppercase text-[var(--color-brand-on)]">
-                  you
+                <span className="shrink-0 rounded border border-[#9FEF00]/40 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-[#9FEF00]">
+                  You
                 </span>
               ) : null}
             </span>
-            <span className="w-[70px] text-right font-mono text-[13.5px] font-bold text-[var(--arena-ink)]">
+            <span
+              className={cn(
+                "font-mono text-sm tabular-nums",
+                row.isYou ? "text-[#9FEF00]" : "text-[#A4B1CD]",
+              )}
+            >
               {row.score.toLocaleString()}
             </span>
           </li>
         ))}
       </ul>
-      <p className="flex items-center justify-center gap-1.5 border-t border-[var(--arena-line)] bg-[color-mix(in_srgb,var(--arena-lime)_4%,transparent)] px-4 py-3 text-center text-xs font-medium text-[var(--arena-text-2)]">
-        <Zap className="size-[13px] text-[var(--arena-lime-fg)]" aria-hidden />
-        {hint}
-      </p>
+      {hint ? (
+        <p className="border-t border-[#232C3D] py-2.5 text-center text-xs text-[#6B7891]">{hint}</p>
+      ) : null}
     </section>
   );
 }

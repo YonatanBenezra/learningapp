@@ -8,10 +8,12 @@ import { EventDetailsSkeleton } from "@/features/contests/event-details/event-de
 import { mapContestToEventDetails } from "@/features/contests/event-details/map-contest-to-details";
 import { contestsApi } from "@/features/contests/contests-api";
 import { ApiError } from "@/lib/api-client";
-import type { ContestDetail } from "@/types/contest";
+import type { ContestDetail, ContestLeaderboardItem } from "@/types/contest";
 
 export function EventDetailsView({ slug }: { slug: string }) {
   const [contest, setContest] = useState<ContestDetail | null>(null);
+  const [operatorsOnBoard, setOperatorsOnBoard] = useState<number | null>(null);
+  const [leaderboardYou, setLeaderboardYou] = useState<ContestLeaderboardItem | null>(null);
   const [error, setError] = useState<"auth" | "load" | null>(null);
 
   useEffect(() => {
@@ -40,9 +42,33 @@ export function EventDetailsView({ slug }: { slug: string }) {
     };
   }, [slug]);
 
+  useEffect(() => {
+    if (!contest) {
+      return;
+    }
+    let cancelled = false;
+    void contestsApi
+      .leaderboard(contest.slug, 1, 50)
+      .then((board) => {
+        if (!cancelled) {
+          setOperatorsOnBoard(board.total > 0 ? board.total : null);
+          setLeaderboardYou(board.items.find((row) => row.isYou) ?? null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setOperatorsOnBoard(null);
+          setLeaderboardYou(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [contest]);
+
   if (error === "auth") {
     return (
-      <main className="lp-dash-figma-main flex flex-1 items-center justify-center px-4 py-24 text-[#A4B1CD]">
+      <main className="flex min-h-dvh items-center justify-center bg-[#0F1520] px-4 py-24 text-[#A4B1CD]">
         <p>
           Sign in to view this event.{" "}
           <Link href={routes.signIn} className="text-[#9FEF00] underline">
@@ -55,7 +81,7 @@ export function EventDetailsView({ slug }: { slug: string }) {
 
   if (error === "load") {
     return (
-      <main className="lp-dash-figma-main flex flex-1 items-center justify-center px-4 py-24 text-[#A4B1CD]">
+      <main className="flex min-h-dvh items-center justify-center bg-[#0F1520] px-4 py-24 text-[#A4B1CD]">
         <p>Could not load this event.</p>
       </main>
     );
@@ -65,5 +91,12 @@ export function EventDetailsView({ slug }: { slug: string }) {
     return <EventDetailsSkeleton />;
   }
 
-  return <EventDetailsPage event={mapContestToEventDetails(contest)} />;
+  return (
+    <EventDetailsPage
+      event={mapContestToEventDetails(contest, {
+        operatorsOnBoard,
+        leaderboardYou,
+      })}
+    />
+  );
 }

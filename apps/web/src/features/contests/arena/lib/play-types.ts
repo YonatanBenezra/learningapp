@@ -9,14 +9,14 @@ export type PlayChallengeDef = {
   base: number;
   solves: number;
   firstBlood?: { user: string; afterSec: number };
-  objective: string;
-  passCriteria: {
+  objective?: string;
+  passCriteria?: {
     metric: string;
     threshold: string;
     budget: string;
   };
-  knobs: string[];
-  ratingVotes: number[];
+  knobs?: string[];
+  ratingVotes?: number[];
   code: string;
 };
 

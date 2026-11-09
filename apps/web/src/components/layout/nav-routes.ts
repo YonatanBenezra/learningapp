@@ -9,12 +9,21 @@ export function isPracticePath(pathname: string): boolean {
   );
 }
 
+/** Contest/assessment lab workspace — in-shell chrome only, no global navbar. */
+export function isContestWorkspacePath(pathname: string): boolean {
+  return (
+    /^\/contests\/[^/]+\/problems\/[^/]+\/?$/.test(pathname) ||
+    /^\/contests\/[^/]+\/practice\/[^/]+\/?$/.test(pathname) ||
+    /^\/assessments\/[^/]+\/problems\/[^/]+\/?$/.test(pathname)
+  );
+}
+
 /** Catalogue app: dashboard, problems, contest, simulators (+ home). */
 export function isAppCatalogPath(pathname: string): boolean {
   if (pathname === routes.onboarding) {
     return false;
   }
-  if (isPracticePath(pathname)) {
+  if (isPracticePath(pathname) || isContestWorkspacePath(pathname)) {
     return false;
   }
   if (pathname === routes.home || pathname === routes.contact) {

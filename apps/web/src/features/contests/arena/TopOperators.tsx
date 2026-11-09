@@ -24,7 +24,7 @@ export function TopOperators({
         </h3>
         {eventSlug ? (
           <Link
-            href={routes.contest(eventSlug)}
+            href={routes.ctfEvent(eventSlug)}
             className="font-mono text-[11.5px] text-[var(--arena-lime-fg)] hover:underline"
           >
             view all →

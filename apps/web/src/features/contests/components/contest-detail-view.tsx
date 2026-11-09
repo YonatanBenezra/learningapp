@@ -4,12 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
-import { EventLobby } from "@/features/contests/arena/lobby/EventLobby";
-import { LobbySkeleton } from "@/features/contests/arena/lobby/LobbySkeleton";
 import { EventPlay } from "@/features/contests/arena/play/EventPlay";
 import { PlaySkeleton } from "@/features/contests/arena/play/PlaySkeleton";
 import { EventScoreboard } from "@/features/contests/arena/scoreboard/EventScoreboard";
-import { ArenaPage } from "@/features/contests/arena/ArenaPage";
 import { contestsApi } from "@/features/contests/contests-api";
 import { ApiError } from "@/lib/api-client";
 import type { ContestDetail } from "@/types/contest";
@@ -65,51 +62,19 @@ function ContestLoadError() {
   );
 }
 
-/** Pre-join event lobby at `/contests/[slug]`. */
-export function ContestLobbyView({ slug }: { slug: string }) {
-  const router = useRouter();
-  const { contest, error } = useContestDetail(slug);
-
-  useEffect(() => {
-    if (contest?.entered) {
-      router.replace(routes.contestPlay(slug));
-    }
-  }, [contest?.entered, router, slug]);
-
-  if (error === "auth") {
-    return <ContestAuthError />;
-  }
-  if (error === "load") {
-    return <ContestLoadError />;
-  }
-  if (!contest || contest.entered) {
-    return (
-      <ArenaPage>
-        <LobbySkeleton />
-      </ArenaPage>
-    );
-  }
-
-  return (
-    <ArenaPage>
-      <EventLobby initialContest={contest} />
-    </ArenaPage>
-  );
-}
-
 /** Live scoreboard at `/contests/[slug]/scoreboard`. */
 export function ContestScoreboardView({ slug }: { slug: string }) {
   return <EventScoreboard slug={slug} />;
 }
 
-/** Joined operator dashboard at `/contests/[slug]/play`. */
+/** Joined operator dashboard at `/contests/[slug]/arena`. */
 export function ContestPlayView({ slug }: { slug: string }) {
   const router = useRouter();
   const { contest, error } = useContestDetail(slug);
 
   useEffect(() => {
     if (contest && !contest.entered) {
-      router.replace(routes.contest(slug));
+      router.replace(routes.ctfEvent(slug));
     }
   }, [contest, router, slug]);
 
@@ -121,24 +86,16 @@ export function ContestPlayView({ slug }: { slug: string }) {
   }
   if (!contest || !contest.entered) {
     return (
-      <ArenaPage>
+      <div className="flex min-h-[calc(100dvh-3.5rem)] w-full flex-1 flex-col bg-[#0F1520]">
         <PlaySkeleton />
-      </ArenaPage>
+      </div>
     );
   }
 
-  return (
-    <ArenaPage>
-      <EventPlay initial={contest} />
-    </ArenaPage>
-  );
+  return <EventPlay initial={contest} />;
 }
 
-/** @deprecated Use {@link ContestLobbyView} or {@link ContestPlayView}. */
-export function ContestDetailView({ slug }: { slug: string }) {
-  return <ContestLobbyView slug={slug} />;
-}
-
+/** Loading shell for assessment detail (legacy contest layout). */
 export function ContestDetailSkeleton() {
   return (
     <div className="lp-ct lp-ct-skel" aria-busy="true" aria-live="polite">
@@ -154,7 +111,6 @@ export function ContestDetailSkeleton() {
           <span className="lp-ct-skel-block lp-ct-skel-chip" />
         </div>
       </header>
-
       <div className="lp-ctd-facts" aria-hidden>
         {Array.from({ length: 6 }, (_, index) => (
           <div key={index} className="lp-ct-fact">
@@ -163,24 +119,6 @@ export function ContestDetailSkeleton() {
           </div>
         ))}
       </div>
-
-      <section className="lp-ctd-enter-block" aria-hidden>
-        <div className="lp-ctd-enter-toolbar">
-          <span className="lp-ct-skel-block lp-ct-skel-toggle" />
-        </div>
-        <div className="lp-ctd-enter-grid">
-          {Array.from({ length: 4 }, (_, index) => (
-            <article key={index} className="lp-ctd-enter-card lp-ctd-enter-card--skel">
-              <span className="lp-ct-skel-block lp-ct-skel-enter-title" />
-              <span className="lp-ct-skel-block lp-ct-skel-copy" />
-              <span className="lp-ct-skel-block lp-ct-skel-copy lp-ct-skel-copy--short" />
-              {index === 3 ? (
-                <span className="lp-ct-skel-block lp-ct-skel-btn lp-ctd-skel-btn" />
-              ) : null}
-            </article>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

@@ -9,9 +9,9 @@ export function EventAbout({ paragraphs }: EventAboutProps) {
   return (
     <section aria-labelledby="event-about-heading">
       <h2 id="event-about-heading" className="text-lg font-semibold text-white">
-        About the Event
+        About the event
       </h2>
-      <div className="mt-5 space-y-6 text-base leading-7 text-[#A4B1CD]">
+      <div className="mt-5 space-y-6 text-[15px] leading-[1.7] text-[#A4B1CD]">
         {paragraphs.map((text, i) => (
           <p key={i}>
             {text.split("Contact —").map((part, j, arr) =>

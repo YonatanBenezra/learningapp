@@ -16,7 +16,7 @@ export function mapContestToLobby(contest: ContestDetail): LobbyEvent {
     endsAt: contest.endsAt,
     clockMinutes: contest.timeBoxMinutes,
     maxPoints: Math.max(contest.maxScore || 0, LOBBY_MAX_PTS),
-    operatorCount: 214,
+    operatorCount: 0,
     challengeCount: contest.problemCount || 15,
     window: contest.window,
     canEnter: contest.canEnter,

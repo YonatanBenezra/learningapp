@@ -3,6 +3,7 @@
 import { Bell } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { platformUpdates } from "@/features/dashboard/data/platform-updates";
 import { DashboardNotificationsPanel } from "./dashboard-notifications-panel";
 
 export function DashboardNavNotifications() {
@@ -73,7 +74,9 @@ export function DashboardNavNotifications() {
         }}
       >
         <Bell className="lp-dash-htb-nav-action-icon" strokeWidth={2} aria-hidden />
-        <span className="lp-dash-htb-nav-notify-dot" aria-hidden />
+        {platformUpdates.length > 0 ? (
+          <span className="lp-dash-htb-nav-notify-dot" aria-hidden />
+        ) : null}
       </button>
 
       {mounted ? (

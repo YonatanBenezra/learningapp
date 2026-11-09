@@ -1,113 +1,148 @@
 "use client";
 
-import type { CSSProperties } from "react";
-import "@/features/dashboard/dashboard-figma.css";
+import { cn } from "@/lib/utils";
 
-function Skel({
-  className = "",
-  style,
-}: {
-  className?: string;
-  style?: CSSProperties;
-}) {
-  return <span className={`lp-dash-figma-skel-block block ${className}`} style={style} aria-hidden />;
+function Skel({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn("block animate-pulse rounded-md bg-[#232C3D]/70", className)}
+      aria-hidden
+    />
+  );
 }
 
 export function EventDetailsSkeleton() {
   return (
     <div
-      className="lp-dash-figma-main lp-ctf-event-detail lp-dash-figma-skel !gap-8 min-h-0 flex-1 !pb-16 !pt-6"
+      className="min-h-dvh bg-[#0F1520] text-white"
       aria-busy="true"
+      aria-live="polite"
       aria-label="Loading event details"
     >
-      {/* Back link */}
-      <Skel className="!h-4 !w-36 !rounded-md opacity-80" />
-
-      {/* Hero shell + centered card */}
-      <div className="w-full">
-        <div className="relative flex h-[240px] w-full items-center justify-center overflow-hidden rounded-[28px] border border-white/5 bg-[#0F1520] md:h-[400px]">
-          <div className="pointer-events-none absolute -right-[8%] top-[-6%] h-[78%] w-[52%] rounded-full bg-[#9FEF00]/12 blur-[96px]" aria-hidden />
-          <div className="flex h-[180px] w-[88%] flex-col overflow-hidden rounded-[30px] border border-white/10 bg-[#141B29]/95 sm:flex-row md:h-[270px] md:w-[480px]">
-            <div className="flex flex-1 flex-col justify-center gap-4 px-6 py-6 sm:px-8">
-              <Skel className="!h-8 !w-[85%] max-w-[280px] !rounded-md" />
-              <Skel className="!h-px !w-full !rounded-none opacity-60" />
-              <div className="flex items-center gap-2.5">
-                <Skel className="!size-[22px] !rounded-md" />
-                <Skel className="!h-4 !w-28 !rounded-md" />
+      <section className="relative overflow-hidden border-b border-[#1A2232]">
+        <div className="relative mx-auto max-w-[1200px] px-6 pb-12 pt-10">
+          <Skel className="h-4 w-36" />
+          <div className="mt-7 grid items-center gap-10 lg:grid-cols-[1fr_520px] lg:gap-12">
+            <div className="order-2 space-y-5 lg:order-1">
+              <div className="flex flex-wrap gap-2">
+                <Skel className="h-6 w-[76px]" />
+                <Skel className="h-6 w-14" />
+                <Skel className="h-6 w-24" />
+              </div>
+              <Skel className="h-11 w-full max-w-lg md:h-12" />
+              <div className="space-y-2">
+                <Skel className="h-4 w-full max-w-[560px]" />
+                <Skel className="h-4 w-[92%] max-w-[520px]" />
+              </div>
+              <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-[10px] border border-[#232C3D] sm:flex-row sm:divide-x sm:divide-[#232C3D]">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="space-y-2 px-4 py-3 sm:px-5">
+                    <Skel className="h-3 w-14" />
+                    <Skel className="h-5 w-32" />
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                <Skel className="h-[46px] w-40 rounded-md" />
+                <Skel className="h-[46px] w-44 rounded-md" />
+                <Skel className="size-[46px] rounded-md" />
               </div>
             </div>
-            <div className="relative hidden min-h-full w-[42%] max-w-[200px] sm:block">
-              <Skel className="absolute !inset-0 !h-full !w-full !rounded-none opacity-40" />
-              <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-                <Skel className="!size-[72px] !rounded-full" />
-                <Skel className="!h-2 !w-20 !rounded-full opacity-70" />
+            <div className="order-1 lg:order-2">
+              <Skel className="h-[300px] w-full rounded-[24px] bg-[#1B2434]/80" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-[1200px] px-6">
+        <section
+          className="mt-7 grid grid-cols-2 divide-y divide-[#232C3D] overflow-hidden rounded-[10px] border border-[#232C3D] bg-[#151C2B] sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-y-0"
+          aria-hidden
+        >
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                "flex gap-3.5 p-[18px_22px]",
+                i === 4 ? "col-span-2 sm:col-span-1" : "",
+              )}
+            >
+              <Skel className="size-10 shrink-0 rounded-md" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <Skel className="h-3 w-16" />
+                <Skel className="h-5 w-24" />
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <div className="mt-10 flex gap-7 border-b border-[#232C3D] pb-3" aria-hidden>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skel key={i} className={cn("h-4", i === 0 ? "w-20" : "w-24")} />
+          ))}
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[1fr_340px]">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <Skel className="h-5 w-36" />
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skel key={i} className="h-4 w-full" />
+              ))}
+              <Skel className="h-4 w-[78%]" />
+            </div>
+            <div className="space-y-3">
+              <Skel className="h-5 w-28" />
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Skel key={i} className="h-9 w-28 rounded-lg" />
+                ))}
+              </div>
+            </div>
+            <div className="overflow-hidden rounded-[10px] border border-[#232C3D] bg-[#0C111B]">
+              <Skel className="h-10 w-full rounded-none bg-[#151C2B]/90" />
+              <div className="grid gap-px bg-[#232C3D] sm:grid-cols-2">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="bg-[#0C111B] p-[18px]">
+                    <div className="flex gap-3">
+                      <Skel className="size-[26px] shrink-0 rounded-md" />
+                      <div className="flex-1 space-y-2">
+                        <Skel className="h-4 w-[85%]" />
+                        <Skel className="h-3 w-full" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-4 flex gap-2">
-          <Skel className="!h-6 !w-[76px] !rounded-md" />
-          <Skel className="!h-6 !w-[52px] !rounded-md" />
-        </div>
-      </div>
-
-      {/* Title + meta + actions */}
-      <div className="space-y-6">
-        <Skel className="!h-9 !w-full max-w-md !rounded-md" />
-
-        <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
-          <div className="space-y-2">
-            <Skel className="!h-3 !w-16 !rounded-sm opacity-70" />
-            <Skel className="!h-5 !w-48 !rounded-md" />
-          </div>
-          <div className="space-y-2">
-            <Skel className="!h-3 !w-14 !rounded-sm opacity-70" />
-            <Skel className="!h-5 !w-48 !rounded-md" />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-          <Skel className="!h-12 !w-full !rounded-md sm:!w-36" />
-          <Skel className="!h-12 !w-full !rounded-md sm:!w-44" />
-          <Skel className="!h-12 !w-full !rounded-md sm:!w-28" />
-        </div>
-      </div>
-
-      {/* About + sidebar */}
-      <div className="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_310px] lg:gap-16">
-        <div className="space-y-4">
-          <Skel className="!h-5 !w-40 !rounded-md" />
-          <Skel className="!h-4 !w-full !rounded-sm" />
-          <Skel className="!h-4 !w-full !rounded-sm" />
-          <Skel className="!h-4 !w-[92%] !rounded-sm" />
-          <Skel className="!h-4 !w-full !rounded-sm" />
-          <Skel className="!h-4 !w-[78%] !rounded-sm" />
-        </div>
-
-        <div className="space-y-0 divide-y divide-[#232C3D] border-t border-[#232C3D] lg:border-t-0">
-          <div className="space-y-3 py-6 pt-0">
-            <Skel className="!h-4 !w-24 !rounded-md" />
-            <div className="flex items-center gap-3">
-              <Skel className="!size-8 !rounded-md" />
-              <Skel className="!h-4 !w-28 !rounded-md" />
-            </div>
-            <Skel className="!h-3 !w-24 !rounded-sm" />
-          </div>
-          <div className="space-y-3 py-6">
-            <Skel className="!h-4 !w-16 !rounded-md" />
-            <Skel className="!h-4 !w-full !rounded-sm" />
-            <Skel className="!h-4 !w-full !rounded-sm" />
-          </div>
-          <div className="space-y-4 py-6">
-            <Skel className="!h-4 !w-28 !rounded-md" />
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skel className="!h-3 !w-20 !rounded-sm opacity-70" />
-                <Skel className="!h-4 !w-40 !rounded-md" />
+          <aside className="space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-[10px] border border-[#232C3D] bg-[#151C2B] p-5"
+              >
+                <Skel className="mb-3.5 h-3 w-24" />
+                <Skel className="h-4 w-full" />
+                <Skel className="mt-2 h-4 w-2/3" />
               </div>
             ))}
-          </div>
+            <div className="overflow-hidden rounded-[10px] border border-[#232C3D] bg-[#151C2B]">
+              <div className="border-b border-[#232C3D] p-5 pb-3.5">
+                <Skel className="h-3 w-28" />
+              </div>
+              <div className="grid grid-cols-2 gap-px bg-[#232C3D]">
+                {Array.from({ length: 6 }).map((_, j) => (
+                  <div key={j} className="space-y-2 bg-[#151C2B] px-4 py-3.5">
+                    <Skel className="h-3 w-16" />
+                    <Skel className="h-4 w-20" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

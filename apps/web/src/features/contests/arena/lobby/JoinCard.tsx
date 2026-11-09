@@ -31,7 +31,7 @@ export function JoinCard({ event, compact, className, index = 0, onJoined }: Joi
   const [error, setError] = useState<string | null>(null);
 
   const joinPath = routes.contestPlay(event.slug);
-  const signInHref = loginPath(routes.contest(event.slug));
+  const signInHref = loginPath(routes.ctfEvent(event.slug));
 
   const disabledReason = (() => {
     if (event.window === "closed") {

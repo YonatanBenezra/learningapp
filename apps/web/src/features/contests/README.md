@@ -13,10 +13,19 @@ Live CTF seasons, play board, scoreboard, and contest problem workspace.
 
 | Route | Entry component |
 |-------|-----------------|
-| `/contests` | `ContestsHubView` / `ContestsView` |
-| `/contests/[slug]` | `ContestDetailView` |
-| `/contests/[slug]/play` | `EventPlay` |
-| `/contests/[slug]/scoreboard` | `EventScoreboard` |
+| `/contest` | `CtfEventsView` (hub) |
+| `/events/[slug]` | `EventDetailsView` (canonical pre-join) |
+| `/contests/[slug]` | Redirect → `/events/[slug]` |
+| `/contests/[slug]/arena` | `ContestPlayView` → `EventPlay` |
+| `/contests/[slug]/scoreboard` | `EventScoreboard` → `CtfScoreboardPage` (single implementation) |
 | `/contests/[slug]/problems/[exerciseSlug]` | `ContestWorkspaceShell` |
 
 Do not import `arena/` from other features; use shared types in `@/types/contest` if needed.
+
+**CTF vs assessment:** Live CTF uses `arena/` + `/events` + `/contests/.../arena`. Season
+assessments use `components/contest-view.tsx` at `/assessments/[slug]` only — do not route CTF
+operators through `ContestView`.
+
+## Remediation plan
+
+Phased cleanup (mock board → API, flow, scoreboard, backend): **[CONTEST-PHASES.md](./CONTEST-PHASES.md)**.

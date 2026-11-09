@@ -1015,3 +1015,12 @@ html[data-theme="dark"] .lp-site-nav--catalog .lp-theme-segment-btn.is-active {
   color: var(--lp-nav-link-hover, #f4f4f4);
   background: color-mix(in srgb, var(--lp-nav-logo-accent, #9fef00) 14%, #242f40);
 }
+
+/* CTF arena/scoreboard — short ArenaEventNav, not 85px catalog bar */
+html[data-workspace="catalog"][data-arena-nav="1"] {
+  --lp-dash-nav-h: 3.5rem;
+  --lp-dash-nav-h-scrolled: 3.5rem;
+  --lp-dash-nav-gap: 0px;
+  --lp-dash-nav-offset: calc(var(--lp-dash-nav-h) + env(safe-area-inset-top, 0px));
+  --arena-event-nav-top: var(--lp-dash-nav-offset);
+}

@@ -1,3 +1,4 @@
+import type { ContestProblem } from "@/types/contest";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowDownToLine,
@@ -78,6 +79,24 @@ export function normalizeDifficulty(raw: string): ArenaDifficulty {
     insane: "Insane",
   };
   return map[raw] ?? "Medium";
+}
+
+/** Map exercise simulator + slug heuristics to arena sidebar categories. */
+export function categoryForContestProblem(problem: ContestProblem): ArenaCategoryId {
+  if (problem.simulator === "rag") {
+    return "retrieval";
+  }
+  if (problem.simulator === "guardrails") {
+    const hay = problem.slug.toLowerCase();
+    if (/inject|payload|indirect|page-inject/.test(hay)) {
+      return "prompt-injection";
+    }
+    if (/extract|hex|smuggle|bcc|encoding|exfil/.test(hay)) {
+      return "exfiltration";
+    }
+    return "guardrails";
+  }
+  return "evals";
 }
 
 const AVATAR_PALETTE = [

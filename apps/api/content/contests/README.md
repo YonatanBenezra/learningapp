@@ -4,7 +4,7 @@ Phased LeetCode-style product plan: [LeetCode-Style-Contests-Phases.md](../../..
 
 Add one JSON file per season (see the former `dogfood-s1` shape in git history).
 
-**Weekly (LeetCode-style):** `weekly-advanced-1.json` — only published timed contest; same 15 advanced slugs for every entrant (`samplingMode: fixed_pool`). Scoring: `pointsPerProblem: 100` → **1500 max** (15 × 100). Manifest: `../collections/core-15.json` (`contestSlug`). Old slugs (`core-15-championship`, `iron-gate-marathon`) removed — ingest unpublishes them in DB.
+**Weekly (CTF tryout):** `weekly-advanced-1.json` — published timed contest; fixed pool of **5 Easy + 5 Medium + 5 Hard** scenarios (`samplingMode: fixed_pool`). Scoring: `pointsPerProblem: 100` → **1500 max** (15 × 100). Manifest: `../collections/ctf-tryout-15.json`. Advanced-only pool remains documented in `../collections/core-15.json` for path/capstone reference.
 
 ### Contest JSON fields (v1)
 

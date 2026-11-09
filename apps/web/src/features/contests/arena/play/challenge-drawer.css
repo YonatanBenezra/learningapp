@@ -1,20 +1,23 @@
 .challenge-drawer-dialog {
-  margin: 0 0 0 auto;
+  position: fixed;
+  inset: 0;
+  margin: 0;
   padding: 0;
   border: none;
-  width: min(540px, 100vw);
+  max-width: none;
+  width: 100%;
   height: 100%;
-  max-height: 100dvh;
   background: transparent;
   overflow: hidden;
+  color: #a4b1cd;
 }
 
 .challenge-drawer-dialog::backdrop {
-  background: var(--arena-overlay, rgba(3, 6, 10, 0.72));
-  animation: challenge-drawer-fade 0.2s ease-out;
+  background: rgba(0, 0, 0, 0.4);
+  animation: challenge-modal-fade 0.2s ease-out;
 }
 
-@keyframes challenge-drawer-fade {
+@keyframes challenge-modal-fade {
   from {
     opacity: 0;
   }
@@ -24,31 +27,106 @@
 }
 
 .challenge-drawer-panel {
+  position: fixed;
+  top: var(--arena-event-nav-top, var(--lp-dash-nav-offset, 3.5rem));
+  left: 0;
+  z-index: 35;
   display: flex;
+  width: min(505px, 100vw);
+  height: calc(
+    100dvh - var(--arena-event-nav-top, var(--lp-dash-nav-offset, 3.5rem))
+  );
+  max-height: none;
   flex-direction: column;
-  height: 100%;
-  background: var(--arena-panel, var(--arena-surface));
-  border-left: 1px solid var(--arena-line-2);
-  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  background: #151c2b;
+  border-right: 1px solid #232c3d;
+  border-top: none;
+  border-radius: 0;
+  box-shadow: 24px 0 80px rgba(0, 0, 0, 0.45);
+}
+
+/* Catalog layout reserves ~85px for AppCatalogNav — arena play uses a shorter bar only */
+html[data-arena-nav="1"] .challenge-drawer-panel {
+  top: var(--arena-event-nav-top);
+  height: calc(100dvh - var(--arena-event-nav-top));
 }
 
 .challenge-drawer-scroll {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding: 28px;
+  padding: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: #232c3d transparent;
+}
+
+.challenge-drawer-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.challenge-drawer-scroll::-webkit-scrollbar-thumb {
+  background: #232c3d;
+  border-radius: 999px;
 }
 
 .challenge-drawer-footer {
   flex-shrink: 0;
-  margin-top: auto;
-  border-top: 1px solid var(--arena-line);
-  padding: 16px 28px;
+  border-top: 1px solid #232c3d;
+  padding: 16px 24px;
   padding-bottom: max(16px, env(safe-area-inset-bottom));
-  background: var(--arena-panel, var(--arena-surface));
+  background: #151c2b;
+}
+
+.challenge-drawer-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #232c3d;
+  margin: 0 -24px 20px;
+  padding: 0 24px;
+  min-height: 4rem;
+  align-items: stretch;
+}
+
+.challenge-drawer-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7891;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.challenge-drawer-tab:hover {
+  color: #a4b1cd;
+}
+
+.challenge-drawer-tab.is-active {
+  color: #9fef00;
+}
+
+.challenge-drawer-tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #9fef00;
 }
 
 @media (max-width: 639px) {
-  .challenge-drawer-dialog {
+  .challenge-drawer-panel {
     width: 100vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .challenge-drawer-dialog::backdrop {
+    animation: none;
   }
 }

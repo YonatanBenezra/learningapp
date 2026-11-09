@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
       { source: "/simulations", destination: "/practice", permanent: false },
       { source: "/contests", destination: "/contest", permanent: false },
       { source: "/leaderboard", destination: "/dashboard/ranking", permanent: false },
+      {
+        source: "/contests/:slug/play",
+        destination: "/contests/:slug/arena",
+        permanent: false,
+      },
     ];
   },
   async rewrites() {

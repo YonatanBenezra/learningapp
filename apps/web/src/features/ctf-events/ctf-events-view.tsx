@@ -75,9 +75,9 @@ export function CtfEventsView() {
   return (
     <main className="lp-dash-figma-main lp-ctf-events !gap-0 !pb-16 !pt-6">
       <EventTabs tab={tab} counts={tabCounts ?? undefined} onTab={setTab} />
-      {apiFailed && arenaEvents && arenaEvents.length > 0 ? (
+      {apiFailed ? (
         <p className="mt-4 rounded border border-platform-border bg-platform-card px-3 py-2 text-sm text-platform-muted">
-          Could not reach the contest API — showing cached catalog events. Refresh when the API is back.
+          Could not reach the contest API. Refresh when the API is back.
         </p>
       ) : null}
       <EventSearch

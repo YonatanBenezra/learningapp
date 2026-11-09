@@ -21,10 +21,10 @@
     "type": "object",
     "additionalProperties": false,
     "required": [
-      "attackPrompt"
+      "pageContent"
     ],
     "properties": {
-      "attackPrompt": {
+      "pageContent": {
         "type": "string",
         "default": ""
       }
@@ -53,6 +53,6 @@
     "rotate": true
   },
   "attemptPolicy": null,
-  "graderArchetype": "guard-g1",
+  "graderArchetype": "guard-g2",
   "isPublished": true
 }

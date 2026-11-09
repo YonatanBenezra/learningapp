@@ -46,14 +46,24 @@ export type ContestSittingClock = {
   entryStatus: "active" | "finished" | "expired";
 };
 
+export type ContestArenaCategory =
+  | "prompt-injection"
+  | "retrieval"
+  | "guardrails"
+  | "evals"
+  | "exfiltration";
+
 export type ContestProblem = {
   slug: string;
   title: string;
   difficulty: string;
   simulator: string;
+  arenaCategory?: ContestArenaCategory;
   scored: boolean;
   score: number | null;
   verdict: string | null;
+  /** Wall-clock ms from contest entry start to first passing grade (when scored). */
+  solvedElapsedMs?: number | null;
 };
 
 export type ContestDetail = ContestListItem & {
