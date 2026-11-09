@@ -1,4 +1,8 @@
-import { resolveSampledSlugs, sampleFromPool } from './contest-sample';
+import {
+  entrantSlugs,
+  resolveSampledSlugs,
+  sampleFromPool,
+} from './contest-sample';
 
 describe('sampleFromPool', () => {
   const pool = ['a', 'b', 'c', 'd'];
@@ -31,5 +35,40 @@ describe('resolveSampledSlugs', () => {
     const b = resolveSampledSlugs(pool, 2, 'seed-a', 'per_user');
     expect(a).toEqual(b);
     expect(a).toHaveLength(2);
+  });
+});
+
+describe('entrantSlugs', () => {
+  const problems = [
+    { position: 1, exerciseSlug: 'easy-1' },
+    { position: 2, exerciseSlug: 'med-1' },
+    { position: 3, exerciseSlug: 'hard-1' },
+  ];
+
+  it('uses contest pool for fixed_pool even when entry slugs are stale', () => {
+    expect(
+      entrantSlugs(
+        {
+          samplingMode: 'fixed_pool',
+          sampleSize: 3,
+          problems,
+        },
+        { sampledSlugs: ['legacy-adv-1', 'legacy-adv-2'] },
+      ),
+    ).toEqual(['easy-1', 'med-1', 'hard-1']);
+  });
+
+  it('keeps per-user entry slugs', () => {
+    const entrySlugs = ['med-1', 'hard-1'];
+    expect(
+      entrantSlugs(
+        {
+          samplingMode: 'per_user',
+          sampleSize: 2,
+          problems,
+        },
+        { sampledSlugs: entrySlugs },
+      ),
+    ).toEqual(entrySlugs);
   });
 });

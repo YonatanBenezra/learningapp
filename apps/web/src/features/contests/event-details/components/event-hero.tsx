@@ -8,6 +8,7 @@ export type EventHeroProps = {
   title: string;
   brand?: string;
   flagText?: string;
+  variant?: "full" | "banner";
 };
 
 type Parallax = { x: number; y: number };
@@ -85,7 +86,57 @@ function FlagScene({ uid }: { uid: string }) {
   );
 }
 
-export default function EventHero({ title, brand: brandName = brand.name, flagText = "flag{try_0ut}" }: EventHeroProps) {
+function BannerInner({
+  title,
+  brandName,
+  flagText,
+  uid,
+}: {
+  title: string;
+  brandName: string;
+  flagText: string;
+  uid: string;
+}) {
+  return (
+    <div className="group relative h-[300px] w-full overflow-hidden rounded-[24px] border border-white/10 bg-[#141B29] shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9),0_0_80px_-30px_rgba(159,239,0,0.35)] transition-transform duration-150 hover:-translate-y-1">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#9FEF00] to-transparent opacity-70" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#5C8A00] via-[#7FB800]/70 to-transparent"
+        style={{ clipPath: "polygon(58% 100%, 100% 22%, 100% 100%)" }}
+        aria-hidden
+      />
+      <div className="relative z-[1] flex h-full max-w-[58%] flex-col justify-center pl-6 md:pl-8">
+        <h2 className="text-[28px] font-extrabold leading-none tracking-tight text-white md:text-[36px]">
+          {title}
+        </h2>
+        <p className="mt-4 h-[2px] w-[min(250px,90%)] rounded-full bg-white/70" aria-hidden />
+        <div className="mt-4 flex items-center gap-2.5">
+          <BrandHexIcon />
+          <span className="text-lg md:text-xl">
+            <span className="font-bold tracking-wide text-white">{brandName}</span>
+            <span className="font-normal text-[#A4B1CD]"> CTF</span>
+          </span>
+        </div>
+        <p className="mt-3 inline-flex items-center gap-0.5 self-start rounded-md border border-[#9FEF00]/25 bg-[#9FEF00]/10 px-2 py-0.5 font-mono text-[11px] text-[#9FEF00]">
+          <span>{flagText}</span>
+          <span className="lp-event-hero-caret" aria-hidden>
+            |
+          </span>
+        </p>
+      </div>
+      <div className="absolute right-4 top-1/2 z-[2] h-[180px] w-[140px] -translate-y-1/2 md:right-6 md:h-[200px] md:w-[180px]">
+        <FlagScene uid={uid} />
+      </div>
+    </div>
+  );
+}
+
+export default function EventHero({
+  title,
+  brand: brandName = brand.name,
+  flagText = "flag{try_0ut}",
+  variant = "full",
+}: EventHeroProps) {
   const uid = useId().replace(/:/g, "");
   const bannerRef = useRef<HTMLDivElement>(null);
   const [parallax, setParallax] = useState<Parallax>({ x: 0, y: 0 });
@@ -122,6 +173,12 @@ export default function EventHero({ title, brand: brandName = brand.name, flagTe
       cancelAnimationFrame(frame);
     };
   }, []);
+
+  if (variant === "banner") {
+    return (
+      <BannerInner title={title} brandName={brandName} flagText={flagText} uid={uid} />
+    );
+  }
 
   const blobs = [
     { cls: "lp-event-hero-blob--1", color: "bg-[#9FEF00]/60", size: 320, style: { top: -40, right: "12%" } },

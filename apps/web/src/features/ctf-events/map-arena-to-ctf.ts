@@ -1,3 +1,4 @@
+/** Sole mapper from arena hub `ArenaEvent` cards to hub UI `CtfEvent` — keep in sync with `listArenaEvents`. */
 import type { ArenaEvent } from "@/features/contests/arena/lib/types";
 import type { CtfBannerVariant, CtfEvent, CtfEventBadge } from "@/features/ctf-events/types";
 
@@ -24,9 +25,6 @@ function badgesFor(event: ArenaEvent): CtfEventBadge[] {
 }
 
 function playersFor(event: ArenaEvent) {
-  if (event.status === "upcoming" && event.registeredCount != null) {
-    return event.registeredCount;
-  }
   return event.operatorCount;
 }
 

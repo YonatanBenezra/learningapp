@@ -3,17 +3,17 @@ import { brand } from "@/config/brand";
 import { routes } from "@/config/routes";
 
 const LINKS = [
-  { label: "Contact Us", href: routes.contact },
+  { label: "Contact", href: routes.contact },
   { label: "User Agreement", href: routes.home },
-  { label: "Privacy Notice", href: routes.home },
+  { label: "Privacy", href: routes.home },
   { label: "Cookie Settings", href: routes.home },
 ] as const;
 
 export function EventDetailsFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-24 border-t border-[#232C3D] py-10 md:mt-40">
-      <div className="flex flex-col flex-wrap items-center justify-center gap-4 text-center text-sm text-[#A4B1CD] sm:flex-row sm:gap-6">
+    <footer className="border-t border-[#232C3D] py-7">
+      <div className="mx-auto flex max-w-[1200px] flex-col flex-wrap items-center justify-center gap-4 px-6 text-center text-[13px] text-[#6B7891] sm:flex-row sm:gap-6">
         <span>© {year} {brand.name}</span>
         {LINKS.map((link) => (
           <Link

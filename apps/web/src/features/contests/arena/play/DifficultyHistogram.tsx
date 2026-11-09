@@ -3,16 +3,16 @@
 import { motion, useReducedMotion } from "motion/react";
 
 const BAR_COLORS = [
-  "var(--color-status-pass)",
-  "var(--color-status-pass)",
-  "var(--arena-amber)",
-  "var(--arena-amber)",
-  "var(--arena-red)",
-  "var(--arena-red)",
-  "var(--arena-red)",
-  "var(--arena-purple)",
-  "var(--arena-purple)",
-  "var(--arena-purple)",
+  "#9FEF00",
+  "#9FEF00",
+  "#FFAF00",
+  "#FFAF00",
+  "#FF3E3E",
+  "#FF3E3E",
+  "#FF3E3E",
+  "#B45CFF",
+  "#B45CFF",
+  "#B45CFF",
 ];
 
 export function DifficultyHistogram({
@@ -31,20 +31,19 @@ export function DifficultyHistogram({
         {votes.map((v, i) => (
           <motion.span
             key={i}
-            className="flex-1 rounded-sm"
-            style={{
-              backgroundColor: BAR_COLORS[i],
-              opacity: 0.75,
-            }}
+            className="flex-1 rounded-sm opacity-80"
+            style={{ backgroundColor: BAR_COLORS[i] }}
             initial={animate && !reduce ? { height: 0 } : false}
             animate={{ height: `${(v / max) * 100}%` }}
             transition={
-              reduce ? { duration: 0 } : { delay: i * 0.03, type: "spring", stiffness: 320, damping: 34 }
+              reduce
+                ? { duration: 0 }
+                : { delay: i * 0.03, type: "spring", stiffness: 320, damping: 34 }
             }
           />
         ))}
       </div>
-      <div className="mt-1.5 flex justify-between font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-[var(--arena-text-3)]">
+      <div className="mt-1.5 flex justify-between text-[9px] font-semibold uppercase tracking-wider text-[#6B7891]">
         <span>Easy</span>
         <span>Medium</span>
         <span>Hard</span>

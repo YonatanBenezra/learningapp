@@ -1,47 +1,82 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { routes } from "@/config/routes";
+import { CategoryChips } from "@/features/contests/event-details/components/category-chips";
+import { EventDetailsSidebar } from "@/features/contests/event-details/components/event-details-sidebar";
+import { EventHeroSection } from "@/features/contests/event-details/components/event-hero-section";
+import { EventStatsStrip } from "@/features/contests/event-details/components/event-stats-strip";
+import { EventTabs, tabFromSearchParams } from "@/features/contests/event-details/components/event-tabs";
+import { MissionBriefingCard } from "@/features/contests/event-details/components/mission-briefing-card";
 import { EventAbout } from "@/features/contests/event-details/components/event-about";
-import { EventDetailsFooter } from "@/features/contests/event-details/components/event-details-footer";
-import { EventHeader } from "@/features/contests/event-details/components/event-header";
-import { EventSidebar } from "@/features/contests/event-details/components/event-sidebar";
-import { HeroBanner } from "@/features/contests/event-details/components/hero-banner";
-import type { EventDetailsData } from "@/features/contests/event-details/types";
+import type { EventDetailsData, EventTabId } from "@/features/contests/event-details/types";
 
 type EventDetailsPageProps = {
   event: EventDetailsData;
 };
 
-export function EventDetailsPage({ event }: EventDetailsPageProps) {
+function EventDetailsPageInner({ event }: EventDetailsPageProps) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const reduce = useReducedMotion();
+  const [tab, setTab] = useState<EventTabId>(() => tabFromSearchParams(searchParams));
 
   return (
-    <motion.div
-      className="lp-dash-figma-main lp-ctf-event-detail !gap-8 min-h-0 flex-1 !pb-16 !pt-6 text-white antialiased"
-      initial={reduce ? false : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduce ? 0 : 0.35, ease: "easeOut" }}
-    >
-        <Link
-          href={routes.contestHub}
-          className="mb-6 inline-flex items-center gap-2 text-sm text-[#6B7891] transition-colors duration-150 hover:text-[#9FEF00]"
-        >
-          <ArrowLeft className="size-4" aria-hidden />
-          Back to Events
-        </Link>
+    <div className="min-h-dvh bg-[#0F1520] text-white">
+      <EventHeroSection event={event} />
 
-        <HeroBanner title={event.heroTitle} badges={event.badges} />
-        <EventHeader event={event} />
+      <div className="mx-auto max-w-[1200px] px-6">
+        <EventStatsStrip cells={event.statsStrip} />
+        <EventTabs event={event} active={tab} onTabChange={setTab} />
 
-        <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_310px] lg:gap-16">
-          <EventAbout paragraphs={event.aboutParagraphs} />
-          <EventSidebar event={event} />
-        </div>
+        {tab === "overview" ? (
+          <motion.div
+            className="mt-8 grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[1fr_340px]"
+            initial={reduce ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduce ? 0 : 0.35, ease: "easeOut" }}
+          >
+            <div>
+              <EventAbout paragraphs={event.aboutParagraphs} />
+              <section className="mt-8" aria-labelledby="categories-heading">
+                <h2 id="categories-heading" className="text-lg font-semibold text-white">
+                  Categories
+                </h2>
+                <CategoryChips
+                  categories={event.categories}
+                  onSelect={() => router.push(routes.contestPlay(event.slug))}
+                />
+              </section>
+              <MissionBriefingCard rules={event.missionRules} />
+            </div>
+            <EventDetailsSidebar event={event} />
+          </motion.div>
+        ) : null}
 
-        <EventDetailsFooter />
-    </motion.div>
+        {tab === "rules" ? (
+          <motion.div
+            className="mt-8 pb-20"
+            initial={reduce ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <MissionBriefingCard rules={event.missionRules} />
+          </motion.div>
+        ) : null}
+
+        {tab === "updates" ? (
+          <div className="mt-8 pb-20 text-sm text-[#6B7891]">No updates yet for this event.</div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+export function EventDetailsPage(props: EventDetailsPageProps) {
+  return (
+    <Suspense fallback={<div className="min-h-dvh bg-[#0F1520]" aria-busy />}>
+      <EventDetailsPageInner {...props} />
+    </Suspense>
   );
 }

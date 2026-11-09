@@ -1,4 +1,10 @@
 import { createHash } from 'node:crypto';
+import { samplingModeFromDb } from './contest-scoring';
+
+export type ContestProblemRef = {
+  position: number;
+  exerciseSlug: string;
+};
 
 export function sampleFromPool(
   pool: readonly string[],
@@ -31,4 +37,34 @@ export function resolveSampledSlugs(
     return pool.slice(0, size);
   }
   return sampleFromPool(pool, sampleSize, seed);
+}
+
+export function contestPoolSlugs(
+  problems: ContestProblemRef[],
+  sampleSize: number,
+): string[] {
+  return [...problems]
+    .sort((left, right) => left.position - right.position)
+    .map((row) => row.exerciseSlug)
+    .slice(0, sampleSize);
+}
+
+/** Live board slugs: fixed_pool always follows the contest catalog (not frozen entry slugs). */
+export function entrantSlugs(
+  contest: {
+    samplingMode: Parameters<typeof samplingModeFromDb>[0];
+    sampleSize: number;
+    problems: ContestProblemRef[];
+  },
+  entry: { sampledSlugs: string[] } | null,
+): string[] {
+  const pool = contestPoolSlugs(contest.problems, contest.sampleSize);
+  if (samplingModeFromDb(contest.samplingMode) === 'fixed_pool') {
+    return pool;
+  }
+  return entry?.sampledSlugs.length ? entry.sampledSlugs : pool;
+}
+
+export function sameSlugList(a: string[], b: string[]): boolean {
+  return a.length === b.length && a.every((slug, index) => slug === b[index]);
 }

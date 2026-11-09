@@ -27,8 +27,13 @@ export const routes = {
   leaderboard: "/leaderboard",
   /** Root redirects to {@link routes.contestHub}; `/contests/:slug/*` stays for live events. */
   contests: "/contests",
+  /** Legacy path — `/contests/[slug]` redirects to {@link routes.ctfEvent}. */
   contest: (slug: string) => `/contests/${slug}`,
-  contestPlay: (slug: string) => `/contests/${slug}/play`,
+  /** Canonical pre-join event overview (hub → enroll). */
+  contestEventOverview: (slug: string) => `/events/${slug}`,
+  /** Live CTF challenge board (formerly `/play`). */
+  contestPlay: (slug: string) => `/contests/${slug}/arena`,
+  contestArena: (slug: string) => `/contests/${slug}/arena`,
   contestScoreboard: (slug: string) => `/contests/${slug}/scoreboard`,
   /** Alias — redirects to {@link routes.contestScoreboard}. */
   contestLeaderboard: (slug: string) => `/contests/${slug}/leaderboard`,

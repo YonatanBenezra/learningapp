@@ -1,25 +1,12 @@
-import { Suspense } from "react";
-import { ContestPlayView } from "@/features/contests/components/contest-detail-view";
-import { PlaySkeleton } from "@/features/contests/arena/play/PlaySkeleton";
-import { ArenaPage } from "@/features/contests/arena/ArenaPage";
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
-export default async function ContestPlayPage({
+/** @deprecated Use `/contests/[slug]/arena` */
+export default async function ContestPlayRedirectPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  return (
-    <div className="flex min-h-0 w-full max-w-none flex-1 flex-col">
-      <Suspense
-        fallback={
-          <ArenaPage>
-            <PlaySkeleton />
-          </ArenaPage>
-        }
-      >
-        <ContestPlayView slug={slug} />
-      </Suspense>
-    </div>
-  );
+  redirect(routes.contestArena(slug));
 }

@@ -1,35 +1,22 @@
+import { AlertTriangle, Clock, Lock, SearchX } from "lucide-react";
 import Link from "next/link";
 import { routes } from "@/config/routes";
-import "../contests.css";
+import "./contest-state.css";
 
 type Tone = "closed" | "locked" | "missing" | "error";
 
-const ICONS: Record<Tone, React.ReactElement> = {
-  closed: (
-    <>
-      <circle cx="12" cy="12" r="8.5" />
-      <path d="M12 7.4V12l3 1.8" />
-    </>
-  ),
-  locked: (
-    <>
-      <rect x="4.5" y="10.5" width="15" height="9" rx="2" />
-      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
-    </>
-  ),
-  missing: (
-    <>
-      <circle cx="11" cy="11" r="6.5" />
-      <path d="M15.8 15.8 20 20" />
-    </>
-  ),
-  error: (
-    <>
-      <path d="M12 4.5 21 19.5H3L12 4.5Z" />
-      <path d="M12 10v4" />
-      <path d="M12 16.6v.1" />
-    </>
-  ),
+const EYEBROW: Record<Tone, string> = {
+  closed: "Session ended",
+  locked: "Access restricted",
+  missing: "Not in your pool",
+  error: "Something went wrong",
+};
+
+const ICONS: Record<Tone, React.ReactNode> = {
+  closed: <Clock className="size-5" strokeWidth={1.75} aria-hidden />,
+  locked: <Lock className="size-5" strokeWidth={1.75} aria-hidden />,
+  missing: <SearchX className="size-5" strokeWidth={1.75} aria-hidden />,
+  error: <AlertTriangle className="size-5" strokeWidth={1.75} aria-hidden />,
 };
 
 type ContestStateProps = {
@@ -51,43 +38,30 @@ export function ContestState({
   backLabel = "Contest",
   action,
 }: ContestStateProps) {
+  const secondary =
+    action ??
+    ({
+      href: routes.problems,
+      label: "Browse problems",
+    } as const);
+
   return (
-    <main className="lp-ctd-state">
-      <div className="lp-ctd-state-card">
-        <span className={`lp-ctd-state-icon lp-ctd-state-icon--${tone}`}>
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            {ICONS[tone]}
-          </svg>
-        </span>
-        <h1 className="lp-ctd-state-title">{title}</h1>
-        <p className="lp-ctd-state-copy">{body}</p>
-        <div className="lp-ctd-state-actions">
+    <main className="contest-state" data-tone={tone}>
+      <div className="contest-state__panel">
+        <p className="contest-state__eyebrow">{EYEBROW[tone]}</p>
+        <div className="contest-state__icon">{ICONS[tone]}</div>
+        <h1 className="contest-state__title">{title}</h1>
+        <p className="contest-state__body">{body}</p>
+        <div className="contest-state__actions">
           <Link
-            href={backHref ?? routes.contest(contestSlug)}
-            className="lp-ct-btn"
+            href={backHref ?? routes.ctfEvent(contestSlug)}
+            className="contest-state__btn contest-state__btn--primary"
           >
             Back to {backLabel.toLowerCase()}
           </Link>
-          {action ? (
-            <Link href={action.href} className="lp-ct-btn lp-ct-btn--ghost">
-              {action.label}
-            </Link>
-          ) : (
-            <Link
-              href={routes.problems}
-              className="lp-ct-btn lp-ct-btn--ghost"
-            >
-              Browse problems
-            </Link>
-          )}
+          <Link href={secondary.href} className="contest-state__btn contest-state__btn--secondary">
+            {secondary.label}
+          </Link>
         </div>
       </div>
     </main>

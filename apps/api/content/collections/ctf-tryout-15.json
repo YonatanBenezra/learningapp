@@ -1,0 +1,24 @@
+{
+  "slug": "ctf-tryout-15",
+  "title": "CTF Try Out — 15 Scenario Mix",
+  "description": "Five Easy, five Medium, and five Hard exercises for the live CTF board (`weekly-advanced-1`). Difficulty comes from each exercise meta.json (E/M/H).",
+  "contestSlug": "weekly-advanced-1",
+  "version": 1,
+  "problems": [
+    { "position": 1, "slug": "rag-001-chunk-it-right", "title": "Chunk It Right", "track": "rag", "difficulty": "E" },
+    { "position": 2, "slug": "rag-010-window-fit", "title": "Window Fit", "track": "rag", "difficulty": "E" },
+    { "position": 3, "slug": "grd-001-break-the-concierge", "title": "Break the Concierge", "track": "guardrails", "difficulty": "E" },
+    { "position": 4, "slug": "grd-004-polite-boundary", "title": "Polite Boundary", "track": "guardrails", "difficulty": "E" },
+    { "position": 5, "slug": "rag-006-overlap-tune", "title": "Overlap Tune", "track": "rag", "difficulty": "E" },
+    { "position": 6, "slug": "rag-002-the-cost-ceiling", "title": "Cost-Capped Retrieval", "track": "rag", "difficulty": "M" },
+    { "position": 7, "slug": "rag-007-chunk-balance", "title": "Recall@k SLA on Policy KB", "track": "rag", "difficulty": "M" },
+    { "position": 8, "slug": "rag-003-the-citation-contract", "title": "Citation-Grounded Answers", "track": "rag", "difficulty": "M" },
+    { "position": 9, "slug": "grd-002-the-indirect-payload", "title": "Indirect Injection via Retrieval", "track": "guardrails", "difficulty": "M" },
+    { "position": 10, "slug": "grd-011-bcc-smuggle", "title": "Tool Argument Validation", "track": "guardrails", "difficulty": "M" },
+    { "position": 11, "slug": "rag-009-python-retriever", "title": "Custom Retriever (Sandbox)", "track": "rag", "difficulty": "H" },
+    { "position": 12, "slug": "grd-010-page-inject", "title": "Page Inject", "track": "guardrails", "difficulty": "H" },
+    { "position": 13, "slug": "rag-016-citation-lock", "title": "Citation Lock", "track": "rag", "difficulty": "H" },
+    { "position": 14, "slug": "grd-013-filter-stack", "title": "Filter Stack", "track": "guardrails", "difficulty": "H" },
+    { "position": 15, "slug": "grd-014-wilson-gate", "title": "Wilson Gate", "track": "guardrails", "difficulty": "H" }
+  ]
+}

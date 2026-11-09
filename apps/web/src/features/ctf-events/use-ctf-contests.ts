@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  mapContestToArenaEvent,
-  mergeArenaEvents,
-} from "@/features/contests/arena/lib/map-api";
+import { listArenaEvents } from "@/features/contests/arena/lib/map-api";
 import type { ArenaEvent } from "@/features/contests/arena/lib/types";
 import { contestListItems } from "@/features/ctf-events/contest-list-items";
 import { contestsApi } from "@/features/contests/contests-api";
+import type { ContestListItem } from "@/types/contest";
 
 function sortArenaEvents(events: ArenaEvent[]) {
   const order = { live: 0, upcoming: 1, archived: 2 } as const;
@@ -25,7 +23,7 @@ async function enrichLiveOperatorCounts(events: ArenaEvent[]) {
         const board = await contestsApi.leaderboard(event.slug, 1, 1);
         return { slug: event.slug, total: board.total };
       } catch {
-        return { slug: event.slug, total: event.operatorCount };
+        return { slug: event.slug, total: 0 };
       }
     }),
   );
@@ -35,6 +33,31 @@ async function enrichLiveOperatorCounts(events: ArenaEvent[]) {
   );
 }
 
+async function enrichClosedResults(events: ArenaEvent[], items: ContestListItem[]) {
+  const closedEntered = items.filter((c) => c.entered && c.window === "closed");
+  if (closedEntered.length === 0) {
+    return events;
+  }
+  const rows = await Promise.all(
+    closedEntered.map(async (c) => {
+      try {
+        const detail = await contestsApi.getBySlug(c.slug);
+        const pts = detail.totalScore ?? detail.scorecard?.totalScore;
+        if (pts == null) {
+          return null;
+        }
+        return { slug: c.slug, myResult: `${pts.toLocaleString()} pts` };
+      } catch {
+        return null;
+      }
+    }),
+  );
+  const bySlug = new Map(
+    rows.filter((r): r is { slug: string; myResult: string } => r != null).map((r) => [r.slug, r.myResult]),
+  );
+  return events.map((e) => (bySlug.has(e.slug) ? { ...e, myResult: bySlug.get(e.slug) } : e));
+}
+
 export function useCtfContests() {
   const [events, setEvents] = useState<ArenaEvent[] | null>(null);
   const [apiFailed, setApiFailed] = useState(false);
@@ -42,16 +65,18 @@ export function useCtfContests() {
   useEffect(() => {
     let cancelled = false;
 
-    const applyList = (merged: ArenaEvent[]) => {
+    const applyList = (mapped: ArenaEvent[], items: ContestListItem[]) => {
       if (cancelled) {
         return;
       }
-      setEvents(sortArenaEvents(merged));
-      void enrichLiveOperatorCounts(merged).then((enriched) => {
-        if (!cancelled) {
-          setEvents(sortArenaEvents(enriched));
-        }
-      });
+      setEvents(sortArenaEvents(mapped));
+      void enrichLiveOperatorCounts(mapped)
+        .then((withCounts) => enrichClosedResults(withCounts, items))
+        .then((enriched) => {
+          if (!cancelled) {
+            setEvents(sortArenaEvents(enriched));
+          }
+        });
     };
 
     contestsApi
@@ -62,12 +87,12 @@ export function useCtfContests() {
         }
         setApiFailed(false);
         const contests = contestListItems(result.items);
-        applyList(mergeArenaEvents(contests));
+        applyList(listArenaEvents(contests), contests);
       })
       .catch(() => {
         if (!cancelled) {
           setApiFailed(true);
-          applyList(mergeArenaEvents([]));
+          setEvents([]);
         }
       });
 
@@ -80,6 +105,6 @@ export function useCtfContests() {
     events,
     apiFailed,
     loading: events === null,
-    error: apiFailed && events !== null && events.length === 0,
+    error: apiFailed,
   };
 }

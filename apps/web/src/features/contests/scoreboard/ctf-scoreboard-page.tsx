@@ -130,7 +130,7 @@ export function CtfScoreboardPage({ slug }: { slug: string }) {
 
   if (boardQuery.isError && allRows.length === 0) {
     return (
-      <div className="bg-[#0F1520] pb-24 text-white">
+      <div className="bg-[#0F1520] pb-10 text-white">
         <ScoreboardError onRetry={() => void boardQuery.refetch()} />
       </div>
     );
@@ -138,7 +138,7 @@ export function CtfScoreboardPage({ slug }: { slug: string }) {
 
   if (total === 0 && sortedRows.length === 0) {
     return (
-      <div className="bg-[#0F1520] min-h-[50vh] pb-24 text-white">
+      <div className="bg-[#0F1520] min-h-[50vh] pb-10 text-white">
         <ScoreboardEmpty slug={slug} />
       </div>
     );
@@ -147,7 +147,7 @@ export function CtfScoreboardPage({ slug }: { slug: string }) {
   const showCountry = sortedRows.some((r) => r.country.length === 2);
 
   return (
-    <div className="bg-[#0F1520] pb-24 font-[family-name:var(--font-inter,Inter,sans-serif)] text-white">
+    <div className="bg-[#0F1520] pb-10 font-[family-name:var(--font-inter,Inter,sans-serif)] text-white">
       <ScoreChart entries={chartEntries} maxScore={maxScore} />
 
       {(podiumEntries[0] || podiumEntries[1] || podiumEntries[2]) && (

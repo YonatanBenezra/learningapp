@@ -12,6 +12,9 @@ import type { CtfEvent } from "@/features/ctf-events/types";
 import { cn } from "@/lib/utils";
 
 function playersLabel(event: CtfEvent) {
+  if (event.players <= 0) {
+    return "No operators on the board yet";
+  }
   if (event.capacity != null && event.capacity > 0) {
     return `${event.players}/${event.capacity} players`;
   }

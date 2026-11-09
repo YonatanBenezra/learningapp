@@ -3,8 +3,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { contestsApi } from "@/features/contests/contests-api";
-import { mergeArenaEvents } from "@/features/contests/arena/lib/map-api";
-import { MOCK_OPERATORS } from "@/features/contests/arena/lib/mock";
+import { listArenaEvents } from "@/features/contests/arena/lib/map-api";
 import type { ArenaEvent, ArenaOperator, ArenaTab } from "@/features/contests/arena/lib/types";
 import { ArenaHero } from "./ArenaHero";
 import { EventCard } from "./EventCard";
@@ -39,7 +38,7 @@ type ArenaHubProps = {
 export function ArenaHub({ compact = false }: ArenaHubProps) {
   const reduce = useReducedMotion();
   const [events, setEvents] = useState<ArenaEvent[] | null>(null);
-  const [operators, setOperators] = useState<ArenaOperator[]>(MOCK_OPERATORS);
+  const [operators, setOperators] = useState<ArenaOperator[]>([]);
   const [tab, setTab] = useState<ArenaTab>("live");
   const [query, setQuery] = useState("");
   const [error, setError] = useState(false);
@@ -52,9 +51,9 @@ export function ArenaHub({ compact = false }: ArenaHubProps) {
         if (cancelled) {
           return;
         }
-        const merged = mergeArenaEvents(result.items);
-        setEvents(merged);
-        const live = merged.find((e) => e.status === "live");
+        const mapped = listArenaEvents(result.items);
+        setEvents(mapped);
+        const live = mapped.find((e) => e.status === "live");
         if (live) {
           try {
             const board = await contestsApi.leaderboard(live.slug, 1, 10);
@@ -69,7 +68,7 @@ export function ArenaHub({ compact = false }: ArenaHubProps) {
                 })),
               );
               setEvents((prev) =>
-                (prev ?? merged).map((e) =>
+                (prev ?? mapped).map((e) =>
                   e.slug === live.slug
                     ? {
                         ...e,
@@ -80,14 +79,14 @@ export function ArenaHub({ compact = false }: ArenaHubProps) {
               );
             }
           } catch {
-            /* keep mock operators */
+            /* no podium rows */
           }
         }
       })
       .catch(() => {
         if (!cancelled) {
           setError(true);
-          setEvents(mergeArenaEvents([]));
+          setEvents([]);
         }
       });
     return () => {
@@ -131,7 +130,7 @@ export function ArenaHub({ compact = false }: ArenaHubProps) {
     const live = featured;
     return {
       operators: live?.operatorCount ?? 0,
-      flagsCaptured: 1284,
+      flagsCaptured: 0,
       firstBloods: live ? `15/${live.challengeCount}` : "—",
       clockMinutes: live?.clockMinutes ?? 180,
     };

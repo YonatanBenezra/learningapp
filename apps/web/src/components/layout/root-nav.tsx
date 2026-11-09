@@ -3,7 +3,12 @@
 import { usePathname } from "next/navigation";
 import { routes } from "@/config/routes";
 import { AppCatalogNav } from "@/components/layout/app-catalog-nav";
-import { isAppCatalogPath, isPracticePath } from "@/components/layout/nav-routes";
+import {
+  isAppCatalogPath,
+  isContestWorkspacePath,
+  isPracticePath,
+} from "@/components/layout/nav-routes";
+import { ArenaEventNav } from "@/features/contests/arena/play/ArenaEventNav";
 import { OnboardingProblemNav } from "@/features/onboarding/onboarding-problem-nav";
 import { HomeNav } from "@/features/home/home-nav";
 import "@/features/home/home.css";
@@ -45,9 +50,13 @@ export function RootNav() {
     return <OnboardingProblemNav />;
   }
 
-  /* Simulator workspace: no global site nav — use lp-ws back tab + in-shell chrome. */
-  if (isPracticePath(pathname)) {
+  /* Simulator / contest lab: no global site nav — in-shell chrome only. */
+  if (isPracticePath(pathname) || isContestWorkspacePath(pathname)) {
     return null;
+  }
+
+  if (/^\/contests\/[^/]+\/(arena|scoreboard)\/?$/.test(pathname)) {
+    return <ArenaEventNav />;
   }
 
   if (isAppCatalogPath(pathname)) {

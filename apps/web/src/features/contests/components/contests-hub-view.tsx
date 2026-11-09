@@ -103,19 +103,21 @@ function cardCountdownLabel(contest: ContestListItem) {
 }
 
 function primaryCardCta(contest: ContestListItem) {
+  const overview = routes.ctfEvent(contest.slug);
+  const arena = routes.contestPlay(contest.slug);
   if (contest.window === "open") {
-    if (contest.canEnter) {
-      return { label: "JOIN", href: routes.contest(contest.slug), primary: true };
-    }
     if (contest.entered) {
-      return { label: "CONTINUE", href: routes.contest(contest.slug), primary: true };
+      return { label: "CONTINUE", href: arena, primary: true };
     }
-    return { label: "VIEW", href: routes.contest(contest.slug), primary: false };
+    if (contest.canEnter) {
+      return { label: "JOIN", href: overview, primary: true };
+    }
+    return { label: "VIEW", href: overview, primary: false };
   }
   if (contest.window === "upcoming") {
-    return { label: "NOTIFY ME", href: routes.contest(contest.slug), primary: false, disabled: true };
+    return { label: "NOTIFY ME", href: overview, primary: false, disabled: true };
   }
-  return { label: "RESULTS", href: routes.contest(contest.slug), primary: false };
+  return { label: "RESULTS", href: routes.contestScoreboard(contest.slug), primary: false };
 }
 
 function HeroCountdown({
@@ -215,7 +217,7 @@ function HubSidebar({
         <div className="lp-ct-hub-topops-head">
           <h3 className="lp-ct-hub-topops-title">Top operators</h3>
           {featured ? (
-            <Link href={routes.contest(featured.slug)} className="lp-ct-hub-topops-all">
+            <Link href={routes.ctfEvent(featured.slug)} className="lp-ct-hub-topops-all">
               view all →
             </Link>
           ) : null}
@@ -357,7 +359,10 @@ function FeaturedHero({
       <div className="lp-ct-hub-hero-mid">
         <HeroCountdown deadlineIso={contest.windowDeadlineAt} window={contest.window} />
         <div className="lp-ct-hub-hero-actions">
-          <Link href={routes.contest(contest.slug)} className="lp-ct-hub-btn lp-ct-hub-btn--join">
+          <Link
+            href={contest.entered ? routes.contestPlay(contest.slug) : routes.ctfEvent(contest.slug)}
+            className="lp-ct-hub-btn lp-ct-hub-btn--join"
+          >
             <Play className="size-4" aria-hidden />
             {contest.canEnter ? "JOIN EVENT" : contest.entered ? "CONTINUE" : "OPEN EVENT"}
           </Link>

@@ -1692,6 +1692,15 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
   overflow-y: auto;
 }
 
+.lp-dash-updates-empty {
+  margin: 0;
+  padding: 20px 18px 22px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  text-align: center;
+  color: #9aa8bd;
+}
+
 .lp-dash-updates-item {
   border-bottom: 1px solid #252f3f;
 }

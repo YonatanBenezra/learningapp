@@ -54,7 +54,7 @@ export function ArenaHero({
       <div className="flex flex-col items-stretch justify-between gap-4 min-[480px]:flex-row min-[480px]:flex-wrap lg:flex-nowrap lg:items-end">
         <Countdown deadlineIso={deadline} label={countdownLabel} />
         <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:flex-wrap">
-          <ArenaButton href={routes.contest(event.slug)} className="w-full sm:w-auto">
+          <ArenaButton href={routes.ctfEvent(event.slug)} className="w-full sm:w-auto">
             <Play className="size-[15px]" aria-hidden />
             JOIN EVENT
           </ArenaButton>
