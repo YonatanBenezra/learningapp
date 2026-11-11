@@ -13,6 +13,12 @@ npm run content:seed-core-15 -w @labpath/api
 npm run build:api
 
 cd apps/web
+if [[ -f .env.local ]]; then
+  set -a
+  # shellcheck source=/dev/null
+  source .env.local
+  set +a
+fi
 NEXT_PUBLIC_API_URL="/api" npm run build
 cd "$APP_DIR"
 
