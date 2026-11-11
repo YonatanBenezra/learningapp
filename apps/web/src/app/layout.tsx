@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Caveat, DM_Sans, Instrument_Serif } from "next/font/google";
 import Script from "next/script";
 import { AppToaster } from "@/components/ui/app-toaster";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { RootNav } from "@/components/layout/root-nav";
 import { brand } from "@/config/brand";
@@ -67,9 +68,11 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col font-sans">
         <Script id="labpath-theme-init" src={themeInitPublicPath} strategy="beforeInteractive" />
         <QueryProvider>
-          <RootNav />
-          <AppToaster />
-          {children}
+          <PostHogProvider>
+            <RootNav />
+            <AppToaster />
+            {children}
+          </PostHogProvider>
         </QueryProvider>
       </body>
     </html>

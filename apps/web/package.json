@@ -23,6 +23,7 @@
     "lucide-react": "^1.48.0",
     "motion": "^13.4.4",
     "next": "16.3.3",
+    "posthog-js": "^1.447.12",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.91.0",
