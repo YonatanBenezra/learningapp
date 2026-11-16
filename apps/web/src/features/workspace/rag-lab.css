@@ -591,3 +591,192 @@
   font-weight: 500;
   color: var(--lp-muted);
 }
+
+/* Live public estimate under the pipeline (Submission tab). */
+.lp-rag-meter {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.5rem 0.75rem 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--color-ink) 6%, var(--color-card));
+}
+
+.lp-rag-meter-title {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-meter-title span {
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.lp-rag-meter-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.lp-rag-meter-label {
+  color: var(--lp-muted);
+}
+
+.lp-rag-meter-value {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-weight: 650;
+}
+
+.lp-rag-meter-value small {
+  margin-left: 0.25rem;
+  font-weight: 500;
+  color: var(--lp-muted);
+}
+
+.lp-rag-meter-value.is-pass {
+  color: var(--color-status-pass);
+}
+
+.lp-rag-meter-value.is-fail {
+  color: var(--color-status-fail);
+}
+
+.lp-rag-meter-track {
+  height: 0.3rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-muted) 20%, transparent);
+}
+
+.lp-rag-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.lp-rag-meter-fill.is-pass {
+  background: var(--color-status-pass);
+}
+
+.lp-rag-meter-fill.is-fail {
+  background: var(--color-status-fail);
+}
+
+/* Red team target bot console. */
+.lp-rt-console {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lp-rt-intro {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-rt-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-rt-empty {
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-rt-turn {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.lp-rt-you,
+.lp-rt-bot {
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.lp-rt-you span,
+.lp-rt-bot > span {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rt-you {
+  justify-self: end;
+  max-width: 85%;
+  background: color-mix(in srgb, var(--color-brand) 12%, var(--color-card));
+}
+
+.lp-rt-bot {
+  justify-self: start;
+  max-width: 92%;
+  border: 1px solid var(--lp-border);
+  background: var(--color-card);
+}
+
+.lp-rt-bot p {
+  margin: 0;
+}
+
+.lp-rt-bot.is-blocked {
+  border-color: color-mix(in srgb, var(--color-status-fail) 45%, var(--lp-border));
+}
+
+.lp-rt-cites {
+  margin-top: 0.35rem !important;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-rt-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.lp-rt-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+  background: var(--color-card);
+  color: var(--lp-ink);
+  font-size: 0.8125rem;
+}
+
+.lp-rt-form button {
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  border-radius: 0.45rem;
+  background: var(--color-brand);
+  color: var(--color-brand-on);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.lp-rt-form button:disabled {
+  opacity: 0.55;
+}

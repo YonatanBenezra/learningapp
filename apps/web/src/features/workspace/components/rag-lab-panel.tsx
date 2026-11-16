@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { InfoTip } from "./info-tip";
+import { RagTargetConsole } from "./rag-target-console";
 import { ragLabApi } from "../rag-lab/rag-lab-api";
 import {
   CHUNK_ID_TIP,
@@ -30,6 +31,7 @@ const TOKEN_GATE_BY_ARCHETYPE: Partial<Record<RagLabArchetype, string>> = {
   r1: "mean_context_tokens",
   r2: "mean_prompt_tokens",
   r4: "context_tokens",
+  r5: "mean_prompt_tokens",
 };
 
 function tokenGateFor(archetype: RagLabArchetype, gates: unknown): GateSpec | null {
@@ -92,6 +94,11 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
     };
   }, [slug]);
 
+  // R5 routes a query through its class profile; custom queries borrow the
+  // class of the public question picked in the dropdown.
+  const activeClass =
+    context?.questions.find((item) => item.id === questionId)?.class ?? null;
+
   const activeQuestion = useMemo(() => {
     if (customQuestion.trim()) {
       return customQuestion.trim();
@@ -101,14 +108,14 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
   }, [context, questionId, customQuestion]);
 
   useEffect(() => {
-    if (!context?.labEnabled || !activeQuestion) {
+    if (!context?.labEnabled || !activeQuestion || context.archetype === "redteam") {
       return;
     }
     let cancelled = false;
     const timer = setTimeout(() => {
       setPreviewing(true);
       ragLabApi
-        .preview(slug, payload, activeQuestion)
+        .preview(slug, payload, activeQuestion, activeClass)
         .then((result) => {
           if (!cancelled) {
             setPreview(result);
@@ -135,7 +142,7 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [slug, payload, activeQuestion, context?.labEnabled]);
+  }, [slug, payload, activeQuestion, activeClass, context?.labEnabled, context?.archetype]);
 
   const archetype = preview?.archetype ?? context?.archetype ?? "unknown";
   const visibleTabs = useMemo(() => labTabsForArchetype(archetype), [archetype]);
@@ -182,8 +189,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
         <div>
           <h2 className="lp-rag-lab-title">Simulation Lab</h2>
           <p className="lp-rag-lab-lead">
-            Runs your current config on the public corpus and sample questions. Not graded:
-            submit from Submission to score the hidden set.
+            {archetype === "redteam"
+              ? "Talk to the target bot and read its public corpus. Not graded: submit the flag you find from Submission."
+              : "Runs your current config on the public corpus and sample questions. Not graded: submit from Submission to score the hidden set."}
           </p>
         </div>
         {frozen ? (
@@ -211,9 +219,11 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
             {LAB_TAB_LABELS[item]}
           </button>
         ))}
-        <span className={`lp-rag-lab-status${previewing ? " is-busy" : ""}`}>
-          {previewing ? "Updating…" : preview ? `${preview.chunkCount} chunks` : "—"}
-        </span>
+        {archetype === "redteam" ? null : (
+          <span className={`lp-rag-lab-status${previewing ? " is-busy" : ""}`}>
+            {previewing ? "Updating…" : preview ? `${preview.chunkCount} chunks` : "—"}
+          </span>
+        )}
       </div>
 
       {error ? (
@@ -221,6 +231,8 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
           {error}
         </p>
       ) : null}
+
+      {activeTab === "target" ? <RagTargetConsole slug={slug} /> : null}
 
       {activeTab === "corpus" ? (
         <section className="lp-rag-lab-pane" aria-label="Corpus documents">
@@ -307,7 +319,7 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
 
           <div className="lp-rag-lab-query-active">
             <span>
-              Query
+              {archetype === "r5" && activeClass ? `Query · routed as ${activeClass}` : "Query"}
               <InfoTip text="Pick a sample question or type your own to preview retrieval." />
             </span>
             <p>{activeQuestion}</p>

@@ -1,0 +1,227 @@
+[
+  {
+    "id": "h01",
+    "class": "faq",
+    "question": "When does the guest Wi-Fi passphrase change?",
+    "answerable": true,
+    "goldAnswer": "Every Monday",
+    "goldDocId": "it-faq",
+    "goldSpan": "The guest Wi-Fi passphrase rotates every Monday"
+  },
+  {
+    "id": "h02",
+    "class": "faq",
+    "question": "Where can I get a replacement laptop charger?",
+    "answerable": true,
+    "goldAnswer": "Help desk, floor three",
+    "goldDocId": "it-faq",
+    "goldSpan": "Lost laptop chargers are replaced at the help desk on floor three"
+  },
+  {
+    "id": "h03",
+    "class": "faq",
+    "question": "How long does an extra monitor take to arrive?",
+    "answerable": true,
+    "goldAnswer": "Five working days",
+    "goldDocId": "it-faq",
+    "goldSpan": "arrive within five working days"
+  },
+  {
+    "id": "h04",
+    "class": "faq",
+    "question": "Which VPN client version is required?",
+    "answerable": true,
+    "goldAnswer": "4.2 or later",
+    "goldDocId": "it-faq",
+    "goldSpan": "The VPN client must be updated to version 4.2 or later"
+  },
+  {
+    "id": "h05",
+    "class": "faq",
+    "question": "Where do I report a printer jam?",
+    "answerable": true,
+    "goldAnswer": "#it-help",
+    "goldDocId": "it-faq",
+    "goldSpan": "Printer jams are reported in the #it-help channel"
+  },
+  {
+    "id": "h06",
+    "class": "faq",
+    "question": "When can I retake my badge photo?",
+    "answerable": true,
+    "goldAnswer": "Tuesdays at the security desk",
+    "goldDocId": "it-faq",
+    "goldSpan": "Badge photos are retaken at the security desk on Tuesdays"
+  },
+  {
+    "id": "h07",
+    "class": "faq",
+    "question": "Who approves design tool licences?",
+    "answerable": true,
+    "goldAnswer": "The studio lead",
+    "goldDocId": "it-faq",
+    "goldSpan": "Design tool licences are approved by the studio lead"
+  },
+  {
+    "id": "h08",
+    "class": "faq",
+    "question": "When do new starters get a desk phone number?",
+    "answerable": true,
+    "goldAnswer": "On their first working day",
+    "goldDocId": "it-faq",
+    "goldSpan": "assigned on their first working day"
+  },
+  {
+    "id": "h09",
+    "class": "policy",
+    "question": "How many days of paid time off do staff receive each calendar year?",
+    "answerable": true,
+    "goldAnswer": "22 days",
+    "goldDocId": "pto",
+    "goldSpan": "twenty-two (22) days of paid time off"
+  },
+  {
+    "id": "h10",
+    "class": "policy",
+    "question": "How must remote access traffic leave the network?",
+    "answerable": true,
+    "goldAnswer": "Through the company gateway",
+    "goldDocId": "vpn",
+    "goldSpan": "all traffic must egress through the company gateway"
+  },
+  {
+    "id": "h11",
+    "class": "policy",
+    "question": "How quickly must a Priority-1 incident be acknowledged?",
+    "answerable": true,
+    "goldAnswer": "15 minutes",
+    "goldDocId": "incident",
+    "goldSpan": "acknowledged within fifteen (15) minutes"
+  },
+  {
+    "id": "h12",
+    "class": "policy",
+    "question": "How long are prompt and completion logs kept?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "model-usage",
+    "goldSpan": "retained for thirty (30) days"
+  },
+  {
+    "id": "h13",
+    "class": "policy",
+    "question": "What is the team meal reimbursement cap per person?",
+    "answerable": true,
+    "goldAnswer": "€45",
+    "goldDocId": "expense",
+    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+  },
+  {
+    "id": "h14",
+    "class": "policy",
+    "question": "How long are support tickets kept after close?",
+    "answerable": true,
+    "goldAnswer": "18 months",
+    "goldDocId": "retention",
+    "goldSpan": "kept for eighteen (18) months after close"
+  },
+  {
+    "id": "h15",
+    "class": "policy",
+    "question": "When does the primary on-call rotate?",
+    "answerable": true,
+    "goldAnswer": "Monday 09:00 UTC",
+    "goldDocId": "oncall",
+    "goldSpan": "rotates every Monday at 09:00 UTC"
+  },
+  {
+    "id": "h16",
+    "class": "policy",
+    "question": "What report must production SaaS vendors present before procurement?",
+    "answerable": true,
+    "goldAnswer": "SOC 2 Type II",
+    "goldDocId": "vendor",
+    "goldSpan": "SOC 2 Type II report before procurement"
+  },
+  {
+    "id": "h17",
+    "class": "procedural",
+    "question": "What are the steps to onboard a contractor?",
+    "answerable": true,
+    "goldAnswer": "To onboard a contractor, first open a ticket in the access portal with the contract end date. Next, the hiring manager approves the ticket and assigns a buddy. Finally, IT ships a locked-down laptop and enables remote access for the contract period.",
+    "goldDocId": "proc-contractor",
+    "goldSpan": "To onboard a contractor, first open a ticket in the access portal with the contract end date. Next, the hiring manager approves the ticket and assigns a buddy. Finally, IT ships a locked-down laptop and enables remote access for the contract period."
+  },
+  {
+    "id": "h18",
+    "class": "procedural",
+    "question": "How do I restore a deleted file?",
+    "answerable": true,
+    "goldAnswer": "To restore a deleted file, first check the recycle bin of the shared drive. Next, file a restore request with the drive path and the deletion date. Finally, the storage team restores the file from the nightly snapshot within one working day.",
+    "goldDocId": "proc-restore",
+    "goldSpan": "To restore a deleted file, first check the recycle bin of the shared drive. Next, file a restore request with the drive path and the deletion date. Finally, the storage team restores the file from the nightly snapshot within one working day."
+  },
+  {
+    "id": "h19",
+    "class": "procedural",
+    "question": "What is the process for reporting a phishing email?",
+    "answerable": true,
+    "goldAnswer": "To report a phishing email, first leave every link and attachment unopened. Next, press the Report Phish button in the mail client. Finally, delete the message once the security team confirms receipt.",
+    "goldDocId": "proc-phishing",
+    "goldSpan": "To report a phishing email, first leave every link and attachment unopened. Next, press the Report Phish button in the mail client. Finally, delete the message once the security team confirms receipt."
+  },
+  {
+    "id": "h20",
+    "class": "procedural",
+    "question": "How do I change a production database?",
+    "answerable": true,
+    "goldAnswer": "To change a production database, first write a migration plan with a rollback step. Next, get approval from a second engineer in the change ticket. Finally, run the migration in the maintenance window and attach the logs to the ticket.",
+    "goldDocId": "proc-db-change",
+    "goldSpan": "To change a production database, first write a migration plan with a rollback step. Next, get approval from a second engineer in the change ticket. Finally, run the migration in the maintenance window and attach the logs to the ticket."
+  },
+  {
+    "id": "h21",
+    "class": "procedural",
+    "question": "What are the steps to offboard a leaver?",
+    "answerable": true,
+    "goldAnswer": "To offboard a leaver, first the manager files the exit form two weeks before the last day. Next, IT schedules account suspension for the evening of the last day. Finally, the leaver returns the laptop and badge to the help desk and receives a signed receipt.",
+    "goldDocId": "proc-offboarding",
+    "goldSpan": "To offboard a leaver, first the manager files the exit form two weeks before the last day. Next, IT schedules account suspension for the evening of the last day. Finally, the leaver returns the laptop and badge to the help desk and receives a signed receipt."
+  },
+  {
+    "id": "h22",
+    "class": "procedural",
+    "question": "How do I create a new code repository?",
+    "answerable": true,
+    "goldAnswer": "To create a new code repository, first request it in the engineering portal with an owning team. Next, apply the standard template so branch protection and CI are switched on. Finally, add a CODEOWNERS file and invite at least two maintainers.",
+    "goldDocId": "proc-new-repo",
+    "goldSpan": "To create a new code repository, first request it in the engineering portal with an owning team. Next, apply the standard template so branch protection and CI are switched on. Finally, add a CODEOWNERS file and invite at least two maintainers."
+  },
+  {
+    "id": "h23",
+    "class": "procedural",
+    "question": "What is the process for booking business travel?",
+    "answerable": true,
+    "goldAnswer": "To book business travel, first get written approval from your budget holder. Next, book flights and hotels only through the travel portal so the trip is insured. Finally, upload the itinerary to the expense tool before departure.",
+    "goldDocId": "proc-travel-booking",
+    "goldSpan": "To book business travel, first get written approval from your budget holder. Next, book flights and hotels only through the travel portal so the trip is insured. Finally, upload the itinerary to the expense tool before departure."
+  },
+  {
+    "id": "h24",
+    "class": "procedural",
+    "question": "How do I run a quarterly access review?",
+    "answerable": true,
+    "goldAnswer": "To run a quarterly access review, first export the group memberships from the identity provider. Next, each team lead confirms or removes every member of their groups. Finally, the security team revokes unconfirmed access and archives the signed export.",
+    "goldDocId": "proc-access-review",
+    "goldSpan": "To run a quarterly access review, first export the group memberships from the identity provider. Next, each team lead confirms or removes every member of their groups. Finally, the security team revokes unconfirmed access and archives the signed export."
+  },
+  {
+    "id": "canary",
+    "class": "faq",
+    "question": "What is the HIDDEN_EVAL_R31_CANARY_PHRASE in the unpublished runbook?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  }
+]

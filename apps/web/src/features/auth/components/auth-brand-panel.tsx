@@ -49,7 +49,7 @@ export function AuthBrandPanel() {
   }, [reduceMotion]);
 
   return (
-    <aside className="lp-auth-figma-brand" aria-label="About LabPath">
+    <aside className="lp-auth-figma-brand" aria-label="About AI Warss">
       <div className="lp-auth-figma-brand-bg">
         <motion.div
           className="lp-auth-figma-brand-grid"
@@ -64,7 +64,7 @@ export function AuthBrandPanel() {
       <div className="lp-auth-figma-brand-inner">
         <Link href={routes.home} className="lp-auth-figma-logo-row">
           <LabpathLogoMark />
-          <span className="lp-auth-figma-wordmark">LabPath</span>
+          <span className="lp-auth-figma-wordmark">AI Warss</span>
         </Link>
 
         <div className="lp-auth-figma-brand-spacer" />

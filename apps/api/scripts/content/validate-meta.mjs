@@ -17,6 +17,8 @@ const ARCHETYPES = new Set([
   'rag-r3',
   'rag-r4',
   'rag-sandbox',
+  'rag-r5',
+  'rag-redteam',
   'pe-p1',
   'agent-a1',
   'agent-a2',

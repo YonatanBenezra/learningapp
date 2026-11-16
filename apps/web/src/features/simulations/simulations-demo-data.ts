@@ -31,7 +31,7 @@ export const simulationsPageCopy = {
     attempts: "4",
   },
   footnote:
-    "LabPath navy + teal — no course sidebar. G1 chat is the hero; G2/G3 use page edit and scorecard flows.",
+    "AI Warss navy + teal — no course sidebar. G1 chat is the hero; G2/G3 use page edit and scorecard flows.",
 } as const;
 
 export const guardrailsSimulatorCard = {

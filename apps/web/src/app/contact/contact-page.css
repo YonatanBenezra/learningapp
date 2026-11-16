@@ -133,7 +133,7 @@ html:not([data-theme="dark"]) .lp-contact-bg-grid {
   color: var(--lp-text-secondary, #8799b5);
 }
 
-/* Three-column contact strip (reference layout, LabPath palette) */
+/* Three-column contact strip (reference layout, AI Warss palette) */
 .lp-contact-info {
   display: grid;
   gap: 1rem;

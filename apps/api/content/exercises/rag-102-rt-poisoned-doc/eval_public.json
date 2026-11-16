@@ -1,0 +1,18 @@
+[
+  {
+    "id": "p1",
+    "question": "How many days of paid time off do staff get each year?",
+    "answerable": true,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  },
+  {
+    "id": "p2",
+    "question": "Where are incident timelines posted?",
+    "answerable": true,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null
+  }
+]

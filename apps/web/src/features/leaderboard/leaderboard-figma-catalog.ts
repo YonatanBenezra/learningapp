@@ -5,7 +5,7 @@ export const LEADERBOARD_SUMMARY_COPY =
   "Unique problems first, recent activity breaks ties.";
 
 export const LEADERBOARD_PAGE_SUBTITLE =
-  "LabPath rankings throughout the platform";
+  "AI Warss rankings throughout the platform";
 
 /** HTB-style tab labels mapped to period filters. */
 export const HTB_RANKING_TABS: { id: PeriodFilter; label: string }[] = [
@@ -58,7 +58,7 @@ export const LEADERBOARD_SPARSE_TABLE_TITLE =
   "Ranks 4+ appear as more learners pass problems";
 
 export const LEADERBOARD_SPARSE_TABLE_BODY =
-  "The table fills in automatically. Share LabPath with your team to start a real race.";
+  "The table fills in automatically. Share AI Warss with your team to start a real race.";
 
 export type AvatarTone = "blue" | "teal" | "ember" | "amber" | "neutral";
 export type TrackId = "rag" | "eval" | "guard" | "prompt";

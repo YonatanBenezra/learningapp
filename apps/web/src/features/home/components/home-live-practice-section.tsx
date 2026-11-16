@@ -54,7 +54,7 @@ type CodeLine = CodeToken[];
 const PYTHON_LINES: CodeLine[] = [
   [
     { text: "from", kind: "kw" },
-    { text: " labpath " },
+    { text: " aiwarss " },
     { text: "import", kind: "kw" },
     { text: " Corpus, Retriever" },
   ],

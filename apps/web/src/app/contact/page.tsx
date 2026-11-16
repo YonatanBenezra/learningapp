@@ -7,12 +7,12 @@ import { ContactCopyEmail } from "@/app/contact/contact-copy-email";
 import { ContactForm } from "@/app/contact/contact-form";
 import "./contact-page.css";
 
-const CONTACT_EMAIL = "hello@labpath.dev";
-const MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Hello LabPath")}`;
+const CONTACT_EMAIL = "hello@aiwarss.com";
+const MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Hello AI Warss")}`;
 
 export const metadata: Metadata = {
   title: `Contact — ${brand.name}`,
-  description: "Reach the LabPath team by email or send a message from your inbox.",
+  description: "Reach the AI Warss team by email or send a message from your inbox.",
 };
 
 export default function ContactPage() {

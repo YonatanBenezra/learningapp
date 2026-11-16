@@ -1,0 +1,136 @@
+{
+  "slug": "rag-031-query-routing",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Query Routing: One Profile per Question Type",
+  "difficulty": "H",
+  "catalogPhase": 4,
+  "skills": [
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "cost-engineering",
+      "name": "Cost engineering"
+    }
+  ],
+  "briefMd": "# Phase 4 · Query Routing\n\nThe support bot gets three kinds of questions, and the router already tells you which kind each one is:\n\n- **FAQ**: answered by one short line in the IT help desk FAQ.\n- **Policy**: answered by a policy document, but keyword-stuffed noise documents compete for the top spots.\n- **Procedural**: the answer is a three-step procedure spread over consecutive sentences, so the whole procedure has to sit in one chunk.\n\nSet a separate **top-k / rerank / chunk size** profile for each type. One profile for everything either misses procedures or blows the budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** FAQ and procedural recall ≥ 0.85, every policy question answered (recall = 1.00), and mean prompt tokens ≤ 100 on the hidden set.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "faqTopK",
+      "faqChunkSize",
+      "faqRerank",
+      "policyTopK",
+      "policyChunkSize",
+      "policyRerank",
+      "proceduralTopK",
+      "proceduralChunkSize",
+      "proceduralRerank"
+    ],
+    "properties": {
+      "faqTopK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 20
+      },
+      "faqChunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      },
+      "faqRerank": {
+        "type": "boolean",
+        "default": false
+      },
+      "policyTopK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 20
+      },
+      "policyChunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      },
+      "policyRerank": {
+        "type": "boolean",
+        "default": false
+      },
+      "proceduralTopK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 20
+      },
+      "proceduralChunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      },
+      "proceduralRerank": {
+        "type": "boolean",
+        "default": false
+      }
+    }
+  },
+  "thresholds": {
+    "recall_faq": 0.85,
+    "recall_policy": 1,
+    "recall_procedural": 0.85,
+    "mean_prompt_tokens": 100
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.0,
+    "wall_clock_s": 60
+  },
+  "gates": [
+    {
+      "id": "recall-faq",
+      "class": "A",
+      "metric": "recall_faq",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "recall-policy",
+      "class": "A",
+      "metric": "recall_policy",
+      "op": "gte",
+      "value": 1
+    },
+    {
+      "id": "recall-procedural",
+      "class": "A",
+      "metric": "recall_procedural",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 100
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": false
+  },
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-r5"
+}

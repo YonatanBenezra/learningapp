@@ -69,7 +69,7 @@ export function DashboardNavApps({ className }: DashboardNavAppsProps) {
         ref={triggerRef}
         type="button"
         className={cn("lp-dash-htb-nav-icon-btn", open && "is-active")}
-        aria-label="LabPath apps"
+        aria-label="AI Warss apps"
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((value) => !value)}

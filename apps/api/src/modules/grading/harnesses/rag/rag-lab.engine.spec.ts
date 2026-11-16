@@ -2,7 +2,10 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { estimateTokens } from '../../gateway/pricing';
 import type { CorpusDoc } from './chunking';
-import { previewRagLabWithCorpus } from './rag-lab.engine';
+import {
+  estimateRagLabWithCorpus,
+  previewRagLabWithCorpus,
+} from './rag-lab.engine';
 
 const docs = JSON.parse(
   readFileSync(
@@ -45,5 +48,25 @@ describe('previewRagLabWithCorpus', () => {
     const preview = previewRagLabWithCorpus(SLUG, PAYLOAD, QUESTION, docs);
     const joined = preview.retrieved.map((hit) => hit.text).join('\n\n');
     expect(preview.contextTokens).toBe(estimateTokens(`Context:\n${joined}`));
+  });
+});
+
+describe('estimateRagLabWithCorpus', () => {
+  it('runs every public question and counts answers that reach the context', () => {
+    const estimate = estimateRagLabWithCorpus(
+      SLUG,
+      PAYLOAD,
+      [
+        { id: 'p1', question: QUESTION, answerable: true, gold: PUBLIC_GOLD },
+        { id: 'p2', question: 'office dogs', answerable: false, gold: null },
+      ],
+      docs,
+    );
+    expect(estimate.questions).toBe(2);
+    expect(estimate.answerable).toBe(1);
+    expect(estimate.answersFound).toBe(1);
+    expect(estimate.rows[0].goldRank).toBe(1);
+    expect(estimate.rows[1].answerFound).toBeNull();
+    expect(estimate.meanContextTokens).toBeGreaterThan(0);
   });
 });

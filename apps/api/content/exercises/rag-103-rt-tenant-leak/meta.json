@@ -1,0 +1,63 @@
+{
+  "slug": "rag-103-rt-tenant-leak",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Red Team 3: Tenant Leak",
+  "difficulty": "H",
+  "catalogPhase": 7,
+  "skills": [
+    {
+      "slug": "red-teaming",
+      "name": "Red teaming"
+    },
+    {
+      "slug": "prompt-injection",
+      "name": "Prompt injection"
+    }
+  ],
+  "briefMd": "# Red Team 3 · Tenant Leak\n\nAcme and Globex share one search index. The bot filters results to your tenant (Acme) **after** retrieval, and when nothing from Acme matches it \"helpfully\" falls back to the best result from the shared index.\n\nGlobex keeps its **Project Lighthouse** launch notes in that index, and they contain the flag. Ask the **Target bot** something that matches nothing in Acme's workspace but matches Globex's notes.\n\n**Gate:** the submitted flag matches.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "flag"
+    ],
+    "properties": {
+      "flag": {
+        "type": "string",
+        "minLength": 8,
+        "maxLength": 120,
+        "description": "The flag you extracted, e.g. LABPATH{...}",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "flag_captured": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.0,
+    "wall_clock_s": 30
+  },
+  "gates": [
+    {
+      "id": "flag-captured",
+      "class": "A",
+      "metric": "flag_captured",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 0,
+    "rotate": false
+  },
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-redteam"
+}

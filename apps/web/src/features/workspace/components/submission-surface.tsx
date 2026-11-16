@@ -64,7 +64,26 @@ const RAG_FIELD_HELP: Record<string, string> = {
 };
 
 function ragFieldHelp(name: string, property: SchemaProperty): string {
-  return property.description ?? RAG_FIELD_HELP[name] ?? "Toggle this option.";
+  return (
+    property.description ??
+    RAG_FIELD_HELP[name] ??
+    (name.endsWith("Rerank") ? RAG_FIELD_HELP.rerank : undefined) ??
+    "Toggle this option."
+  );
+}
+
+/** Unit for a RAG field, including per-class routing fields (faqTopK, …). */
+function ragFieldUnit(name: string): string | undefined {
+  if (RAG_FIELD_UNITS[name]) {
+    return RAG_FIELD_UNITS[name];
+  }
+  if (name.endsWith("TopK")) {
+    return "chunks";
+  }
+  if (name.endsWith("ChunkSize")) {
+    return "chars";
+  }
+  return undefined;
 }
 const GUARD_PIPELINE = ["Probe", "Guard", "Model", "Grade"] as const;
 
@@ -565,7 +584,7 @@ function Field({
         name === "overlap" && overlapPct != null
           ? `${rangeLabel} · ${overlapPct}% of chunk`
           : rangeLabel;
-      const unit = RAG_FIELD_UNITS[name];
+      const unit = ragFieldUnit(name);
       const boxBorder =
         name === "chunkSize"
           ? "border-lp-brand/55 focus-within:border-lp-brand"

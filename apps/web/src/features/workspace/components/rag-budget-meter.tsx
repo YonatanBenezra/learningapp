@@ -1,0 +1,125 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { formatGateNumber, formatGateThreshold, gateMetricLabel, gradedGates } from "../gates";
+import { ragLabApi } from "../rag-lab/rag-lab-api";
+import type { RagLabArchetype, RagLabEstimate } from "../rag-lab/rag-lab-types";
+import "../rag-lab.css";
+
+/** Which graded token metric the lab's per-question token count corresponds to. */
+const TOKEN_METRIC: Partial<Record<RagLabArchetype, string>> = {
+  r1: "mean_context_tokens",
+  r2: "mean_prompt_tokens",
+  r4: "context_tokens",
+  r5: "mean_prompt_tokens",
+};
+
+function meanRank(values: Array<number | null>): number | null {
+  const ranks = values.filter((value): value is number => value !== null);
+  return ranks.length === 0 ? null : ranks.reduce((sum, value) => sum + value, 0) / ranks.length;
+}
+
+type RagBudgetMeterProps = {
+  slug: string;
+  payload: Record<string, unknown>;
+  gates?: unknown;
+};
+
+/**
+ * Live, ungraded read of the current config on the public sample questions:
+ * the same token count and answer check the grader applies to the hidden set.
+ */
+export function RagBudgetMeter({ slug, payload, gates }: RagBudgetMeterProps) {
+  const [estimate, setEstimate] = useState<RagLabEstimate | null>(null);
+  const [failed, setFailed] = useState(false);
+  const payloadKey = JSON.stringify(payload);
+
+  useEffect(() => {
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      ragLabApi
+        .estimate(slug, JSON.parse(payloadKey) as Record<string, unknown>)
+        .then((result) => {
+          if (!cancelled) {
+            setEstimate(result);
+            setFailed(false);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setFailed(true);
+          }
+        });
+    }, 400);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [slug, payloadKey]);
+
+  if (failed || !estimate || estimate.questions === 0) {
+    return null;
+  }
+
+  const tokenMetric = TOKEN_METRIC[estimate.archetype];
+  const tokenGate = tokenMetric
+    ? (gradedGates(gates).find((gate) => gate.metric === tokenMetric) ?? null)
+    : null;
+  const tokensOk = tokenGate ? estimate.meanContextTokens <= tokenGate.value : null;
+  const budgetPct = tokenGate
+    ? Math.min(100, (estimate.meanContextTokens / tokenGate.value) * 100)
+    : null;
+  const firstStage = meanRank(estimate.rows.map((row) => row.firstStageGoldRank));
+  const reranked = meanRank(estimate.rows.map((row) => row.goldRank));
+
+  return (
+    <section
+      className="lp-rag-meter"
+      aria-label="Public estimate for the current config"
+    >
+      <p className="lp-rag-meter-title">
+        Public estimate <span>· {estimate.questions} sample questions · not graded</span>
+      </p>
+      <div className="lp-rag-meter-row">
+        <span className="lp-rag-meter-label">
+          {tokenGate ? gateMetricLabel(tokenGate.metric) : "context tokens"}
+        </span>
+        <span className={cn("lp-rag-meter-value", tokensOk === false && "is-fail", tokensOk && "is-pass")}>
+          {formatGateNumber("tokens", estimate.meanContextTokens)}
+          {tokenGate ? <small> / {formatGateThreshold(tokenGate)}</small> : null}
+        </span>
+      </div>
+      {budgetPct !== null ? (
+        <div className="lp-rag-meter-track" aria-hidden>
+          <span
+            className={cn("lp-rag-meter-fill", tokensOk ? "is-pass" : "is-fail")}
+            style={{ width: `${budgetPct}%` }}
+          />
+        </div>
+      ) : null}
+      {estimate.answerable > 0 ? (
+        <div className="lp-rag-meter-row">
+          <span className="lp-rag-meter-label">answers in context</span>
+          <span
+            className={cn(
+              "lp-rag-meter-value",
+              estimate.answersFound === estimate.answerable ? "is-pass" : "is-fail",
+            )}
+          >
+            {estimate.answersFound}/{estimate.answerable}
+          </span>
+        </div>
+      ) : null}
+      {firstStage !== null && reranked !== null ? (
+        <div className="lp-rag-meter-row">
+          <span className="lp-rag-meter-label">mean gold rank</span>
+          <span className="lp-rag-meter-value">
+            #{firstStage.toFixed(1)} → #{reranked.toFixed(1)}
+            <small> first stage → rerank</small>
+          </span>
+        </div>
+      ) : null}
+    </section>
+  );
+}

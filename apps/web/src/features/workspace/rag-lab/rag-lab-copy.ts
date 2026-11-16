@@ -1,15 +1,19 @@
 import type { RagLabArchetype } from "./rag-lab-types";
 
-export type LabTab = "corpus" | "chunks" | "query" | "generate";
+export type LabTab = "corpus" | "chunks" | "query" | "generate" | "target";
 
 export const LAB_TAB_LABELS: Record<LabTab, string> = {
   corpus: "Corpus",
   chunks: "Chunks",
   query: "Query",
   generate: "Generate",
+  target: "Target bot",
 };
 
 export function labTabsForArchetype(archetype: RagLabArchetype): LabTab[] {
+  if (archetype === "redteam") {
+    return ["target", "corpus"];
+  }
   if (archetype === "r3") {
     return ["corpus", "chunks", "query", "generate"];
   }
@@ -39,6 +43,10 @@ export const METRIC_TIPS: Record<string, string> = {
     "Average tokens of the top 5 chunks, i.e. the context a model would read.",
   mean_prompt_tokens:
     "Average prompt tokens per question. Every retrieved chunk is sent in full.",
+  recall_faq: "Share of FAQ questions whose answer line reached the context.",
+  recall_policy: "Share of policy questions whose answer sentence reached the context.",
+  recall_procedural: "Share of procedural questions whose whole procedure sat in one retrieved chunk.",
+  flag_captured: "1 when the submitted flag matches exactly.",
 };
 
 export function metricLabel(key: string): string {

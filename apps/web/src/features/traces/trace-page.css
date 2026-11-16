@@ -672,3 +672,20 @@
     width: auto;
   }
 }
+
+.lp-trace-hit-badge--pass {
+  color: var(--color-status-pass);
+  border-color: color-mix(in srgb, var(--color-status-pass) 45%, transparent);
+  background: color-mix(in srgb, var(--color-status-pass) 12%, transparent);
+}
+
+.lp-trace-hit-badge--fail {
+  color: var(--color-status-fail);
+  border-color: color-mix(in srgb, var(--color-status-fail) 45%, transparent);
+  background: color-mix(in srgb, var(--color-status-fail) 12%, transparent);
+}
+
+.lp-trace-hit-moved {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}

@@ -23,7 +23,7 @@ import {
   E,
 } from "./auth-form-primitives";
 
-const TAKEN_USERNAMES = new Set(["admin", "jewel", "taken", "labpath"]);
+const TAKEN_USERNAMES = new Set(["admin", "jewel", "taken", "aiwarss"]);
 
 export function SignUpFormFigma() {
   return (

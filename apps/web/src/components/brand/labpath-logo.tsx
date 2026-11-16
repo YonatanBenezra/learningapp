@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
 
 type LabpathLogoProps = {
@@ -56,7 +57,7 @@ export function LabpathLogo({
         priority
       />
       {showWordmark ? (
-        <span className={cn("lp-site-nav-wordmark", wordmarkClassName)}>LabPath</span>
+        <span className={cn("lp-site-nav-wordmark", wordmarkClassName)}>{brand.name}</span>
       ) : null}
     </span>
   );

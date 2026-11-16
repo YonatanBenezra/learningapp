@@ -7,12 +7,14 @@ import {
   expandGoldSpan,
   FAILING_SAMPLE_LIMIT,
   gateThreshold,
+  publicGold,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
 import type {
   GateResult,
   HiddenItem,
+  PublicItem,
   RagGradeResult,
   RagPayload,
   TraceQuery,
@@ -27,7 +29,7 @@ export function gradeR1(
   payload: RagPayload,
   docs: CorpusDoc[],
   hidden: HiddenItem[],
-  publicItems: { question: string }[] = [],
+  publicItems: PublicItem[] = [],
   gates?: unknown,
 ): RagGradeResult {
   const recallThreshold = gateThreshold(gates, 'recall@5', DEFAULT_RECALL);
@@ -132,13 +134,15 @@ export function gradeR1(
       tokensOut: 0,
       costEurMicros: 0,
       queries: [
-        ...publicTraceItems(publicItems).map((item) =>
-          toTraceQuery(
-            'public',
-            item.question,
-            retrieveRanked(item.question, chunks, K),
-          ),
-        ),
+        ...publicTraceItems(publicItems).map((item) => {
+          const ranked = retrieveRanked(item.question, chunks, K);
+          return toTraceQuery('public', item.question, ranked, {
+            gold: publicGold(docs, item),
+            contextTokens: estimateTokens(
+              ranked.map((row) => row.chunk.text).join('\n\n'),
+            ),
+          });
+        }),
         ...failingQueries,
       ],
     },

@@ -1,0 +1,6 @@
+[
+  "Look at what each question type needs before tuning numbers: one sentence, the right document, or a whole procedure.",
+  "Procedures span three sentences, so the procedural chunk size must hold all of them.",
+  "Policy questions compete with keyword-stuffed noise: rerank lets you keep k at 1. The same rerank hurts FAQ lookups.",
+  "FAQ answers are one line: tiny chunks and k of 1 or 2 keep them almost free."
+]

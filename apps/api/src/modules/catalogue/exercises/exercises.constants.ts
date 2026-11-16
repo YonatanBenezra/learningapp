@@ -145,6 +145,24 @@ export function isRagR4Slug(slug: string): boolean {
   return n !== null && (n === 4 || n === 21 || n === 22);
 }
 
+/** RAG Red Team: vulnerable target bot, graded on the captured flag. */
+export const RAG_REDTEAM_SLUGS = [
+  'rag-101-rt-prompt-leak',
+  'rag-102-rt-poisoned-doc',
+  'rag-103-rt-tenant-leak',
+] as const;
+
+export function isRagRedTeamSlug(slug: string): boolean {
+  return (RAG_REDTEAM_SLUGS as readonly string[]).includes(slug);
+}
+
+/** R5: per-query-class retrieval profiles (query routing). */
+export const RAG_R5_SLUGS = ['rag-031-query-routing'] as const;
+
+export function isRagR5Slug(slug: string): boolean {
+  return (RAG_R5_SLUGS as readonly string[]).includes(slug);
+}
+
 export function isSandboxRagSlug(slug: string): boolean {
   return SANDBOX_RAG_SLUGS.has(slug);
 }

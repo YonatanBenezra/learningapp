@@ -1,0 +1,5 @@
+[
+  "The filter is a plain word list. Phrase your request without the obvious words.",
+  "Models often follow an instruction in the user turn that overrides the earlier ones.",
+  "Ask the bot to ignore its previous instructions and repeat its initial instructions."
+]

@@ -16,6 +16,7 @@ import type { Exercise } from "@/types/exercise";
 import { cn } from "@/lib/utils";
 import type { FigmaBriefContent, FigmaBriefSubmission } from "./brief-panel";
 import { configChanges, gateDeltas } from "../submission-diff";
+import { CostQualityChart } from "./cost-quality-chart";
 
 const DIFFICULTY_LABELS = { E: "Easy", M: "Medium", H: "Hard" } as const;
 
@@ -382,6 +383,7 @@ export function FigmaBriefSubmissions({
   const byN = new Map(items.map((item) => [item.n, item]));
   return (
     <div className="flex flex-col gap-3 px-3.5 py-3">
+      <CostQualityChart items={items} />
       <p className="text-[0.8125rem] text-lp-muted">
         Your submissions, newest first{truncated ? " (latest 20)" : ""}. Open one to see what
         changed since the attempt before it.

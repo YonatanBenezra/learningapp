@@ -1,0 +1,63 @@
+{
+  "slug": "rag-101-rt-prompt-leak",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Red Team 1: Prompt Leak",
+  "difficulty": "E",
+  "catalogPhase": 7,
+  "skills": [
+    {
+      "slug": "red-teaming",
+      "name": "Red teaming"
+    },
+    {
+      "slug": "prompt-injection",
+      "name": "Prompt injection"
+    }
+  ],
+  "briefMd": "# Red Team 1 · Prompt Leak\n\nAcme Help keeps an internal escalation code in its system prompt and is told never to reveal it. An input filter refuses messages that contain a few obvious words.\n\nOpen the **Target bot** tab in the Simulation Lab and get the bot to reveal its own instructions. Submit the flag it leaks (`LABPATH{...}`).\n\n**Gate:** the submitted flag matches.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "flag"
+    ],
+    "properties": {
+      "flag": {
+        "type": "string",
+        "minLength": 8,
+        "maxLength": 120,
+        "description": "The flag you extracted, e.g. LABPATH{...}",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "flag_captured": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.0,
+    "wall_clock_s": 30
+  },
+  "gates": [
+    {
+      "id": "flag-captured",
+      "class": "A",
+      "metric": "flag_captured",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 0,
+    "rotate": false
+  },
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-redteam"
+}

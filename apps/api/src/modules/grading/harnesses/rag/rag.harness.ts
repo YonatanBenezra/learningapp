@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
+  isRagR5Slug,
+  isRagRedTeamSlug,
   isRagR1Slug,
   isRagR2Slug,
   isRagR3Slug,
@@ -17,7 +19,13 @@ import { gradeR1 } from './r1.grade';
 import { gradeR2 } from './r2.grade';
 import { gradeR3 } from './r3.grade';
 import { gradeR4 } from './r4.grade';
-import type { HiddenItem, RagGradeResult } from './rag.types';
+import { gradeR5, parseR5Payload } from './r5.grade';
+import {
+  gradeRedTeam,
+  parseRedTeamPayload,
+  parseRedTeamScenario,
+} from './redteam';
+import type { HiddenItem, PublicItem, RagGradeResult } from './rag.types';
 
 export type RagExecuteInput = {
   slug: string;
@@ -25,7 +33,7 @@ export type RagExecuteInput = {
   payload: unknown;
   docs: CorpusDoc[];
   hidden: HiddenItem[];
-  publicItems?: { question: string }[];
+  publicItems?: PublicItem[];
   /** Exercise gates (meta.json -> DB); graders read their thresholds from these. */
   gates?: unknown;
 };
@@ -36,6 +44,22 @@ export class RagHarness {
 
   async execute(input: RagExecuteInput): Promise<RagGradeResult> {
     const publicItems = input.publicItems ?? [];
+    if (isRagRedTeamSlug(input.slug)) {
+      // The hidden asset is the scenario object (flag, secrets), not a Q/A list.
+      return gradeRedTeam(
+        parseRedTeamPayload(input.payload),
+        parseRedTeamScenario(input.hidden),
+      );
+    }
+    if (isRagR5Slug(input.slug)) {
+      return gradeR5(
+        parseR5Payload(input.payload),
+        input.docs,
+        input.hidden,
+        publicItems,
+        input.gates,
+      );
+    }
     if (isRagR1Slug(input.slug)) {
       return gradeR1(
         parseR1Payload(input.payload),

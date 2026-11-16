@@ -43,7 +43,7 @@ const FOOT_COLUMNS: readonly FootGroup[][] = [
         { label: "Documentation", href: "https://github.com/Bina-Labs/Labpath" },
         { label: "Changelog", href: "https://github.com/Bina-Labs/Labpath/releases" },
         { label: "RAG demo", href: routes.demoRagWorkspace },
-        { label: "Help", href: "mailto:hello@labpath.dev" },
+        { label: "Help", href: "mailto:hello@aiwarss.com" },
       ],
     },
     {
@@ -218,7 +218,7 @@ export function HomeLandingFooter() {
                 {link.label}
               </Link>
             ))}
-            <span className="lp-home-foot-copy">© {year} LabPath</span>
+            <span className="lp-home-foot-copy">© {year} AI Warss</span>
           </div>
         </div>
       </div>

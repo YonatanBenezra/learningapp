@@ -9,11 +9,13 @@ import {
   answerableHidden,
   FAILING_SAMPLE_LIMIT,
   gateThreshold,
+  publicGold,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
 import type {
   HiddenItem,
+  PublicItem,
   R4Payload,
   RagGradeResult,
   TraceQuery,
@@ -31,7 +33,7 @@ export async function gradeR4(
   payload: R4Payload,
   docs: CorpusDoc[],
   hidden: HiddenItem[],
-  publicItems: { question: string }[] = [],
+  publicItems: PublicItem[] = [],
   gateway: ModelGateway | undefined,
   runId: string,
   gates?: unknown,
@@ -169,13 +171,20 @@ export async function gradeR4(
       tokensOut: 0,
       costEurMicros: 0,
       queries: [
-        ...publicTraceItems(publicItems).map((item) =>
-          toTraceQuery(
-            'public',
-            item.question,
-            rerankForR4(item.question, chunks, payload),
-          ),
-        ),
+        ...publicTraceItems(publicItems).map((item) => {
+          const reranked = rerankForR4(item.question, chunks, payload);
+          return toTraceQuery('public', item.question, reranked, {
+            gold: publicGold(docs, item),
+            firstStage: retrieveByTermCount(
+              item.question,
+              chunks,
+              Math.min(chunks.length, Math.max(payload.rerankTopN, K)),
+            ),
+            contextTokens: estimateTokens(
+              reranked.map((row) => row.chunk.text).join('\n\n'),
+            ),
+          });
+        }),
         ...failingQueries,
       ],
     },

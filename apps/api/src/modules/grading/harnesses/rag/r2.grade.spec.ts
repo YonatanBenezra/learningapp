@@ -129,4 +129,35 @@ describe('gradeR2', () => {
       tokenCeiling,
     );
   });
+
+  it('marks gold only on public trace queries, never on hidden failing samples', () => {
+    const publicWithGold = [
+      {
+        question: 'Who approves PTO before the leave starts?',
+        goldDocId: 'pto',
+        goldSpan: 'Managers approve PTO in Workday',
+      },
+    ];
+    const result = gradeR2(
+      { topK: 1, rerank: true, chunkSize: 50 },
+      docs,
+      hidden,
+      publicWithGold,
+      gates,
+    );
+    const publicQuery = result.trace.queries.find(
+      (row) => row.source === 'public',
+    );
+    expect(typeof publicQuery?.hit).toBe('boolean');
+    expect(publicQuery?.retrieved[0].firstStageRank).toBeGreaterThan(0);
+    expect(publicQuery?.contextTokens).toBeGreaterThan(0);
+    for (const row of result.trace.queries.filter(
+      (query) => query.source === 'failing_sample',
+    )) {
+      expect(row.hit).toBeUndefined();
+      expect(row.retrieved.every((hit) => hit.goldHit === undefined)).toBe(
+        true,
+      );
+    }
+  });
 });

@@ -61,7 +61,7 @@ const TRACK_PILLS = [
   { label: "Prompt", icon: ImageIcon },
 ] as const;
 
-const TERMINAL_CMD = "$ labpath run rag-001";
+const TERMINAL_CMD = "$ aiwarss run rag-001";
 
 const TERMINAL_LINES = [
   { text: "chunk  400 · overlap 80 · heading-aware", tone: "muted" as const },

@@ -7,19 +7,29 @@ import {
 } from '@nestjs/common';
 import type { CorpusDoc } from '../../grading/harnesses/rag/chunking';
 import {
+  estimateRagLabWithCorpus,
   previewRagLabWithCorpus,
   ragLabArchetype,
   ragLabFrozen,
   type RagLabArchetype,
   type RagLabPublicGold,
+  type RagLabPublicItem,
 } from '../../grading/harnesses/rag/rag-lab.engine';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import {
+  parseRedTeamScenario,
+  runTargetBot,
+  type TargetReply,
+} from '../../grading/harnesses/rag/redteam';
+import { isRagRedTeamSlug } from './exercises.constants';
 
 export type RagLabQuestion = {
   id: string;
   question: string;
   answerable: boolean;
   goldAnswer: string | null;
+  /** R5 query class, when the exercise routes by question type. */
+  class: string | null;
 };
 
 export type RagLabContext = {
@@ -59,6 +69,7 @@ export class RagLabService {
     slug: string,
     payload: Record<string, unknown>,
     question?: string,
+    queryClass?: string,
   ) {
     const exercise = await this.loadExercise(slug);
     const context = await this.getContext(slug);
@@ -79,6 +90,9 @@ export class RagLabService {
         selected,
         context.corpus,
         publicGoldFor(exercise.publicSample, selected),
+        queryClass ??
+          context.questions.find((item) => item.question === selected)?.class ??
+          null,
       );
     } catch (error) {
       const message =
@@ -87,6 +101,54 @@ export class RagLabService {
           : 'Invalid RAG lab preview payload';
       throw new BadRequestException(message);
     }
+  }
+
+  async estimate(slug: string, payload: Record<string, unknown>) {
+    const exercise = await this.loadExercise(slug);
+    const context = await this.getContext(slug);
+    if (!context.labEnabled) {
+      throw new BadRequestException(
+        'RAG lab is not available for this exercise',
+      );
+    }
+    try {
+      return estimateRagLabWithCorpus(
+        slug,
+        payload,
+        publicItems(exercise.publicSample),
+        context.corpus,
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Invalid RAG lab estimate payload';
+      throw new BadRequestException(message);
+    }
+  }
+
+  /** Talk to a red team exercise's vulnerable bot. The secrets stay server-side. */
+  async target(slug: string, message: string): Promise<TargetReply> {
+    if (!isRagRedTeamSlug(slug)) {
+      throw new BadRequestException('This exercise has no target bot');
+    }
+    const exercise = await this.loadExercise(slug);
+    const assets = await this.prisma.exerciseAsset.findUnique({
+      where: {
+        exerciseSlug_exerciseVersion: {
+          exerciseSlug: exercise.slug,
+          exerciseVersion: exercise.version,
+        },
+      },
+    });
+    if (!assets?.hiddenEvalUri || !assets.corpusUri) {
+      throw new NotFoundException('Target bot is not configured');
+    }
+    const scenario = parseRedTeamScenario(
+      JSON.parse(await readAsset(assets.hiddenEvalUri)) as unknown,
+    );
+    const docs = JSON.parse(await readAsset(assets.corpusUri)) as CorpusDoc[];
+    return runTargetBot(scenario, docs, message);
   }
 
   private async loadExercise(slug: string) {
@@ -148,8 +210,29 @@ function publicQuestions(value: unknown): RagLabQuestion[] {
           : item.goldAnswer === null
             ? null
             : null,
+      class: typeof item.class === 'string' ? item.class : null,
     }))
     .filter((item) => item.question.length > 0);
+}
+
+function publicItems(publicSample: unknown): RagLabPublicItem[] {
+  if (!Array.isArray(publicSample)) {
+    return [];
+  }
+  return publicSample
+    .filter(
+      (item): item is Record<string, unknown> =>
+        Boolean(item) &&
+        typeof item === 'object' &&
+        typeof (item as Record<string, unknown>).question === 'string',
+    )
+    .map((item, index) => ({
+      id: typeof item.id === 'string' ? item.id : `q${index + 1}`,
+      question: item.question as string,
+      answerable: item.answerable !== false,
+      gold: publicGoldFor(publicSample, item.question as string),
+      queryClass: typeof item.class === 'string' ? item.class : null,
+    }));
 }
 
 /**

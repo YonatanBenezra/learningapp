@@ -28,6 +28,12 @@ export function ragEditorTitle(schema: unknown) {
       unknown
     >,
   );
+  if (keys.includes("flag")) {
+    return "Captured flag";
+  }
+  if (keys.includes("faqTopK")) {
+    return "Routing profiles";
+  }
   if (keys.includes("generationPrompt")) {
     return "Generation prompt";
   }

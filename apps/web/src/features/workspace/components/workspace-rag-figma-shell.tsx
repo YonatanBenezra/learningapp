@@ -18,6 +18,7 @@ import {
   type FigmaBriefContent,
   type FigmaBriefSubmission,
 } from "./brief-panel";
+import { RagBudgetMeter } from "./rag-budget-meter";
 import { RagFlowGraph } from "./rag-flow-graph";
 import { RagLabPanel } from "./rag-lab-panel";
 import { RunPanel } from "./run-panel";
@@ -75,6 +76,13 @@ function historyRows(history: SubmissionHistoryItem[]): FigmaBriefSubmission[] {
     gateResults: item.grade?.gateResults ?? null,
     contest: item.contest,
   }));
+}
+
+function schemaProperties(schema: unknown): Record<string, unknown> {
+  return ((schema as { properties?: Record<string, unknown> })?.properties ?? {}) as Record<
+    string,
+    unknown
+  >;
 }
 
 /** Matches the API's history page size. */
@@ -326,23 +334,32 @@ export function WorkspaceRagFigmaShell({
                       />
                     }
                     secondary={
-                      <SubmissionSurface
-                        schema={exercise.submissionSchema}
-                        simulator={exercise.simulator}
-                        disabled={pending}
-                        pending={pending}
-                        error={submitError}
-                        initialValues={formDefaults}
-                        title={editorTitle}
-                        onSubmit={handleSubmit}
-                        onValidityChange={onValidityChange}
-                        onValuesChange={handleValuesChange}
-                        figmaLayout
-                        figmaGrade={grade}
-                        figmaAttempt={
-                          history ? history.length + 1 : pending ? submitCount : submitCount + 1
-                        }
-                      />
+                      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+                        {showSimulationLab && !("flag" in schemaProperties(exercise.submissionSchema)) ? (
+                          <RagBudgetMeter
+                            slug={slug}
+                            payload={labPayload ?? formDefaults}
+                            gates={exercise.gates}
+                          />
+                        ) : null}
+                        <SubmissionSurface
+                          schema={exercise.submissionSchema}
+                          simulator={exercise.simulator}
+                          disabled={pending}
+                          pending={pending}
+                          error={submitError}
+                          initialValues={formDefaults}
+                          title={editorTitle}
+                          onSubmit={handleSubmit}
+                          onValidityChange={onValidityChange}
+                          onValuesChange={handleValuesChange}
+                          figmaLayout
+                          figmaGrade={grade}
+                          figmaAttempt={
+                            history ? history.length + 1 : pending ? submitCount : submitCount + 1
+                          }
+                        />
+                      </div>
                     }
                   />
                 </div>

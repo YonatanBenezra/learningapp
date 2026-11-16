@@ -153,6 +153,38 @@ export const LIVE_RAG_PROBLEMS: readonly LiveRagProblem[] = [
     title: "Rerank Without Extra Model Calls",
     summary: "Lift nDCG@5 with reranking alone, with zero model calls.",
     href: routes.exercise("rag-022-score-gate"),
+    nextCta: "Query routing",
+  },
+  {
+    id: "P4-R5",
+    slug: "rag-031-query-routing",
+    title: "Query Routing: One Profile per Question Type",
+    summary: "Separate retrieval profiles for FAQ, policy and procedural questions under one budget.",
+    href: routes.exercise("rag-031-query-routing"),
+    nextCta: "Red team: prompt leak",
+  },
+  {
+    id: "RT-1",
+    slug: "rag-101-rt-prompt-leak",
+    title: "Red Team 1: Prompt Leak",
+    summary: "Get the support bot to reveal its system prompt and capture the flag.",
+    href: routes.exercise("rag-101-rt-prompt-leak"),
+    nextCta: "Red team: poisoned document",
+  },
+  {
+    id: "RT-2",
+    slug: "rag-102-rt-poisoned-doc",
+    title: "Red Team 2: Poisoned Document",
+    summary: "Trigger an instruction hidden in a knowledge-base note to leak a privileged runbook.",
+    href: routes.exercise("rag-102-rt-poisoned-doc"),
+    nextCta: "Red team: tenant leak",
+  },
+  {
+    id: "RT-3",
+    slug: "rag-103-rt-tenant-leak",
+    title: "Red Team 3: Tenant Leak",
+    summary: "Abuse a cross-tenant search fallback to read another workspace's notes.",
+    href: routes.exercise("rag-103-rt-tenant-leak"),
   },
 ];
 

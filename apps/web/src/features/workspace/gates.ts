@@ -21,6 +21,10 @@ const METRIC_LABELS: Record<string, string> = {
   gold_span_overlap: "gold-span overlap",
   unanswerable_refusals: "refusals (unanswerable)",
   answerable_refusals: "refusals (answerable)",
+  recall_faq: "recall (FAQ)",
+  recall_policy: "recall (policy)",
+  recall_procedural: "recall (procedural)",
+  flag_captured: "flag captured",
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -70,6 +74,9 @@ function isCountMetric(metric: string): boolean {
 }
 
 export function formatGateNumber(metric: string, value: number): string {
+  if (metric === "flag_captured") {
+    return value >= 1 ? "yes" : "no";
+  }
   if (isCountMetric(metric)) {
     return new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(
       Number.isInteger(value) ? value : Math.round(value * 10) / 10,

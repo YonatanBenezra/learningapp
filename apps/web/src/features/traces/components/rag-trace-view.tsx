@@ -22,6 +22,7 @@ import {
 } from "@/features/traces/demo/rag-trace-demo-data";
 import {
   buildRagPipeline,
+  recallLabelFromGrade,
   buildRagTraceMeta,
   enrichTraceQueries,
   recallFromTraceAndGrade,
@@ -141,7 +142,7 @@ export function RagTraceView({
               >
                 <span className="lp-trace-status-pill-dot" aria-hidden />
                 {recall != null
-                  ? `${verdict} · recall@5 ${recall.toFixed(2)}`
+                  ? `${verdict} · ${recallLabelFromGrade(grade)} ${recall.toFixed(2)}`
                   : verdict}
               </span>
             ) : null}
@@ -402,9 +403,24 @@ function QueryAccordion({
             <span className="lp-trace-query-question">{query.question}</span>
           </span>
         </span>
-        {query.timingLabel ? (
-          <span className="lp-trace-query-timing">{query.timingLabel}</span>
-        ) : null}
+        <span className="flex shrink-0 items-center gap-1.5">
+          {typeof query.hit === "boolean" ? (
+            <span
+              className={cn(
+                "lp-trace-hit-badge",
+                query.hit ? "lp-trace-hit-badge--pass" : "lp-trace-hit-badge--fail",
+              )}
+            >
+              {query.hit ? "answer in context" : "answer missed"}
+            </span>
+          ) : null}
+          {typeof query.contextTokens === "number" ? (
+            <span className="lp-trace-query-timing">{query.contextTokens} tok</span>
+          ) : null}
+          {query.timingLabel ? (
+            <span className="lp-trace-query-timing">{query.timingLabel}</span>
+          ) : null}
+        </span>
       </button>
       {open ? (
         <ul className="lp-trace-hit-list m-0 list-none p-0">
@@ -449,6 +465,16 @@ function HitRow({
             {chunkLabel}
           </span>
           {topHit ? <span className="lp-trace-hit-badge">top hit</span> : null}
+          {hit.goldHit ? (
+            <span className="lp-trace-hit-badge lp-trace-hit-badge--pass">gold</span>
+          ) : null}
+          {hit.firstStageRank !== undefined ? (
+            <span className="lp-trace-hit-moved" title="Rank before the rerank step">
+              {hit.firstStageRank === null
+                ? "outside first stage"
+                : `first stage #${hit.firstStageRank}`}
+            </span>
+          ) : null}
         </div>
         <div className="lp-trace-hit-score-group" aria-label={`Relevance ${hit.score.toFixed(2)}`}>
           <span

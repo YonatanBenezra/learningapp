@@ -115,7 +115,7 @@ export const FILLED_PREVIEW_WORKSPACE: ProfileWorkspace = {
   totalXp: 195,
   rank: "Script Kiddie",
   grade: 2,
-  summary: "RAG engineer learning guardrails and eval pipelines on LabPath.",
+  summary: "RAG engineer learning guardrails and eval pipelines on AI Warss.",
   xpHistory: [],
   xpGainedLastYear: 420,
   weeklyAverageXp: 12,
@@ -133,9 +133,9 @@ export const FILLED_PREVIEW_WORKSPACE: ProfileWorkspace = {
   skills: ["Retrieval", "Chunking", "Guardrails"],
   tools: ["LangChain", "OpenAI API"],
   languages: ["English", "Bengali"],
-  certifications: [{ name: "LabPath RAG Foundations", issuer: "LabPath" }],
+  certifications: [{ name: "AI Warss RAG Foundations", issuer: "AI Warss" }],
   achievements: [{ name: "First blood", earnedAt: "2025-08-01" }],
-  events: [{ name: "LabPath CTF Sprint", date: "2025-09-12" }],
+  events: [{ name: "AI Warss CTF Sprint", date: "2025-09-12" }],
   badges: [
     {
       id: "b1",

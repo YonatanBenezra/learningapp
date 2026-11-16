@@ -3,12 +3,19 @@ export type TraceHit = {
   docId: string;
   score: number;
   text: string;
+  /** Public queries only: this chunk carries the gold sentence. */
+  goldHit?: boolean;
+  /** Rank before the rerank/boost step, when one ran. */
+  firstStageRank?: number | null;
 };
 
 export type TraceQuery = {
   source: string;
   question: string;
   retrieved: TraceHit[];
+  /** Public queries only: the gold sentence reached the context. */
+  hit?: boolean;
+  contextTokens?: number;
   queryId?: string;
   timingLabel?: string;
 };

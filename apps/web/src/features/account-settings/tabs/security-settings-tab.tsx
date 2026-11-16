@@ -150,7 +150,7 @@ export function SecuritySettingsTab({
         />
       </SectionCard>
 
-      <SectionCard title="Connected accounts" description="Link sign-in providers to your LabPath account.">
+      <SectionCard title="Connected accounts" description="Link sign-in providers to your AI Warss account.">
         <div>
           {security.connectedAccounts.map((account) => (
             <ConnectedAccountRow
@@ -219,7 +219,7 @@ export function SecuritySettingsTab({
 
       <SectionCard
         title="Danger zone"
-        description="Irreversible actions for your LabPath account."
+        description="Irreversible actions for your AI Warss account."
         danger
       >
         <div className="flex flex-wrap gap-4">

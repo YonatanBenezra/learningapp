@@ -163,7 +163,7 @@ export function ChallengeDrawer({
               </h2>
               <p className="mt-1 text-xs text-[#6B7891]">
                 Author{" "}
-                <span className="text-[#A4B1CD]">LabPath · {challenge.code}</span>
+                <span className="text-[#A4B1CD]">AI Warss · {challenge.code}</span>
               </p>
             </div>
             <button

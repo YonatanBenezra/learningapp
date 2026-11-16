@@ -1,0 +1,132 @@
+/* Cost vs quality scatter (Submissions pane). */
+.lp-cq-chart {
+  margin: 0;
+  padding: 0.6rem 0.7rem 0.5rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: var(--color-card);
+}
+
+.lp-cq-chart-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  color: var(--lp-ink);
+}
+
+.lp-cq-chart-title span {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--lp-muted);
+}
+
+.lp-cq-chart-plot {
+  position: relative;
+}
+
+.lp-cq-chart-plot svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.lp-cq-axis {
+  stroke: var(--lp-border);
+  stroke-width: 1;
+}
+
+.lp-cq-limit {
+  stroke: color-mix(in srgb, var(--lp-muted) 70%, transparent);
+  stroke-width: 1;
+}
+
+.lp-cq-pass-zone {
+  fill: color-mix(in srgb, var(--color-status-pass) 9%, transparent);
+}
+
+.lp-cq-tick {
+  fill: var(--lp-muted);
+  font-size: 9px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+.lp-cq-dot {
+  stroke: var(--color-card);
+  stroke-width: 2;
+  transition: r 0.1s ease;
+}
+
+.lp-cq-dot.is-pass {
+  fill: var(--color-status-pass);
+}
+
+.lp-cq-dot.is-fail {
+  fill: var(--color-status-fail);
+}
+
+.lp-cq-chart-plot g:focus {
+  outline: none;
+}
+
+.lp-cq-chart-plot g:focus-visible .lp-cq-dot {
+  stroke: var(--color-brand);
+}
+
+.lp-cq-tooltip {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 9rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.4rem;
+  background: var(--color-card);
+  box-shadow: 0 4px 14px color-mix(in srgb, #000 35%, transparent);
+  color: var(--lp-ink);
+  font-size: 0.6875rem;
+  transform: translate(-50%, calc(-100% - 10px));
+  pointer-events: none;
+}
+
+.lp-cq-tooltip span {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  color: var(--lp-muted);
+}
+
+.lp-cq-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-cq-key {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: -0.25rem;
+  border-radius: 999px;
+}
+
+.lp-cq-key.is-pass {
+  background: var(--color-status-pass);
+}
+
+.lp-cq-key.is-fail {
+  background: var(--color-status-fail);
+}
+
+.lp-cq-key-zone {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.55rem;
+  margin-right: -0.25rem;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-status-pass) 18%, transparent);
+}

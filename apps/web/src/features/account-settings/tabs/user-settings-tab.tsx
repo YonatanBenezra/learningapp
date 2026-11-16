@@ -292,7 +292,7 @@ export function UserSettingsTab({ initial, onPatch, onReload }: UserSettingsTabP
         </div>
       </SectionCard>
 
-      <SectionCard title="Social Profiles" description="Link public profiles to your LabPath identity.">
+      <SectionCard title="Social Profiles" description="Link public profiles to your AI Warss identity.">
         <form className="space-y-12" onSubmit={socialForm.handleSubmit(saveSocial)} noValidate>
           <div className="space-y-12">
             <FilledField

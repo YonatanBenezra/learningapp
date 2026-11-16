@@ -279,7 +279,7 @@ export function ProfileHtbView() {
             <p className="lp-profile-htb-handle">{handle}</p>
             <p className="lp-profile-htb-location">
               <MapPin size={16} strokeWidth={2} aria-hidden />
-              LabPath learner
+              AI Warss learner
             </p>
           </div>
           <div className="lp-profile-htb-head-actions">
@@ -336,7 +336,7 @@ export function ProfileHtbView() {
                 <div className="lp-profile-htb-rank-top">
                   <div>
                     <p className="lp-profile-htb-rank-title">{rankTitle}</p>
-                    <p className="lp-profile-htb-rank-meta">LabPath rank · {progress.solves} solves</p>
+                    <p className="lp-profile-htb-rank-meta">AI Warss rank · {progress.solves} solves</p>
                   </div>
                   <span className="lp-profile-htb-level">Lvl {level.level}</span>
                 </div>
@@ -425,7 +425,7 @@ export function ProfileHtbView() {
                   Certifications
                 </h2>
                 <EmptyPanel
-                  message="Complete LabPath paths to earn shareable certificates."
+                  message="Complete AI Warss paths to earn shareable certificates."
                   cta="Explore problems"
                   href={routes.problems}
                 />
@@ -505,7 +505,7 @@ export function ProfileHtbView() {
           <section className="lp-profile-htb-card" aria-label="Badges">
             <div className="lp-profile-htb-empty" style={{ minHeight: 200 }}>
               <Sparkles size={32} className="text-[#9FEF00]" aria-hidden />
-              <p>Your badges will appear here as you earn them on LabPath.</p>
+              <p>Your badges will appear here as you earn them on AI Warss.</p>
               <Link href={routes.dashboard} className="lp-profile-htb-link">
                 View activity on dashboard
               </Link>

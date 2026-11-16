@@ -67,14 +67,31 @@ export type RagGradeResult = {
   trace: RagTrace;
 };
 
+/** A public sample question; gold labels are public data, shown in traces. */
+export type PublicItem = {
+  question: string;
+  goldDocId?: string | null;
+  goldSpan?: string | null;
+  /** R5 query class (faq / policy / procedural), when the exercise routes. */
+  class?: string | null;
+};
+
 export type TraceQuery = {
   source: 'public' | 'failing_sample';
   question: string;
+  /** Public queries only: the gold sentence reached the context. */
+  hit?: boolean;
+  /** Tokens this query put into the context (as the grader counts them). */
+  contextTokens?: number;
   retrieved: {
     chunkId: string;
     docId: string;
     score: number;
     text: string;
+    /** Public queries only: this chunk carries the gold sentence. */
+    goldHit?: boolean;
+    /** Rank before the rerank/boost step, when one ran (1-based). */
+    firstStageRank?: number | null;
   }[];
 };
 

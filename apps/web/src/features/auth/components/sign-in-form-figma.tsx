@@ -76,7 +76,7 @@ function SignInFormInner() {
     <>
       <AuthFormIntro
         eyebrow="Welcome back"
-        title="Sign in to LabPath"
+        title="Sign in to AI Warss"
         subtitle="Pick up where you left off. Your runs and traces are waiting."
         subtitleShort="Your runs and traces are waiting."
       />

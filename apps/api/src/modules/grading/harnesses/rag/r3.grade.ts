@@ -13,6 +13,7 @@ import {
   FAILING_SAMPLE_LIMIT,
   gateThreshold,
   goldSpanOverlap,
+  publicGold,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
@@ -20,6 +21,7 @@ import { titleBoost } from './rerank';
 import { retrieveRanked } from './retrieve';
 import type {
   HiddenItem,
+  PublicItem,
   R3Payload,
   RagGradeResult,
   TraceQuery,
@@ -35,7 +37,7 @@ export async function gradeR3(
   payload: R3Payload,
   docs: CorpusDoc[],
   hidden: HiddenItem[],
-  publicItems: { question: string }[] = [],
+  publicItems: PublicItem[] = [],
   gateway: ModelGateway,
   runId: string,
   gates?: unknown,
@@ -236,6 +238,14 @@ export async function gradeR3(
             'public',
             item.question,
             frozenRetrieve(item.question, chunks),
+            {
+              gold: publicGold(docs, item),
+              firstStage: retrieveRanked(
+                item.question,
+                chunks,
+                Math.min(chunks.length, 20),
+              ),
+            },
           ),
         ),
         ...failingQueries,

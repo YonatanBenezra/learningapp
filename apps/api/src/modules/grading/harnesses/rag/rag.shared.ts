@@ -1,7 +1,7 @@
 import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
 import type { CorpusDoc } from './chunking';
-import type { HiddenItem, TraceQuery } from './rag.types';
-import type { RankedChunk } from './retrieve';
+import type { HiddenItem, PublicItem, TraceQuery } from './rag.types';
+import { chunkContainsSpan, type RankedChunk } from './retrieve';
 
 export const FAILING_SAMPLE_LIMIT = 3;
 
@@ -49,27 +49,57 @@ export function answerableHidden(hidden: HiddenItem[]): HiddenItem[] {
   );
 }
 
-export function publicTraceItems(
-  publicItems: { question: string }[],
-): { question: string }[] {
+export function publicTraceItems<T extends { question: string }>(
+  publicItems: T[],
+): T[] {
   return publicItems.filter((item) => !isHiddenCanary(item.question));
 }
+
+export type TraceExtras = {
+  /** Expanded gold sentence. Pass it for PUBLIC queries only, never hidden ones. */
+  gold?: string | null;
+  /** Ranking before the rerank/boost step, to show how ranks moved. */
+  firstStage?: RankedChunk[] | null;
+  contextTokens?: number;
+};
 
 export function toTraceQuery(
   source: TraceQuery['source'],
   question: string,
   ranked: RankedChunk[],
+  extras: TraceExtras = {},
 ): TraceQuery {
-  return {
-    source,
-    question,
-    retrieved: ranked.map((row) => ({
+  const gold = source === 'public' ? (extras.gold ?? null) : null;
+  const firstStageIds = extras.firstStage?.map((row) => row.chunk.id) ?? null;
+  const retrieved = ranked.map((row) => {
+    const firstIndex = firstStageIds?.indexOf(row.chunk.id) ?? -1;
+    return {
       chunkId: row.chunk.id,
       docId: row.chunk.docId,
       score: row.score,
       text: row.chunk.text.slice(0, 400),
-    })),
+      ...(gold ? { goldHit: chunkContainsSpan(row.chunk.text, gold) } : {}),
+      ...(firstStageIds
+        ? { firstStageRank: firstIndex < 0 ? null : firstIndex + 1 }
+        : {}),
+    };
+  });
+  return {
+    source,
+    question,
+    ...(gold ? { hit: retrieved.some((row) => row.goldHit === true) } : {}),
+    ...(extras.contextTokens !== undefined
+      ? { contextTokens: extras.contextTokens }
+      : {}),
+    retrieved,
   };
+}
+
+/** Expanded gold sentence for a public sample, or null when it has none. */
+export function publicGold(docs: CorpusDoc[], item: PublicItem): string | null {
+  return item.goldDocId && item.goldSpan
+    ? expandGoldSpan(docs, item.goldDocId, item.goldSpan)
+    : null;
 }
 
 export function expandGoldSpan(

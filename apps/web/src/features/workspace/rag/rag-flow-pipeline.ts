@@ -9,7 +9,14 @@ import {
 
 export const RAG_FLOW_NODE_TYPE = "ragFlow";
 
-export type RagExerciseMode = "chunk" | "budget" | "prompt" | "rerank" | "sandbox";
+export type RagExerciseMode =
+  | "chunk"
+  | "budget"
+  | "prompt"
+  | "rerank"
+  | "routing"
+  | "redteam"
+  | "sandbox";
 
 export type RagFlowPhase = "idle" | "running" | "graded";
 
@@ -30,9 +37,19 @@ export type PipelineStage = {
 /** Which grader archetype a submission schema belongs to. */
 export function ragModeFromSchema(schema: unknown): RagExerciseMode {
   const properties = (schema as { properties?: Record<string, unknown> })?.properties ?? {};
-  const keys = Object.keys(properties);
+  return ragModeFromKeys(Object.keys(properties));
+}
+
+/** Same as ragModeFromSchema, from a submitted payload's field names. */
+export function ragModeFromKeys(keys: string[]): RagExerciseMode {
   if (keys.length === 1 && keys[0] === "source") {
     return "sandbox";
+  }
+  if (keys.length === 1 && keys[0] === "flag") {
+    return "redteam";
+  }
+  if (keys.includes("faqTopK")) {
+    return "routing";
   }
   if (keys.includes("generationPrompt")) {
     return "prompt";
@@ -213,6 +230,91 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       detail: "Pass when nDCG@5 improves enough over the first stage within token and call caps.",
     },
   ],
+  routing: [
+    QUERY,
+    {
+      id: "router",
+      title: "Router",
+      subtitle: "class given",
+      icon: "planner",
+      control: false,
+      detail: "Each question arrives labelled FAQ, policy or procedural and is sent to that class's profile.",
+    },
+    {
+      id: "profiles",
+      title: "Profiles",
+      subtitle: "you control",
+      icon: "retriever",
+      control: true,
+      detail: "One top-k / rerank / chunk size profile per class. Chunks are whole sentences packed up to that size.",
+    },
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "per profile",
+      icon: "vsearch",
+      control: false,
+      detail: "BM25 keyword search over that profile's chunks, with the title boost when the profile reranks.",
+    },
+    {
+      id: "context",
+      title: "Context",
+      subtitle: "sent in full",
+      icon: "context",
+      control: false,
+      detail: "Every retrieved chunk is sent in full; prompt tokens are averaged over all classes.",
+    },
+    {
+      id: "grade",
+      title: "Grade",
+      subtitle: "recall per class · tokens",
+      icon: "grade",
+      control: false,
+      detail: "Pass when each class meets its recall bar and the mean prompt stays within budget.",
+    },
+  ],
+  redteam: [
+    {
+      id: "query",
+      title: "Your message",
+      subtitle: "Target bot tab",
+      icon: "query",
+      control: true,
+      detail: "Everything you type in the Target bot tab goes to the vulnerable bot. Nothing there is graded.",
+    },
+    {
+      id: "filter",
+      title: "Input filter",
+      subtitle: "blocks some asks",
+      icon: "evaluator",
+      control: false,
+      detail: "A simple filter refuses some words and, on later levels, direct injection phrasing.",
+    },
+    {
+      id: "search",
+      title: "Retrieval",
+      subtitle: "tenant index",
+      icon: "vsearch",
+      control: false,
+      detail: "Keyword search over the knowledge base. How it filters, and what it trusts, is the bug you are looking for.",
+    },
+    {
+      id: "llm",
+      title: "Bot",
+      subtitle: "vulnerable",
+      icon: "llm",
+      control: false,
+      detail: "The bot answers from what it retrieved and trusts more than it should.",
+    },
+    {
+      id: "grade",
+      title: "Flag",
+      subtitle: "you submit",
+      icon: "grade",
+      control: true,
+      detail: "Submit the flag you extracted. Only an exact match passes.",
+    },
+  ],
   sandbox: [
     QUERY,
     {
@@ -240,6 +342,8 @@ const MODE_LABELS: Record<RagExerciseMode, string> = {
   prompt: "R3 · grounded generation",
   rerank: "R4 · rerank",
   sandbox: "Custom retriever",
+  routing: "R5 · query routing",
+  redteam: "Red team · flag capture",
 };
 
 export function pipelineForMode(mode: RagExerciseMode): PipelineStage[] {

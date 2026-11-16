@@ -2,6 +2,11 @@ import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import type { RunTrace, TraceQuery } from "@/types/trace";
 import type { RagTracePipelineStep } from "@/features/traces/demo/rag-trace-demo-data";
+import {
+  pipelineForMode,
+  ragFlowModeLabel,
+  ragModeFromKeys,
+} from "@/features/workspace/rag/rag-flow-pipeline";
 export type RagTraceViewMeta = {
   exerciseSlug?: string;
   exerciseTitle?: string;
@@ -67,6 +72,17 @@ export function truncateRunId(runId: string, head = 12, tail = 4): string {
 }
 
 export function formatRagConfigDisplay(payload: unknown): string | undefined {
+  const root = asRecord(payload);
+  // Real submissions: show every submitted field (long prompts by length).
+  if (root && !("chunking" in root) && Object.keys(root).length > 0) {
+    return Object.entries(root)
+      .map(([key, value]) =>
+        typeof value === "string" && value.length > 24
+          ? `${key} (${value.length} chars)`
+          : `${key} ${typeof value === "string" ? value || "—" : JSON.stringify(value)}`,
+      )
+      .join(" · ");
+  }
   const chunking = chunkingFromPayload(payload);
   if (!chunking) {
     return undefined;
@@ -152,33 +168,31 @@ export function verdictFromTraceAndGrade(
   return undefined;
 }
 
+function traceMode(trace: RunTrace) {
+  return ragModeFromKeys(Object.keys(asRecord(trace.payload) ?? {}));
+}
+
+/** The stages the grader actually ran for this run's exercise type. */
 export function buildRagPipeline(
   trace: RunTrace,
   verdict?: "pass" | "fail",
 ): RagTracePipelineStep[] {
-  const generation =
-    typeof trace.tokensOut === "number" && trace.tokensOut > 0;
-  const gradeState: RagTracePipelineStep["state"] =
-    verdict === "pass" ? "done" : verdict === "fail" ? "fail" : "done";
-
-  return [
-    { id: "query", label: "Query", state: "done" },
-    { id: "planner", label: "Planner", state: "skip" },
-    { id: "retriever", label: "Retriever", state: "done" },
-    { id: "vsearch", label: "BM25 search", state: "done" },
-    { id: "evaluator", label: "Evaluator", state: "skip" },
-    { id: "context", label: "Context", state: "done" },
-    { id: "llm", label: "LLM", state: generation ? "done" : "skip" },
-    { id: "grade", label: "Grade", state: gradeState },
-  ];
+  return pipelineForMode(traceMode(trace)).map((stage) => ({
+    id: stage.id,
+    label: stage.title,
+    state: stage.id === "grade" && verdict === "fail" ? "fail" : "done",
+  }));
 }
 
 export function pipelineNoteForTrace(trace: RunTrace): string {
-  const skipped = buildRagPipeline(trace).filter((s) => s.state === "skip").length;
-  if (skipped === 0) {
-    return "Full pipeline";
-  }
-  return `${skipped} step${skipped === 1 ? "" : "s"} skipped in this mode`;
+  return ragFlowModeLabel(traceMode(trace));
+}
+
+/** "recall@5" for R1/sandbox grades, "recall@k" for R2. */
+export function recallLabelFromGrade(grade?: Grade | null): string {
+  return grade?.metrics?.recall_at_k || grade?.metrics?.["recall@k"]
+    ? "recall@k"
+    : "recall@5";
 }
 
 function statFootnotesFromTrace(trace: RunTrace): RagTraceViewMeta["statFootnotes"] {

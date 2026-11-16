@@ -30,11 +30,24 @@ import {
   parseR3Payload,
   parseR4Payload,
 } from '../modules/grading/harnesses/rag/rag.payloads';
-import type { HiddenItem } from '../modules/grading/harnesses/rag/rag.types';
+import type {
+  HiddenItem,
+  PublicItem,
+} from '../modules/grading/harnesses/rag/rag.types';
 import { gradeR1 } from '../modules/grading/harnesses/rag/r1.grade';
 import { gradeR2 } from '../modules/grading/harnesses/rag/r2.grade';
 import { gradeR3 } from '../modules/grading/harnesses/rag/r3.grade';
 import { gradeR4 } from '../modules/grading/harnesses/rag/r4.grade';
+import {
+  gradeR5,
+  parseR5Payload,
+  type RoutedItem,
+} from '../modules/grading/harnesses/rag/r5.grade';
+import {
+  gradeRedTeam,
+  parseRedTeamPayload,
+  parseRedTeamScenario,
+} from '../modules/grading/harnesses/rag/redteam';
 import { gradeSandboxRetriever } from '../modules/grading/harnesses/sandbox/sandbox.grade';
 import { parseSandboxPayload } from '../modules/grading/harnesses/sandbox/sandbox.payloads';
 import { runLocalPython } from '../modules/sandbox/local-python';
@@ -100,6 +113,21 @@ export async function runContentGrader(
         bundle.meta.gates,
       );
     }
+    case 'rag-r5': {
+      const docs = await loadCorpus(bundle.dir, bundle.meta);
+      return gradeR5(
+        parseR5Payload(payload),
+        docs,
+        hiddenRaw as RoutedItem[],
+        publicQuestions(publicRaw),
+        bundle.meta.gates,
+      );
+    }
+    case 'rag-redteam':
+      return gradeRedTeam(
+        parseRedTeamPayload(payload),
+        parseRedTeamScenario(hiddenRaw),
+      );
     case 'rag-sandbox': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
       return gradeSandboxRetriever(
@@ -260,11 +288,11 @@ function payloadText(payload: Record<string, unknown>, key: string): string {
   return '';
 }
 
-function publicQuestions(value: unknown): { question: string }[] {
+function publicQuestions(value: unknown): PublicItem[] {
   if (!Array.isArray(value)) {
     return [];
   }
-  const questions: { question: string }[] = [];
+  const questions: PublicItem[] = [];
   for (const item of value) {
     if (!item || typeof item !== 'object') {
       continue;
@@ -277,7 +305,12 @@ function publicQuestions(value: unknown): { question: string }[] {
           ? row.input
           : null;
     if (question) {
-      questions.push({ question });
+      questions.push({
+        question,
+        goldDocId: typeof row.goldDocId === 'string' ? row.goldDocId : null,
+        goldSpan: typeof row.goldSpan === 'string' ? row.goldSpan : null,
+        class: typeof row.class === 'string' ? row.class : null,
+      });
     }
   }
   return questions;

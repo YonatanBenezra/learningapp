@@ -12,11 +12,13 @@ import {
   expandGoldSpan,
   FAILING_SAMPLE_LIMIT,
   gateThreshold,
+  publicGold,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
 import type {
   HiddenItem,
+  PublicItem,
   R2Payload,
   RagGradeResult,
   TraceQuery,
@@ -45,7 +47,7 @@ export function gradeR2(
   payload: R2Payload,
   docs: CorpusDoc[],
   hidden: HiddenItem[],
-  publicItems: { question: string }[] = [],
+  publicItems: PublicItem[] = [],
   gates?: unknown,
 ): RagGradeResult {
   const recallThreshold = gateThreshold(gates, 'recall@k', DEFAULT_RECALL);
@@ -144,17 +146,31 @@ export function gradeR2(
       tokensOut: 0,
       costEurMicros: 0,
       queries: [
-        ...publicTraceItems(publicItems).map((item) =>
-          toTraceQuery(
-            'public',
-            item.question,
-            retrieveForR2(item.question, chunks, payload),
-          ),
-        ),
+        ...publicTraceItems(publicItems).map((item) => {
+          const ranked = retrieveForR2(item.question, chunks, payload);
+          return toTraceQuery('public', item.question, ranked, {
+            gold: publicGold(docs, item),
+            firstStage: payload.rerank
+              ? retrieveRanked(
+                  item.question,
+                  chunks,
+                  rerankPool(payload, chunks),
+                )
+              : null,
+            contextTokens: estimateTokens(
+              `Context:\n${ranked.map((row) => row.chunk.text).join('\n\n')}`,
+            ),
+          });
+        }),
         ...failingQueries,
       ],
     },
   };
+}
+
+/** Candidates fetched before the title boost when rerank is on. */
+function rerankPool(payload: R2Payload, chunks: Chunk[]): number {
+  return Math.min(chunks.length, Math.max(payload.topK * 4, payload.topK));
 }
 
 export function retrieveForR2(
@@ -162,9 +178,7 @@ export function retrieveForR2(
   chunks: Chunk[],
   payload: R2Payload,
 ): RankedChunk[] {
-  const pool = payload.rerank
-    ? Math.min(chunks.length, Math.max(payload.topK * 4, payload.topK))
-    : payload.topK;
+  const pool = payload.rerank ? rerankPool(payload, chunks) : payload.topK;
   const ranked = retrieveRanked(question, chunks, pool);
   if (!payload.rerank) {
     return ranked.slice(0, payload.topK);

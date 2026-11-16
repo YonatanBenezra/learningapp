@@ -24,7 +24,7 @@
   --arena-ink: #0b1220;
   --arena-text-2: #4a5568;
   --arena-text-3: #7b8597;
-  /* Primary arena accent = LabPath ember brand (legacy token names: arena-lime) */
+  /* Primary arena accent = AI Warss ember brand (legacy token names: arena-lime) */
   --arena-lime: var(--color-brand);
   --arena-lime-fg: var(--color-brand);
   --arena-cyan: #0891b2;
@@ -127,7 +127,7 @@ html[data-theme="dark"] {
 }
 
 @theme inline {
-  /* LabPath design tokens (use in Tailwind: bg-lp-elevated, text-lp-ink, etc.) */
+  /* AI Warss design tokens (use in Tailwind: bg-lp-elevated, text-lp-ink, etc.) */
   --color-lp-ink: var(--color-ink);
   --color-lp-muted: var(--color-muted);
   --color-lp-subtle: var(--color-subtle);

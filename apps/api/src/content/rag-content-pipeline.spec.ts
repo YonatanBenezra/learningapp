@@ -23,6 +23,16 @@ const EXPLOITS: Record<string, Record<string, unknown>> = {
   'rag-r2': { topK: 40, rerank: false, chunkSize: 50 },
   // Whole-document chunks: recall is free when context has no cost.
   'rag-r1': { chunkSize: 2000, overlap: 0, splitStrategy: 'heading-aware' },
+  // The same retrieve-everything profile for every query class.
+  'rag-r5': Object.fromEntries(
+    ['faq', 'policy', 'procedural'].flatMap((cls): [string, unknown][] => [
+      [`${cls}TopK`, 40],
+      [`${cls}Rerank`, false],
+      [`${cls}ChunkSize`, 50],
+    ]),
+  ),
+  // Guessing the flag format is not capturing it.
+  'rag-redteam': { flag: 'LABPATH{flag}' },
 };
 
 describe('RAG content: reference, near-miss and gates', () => {
@@ -88,8 +98,11 @@ describe('RAG content: public samples stay off the hidden sets', () => {
     const bundles = (await loadAllExerciseBundles()).filter((bundle) =>
       published.has(bundle.meta.slug),
     );
-    const read = (file: string) =>
-      JSON.parse(readFileSync(file, 'utf8')) as EvalItem[];
+    // Red team hidden assets are scenario objects, not Q/A lists.
+    const read = (file: string) => {
+      const value = JSON.parse(readFileSync(file, 'utf8')) as unknown;
+      return Array.isArray(value) ? (value as EvalItem[]) : [];
+    };
     const corpusOf = (bundle: (typeof bundles)[number]) =>
       bundle.meta.corpusFile === 'shared'
         ? path.join(process.cwd(), 'content/corpora/internal-policy.json')

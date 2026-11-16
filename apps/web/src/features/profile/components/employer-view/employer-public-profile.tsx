@@ -474,7 +474,7 @@ export function CoverageGrid({
 export function VerifiedCard({ results }: { results: PublicProfile["verifiedResults"] }) {
   const steps = [
     "Timed sitting — learner completes assessments without outside help.",
-    "Graded by LabPath — scores are signed and tamper-evident.",
+    "Graded by AI Warss — scores are signed and tamper-evident.",
     "Learner opts in — nothing appears here unless explicitly shared.",
   ];
 
@@ -998,7 +998,7 @@ export function EmployerPublicProfileLayout({
 
             <footer className="pt-4 text-center text-[11px]" style={{ color: T.dim, fontFamily: "var(--font-ep-body), sans-serif" }}>
               <Link href={routes.home} className="underline decoration-[#555F70] underline-offset-2 hover:decoration-[#8A93A3]">
-                LabPath
+                AI Warss
               </Link>{" "}
               — signals are indicative, not a certification.
             </footer>

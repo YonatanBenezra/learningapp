@@ -28,7 +28,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
     router.push(routes.home);
   };
 
-  const prompt = isSignUp ? "Already have an account?" : "New to LabPath?";
+  const prompt = isSignUp ? "Already have an account?" : "New to AI Warss?";
   const ctaHref = isSignUp ? routes.signIn : routes.signUp;
   const ctaLabel = isSignUp ? "Sign in" : "Create account";
   const footNote = isSignUp

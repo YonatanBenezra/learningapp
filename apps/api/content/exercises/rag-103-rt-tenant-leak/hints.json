@@ -1,0 +1,5 @@
+[
+  "Look at Acme's documents in the Corpus tab: which words never appear in them?",
+  "If even one Acme chunk matches your words, the filter keeps it and the fallback never fires.",
+  "Use only words that Globex's notes would contain: the project name on its own is enough."
+]

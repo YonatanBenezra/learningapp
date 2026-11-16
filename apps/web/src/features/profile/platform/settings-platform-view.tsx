@@ -140,7 +140,7 @@ export function SettingsPlatformView() {
             Settings
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-platform-muted">
-            Manage how you appear on LabPath — display name, public profile URL, location, and
+            Manage how you appear on AI Warss — display name, public profile URL, location, and
             visibility.
           </p>
         </header>
@@ -189,7 +189,7 @@ export function SettingsPlatformView() {
                     className="flex shrink-0 items-center border-r border-platform-border bg-platform-input px-3 text-xs font-medium text-platform-muted sm:text-sm"
                     aria-hidden
                   >
-                    labpath.com/u/
+                    aiwarss.com/u/
                   </span>
                   <input
                     id="settings-username"

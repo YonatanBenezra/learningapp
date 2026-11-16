@@ -48,7 +48,7 @@ export function StartExploringSection() {
             </span>
           </div>
           <p className="ag-lc-explore-lead">
-            Explore is a well-organized tool that helps you get the most out of LabPath by
+            Explore is a well-organized tool that helps you get the most out of AI Warss by
             providing structure to guide your progress towards the next step in your AI
             engineering career.
           </p>

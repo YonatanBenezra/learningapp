@@ -1,5 +1,7 @@
 import { estimateTokens } from '../../gateway/pricing';
 import {
+  isRagR5Slug,
+  isRagRedTeamSlug,
   isRagR1Slug,
   isRagR2Slug,
   isRagR3Slug,
@@ -20,6 +22,7 @@ import {
 } from './rag.payloads';
 import { chunkForR2, R2_SPLIT, retrieveForR2 } from './r2.grade';
 import { R4_FIRST_STAGE_LABEL, r4Baseline, rerankForR4 } from './r4.grade';
+import { isR5Class, parseR5Payload, routeR5 } from './r5.grade';
 import { titleBoost } from './rerank';
 import { expandGoldSpan } from './rag.shared';
 import {
@@ -28,7 +31,8 @@ import {
   type RankedChunk,
 } from './retrieve';
 
-export type RagLabArchetype = 'r1' | 'r2' | 'r3' | 'r4' | 'sandbox' | 'unknown';
+export type RagLabArchetype =
+  'r1' | 'r2' | 'r3' | 'r4' | 'r5' | 'redteam' | 'sandbox' | 'unknown';
 
 export type RagLabFrozen = {
   label: string;
@@ -75,6 +79,12 @@ const R3_FROZEN = {
 };
 
 export function ragLabArchetype(slug: string): RagLabArchetype {
+  if (isRagRedTeamSlug(slug)) {
+    return 'redteam';
+  }
+  if (isRagR5Slug(slug)) {
+    return 'r5';
+  }
   if (isSandboxRagSlug(slug)) {
     return 'sandbox';
   }
@@ -108,6 +118,16 @@ export function ragLabFrozen(slug: string): RagLabFrozen | null {
       items: ['Whole-document chunks', R4_FIRST_STAGE_LABEL],
     };
   }
+  if (archetype === 'r5') {
+    return {
+      label: 'Router given',
+      items: [
+        `Strategy ${R2_SPLIT.splitStrategy}`,
+        `Overlap ${R2_SPLIT.overlap}`,
+        'Class from the router',
+      ],
+    };
+  }
   if (archetype === 'r2') {
     return {
       label: 'Split locked',
@@ -126,10 +146,17 @@ export function previewRagLabWithCorpus(
   question: string,
   docs: CorpusDoc[],
   publicGold: RagLabPublicGold | null = null,
+  /** R5: which class profile to route the question through. */
+  queryClass: string | null = null,
 ): RagLabPreview {
   const archetype = ragLabArchetype(slug);
   if (archetype === 'sandbox') {
     throw new Error('Sandbox exercises use the Python editor lab');
+  }
+  if (archetype === 'redteam') {
+    throw new Error(
+      'Red team exercises use the target bot, not retrieval previews',
+    );
   }
 
   let chunks: Chunk[];
@@ -139,7 +166,16 @@ export function previewRagLabWithCorpus(
   let citations: string[] = [];
   let refused = false;
 
-  if (archetype === 'r1' || archetype === 'unknown') {
+  if (archetype === 'r5') {
+    const routed = routeR5(
+      question,
+      isR5Class(queryClass) ? queryClass : 'faq',
+      docs,
+      parseR5Payload(payload),
+    );
+    chunks = routed.chunks;
+    retrieved = routed.ranked;
+  } else if (archetype === 'r1' || archetype === 'unknown') {
     const parsed = parseR1Payload(payload);
     chunks = chunkCorpus(
       docs,
@@ -193,7 +229,7 @@ export function previewRagLabWithCorpus(
   // R2 grades prompt tokens including the "Context:" header; the others grade
   // the bare context.
   const contextTokens = estimateTokens(
-    archetype === 'r2' ? `Context:\n${joined}` : joined,
+    archetype === 'r2' || archetype === 'r5' ? `Context:\n${joined}` : joined,
   );
   const gold = publicGold
     ? expandGoldSpan(docs, publicGold.goldDocId, publicGold.goldSpan)
@@ -231,4 +267,85 @@ function hitsToDto(ranked: RankedChunk[], gold: string | null): RagLabHit[] {
 function frozenRetrieve(question: string, chunks: Chunk[]): RankedChunk[] {
   const pool = retrieveRanked(question, chunks, Math.min(chunks.length, 20));
   return titleBoost(question, pool).slice(0, K);
+}
+
+export type RagLabEstimateRow = {
+  id: string;
+  question: string;
+  answerable: boolean;
+  contextTokens: number;
+  answerFound: boolean | null;
+  /** 1-based rank of the first chunk carrying the gold sentence, if retrieved. */
+  goldRank: number | null;
+  /** Same, before reranking (R4 first stage only). */
+  firstStageGoldRank: number | null;
+};
+
+export type RagLabEstimate = {
+  archetype: RagLabArchetype;
+  questions: number;
+  meanContextTokens: number;
+  answerable: number;
+  answersFound: number;
+  rows: RagLabEstimateRow[];
+};
+
+export type RagLabPublicItem = {
+  id: string;
+  question: string;
+  answerable: boolean;
+  gold: RagLabPublicGold | null;
+  /** R5 query class of this public sample. */
+  queryClass?: string | null;
+};
+
+function goldRankOf(hits: RagLabHit[] | null): number | null {
+  if (!hits) {
+    return null;
+  }
+  const index = hits.findIndex((hit) => hit.containsAnswer === true);
+  return index < 0 ? null : index + 1;
+}
+
+/**
+ * Runs the current config over every PUBLIC sample question: the same numbers
+ * the grader measures, on data the learner may see. Not a grade.
+ */
+export function estimateRagLabWithCorpus(
+  slug: string,
+  payload: unknown,
+  items: RagLabPublicItem[],
+  docs: CorpusDoc[],
+): RagLabEstimate {
+  const rows = items.map((item) => {
+    const preview = previewRagLabWithCorpus(
+      slug,
+      payload,
+      item.question,
+      docs,
+      item.gold,
+      item.queryClass ?? null,
+    );
+    return {
+      id: item.id,
+      question: item.question,
+      answerable: item.answerable,
+      contextTokens: preview.contextTokens,
+      answerFound: preview.answerFound,
+      goldRank: goldRankOf(preview.retrieved),
+      firstStageGoldRank: goldRankOf(preview.baseline),
+    };
+  });
+  const graded = rows.filter((row) => row.answerFound !== null);
+  return {
+    archetype: ragLabArchetype(slug),
+    questions: rows.length,
+    meanContextTokens:
+      rows.length === 0
+        ? 0
+        : rows.reduce((sum, row) => sum + row.contextTokens, 0) / rows.length,
+    answerable: graded.length,
+    answersFound: graded.filter((row) => row.answerFound === true).length,
+    rows,
+  };
 }

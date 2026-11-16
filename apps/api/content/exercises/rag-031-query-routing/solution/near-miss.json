@@ -1,0 +1,11 @@
+{
+  "faqTopK": 2,
+  "faqRerank": false,
+  "faqChunkSize": 300,
+  "policyTopK": 2,
+  "policyRerank": false,
+  "policyChunkSize": 300,
+  "proceduralTopK": 2,
+  "proceduralRerank": false,
+  "proceduralChunkSize": 300
+}

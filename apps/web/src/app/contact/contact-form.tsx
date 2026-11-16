@@ -24,7 +24,7 @@ const AUDIENCE = [
   { value: "other-audience", label: "Other" },
 ] as const;
 
-const CONTACT_EMAIL = "hello@labpath.dev";
+const CONTACT_EMAIL = "hello@aiwarss.com";
 
 export function ContactForm() {
   const [purpose, setPurpose] = useState("");
@@ -41,7 +41,7 @@ export function ContactForm() {
       const purposeLabel = PURPOSE.find((p) => p.value === purpose)?.label ?? (purpose || "Contact");
       const audienceRaw = AUDIENCE.find((a) => a.value === audience)?.label;
       const audienceLabel = audienceRaw && audience ? audienceRaw : "";
-      const subject = `[LabPath] ${purposeLabel}`;
+      const subject = `[AI Warss] ${purposeLabel}`;
       const lines = [
         `Purpose: ${purposeLabel}`,
         audienceLabel ? `Audience: ${audienceLabel}` : null,
