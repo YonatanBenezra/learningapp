@@ -3,7 +3,7 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Eval Slice Regression Gate",
+  "title": "Rerank Without Extra Model Calls",
   "difficulty": "H",
   "catalogPhase": 6,
   "corpusFile": "shared",
@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 6 · Eval Slice Regression Gate\n\nLast week’s rerank deploy **lifted aggregate nDCG** but regressed a **SKU-heavy eval slice**. Fix **reranker**, **rerankTopN**, and optional **query rewrite** so **nDCG@5 improves ≥ 0.15** vs baseline, **context tokens ≤ 3000**, and **≤ 2 model calls per question** — no shipping a global win that fails the slice gate.\n",
+  "briefMd": "# Phase 6 · Rerank Without Extra Model Calls\n\nThe latency budget leaves no room for an LLM in the retrieval path. Lift nDCG@5 with reranking alone: no query rewrite.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt costs one model call per question; the rewritten query is not used for ranking yet.\n\n**Gates:** nDCG@5 improves by at least 0.15, context tokens ≤ 3000, and 0 model calls per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -54,7 +54,7 @@
   "thresholds": {
     "ndcg_improvement": 0.15,
     "context_tokens": 3000,
-    "model_calls_per_question": 2
+    "model_calls_per_question": 0
   },
   "budget": {
     "max_model_calls": 50,
@@ -78,17 +78,20 @@
       "value": 3000
     },
     {
-      "id": "calls-per-question",
+      "id": "model-calls",
       "class": "A",
       "metric": "model_calls_per_question",
       "op": "lte",
-      "value": 2
+      "value": 0
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r4"
 }

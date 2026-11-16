@@ -11,6 +11,29 @@ export type PublicGrade = {
   failingCases: unknown;
 };
 
+/**
+ * Failing cases come from the hidden eval set. The question and what the
+ * learner's system retrieved/produced are feedback; the gold labels are not.
+ * Returning them lets a learner rebuild the hidden set over repeated submits.
+ */
+const HIDDEN_FAILING_CASE_FIELDS = new Set(['goldSpan', 'goldAnswer']);
+
+export function redactFailingCases(failingCases: unknown): unknown {
+  if (!Array.isArray(failingCases)) {
+    return failingCases;
+  }
+  return failingCases.map((item: unknown) => {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) {
+      return item;
+    }
+    return Object.fromEntries(
+      Object.entries(item).filter(
+        ([key]) => !HIDDEN_FAILING_CASE_FIELDS.has(key),
+      ),
+    );
+  });
+}
+
 @Injectable()
 export class GradesService {
   constructor(private readonly prisma: PrismaService) {}
@@ -35,7 +58,7 @@ export class GradesService {
       gateResults: run.grade.gateResults,
       failureClasses: run.grade.failureClasses,
       scorecard: run.grade.scorecard,
-      failingCases: run.grade.failingCases,
+      failingCases: redactFailingCases(run.grade.failingCases),
     };
     if (JSON.stringify(grade).includes('HIDDEN_EVAL')) {
       return { ...grade, failingCases: [] };

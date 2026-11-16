@@ -10,21 +10,55 @@ import {
   SCORE_TIP,
   type LabTab,
 } from "../rag-lab/rag-lab-copy";
-import { chunkRowsFromPreview } from "../rag-lab/rag-lab-wireframe-data";
-import type { RagLabContext, RagLabPreview } from "../rag-lab/rag-lab-types";
-import { RagLabWireframeSkeleton } from "./rag-lab-wireframe-skeleton";
+import type {
+  RagLabArchetype,
+  RagLabContext,
+  RagLabPreview,
+} from "../rag-lab/rag-lab-types";
+import { formatGateThreshold, gateMetricLabel, gradedGates, type GateSpec } from "../gates";
 import "../rag-lab.css";
 
 type RagLabPanelProps = {
   slug: string;
   payload: Record<string, unknown>;
-  figmaWireframe?: boolean;
+  /** Exercise gates, so the preview can be read against the token budget. */
+  gates?: unknown;
 };
 
-export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPanelProps) {
+/** Which graded token metric the lab's per-question token count corresponds to. */
+const TOKEN_GATE_BY_ARCHETYPE: Partial<Record<RagLabArchetype, string>> = {
+  r1: "mean_context_tokens",
+  r2: "mean_prompt_tokens",
+  r4: "context_tokens",
+};
+
+function tokenGateFor(archetype: RagLabArchetype, gates: unknown): GateSpec | null {
+  const metric = TOKEN_GATE_BY_ARCHETYPE[archetype];
+  if (!metric) {
+    return null;
+  }
+  return gradedGates(gates).find((gate) => gate.metric === metric) ?? null;
+}
+
+function withinGate(gate: GateSpec, value: number): boolean {
+  switch (gate.op) {
+    case "lte":
+      return value <= gate.value;
+    case "lt":
+      return value < gate.value;
+    case "gte":
+      return value >= gate.value;
+    case "gt":
+      return value > gate.value;
+    default:
+      return value === gate.value;
+  }
+}
+
+export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
   const [context, setContext] = useState<RagLabContext | null>(null);
   const [preview, setPreview] = useState<RagLabPreview | null>(null);
-  const [tab, setTab] = useState<LabTab>(figmaWireframe ? "chunks" : "corpus");
+  const [tab, setTab] = useState<LabTab>("query");
   const [questionId, setQuestionId] = useState<string>("");
   const [customQuestion, setCustomQuestion] = useState("");
   const [loading, setLoading] = useState(true);
@@ -106,25 +140,27 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
   const archetype = preview?.archetype ?? context?.archetype ?? "unknown";
   const visibleTabs = useMemo(() => labTabsForArchetype(archetype), [archetype]);
   const showGenerate = visibleTabs.includes("generate");
-
-  useEffect(() => {
-    if (!visibleTabs.includes(tab)) {
-      setTab(visibleTabs[0] ?? "corpus");
-    }
-  }, [tab, visibleTabs]);
+  const activeTab = visibleTabs.includes(tab) ? tab : (visibleTabs[0] ?? "query");
 
   if (loading) {
-    if (figmaWireframe) {
-      return <RagLabWireframeSkeleton />;
-    }
     return (
-      <div className="lp-rag-lab lp-rag-lab--loading">
+      <div className="lp-rag-lab lp-rag-lab--loading" aria-busy="true">
         <p>Loading simulation lab…</p>
       </div>
     );
   }
 
-  if (!context?.labEnabled) {
+  if (!context) {
+    return (
+      <div className="lp-rag-lab lp-rag-lab--disabled">
+        <p className="lp-rag-lab-error" role="alert">
+          {error ?? "Could not load the RAG lab for this exercise."}
+        </p>
+      </div>
+    );
+  }
+
+  if (!context.labEnabled) {
     return (
       <div className="lp-rag-lab lp-rag-lab--disabled">
         <p>This sandbox exercise uses the Python editor. Run your retriever code, then submit to grade.</p>
@@ -133,112 +169,12 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
   }
 
   const chunksByDoc = groupChunks(preview?.chunks ?? []);
-
-  if (figmaWireframe && !loading && context?.labEnabled) {
-    const corpusCount = context.corpus.length || 12;
-    const chunkCount = preview?.chunkCount ?? preview?.chunks.length ?? 212;
-    const chunksLoading = previewing && !preview?.chunks?.length;
-    const chunkRows = chunksLoading
-      ? []
-      : chunkRowsFromPreview(preview?.chunks ?? []);
-    const segTabs: LabTab[] = ["corpus", "chunks", "query"];
-
-    return (
-      <div className="lp-rag-lab lp-rag-lab--figma-wireframe">
-        <div className="lp-rag-lab-seg" role="tablist" aria-label="Simulation lab views">
-          {segTabs.map((item) => {
-            const label =
-              item === "corpus"
-                ? `Corpus · ${corpusCount}`
-                : item === "chunks"
-                  ? `Chunks · ${chunkCount}`
-                  : "Query";
-            return (
-              <button
-                key={item}
-                type="button"
-                role="tab"
-                aria-selected={tab === item}
-                className={`lp-rag-lab-seg-btn${tab === item ? " is-active" : ""}`}
-                onClick={() => setTab(item)}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="lp-rag-lab-wf-body">
-          {tab === "corpus" ? (
-            <ul className="lp-rag-lab-wf-list" aria-label="Corpus documents">
-              {context.corpus.map((doc) => (
-                <li key={doc.id} className="lp-rag-lab-wf-row">
-                  <span className="lp-rag-lab-wf-id">{doc.id}</span>
-                  <span className="lp-rag-lab-wf-title">## {doc.title}</span>
-                  <span className="lp-rag-lab-wf-bar" aria-hidden />
-                  <span className="lp-rag-lab-wf-tok">{doc.text.length} chars</span>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-
-          {tab === "chunks" ? (
-            chunksLoading ? (
-              <ul className="lp-rag-lab-wf-list" aria-busy="true" aria-label="Loading chunks">
-                {Array.from({ length: 4 }, (_, index) => (
-                  <li key={index} className="lp-rag-lab-wf-row lp-rag-lab-wf-row--skel">
-                    <span className="lp-rag-lab-wf-skel-id lp-skel-line" />
-                    <span className="lp-rag-lab-wf-skel-title lp-skel-line" />
-                    <span className="lp-rag-lab-wf-skel-bar lp-skel-line" />
-                    <span className="lp-rag-lab-wf-skel-tok lp-skel-line" />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <ul className="lp-rag-lab-wf-list" aria-label="Generated chunks">
-                {chunkRows.map((row) => (
-                  <li key={row.id} className="lp-rag-lab-wf-row">
-                    <span className="lp-rag-lab-wf-id">{row.id}</span>
-                    <span className="lp-rag-lab-wf-title">## {row.heading}</span>
-                    <span className="lp-rag-lab-wf-bar" aria-hidden />
-                    <span className="lp-rag-lab-wf-tok">{row.tokens} tok</span>
-                  </li>
-                ))}
-              </ul>
-            )
-          ) : null}
-
-          {tab === "query" ? (
-            <div className="lp-rag-lab-wf-query">
-              <label className="lp-rag-lab-wf-query-field">
-                <span className="sr-only">Public query</span>
-                <select
-                  value={questionId}
-                  onChange={(event) => {
-                    setQuestionId(event.target.value);
-                    setCustomQuestion("");
-                  }}
-                >
-                  {context.questions.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.question}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <p className="lp-rag-lab-wf-query-preview">{activeQuestion || "—"}</p>
-              <HitList hits={preview?.retrieved ?? []} />
-            </div>
-          ) : null}
-        </div>
-
-        <p className="lp-rag-lab-wf-foot">
-          Wireframe only: learners browse the corpus, inspect generated chunks and try a public
-          query. Not graded.
-        </p>
-      </div>
-    );
-  }
+  const frozen = preview?.frozen ?? context.frozen;
+  const tokenGate = tokenGateFor(archetype, gates);
+  const isPublicQuestion = !customQuestion.trim();
+  const selectedQuestion = isPublicQuestion
+    ? context.questions.find((item) => item.id === questionId)
+    : undefined;
 
   return (
     <div className="lp-rag-lab">
@@ -246,16 +182,14 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
         <div>
           <h2 className="lp-rag-lab-title">Simulation Lab</h2>
           <p className="lp-rag-lab-lead">
-            Optional preview on the public corpus. Submit from Configure to grade the hidden
-            set.
+            Runs your current config on the public corpus and sample questions. Not graded:
+            submit from Submission to score the hidden set.
           </p>
         </div>
-        {context.frozen || preview?.frozen ? (
-          <div className="lp-rag-lab-frozen" aria-label="Frozen pipeline settings">
-            <span className="lp-rag-lab-frozen-label">
-              {(preview?.frozen ?? context.frozen)?.label}
-            </span>
-            {(preview?.frozen ?? context.frozen)?.items.map((item) => (
+        {frozen ? (
+          <div className="lp-rag-lab-frozen" aria-label="Fixed pipeline settings">
+            <span className="lp-rag-lab-frozen-label">{frozen.label}</span>
+            {frozen.items.map((item) => (
               <span key={item} className="lp-rag-lab-frozen-chip">
                 {item}
               </span>
@@ -270,8 +204,8 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
             key={item}
             type="button"
             role="tab"
-            aria-selected={tab === item}
-            className={`lp-rag-lab-tab${tab === item ? " is-active" : ""}`}
+            aria-selected={activeTab === item}
+            className={`lp-rag-lab-tab${activeTab === item ? " is-active" : ""}`}
             onClick={() => setTab(item)}
           >
             {LAB_TAB_LABELS[item]}
@@ -282,16 +216,22 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
         </span>
       </div>
 
-      {error ? <p className="lp-rag-lab-error">{error}</p> : null}
+      {error ? (
+        <p className="lp-rag-lab-error" role="alert">
+          {error}
+        </p>
+      ) : null}
 
-      {tab === "corpus" ? (
+      {activeTab === "corpus" ? (
         <section className="lp-rag-lab-pane" aria-label="Corpus documents">
           <ul className="lp-rag-lab-corpus">
             {context.corpus.map((doc) => (
               <li key={doc.id} className="lp-rag-lab-doc">
                 <div className="lp-rag-lab-doc-head">
                   <strong>{doc.title}</strong>
-                  <span>{doc.id}</span>
+                  <span>
+                    {doc.id} · {doc.text.length} chars
+                  </span>
                 </div>
                 <p>{doc.text}</p>
               </li>
@@ -300,20 +240,30 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
         </section>
       ) : null}
 
-      {tab === "chunks" ? (
+      {activeTab === "chunks" ? (
         <section className="lp-rag-lab-pane" aria-label="Chunk preview">
           {Object.entries(chunksByDoc).length === 0 ? (
-            <p className="lp-rag-lab-empty">Adjust config to preview chunks.</p>
+            <p className="lp-rag-lab-empty">
+              {previewing ? "Chunking…" : "Adjust the config to preview chunks."}
+            </p>
           ) : (
             Object.entries(chunksByDoc).map(([docId, chunks]) => (
               <div key={docId} className="lp-rag-lab-chunk-group">
-                <h3>{chunks[0]?.title ?? docId}</h3>
+                <h3>
+                  {chunks[0]?.title ?? docId}
+                  <span className="lp-rag-lab-chunk-count">
+                    {chunks.length} chunk{chunks.length === 1 ? "" : "s"}
+                  </span>
+                </h3>
                 <div className="lp-rag-lab-chunk-grid">
                   {chunks.map((chunk) => (
                     <article key={chunk.id} className="lp-rag-lab-chunk">
                       <header>
                         <code title={CHUNK_ID_TIP}>{chunk.id}</code>
-                        <span>{chunk.text.length} chars</span>
+                        <span>
+                          {chunk.text.length} chars · ~{Math.max(1, Math.ceil(chunk.text.length / 4))}{" "}
+                          tok
+                        </span>
                       </header>
                       <p>{chunk.text}</p>
                     </article>
@@ -325,7 +275,7 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
         </section>
       ) : null}
 
-      {tab === "query" ? (
+      {activeTab === "query" ? (
         <section className="lp-rag-lab-pane" aria-label="Query console">
           <div className="lp-rag-lab-query-bar">
             <label className="lp-rag-lab-field">
@@ -363,10 +313,19 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
             <p>{activeQuestion}</p>
           </div>
 
+          {preview ? (
+            <LabReadout
+              preview={preview}
+              tokenGate={tokenGate}
+              isPublicQuestion={isPublicQuestion}
+              unanswerable={selectedQuestion?.answerable === false}
+            />
+          ) : null}
+
           {preview?.baseline && preview.baseline.length > 0 ? (
             <div className="lp-rag-lab-compare">
               <div>
-                <h3>Baseline retrieve</h3>
+                <h3>First stage</h3>
                 <HitList hits={preview.baseline} />
               </div>
               <div>
@@ -380,7 +339,7 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
         </section>
       ) : null}
 
-      {tab === "generate" ? (
+      {activeTab === "generate" ? (
         <section className="lp-rag-lab-pane" aria-label="Generation preview">
           {preview?.generation ? (
             <div className="lp-rag-lab-gen">
@@ -397,7 +356,7 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
             </div>
           ) : (
             <p className="lp-rag-lab-empty">
-              Set a generation prompt in Configure to preview an answer here.
+              Set a generation prompt in Submission to preview an answer here.
             </p>
           )}
           {showGenerate && preview?.retrieved && preview.retrieved.length > 0 ? (
@@ -415,6 +374,55 @@ export function RagLabPanel({ slug, payload, figmaWireframe = false }: RagLabPan
   );
 }
 
+/** One-line read of this query against what the grader measures. */
+function LabReadout({
+  preview,
+  tokenGate,
+  isPublicQuestion,
+  unanswerable,
+}: {
+  preview: RagLabPreview;
+  tokenGate: GateSpec | null;
+  isPublicQuestion: boolean;
+  /** Public sample the corpus cannot answer: a grounded answer should refuse. */
+  unanswerable: boolean;
+}) {
+  const tokensOk = tokenGate ? withinGate(tokenGate, preview.contextTokens) : null;
+  return (
+    <dl className="lp-rag-lab-readout" aria-label="Preview readout">
+      <div>
+        <dt>{tokenGate ? gateMetricLabel(tokenGate.metric) : "context tokens"}</dt>
+        <dd className={tokensOk === null ? undefined : tokensOk ? "is-pass" : "is-fail"}>
+          {preview.contextTokens}
+          {tokenGate ? (
+            <span className="lp-rag-lab-readout-sub">
+              budget {formatGateThreshold(tokenGate)} (graded as a mean over the hidden set)
+            </span>
+          ) : null}
+        </dd>
+      </div>
+      <div>
+        <dt>answer in context</dt>
+        <dd
+          className={
+            preview.answerFound === null ? undefined : preview.answerFound ? "is-pass" : "is-fail"
+          }
+        >
+          {preview.answerFound === null
+            ? unanswerable
+              ? "not in the corpus: expect a refusal"
+              : isPublicQuestion
+                ? "no answer key"
+                : "custom query, no answer key"
+            : preview.answerFound
+              ? "yes"
+              : "no"}
+        </dd>
+      </div>
+    </dl>
+  );
+}
+
 function HitList({ hits }: { hits: RagLabPreview["retrieved"] }) {
   if (hits.length === 0) {
     return <p className="lp-rag-lab-empty">No chunks retrieved yet.</p>;
@@ -422,11 +430,17 @@ function HitList({ hits }: { hits: RagLabPreview["retrieved"] }) {
   return (
     <ol className="lp-rag-lab-hits">
       {hits.map((hit, index) => (
-        <li key={hit.chunkId} className="lp-rag-lab-hit">
+        <li
+          key={hit.chunkId}
+          className={`lp-rag-lab-hit${hit.containsAnswer ? " lp-rag-lab-hit--answer" : ""}`}
+        >
           <div className="lp-rag-lab-hit-head">
             <span>#{index + 1}</span>
             <code title={CHUNK_ID_TIP}>{hit.chunkId}</code>
-            <strong title={SCORE_TIP}>score {hit.score}</strong>
+            {hit.containsAnswer ? (
+              <span className="lp-rag-lab-hit-answer">contains answer</span>
+            ) : null}
+            <strong title={SCORE_TIP}>score {hit.score.toFixed(2)}</strong>
           </div>
           <p>{hit.text}</p>
         </li>

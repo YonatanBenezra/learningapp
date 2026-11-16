@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 4 · Two-Stage Retrieve + Rerank\n\nProduction logs show high recall@20 but poor nDCG@5 — relevant chunks are retrieved then **buried**. Fix second-stage ordering.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN**, and an optional **query rewrite prompt**. Chunking is frozen.\n\nPass when **nDCG@5 improves by at least 0.15** over the lexical baseline, **context tokens ≤ 3000**, and **≤ 2 model calls per question**. Class B answer-correctness is advisory.\n",
+  "briefMd": "# Phase 4 · Two-Stage Retrieve + Rerank\n\nProduction logs show high recall@20 but poor nDCG@5: relevant documents are retrieved, then **buried**. Fix second-stage ordering.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt costs one model call per question; the rewritten query is not used for ranking yet.\n\n**Gates:** nDCG@5 improves by at least 0.15 over the first stage, context tokens ≤ 3000, and ≤ 2 model calls per question. Class B answer-correctness is advisory.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -89,6 +89,9 @@
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r4"
 }

@@ -21,7 +21,7 @@
       "name": "Refusal behaviour"
     }
   ],
-  "briefMd": "# Phase 3 · Citation-Grounded Answers\n\nLegal/compliance blocked launch: answers must cite sources and refuse when context is insufficient.\n\nYou author **only the generation prompt**. Retrieval is frozen (heading-aware, chunk 400, overlap 80, k=5).\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
+  "briefMd": "# Phase 3 · Citation-Grounded Answers\n\nLegal/compliance blocked launch: answers must cite sources and refuse when context is insufficient.\n\nYou author **only the generation prompt**. Retrieval is fixed: whole-document chunks ranked by BM25 with a title boost, top 5.\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -80,6 +80,9 @@
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r3"
 }

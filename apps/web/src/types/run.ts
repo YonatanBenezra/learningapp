@@ -15,6 +15,9 @@ export type Run = {
   costEurMicros?: number;
   exerciseSlug?: string;
   title?: string;
+  createdAt?: string | null;
+  startedAt?: string | null;
+  finishedAt?: string | null;
 };
 
 export type QueuedSubmission = {

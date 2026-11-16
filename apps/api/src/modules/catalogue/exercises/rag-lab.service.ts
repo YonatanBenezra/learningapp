@@ -11,6 +11,7 @@ import {
   ragLabArchetype,
   ragLabFrozen,
   type RagLabArchetype,
+  type RagLabPublicGold,
 } from '../../grading/harnesses/rag/rag-lab.engine';
 import { PrismaService } from '../../../core/prisma/prisma.service';
 
@@ -59,6 +60,7 @@ export class RagLabService {
     payload: Record<string, unknown>,
     question?: string,
   ) {
+    const exercise = await this.loadExercise(slug);
     const context = await this.getContext(slug);
     if (!context.labEnabled) {
       throw new BadRequestException(
@@ -71,7 +73,13 @@ export class RagLabService {
       'How many PTO days do full-time staff get each year?';
 
     try {
-      return previewRagLabWithCorpus(slug, payload, selected, context.corpus);
+      return previewRagLabWithCorpus(
+        slug,
+        payload,
+        selected,
+        context.corpus,
+        publicGoldFor(exercise.publicSample, selected),
+      );
     } catch (error) {
       const message =
         error instanceof Error
@@ -142,6 +150,36 @@ function publicQuestions(value: unknown): RagLabQuestion[] {
             : null,
     }))
     .filter((item) => item.question.length > 0);
+}
+
+/**
+ * Gold label for a question that is one of the exercise's PUBLIC samples, so the
+ * lab can show whether retrieval found the answer. Custom queries get none, and
+ * hidden-set labels are never read here.
+ */
+function publicGoldFor(
+  publicSample: unknown,
+  question: string,
+): RagLabPublicGold | null {
+  if (!Array.isArray(publicSample)) {
+    return null;
+  }
+  const normalized = question.trim().toLowerCase();
+  for (const item of publicSample) {
+    if (!item || typeof item !== 'object') {
+      continue;
+    }
+    const row = item as Record<string, unknown>;
+    if (
+      typeof row.question === 'string' &&
+      row.question.trim().toLowerCase() === normalized &&
+      typeof row.goldDocId === 'string' &&
+      typeof row.goldSpan === 'string'
+    ) {
+      return { goldDocId: row.goldDocId, goldSpan: row.goldSpan };
+    }
+  }
+  return null;
 }
 
 async function readAsset(uri: string): Promise<string> {

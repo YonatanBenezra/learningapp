@@ -35,6 +35,8 @@ export type RagLabHit = {
   title: string;
   score: number;
   text: string;
+  /** Public sample questions only: the chunk carries the gold sentence. */
+  containsAnswer?: boolean | null;
 };
 
 export type RagLabPreview = {
@@ -46,6 +48,9 @@ export type RagLabPreview = {
   generation: string | null;
   citations: string[];
   refused: boolean;
+  /** Same per-question token count the grader averages for this archetype. */
   contextTokens: number;
+  /** Public sample questions only: the gold sentence is somewhere in the context. */
+  answerFound?: boolean | null;
   frozen: { label: string; items: string[] } | null;
 };

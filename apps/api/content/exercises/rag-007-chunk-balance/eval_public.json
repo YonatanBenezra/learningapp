@@ -1,19 +1,19 @@
 [
   {
     "id": "p1",
-    "question": "How many PTO days do full-time staff get each year?",
+    "question": "Who approves PTO, and where?",
     "answerable": true,
-    "goldAnswer": "22 days",
+    "goldAnswer": "Managers, in Workday",
     "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldSpan": "Managers approve PTO in Workday"
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
+    "goldAnswer": "No",
     "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
   },
   {
     "id": "p3",
@@ -25,18 +25,18 @@
   },
   {
     "id": "p4",
-    "question": "How long are prompt and completion logs kept?",
+    "question": "How long before an unacknowledged page escalates to the secondary?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "Ten minutes",
+    "goldDocId": "oncall",
+    "goldSpan": "escalate after ten minutes without an ack"
   },
   {
     "id": "p5",
-    "question": "When does primary on-call rotate?",
+    "question": "What happens to a purchase order when the vendor security report is missing?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "It is blocked",
+    "goldDocId": "vendor",
+    "goldSpan": "A missing report blocks the purchase order"
   }
 ]

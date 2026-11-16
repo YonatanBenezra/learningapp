@@ -54,5 +54,8 @@
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  }
 }

@@ -1,35 +1,35 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "Who approves PTO before the leave starts?",
     "answerable": true,
-    "goldAnswer": "22 days",
+    "goldAnswer": "Managers, in Workday",
     "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldSpan": "Managers approve PTO in Workday"
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "Do domestic flights under three hours have to be economy?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldAnswer": "Yes",
+    "goldDocId": "travel",
+    "goldSpan": "Domestic flights below three hours must be economy"
   },
   {
     "id": "p3",
-    "question": "When does primary on-call rotate?",
+    "question": "How long before an unacknowledged page escalates to the secondary on-call?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
+    "goldAnswer": "Ten minutes",
     "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldSpan": "escalate after ten minutes without an ack"
   },
   {
     "id": "p4",
-    "question": "What report must production SaaS vendors present before procurement?",
+    "question": "What happens to a purchase order when a vendor security report is missing?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
+    "goldAnswer": "It is blocked",
     "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldSpan": "A missing report blocks the purchase order"
   },
   {
     "id": "p5",

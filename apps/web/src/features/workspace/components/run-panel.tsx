@@ -264,7 +264,7 @@ function Scorecard({ grade, onboarding = false }: { grade: Grade; onboarding?: b
         <div className="lp-ws-score-hero">
           <span className="lp-ws-score-hero-verdict">{grade.verdict}</span>
           <p className="lp-ws-score-hero-title">{headline}</p>
-          <p className="lp-ws-score-hero-meta">Run succeeded · Grade complete · 2.4s</p>
+          <p className="lp-ws-score-hero-meta">Run succeeded · Grade complete</p>
         </div>
       ) : (
         <span className={`lp-ws-verdict lp-ws-verdict--${grade.verdict}`} data-testid="verdict">

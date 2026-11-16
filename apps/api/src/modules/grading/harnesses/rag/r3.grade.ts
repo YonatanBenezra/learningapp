@@ -11,6 +11,7 @@ import {
   answerableHidden,
   expandGoldSpan,
   FAILING_SAMPLE_LIMIT,
+  gateThreshold,
   goldSpanOverlap,
   publicTraceItems,
   toTraceQuery,
@@ -25,9 +26,10 @@ import type {
 } from './rag.types';
 
 const K = 5;
-const OVERLAP_THRESHOLD = 0.85;
-const UNANSWERABLE_NEED = 5;
-const ANSWERABLE_REFUSE_MAX = 2;
+const DEFAULT_CITATION_FORMAT = 1;
+const DEFAULT_OVERLAP = 0.85;
+const DEFAULT_UNANSWERABLE_NEED = 5;
+const DEFAULT_ANSWERABLE_REFUSE_MAX = 2;
 
 export async function gradeR3(
   payload: R3Payload,
@@ -36,7 +38,28 @@ export async function gradeR3(
   publicItems: { question: string }[] = [],
   gateway: ModelGateway,
   runId: string,
+  gates?: unknown,
 ): Promise<RagGradeResult> {
+  const formatTarget = gateThreshold(
+    gates,
+    'citation_format',
+    DEFAULT_CITATION_FORMAT,
+  );
+  const overlapThreshold = gateThreshold(
+    gates,
+    'gold_span_overlap',
+    DEFAULT_OVERLAP,
+  );
+  const unanswerableNeed = gateThreshold(
+    gates,
+    'unanswerable_refusals',
+    DEFAULT_UNANSWERABLE_NEED,
+  );
+  const answerableRefuseMax = gateThreshold(
+    gates,
+    'answerable_refusals',
+    DEFAULT_ANSWERABLE_REFUSE_MAX,
+  );
   const chunks = chunkCorpus(docs, 400, 80, 'heading-aware');
   const usable = hidden.filter((item) => !isHiddenCanary(item.question));
   const answerable = answerableHidden(usable);
@@ -91,7 +114,7 @@ export async function gradeR3(
         overlapCount += 1;
       }
       const grounded =
-        !refused && overlap >= OVERLAP_THRESHOLD && citations.length > 0;
+        !refused && overlap >= overlapThreshold && citations.length > 0;
       if (!grounded && misses.length < FAILING_SAMPLE_LIMIT) {
         misses.push({
           question: item.question,
@@ -123,10 +146,10 @@ export async function gradeR3(
 
   const formatRate = usable.length === 0 ? 0 : formatHits / usable.length;
   const meanOverlap = overlapCount === 0 ? 0 : overlapSum / overlapCount;
-  const formatPass = formatRate === 1 && fabricated === 0;
-  const overlapPass = meanOverlap >= OVERLAP_THRESHOLD;
-  const underRefusePass = unanswerableRefusals >= UNANSWERABLE_NEED;
-  const overRefusePass = answerableRefusals <= ANSWERABLE_REFUSE_MAX;
+  const formatPass = formatRate >= formatTarget && fabricated === 0;
+  const overlapPass = meanOverlap >= overlapThreshold;
+  const underRefusePass = unanswerableRefusals >= unanswerableNeed;
+  const overRefusePass = answerableRefusals <= answerableRefuseMax;
   const passed = formatPass && overlapPass && underRefusePass && overRefusePass;
 
   return {
@@ -149,8 +172,8 @@ export async function gradeR3(
         class: 'A',
         metric: 'citation_format',
         op: 'eq',
-        value: 1,
-        actual: formatPass ? 1 : formatRate,
+        value: formatTarget,
+        actual: formatRate,
         passed: formatPass,
       },
       {
@@ -158,7 +181,7 @@ export async function gradeR3(
         class: 'A',
         metric: 'gold_span_overlap',
         op: 'gte',
-        value: OVERLAP_THRESHOLD,
+        value: overlapThreshold,
         actual: meanOverlap,
         passed: overlapPass,
       },
@@ -167,7 +190,7 @@ export async function gradeR3(
         class: 'A',
         metric: 'unanswerable_refusals',
         op: 'gte',
-        value: UNANSWERABLE_NEED,
+        value: unanswerableNeed,
         actual: unanswerableRefusals,
         passed: underRefusePass,
       },
@@ -176,7 +199,7 @@ export async function gradeR3(
         class: 'A',
         metric: 'answerable_refusals',
         op: 'lte',
-        value: ANSWERABLE_REFUSE_MAX,
+        value: answerableRefuseMax,
         actual: answerableRefusals,
         passed: overRefusePass,
       },

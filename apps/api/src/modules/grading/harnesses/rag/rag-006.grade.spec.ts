@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { R1_REFERENCE_PAYLOAD } from '../../../catalogue/exercises/exercises.constants';
 import { gradeR1 } from './r1.grade';
 import type { CorpusDoc } from './chunking';
 import type { HiddenItem } from './rag.types';
@@ -20,10 +21,11 @@ describe('RagHarness R1 — rag-006-overlap-tune', () => {
 
   it('passes with published reference payload', () => {
     const result = gradeR1(
-      { chunkSize: 400, overlap: 80, splitStrategy: 'heading-aware' },
+      R1_REFERENCE_PAYLOAD,
       docs,
       hidden,
       publicItems,
+      loadJson<{ gates: unknown }>('meta.json').gates,
     );
     expect(result.verdict).toBe('pass');
     expect(result.trace.queries.length).toBeGreaterThan(0);

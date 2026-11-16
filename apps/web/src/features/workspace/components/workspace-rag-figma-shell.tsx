@@ -4,12 +4,20 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Exercise } from "@/types/exercise";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
+import type { SubmissionHistoryItem } from "@/types/submission";
 import type { HintList } from "@/types/hint";
 import {
   buildFigmaBriefFromExercise,
   defaultsFromSubmissionSchema,
 } from "../figma-brief-from-exercise";
-import { BriefPanel, type BriefTab, type FigmaBriefContent } from "./brief-panel";
+import { gateSummary } from "../submission-diff";
+import { workspaceApi } from "../workspace-api";
+import {
+  BriefPanel,
+  type BriefTab,
+  type FigmaBriefContent,
+  type FigmaBriefSubmission,
+} from "./brief-panel";
 import { RagFlowGraph } from "./rag-flow-graph";
 import { RagLabPanel } from "./rag-lab-panel";
 import { RunPanel } from "./run-panel";
@@ -49,7 +57,28 @@ type WorkspaceRagFigmaShellProps = {
   demoMode?: boolean;
   labPlaceholder?: React.ReactNode;
   figmaBrief?: FigmaBriefContent;
+  onUnlockHint?: () => Promise<void>;
 };
+
+/** Server history (newest first) -> brief rows numbered from the oldest. */
+function historyRows(history: SubmissionHistoryItem[]): FigmaBriefSubmission[] {
+  const total = history.length;
+  return history.map((item, index) => ({
+    id: item.submissionId,
+    runId: item.run?.id ?? null,
+    n: total - index,
+    status: item.run?.status ?? "queued",
+    verdict: item.grade?.verdict ?? null,
+    summary: item.grade ? gateSummary(item.grade.gateResults) : "",
+    createdAt: item.createdAt,
+    payload: item.payload ?? {},
+    gateResults: item.grade?.gateResults ?? null,
+    contest: item.contest,
+  }));
+}
+
+/** Matches the API's history page size. */
+const HISTORY_LIMIT = 20;
 
 export function WorkspaceRagFigmaShell({
   slug,
@@ -74,6 +103,7 @@ export function WorkspaceRagFigmaShell({
   demoMode = false,
   labPlaceholder = null,
   figmaBrief: figmaBriefOverride,
+  onUnlockHint,
 }: WorkspaceRagFigmaShellProps) {
   const [briefTab, setBriefTab] = useState<BriefTab>("description");
   const [workTab, setWorkTab] = useState<"configure" | "lab">("configure");
@@ -83,19 +113,60 @@ export function WorkspaceRagFigmaShell({
       ? window.matchMedia("(max-width: 899px)").matches
       : false,
   );
-  const [attempt, setAttempt] = useState(1);
+  /** Submissions sent from this workspace session (resets on reload). */
+  const [submitCount, setSubmitCount] = useState(0);
+  const [history, setHistory] = useState<SubmissionHistoryItem[] | null>(null);
   const [formValues, setFormValues] = useState<Record<string, unknown> | null>(null);
   const lastGradedPayloadRef = useRef<string | null>(null);
+
+  // Reload the learner's history on open and whenever a run settles.
+  const settledRunKey = run && !pending ? `${run.id}:${run.status}:${grade ? 1 : 0}` : null;
+  useEffect(() => {
+    if (demoMode) {
+      return;
+    }
+    let cancelled = false;
+    workspaceApi
+      .listSubmissions(slug)
+      .then((rows) => {
+        if (!cancelled) {
+          setHistory(rows);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setHistory(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, settledRunKey, demoMode]);
+
+  const submissions = useMemo(() => (history ? historyRows(history) : undefined), [history]);
+  const submittedTotal = history ? history.length : submitCount;
+  const historyTruncated = (history?.length ?? 0) >= HISTORY_LIMIT;
 
   const figmaBrief = useMemo(
     () =>
       figmaBriefOverride ??
       buildFigmaBriefFromExercise(exercise, {
         hints,
-        submissionCount: Math.max(0, attempt - 1),
+        onUnlockHint,
+        submissionCount: submittedTotal,
+        submissions,
+        submissionsTruncated: historyTruncated,
         thresholdFootnote: "on the hidden set · graded on submit",
       }),
-    [exercise, hints, figmaBriefOverride, attempt],
+    [
+      exercise,
+      hints,
+      onUnlockHint,
+      figmaBriefOverride,
+      submittedTotal,
+      submissions,
+      historyTruncated,
+    ],
   );
 
   const initialValuesKey = JSON.stringify(initialValues ?? {});
@@ -152,7 +223,7 @@ export function WorkspaceRagFigmaShell({
     JSON.stringify(formValues) !== lastGradedPayloadRef.current;
 
   const handleSubmit = (payload: Record<string, unknown>) => {
-    setAttempt((n) => n + 1);
+    setSubmitCount((n) => n + 1);
     setFormValues(payload);
     onSubmit(payload);
   };
@@ -178,6 +249,13 @@ export function WorkspaceRagFigmaShell({
           submitError={submitError}
           initialValues={formDefaults}
           onSubmit={handleSubmit}
+          onValidityChange={onValidityChange}
+          onValuesChange={handleValuesChange}
+          editorTitle={editorTitle}
+          nextAttempt={history ? history.length + 1 : pending ? submitCount : submitCount + 1}
+          submittedAttempts={submittedTotal}
+          showLab={showSimulationLab}
+          labPayload={labPayload ?? formDefaults}
         />
       </div>
     );
@@ -261,7 +339,9 @@ export function WorkspaceRagFigmaShell({
                         onValuesChange={handleValuesChange}
                         figmaLayout
                         figmaGrade={grade}
-                        figmaAttempt={attempt}
+                        figmaAttempt={
+                          history ? history.length + 1 : pending ? submitCount : submitCount + 1
+                        }
                       />
                     }
                   />
@@ -271,7 +351,7 @@ export function WorkspaceRagFigmaShell({
                     <RagLabPanel
                       slug={slug}
                       payload={labPayload ?? formDefaults}
-                      figmaWireframe
+                      gates={exercise.gates}
                     />
                   ) : (
                     labPlaceholder
@@ -290,8 +370,8 @@ export function WorkspaceRagFigmaShell({
                 pending={pending}
                 attempt={
                   demoMode
-                    ? Math.max(attempt, (figmaBrief?.submissionCount ?? 0) + 1)
-                    : attempt
+                    ? Math.max(submitCount, figmaBrief?.submissionCount ?? 0)
+                    : submittedTotal
                 }
                 exerciseSlug={slug}
               />

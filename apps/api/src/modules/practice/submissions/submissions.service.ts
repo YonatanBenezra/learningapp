@@ -27,6 +27,28 @@ import { CreateSubmissionDto } from './dto/create-submission.dto';
 
 const UNASSIGNED_WORKER = 'unassigned';
 
+/** Most recent submissions returned to the workspace history pane. */
+export const SUBMISSION_HISTORY_LIMIT = 20;
+
+export type SubmissionHistoryItem = {
+  submissionId: string;
+  createdAt: Date;
+  payload: unknown;
+  contest: boolean;
+  run: {
+    id: string;
+    status: string;
+    startedAt: Date | null;
+    finishedAt: Date | null;
+  } | null;
+  /** Verdict and gate outcomes only; failing cases stay on the grade endpoint. */
+  grade: {
+    verdict: string;
+    gateResults: unknown;
+    metrics: unknown;
+  } | null;
+};
+
 @Injectable()
 export class SubmissionsService {
   constructor(
@@ -114,6 +136,61 @@ export class SubmissionsService {
       status: created.run.status,
     };
   }
+}
+
+export async function listSubmissionHistory(
+  prisma: PrismaService,
+  userId: string,
+  slug: string,
+): Promise<SubmissionHistoryItem[]> {
+  const rows = await prisma.submission.findMany({
+    where: { attempt: { userId, exercise: { slug } } },
+    orderBy: { createdAt: 'desc' },
+    take: SUBMISSION_HISTORY_LIMIT,
+    select: {
+      id: true,
+      createdAt: true,
+      payload: true,
+      attempt: { select: { contestEntryId: true } },
+      runs: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: {
+          id: true,
+          status: true,
+          startedAt: true,
+          finishedAt: true,
+          grade: {
+            select: { verdict: true, gateResults: true, metrics: true },
+          },
+        },
+      },
+    },
+  });
+  return rows.map((row) => {
+    const run = row.runs[0] ?? null;
+    return {
+      submissionId: row.id,
+      createdAt: row.createdAt,
+      payload: row.payload,
+      contest: row.attempt.contestEntryId !== null,
+      run: run
+        ? {
+            id: run.id,
+            status: run.status,
+            startedAt: run.startedAt,
+            finishedAt: run.finishedAt,
+          }
+        : null,
+      grade: run?.grade
+        ? {
+            verdict: run.grade.verdict,
+            gateResults: run.grade.gateResults,
+            metrics: run.grade.metrics,
+          }
+        : null,
+    };
+  });
 }
 
 async function assertAttemptPolicy(

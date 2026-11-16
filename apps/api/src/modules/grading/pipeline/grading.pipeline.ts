@@ -102,6 +102,7 @@ export class GradingPipeline {
         hidden: hidden as HiddenItem[],
         publicItems,
         budget: exercise.budget,
+        gates: exercise.gates,
       });
     } else if (exercise.simulator === 'rag') {
       if (!assets.corpusUri) {
@@ -115,6 +116,7 @@ export class GradingPipeline {
         docs,
         hidden: hidden as HiddenItem[],
         publicItems,
+        gates: exercise.gates,
       });
     } else if (exercise.simulator === 'evaluation') {
       result = await this.evaluationHarness.execute({

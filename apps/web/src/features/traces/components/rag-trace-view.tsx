@@ -409,7 +409,12 @@ function QueryAccordion({
       {open ? (
         <ul className="lp-trace-hit-list m-0 list-none p-0">
           {query.retrieved.map((hit, index) => (
-            <HitRow key={`${hit.chunkId}-${hit.docId}`} hit={hit} topHit={index === 0} />
+            <HitRow
+              key={`${hit.chunkId}-${hit.docId}`}
+              hit={hit}
+              topHit={index === 0}
+              maxScore={Math.max(0, ...query.retrieved.map((row) => row.score))}
+            />
           ))}
         </ul>
       ) : null}
@@ -417,8 +422,18 @@ function QueryAccordion({
   );
 }
 
-function HitRow({ hit, topHit }: { hit: TraceHit; topHit?: boolean }) {
-  const pct = Math.min(100, Math.max(0, hit.score * 100));
+function HitRow({
+  hit,
+  topHit,
+  maxScore,
+}: {
+  hit: TraceHit;
+  topHit?: boolean;
+  maxScore: number;
+}) {
+  // Scores are BM25 relevance, not 0–1 similarity: draw the bar relative to the
+  // best hit for this query.
+  const pct = maxScore > 0 ? Math.min(100, Math.max(0, (hit.score / maxScore) * 100)) : 0;
   const chunkLabel = `${hit.docId} · ${hit.chunkId}`;
   return (
     <li className={cn("lp-trace-hit-row", topHit && "lp-trace-hit-row--top")}>
@@ -435,7 +450,7 @@ function HitRow({ hit, topHit }: { hit: TraceHit; topHit?: boolean }) {
           </span>
           {topHit ? <span className="lp-trace-hit-badge">top hit</span> : null}
         </div>
-        <div className="lp-trace-hit-score-group" aria-label={`Similarity ${hit.score.toFixed(2)}`}>
+        <div className="lp-trace-hit-score-group" aria-label={`Relevance ${hit.score.toFixed(2)}`}>
           <span
             className={cn(
               "lp-trace-hit-score-val",

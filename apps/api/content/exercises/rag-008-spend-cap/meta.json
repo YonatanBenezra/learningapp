@@ -4,7 +4,7 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r2",
-  "title": "Rate & Spend Abuse Under Load",
+  "title": "Spend Cap on Retrieval",
   "difficulty": "M",
   "catalogPhase": 6,
   "skills": [
@@ -13,7 +13,7 @@
       "name": "Content pipeline"
     }
   ],
-  "briefMd": "# Phase 6 · Rate & Spend Abuse Under Load\n\nTraffic spikes invite **rerank spam** and oversized chunks that blow the EUR cap. Tune **topK**, **rerank**, and **chunkSize** so recall stays within SLO while **class A cost + recall gates** pass — the same knobs ops uses when a tenant hammers the retrieval API.\n",
+  "briefMd": "# Phase 6 · Spend Cap on Retrieval\n\nFinance capped prompt spend per question. Every retrieved chunk is billed in full, so top-k and chunk size trade directly against cost.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 200 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -42,7 +42,8 @@
     }
   },
   "thresholds": {
-    "pass": 1
+    "mean_prompt_tokens": 200,
+    "recall_at_k": 0.95
   },
   "budget": {
     "max_model_calls": 0,
@@ -52,17 +53,27 @@
   },
   "gates": [
     {
-      "id": "pass",
+      "id": "mean-prompt-tokens",
       "class": "A",
-      "metric": "pass",
-      "op": "eq",
-      "value": 1
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 200
+    },
+    {
+      "id": "recall-at-k",
+      "class": "A",
+      "metric": "recall@k",
+      "op": "gte",
+      "value": 0.95
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "corpusFile": "shared"
 }

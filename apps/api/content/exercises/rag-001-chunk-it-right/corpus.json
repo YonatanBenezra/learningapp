@@ -2,7 +2,7 @@
   {
     "id": "pto",
     "title": "Paid time off",
-    "text": "Full-time staff receive twenty-two (22) days of paid time off each calendar year. Requests must be submitted at least fourteen (14) days before the first day of leave, except for documented emergencies. Unused days may be carried into the next year up to a maximum of five (5) days; any remainder is forfeited on 31 January."
+    "text": "Full-time staff receive twenty-two (22) days of paid time off each calendar year. Requests must be submitted at least fourteen (14) days before the first day of leave, except for documented emergencies. Unused days may be carried into the next year up to a maximum of five (5) days; any remainder is forfeited on 31 January. Managers approve PTO in Workday before the leave starts."
   },
   {
     "id": "vpn",
@@ -22,7 +22,7 @@
   {
     "id": "expense",
     "title": "Expense policy",
-    "text": "Team meals are reimbursed up to forty-five euros (€45) per person excluding tax. Alcohol is never reimbursable. Expense reports must be submitted within thirty (30) days of the transaction date or they are declined automatically."
+    "text": "Team meals are reimbursed up to forty-five euros (€45) per person excluding tax. Alcohol is never reimbursable. Expense reports must be submitted within thirty (30) days of the transaction date or they are declined automatically. Ride-hailing to the office is not reimbursable on ordinary workdays."
   },
   {
     "id": "retention",
@@ -32,11 +32,11 @@
   {
     "id": "oncall",
     "title": "On-call roster",
-    "text": "Primary on-call rotates every Monday at 09:00 UTC. The previous primary becomes backup for that week. Handoff notes live in the oncall-handbook repo under /handoffs."
+    "text": "Primary on-call rotates every Monday at 09:00 UTC. The previous primary becomes backup for that week. Handoff notes live in the oncall-handbook repo under /handoffs. Secondary pages escalate after ten minutes without an ack."
   },
   {
     "id": "vendor",
     "title": "Vendor security",
-    "text": "Production SaaS vendors must present a current SOC 2 Type II report before procurement. Shadow IT is prohibited; new tools are requested through the security-review form. Exceptions require a director and a time-boxed waiver no longer than ninety days."
+    "text": "Production SaaS vendors must present a current SOC 2 Type II report before procurement. Shadow IT is prohibited; new tools are requested through the security-review form. Exceptions require a director and a time-boxed waiver no longer than ninety days. A missing report blocks the purchase order."
   }
 ]

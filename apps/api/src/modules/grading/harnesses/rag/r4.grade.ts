@@ -4,10 +4,11 @@ import { advisoryClassB } from '../../judge/class-b';
 import { MetricsLibrary } from '../../metrics/metrics.library';
 import { chunkCorpus, type CorpusDoc } from './chunking';
 import { mmrRerank, titleBoost } from './rerank';
-import { retrieveRanked, type RankedChunk } from './retrieve';
+import { retrieveByTermCount, type RankedChunk } from './retrieve';
 import {
   answerableHidden,
   FAILING_SAMPLE_LIMIT,
+  gateThreshold,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
@@ -19,9 +20,9 @@ import type {
 } from './rag.types';
 
 const K = 5;
-const IMPROVEMENT = 0.15;
-const CONTEXT_CEILING = 3000;
-const CALLS_PER_Q = 2;
+const DEFAULT_IMPROVEMENT = 0.15;
+const DEFAULT_CONTEXT_CEILING = 3000;
+const DEFAULT_CALLS_PER_Q = 2;
 const FROZEN_CHUNK = 400;
 const FROZEN_OVERLAP = 80;
 const metrics = new MetricsLibrary();
@@ -33,7 +34,23 @@ export async function gradeR4(
   publicItems: { question: string }[] = [],
   gateway: ModelGateway | undefined,
   runId: string,
+  gates?: unknown,
 ): Promise<RagGradeResult> {
+  const improvementTarget = gateThreshold(
+    gates,
+    'ndcg_improvement',
+    DEFAULT_IMPROVEMENT,
+  );
+  const contextCeiling = gateThreshold(
+    gates,
+    'context_tokens',
+    DEFAULT_CONTEXT_CEILING,
+  );
+  const callsCeiling = gateThreshold(
+    gates,
+    'model_calls_per_question',
+    DEFAULT_CALLS_PER_Q,
+  );
   const chunks = chunkCorpus(
     docs,
     FROZEN_CHUNK,
@@ -56,7 +73,7 @@ export async function gradeR4(
         prompt: `${payload.queryRewritePrompt}\n\nQuery: ${item.question}`,
       });
     }
-    const baseline = retrieveRanked(question, chunks, K);
+    const baseline = r4Baseline(question, chunks);
     const reranked = rerankForR4(question, chunks, payload);
     const baseNdcg = ndcgForGold(baseline, item.goldDocId as string);
     const nextNdcg = ndcgForGold(reranked, item.goldDocId as string);
@@ -89,9 +106,9 @@ export async function gradeR4(
       ? 0
       : contextTokens.reduce((sum, value) => sum + value, 0) /
         contextTokens.length;
-  const ndcgPass = meanImprovement >= IMPROVEMENT;
-  const contextPass = meanContext <= CONTEXT_CEILING;
-  const callsPass = callsPerQuestion <= CALLS_PER_Q;
+  const ndcgPass = meanImprovement >= improvementTarget;
+  const contextPass = meanContext <= contextCeiling;
+  const callsPass = callsPerQuestion <= callsCeiling;
   const passed = ndcgPass && contextPass && callsPass;
 
   return {
@@ -107,7 +124,7 @@ export async function gradeR4(
         class: 'A',
         metric: 'ndcg_improvement',
         op: 'gte',
-        value: IMPROVEMENT,
+        value: improvementTarget,
         actual: meanImprovement,
         passed: ndcgPass,
       },
@@ -116,7 +133,7 @@ export async function gradeR4(
         class: 'A',
         metric: 'context_tokens',
         op: 'lte',
-        value: CONTEXT_CEILING,
+        value: contextCeiling,
         actual: meanContext,
         passed: contextPass,
       },
@@ -125,7 +142,7 @@ export async function gradeR4(
         class: 'A',
         metric: 'model_calls_per_question',
         op: 'lte',
-        value: CALLS_PER_Q,
+        value: callsCeiling,
         actual: callsPerQuestion,
         passed: callsPass,
       },
@@ -165,13 +182,24 @@ export async function gradeR4(
   };
 }
 
-function rerankForR4(
+/** Shown in the lab so learners know what the reranker starts from. */
+export const R4_FIRST_STAGE_LABEL = 'First stage keyword count';
+
+/** R4's first stage is a deliberately weak keyword count; see retrieveByTermCount. */
+export function r4Baseline(
+  question: string,
+  chunks: ReturnType<typeof chunkCorpus>,
+): RankedChunk[] {
+  return retrieveByTermCount(question, chunks, K);
+}
+
+export function rerankForR4(
   question: string,
   chunks: ReturnType<typeof chunkCorpus>,
   payload: R4Payload,
 ): RankedChunk[] {
   const window = Math.min(chunks.length, Math.max(payload.rerankTopN, K));
-  const pool = retrieveRanked(question, chunks, window);
+  const pool = retrieveByTermCount(question, chunks, window);
   if (payload.reranker === 'title-boost') {
     return titleBoost(question, pool).slice(0, K);
   }

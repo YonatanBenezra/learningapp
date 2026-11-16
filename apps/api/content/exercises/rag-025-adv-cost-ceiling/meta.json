@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Advanced · Cost-Capped Retrieval\n\nStricter token and call budget with tighter recall@5 — production SLO under spend pressure.",
+  "briefMd": "# Advanced · Cost-Capped Retrieval\n\nThe strictest budget in the track: the whole prompt must fit in about 80 tokens. Only very small chunks with reranking get there without losing recall.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 80 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,8 +46,8 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 2000,
-    "recall_at_k": 0.8
+    "mean_prompt_tokens": 80,
+    "recall_at_k": 0.95
   },
   "budget": {
     "max_model_calls": 0,
@@ -61,21 +61,24 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 2000
+      "value": 80
     },
     {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.8
+      "value": 0.95
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r2",
   "isPublished": true
 }

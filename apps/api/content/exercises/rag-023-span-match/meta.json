@@ -4,7 +4,7 @@
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-sandbox",
-  "title": "Adversarial Corpus & Span Evasion",
+  "title": "Custom Retriever vs Keyword-Stuffed Noise",
   "difficulty": "H",
   "catalogPhase": 6,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Phase 6 · Adversarial Corpus & Span Evasion\n\nA competitor seeded **look-alike** chunks and split gold spans across headings. Lexical baselines chase decoys. Write sandbox retrieval that **anchors on citation spans** and ignores poisoned neighbors — **recall@5 ≥ 0.80** on the adversarial slice.\n",
+  "briefMd": "# Phase 6 · Custom Retriever vs Keyword-Stuffed Noise\n\nThe shared policy corpus contains eight noise documents that repeat common question words. A naive keyword counter ranks them above the real policies. Ship a **Python retriever** that keeps them out of your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Gate:** recall@5 ≥ 0.80 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -54,6 +54,9 @@
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "corpusFile": "shared"
 }

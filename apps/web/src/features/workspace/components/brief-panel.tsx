@@ -71,22 +71,44 @@ export const BRIEF_TABS = [
 
 export type BriefTab = (typeof BRIEF_TABS)[number]["id"];
 
+export type FigmaBriefSubmission = {
+  id: string;
+  runId: string | null;
+  /** 1 = oldest submission in the list. */
+  n: number;
+  status: string;
+  verdict: string | null;
+  summary: string;
+  createdAt: string;
+  payload: Record<string, unknown>;
+  gateResults: unknown;
+  contest: boolean;
+};
+
 export type FigmaBriefContent = {
   submissionCount: number;
-  meta: { id: string; duration: string; solved: string };
+  /** The learner's submissions (server history); when absent only the count is shown. */
+  submissions?: ReadonlyArray<FigmaBriefSubmission>;
+  /** True when the list was cut at the server's history limit. */
+  submissionsTruncated?: boolean;
+  meta: { id: string; duration?: string; solved: string };
   goal: string;
   constraint: {
     metric: string;
     threshold: string;
     footnote: string;
     fields: string;
+    /** Every graded gate; when set it replaces the single metric/threshold line. */
+    gates?: ReadonlyArray<{ metric: string; threshold: string }>;
   };
   publicSampleNote: string;
   publicRows: ReadonlyArray<{ question: string; file: string; tag: string }>;
   hints: ReadonlyArray<
     | { n: number; unlocked: true; text: string }
-    | { n: number; unlocked: false; unlockAfter: number }
+    | { n: number; unlocked: false; unlockAfter?: number }
   >;
+  /** Unlocks the next hint via the hints API; omitted where hints are disabled. */
+  onUnlockHint?: () => Promise<void>;
 };
 
 type BriefPanelProps = {
@@ -201,7 +223,11 @@ export function BriefPanel({
         />
         <div className="min-h-0 flex-1 overflow-y-auto">
           {figmaPane === "submissions" ? (
-            <FigmaBriefSubmissions count={figmaBrief.submissionCount} />
+            <FigmaBriefSubmissions
+              count={figmaBrief.submissionCount}
+              items={figmaBrief.submissions}
+              truncated={figmaBrief.submissionsTruncated}
+            />
           ) : exercise ? (
             <>
               <FigmaBriefHeader exercise={exercise} content={figmaBrief} />

@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Advanced · Python Retriever\n\nHarder corpus skew and paraphrase; recall@5 ≥ 0.80 on hidden set.",
+  "briefMd": "# Advanced · Python Retriever\n\nThe sandbox task with a stricter bar: almost every hidden question must land its answer in your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Gate:** recall@5 ≥ 0.90 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -33,7 +33,7 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.8
+    "recall_at_5": 0.9
   },
   "budget": {
     "max_model_calls": 0,
@@ -47,13 +47,16 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "isPublished": true
 }

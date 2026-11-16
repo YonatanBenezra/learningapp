@@ -2,6 +2,7 @@ import { apiClient, ApiError } from "@/lib/api-client";
 import type { Attempt } from "@/types/attempt";
 import type { Grade } from "@/types/grade";
 import type { QueuedSubmission, Run } from "@/types/run";
+import type { SubmissionHistoryItem } from "@/types/submission";
 
 const TERMINAL: Run["status"][] = ["succeeded", "failed", "killed_budget"];
 
@@ -18,6 +19,9 @@ export const workspaceApi = {
     }),
   getRun: (runId: string) => apiClient<Run>(`/runs/${runId}`),
   getGrade: (runId: string) => apiClient<Grade>(`/runs/${runId}/grade`),
+  /** The signed-in learner's recent submissions for one exercise, newest first. */
+  listSubmissions: (exerciseSlug: string) =>
+    apiClient<SubmissionHistoryItem[]>(`/exercises/${exerciseSlug}/submissions`),
 };
 
 export async function waitForRun(

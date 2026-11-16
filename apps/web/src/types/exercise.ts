@@ -19,6 +19,8 @@ export type Exercise = {
   briefMd?: string;
   submissionSchema?: unknown;
   budget?: unknown;
+  /** Pass gates from exercise meta (`{ id, class, metric, op, value }[]`). */
+  gates?: unknown;
   publicSample?: PublicSampleItem[] | unknown;
 };
 

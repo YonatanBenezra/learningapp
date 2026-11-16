@@ -63,6 +63,7 @@ export async function runContentGrader(
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
+        bundle.meta.gates,
       );
     }
     case 'rag-r2': {
@@ -72,6 +73,7 @@ export async function runContentGrader(
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
+        bundle.meta.gates,
       );
     }
     case 'rag-r3': {
@@ -83,6 +85,7 @@ export async function runContentGrader(
         publicQuestions(publicRaw),
         contentPipelineGateway(),
         contentRunId(bundle),
+        bundle.meta.gates,
       );
     }
     case 'rag-r4': {
@@ -94,6 +97,7 @@ export async function runContentGrader(
         publicQuestions(publicRaw),
         undefined,
         contentRunId(bundle),
+        bundle.meta.gates,
       );
     }
     case 'rag-sandbox': {
@@ -104,6 +108,8 @@ export async function runContentGrader(
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
         runLocalPython,
+        undefined,
+        bundle.meta.gates,
       );
     }
     case 'pe-p1':

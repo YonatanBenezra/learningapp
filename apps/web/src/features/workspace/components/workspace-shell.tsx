@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { loginPath, routes } from "@/config/routes";
 import {
   ensureAuthSession,
@@ -75,6 +75,9 @@ export function WorkspaceShell({
   const [submitValid, setSubmitValid] = useState(false);
   const [labPayload, setLabPayload] = useState<Record<string, unknown>>({});
   const [hints, setHints] = useState<HintList | null>(null);
+  const unlockHint = useCallback(async () => {
+    setHints(await hintsApi.unlockNext(slug));
+  }, [slug]);
   const [authAllowed, setAuthAllowed] = useState<boolean | null>(() =>
     getAuthSnapshot().status === "authenticated" ? true : null,
   );
@@ -333,6 +336,7 @@ export function WorkspaceShell({
         exercise={exercise}
         pathSlug={pathSlug}
         hints={hints}
+        onUnlockHint={unlockHint}
         run={run}
         grade={grade}
         pending={pending}

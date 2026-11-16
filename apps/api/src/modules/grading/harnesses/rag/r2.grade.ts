@@ -1,12 +1,17 @@
 import { estimateTokens } from '../../gateway/pricing';
 import { advisoryClassB } from '../../judge/class-b';
-import { chunkCorpus, type CorpusDoc } from './chunking';
+import { chunkCorpus, type Chunk, type CorpusDoc } from './chunking';
 import { titleBoost } from './rerank';
-import { chunkContainsSpan, retrieveRanked } from './retrieve';
+import {
+  chunkContainsSpan,
+  retrieveRanked,
+  type RankedChunk,
+} from './retrieve';
 import {
   answerableHidden,
   expandGoldSpan,
   FAILING_SAMPLE_LIMIT,
+  gateThreshold,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
@@ -17,17 +22,39 @@ import type {
   TraceQuery,
 } from './rag.types';
 
-const RECALL_THRESHOLD = 0.8;
-const TOKEN_CEILING = 2000;
-const OVERLAP = 80;
+const DEFAULT_RECALL = 0.8;
+const DEFAULT_TOKEN_CEILING = 2000;
+
+/**
+ * R2 learners pick chunk size, top-k and rerank; the split itself is fixed.
+ * Sentence packing keeps sentences whole, so a chunk either carries the gold
+ * sentence or it does not, and the chunk text is exactly what enters context.
+ */
+export const R2_SPLIT = { overlap: 0, splitStrategy: 'sentence' as const };
+
+export function chunkForR2(docs: CorpusDoc[], payload: R2Payload): Chunk[] {
+  return chunkCorpus(
+    docs,
+    payload.chunkSize,
+    R2_SPLIT.overlap,
+    R2_SPLIT.splitStrategy,
+  );
+}
 
 export function gradeR2(
   payload: R2Payload,
   docs: CorpusDoc[],
   hidden: HiddenItem[],
   publicItems: { question: string }[] = [],
+  gates?: unknown,
 ): RagGradeResult {
-  const chunks = chunkCorpus(docs, payload.chunkSize, OVERLAP, 'heading-aware');
+  const recallThreshold = gateThreshold(gates, 'recall@k', DEFAULT_RECALL);
+  const tokenCeiling = gateThreshold(
+    gates,
+    'mean_prompt_tokens',
+    DEFAULT_TOKEN_CEILING,
+  );
+  const chunks = chunkForR2(docs, payload);
   const answerable = answerableHidden(hidden);
   const misses: RagGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
@@ -36,9 +63,8 @@ export function gradeR2(
 
   for (const item of answerable) {
     const ranked = retrieveForR2(item.question, chunks, payload);
-    const packed = ranked
-      .map((row) => row.chunk.text.slice(0, payload.chunkSize))
-      .join('\n\n');
+    // Recall is judged on exactly the text that is sent as context.
+    const packed = ranked.map((row) => row.chunk.text).join('\n\n');
     tokenCounts.push(estimateTokens(`Context:\n${packed}`));
     const gold = expandGoldSpan(
       docs,
@@ -66,8 +92,8 @@ export function gradeR2(
     tokenCounts.length === 0
       ? 0
       : tokenCounts.reduce((sum, value) => sum + value, 0) / tokenCounts.length;
-  const recallPass = recall >= RECALL_THRESHOLD;
-  const costPass = meanTokens <= TOKEN_CEILING;
+  const recallPass = recall >= recallThreshold;
+  const costPass = meanTokens <= tokenCeiling;
   const passed = recallPass && costPass;
 
   return {
@@ -82,7 +108,7 @@ export function gradeR2(
         class: 'A',
         metric: 'recall@k',
         op: 'gte',
-        value: RECALL_THRESHOLD,
+        value: recallThreshold,
         actual: recall,
         passed: recallPass,
       },
@@ -91,7 +117,7 @@ export function gradeR2(
         class: 'A',
         metric: 'mean_prompt_tokens',
         op: 'lte',
-        value: TOKEN_CEILING,
+        value: tokenCeiling,
         actual: meanTokens,
         passed: costPass,
       },
@@ -103,7 +129,7 @@ export function gradeR2(
     scorecard: {
       recallAtK: recall,
       meanPromptTokens: meanTokens,
-      tokenCeiling: TOKEN_CEILING,
+      tokenCeiling: tokenCeiling,
       topK: payload.topK,
       rerank: payload.rerank,
       chunks: chunks.length,
@@ -131,11 +157,11 @@ export function gradeR2(
   };
 }
 
-function retrieveForR2(
+export function retrieveForR2(
   question: string,
-  chunks: ReturnType<typeof chunkCorpus>,
+  chunks: Chunk[],
   payload: R2Payload,
-) {
+): RankedChunk[] {
   const pool = payload.rerank
     ? Math.min(chunks.length, Math.max(payload.topK * 4, payload.topK))
     : payload.topK;
@@ -154,6 +180,9 @@ function r2FailureClasses(
   const classes: string[] = [];
   if (!costPass && payload.topK >= 16) {
     classes.push('topk-too-high');
+  }
+  if (!costPass && payload.chunkSize >= 400) {
+    classes.push('chunks-too-large');
   }
   if (!recallPass && !payload.rerank && payload.topK <= 8) {
     classes.push('no-rerank-with-low-k');

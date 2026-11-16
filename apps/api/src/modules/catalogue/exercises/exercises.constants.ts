@@ -163,22 +163,24 @@ export function isHiddenCanary(question: string): boolean {
   return question.includes('HIDDEN_EVAL');
 }
 
+/** Sentence packing small enough to fit the R1 context budget. */
 export const R1_REFERENCE_PAYLOAD = {
+  chunkSize: 200,
+  overlap: 40,
+  splitStrategy: 'sentence' as const,
+};
+
+/** Whole-document chunks: full recall, but over the R1 context budget. */
+export const R1_NEAR_MISS_PAYLOAD = {
   chunkSize: 400,
   overlap: 80,
   splitStrategy: 'heading-aware' as const,
 };
 
-export const R1_NEAR_MISS_PAYLOAD = {
-  chunkSize: 50,
-  overlap: 0,
-  splitStrategy: 'fixed' as const,
-};
-
 export const R2_REFERENCE_PAYLOAD = {
-  topK: 5,
+  topK: 2,
   rerank: true,
-  chunkSize: 400,
+  chunkSize: 200,
 };
 
 export const R2_NEAR_MISS_PAYLOAD = {

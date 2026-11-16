@@ -87,7 +87,8 @@
 
 .lp-ws-mobile-segments {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   gap: 0.35rem;
   padding: 0.5rem 0.65rem 0.65rem;
   border-bottom: 1px solid var(--lp-border);
@@ -166,8 +167,10 @@
 }
 
 .lp-ws-mobile-flow {
-  height: 10.5rem;
-  min-height: 10.5rem;
+  /* Size to the pipeline card (header + fixed-height canvas + caption). */
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
   border-bottom: 1px solid var(--lp-border);
   background: color-mix(in srgb, var(--color-ink) 5%, var(--color-bg-inset));
 }
@@ -214,4 +217,10 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+}
+
+.lp-rag-graph--mobile .lp-rag-graph-canvas {
+  flex: none;
+  height: 7.5rem;
+  min-height: 7.5rem;
 }

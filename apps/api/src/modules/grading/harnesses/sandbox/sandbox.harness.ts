@@ -18,6 +18,7 @@ export type SandboxExecuteInput = {
   hidden: HiddenItem[];
   publicItems?: { question: string }[];
   budget?: unknown;
+  gates?: unknown;
 };
 
 @Injectable()
@@ -49,6 +50,7 @@ export class SandboxHarness {
       input.publicItems ?? [],
       (job) => this.sandbox.run(job),
       { maxWallClockS },
+      input.gates,
     );
 
     await this.budget.recordSandbox(input.runId, {

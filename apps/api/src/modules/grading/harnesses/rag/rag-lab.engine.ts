@@ -18,9 +18,15 @@ import {
   parseR3Payload,
   parseR4Payload,
 } from './rag.payloads';
-import type { R2Payload, R4Payload } from './rag.types';
-import { mmrRerank, titleBoost } from './rerank';
-import { retrieveRanked, type RankedChunk } from './retrieve';
+import { chunkForR2, R2_SPLIT, retrieveForR2 } from './r2.grade';
+import { R4_FIRST_STAGE_LABEL, r4Baseline, rerankForR4 } from './r4.grade';
+import { titleBoost } from './rerank';
+import { expandGoldSpan } from './rag.shared';
+import {
+  chunkContainsSpan,
+  retrieveRanked,
+  type RankedChunk,
+} from './retrieve';
 
 export type RagLabArchetype = 'r1' | 'r2' | 'r3' | 'r4' | 'sandbox' | 'unknown';
 
@@ -35,6 +41,14 @@ export type RagLabHit = {
   title: string;
   score: number;
   text: string;
+  /** Public sample questions only: does this chunk carry the gold sentence? */
+  containsAnswer: boolean | null;
+};
+
+/** Gold label of a PUBLIC sample question (never hidden-set data). */
+export type RagLabPublicGold = {
+  goldDocId: string;
+  goldSpan: string;
 };
 
 export type RagLabPreview = {
@@ -46,17 +60,16 @@ export type RagLabPreview = {
   generation: string | null;
   citations: string[];
   refused: boolean;
+  /** Same per-question token count the grader averages for this archetype. */
   contextTokens: number;
+  /** Public sample questions only: is the gold sentence anywhere in the context? */
+  answerFound: boolean | null;
   frozen: RagLabFrozen | null;
 };
 
 const K = 5;
 const R3_FROZEN = {
   chunkSize: 400,
-  overlap: 80,
-  splitStrategy: 'heading-aware' as const,
-};
-const R2_FROZEN = {
   overlap: 80,
   splitStrategy: 'heading-aware' as const,
 };
@@ -85,30 +98,22 @@ export function ragLabFrozen(slug: string): RagLabFrozen | null {
   if (archetype === 'r3') {
     return {
       label: 'Retrieval locked',
-      items: [
-        `Chunk size ${R3_FROZEN.chunkSize}`,
-        `Overlap ${R3_FROZEN.overlap}`,
-        `Strategy ${R3_FROZEN.splitStrategy}`,
-        `Top k ${K}`,
-      ],
+      // heading-aware keeps each document whole, whatever the chunk size.
+      items: ['Whole-document chunks', 'BM25 + title boost', `Top k ${K}`],
     };
   }
   if (archetype === 'r4') {
     return {
       label: 'Chunking locked',
-      items: [
-        `Chunk size ${R3_FROZEN.chunkSize}`,
-        `Overlap ${R3_FROZEN.overlap}`,
-        `Strategy ${R3_FROZEN.splitStrategy}`,
-      ],
+      items: ['Whole-document chunks', R4_FIRST_STAGE_LABEL],
     };
   }
   if (archetype === 'r2') {
     return {
       label: 'Split locked',
       items: [
-        `Strategy ${R2_FROZEN.splitStrategy}`,
-        `Overlap ${R2_FROZEN.overlap}`,
+        `Strategy ${R2_SPLIT.splitStrategy}`,
+        `Overlap ${R2_SPLIT.overlap}`,
       ],
     };
   }
@@ -120,6 +125,7 @@ export function previewRagLabWithCorpus(
   payload: unknown,
   question: string,
   docs: CorpusDoc[],
+  publicGold: RagLabPublicGold | null = null,
 ): RagLabPreview {
   const archetype = ragLabArchetype(slug);
   if (archetype === 'sandbox') {
@@ -143,13 +149,9 @@ export function previewRagLabWithCorpus(
     );
     retrieved = retrieveRanked(question, chunks, K);
   } else if (archetype === 'r2') {
+    // Same chunking and retrieval as the R2 grader, so the preview matches grading.
     const parsed = parseR2Payload(payload);
-    chunks = chunkCorpus(
-      docs,
-      parsed.chunkSize,
-      R2_FROZEN.overlap,
-      R2_FROZEN.splitStrategy,
-    );
+    chunks = chunkForR2(docs, parsed);
     retrieved = retrieveForR2(question, chunks, parsed);
   } else if (archetype === 'r3') {
     const parsed = parseR3Payload(payload);
@@ -171,7 +173,7 @@ export function previewRagLabWithCorpus(
       R3_FROZEN.overlap,
       R3_FROZEN.splitStrategy,
     );
-    baseline = retrieveRanked(question, chunks, K);
+    baseline = r4Baseline(question, chunks);
     retrieved = rerankForR4(question, chunks, parsed);
     if (parsed.queryRewritePrompt.trim()) {
       generation = `[Query rewrite prompt set — grading uses rewritten queries on submit.]`;
@@ -187,66 +189,46 @@ export function previewRagLabWithCorpus(
     retrieved = retrieveRanked(question, chunks, K);
   }
 
+  const joined = retrieved.map((row) => row.chunk.text).join('\n\n');
+  // R2 grades prompt tokens including the "Context:" header; the others grade
+  // the bare context.
   const contextTokens = estimateTokens(
-    retrieved.map((row) => row.chunk.text).join('\n\n'),
+    archetype === 'r2' ? `Context:\n${joined}` : joined,
   );
+  const gold = publicGold
+    ? expandGoldSpan(docs, publicGold.goldDocId, publicGold.goldSpan)
+    : null;
+  const retrievedHits = hitsToDto(retrieved, gold);
 
   return {
     archetype,
     chunkCount: chunks.length,
     chunks,
-    retrieved: hitsToDto(retrieved),
-    baseline: baseline ? hitsToDto(baseline) : null,
+    retrieved: retrievedHits,
+    baseline: baseline ? hitsToDto(baseline, gold) : null,
     generation,
     citations,
     refused,
     contextTokens,
+    answerFound: gold
+      ? retrievedHits.some((hit) => hit.containsAnswer === true)
+      : null,
     frozen: ragLabFrozen(slug),
   };
 }
 
-function hitsToDto(ranked: RankedChunk[]): RagLabHit[] {
+function hitsToDto(ranked: RankedChunk[], gold: string | null): RagLabHit[] {
   return ranked.map((row) => ({
     chunkId: row.chunk.id,
     docId: row.chunk.docId,
     title: row.chunk.title,
     score: row.score,
     text: row.chunk.text,
+    containsAnswer: gold ? chunkContainsSpan(row.chunk.text, gold) : null,
   }));
-}
-
-function retrieveForR2(
-  question: string,
-  chunks: Chunk[],
-  payload: R2Payload,
-): RankedChunk[] {
-  const pool = payload.rerank
-    ? Math.min(chunks.length, Math.max(payload.topK * 4, payload.topK))
-    : payload.topK;
-  const ranked = retrieveRanked(question, chunks, pool);
-  if (!payload.rerank) {
-    return ranked.slice(0, payload.topK);
-  }
-  return titleBoost(question, ranked).slice(0, payload.topK);
 }
 
 function frozenRetrieve(question: string, chunks: Chunk[]): RankedChunk[] {
   const pool = retrieveRanked(question, chunks, Math.min(chunks.length, 20));
   return titleBoost(question, pool).slice(0, K);
-}
-
-function rerankForR4(
-  question: string,
-  chunks: Chunk[],
-  payload: R4Payload,
-): RankedChunk[] {
-  const window = Math.min(chunks.length, Math.max(payload.rerankTopN, K));
-  const pool = retrieveRanked(question, chunks, window);
-  if (payload.reranker === 'title-boost') {
-    return titleBoost(question, pool).slice(0, K);
-  }
-  if (payload.reranker === 'mmr') {
-    return mmrRerank(pool).slice(0, K);
-  }
-  return pool.slice(0, K);
 }

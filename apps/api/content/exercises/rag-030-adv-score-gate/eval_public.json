@@ -1,42 +1,42 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "Who sets the severity of an incident?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "The incident commander",
+    "goldDocId": "incident",
+    "goldSpan": "Severity is set by the incident commander"
   },
   {
     "id": "p2",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "Is ride-hailing to the office reimbursable on ordinary workdays?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway; split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "No",
+    "goldDocId": "expense",
+    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
   },
   {
     "id": "p3",
-    "question": "How long are support tickets kept after close?",
+    "question": "Which retention clock do backup tapes follow?",
     "answerable": true,
-    "goldAnswer": "18 months",
+    "goldAnswer": "The same clock as the source system",
     "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldSpan": "Backup tapes follow the same clock as the source system"
   },
   {
     "id": "p4",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "Are personal USB drives allowed on company laptops?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "No, they are blocked on the endpoint",
+    "goldDocId": "laptop",
+    "goldSpan": "personal USB drives are blocked on the endpoint"
   },
   {
     "id": "p5",
-    "question": "What report must vendors present before procurement?",
+    "question": "How quickly must a leaked credential be rotated?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "Within one hour of detection",
+    "goldDocId": "password",
+    "goldSpan": "Rotate a leaked credential within one hour of detection"
   }
 ]

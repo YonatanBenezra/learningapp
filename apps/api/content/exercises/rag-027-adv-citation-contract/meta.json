@@ -21,7 +21,7 @@
       "name": "Refusal behaviour"
     }
   ],
-  "briefMd": "# Advanced · Citation Contract\n\nMulti-hop questions: every claim needs [chunk:id]; refusals when context is incomplete.",
+  "briefMd": "# Advanced · Citation Contract\n\nThe same contract with less slack: cited chunks must carry the answer almost verbatim, and answerable questions may be refused at most once.\n\nYou author **only the generation prompt**. Retrieval is fixed: whole-document chunks ranked by BM25 with a title boost, top 5. Cite as `[chunk:<id>]` with ids from the retrieved set and refuse when the answer is not in context.\n\n**Gates:** citation format on every answer, gold-span overlap ≥ 0.95, at least 5 refusals on unanswerable questions, at most 1 refusal on answerable ones.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -36,9 +36,10 @@
     }
   },
   "thresholds": {
-    "gold_span_overlap": 0.85,
-    "unanswerable_refusal": 5,
-    "answerable_refusal_max": 2
+    "citation_format": 1,
+    "gold_span_overlap": 0.95,
+    "unanswerable_refusals": 5,
+    "answerable_refusals": 1
   },
   "budget": {
     "max_model_calls": 40,
@@ -59,7 +60,7 @@
       "class": "A",
       "metric": "gold_span_overlap",
       "op": "gte",
-      "value": 0.85
+      "value": 0.95
     },
     {
       "id": "refusal-unanswerable",
@@ -73,14 +74,17 @@
       "class": "A",
       "metric": "answerable_refusals",
       "op": "lte",
-      "value": 2
+      "value": 1
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r3",
   "isPublished": true
 }

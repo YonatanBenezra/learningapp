@@ -14,7 +14,8 @@ import { routes } from "@/config/routes";
 import { SIMULATOR_LABELS } from "@/config/simulators";
 import type { Exercise } from "@/types/exercise";
 import { cn } from "@/lib/utils";
-import type { FigmaBriefContent } from "./brief-panel";
+import type { FigmaBriefContent, FigmaBriefSubmission } from "./brief-panel";
+import { configChanges, gateDeltas } from "../submission-diff";
 
 const DIFFICULTY_LABELS = { E: "Easy", M: "Medium", H: "Hard" } as const;
 
@@ -55,11 +56,9 @@ export function FigmaBriefHeader({ exercise, content }: FigmaBriefHeaderProps) {
         ))}
       </div>
       <p className="text-[0.6875rem] font-medium text-lp-muted">
-        {content.meta.id}
-        <span aria-hidden> · </span>
-        {content.meta.duration}
-        <span aria-hidden> · </span>
-        {content.meta.solved}
+        {[content.meta.id, content.meta.duration, content.meta.solved]
+          .filter((part): part is string => Boolean(part))
+          .join(" · ")}
       </p>
     </div>
   );
@@ -71,7 +70,26 @@ type FigmaBriefBodyProps = {
 
 export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
   const [publicOpen, setPublicOpen] = useState(false);
+  const [hintPending, setHintPending] = useState(false);
+  const [hintError, setHintError] = useState<string | null>(null);
   const unlockedHints = content.hints.filter((h) => h.unlocked).length;
+  const firstLockedHint = content.hints.find((h) => !h.unlocked)?.n;
+  const gates = content.constraint.gates;
+
+  async function unlockHint() {
+    if (!content.onUnlockHint) {
+      return;
+    }
+    setHintPending(true);
+    setHintError(null);
+    try {
+      await content.onUnlockHint();
+    } catch (caught: unknown) {
+      setHintError(caught instanceof Error ? caught.message : "Could not unlock the hint.");
+    } finally {
+      setHintPending(false);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4 px-3.5 pb-4">
@@ -87,9 +105,22 @@ export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
           Constraints &amp; pass criteria
         </h2>
         <div className="rounded-lg border border-lp-brand/35 bg-[color-mix(in_srgb,var(--color-brand)_6%,var(--color-card))] px-3 py-2.5">
-          <p className="text-[1.35rem] font-bold leading-none text-lp-brand">
-            {content.constraint.metric} {content.constraint.threshold}
-          </p>
+          {gates && gates.length > 1 ? (
+            <ul className="m-0 flex list-none flex-col gap-1 p-0">
+              {gates.map((gate) => (
+                <li
+                  key={gate.metric}
+                  className="text-[1.05rem] font-bold leading-tight text-lp-brand"
+                >
+                  {gate.metric} {gate.threshold}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-[1.35rem] font-bold leading-none text-lp-brand">
+              {content.constraint.metric} {content.constraint.threshold}
+            </p>
+          )}
           <p className="mt-1.5 text-[0.6875rem] text-lp-muted">{content.constraint.footnote}</p>
           <p className="mt-1 font-mono text-[0.6875rem] text-lp-muted">
             {content.constraint.fields}
@@ -140,6 +171,7 @@ export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
         ) : null}
       </section>
 
+      {content.hints.length > 0 ? (
       <section>
         <div className="mb-2 flex items-baseline justify-between gap-2">
           <h2 className="text-[0.625rem] font-bold uppercase tracking-[0.06em] text-lp-muted">
@@ -171,14 +203,33 @@ export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
                   <Lock className="size-3.5" aria-hidden />
                   Hint {hint.n}
                 </div>
-                <p className="text-[0.75rem] text-lp-muted">
-                  Hint {hint.n} unlocks after {hint.unlockAfter} more attempts.
-                </p>
+                {hint.unlockAfter != null ? (
+                  <p className="text-[0.75rem] text-lp-muted">
+                    Hint {hint.n} unlocks after {hint.unlockAfter} more attempts.
+                  </p>
+                ) : hint.n === firstLockedHint && content.onUnlockHint ? (
+                  <button
+                    type="button"
+                    onClick={() => void unlockHint()}
+                    disabled={hintPending}
+                    className="border-0 bg-transparent p-0 text-[0.75rem] font-semibold text-lp-brand underline-offset-2 hover:underline disabled:opacity-60"
+                  >
+                    {hintPending ? "Unlocking…" : "Unlock this hint"}
+                  </button>
+                ) : (
+                  <p className="text-[0.75rem] text-lp-muted">Locked.</p>
+                )}
               </div>
             ),
           )}
         </div>
+        {hintError ? (
+          <p className="mt-2 text-[0.75rem] text-lp-status-fail" role="alert">
+            {hintError}
+          </p>
+        ) : null}
       </section>
+      ) : null}
     </div>
   );
 }
@@ -306,22 +357,152 @@ export function FigmaBriefCollapsedRail({
   );
 }
 
-export function FigmaBriefSubmissions({ count }: { count: number }) {
+export function FigmaBriefSubmissions({
+  count,
+  items,
+  truncated = false,
+}: {
+  count: number;
+  items?: ReadonlyArray<FigmaBriefSubmission>;
+  truncated?: boolean;
+}) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  if (!items || items.length === 0) {
+    return (
+      <div className="flex flex-col gap-3 px-3.5 py-3">
+        <p className="text-[0.8125rem] text-lp-muted">
+          {count > 0
+            ? `${count} submission${count === 1 ? "" : "s"} graded on the hidden set.`
+            : "No graded submissions yet. Submit a config to see results here."}
+        </p>
+      </div>
+    );
+  }
+  const newestFirst = [...items].sort((a, b) => b.n - a.n);
+  const byN = new Map(items.map((item) => [item.n, item]));
   return (
     <div className="flex flex-col gap-3 px-3.5 py-3">
       <p className="text-[0.8125rem] text-lp-muted">
-        {count} graded attempts on the hidden set (demo).
+        Your submissions, newest first{truncated ? " (latest 20)" : ""}. Open one to see what
+        changed since the attempt before it.
       </p>
       <ul className="m-0 list-none space-y-2 p-0 text-[0.8125rem] text-lp-ink">
-        <li className="rounded-md border border-lp-border px-3 py-2">
-          <strong>Attempt 3</strong>
-          <span className="text-lp-muted"> · fail · recall@5 0.41</span>
-        </li>
-        <li className="rounded-md border border-lp-border px-3 py-2">
-          <strong>Attempt 2</strong>
-          <span className="text-lp-muted"> · fail · recall@5 0.38</span>
-        </li>
+        {newestFirst.map((item) => {
+          const previous = byN.get(item.n - 1);
+          const open = openId === item.id;
+          return (
+            <li key={item.id} className="rounded-md border border-lp-border">
+              <button
+                type="button"
+                className="flex w-full items-start justify-between gap-2 bg-transparent px-3 py-2 text-left"
+                aria-expanded={open}
+                onClick={() => setOpenId(open ? null : item.id)}
+              >
+                <span className="min-w-0">
+                  <strong>Attempt {item.n}</strong>
+                  <span
+                    className={cn(
+                      "ml-1.5",
+                      item.verdict === "pass"
+                        ? "text-lp-status-pass"
+                        : item.verdict === "fail"
+                          ? "text-lp-status-fail"
+                          : "text-lp-muted",
+                    )}
+                  >
+                    {item.verdict ?? item.status}
+                  </span>
+                  {item.contest ? (
+                    <span className="ml-1.5 text-[0.6875rem] text-lp-muted">contest</span>
+                  ) : null}
+                  {item.summary ? (
+                    <span className="mt-0.5 block font-mono text-[0.6875rem] text-lp-muted">
+                      {item.summary}
+                    </span>
+                  ) : null}
+                </span>
+                <span className="shrink-0 text-[0.6875rem] text-lp-muted">
+                  {formatSubmittedAt(item.createdAt)}
+                </span>
+              </button>
+              {open ? (
+                <SubmissionChanges item={item} previous={previous ?? null} />
+              ) : null}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
+}
+
+function SubmissionChanges({
+  item,
+  previous,
+}: {
+  item: FigmaBriefSubmission;
+  previous: FigmaBriefSubmission | null;
+}) {
+  const changes = previous ? configChanges(previous.payload, item.payload) : [];
+  const deltas = gateDeltas(previous?.gateResults, item.gateResults);
+  return (
+    <div className="space-y-2 border-t border-lp-border/70 px-3 py-2 text-[0.75rem]">
+      {previous ? (
+        changes.length > 0 ? (
+          <ul className="m-0 list-none space-y-0.5 p-0 font-mono">
+            {changes.map((change) => (
+              <li key={change.key}>
+                {change.key}: <span className="text-lp-muted">{change.from}</span> →{" "}
+                <span className="text-lp-ink">{change.to}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="m-0 text-lp-muted">Same config as attempt {previous.n}.</p>
+        )
+      ) : (
+        <p className="m-0 font-mono text-lp-muted">
+          {Object.entries(item.payload)
+            .map(([key, value]) => `${key} ${JSON.stringify(value)}`)
+            .join(" · ")}
+        </p>
+      )}
+      {deltas.length > 0 ? (
+        <ul className="m-0 list-none space-y-0.5 p-0 font-mono">
+          {deltas.map((delta) => (
+            <li key={delta.metric}>
+              {delta.label}: {previous ? <span className="text-lp-muted">{delta.from} → </span> : null}
+              <span
+                className={cn(
+                  delta.trend === "better" && "text-lp-status-pass",
+                  delta.trend === "worse" && "text-lp-status-fail",
+                )}
+              >
+                {delta.to}
+              </span>
+              {delta.passedNow === null ? null : delta.passedNow ? " ✓" : " ✗"}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {item.runId ? (
+        <Link href={routes.run(item.runId)} className="inline-block text-lp-brand hover:underline">
+          Open run
+        </Link>
+      ) : null}
+    </div>
+  );
+}
+
+function formatSubmittedAt(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+  return date.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }

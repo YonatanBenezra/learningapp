@@ -79,23 +79,31 @@ export function formatRagConfigDisplay(payload: unknown): string | undefined {
   return parts.join(" · ");
 }
 
+/** R1 grades recall@5; R2 grades recall@k (k = the learner's topK). */
+const RECALL_METRIC_KEYS = ["recall_at_5", "recall@5", "recall_at_k", "recall@k"] as const;
+
+function recallMetric(grade: Grade) {
+  for (const key of RECALL_METRIC_KEYS) {
+    const metric = grade.metrics?.[key];
+    if (metric) {
+      return metric;
+    }
+  }
+  return undefined;
+}
+
 export function recallFromGrade(grade?: Grade | null): number | undefined {
   if (!grade) {
     return undefined;
   }
-  const scorecard = grade.scorecard?.recallAt5;
-  if (typeof scorecard === "number") {
-    return scorecard;
+  for (const key of ["recallAt5", "recallAtK"] as const) {
+    const scorecard = grade.scorecard?.[key];
+    if (typeof scorecard === "number") {
+      return scorecard;
+    }
   }
-  const fromSnake = grade.metrics?.recall_at_5?.value;
-  if (typeof fromSnake === "number") {
-    return fromSnake;
-  }
-  const fromAt = grade.metrics?.["recall@5"]?.value;
-  if (typeof fromAt === "number") {
-    return fromAt;
-  }
-  return undefined;
+  const value = recallMetric(grade)?.value;
+  return typeof value === "number" ? value : undefined;
 }
 
 export function recallHitsTotalFromGrade(
@@ -104,7 +112,7 @@ export function recallHitsTotalFromGrade(
   if (!grade) {
     return {};
   }
-  const metric = grade.metrics?.recall_at_5 ?? grade.metrics?.["recall@5"];
+  const metric = recallMetric(grade);
   if (metric && typeof metric.hits === "number" && typeof metric.total === "number") {
     return { hits: metric.hits, total: metric.total };
   }
@@ -157,7 +165,7 @@ export function buildRagPipeline(
     { id: "query", label: "Query", state: "done" },
     { id: "planner", label: "Planner", state: "skip" },
     { id: "retriever", label: "Retriever", state: "done" },
-    { id: "vsearch", label: "Vector search", state: "done" },
+    { id: "vsearch", label: "BM25 search", state: "done" },
     { id: "evaluator", label: "Evaluator", state: "skip" },
     { id: "context", label: "Context", state: "done" },
     { id: "llm", label: "LLM", state: generation ? "done" : "skip" },
@@ -229,7 +237,7 @@ export function buildRagTraceMeta(
   const verdict = overrides?.verdict ?? verdictFromTraceAndGrade(trace, grade);
   const recallAt5 = overrides?.recallAt5 ?? recallFromTraceAndGrade(trace, grade);
 
-  const hiddenTotal = grade?.metrics?.recall_at_5?.total;
+  const hiddenTotal = grade ? recallHitsTotalFromGrade(grade).total : undefined;
   const publicCount =
     overrides?.publicSampleCount ??
     (countPublicQueries(queries) || queries.length);
@@ -251,7 +259,7 @@ export function buildRagTraceMeta(
     hiddenFooter:
       overrides?.hiddenFooter ??
       (typeof hiddenTotal === "number"
-        ? `${hiddenTotal} hidden-set queries ran in this grade. Their questions, passages, and gold labels stay private.`
+        ? `${hiddenTotal} hidden-set queries ran in this grade. Gold labels stay private; only a few missed questions are shown as feedback.`
         : undefined),
   };
 }

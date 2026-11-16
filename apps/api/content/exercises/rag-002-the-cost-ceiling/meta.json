@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 2 · Cost-Capped Retrieval\n\nFinance flagged **runaway context costs** on the support bot: top-k=20 with rerank on every query. You must hold **recall@k ≥ 0.80** while keeping **mean prompt tokens ≤ 2,000** on the hidden eval.\n\nChunking is frozen (heading-aware, overlap 80). Tune **top-k**, **rerank**, and **chunk size** — the tradeoff every production RAG team negotiates with FinOps.\n",
+  "briefMd": "# Phase 2 · Cost-Capped Retrieval\n\nFinance flagged **runaway context costs** on the support bot: top-k=20 with rerank on every query. You must hold **recall@k ≥ 0.95** while keeping **mean prompt tokens ≤ 250** on the hidden eval.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full. Tune **top-k**, **rerank**, and **chunk size** — the tradeoff every production RAG team negotiates with FinOps.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,8 +46,8 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 2000,
-    "recall_at_k": 0.8
+    "mean_prompt_tokens": 250,
+    "recall_at_k": 0.95
   },
   "budget": {
     "max_model_calls": 0,
@@ -61,20 +61,23 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 2000
+      "value": 250
     },
     {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.8
+      "value": 0.95
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r2"
 }

@@ -3,7 +3,7 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Hybrid Search & Rank Boost",
+  "title": "Title-Aware Reranking",
   "difficulty": "H",
   "catalogPhase": 4,
   "corpusFile": "shared",
@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 4 · Hybrid Search & Rank Boost\n\nRare tokens and SKUs fail on dense-only retrieval. Combine **lexical + vector** signals via reranker choice, rerank depth, and optional query rewrite — production hybrid search tuning.\n",
+  "briefMd": "# Phase 4 · Title-Aware Reranking\n\nPolicy questions usually name their topic, and every policy document has a title. Pick the reranker that uses that signal and lift nDCG@5 well above the keyword-count first stage.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt costs one model call per question; the rewritten query is not used for ranking yet.\n\n**Gates:** nDCG@5 improves by at least 0.20, context tokens ≤ 3000, ≤ 2 model calls per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -52,7 +52,7 @@
     }
   },
   "thresholds": {
-    "ndcg_improvement": 0.15,
+    "ndcg_improvement": 0.2,
     "context_tokens": 3000,
     "model_calls_per_question": 2
   },
@@ -68,7 +68,7 @@
       "class": "A",
       "metric": "ndcg_improvement",
       "op": "gte",
-      "value": 0.15
+      "value": 0.2
     },
     {
       "id": "context-tokens",
@@ -78,7 +78,7 @@
       "value": 3000
     },
     {
-      "id": "calls-per-question",
+      "id": "model-calls",
       "class": "A",
       "metric": "model_calls_per_question",
       "op": "lte",
@@ -89,7 +89,10 @@
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r4",
   "isPublished": true
 }

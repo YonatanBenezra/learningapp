@@ -18,11 +18,15 @@
       "name": "Vector search"
     }
   ],
-  "briefMd": "# Phase 1 · Retrieval Top-K Baseline\n\nYour embedding index is live on the shared HR policy corpus. Before you tune chunking again, establish a **defensible top-k** for production Q&A.\n\nChunking is frozen (heading-aware, chunk 400, overlap 80). You control **top-k**, **rerank**, and **chunk size** within schema bounds.\n\n**Success criteria (hidden eval):** recall@k ≥ 0.80 with mean prompt tokens ≤ 2,500. Treat this like a launch gate for an internal support bot.\n",
+  "briefMd": "# Phase 1 · Retrieval Top-K Baseline\n\nYour embedding index is live on the shared HR policy corpus. Before you tune chunking again, establish a **defensible top-k** for production Q&A.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full. You control **top-k**, **rerank**, and **chunk size** within schema bounds.\n\n**Success criteria (hidden eval):** recall@k ≥ 0.90 with mean prompt tokens ≤ 400. Treat this like a launch gate for an internal support bot.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["topK", "rerank", "chunkSize"],
+    "required": [
+      "topK",
+      "rerank",
+      "chunkSize"
+    ],
     "properties": {
       "topK": {
         "type": "integer",
@@ -43,8 +47,8 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 2500,
-    "recall_at_k": 0.8
+    "mean_prompt_tokens": 400,
+    "recall_at_k": 0.9
   },
   "budget": {
     "max_model_calls": 0,
@@ -58,19 +62,22 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 2500
+      "value": 400
     },
     {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  }
 }

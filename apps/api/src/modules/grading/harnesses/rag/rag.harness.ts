@@ -26,6 +26,8 @@ export type RagExecuteInput = {
   docs: CorpusDoc[];
   hidden: HiddenItem[];
   publicItems?: { question: string }[];
+  /** Exercise gates (meta.json -> DB); graders read their thresholds from these. */
+  gates?: unknown;
 };
 
 @Injectable()
@@ -40,6 +42,7 @@ export class RagHarness {
         input.docs,
         input.hidden,
         publicItems,
+        input.gates,
       );
     }
     if (isRagR2Slug(input.slug)) {
@@ -48,6 +51,7 @@ export class RagHarness {
         input.docs,
         input.hidden,
         publicItems,
+        input.gates,
       );
     }
     if (isRagR3Slug(input.slug)) {
@@ -58,6 +62,7 @@ export class RagHarness {
         publicItems,
         this.gateway,
         input.runId,
+        input.gates,
       );
     }
     if (isRagR4Slug(input.slug)) {
@@ -68,6 +73,7 @@ export class RagHarness {
         publicItems,
         this.gateway,
         input.runId,
+        input.gates,
       );
     }
     throw new Error(`Unsupported RAG exercise: ${input.slug}`);

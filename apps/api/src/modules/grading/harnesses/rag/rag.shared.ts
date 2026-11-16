@@ -5,6 +5,40 @@ import type { RankedChunk } from './retrieve';
 
 export const FAILING_SAMPLE_LIMIT = 3;
 
+function declaredGate(
+  gates: unknown,
+  metric: string,
+): { value?: unknown } | undefined {
+  if (!Array.isArray(gates)) {
+    return undefined;
+  }
+  return gates.find(
+    (gate: unknown): gate is { metric: string; value?: unknown } =>
+      Boolean(gate) &&
+      typeof gate === 'object' &&
+      (gate as { metric?: unknown }).metric === metric,
+  );
+}
+
+/**
+ * Threshold for a grader gate, read from the exercise's declared gates
+ * (meta.json -> DB) so content is the single source of truth. Falls back to
+ * the archetype default when the exercise does not declare that gate.
+ */
+export function gateThreshold(
+  gates: unknown,
+  metric: string,
+  fallback: number,
+): number {
+  const value = declaredGate(gates, metric)?.value;
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
+/** True when the exercise declares this gate; optional gates only apply then. */
+export function declaresGate(gates: unknown, metric: string): boolean {
+  return declaredGate(gates, metric) !== undefined;
+}
+
 export function answerableHidden(hidden: HiddenItem[]): HiddenItem[] {
   return hidden.filter(
     (item) =>

@@ -43,7 +43,7 @@
     {
       "position": 6,
       "slug": "rag-030-adv-score-gate",
-      "title": "Eval Slice Regression Gate (Advanced)",
+      "title": "Rerank Without Extra Model Calls (Advanced)",
       "track": "rag",
       "difficulty": "H"
     },

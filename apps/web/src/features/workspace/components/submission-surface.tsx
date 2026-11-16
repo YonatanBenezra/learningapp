@@ -19,6 +19,7 @@ type SchemaProperty = {
   maximum?: number;
   enum?: unknown[];
   default?: unknown;
+  description?: string;
 };
 
 type SubmissionSchema = {
@@ -47,6 +48,24 @@ type SubmissionSurfaceProps = {
 };
 
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
+
+/** Units the RAG graders actually measure these fields in. */
+const RAG_FIELD_UNITS: Record<string, string> = {
+  chunkSize: "chars",
+  overlap: "chars",
+  topK: "chunks",
+  rerankTopN: "chunks",
+};
+
+/** What each RAG toggle does in the grader, when the schema has no description. */
+const RAG_FIELD_HELP: Record<string, string> = {
+  rerank:
+    "Fetch 4× top-k candidates, then move chunks whose document title matches the query to the top.",
+};
+
+function ragFieldHelp(name: string, property: SchemaProperty): string {
+  return property.description ?? RAG_FIELD_HELP[name] ?? "Toggle this option.";
+}
 const GUARD_PIPELINE = ["Probe", "Guard", "Model", "Grade"] as const;
 
 function guardModeFromFields(fields: string[]) {
@@ -98,7 +117,7 @@ export function SubmissionSurface({
   onValuesChange,
   figmaLayout = false,
   figmaGrade = null,
-  figmaAttempt = 3,
+  figmaAttempt = 1,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
   const [values, setValues] = useState<Record<string, unknown>>({});
@@ -526,7 +545,7 @@ function Field({
         {rag ? (
           <span>
             <strong>{label}</strong>
-            <span>Toggle this option for the retrieval pipeline</span>
+            <span>{ragFieldHelp(name, property)}</span>
           </span>
         ) : (
           label
@@ -541,13 +560,12 @@ function Field({
     const numeric =
       typeof value === "number" && Number.isFinite(value) ? value : min;
     if (rag && figmaLayout && property.minimum != null && property.maximum != null) {
-      const rangeLabel = `${min} - ${max}`;
+      const rangeLabel = `${min} – ${max}`;
       const footnote =
         name === "overlap" && overlapPct != null
-          ? `${overlapPct}% of chunk`
-          : name === "chunkSize"
-            ? rangeLabel
-            : rangeLabel;
+          ? `${rangeLabel} · ${overlapPct}% of chunk`
+          : rangeLabel;
+      const unit = RAG_FIELD_UNITS[name];
       const boxBorder =
         name === "chunkSize"
           ? "border-lp-brand/55 focus-within:border-lp-brand"
@@ -556,9 +574,6 @@ function Field({
         <div className="flex min-w-0 flex-col gap-1">
           <div className="flex items-center justify-between gap-2 font-mono text-[0.6875rem]">
             <span className="text-lp-ink/90">{name}</span>
-            {name === "chunkSize" ? (
-              <span className="text-lp-muted">{rangeLabel}</span>
-            ) : null}
           </div>
           <div
             className={cn(
@@ -577,7 +592,9 @@ function Field({
               onChange={(event) => onChange(parseInteger(event.target.value))}
               className="min-w-0 flex-1 bg-transparent font-mono text-[0.875rem] font-semibold text-lp-brand outline-none [appearance:textfield] [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-outer-spin-button]:m-0"
             />
-            <span className="shrink-0 font-mono text-[0.6875rem] text-lp-muted">tokens</span>
+            {unit ? (
+              <span className="shrink-0 font-mono text-[0.6875rem] text-lp-muted">{unit}</span>
+            ) : null}
           </div>
           <span className="font-mono text-[0.625rem] text-lp-muted">{footnote}</span>
         </div>

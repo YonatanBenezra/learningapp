@@ -3,7 +3,7 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Query Routing & Retrieval Mix",
+  "title": "Rerank to Full Recall on a Tight Budget",
   "difficulty": "H",
   "catalogPhase": 4,
   "corpusFile": "shared",
@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 4 · Query Routing & Retrieval Mix\n\nFAQ vs policy vs procedural queries need different **top-k / rerank / chunk** profiles. Tune the retrieval stack so each query class hits recall@k under token budget — how platform teams route before generation.\n",
+  "briefMd": "# Phase 4 · Rerank to Full Recall on a Tight Budget\n\nEvery hidden question must find its answer, with a prompt of about one chunk. Without rerank the gold chunk sometimes sits just below your cut-off; reranking lets you keep k small and still catch it.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k = 1.00 (every question) and mean prompt tokens ≤ 120 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,8 +46,8 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 2000,
-    "recall_at_k": 0.8
+    "mean_prompt_tokens": 120,
+    "recall_at_k": 1.0
   },
   "budget": {
     "max_model_calls": 0,
@@ -61,21 +61,24 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 2000
+      "value": 120
     },
     {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.8
+      "value": 1.0
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r2",
   "isPublished": true
 }

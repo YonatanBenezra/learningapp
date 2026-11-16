@@ -1,8 +1,8 @@
 export type Verdict = "pass" | "fail" | "inconclusive";
 
+/** Hidden-set gold labels are redacted by the API; only feedback fields arrive. */
 export type FailingCase = {
   question: string;
-  goldSpan?: string;
   retrieved?: string[];
   note?: string;
   output?: string;
@@ -12,6 +12,19 @@ export type MetricValue = {
   value: number;
   hits?: number;
   total?: number;
+};
+
+export type GateOp = "gte" | "lte" | "gt" | "lt" | "eq";
+
+export type GateResult = {
+  id: string;
+  class?: "A" | "B" | string;
+  metric: string;
+  op: GateOp | string;
+  value: number;
+  actual?: number | null;
+  passed?: boolean | null;
+  advisory?: boolean;
 };
 
 export type Grade = {

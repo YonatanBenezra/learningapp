@@ -51,4 +51,6 @@ export type ExerciseContentMeta = {
   difficulty: string;
   corpusFile?: string;
   isPublished?: boolean;
+  /** Declared pass gates; graders read their thresholds from these. */
+  gates?: unknown;
 };

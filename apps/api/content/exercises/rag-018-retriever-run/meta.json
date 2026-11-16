@@ -3,7 +3,7 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Stale Index & Retriever Refresh",
+  "title": "Re-tune Retrieval After a Re-index",
   "difficulty": "M",
   "catalogPhase": 3,
   "corpusFile": "shared",
@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 3 · Stale Index & Retriever Refresh\n\nPolicy docs updated last sprint but the bot still cites **old chunks**. Tune retrieval (top-k, rerank, chunk size) so answers track the **current index** and meet recall@k on the hidden set — the same drill after re-embed/re-index in production.\n",
+  "briefMd": "# Phase 3 · Re-tune Retrieval After a Re-index\n\nThe policy index was rebuilt with sentence-packed chunks, and the old top-k / chunk-size settings no longer fit. Re-tune them so recall holds and prompts stay within the new budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 300 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,8 +46,8 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 2000,
-    "recall_at_k": 0.8
+    "mean_prompt_tokens": 300,
+    "recall_at_k": 0.95
   },
   "budget": {
     "max_model_calls": 0,
@@ -61,21 +61,24 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 2000
+      "value": 300
     },
     {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.8
+      "value": 0.95
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r2",
   "isPublished": true
 }

@@ -3,7 +3,7 @@
   "version": 1,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Eval Slice Regression Gate (Advanced)",
+  "title": "Rerank Without Extra Model Calls (Advanced)",
   "difficulty": "H",
   "catalogPhase": 7,
   "corpusFile": "shared",
@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Advanced · Regression Gate\n\nTighter Wilson gates on multiple slices — block any localized regression.",
+  "briefMd": "# Advanced · Rerank Without Extra Model Calls\n\nNo model calls and a high bar: only the right reranker with a wide enough window passes.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt costs one model call per question; the rewritten query is not used for ranking yet.\n\n**Gates:** nDCG@5 improves by at least 0.25, context tokens ≤ 700, and 0 model calls per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -52,9 +52,9 @@
     }
   },
   "thresholds": {
-    "ndcg_improvement": 0.15,
-    "context_tokens": 3000,
-    "model_calls_per_question": 2
+    "ndcg_improvement": 0.25,
+    "context_tokens": 700,
+    "model_calls_per_question": 0
   },
   "budget": {
     "max_model_calls": 50,
@@ -68,28 +68,31 @@
       "class": "A",
       "metric": "ndcg_improvement",
       "op": "gte",
-      "value": 0.15
+      "value": 0.25
     },
     {
       "id": "context-tokens",
       "class": "A",
       "metric": "context_tokens",
       "op": "lte",
-      "value": 3000
+      "value": 700
     },
     {
-      "id": "calls-per-question",
+      "id": "model-calls",
       "class": "A",
       "metric": "model_calls_per_question",
       "op": "lte",
-      "value": 2
+      "value": 0
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r4",
   "isPublished": true
 }

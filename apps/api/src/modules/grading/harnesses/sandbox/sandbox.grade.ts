@@ -7,6 +7,7 @@ import {
   answerableHidden,
   expandGoldSpan,
   FAILING_SAMPLE_LIMIT,
+  gateThreshold,
   publicTraceItems,
 } from '../rag/rag.shared';
 import { chunkContainsSpan } from '../rag/retrieve';
@@ -16,7 +17,7 @@ import type { SandboxPayload } from './sandbox.payloads';
 import type { SandboxGradeResult, SandboxRetrieved } from './sandbox.types';
 
 const K = 5;
-const THRESHOLD = 0.8;
+const DEFAULT_THRESHOLD = 0.8;
 
 export type SandboxExecutor = (
   input: SandboxJobInput,
@@ -29,7 +30,9 @@ export async function gradeSandboxRetriever(
   publicItems: { question: string }[],
   execute: SandboxExecutor,
   limits?: { maxWallClockS?: number; maxMemoryMb?: number },
+  gates?: unknown,
 ): Promise<SandboxGradeResult> {
+  const threshold = gateThreshold(gates, 'recall@5', DEFAULT_THRESHOLD);
   const executed = await execute({
     source: payload.source,
     workspaceFiles: { 'input.json': learnerInputJson(docs, hidden) },
@@ -39,7 +42,13 @@ export async function gradeSandboxRetriever(
 
   const answerable = answerableHidden(hidden);
   if (!executed.ok) {
-    return sandboxFailure(executed, payload, answerable.length, publicItems);
+    return sandboxFailure(
+      executed,
+      payload,
+      answerable.length,
+      publicItems,
+      threshold,
+    );
   }
 
   const retrieved = parseResults(executed.stdout);
@@ -78,7 +87,7 @@ export async function gradeSandboxRetriever(
 
   const total = answerable.length;
   const recall = total === 0 ? 0 : hits / total;
-  const passed = recall >= THRESHOLD;
+  const passed = recall >= threshold;
   return {
     verdict: passed ? 'pass' : 'fail',
     metrics: {
@@ -90,7 +99,7 @@ export async function gradeSandboxRetriever(
         class: 'A',
         metric: 'recall@5',
         op: 'gte',
-        value: THRESHOLD,
+        value: threshold,
         actual: recall,
         passed,
       },
@@ -98,7 +107,7 @@ export async function gradeSandboxRetriever(
     failureClasses: passed ? [] : ['retrieval-quality'],
     scorecard: {
       recallAt5: recall,
-      threshold: THRESHOLD,
+      threshold,
       durationMs: executed.durationMs,
       memoryPeakMb: executed.memoryPeakMb,
     },
@@ -136,6 +145,7 @@ function sandboxFailure(
   payload: SandboxPayload,
   total: number,
   publicItems: { question: string }[],
+  threshold: number,
 ): SandboxGradeResult {
   const errorCode = executed.errorCode;
   return {
@@ -149,7 +159,7 @@ function sandboxFailure(
         class: 'A',
         metric: 'recall@5',
         op: 'gte',
-        value: THRESHOLD,
+        value: threshold,
         actual: 0,
         passed: false,
       },

@@ -1,5 +1,9 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import {
+  R1_NEAR_MISS_PAYLOAD,
+  R1_REFERENCE_PAYLOAD,
+} from '../../../catalogue/exercises/exercises.constants';
 import { gradeR1 } from './r1.grade';
 import type { CorpusDoc } from './chunking';
 import type { HiddenItem } from './rag.types';
@@ -17,13 +21,15 @@ describe('RagHarness R1', () => {
   const docs = loadJson<CorpusDoc[]>('corpus.json');
   const hidden = loadJson<HiddenItem[]>('eval_hidden.json');
   const publicItems = loadJson<HiddenItem[]>('eval_public.json');
+  const gates = loadJson<{ gates: unknown }>('meta.json').gates;
 
-  it('passes with heading-aware reference chunking', () => {
+  it('passes with the reference sentence chunking', () => {
     const result = gradeR1(
-      { chunkSize: 400, overlap: 80, splitStrategy: 'heading-aware' },
+      R1_REFERENCE_PAYLOAD,
       docs,
       hidden,
       publicItems,
+      gates,
     );
     expect(result.verdict).toBe('pass');
     expect(result.metrics.recall_at_5.value).toBeGreaterThanOrEqual(0.8);
@@ -36,12 +42,13 @@ describe('RagHarness R1', () => {
     );
   });
 
-  it('fails with tiny fixed windows (near-miss)', () => {
+  it('fails with tiny fixed windows that cut sentences', () => {
     const result = gradeR1(
       { chunkSize: 50, overlap: 0, splitStrategy: 'fixed' },
       docs,
       hidden,
       publicItems,
+      gates,
     );
     expect(result.verdict).toBe('fail');
     expect(result.metrics.recall_at_5.value).toBeLessThan(0.8);
@@ -55,14 +62,26 @@ describe('RagHarness R1', () => {
     ).toBe(true);
   });
 
+  it('fails whole-document chunks on the context budget despite full recall', () => {
+    const result = gradeR1(
+      R1_NEAR_MISS_PAYLOAD,
+      docs,
+      hidden,
+      publicItems,
+      gates,
+    );
+    expect(result.verdict).toBe('fail');
+    expect(result.metrics.recall_at_5.value).toBe(1);
+    const budget = result.gateResults.find(
+      (gate) => gate.metric === 'mean_context_tokens',
+    );
+    expect(budget?.passed).toBe(false);
+    expect(result.failureClasses).toContain('context-over-budget');
+  });
+
   it('is deterministic', () => {
-    const payload = {
-      chunkSize: 400,
-      overlap: 80,
-      splitStrategy: 'heading-aware' as const,
-    };
-    const a = gradeR1(payload, docs, hidden, publicItems);
-    const b = gradeR1(payload, docs, hidden, publicItems);
+    const a = gradeR1(R1_REFERENCE_PAYLOAD, docs, hidden, publicItems, gates);
+    const b = gradeR1(R1_REFERENCE_PAYLOAD, docs, hidden, publicItems, gates);
     expect(a.verdict).toBe(b.verdict);
     expect(a.metrics.recall_at_5.value).toBe(b.metrics.recall_at_5.value);
     expect(a.trace.queries).toEqual(b.trace.queries);
