@@ -87,7 +87,7 @@ export function EventTabs({
             ) : null}
             {isActive ? (
               <span
-                className="absolute inset-x-0 -bottom-px h-0.5 bg-[#9FEF00]"
+                className="absolute inset-x-0 -bottom-px h-0.5 bg-[#FF4D4D]"
                 aria-hidden
               />
             ) : null}

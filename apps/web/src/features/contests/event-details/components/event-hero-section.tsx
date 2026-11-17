@@ -14,7 +14,7 @@ export function EventHeroSection({ event }: { event: EventDetailsData }) {
   return (
     <section className="relative overflow-hidden border-b border-[#1A2232]">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute -right-[10%] top-[-20%] size-[420px] rounded-full bg-[#9FEF00]/[0.28] blur-[90px]" />
+        <div className="absolute -right-[10%] top-[-20%] size-[420px] rounded-full bg-[#FF4D4D]/[0.28] blur-[90px]" />
         <div className="absolute -left-[8%] top-[-15%] size-[360px] rounded-full bg-[#8A94A8]/[0.18] blur-[90px]" />
         <div className="absolute bottom-[-20%] right-[5%] size-[320px] rounded-full bg-[#2EE6A6]/[0.12] blur-[90px]" />
         <div
@@ -32,7 +32,7 @@ export function EventHeroSection({ event }: { event: EventDetailsData }) {
       <div className="relative mx-auto max-w-[1200px] px-6 pb-12 pt-10">
         <Link
           href={routes.contestHub}
-          className="mb-7 inline-flex items-center gap-2 text-[13px] text-[#6B7891] transition-colors duration-150 hover:text-[#9FEF00]"
+          className="mb-7 inline-flex items-center gap-2 text-[13px] text-[#6B7891] transition-colors duration-150 hover:text-[#FF4D4D]"
         >
           <ArrowLeft className="size-4" aria-hidden />
           Back to Events

@@ -80,7 +80,7 @@ export function PodiumCard({ entry, place }: PodiumCardProps) {
               {profileHref ? (
                 <Link
                   href={profileHref}
-                  className="transition-colors hover:text-[#9FEF00] hover:decoration-[#9FEF00]"
+                  className="transition-colors hover:text-[#FF4D4D] hover:decoration-[#FF4D4D]"
                 >
                   {flagsNode}
                 </Link>

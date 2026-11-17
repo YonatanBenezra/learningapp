@@ -16,13 +16,13 @@ export function Flag({ country, size = 18, className }: FlagProps) {
     return (
       <span
         className={cn(
-          "inline-flex shrink-0 items-center justify-center rounded-full border border-[#9FEF00]/30 bg-[#9FEF00]/10",
+          "inline-flex shrink-0 items-center justify-center rounded-full border border-[#FF4D4D]/30 bg-[#FF4D4D]/10",
           className,
         )}
         style={{ width: size, height: size }}
         title="Worldwide"
       >
-        <Box className="size-[55%] text-[#9FEF00]" strokeWidth={2.25} aria-hidden />
+        <Box className="size-[55%] text-[#FF4D4D]" strokeWidth={2.25} aria-hidden />
       </span>
     );
   }

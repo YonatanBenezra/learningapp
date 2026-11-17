@@ -90,7 +90,7 @@ export function HomeFinalCtaSection() {
         >
           <div className="lp-home-cta-content">
             <motion.p
-              className="m-0 flex items-center justify-center gap-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9fef00]"
+              className="m-0 flex items-center justify-center gap-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[#FF4D4D]"
               initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 10 }}
               animate={{ opacity: introActive ? 1 : 0, y: introActive ? 0 : 10 }}
               transition={
@@ -104,7 +104,7 @@ export function HomeFinalCtaSection() {
                     }
               }
             >
-              <span className="h-[1.05em] w-[3px] shrink-0 rounded-sm bg-[#9fef00]" aria-hidden />
+              <span className="h-[1.05em] w-[3px] shrink-0 rounded-sm bg-[#FF4D4D]" aria-hidden />
               YOUR FIRST SET TAKES 15 MINUTES
             </motion.p>
 
@@ -148,7 +148,7 @@ export function HomeFinalCtaSection() {
               >
                 <Link
                   href={routes.signUp}
-                  className="lp-home-cta-btn-primary inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#9fef00] px-[22px] text-[15px] font-medium text-[#121c2b] no-underline shadow-sm transition-colors hover:bg-[#aced2c]"
+                  className="lp-home-cta-btn-primary inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#FF4D4D] px-[22px] text-[15px] font-medium text-[#121c2b] no-underline shadow-sm transition-colors hover:bg-[#ff6b6b]"
                 >
                   Open problems
                   <ArrowRight strokeWidth={2} aria-hidden />

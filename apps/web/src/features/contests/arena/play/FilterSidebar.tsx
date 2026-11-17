@@ -52,7 +52,7 @@ function CategoryItem({
       )}
     >
       {active ? (
-        <span className="absolute left-0 top-1 bottom-1 w-0.5 rounded-sm bg-[#9FEF00]" aria-hidden />
+        <span className="absolute left-0 top-1 bottom-1 w-0.5 rounded-sm bg-[#FF4D4D]" aria-hidden />
       ) : null}
       <span className="play-category-tile flex size-6 shrink-0 items-center justify-center rounded-sm">
         {Icon ? <Icon className="size-3.5" aria-hidden /> : <span className="size-2 rounded-sm bg-[#6B7891]" />}
@@ -164,7 +164,7 @@ export function FilterSidebar({
       <button
         type="button"
         onClick={reset}
-        className="mt-auto text-left text-sm text-[#6B7891] transition-colors hover:text-[#9FEF00]"
+        className="mt-auto text-left text-sm text-[#6B7891] transition-colors hover:text-[#FF4D4D]"
       >
         Reset filters
       </button>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 190" width="610" height="190" role="img" aria-label="AI Warss">
+  <defs>
+    <!-- Hand-drawn angular letters (no font needed) -->
+    <g id="A"><polygon points="0,120 28,40 44,40 72,120 54,120 36,64 18,120"/></g>
+    <g id="S"><polyline points="58,48 16,48 8,56 8,72 16,80 42,80 50,88 50,104 42,112 0,112" fill="none" stroke="currentColor" stroke-width="16" stroke-linejoin="miter"/></g>
+    <g id="word" fill="currentColor" transform="translate(68 12) scale(0.85) skewX(-8)">
+      <use href="#A"/>
+      <rect x="94" y="40" width="16" height="80"/>
+      <polygon transform="translate(150 0)" points="0,40 17,40 28,90 36,56 48,56 56,90 67,40 84,40 64,120 50,120 42,84 34,120 20,120"/>
+      <use href="#A" x="256"/>
+      <g transform="translate(350 0)">
+        <path fill-rule="evenodd" d="M0,40 H46 L58,52 V76 L46,88 H16 V120 H0 Z M16,56 H40 L42,58 V70 L40,72 H16 Z"/>
+        <polygon points="26,88 44,88 60,120 42,120"/>
+      </g>
+      <use href="#S" x="432"/>
+      <use href="#S" x="512"/>
+    </g>
+    <g id="stack">
+      <use href="#word" x="-4" color="#00E5FF"/>
+      <use href="#word" x="4" color="#FF2A4F"/>
+      <use href="#word" color="#FFFFFF"/>
+    </g>
+    <clipPath id="b1"><rect x="0" y="0" width="610" height="70"/></clipPath>
+    <clipPath id="b2"><rect x="0" y="70" width="610" height="9"/></clipPath>
+    <clipPath id="b3"><rect x="0" y="79" width="610" height="111"/></clipPath>
+  </defs>
+
+  
+
+  <g clip-path="url(#b1)"><use href="#stack"/></g>
+  <g clip-path="url(#b2)"><use href="#stack" x="10"/></g>
+  <g clip-path="url(#b3)"><use href="#stack"/></g>
+
+  <text x="305" y="160" text-anchor="middle" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="14" letter-spacing="5" fill="#7D7D88">RAG · GUARDRAILS · EVALS</text>
+</svg>

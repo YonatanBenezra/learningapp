@@ -1286,7 +1286,7 @@ html:not([data-theme="dark"]) .lp-dash-figma.lp-dash-figma--htb {
   --text-3: #6b7d99;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --ember: #9fef00;
+  --ember: #FF4D4D;
   --on-ember: #121c2b;
   --ember-soft: rgb(159 239 0 / 12%);
   --ember-ring: rgb(159 239 0 / 28%);
@@ -1495,8 +1495,11 @@ html[data-workspace="profile"] {
 }
 
 .lp-dash-htb-nav-brand img {
-  display: block;
   object-position: 50% 56%;
+}
+
+.lp-dash-htb-nav-brand .lp-brand-logo > .lp-brand-logo-dark {
+  display: block;
 }
 
 .lp-dash-htb-nav-brand .lp-site-nav-wordmark {
@@ -1638,7 +1641,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
   height: 7px;
   border-radius: 999px;
   border: 1.5px solid #101927;
-  background: #9fef00;
+  background: #FF4D4D;
   box-shadow: 0 0 8px rgb(159 239 0 / 55%);
 }
 
@@ -1715,7 +1718,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 }
 
 .lp-dash-updates-item--new .lp-dash-updates-item-inner {
-  border-left-color: #9fef00;
+  border-left-color: #FF4D4D;
 }
 
 .lp-dash-updates-item--improved .lp-dash-updates-item-inner {
@@ -1794,7 +1797,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 }
 
 .lp-dash-updates-foot-link:hover {
-  color: #b2f233;
+  color: #FF6B6B;
 }
 
 .lp-dash-htb-nav-apps-wrap {
@@ -1903,7 +1906,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 }
 
 .lp-dash-help-link:hover .lp-dash-help-link-icon {
-  color: #b2f233;
+  color: #FF6B6B;
 }
 
 .lp-dash-htb-nav-user {
@@ -1953,7 +1956,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 }
 
 .lp-dash-htb-nav-avatar.is-active {
-  border-color: #b2f233;
+  border-color: #FF6B6B;
   box-shadow:
     0 0 0 1px rgb(159 239 0 / 40%),
     0 0 0 3px rgb(159 239 0 / 14%),

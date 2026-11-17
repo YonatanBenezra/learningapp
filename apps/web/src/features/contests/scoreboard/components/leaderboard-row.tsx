@@ -57,12 +57,12 @@ export function LeaderboardRow({ entry, mobile, showCountry = false }: Leaderboa
       onClick={onRowClick}
       onKeyDown={onKeyDown}
       id={entry.isYou ? "scoreboard-you-row" : undefined}
-      className={`group grid h-[70px] items-center border-b border-[#1E2636] text-[14px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#9FEF00] ${
+      className={`group grid h-[70px] items-center border-b border-[#1E2636] text-[14px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#FF4D4D] ${
         showCountry
           ? "grid-cols-[56px_1fr_100px_88px] md:grid-cols-[80px_1fr_180px_160px_140px]"
           : "grid-cols-[56px_1fr_88px_72px] md:grid-cols-[80px_1fr_160px_140px]"
       } ${profileHref ? "cursor-pointer hover:bg-[#151C2B]" : ""} ${
-        entry.isYou ? "border-l-[3px] border-l-[#9FEF00] bg-[#9FEF00]/5" : ""
+        entry.isYou ? "border-l-[3px] border-l-[#FF4D4D] bg-[#FF4D4D]/5" : ""
       }`}
     >
       <div className="flex justify-center font-mono tabular-nums text-[#A4B1CD]" role="cell">
@@ -72,12 +72,12 @@ export function LeaderboardRow({ entry, mobile, showCountry = false }: Leaderboa
       <div className="flex min-w-0 items-center gap-2 pr-2" role="cell">
         <TeamAvatar name={entry.name} avatarUrl={entry.avatarUrl} size={24} />
         <span
-          className={`min-w-0 truncate font-medium text-white ${profileHref ? "transition-colors group-hover:text-[#9FEF00]" : ""}`}
+          className={`min-w-0 truncate font-medium text-white ${profileHref ? "transition-colors group-hover:text-[#FF4D4D]" : ""}`}
         >
           {entry.name}
         </span>
         {entry.isYou ? (
-          <span className="hidden shrink-0 rounded-full bg-[#9FEF00]/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#9FEF00] md:inline">
+          <span className="hidden shrink-0 rounded-full bg-[#FF4D4D]/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#FF4D4D] md:inline">
             You
           </span>
         ) : null}
@@ -105,7 +105,7 @@ export function LeaderboardRow({ entry, mobile, showCountry = false }: Leaderboa
           <Link
             href={profileHref}
             onClick={(e) => e.stopPropagation()}
-            className="text-[#A4B1CD] underline underline-offset-2 hover:text-[#9FEF00] max-md:text-[13px]"
+            className="text-[#A4B1CD] underline underline-offset-2 hover:text-[#FF4D4D] max-md:text-[13px]"
           >
             <span className="md:hidden">{entry.solved}</span>
             <span className="hidden md:inline">
@@ -124,7 +124,7 @@ export function LeaderboardRow({ entry, mobile, showCountry = false }: Leaderboa
           className="hidden h-1 w-12 max-w-full overflow-hidden rounded-full bg-[#232C3D] md:block"
           aria-hidden
         >
-          <div className="h-full rounded-full bg-[#9FEF00]" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-full bg-[#FF4D4D]" style={{ width: `${pct}%` }} />
         </div>
       </div>
     </div>

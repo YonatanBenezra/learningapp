@@ -91,7 +91,7 @@ html:not([data-theme="dark"]) .lp-contact-bg-grid {
   height: 3px;
   border-radius: 2px;
   margin-bottom: 1.25rem;
-  background: linear-gradient(90deg, var(--color-brand, #9fef00), transparent);
+  background: linear-gradient(90deg, var(--color-brand, #FF4D4D), transparent);
 }
 
 .lp-contact-eyebrow {
@@ -112,7 +112,7 @@ html:not([data-theme="dark"]) .lp-contact-bg-grid {
   width: 3px;
   height: 1em;
   border-radius: 2px;
-  background: var(--color-brand, #9fef00);
+  background: var(--color-brand, #FF4D4D);
 }
 
 .lp-contact-title {
@@ -175,7 +175,7 @@ html:not([data-theme="dark"]) .lp-contact-info-card:hover {
   margin-bottom: 1rem;
   border-radius: var(--lp-radius-sm);
   border: 1px solid rgb(255 255 255 / 10%);
-  color: var(--color-brand, #9fef00);
+  color: var(--color-brand, #FF4D4D);
   background: rgb(21 31 46 / 75%);
 }
 
@@ -206,7 +206,7 @@ html:not([data-theme="dark"]) .lp-contact-info-icon {
 .lp-contact-info-link {
   display: inline-block;
   text-decoration: none;
-  color: var(--color-brand, #9fef00);
+  color: var(--color-brand, #FF4D4D);
   word-break: break-word;
   transition: opacity 0.15s ease;
 }
@@ -399,7 +399,7 @@ html:not([data-theme="dark"]) .lp-contact-select {
   font-weight: 600;
   letter-spacing: 0.01em;
   color: #0b121f;
-  background: var(--color-brand, #9fef00);
+  background: var(--color-brand, #FF4D4D);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22) inset;
   transition:
     filter 0.15s ease,

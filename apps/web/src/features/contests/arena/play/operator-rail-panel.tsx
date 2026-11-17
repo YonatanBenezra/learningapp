@@ -49,7 +49,7 @@ export function OperatorRailPanel({
             >
               {t.label}
               {active ? (
-                <span className="absolute inset-x-2 bottom-0 h-0.5 bg-[#9FEF00]" aria-hidden />
+                <span className="absolute inset-x-2 bottom-0 h-0.5 bg-[#FF4D4D]" aria-hidden />
               ) : null}
             </button>
           );
@@ -63,7 +63,7 @@ export function OperatorRailPanel({
               <span className="relative flex size-12 items-center justify-center">
                 <MessageSquare className="size-8 text-white/80" aria-hidden />
                 <MessageSquare
-                  className="absolute -bottom-0.5 -right-1 size-5 text-[#9FEF00]"
+                  className="absolute -bottom-0.5 -right-1 size-5 text-[#FF4D4D]"
                   aria-hidden
                 />
               </span>

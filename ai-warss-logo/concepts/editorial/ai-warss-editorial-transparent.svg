@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 286" width="600" height="286" role="img" aria-label="AI Warss">
+
+  <g fill="none" stroke="#141518" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(55 42)"><polyline points="2,36 18,2 34,36"/><line x1="9" y1="21" x2="27" y2="21"/></g><g transform="translate(101 42)"><line x1="18" y1="2" x2="18" y2="36"/></g></g>
+  <line x1="155" y1="62" x2="547" y2="62" stroke="#C9C3B6" stroke-width="2"/>
+  <text x="547" y="56" text-anchor="end" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="13" letter-spacing="4" fill="#8A8477">EST. 2026</text>
+  <g fill="none" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(51 108)" stroke="#141518"><polyline points="6,6 24,114 45,40 66,114 84,6"/></g><g transform="translate(153 108)" stroke="#141518"><polyline points="8,114 45,6 82,114"/><line x1="26" y1="78" x2="64" y2="78"/></g><g transform="translate(255 108)" stroke="#141518"><path d="M16,114 V6 H58 a27,27 0 0 1 0,54 H16 M56,60 L84,114"/></g><g transform="translate(357 108)" stroke="#141518"><path d="M80,16 H34 a22,22 0 0 0 0,44 H56 a22,22 0 0 1 0,44 H12"/></g><g transform="translate(459 108)" stroke="#E4572E"><path d="M80,16 H34 a22,22 0 0 0 0,44 H56 a22,22 0 0 1 0,44 H12"/></g></g>
+  <text x="300" y="262" text-anchor="middle" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="14" letter-spacing="6" fill="#6E6A62">RAG · GUARDRAILS · EVALS</text>
+</svg>

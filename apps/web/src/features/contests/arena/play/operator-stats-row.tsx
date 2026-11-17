@@ -55,7 +55,7 @@ function StatCard({
       {progress != null ? (
         <span className="absolute inset-x-0 bottom-0 h-1 overflow-hidden rounded-b-md bg-[#2E3B1A]">
           <span
-            className="block h-full bg-[#9FEF00]"
+            className="block h-full bg-[#FF4D4D]"
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
         </span>
@@ -88,7 +88,7 @@ export function OperatorStatsRow({ hud }: { hud: PlayEntryHud }) {
           <span
             className={cn(
               "ml-1 text-xs",
-              hud.rankDelta > 0 ? "text-[#9FEF00]" : "text-[#FF5A5F]",
+              hud.rankDelta > 0 ? "text-[#FF4D4D]" : "text-[#FF5A5F]",
             )}
           >
             {hud.rankDelta > 0 ? "▲" : "▼"}

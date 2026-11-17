@@ -146,7 +146,7 @@ export function EventPlay({ initial }: { initial: ContestDetail }) {
           <div className="lp-play-container px-6 py-2 text-xs leading-relaxed text-[#6B7891]">
             {scoringBanner}{" "}
             {virtualHref ? (
-              <Link href={virtualHref} className="font-medium text-[#9FEF00] hover:underline">
+              <Link href={virtualHref} className="font-medium text-[#FF4D4D] hover:underline">
                 Virtual practice
               </Link>
             ) : null}

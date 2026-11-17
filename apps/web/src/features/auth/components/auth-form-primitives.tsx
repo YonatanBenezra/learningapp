@@ -29,7 +29,7 @@ export function AuthFormIntro({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: E, delay: 0.1 + index * 0.05 }}
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9FEF00]">{eyebrow}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#FF4D4D]">{eyebrow}</p>
       <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#F4F4F4] sm:text-[1.75rem]">
         {title}
       </h2>
@@ -62,7 +62,7 @@ export function AuthModeSwitch({
       {prompt}{" "}
       <Link
         href={href}
-        className="group inline-flex items-center gap-1 font-semibold text-[#B2F233] underline-offset-2 hover:text-[#9FEF00] hover:underline"
+        className="group inline-flex items-center gap-1 font-semibold text-[#B2F233] underline-offset-2 hover:text-[#FF4D4D] hover:underline"
       >
         {label}
         <ArrowRight
@@ -160,8 +160,8 @@ export function AuthField({
       <div
         className={cn(
           "flex h-12 items-center gap-3 rounded-[4px] border bg-[#1E2939] px-3 transition-colors",
-          "focus-within:border-[#9FEF00] focus-within:ring-1 focus-within:ring-[#9FEF00]/25",
-          state === "valid" && "border-[#9FEF00]/50",
+          "focus-within:border-[#FF4D4D] focus-within:ring-1 focus-within:ring-[#FF4D4D]/25",
+          state === "valid" && "border-[#FF4D4D]/50",
           state === "error" && "border-[#F35E5E]",
           state === "default" && "border-[#3A4559]",
         )}
@@ -175,7 +175,7 @@ export function AuthField({
           id={helperId}
           className={cn(
             "text-xs",
-            helperState === "valid" && "text-[#9FEF00]",
+            helperState === "valid" && "text-[#FF4D4D]",
             helperState === "error" && "text-[#F35E5E]",
             helperState === "default" && "text-[#8799B5]",
           )}
@@ -238,7 +238,7 @@ export function AuthCheckbox({
       <input
         id={id}
         type="checkbox"
-        className="mt-0.5 size-4 shrink-0 rounded border-[#3A4559] bg-[#1E2939] accent-[#9FEF00]"
+        className="mt-0.5 size-4 shrink-0 rounded border-[#3A4559] bg-[#1E2939] accent-[#FF4D4D]"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
@@ -270,9 +270,9 @@ export function AuthSubmitButton({
       type="submit"
       className={cn(
         "mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-[4px] text-sm font-bold transition-colors",
-        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]",
-        success && "bg-[#9FEF00] text-[#121C2B]",
-        !success && active && "bg-[#9FEF00] text-[#121C2B] hover:bg-[#b2f233]",
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]",
+        success && "bg-[#FF4D4D] text-[#121C2B]",
+        !success && active && "bg-[#FF4D4D] text-[#121C2B] hover:bg-[#FF6B6B]",
         !success && !active && "cursor-not-allowed bg-[#242F40] text-[#526177]",
       )}
       disabled={disabled || pending || success}

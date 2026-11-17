@@ -28,7 +28,7 @@ export function MissionBriefingCard({ rules }: { rules: LobbyRule[] }) {
             <span className="size-2.5 rounded-full bg-[#3D4659]" />
             <span className="size-2.5 rounded-full bg-[#3D4659]" />
           </span>
-          <span className="text-[#9FEF00]" aria-hidden>
+          <span className="text-[#FF4D4D]" aria-hidden>
             &gt;_
           </span>
           <span
@@ -45,7 +45,7 @@ export function MissionBriefingCard({ rules }: { rules: LobbyRule[] }) {
           const { title, description } = splitRule(rule);
           return (
             <article key={rule.num} className="flex gap-3.5 bg-[#0C111B] p-[18px]">
-              <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-md border border-[#9FEF00]/25 bg-[#9FEF00]/5 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold text-[#9FEF00]">
+              <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-md border border-[#FF4D4D]/25 bg-[#FF4D4D]/5 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold text-[#FF4D4D]">
                 {rule.num}
               </span>
               <div className="min-w-0">

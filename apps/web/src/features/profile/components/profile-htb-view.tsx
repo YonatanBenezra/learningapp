@@ -452,7 +452,7 @@ export function ProfileHtbView() {
               <section className="lp-profile-htb-card">
                 <h2 className="lp-profile-htb-widget-title">Practice streak</h2>
                 <div className="lp-profile-htb-streak">
-                  <Flame size={28} className="text-[#9FEF00]" strokeWidth={2} aria-hidden />
+                  <Flame size={28} className="text-[#FF4D4D]" strokeWidth={2} aria-hidden />
                   <span className="lp-profile-htb-streak-val">
                     {streak} day{streak === 1 ? "" : "s"}
                   </span>
@@ -504,7 +504,7 @@ export function ProfileHtbView() {
         ) : (
           <section className="lp-profile-htb-card" aria-label="Badges">
             <div className="lp-profile-htb-empty" style={{ minHeight: 200 }}>
-              <Sparkles size={32} className="text-[#9FEF00]" aria-hidden />
+              <Sparkles size={32} className="text-[#FF4D4D]" aria-hidden />
               <p>Your badges will appear here as you earn them on AI Warss.</p>
               <Link href={routes.dashboard} className="lp-profile-htb-link">
                 View activity on dashboard

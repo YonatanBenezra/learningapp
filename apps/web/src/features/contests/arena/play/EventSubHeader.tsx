@@ -79,7 +79,7 @@ function HudStats({ hud, compact }: { hud: PlayEntryHud; compact?: boolean }) {
           <span
             className={cn(
               "ml-1 text-xs font-semibold",
-              delta > 0 ? "text-[#9FEF00]" : "text-[#FF5A5F]",
+              delta > 0 ? "text-[#FF4D4D]" : "text-[#FF5A5F]",
             )}
           >
             {delta > 0 ? "↑" : "↓"}
@@ -152,7 +152,7 @@ export function EventSubHeader({
           {isLive ? (
             <>
               <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#2A3446] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#A4B1CD]">
-                <span className="size-1.5 rounded-sm bg-[#9FEF00]" aria-hidden />
+                <span className="size-1.5 rounded-sm bg-[#FF4D4D]" aria-hidden />
                 Live
               </span>
               {personalTimeEnded ? (
@@ -205,7 +205,7 @@ export function EventSubHeader({
           <div className="lp-play-container py-2.5 text-xs leading-relaxed text-[#6B7891]">
             {scoringBanner}{" "}
             {virtualHref ? (
-              <Link href={virtualHref} className="font-medium text-[#9FEF00] hover:underline">
+              <Link href={virtualHref} className="font-medium text-[#FF4D4D] hover:underline">
                 Virtual practice
               </Link>
             ) : null}

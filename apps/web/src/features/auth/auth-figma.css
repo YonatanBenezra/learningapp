@@ -41,9 +41,9 @@
   --text: #f4f4f4;
   --text-2: #a4b1cd;
   --text-3: #8799b5;
-  --ember: #9fef00;
+  --ember: #FF4D4D;
   --on-ember: #0b121f;
-  --ember-soft: color-mix(in srgb, #9fef00 14%, #141d2b);
+  --ember-soft: color-mix(in srgb, #FF4D4D 14%, #141d2b);
   --teal: #88c9f7;
   --teal-soft: color-mix(in srgb, #88c9f7 16%, #141d2b);
 

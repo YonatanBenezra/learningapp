@@ -133,7 +133,7 @@ type GraderFaceProps = {
 export function GraderFace({ score, barsVisible, showDelta = false }: GraderFaceProps) {
   return (
     <div className="pipeline-face-inner pipeline-face-inner--grader">
-      <FaceHeader icon={Shield} iconColor="#9fef00" label="GRADER" tag="hidden set" />
+      <FaceHeader icon={Shield} iconColor="#FF4D4D" label="GRADER" tag="hidden set" />
       <div className="pipeline-grader-score-row">
         <span className="pipeline-grader-score">{score}</span>
         {showDelta ? <span className="pipeline-grader-delta">▲ 0.06</span> : null}

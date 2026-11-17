@@ -36,8 +36,8 @@ html[data-theme="dark"] {
   --lp-nav-link: #8799b5;
   --lp-nav-link-hover: #f4f4f4;
   --lp-nav-wordmark: #f4f4f4;
-  --lp-nav-logo-accent: #9fef00;
-  --lp-nav-cta-bg: #aced2c;
+  --lp-nav-logo-accent: #ff4d4d;
+  --lp-nav-cta-bg: #ff4d4d;
   --lp-nav-cta-fg: #121c2b;
   --lp-nav-dropdown-bg: #1e2939;
   --lp-nav-dropdown-card: #242f40;
@@ -354,10 +354,7 @@ html[data-workspace="catalog"] .lp-site-nav-inner:not(.lp-site-nav-inner--htb) {
   color: var(--lp-nav-wordmark, #f4f4f4);
 }
 
-html[data-theme="dark"] .lp-site-nav--catalog .lp-site-nav-brand img {
-  filter: brightness(0) saturate(100%) invert(84%) sepia(68%) saturate(628%) hue-rotate(32deg)
-    brightness(104%) contrast(101%);
-}
+/* Keep AIWARSS logo colors as-authored (no brand-color remaps). */
 
 .lp-site-nav-vrule {
   width: 1px;
@@ -996,14 +993,14 @@ html[data-workspace="catalog"]:has(.arena-page) .lp-main.lp-app-main {
 
 html[data-theme="dark"] .lp-site-nav--catalog .lp-btn--primary {
   color: var(--lp-nav-cta-fg, #121c2b);
-  background: var(--lp-nav-cta-bg, #aced2c);
-  border-color: var(--lp-nav-cta-bg, #aced2c);
+  background: var(--lp-nav-cta-bg, #ff6b6b);
+  border-color: var(--lp-nav-cta-bg, #ff6b6b);
 }
 
 html[data-theme="dark"] .lp-site-nav--catalog .lp-btn--primary:hover {
   color: var(--lp-nav-cta-fg, #121c2b);
-  background: color-mix(in srgb, var(--lp-nav-cta-bg, #aced2c) 92%, #ffffff);
-  border-color: color-mix(in srgb, var(--lp-nav-cta-bg, #aced2c) 92%, #ffffff);
+  background: color-mix(in srgb, var(--lp-nav-cta-bg, #ff6b6b) 92%, #ffffff);
+  border-color: color-mix(in srgb, var(--lp-nav-cta-bg, #ff6b6b) 92%, #ffffff);
 }
 
 html[data-theme="dark"] .lp-site-nav--catalog .lp-theme-segment {
@@ -1013,7 +1010,7 @@ html[data-theme="dark"] .lp-site-nav--catalog .lp-theme-segment {
 
 html[data-theme="dark"] .lp-site-nav--catalog .lp-theme-segment-btn.is-active {
   color: var(--lp-nav-link-hover, #f4f4f4);
-  background: color-mix(in srgb, var(--lp-nav-logo-accent, #9fef00) 14%, #242f40);
+  background: color-mix(in srgb, var(--lp-nav-logo-accent, #FF4D4D) 14%, #242f40);
 }
 
 /* CTF arena/scoreboard — short ArenaEventNav, not 85px catalog bar */

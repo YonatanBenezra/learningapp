@@ -91,7 +91,7 @@ export function LeaderboardTable({
                 load();
                 setUseInfinite(true);
               }}
-              className="rounded-md border border-[#2A3446] px-5 py-2.5 text-[14px] font-medium text-[#A4B1CD] transition-colors hover:border-[#9FEF00] hover:text-white disabled:opacity-50"
+              className="rounded-md border border-[#2A3446] px-5 py-2.5 text-[14px] font-medium text-[#A4B1CD] transition-colors hover:border-[#FF4D4D] hover:text-white disabled:opacity-50"
             >
               {loadingMore ? "Loading…" : "Load more"}
             </button>

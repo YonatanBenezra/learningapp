@@ -8,7 +8,7 @@ export function ScoreboardError({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className="rounded-md border border-[#2A3446] px-4 py-2 text-[14px] font-medium text-white transition-colors hover:border-[#9FEF00]"
+        className="rounded-md border border-[#2A3446] px-4 py-2 text-[14px] font-medium text-white transition-colors hover:border-[#FF4D4D]"
       >
         Retry
       </button>

@@ -35,8 +35,12 @@ export const metadata: Metadata = {
   title: brand.name,
   description: brand.description,
   icons: {
-    icon: "/brand/labpath-logo.png",
-    apple: "/brand/labpath-logo.png",
+    icon: [
+      { url: "/brand/favicon.ico", sizes: "48x48" },
+      { url: "/brand/ai-warss-favicon.svg", type: "image/svg+xml" },
+      { url: "/brand/ai-warss-favicon.png", type: "image/png", sizes: "128x128" },
+    ],
+    apple: "/brand/apple-touch-icon.png",
   },
 };
 

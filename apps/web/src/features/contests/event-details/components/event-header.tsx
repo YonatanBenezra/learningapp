@@ -32,7 +32,7 @@ function DateBlock({ label, iso }: { label: string; iso: string }) {
 }
 
 const secondaryBtn =
-  "inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#1E2636] px-5 text-sm font-semibold text-white transition-[background-color,transform,filter] duration-150 hover:bg-[#283246] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]";
+  "inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#1E2636] px-5 text-sm font-semibold text-white transition-[background-color,transform,filter] duration-150 hover:bg-[#283246] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]";
 
 export function EventHeader({ event }: EventHeaderProps) {
   const router = useRouter();
@@ -109,7 +109,7 @@ export function EventHeader({ event }: EventHeaderProps) {
           onClick={() => void onEnroll()}
           className={cn(
             "inline-flex h-12 items-center justify-center gap-2 rounded-md px-6 text-sm font-semibold text-[#0F1520] transition-[filter,transform] duration-150",
-            "bg-[#9FEF00] hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]",
+            "bg-[#FF4D4D] hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]",
             "disabled:cursor-not-allowed disabled:opacity-45",
           )}
         >

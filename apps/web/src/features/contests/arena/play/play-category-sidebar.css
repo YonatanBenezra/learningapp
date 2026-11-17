@@ -111,7 +111,7 @@
   display: block;
   height: 100%;
   border-radius: 999px;
-  background: #9fef00;
+  background: #FF4D4D;
   transition: width 0.25s ease;
 }
 
@@ -122,7 +122,7 @@
   right: 0;
   width: 3px;
   border-radius: 999px;
-  background: #9fef00;
+  background: #FF4D4D;
   opacity: 0;
 }
 
@@ -144,11 +144,11 @@
 }
 
 .play-category-sidebar__more:hover {
-  color: #9fef00;
+  color: #FF4D4D;
 }
 
 .play-category-sidebar__more:focus-visible {
-  outline: 2px solid #9fef00;
+  outline: 2px solid #FF4D4D;
   outline-offset: 2px;
   border-radius: 0.25rem;
 }

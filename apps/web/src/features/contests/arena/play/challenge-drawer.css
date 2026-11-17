@@ -106,7 +106,7 @@ html[data-arena-nav="1"] .challenge-drawer-panel {
 }
 
 .challenge-drawer-tab.is-active {
-  color: #9fef00;
+  color: #FF4D4D;
 }
 
 .challenge-drawer-tab.is-active::after {
@@ -116,7 +116,7 @@ html[data-arena-nav="1"] .challenge-drawer-panel {
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: #9fef00;
+  background: #FF4D4D;
 }
 
 @media (max-width: 639px) {

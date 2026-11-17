@@ -49,13 +49,13 @@ export function BinaHero() {
           <div className="bina-hero-anim bina-hero-anim-delay-2 mt-14 flex flex-col gap-4 max-sm:w-full sm:flex-row sm:items-center">
             <Link
               href={routes.signUp}
-              className="bina-hero-btn-primary inline-flex h-12 w-full items-center justify-center rounded-[4px] bg-[#ACED2C] px-6 py-3 text-base font-medium text-[#121C2B] transition-all duration-200 ease-in-out hover:bg-[#9FEF00] hover:shadow-[0_0_16px_rgba(159,239,0,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00] sm:w-auto"
+              className="bina-hero-btn-primary inline-flex h-12 w-full items-center justify-center rounded-[4px] bg-[#FF6B6B] px-6 py-3 text-base font-medium text-[#121C2B] transition-all duration-200 ease-in-out hover:bg-[#FF4D4D] hover:shadow-[0_0_16px_rgba(255, 77, 77,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D] sm:w-auto"
             >
               Get started
             </Link>
             <Link
               href={routes.signUp}
-              className="bina-hero-btn-secondary inline-flex h-12 w-full items-center justify-center rounded-[4px] bg-[#242F40] px-6 py-3 text-base font-medium text-[#F4F4F4] transition-all duration-200 ease-in-out hover:bg-[#2E3B50] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00] sm:w-auto"
+              className="bina-hero-btn-secondary inline-flex h-12 w-full items-center justify-center rounded-[4px] bg-[#242F40] px-6 py-3 text-base font-medium text-[#F4F4F4] transition-all duration-200 ease-in-out hover:bg-[#2E3B50] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D] sm:w-auto"
             >
               Browse problems
             </Link>

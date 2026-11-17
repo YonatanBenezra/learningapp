@@ -12,7 +12,7 @@ export function showSettingsSaved(message = "Changes saved") {
         }`}
         role="status"
       >
-        <span className="flex size-6 items-center justify-center rounded-full bg-[#9FEF00]/15 text-[#9FEF00]">
+        <span className="flex size-6 items-center justify-center rounded-full bg-[#FF4D4D]/15 text-[#FF4D4D]">
           <Check className="size-3.5" strokeWidth={2.5} aria-hidden />
         </span>
         {message}

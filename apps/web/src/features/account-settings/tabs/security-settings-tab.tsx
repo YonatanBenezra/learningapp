@@ -26,7 +26,7 @@ type SecuritySettingsTabProps = {
 
 function passwordStrength(label: string): { width: string; color: string; text: string } {
   const len = label.length;
-  if (len >= 12) return { width: "100%", color: "#9FEF00", text: "Strong" };
+  if (len >= 12) return { width: "100%", color: "#FF4D4D", text: "Strong" };
   if (len >= 8) return { width: "66%", color: "#B2F233", text: "Good" };
   if (len >= 1) return { width: "33%", color: "#8799B5", text: "Weak" };
   return { width: "0%", color: "#8799B5", text: "" };
@@ -140,7 +140,7 @@ export function SecuritySettingsTab({
           }
           action={
             security.twoFactorEnabled ? (
-              <span className="text-sm font-medium text-[#9FEF00]">Enabled</span>
+              <span className="text-sm font-medium text-[#FF4D4D]">Enabled</span>
             ) : (
               <SettingsButton type="button" onClick={() => setTwoFaOpen(true)}>
                 Enable 2FA

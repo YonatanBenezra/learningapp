@@ -164,7 +164,7 @@ export function mapContestToEventDetails(
         value: String(contest.problemCount || flagsTotal),
         suffix: `${catCount} cats`,
         icon: "flag",
-        iconColor: "#9FEF00",
+        iconColor: "#FF4D4D",
         iconBg: "#1B2434",
       },
       {

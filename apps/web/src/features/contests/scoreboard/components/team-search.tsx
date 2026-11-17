@@ -47,7 +47,7 @@ export function TeamSearch({
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Search operators"
-          className="h-11 w-full rounded-md border border-[#2A3446] bg-transparent px-3 pr-10 text-[14px] text-white placeholder:text-[#6B7891] focus:border-[#9FEF00] focus:outline-none focus:ring-2 focus:ring-[#9FEF00]/20"
+          className="h-11 w-full rounded-md border border-[#2A3446] bg-transparent px-3 pr-10 text-[14px] text-white placeholder:text-[#6B7891] focus:border-[#FF4D4D] focus:outline-none focus:ring-2 focus:ring-[#FF4D4D]/20"
           aria-label="Search operators"
         />
         <Search
@@ -64,7 +64,7 @@ export function TeamSearch({
               <select
                 value={country}
                 onChange={(e) => onCountryChange(e.target.value)}
-                className="h-11 min-w-[120px] appearance-none rounded-md border border-[#2A3446] bg-[#151C2B] pl-3 pr-9 text-[14px] text-white focus:border-[#9FEF00] focus:outline-none focus:ring-2 focus:ring-[#9FEF00]/20"
+                className="h-11 min-w-[120px] appearance-none rounded-md border border-[#2A3446] bg-[#151C2B] pl-3 pr-9 text-[14px] text-white focus:border-[#FF4D4D] focus:outline-none focus:ring-2 focus:ring-[#FF4D4D]/20"
               >
                 {countryOptions.map((c) => (
                   <option key={c} value={c}>
@@ -82,7 +82,7 @@ export function TeamSearch({
 
         <a
           href={exportHref}
-          className="inline-flex h-11 items-center gap-2 rounded-md border border-[#2A3446] px-3 text-[13px] font-medium text-[#A4B1CD] transition-colors hover:border-[#9FEF00] hover:text-white"
+          className="inline-flex h-11 items-center gap-2 rounded-md border border-[#2A3446] px-3 text-[13px] font-medium text-[#A4B1CD] transition-colors hover:border-[#FF4D4D] hover:text-white"
         >
           <Download className="size-4" aria-hidden />
           Export CSV
@@ -96,13 +96,13 @@ export function TeamSearch({
             role="switch"
             aria-checked={showMe}
             onClick={() => onShowMeChange(!showMe)}
-            className={`relative h-6 w-11 rounded-full border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00] ${
-              showMe ? "border-[#9FEF00]/50 bg-[#9FEF00]/20" : "border-[#2A3446] bg-[#0F1520]"
+            className={`relative h-6 w-11 rounded-full border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D] ${
+              showMe ? "border-[#FF4D4D]/50 bg-[#FF4D4D]/20" : "border-[#2A3446] bg-[#0F1520]"
             }`}
           >
             <span
               className={`absolute top-0.5 size-5 rounded-full bg-white shadow transition-[left] ${
-                showMe ? "left-[22px] bg-[#9FEF00]" : "left-0.5"
+                showMe ? "left-[22px] bg-[#FF4D4D]" : "left-0.5"
               }`}
             />
           </button>

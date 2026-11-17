@@ -1692,17 +1692,17 @@ html[data-workspace="catalog"]:has(.lp-page-problems--htb) .lp-main.lp-app-main,
   --text: #f4f4f4;
   --text-2: #c5d0e0;
   --text-3: #94a3bc;
-  --ember: #9fef00;
+  --ember: #FF4D4D;
   --on-ember: #121c2b;
-  --ember-soft: color-mix(in srgb, #9fef00 14%, #1a2433);
-  --teal: #9fef00;
-  --teal-soft: color-mix(in srgb, #9fef00 14%, #0b121f);
+  --ember-soft: color-mix(in srgb, #FF4D4D 14%, #1a2433);
+  --teal: #FF4D4D;
+  --teal-soft: color-mix(in srgb, #FF4D4D 14%, #0b121f);
   --on-teal: #121c2b;
   --amber: #facc15;
   --amber-soft: color-mix(in srgb, #facc15 16%, #1a2433);
   --blue: #88c9f7;
   --blue-soft: color-mix(in srgb, #88c9f7 12%, #0b121f);
-  --segment-active-bg: #9fef00;
+  --segment-active-bg: #FF4D4D;
   --segment-active-fg: #121c2b;
   --segment-active-muted: rgb(18 28 43 / 62%);
   position: relative;
@@ -1916,7 +1916,7 @@ html[data-workspace="catalog"]:has(.lp-page-problems--htb) .lp-main.lp-app-main,
 }
 
 .lp-pfigma--htb .lp-pfigma-btn-ember:hover {
-  background: #aced2c;
+  background: #ff6b6b;
 }
 
 .lp-pfigma--htb .lp-pfigma-action--primary {
@@ -1949,9 +1949,9 @@ html:not([data-theme="dark"]) .lp-pfigma--htb {
   --text: #f4f4f4;
   --text-2: #c5d0e0;
   --text-3: #94a3bc;
-  --ember: #9fef00;
+  --ember: #FF4D4D;
   --on-ember: #121c2b;
-  --segment-active-bg: #9fef00;
+  --segment-active-bg: #FF4D4D;
   --segment-active-fg: #121c2b;
   --segment-active-muted: rgb(18 28 43 / 62%);
 }
@@ -1961,6 +1961,6 @@ html:not([data-theme="dark"]) .lp-pfigma--htb .lp-pfigma-search:focus-within {
 }
 
 html:not([data-theme="dark"]) .lp-pfigma--htb .lp-pfigma-action--primary {
-  background: #9fef00;
+  background: #FF4D4D;
   color: #121c2b;
 }

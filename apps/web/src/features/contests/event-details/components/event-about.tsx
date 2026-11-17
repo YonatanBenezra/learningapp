@@ -18,7 +18,7 @@ export function EventAbout({ paragraphs }: EventAboutProps) {
               j < arr.length - 1 ? (
                 <span key={j}>
                   {part}
-                  <Link href={routes.contact} className="text-[#9FEF00] underline underline-offset-4">
+                  <Link href={routes.contact} className="text-[#FF4D4D] underline underline-offset-4">
                     Contact
                   </Link>
                   {" —"}

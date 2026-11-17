@@ -36,7 +36,7 @@ export function AvatarUploader({ fullName, avatarUrl, onAvatarChange }: AvatarUp
     <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
       <div className="flex gap-4">
         <div
-          className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1E2939] text-xl font-semibold text-[#9FEF00]"
+          className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1E2939] text-xl font-semibold text-[#FF4D4D]"
           aria-hidden
         >
           {preview ? (

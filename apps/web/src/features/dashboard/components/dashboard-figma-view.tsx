@@ -225,7 +225,7 @@ export function DashboardFigmaView() {
               ) : (
                 <Link
                   href={`${routes.dashboardSettings}#career`}
-                  className="lp-dash-htb-welcome-role-accent font-medium underline decoration-[#9fef00]/35 underline-offset-2 hover:decoration-[#9fef00]/70"
+                  className="lp-dash-htb-welcome-role-accent font-medium underline decoration-[#FF4D4D]/35 underline-offset-2 hover:decoration-[#FF4D4D]/70"
                 >
                   Add in settings
                 </Link>

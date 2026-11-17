@@ -1544,9 +1544,9 @@ html[data-workspace="catalog"]:has(.lp-page-leaderboard--htb) .lp-main.lp-app-ma
   --text: #f4f4f4;
   --text-2: #94a3b8;
   --text-3: #64748b;
-  --ember: #9fef00;
+  --ember: #FF4D4D;
   --on-ember: #121c2b;
-  --ember-soft: color-mix(in srgb, #9fef00 10%, #111827);
+  --ember-soft: color-mix(in srgb, #FF4D4D 10%, #111827);
   --htb-rank-bg: #1e293b;
   --htb-pwn: #ef4444;
   position: relative;
@@ -2064,6 +2064,6 @@ html:not([data-theme="dark"]) .lp-lb--htb {
   --text: #f4f4f4;
   --text-2: #c5d0e0;
   --text-3: #94a3bc;
-  --ember: #9fef00;
+  --ember: #FF4D4D;
   --on-ember: #121c2b;
 }

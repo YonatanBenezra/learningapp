@@ -103,7 +103,7 @@ export function ChallengeGrid({
               value={filters.query}
               onChange={(e) => onFiltersChange({ ...filters, query: e.target.value })}
               placeholder="Search challenges"
-              className="h-10 w-full rounded-sm border border-[#2A3446] bg-transparent py-0 pl-10 pr-3 text-sm text-white outline-none transition-colors placeholder:text-[#6B7891] focus:border-[#9FEF00]"
+              className="h-10 w-full rounded-sm border border-[#2A3446] bg-transparent py-0 pl-10 pr-3 text-sm text-white outline-none transition-colors placeholder:text-[#6B7891] focus:border-[#FF4D4D]"
             />
           </label>
           <label className="flex items-center gap-2 text-xs text-[#6B7891]">
@@ -116,7 +116,7 @@ export function ChallengeGrid({
                   sort: e.target.value as PlayFilterState["sort"],
                 })
               }
-              className="h-10 cursor-pointer rounded-sm border border-[#2A3446] bg-[#151C2B] px-3 text-sm text-[#A4B1CD] outline-none focus:border-[#9FEF00]"
+              className="h-10 cursor-pointer rounded-sm border border-[#2A3446] bg-[#151C2B] px-3 text-sm text-[#A4B1CD] outline-none focus:border-[#FF4D4D]"
             >
               <option value="points">Points</option>
               <option value="solves">Solves</option>
@@ -130,7 +130,7 @@ export function ChallengeGrid({
               aria-pressed={view === "grid"}
               onClick={() => setView("grid")}
               className={cn(
-                "rounded-sm p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9FEF00]/40",
+                "rounded-sm p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4D4D]/40",
                 view === "grid" ? "bg-[#18202F] text-white" : "text-[#6B7891] hover:text-[#A4B1CD]",
               )}
             >
@@ -142,7 +142,7 @@ export function ChallengeGrid({
               aria-pressed={view === "list"}
               onClick={() => setView("list")}
               className={cn(
-                "rounded-sm p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9FEF00]/40",
+                "rounded-sm p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4D4D]/40",
                 view === "list" ? "bg-[#18202F] text-white" : "text-[#6B7891] hover:text-[#A4B1CD]",
               )}
             >
@@ -161,7 +161,7 @@ export function ChallengeGrid({
             <button
               type="button"
               onClick={() => onFiltersChange(defaultPlayFilters())}
-              className="rounded-sm border border-[#2A3446] px-4 py-2 text-sm text-white transition-colors hover:border-[#9FEF00]/50 hover:text-[#9FEF00]"
+              className="rounded-sm border border-[#2A3446] px-4 py-2 text-sm text-white transition-colors hover:border-[#FF4D4D]/50 hover:text-[#FF4D4D]"
             >
               Reset filters
             </button>
