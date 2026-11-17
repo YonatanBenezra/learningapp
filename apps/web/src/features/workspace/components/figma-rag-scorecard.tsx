@@ -16,6 +16,12 @@ import { recallHitsTotalFromGrade } from "@/features/traces/rag-trace-meta";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
+import { failureClassCopy } from "../failure-class-copy";
+import {
+  evalBreakdownOf,
+  RagHiddenSetBreakdown,
+  RagMissEvidence,
+} from "./rag-eval-breakdown";
 
 type FigmaRagScorecardProps = {
   run: Run;
@@ -101,7 +107,8 @@ export function FigmaRagScorecard({
       : failing.length > 0
         ? `${failing.length} sample${failing.length === 1 ? "" : "s"} shown`
         : null;
-  const failureClass = grade.failureClasses?.[0];
+  const failureClasses = grade.failureClasses ?? [];
+  const breakdown = evalBreakdownOf(grade.scorecard);
   const failureDetail =
     typeof grade.scorecard?.failureDetail === "string"
       ? grade.scorecard.failureDetail
@@ -221,10 +228,23 @@ export function FigmaRagScorecard({
         </div>
       ) : null}
 
-      {!passed && failureClass ? (
+      {!passed && breakdown ? <RagMissEvidence breakdown={breakdown} /> : null}
+
+      {!passed && !breakdown && failureClasses.length > 0 ? (
         <section className="lp-rag-score-failure-block">
           <h3 className="lp-rag-score-section-label">Failure class</h3>
-          <code className="lp-rag-score-failure-code">{failureClass}</code>
+          <ul className="lp-rag-score-failure-classes">
+            {failureClasses.map((code) => (
+              <li key={code}>
+                <code className="lp-rag-score-failure-code">{code}</code>
+                {failureClassCopy(code) ? (
+                  <span className="lp-rag-score-failure-detail">
+                    {failureClassCopy(code)}
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
           {failureDetail ? (
             <p className="lp-rag-score-failure-detail">{failureDetail}</p>
           ) : null}
@@ -251,11 +271,20 @@ export function FigmaRagScorecard({
             </ul>
           ) : (
             <p className="lp-rag-score-failures-empty">
-              No sample misses attached to this grade.
+              {breakdown
+                ? "No feedback-split question failed, so no question text is shown. Holdout misses are counted below."
+                : "No sample misses attached to this grade."}
             </p>
           )}
+          {breakdown && failing.length > 0 ? (
+            <p className="lp-rag-score-failures-note">
+              Only feedback-split questions are shown. Holdout misses are counted below and never revealed.
+            </p>
+          ) : null}
         </section>
       ) : null}
+
+      {breakdown ? <RagHiddenSetBreakdown breakdown={breakdown} /> : null}
 
       {passed && nextCta ? (
         <footer className="lp-rag-score-footer">

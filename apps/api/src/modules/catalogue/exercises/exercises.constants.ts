@@ -1,3 +1,5 @@
+import { graderArchetypeOf } from '../../../content/archetype-registry';
+
 export const R1_SLUG = 'rag-001-chunk-it-right';
 export const R2_SLUG = 'rag-002-the-cost-ceiling';
 /** R2 retrieval tuning; shares numeric prefix 003 with {@link R3_SLUG}. */
@@ -104,6 +106,12 @@ export const SANDBOX_NEAR_MISS_PAYLOAD = {
   source: SANDBOX_NEAR_MISS_SOURCE,
 };
 
+/** RAG archetype from content meta (null when the slug is not a RAG exercise). */
+function ragArchetype(slug: string): string | null {
+  const declared = graderArchetypeOf(slug);
+  return declared?.startsWith('rag-') ? declared : null;
+}
+
 export function exerciseNumber(slug: string, prefix: string): number | null {
   if (!slug.startsWith(`${prefix}-`)) {
     return null;
@@ -118,6 +126,10 @@ function isCore15AdvRag(slug: string, slot: number): boolean {
 }
 
 export function isRagR1Slug(slug: string): boolean {
+  const declared = ragArchetype(slug);
+  if (declared) {
+    return declared === 'rag-r1';
+  }
   if (isCore15AdvRag(slug, 26)) {
     return true;
   }
@@ -129,6 +141,10 @@ export function isRagR1Slug(slug: string): boolean {
 }
 
 export function isRagR2Slug(slug: string): boolean {
+  const declared = ragArchetype(slug);
+  if (declared) {
+    return declared === 'rag-r2';
+  }
   if (isCore15AdvRag(slug, 25)) {
     return true;
   }
@@ -140,6 +156,10 @@ export function isRagR2Slug(slug: string): boolean {
 }
 
 export function isRagR3Slug(slug: string): boolean {
+  const declared = ragArchetype(slug);
+  if (declared) {
+    return declared === 'rag-r3';
+  }
   if (isCore15AdvRag(slug, 27)) {
     return true;
   }
@@ -151,6 +171,10 @@ export function isRagR3Slug(slug: string): boolean {
 }
 
 export function isRagR4Slug(slug: string): boolean {
+  const declared = ragArchetype(slug);
+  if (declared) {
+    return declared === 'rag-r4';
+  }
   if (isCore15AdvRag(slug, 28) || isCore15AdvRag(slug, 30)) {
     return true;
   }
@@ -166,6 +190,10 @@ export const RAG_REDTEAM_SLUGS = [
 ] as const;
 
 export function isRagRedTeamSlug(slug: string): boolean {
+  const declared = ragArchetype(slug);
+  if (declared) {
+    return declared === 'rag-redteam';
+  }
   return (RAG_REDTEAM_SLUGS as readonly string[]).includes(slug);
 }
 
@@ -173,10 +201,18 @@ export function isRagRedTeamSlug(slug: string): boolean {
 export const RAG_R5_SLUGS = ['rag-031-query-routing'] as const;
 
 export function isRagR5Slug(slug: string): boolean {
+  const declared = ragArchetype(slug);
+  if (declared) {
+    return declared === 'rag-r5';
+  }
   return (RAG_R5_SLUGS as readonly string[]).includes(slug);
 }
 
 export function isSandboxRagSlug(slug: string): boolean {
+  const declared = ragArchetype(slug);
+  if (declared) {
+    return declared === 'rag-sandbox';
+  }
   return SANDBOX_RAG_SLUGS.has(slug);
 }
 

@@ -3,9 +3,11 @@ import { chunkCorpus, type CorpusDoc } from './chunking';
 import { chunkContainsSpan, retrieveRanked } from './retrieve';
 import {
   answerableHidden,
+  costEvidence,
   declaresGate,
+  diagnoseRetrievalMiss,
+  EvalLedger,
   expandGoldSpan,
-  FAILING_SAMPLE_LIMIT,
   gateThreshold,
   publicGold,
   publicTraceItems,
@@ -51,22 +53,39 @@ export function gradeR1(
 
   const misses: RagGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
+  const ledger = new EvalLedger();
+  const perQuery: { tokens: number; chunks: number }[] = [];
   let hits = 0;
   let contextTokenSum = 0;
   for (const item of answerable) {
     const ranked = retrieveRanked(item.question, chunks, K);
-    contextTokenSum += estimateTokens(
+    const tokens = estimateTokens(
       ranked.map((row) => row.chunk.text).join('\n\n'),
     );
+    contextTokenSum += tokens;
+    perQuery.push({ tokens, chunks: ranked.length });
     const gold = expandGoldSpan(
       docs,
       item.goldDocId as string,
       item.goldSpan as string,
     );
     const hit = ranked.some((row) => chunkContainsSpan(row.chunk.text, gold));
+    ledger.record(
+      item,
+      hit,
+      hit
+        ? null
+        : diagnoseRetrievalMiss({
+            chunks,
+            gold,
+            fullRanking: retrieveRanked(item.question, chunks, chunks.length),
+            k: K,
+            pool: null,
+          }),
+    );
     if (hit) {
       hits += 1;
-    } else if (misses.length < FAILING_SAMPLE_LIMIT) {
+    } else if (ledger.reveal(item)) {
       misses.push({
         question: item.question,
         goldSpan: gold,
@@ -84,6 +103,9 @@ export function gradeR1(
   const recallPass = recall >= recallThreshold;
   const contextPass = !contextGate || meanContextTokens <= contextCeiling;
   const passed = recallPass && contextPass;
+  if (contextGate) {
+    ledger.setCost(costEvidence(perQuery, contextCeiling));
+  }
 
   const gateResults: GateResult[] = [
     {
@@ -117,12 +139,16 @@ export function gradeR1(
     gateResults,
     failureClasses: passed
       ? []
-      : r1FailureClasses(payload, recallPass, contextPass),
+      : [
+          ...(contextPass ? [] : ['context-over-budget']),
+          ...(recallPass ? [] : ledger.topCauses()),
+        ],
     scorecard: {
       recallAt5: recall,
       threshold: recallThreshold,
       meanContextTokens,
       chunks: chunks.length,
+      breakdown: ledger.breakdown(),
     },
     failingCases: misses,
     trace: {
@@ -147,30 +173,4 @@ export function gradeR1(
       ],
     },
   };
-}
-
-function r1FailureClasses(
-  payload: RagPayload,
-  recallPass: boolean,
-  contextPass: boolean,
-): string[] {
-  const classes: string[] = [];
-  if (!contextPass) {
-    classes.push('context-over-budget');
-  }
-  if (payload.chunkSize <= 80) {
-    classes.push('chunk-too-small');
-  }
-  if (payload.chunkSize >= 900 || (!contextPass && recallPass)) {
-    classes.push('chunk-too-large');
-  }
-  if (!recallPass) {
-    if (payload.overlap === 0 && payload.splitStrategy !== 'heading-aware') {
-      classes.push('no-overlap-boundary-loss');
-    }
-    if (payload.splitStrategy === 'fixed') {
-      classes.push('structure-ignored');
-    }
-  }
-  return classes.length > 0 ? [...new Set(classes)] : ['retrieval-quality'];
 }

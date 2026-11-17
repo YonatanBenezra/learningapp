@@ -1,10 +1,12 @@
+import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
 import { estimateTokens } from '../../gateway/pricing';
 import type { Chunk, CorpusDoc } from './chunking';
-import { chunkForR2, retrieveForR2 } from './r2.grade';
+import { chunkForR2, diagnoseR2Miss, retrieveForR2 } from './r2.grade';
 import {
+  costEvidence,
   declaresGate,
+  EvalLedger,
   expandGoldSpan,
-  FAILING_SAMPLE_LIMIT,
   gateThreshold,
   publicGold,
   publicTraceItems,
@@ -119,8 +121,10 @@ export function gradeR5(
       item.goldDocId &&
       item.goldSpan &&
       isR5Class(item.class) &&
-      !item.question.includes('HIDDEN_EVAL'),
+      !isHiddenCanary(item.question),
   );
+  const ledger = new EvalLedger();
+  const perQuery: { tokens: number; chunks: number }[] = [];
   const hits: Record<R5Class, number> = { faq: 0, policy: 0, procedural: 0 };
   const totals: Record<R5Class, number> = { faq: 0, policy: 0, procedural: 0 };
   const tokens: number[] = [];
@@ -129,19 +133,27 @@ export function gradeR5(
 
   for (const item of answerable) {
     const cls = item.class as R5Class;
-    const { ranked, tokens: used } = routeR5(
-      item.question,
-      cls,
-      docs,
-      payload,
-      chunksFor,
-    );
+    const {
+      ranked,
+      chunks,
+      profile,
+      tokens: used,
+    } = routeR5(item.question, cls, docs, payload, chunksFor);
     tokens.push(used);
+    perQuery.push({ tokens: used, chunks: ranked.length });
     totals[cls] += 1;
     const gold = goldFor(docs, item);
-    if (ranked.some((row) => chunkContainsSpan(row.chunk.text, gold))) {
+    const hit = ranked.some((row) => chunkContainsSpan(row.chunk.text, gold));
+    if (!hit) {
+      const cause = diagnoseR2Miss(item.question, chunks, profile, gold);
+      // Per-class cause, e.g. "procedural:gold-split-by-chunking".
+      ledger.record(item, hit, { ...cause, code: `${cls}:${cause.code}` });
+    } else {
+      ledger.record(item, hit);
+    }
+    if (hit) {
       hits[cls] += 1;
-    } else if (misses.length < FAILING_SAMPLE_LIMIT) {
+    } else if (ledger.reveal(item)) {
       misses.push({
         question: item.question,
         goldSpan: gold,
@@ -194,6 +206,10 @@ export function gradeR5(
     });
   }
   const passed = gateResults.every((gate) => gate.passed);
+  ledger.setCost(costEvidence(perQuery, tokenCeiling));
+  const tokenGate = gateResults.find(
+    (gate) => gate.metric === 'mean_prompt_tokens',
+  );
 
   return {
     verdict: passed ? 'pass' : 'fail',
@@ -212,13 +228,20 @@ export function gradeR5(
       mean_prompt_tokens: { value: meanTokens },
     },
     gateResults,
-    failureClasses: passed ? [] : r5FailureClasses(payload, gateResults),
+    // Evidence only: which class missed and why, never which knob to turn.
+    failureClasses: passed
+      ? []
+      : [
+          ...(tokenGate && !tokenGate.passed ? ['context-over-budget'] : []),
+          ...ledger.topCauses(),
+        ],
     scorecard: {
       recallFaq: recall('faq'),
       recallPolicy: recall('policy'),
       recallProcedural: recall('procedural'),
       meanPromptTokens: meanTokens,
       tokenCeiling,
+      breakdown: ledger.breakdown(),
     },
     failingCases: misses,
     trace: {
@@ -262,26 +285,4 @@ export function gradeR5(
       ],
     },
   };
-}
-
-function r5FailureClasses(payload: R5Payload, gates: GateResult[]): string[] {
-  const failed = new Set(
-    gates.filter((gate) => !gate.passed).map((gate) => gate.metric),
-  );
-  const classes: string[] = [];
-  if (failed.has('recall_procedural') && payload.procedural.chunkSize < 400) {
-    classes.push('procedural-chunks-too-small');
-  }
-  if (failed.has('recall_policy') && !payload.policy.rerank) {
-    classes.push('policy-needs-rerank');
-  }
-  if (failed.has('mean_prompt_tokens')) {
-    classes.push('one-profile-for-all');
-  }
-  for (const cls of R5_CLASSES) {
-    if (failed.has(`recall_${cls}`)) {
-      classes.push(`${cls}-recall`);
-    }
-  }
-  return classes.length > 0 ? classes : ['routing'];
 }

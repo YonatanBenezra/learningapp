@@ -6,7 +6,7 @@ import { citedChunkIds, isRefusal } from './grounded-generate';
 import {
   answerableHidden,
   expandGoldSpan,
-  FAILING_SAMPLE_LIMIT,
+  EvalLedger,
   gateThreshold,
   goldSpanOverlap,
   publicGold,
@@ -121,6 +121,7 @@ export async function gradeR3(
 
   let tokensIn = 0;
   let tokensOut = 0;
+  const ledger = new EvalLedger();
   const generated = await mapLimited(
     usable,
     GENERATION_CONCURRENCY,
@@ -172,29 +173,30 @@ export async function gradeR3(
       }
       const grounded =
         !refused && overlap >= overlapThreshold && citations.length > 0;
-      if (!grounded && misses.length < FAILING_SAMPLE_LIMIT) {
+      const cause = refused
+        ? 'over-refusal'
+        : citations.length === 0
+          ? 'no-citation'
+          : 'citation-outside-gold-span';
+      ledger.record(item, grounded, grounded ? null : { code: cause });
+      if (!grounded && ledger.reveal(item)) {
         misses.push({
           question: item.question,
           goldSpan: gold,
           retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
           answer: answer.slice(0, 400),
-          note: refused
-            ? 'over-refusal'
-            : citations.length === 0
-              ? 'no-citation'
-              : 'citation-outside-gold-span',
+          note: cause,
         });
         failingQueries.push(
           toTraceQuery('failing_sample', item.question, ranked),
         );
       }
-    } else if (!item.answerable && refused) {
+    } else if (!item.answerable) {
+      ledger.record(item, refused, refused ? null : { code: 'under-refusal' });
+    }
+    if (!item.answerable && refused) {
       unanswerableRefusals += 1;
-    } else if (
-      !item.answerable &&
-      !refused &&
-      misses.length < FAILING_SAMPLE_LIMIT
-    ) {
+    } else if (!item.answerable && !refused && ledger.reveal(item)) {
       misses.push({
         question: item.question,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
@@ -207,6 +209,7 @@ export async function gradeR3(
     }
   }
 
+  ledger.note('hallucinated-citation', fabricated);
   const formatRate = usable.length === 0 ? 0 : formatHits / usable.length;
   const meanOverlap = overlapCount === 0 ? 0 : overlapSum / overlapCount;
   const formatPass = formatRate >= formatTarget && fabricated === 0;
@@ -283,6 +286,7 @@ export async function gradeR3(
       answerableRefusals: answerableRefusals,
       fabricatedCitations: fabricated,
       chunks: chunks.length,
+      breakdown: ledger.breakdown(),
     },
     failingCases: misses,
     trace: {

@@ -324,6 +324,19 @@ Grade হবে দুটো hidden suite-এ: attack suite-এর ≥ X% আট
 | UI দ্রুত fix (U1–U4, track list, target console) | ✅ |
 | Grader বাছাই `graderArchetype` দিয়ে | ⏭ Phase B-তে সরানো হয়েছে। DB-তে এর column নেই, তাই migration লাগবে। |
 
+### Phase B-এর অবস্থা (২০২৬-১১-১৭)
+
+| কাজ | অবস্থা |
+|---|---|
+| Feedback/holdout split | ✅ প্রতিটা hidden প্রশ্নের `split` ঠিক হয় **প্রশ্নের লেখার hash থেকে**, exercise থেকে না। তাই একই প্রশ্ন যতগুলো exercise-এ থাকুক, সবখানে একই split পায়। Holdout প্রশ্ন কোনো exercise-এ কখনো দেখানো হয় না। Feedback প্রায় ১/৩, প্রতিটা exercise-এ কমপক্ষে ৫টা উত্তরযোগ্য feedback প্রশ্ন। |
+| Tag | ✅ Content থেকে হিসাব করে বসানো: `lexical`/`paraphrase` (প্রশ্ন আর উত্তর-বাক্যে কতটা শব্দ মেলে), `numeric`, `multi-sentence`, `unanswerable`, `distractor` (whole-doc BM25-এ অন্য doc এগিয়ে থাকে), আর R5-এর class। Script: `scripts/content/tag-rag-eval.mjs` (`--check` দিলে CI-তে চেক করে)। |
+| Breakdown | ✅ `scorecard.breakdown`-এ থাকে: split অনুযায়ী hit, tag অনুযায়ী hit, miss-এর কারণ (শুধু সংখ্যা), gold-এর rank, আর token খরচ কোথায় গেল। UI-তে দুটো নতুন অংশ: "Why it missed" আর "Hidden set"। |
+| Failure class আসল ঘটনা থেকে (G10) | ✅ Config দেখে আন্দাজ করা class সরানো হয়েছে, যেমন `topk-too-high`, `policy-needs-rerank`। এখন class আসে ranking থেকে: `gold-split-by-chunking`, `gold-ranked-below-k`, `gold-outside-rerank-pool`, `rerank-demoted-gold`, `rerank-did-not-lift-gold`। R5-এ class-এর নাম সামনে বসে, যেমন `procedural:gold-split-by-chunking`। |
+| Sandbox দিয়ে holdout ফাঁস | ✅ Corpus-এর অংশ না এমন passage আর দেখানো হয় না। Hidden run-এর `stderr`-ও দেখানো হয় না। Crash হলে program-টা শুধু public sample-এ আবার চালানো হয়, আর সেই run-এর error দেখানো হয়। |
+| Grader বাছাই `graderArchetype` দিয়ে | ✅ DB migration ছাড়াই করা হয়েছে: `content/archetype-registry.ts` content-এর `meta.json` থেকে পড়ে। পুরনো slug-নম্বরের নিয়ম শুধু fallback হিসেবে আছে। |
+| CI invariant | ✅ `rag-eval-invariants.spec.ts` চেক করে: split আর tag-এর schema, একই প্রশ্নের split সবখানে এক কিনা, public আর hidden-এর overlap শূন্য কিনা, প্রতিটা gold span তার doc-এ সত্যিই আছে কিনা, আর grader কখনো holdout প্রশ্ন দেখায় কিনা। |
+| প্রতিটা exercise-এর আলাদা hidden প্রশ্ন (E1) | ⏭ **Phase D-তে সরানো হয়েছে।** Shared corpus-এ ১৬টা policy doc মানে মোটামুটি ৮০টা তথ্য, অথচ ১৬টা exercise এটা ব্যবহার করে। একই তথ্যকে ঘুরিয়ে প্রশ্ন লিখে "আলাদা" set বানালে আসলে কোনো লাভ নেই। ফাঁস হওয়ার মূল পথটা split এমনিতেই বন্ধ করেছে, কারণ holdout প্রশ্ন কোথাও দেখানো হয় না। সত্যিকারের আলাদা set আসবে নতুন আর বড় corpus-এর সাথে। |
+
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে
 
 1. **Grading-এ আসল model:** প্রতিটা R3 attempt-এ ~৩০টা প্রশ্ন, মোটামুটি ২০–২৫ হাজার token। Cache থাকায় একই submission আবার দিলে খরচ শূন্য। এই খরচ মেনে নেওয়া যাবে, নাকি R3 simulated থাকবে আর UI-তে স্পষ্ট লেবেল দেওয়া হবে?

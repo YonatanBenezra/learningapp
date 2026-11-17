@@ -25,6 +25,13 @@ export type R4Payload = {
   queryRewritePrompt: string;
 };
 
+/**
+ * feedback: a miss may be shown with its question text (never its gold).
+ * holdout: only ever counted, per split and per tag. Assigned per question
+ * text, so the same question is holdout in every exercise that uses it.
+ */
+export type EvalSplit = 'feedback' | 'holdout';
+
 export type HiddenItem = {
   id: string;
   question: string;
@@ -32,6 +39,30 @@ export type HiddenItem = {
   goldAnswer: string | null;
   goldDocId: string | null;
   goldSpan: string | null;
+  /** Missing means holdout: nothing is revealed unless content opts in. */
+  split?: EvalSplit;
+  /** Question categories for the per-tag breakdown (see EVAL_TAGS). */
+  tags?: string[];
+};
+
+/** Counted outcome for a group of hidden questions. */
+export type HitCount = { hits: number; total: number };
+
+/** What a learner sees about the hidden set beyond the gates: counts only. */
+export type EvalBreakdown = {
+  bySplit: Record<EvalSplit, HitCount>;
+  byTag: Record<string, HitCount>;
+  /** Evidence for every miss (both splits), counted by cause. */
+  diagnosis: Record<string, number>;
+  /** 1-based first-stage rank of the gold chunk, for misses ranked below k. */
+  goldRanks: number[];
+  /** Where the context budget went, when the archetype has one. */
+  cost?: {
+    meanTokens: number;
+    ceiling: number;
+    meanChunks: number;
+    meanTokensPerChunk: number;
+  };
 };
 
 export type MetricValue = {

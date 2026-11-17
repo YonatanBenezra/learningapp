@@ -413,6 +413,139 @@
   color: var(--lp-grd-fail-accent);
 }
 
+.lp-rag-score-failure-classes {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-rag-score-failure-classes li {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.lp-rag-score-failures-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+/* Evidence-based miss causes (scorecard.breakdown.diagnosis). */
+.lp-rag-evidence {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--lp-grd-fail-deep) 22%, var(--lp-border));
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--lp-ink) 5%, var(--color-card));
+}
+
+.lp-rag-evidence-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--lp-ink);
+}
+
+.lp-rag-evidence-list li {
+  display: grid;
+  grid-template-columns: 3.25rem 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.lp-rag-evidence-count {
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  color: var(--lp-grd-fail-accent);
+}
+
+.lp-rag-evidence-sub {
+  color: var(--lp-muted);
+}
+
+/* Count-only view of the hidden set (feedback vs holdout, per tag). */
+.lp-rag-hidden-set {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.lp-rag-hidden-set-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-hidden-set-split strong {
+  color: var(--lp-ink);
+  font-weight: 650;
+}
+
+.lp-rag-hidden-set-holdout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.lp-rag-hidden-set-tags {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.lp-rag-hidden-set-tags th {
+  padding: 0.2rem 0.5rem 0.2rem 0;
+  font-weight: 500;
+  text-align: left;
+  color: var(--lp-ink);
+  white-space: nowrap;
+}
+
+.lp-rag-hidden-set-bar-cell {
+  width: 100%;
+  padding: 0.2rem 0.5rem;
+}
+
+.lp-rag-hidden-set-bar {
+  display: block;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-ink) 10%, transparent);
+  overflow: hidden;
+}
+
+.lp-rag-hidden-set-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.lp-rag-hidden-set-bar-fill.is-full {
+  background: var(--lp-grd-teal);
+}
+
+.lp-rag-hidden-set-bar-fill.is-partial {
+  background: var(--lp-grd-fail-accent);
+}
+
+.lp-rag-hidden-set-count {
+  padding: 0.2rem 0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--lp-muted);
+}
+
 .lp-rag-score-hero-links {
   display: flex;
   flex-wrap: wrap;

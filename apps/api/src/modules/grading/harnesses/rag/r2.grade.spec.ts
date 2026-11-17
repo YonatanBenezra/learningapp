@@ -81,7 +81,13 @@ describe('gradeR2', () => {
     expect(result.metrics.mean_prompt_tokens.value).toBeGreaterThan(
       tokenCeiling,
     );
-    expect(result.failureClasses).toContain('topk-too-high');
+    expect(result.failureClasses).toContain('context-over-budget');
+    // The scorecard shows where the budget went: chunks per query x size.
+    const breakdown = result.scorecard.breakdown as {
+      cost: { meanTokens: number; meanChunks: number; ceiling: number };
+    };
+    expect(breakdown.cost.meanTokens).toBeGreaterThan(breakdown.cost.ceiling);
+    expect(breakdown.cost.meanChunks).toBe(R2_NEAR_MISS_PAYLOAD.topK);
     expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL');
   });
 

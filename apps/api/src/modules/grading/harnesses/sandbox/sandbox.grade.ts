@@ -1,3 +1,4 @@
+import { SANDBOX_ERROR_CODES } from '../../../sandbox/sandbox.constants';
 import type {
   SandboxJobInput,
   SandboxJobResult,
@@ -6,8 +7,9 @@ import { estimateTokens } from '../../gateway/pricing';
 import type { CorpusDoc } from '../rag/chunking';
 import {
   answerableHidden,
+  costEvidence,
+  EvalLedger,
   expandGoldSpan,
-  FAILING_SAMPLE_LIMIT,
   gateThreshold,
   publicTraceItems,
 } from '../rag/rag.shared';
@@ -36,12 +38,24 @@ function normalizeForMatch(text: string): string {
  * inventing text, is not retrieval.
  */
 export function passageMatcher(docs: CorpusDoc[]): (text: string) => boolean {
-  const bodies = docs.map((doc) =>
-    normalizeForMatch(`${doc.title} ${doc.text}`),
-  );
+  const docOf = passageDocs(docs);
+  return (text: string) => docOf(text) !== null;
+}
+
+/** The id of the one document a passage is a span of, or null. */
+export function passageDocs(
+  docs: CorpusDoc[],
+): (text: string) => string | null {
+  const bodies = docs.map((doc) => ({
+    id: doc.id,
+    body: normalizeForMatch(`${doc.title} ${doc.text}`),
+  }));
   return (text: string) => {
     const needle = normalizeForMatch(text);
-    return needle.length > 0 && bodies.some((body) => body.includes(needle));
+    if (needle.length === 0) {
+      return null;
+    }
+    return bodies.find((row) => row.body.includes(needle))?.id ?? null;
   };
 }
 
@@ -79,13 +93,17 @@ export async function gradeSandboxRetriever(
       answerable.length,
       publicItems,
       threshold,
+      await crashNote(executed, payload, docs, publicItems, execute, limits),
     );
   }
 
   const retrieved = parseResults(executed.stdout);
-  const fromCorpus = passageMatcher(docs);
+  const docOf = passageDocs(docs);
+  const fromCorpus = (text: string) => docOf(text) !== null;
   const misses: SandboxGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
+  const ledger = new EvalLedger();
+  const perQuery: { tokens: number; chunks: number }[] = [];
   let hits = 0;
   let passageCount = 0;
   let invalidPassages = 0;
@@ -97,21 +115,47 @@ export async function gradeSandboxRetriever(
     passageCount += returned.length;
     invalidPassages += returned.length - passages.length;
     // Budget counts everything the program returned, valid or not.
-    contextTokenSum +=
+    const tokens =
       returned.length === 0 ? 0 : estimateTokens(returned.join('\n\n'));
+    contextTokenSum += tokens;
+    perQuery.push({ tokens, chunks: returned.length });
     const gold = expandGoldSpan(
       docs,
       item.goldDocId as string,
       item.goldSpan as string,
     );
     const hit = passages.some((text) => chunkContainsSpan(text, gold));
+    ledger.record(
+      item,
+      hit,
+      hit
+        ? null
+        : {
+            code:
+              passages.length < returned.length
+                ? 'passage-not-from-corpus'
+                : passages.some((text) => docOf(text) === item.goldDocId)
+                  ? 'right-doc-wrong-span'
+                  : 'gold-doc-not-returned',
+          },
+    );
     if (hit) {
       hits += 1;
-    } else if (misses.length < FAILING_SAMPLE_LIMIT) {
+    } else if (ledger.reveal(item)) {
       misses.push({
         question: item.question,
         goldSpan: gold,
-        retrieved: returned.map((text) => text.slice(0, 220)),
+        // Only real corpus spans are echoed: the program can read every
+        // hidden question, so anything else it prints could smuggle holdout
+        // questions out through a feedback miss.
+        retrieved: [
+          ...passages.map((text) => text.slice(0, 220)),
+          ...(passages.length < returned.length
+            ? [
+                `[${returned.length - passages.length} passage(s) not from the corpus, not shown]`,
+              ]
+            : []),
+        ],
         ...(passages.length < returned.length
           ? { note: 'passage-not-from-corpus' }
           : {}),
@@ -138,6 +182,7 @@ export async function gradeSandboxRetriever(
   const contextPass = meanContextTokens <= contextCeiling;
   const corpusPass = invalidPassages === 0;
   const passed = recallPass && contextPass && corpusPass;
+  ledger.setCost(costEvidence(perQuery, contextCeiling));
   const failureClasses: string[] = [];
   if (!corpusPass) {
     failureClasses.push('passage-not-from-corpus');
@@ -146,7 +191,7 @@ export async function gradeSandboxRetriever(
     failureClasses.push('context-over-budget');
   }
   if (!recallPass) {
-    failureClasses.push('retrieval-quality');
+    failureClasses.push(...ledger.topCauses());
   }
   return {
     verdict: passed ? 'pass' : 'fail',
@@ -188,13 +233,14 @@ export async function gradeSandboxRetriever(
         passed: corpusPass,
       },
     ],
-    failureClasses: passed ? [] : failureClasses,
+    failureClasses: passed ? [] : [...new Set(failureClasses)],
     scorecard: {
       recallAt5: recall,
       threshold,
       meanContextTokens,
       contextCeiling,
       invalidPassages,
+      breakdown: ledger.breakdown(),
       durationMs: executed.durationMs,
       memoryPeakMb: executed.memoryPeakMb,
     },
@@ -227,12 +273,59 @@ export async function gradeSandboxRetriever(
   };
 }
 
+/** Errors where the learner's program never produced output of its own. */
+const INFRA_ERRORS = new Set<string>([
+  SANDBOX_ERROR_CODES.RUNTIME_UNAVAILABLE,
+  SANDBOX_ERROR_CODES.EGRESS_BLOCKED,
+]);
+
+/**
+ * What to show when the hidden run crashed. The hidden run's stderr is never
+ * echoed: the program reads every hidden question and could print holdout
+ * questions in an error message. Instead the program is re-run on the public
+ * samples only, and that run's error output (which holds no hidden data) is
+ * shown when it fails too.
+ */
+async function crashNote(
+  executed: SandboxJobResult,
+  payload: SandboxPayload,
+  docs: CorpusDoc[],
+  publicItems: { question: string }[],
+  execute: SandboxExecutor,
+  limits?: { maxWallClockS?: number; maxMemoryMb?: number },
+): Promise<string> {
+  if (INFRA_ERRORS.has(executed.errorCode) || publicItems.length === 0) {
+    return executed.errorCode;
+  }
+  const publicAsQuestions: HiddenItem[] = publicItems.map((item, index) => ({
+    id: `public-${index + 1}`,
+    question: item.question,
+    answerable: true,
+    goldAnswer: null,
+    goldDocId: null,
+    goldSpan: null,
+  }));
+  const dryRun = await execute({
+    source: payload.source,
+    workspaceFiles: {
+      'input.json': learnerInputJson(docs, publicAsQuestions),
+    },
+    maxWallClockS: limits?.maxWallClockS,
+    maxMemoryMb: limits?.maxMemoryMb,
+  });
+  if (!dryRun.ok) {
+    return `Also fails on the public samples (${dryRun.errorCode}):\n${dryRun.stderr.slice(0, 400)}`;
+  }
+  return `Your program crashed (${executed.errorCode}) on the hidden questions but runs on the public samples. Error output from the hidden run is never shown; check edge cases such as empty or unusual questions.`;
+}
+
 function sandboxFailure(
   executed: SandboxJobResult,
   payload: SandboxPayload,
   total: number,
   publicItems: { question: string }[],
   threshold: number,
+  note: string,
 ): SandboxGradeResult {
   const errorCode = executed.errorCode;
   return {
@@ -260,7 +353,7 @@ function sandboxFailure(
     failingCases: [
       {
         question: 'sandbox execution',
-        note: executed.stderr.slice(0, 400) || errorCode,
+        note,
       },
     ],
     trace: {

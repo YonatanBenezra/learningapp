@@ -1,9 +1,162 @@
 import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
 import type { CorpusDoc } from './chunking';
-import type { HiddenItem, PublicItem, TraceQuery } from './rag.types';
+import type { Chunk } from './chunking';
+import type {
+  EvalBreakdown,
+  EvalSplit,
+  HiddenItem,
+  HitCount,
+  PublicItem,
+  TraceQuery,
+} from './rag.types';
 import { chunkContainsSpan, type RankedChunk } from './retrieve';
 
 export const FAILING_SAMPLE_LIMIT = 3;
+
+/** Allowed question tags; content checks reject anything else. */
+export const EVAL_TAGS = [
+  'lexical',
+  'paraphrase',
+  'numeric',
+  'multi-sentence',
+  'unanswerable',
+  'distractor',
+  'faq',
+  'policy',
+  'procedural',
+] as const;
+
+export function splitOf(item: { split?: unknown }): EvalSplit {
+  return item.split === 'feedback' ? 'feedback' : 'holdout';
+}
+
+/**
+ * Tallies hidden-set outcomes. Gates are computed by the grader on every
+ * item; the ledger decides what may be revealed (feedback misses, up to the
+ * sample limit) and builds the count-only breakdown for everything else.
+ */
+export class EvalLedger {
+  private revealed = 0;
+  private readonly bySplit: Record<EvalSplit, HitCount> = {
+    feedback: { hits: 0, total: 0 },
+    holdout: { hits: 0, total: 0 },
+  };
+  private readonly byTag: Record<string, HitCount> = {};
+  private readonly diagnosis: Record<string, number> = {};
+  private readonly goldRanks: number[] = [];
+  private cost: EvalBreakdown['cost'];
+
+  record(item: HiddenItem, hit: boolean, cause?: MissCause | null): void {
+    const split = this.bySplit[splitOf(item)];
+    split.total += 1;
+    split.hits += hit ? 1 : 0;
+    for (const tag of item.tags ?? []) {
+      const row = (this.byTag[tag] ??= { hits: 0, total: 0 });
+      row.total += 1;
+      row.hits += hit ? 1 : 0;
+    }
+    if (!hit && cause) {
+      this.diagnosis[cause.code] = (this.diagnosis[cause.code] ?? 0) + 1;
+      if (cause.rank !== undefined) {
+        this.goldRanks.push(cause.rank);
+      }
+    }
+  }
+
+  /** Count a cause that is not tied to one question's hit/miss (e.g. a bad citation). */
+  note(code: string, count = 1): void {
+    if (count > 0) {
+      this.diagnosis[code] = (this.diagnosis[code] ?? 0) + count;
+    }
+  }
+
+  /** May this miss be shown with its question text? Feedback split only. */
+  reveal(item: HiddenItem): boolean {
+    if (splitOf(item) !== 'feedback' || this.revealed >= FAILING_SAMPLE_LIMIT) {
+      return false;
+    }
+    this.revealed += 1;
+    return true;
+  }
+
+  setCost(cost: NonNullable<EvalBreakdown['cost']>): void {
+    this.cost = cost;
+  }
+
+  breakdown(): EvalBreakdown {
+    return {
+      bySplit: this.bySplit,
+      byTag: this.byTag,
+      diagnosis: this.diagnosis,
+      goldRanks: [...this.goldRanks].sort((a, b) => a - b),
+      ...(this.cost ? { cost: this.cost } : {}),
+    };
+  }
+
+  /** Miss causes, most frequent first, optionally prefixed (e.g. "policy:"). */
+  topCauses(prefix = ''): string[] {
+    return Object.entries(this.diagnosis)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([code]) => `${prefix}${code}`);
+  }
+}
+
+export type MissCause = { code: string; rank?: number };
+
+/**
+ * Why the gold text did not reach the final top-k, read from the rankings
+ * rather than guessed from the config:
+ * - gold-split-by-chunking: no chunk holds the whole gold text.
+ * - gold-outside-rerank-pool: the reranker never saw the gold chunk.
+ * - rerank-demoted-gold: first stage had it in the top-k, the rerank pushed it out.
+ * - rerank-did-not-lift-gold: it was in the pool but stayed below k.
+ * - gold-ranked-below-k: no rerank, and the first stage ranked it below k.
+ */
+export function diagnoseRetrievalMiss(input: {
+  chunks: Chunk[];
+  gold: string;
+  /** First-stage ranking over every chunk. */
+  fullRanking: RankedChunk[];
+  k: number;
+  /** Rerank candidate pool size, or null when no rerank ran. */
+  pool: number | null;
+}): MissCause {
+  if (
+    !input.chunks.some((chunk) => chunkContainsSpan(chunk.text, input.gold))
+  ) {
+    return { code: 'gold-split-by-chunking' };
+  }
+  const index = input.fullRanking.findIndex((row) =>
+    chunkContainsSpan(row.chunk.text, input.gold),
+  );
+  const rank = index < 0 ? input.fullRanking.length + 1 : index + 1;
+  if (input.pool === null) {
+    return { code: 'gold-ranked-below-k', rank };
+  }
+  if (rank > input.pool) {
+    return { code: 'gold-outside-rerank-pool', rank };
+  }
+  if (rank <= input.k) {
+    return { code: 'rerank-demoted-gold', rank };
+  }
+  return { code: 'rerank-did-not-lift-gold', rank };
+}
+
+/** Mean context tokens and how they split into chunks x size. */
+export function costEvidence(
+  perQuery: { tokens: number; chunks: number }[],
+  ceiling: number,
+): NonNullable<EvalBreakdown['cost']> {
+  const n = perQuery.length || 1;
+  const meanTokens = perQuery.reduce((sum, row) => sum + row.tokens, 0) / n;
+  const meanChunks = perQuery.reduce((sum, row) => sum + row.chunks, 0) / n;
+  return {
+    meanTokens,
+    ceiling,
+    meanChunks,
+    meanTokensPerChunk: meanChunks === 0 ? 0 : meanTokens / meanChunks,
+  };
+}
 
 function declaredGate(
   gates: unknown,

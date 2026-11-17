@@ -59,7 +59,10 @@ describe('gradeR4', () => {
       'run-r4-miss',
     );
     expect(result.verdict).toBe('fail');
-    expect(result.failureClasses).toContain('no-rerank');
+    // Evidence, not a config guess: with no reranker the first stage ranked
+    // the gold doc below k, and the gain stayed under target.
+    expect(result.failureClasses).toContain('gold-ranked-below-k');
+    expect(result.failureClasses).toContain('ndcg-gain-below-target');
     expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL');
   });
 });

@@ -7,7 +7,8 @@ import { mmrRerank, titleBoost } from './rerank';
 import { retrieveByTermCount, type RankedChunk } from './retrieve';
 import {
   answerableHidden,
-  FAILING_SAMPLE_LIMIT,
+  diagnoseRetrievalMiss,
+  EvalLedger,
   gateThreshold,
   publicGold,
   publicTraceItems,
@@ -66,6 +67,8 @@ export async function gradeR4(
   const failingQueries: TraceQuery[] = [];
   const improvements: number[] = [];
   const contextTokens: number[] = [];
+  const ledger = new EvalLedger();
+  const window = Math.min(chunks.length, Math.max(payload.rerankTopN, K));
 
   for (const item of answerable) {
     const question = item.question;
@@ -86,7 +89,20 @@ export async function gradeR4(
     const goldInTop = reranked.some(
       (row) => row.chunk.docId === item.goldDocId,
     );
-    if (!goldInTop && misses.length < FAILING_SAMPLE_LIMIT) {
+    ledger.record(
+      item,
+      goldInTop,
+      goldInTop
+        ? null
+        : diagnoseRetrievalMiss({
+            chunks,
+            gold: item.goldSpan as string,
+            fullRanking: retrieveByTermCount(question, chunks, chunks.length),
+            k: K,
+            pool: payload.reranker === 'none' ? null : window,
+          }),
+    );
+    if (!goldInTop && ledger.reveal(item)) {
       misses.push({
         question: item.question,
         goldSpan: item.goldSpan ?? undefined,
@@ -152,7 +168,13 @@ export async function gradeR4(
     ],
     failureClasses: passed
       ? []
-      : r4FailureClasses(payload, ndcgPass, contextPass),
+      : [
+          ...(contextPass ? [] : ['context-over-budget']),
+          ...(callsPass ? [] : ['model-calls-over-budget']),
+          ...(ndcgPass
+            ? []
+            : [...ledger.topCauses(), 'ndcg-gain-below-target']),
+        ],
     scorecard: {
       ndcgImprovement: meanImprovement,
       contextTokens: meanContext,
@@ -160,6 +182,7 @@ export async function gradeR4(
       reranker: payload.reranker,
       rerankTopN: payload.rerankTopN,
       chunks: chunks.length,
+      breakdown: ledger.breakdown(),
     },
     failingCases: misses,
     trace: {
@@ -226,25 +249,4 @@ function ndcgForGold(ranked: RankedChunk[], goldDocId: string): number {
     return 0;
   }
   return metrics.ndcgAtK(relevances, K);
-}
-
-function r4FailureClasses(
-  payload: R4Payload,
-  ndcgPass: boolean,
-  contextPass: boolean,
-): string[] {
-  const classes: string[] = [];
-  if (!ndcgPass && payload.reranker === 'none') {
-    classes.push('no-rerank');
-  }
-  if (!ndcgPass && payload.rerankTopN <= 8) {
-    classes.push('rerank-window-too-narrow');
-  }
-  if (!contextPass) {
-    classes.push('context-budget-blown');
-  }
-  if (payload.queryRewritePrompt.trim() && !ndcgPass) {
-    classes.push('query-rewrite-drift');
-  }
-  return classes.length > 0 ? classes : ['reranking'];
 }

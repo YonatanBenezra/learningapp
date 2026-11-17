@@ -9,9 +9,12 @@ import {
 } from './retrieve';
 import {
   answerableHidden,
+  costEvidence,
+  diagnoseRetrievalMiss,
+  EvalLedger,
   expandGoldSpan,
-  FAILING_SAMPLE_LIMIT,
   gateThreshold,
+  type MissCause,
   publicGold,
   publicTraceItems,
   toTraceQuery,
@@ -60,6 +63,8 @@ export function gradeR2(
   const answerable = answerableHidden(hidden);
   const misses: RagGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
+  const ledger = new EvalLedger();
+  const perQuery: { tokens: number; chunks: number }[] = [];
   let hits = 0;
   const tokenCounts: number[] = [];
 
@@ -67,16 +72,23 @@ export function gradeR2(
     const ranked = retrieveForR2(item.question, chunks, payload);
     // Recall is judged on exactly the text that is sent as context.
     const packed = ranked.map((row) => row.chunk.text).join('\n\n');
-    tokenCounts.push(estimateTokens(`Context:\n${packed}`));
+    const tokens = estimateTokens(`Context:\n${packed}`);
+    tokenCounts.push(tokens);
+    perQuery.push({ tokens, chunks: ranked.length });
     const gold = expandGoldSpan(
       docs,
       item.goldDocId as string,
       item.goldSpan as string,
     );
     const hit = ranked.some((row) => chunkContainsSpan(row.chunk.text, gold));
+    ledger.record(
+      item,
+      hit,
+      hit ? null : diagnoseR2Miss(item.question, chunks, payload, gold),
+    );
     if (hit) {
       hits += 1;
-    } else if (misses.length < FAILING_SAMPLE_LIMIT) {
+    } else if (ledger.reveal(item)) {
       misses.push({
         question: item.question,
         goldSpan: gold,
@@ -97,6 +109,7 @@ export function gradeR2(
   const recallPass = recall >= recallThreshold;
   const costPass = meanTokens <= tokenCeiling;
   const passed = recallPass && costPass;
+  ledger.setCost(costEvidence(perQuery, tokenCeiling));
 
   return {
     verdict: passed ? 'pass' : 'fail',
@@ -127,7 +140,10 @@ export function gradeR2(
     ],
     failureClasses: passed
       ? []
-      : r2FailureClasses(payload, recallPass, costPass),
+      : [
+          ...(costPass ? [] : ['context-over-budget']),
+          ...(recallPass ? [] : ledger.topCauses()),
+        ],
     scorecard: {
       recallAtK: recall,
       meanPromptTokens: meanTokens,
@@ -135,6 +151,7 @@ export function gradeR2(
       topK: payload.topK,
       rerank: payload.rerank,
       chunks: chunks.length,
+      breakdown: ledger.breakdown(),
     },
     failingCases: misses,
     trace: {
@@ -168,8 +185,24 @@ export function gradeR2(
   };
 }
 
+/** Evidence for an R2-style miss (also used by R5 per class). */
+export function diagnoseR2Miss(
+  question: string,
+  chunks: Chunk[],
+  payload: R2Payload,
+  gold: string,
+): MissCause {
+  return diagnoseRetrievalMiss({
+    chunks,
+    gold,
+    fullRanking: retrieveRanked(question, chunks, chunks.length),
+    k: payload.topK,
+    pool: payload.rerank ? rerankPool(payload, chunks) : null,
+  });
+}
+
 /** Candidates fetched before the title boost when rerank is on. */
-function rerankPool(payload: R2Payload, chunks: Chunk[]): number {
+export function rerankPool(payload: R2Payload, chunks: Chunk[]): number {
   return Math.min(chunks.length, Math.max(payload.topK * 4, payload.topK));
 }
 
@@ -184,25 +217,4 @@ export function retrieveForR2(
     return ranked.slice(0, payload.topK);
   }
   return titleBoost(question, ranked).slice(0, payload.topK);
-}
-
-function r2FailureClasses(
-  payload: R2Payload,
-  recallPass: boolean,
-  costPass: boolean,
-): string[] {
-  const classes: string[] = [];
-  if (!costPass && payload.topK >= 16) {
-    classes.push('topk-too-high');
-  }
-  if (!costPass && payload.chunkSize >= 400) {
-    classes.push('chunks-too-large');
-  }
-  if (!recallPass && !payload.rerank && payload.topK <= 8) {
-    classes.push('no-rerank-with-low-k');
-  }
-  if (!recallPass) {
-    classes.push('quality-sacrificed');
-  }
-  return classes.length > 0 ? classes : ['cost-engineering'];
 }

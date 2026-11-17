@@ -5,7 +5,12 @@
     "answerable": true,
     "goldAnswer": "22",
     "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldSpan": "twenty-two (22) days of paid time off",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h02",
@@ -13,7 +18,12 @@
     "answerable": true,
     "goldAnswer": "14 days",
     "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h03",
@@ -21,7 +31,12 @@
     "answerable": true,
     "goldAnswer": "Through the company gateway",
     "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldSpan": "all traffic must egress through the company gateway",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h04",
@@ -29,7 +44,11 @@
     "answerable": true,
     "goldAnswer": "Within four hours",
     "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldSpan": "offboarded within four hours of contract end",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h05",
@@ -37,7 +56,11 @@
     "answerable": true,
     "goldAnswer": "#incidents",
     "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldSpan": "post a timeline in Slack channel #incidents",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h06",
@@ -45,7 +68,12 @@
     "answerable": true,
     "goldAnswer": "30 days",
     "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldSpan": "retained for thirty (30) days",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h07",
@@ -53,7 +81,12 @@
     "answerable": true,
     "goldAnswer": "€45",
     "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h08",
@@ -61,7 +94,12 @@
     "answerable": true,
     "goldAnswer": "30 days",
     "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldSpan": "within thirty (30) days of the transaction date",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h09",
@@ -69,7 +107,12 @@
     "answerable": true,
     "goldAnswer": "18 months",
     "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldSpan": "kept for eighteen (18) months after close",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h10",
@@ -77,7 +120,12 @@
     "answerable": true,
     "goldAnswer": "90 days",
     "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days"
+    "goldSpan": "kept for ninety (90) days",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h11",
@@ -85,7 +133,12 @@
     "answerable": true,
     "goldAnswer": "Monday at 09:00 UTC",
     "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldSpan": "rotates every Monday at 09:00 UTC",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h12",
@@ -93,7 +146,13 @@
     "answerable": true,
     "goldAnswer": "SOC 2 Type II",
     "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldSpan": "SOC 2 Type II report before procurement",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h13",
@@ -101,7 +160,12 @@
     "answerable": true,
     "goldAnswer": "€180",
     "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night"
+    "goldSpan": "one hundred eighty euros (€180) per night",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h14",
@@ -109,7 +173,11 @@
     "answerable": true,
     "goldAnswer": "Within two hours",
     "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours"
+    "goldSpan": "reported to IT within two hours",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h15",
@@ -117,7 +185,12 @@
     "answerable": true,
     "goldAnswer": "1Password",
     "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldSpan": "stored only in 1Password",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h16",
@@ -125,7 +198,11 @@
     "answerable": true,
     "goldAnswer": "Public channels",
     "goldDocId": "slack",
-    "goldSpan": "Public channels are the default"
+    "goldSpan": "Public channels are the default",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h17",
@@ -133,7 +210,11 @@
     "answerable": true,
     "goldAnswer": "Five business days",
     "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision"
+    "goldSpan": "within five business days of a hire decision",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h18",
@@ -141,7 +222,11 @@
     "answerable": true,
     "goldAnswer": "Within thirty minutes",
     "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report"
+    "goldSpan": "deactivated within thirty minutes of the report",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h19",
@@ -149,7 +234,11 @@
     "answerable": true,
     "goldAnswer": "Every four hours",
     "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldSpan": "encrypted snapshots every four hours",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h20",
@@ -157,7 +246,12 @@
     "answerable": true,
     "goldAnswer": "AES-256",
     "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
+    "goldSpan": "AES-256 at rest",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "canary",
@@ -165,6 +259,8 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

@@ -5,7 +5,12 @@
     "answerable": true,
     "goldAnswer": "22",
     "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldSpan": "twenty-two (22) days of paid time off",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h02",
@@ -13,7 +18,12 @@
     "answerable": true,
     "goldAnswer": "14 days",
     "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h03",
@@ -21,7 +31,11 @@
     "answerable": true,
     "goldAnswer": "Okta hardware MFA",
     "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta"
+    "goldSpan": "hardware MFA enrolled in Okta",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h04",
@@ -29,7 +43,11 @@
     "answerable": true,
     "goldAnswer": "No, split tunneling is disabled",
     "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled"
+    "goldSpan": "Split tunneling is disabled",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h05",
@@ -37,7 +55,12 @@
     "answerable": true,
     "goldAnswer": "15 minutes",
     "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes"
+    "goldSpan": "acknowledged within fifteen (15) minutes",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h06",
@@ -45,7 +68,11 @@
     "answerable": true,
     "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
     "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication"
+    "goldSpan": "blocks customer-facing checkout or authentication",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h07",
@@ -53,7 +80,11 @@
     "answerable": true,
     "goldAnswer": "No",
     "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers"
+    "goldSpan": "must not be placed in prompts sent to external model providers",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h08",
@@ -61,7 +92,12 @@
     "answerable": true,
     "goldAnswer": "30 days",
     "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldSpan": "retained for thirty (30) days",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h09",
@@ -69,7 +105,11 @@
     "answerable": true,
     "goldAnswer": "No",
     "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable"
+    "goldSpan": "Alcohol is never reimbursable",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h10",
@@ -77,7 +117,12 @@
     "answerable": true,
     "goldAnswer": "€45",
     "goldDocId": "expense",
-    "goldSpan": "forty-five euros (€45) per person excluding tax"
+    "goldSpan": "forty-five euros (€45) per person excluding tax",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h11",
@@ -85,7 +130,12 @@
     "answerable": true,
     "goldAnswer": "18 months",
     "goldDocId": "retention",
-    "goldSpan": "eighteen (18) months after close"
+    "goldSpan": "eighteen (18) months after close",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h12",
@@ -93,7 +143,12 @@
     "answerable": true,
     "goldAnswer": "Every Monday at 09:00 UTC",
     "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldSpan": "rotates every Monday at 09:00 UTC",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h13",
@@ -101,7 +156,12 @@
     "answerable": true,
     "goldAnswer": "SOC 2 Type II",
     "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldSpan": "SOC 2 Type II report before procurement",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h14",
@@ -109,7 +169,11 @@
     "answerable": true,
     "goldAnswer": "Navan",
     "goldDocId": "travel",
-    "goldSpan": "Book through the Navan profile"
+    "goldSpan": "Book through the Navan profile",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h15",
@@ -117,7 +181,12 @@
     "answerable": true,
     "goldAnswer": "Linux",
     "goldDocId": "laptop",
-    "goldSpan": "14-inch Linux workstation"
+    "goldSpan": "14-inch Linux workstation",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h16",
@@ -125,7 +194,12 @@
     "answerable": true,
     "goldAnswer": "1Password",
     "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldSpan": "stored only in 1Password",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h17",
@@ -133,7 +207,11 @@
     "answerable": true,
     "goldAnswer": "#incidents",
     "goldDocId": "slack",
-    "goldSpan": "discussed in #incidents"
+    "goldSpan": "discussed in #incidents",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h18",
@@ -141,7 +219,11 @@
     "answerable": true,
     "goldAnswer": "People Ops",
     "goldDocId": "hiring",
-    "goldSpan": "issued by People Ops"
+    "goldSpan": "issued by People Ops",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h19",
@@ -149,7 +231,11 @@
     "answerable": true,
     "goldAnswer": "red",
     "goldDocId": "badge",
-    "goldSpan": "wear a red lanyard"
+    "goldSpan": "wear a red lanyard",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h20",
@@ -157,7 +243,11 @@
     "answerable": true,
     "goldAnswer": "Every four hours",
     "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldSpan": "encrypted snapshots every four hours",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h21",
@@ -165,7 +255,12 @@
     "answerable": true,
     "goldAnswer": "AES-256",
     "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
+    "goldSpan": "AES-256 at rest",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h22",
@@ -173,7 +268,12 @@
     "answerable": true,
     "goldAnswer": "Up to five days",
     "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days"
+    "goldSpan": "carried into the next year up to a maximum of five (5) days",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h23",
@@ -181,7 +281,12 @@
     "answerable": true,
     "goldAnswer": "60 minutes",
     "goldDocId": "incident",
-    "goldSpan": "sixty-minute acknowledge target"
+    "goldSpan": "sixty-minute acknowledge target",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h24",
@@ -189,7 +294,11 @@
     "answerable": true,
     "goldAnswer": "No",
     "goldDocId": "vpn",
-    "goldSpan": "Personal devices are not permitted on the production VPN profile"
+    "goldSpan": "Personal devices are not permitted on the production VPN profile",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "u01",
@@ -197,7 +306,11 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "u02",
@@ -205,7 +318,11 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "u03",
@@ -213,7 +330,11 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "u04",
@@ -221,7 +342,11 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "u05",
@@ -229,7 +354,11 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "u06",
@@ -237,7 +366,11 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "canary",
@@ -245,6 +378,8 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]
