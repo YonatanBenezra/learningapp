@@ -1,12 +1,14 @@
-import { estimateTokens } from '../../gateway/pricing';
+import { countTokens } from '../../gateway/pricing';
 import { advisoryClassB } from '../../judge/class-b';
 import { chunkCorpus, type Chunk, type CorpusDoc } from './chunking';
 import { titleBoost } from './rerank';
+import { chunkContainsSpan, type RankedChunk } from './retrieve';
 import {
-  chunkContainsSpan,
-  retrieveRanked,
-  type RankedChunk,
-} from './retrieve';
+  prepareRetriever,
+  type Retriever,
+  retrieverLabel,
+  retrieverSpecOf,
+} from './retrievers';
 import {
   answerableHidden,
   costEvidence,
@@ -46,13 +48,13 @@ export function chunkForR2(docs: CorpusDoc[], payload: R2Payload): Chunk[] {
   );
 }
 
-export function gradeR2(
+export async function gradeR2(
   payload: R2Payload,
   docs: CorpusDoc[],
   hidden: HiddenItem[],
   publicItems: PublicItem[] = [],
   gates?: unknown,
-): RagGradeResult {
+): Promise<RagGradeResult> {
   const recallThreshold = gateThreshold(gates, 'recall@k', DEFAULT_RECALL);
   const tokenCeiling = gateThreshold(
     gates,
@@ -61,6 +63,12 @@ export function gradeR2(
   );
   const chunks = chunkForR2(docs, payload);
   const answerable = answerableHidden(hidden);
+  const shownPublic = publicTraceItems(publicItems);
+  const spec = retrieverSpecOf(payload);
+  const retriever = await prepareRetriever(chunks, spec, [
+    ...answerable.map((item) => item.question),
+    ...shownPublic.map((item) => item.question),
+  ]);
   const misses: RagGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
   const ledger = new EvalLedger();
@@ -69,10 +77,10 @@ export function gradeR2(
   const tokenCounts: number[] = [];
 
   for (const item of answerable) {
-    const ranked = retrieveForR2(item.question, chunks, payload);
+    const ranked = retrieveForR2(item.question, retriever, payload);
     // Recall is judged on exactly the text that is sent as context.
     const packed = ranked.map((row) => row.chunk.text).join('\n\n');
-    const tokens = estimateTokens(`Context:\n${packed}`);
+    const tokens = countTokens(`Context:\n${packed}`);
     tokenCounts.push(tokens);
     perQuery.push({ tokens, chunks: ranked.length });
     const gold = expandGoldSpan(
@@ -84,7 +92,7 @@ export function gradeR2(
     ledger.record(
       item,
       hit,
-      hit ? null : diagnoseR2Miss(item.question, chunks, payload, gold),
+      hit ? null : diagnoseR2Miss(item.question, retriever, payload, gold),
     );
     if (hit) {
       hits += 1;
@@ -150,6 +158,7 @@ export function gradeR2(
       tokenCeiling: tokenCeiling,
       topK: payload.topK,
       rerank: payload.rerank,
+      retrieval: retrieverLabel(retriever.spec),
       chunks: chunks.length,
       breakdown: ledger.breakdown(),
     },
@@ -163,18 +172,14 @@ export function gradeR2(
       tokensOut: 0,
       costEurMicros: 0,
       queries: [
-        ...publicTraceItems(publicItems).map((item) => {
-          const ranked = retrieveForR2(item.question, chunks, payload);
+        ...shownPublic.map((item) => {
+          const ranked = retrieveForR2(item.question, retriever, payload);
           return toTraceQuery('public', item.question, ranked, {
             gold: publicGold(docs, item),
             firstStage: payload.rerank
-              ? retrieveRanked(
-                  item.question,
-                  chunks,
-                  rerankPool(payload, chunks),
-                )
+              ? retriever.rank(item.question, rerankPool(payload, chunks))
               : null,
-            contextTokens: estimateTokens(
+            contextTokens: countTokens(
               `Context:\n${ranked.map((row) => row.chunk.text).join('\n\n')}`,
             ),
           });
@@ -188,14 +193,15 @@ export function gradeR2(
 /** Evidence for an R2-style miss (also used by R5 per class). */
 export function diagnoseR2Miss(
   question: string,
-  chunks: Chunk[],
+  retriever: Retriever,
   payload: R2Payload,
   gold: string,
 ): MissCause {
+  const { chunks } = retriever;
   return diagnoseRetrievalMiss({
     chunks,
     gold,
-    fullRanking: retrieveRanked(question, chunks, chunks.length),
+    fullRanking: retriever.rank(question, chunks.length),
     k: payload.topK,
     pool: payload.rerank ? rerankPool(payload, chunks) : null,
   });
@@ -208,11 +214,13 @@ export function rerankPool(payload: R2Payload, chunks: Chunk[]): number {
 
 export function retrieveForR2(
   question: string,
-  chunks: Chunk[],
+  retriever: Retriever,
   payload: R2Payload,
 ): RankedChunk[] {
-  const pool = payload.rerank ? rerankPool(payload, chunks) : payload.topK;
-  const ranked = retrieveRanked(question, chunks, pool);
+  const pool = payload.rerank
+    ? rerankPool(payload, retriever.chunks)
+    : payload.topK;
+  const ranked = retriever.rank(question, pool);
   if (!payload.rerank) {
     return ranked.slice(0, payload.topK);
   }

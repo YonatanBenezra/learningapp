@@ -337,6 +337,22 @@ Grade হবে দুটো hidden suite-এ: attack suite-এর ≥ X% আট
 | CI invariant | ✅ `rag-eval-invariants.spec.ts` চেক করে: split আর tag-এর schema, একই প্রশ্নের split সবখানে এক কিনা, public আর hidden-এর overlap শূন্য কিনা, প্রতিটা gold span তার doc-এ সত্যিই আছে কিনা, আর grader কখনো holdout প্রশ্ন দেখায় কিনা। |
 | প্রতিটা exercise-এর আলাদা hidden প্রশ্ন (E1) | ⏭ **Phase D-তে সরানো হয়েছে।** Shared corpus-এ ১৬টা policy doc মানে মোটামুটি ৮০টা তথ্য, অথচ ১৬টা exercise এটা ব্যবহার করে। একই তথ্যকে ঘুরিয়ে প্রশ্ন লিখে "আলাদা" set বানালে আসলে কোনো লাভ নেই। ফাঁস হওয়ার মূল পথটা split এমনিতেই বন্ধ করেছে, কারণ holdout প্রশ্ন কোথাও দেখানো হয় না। সত্যিকারের আলাদা set আসবে নতুন আর বড় corpus-এর সাথে। |
 
+### Phase C-এর অবস্থা (২০২৬-১১-১৮)
+
+| কাজ | অবস্থা |
+|---|---|
+| আসল tokenizer | ✅ RAG-এর সব token gate এখন `cl100k_base` দিয়ে গোনা হয় (`countTokens`), অক্ষর ÷ ৪ দিয়ে না। এই corpus-এ আসল token প্রায় ২৫% কম আসে, তাই প্রতিটা token gate মোটামুটি ×০.৭৫ করা হয়েছে (যেমন R1 ২২০ → ১৬৫, R2 ৮০ → ৬০, R4 ৭০০ → ৫০০, sandbox ২০০ → ১৫০)। কঠিনতা আগের মতোই: সব reference pass, সব near-miss আর exploit fail। Lab-এর chunk-এও এখন আসল token সংখ্যা দেখায়। Live model call-এর token-ও এই tokenizer দিয়ে গোনা হয়। |
+| Cost | ⚠️ আংশিক। Run-এর cost এখনো budget price table থেকে আসে (ইচ্ছে করে list price-এর চেয়ে বেশি), provider-এর invoice থেকে না। শুধু retrieval-এর archetype-এ model call নেই, তাই সেখানে cost ০ থাকাটাই সঠিক। |
+| Unicode tokenizer (BM25) | ✅ `\p{L}\p{M}\p{N}` দিয়ে শব্দ ধরা হয়, NFKC normalize করে। বাংলা প্রশ্নে এখন আসল term আসে। ইংরেজির ফল আগের মতোই (tag script `--check`-এ কোনো পরিবর্তন নেই)। |
+| Chunking ঠিক করা (G7) | ✅ চারটা strategy এখন সত্যিই আলাদা: `fixed` শব্দের window (শব্দ কাটে না, বাক্য কাটে), `sentence` পুরো বাক্য (বাক্য কখনো কাটে না), `recursive` paragraph → line → বাক্য → শব্দ (size কড়া সীমা), `heading-aware` markdown heading ধরে section, আর প্রতিটা chunk-এর শুরুতে title আর heading path। Overlap এখন শুধু পুরো শব্দ বা বাক্য বহন করে। R3/R4-এর "পুরো doc এক chunk" এখন আলাদা internal mode `document`। |
+| Dense আর hybrid (G5) | ✅ Engine-এ আছে। Embedding: `Xenova/bge-small-en-v1.5` (q8, commit pin করা), CPU-তে ONNX। Hybrid: BM25 আর cosine প্রতিটা প্রশ্নে min-max করে alpha দিয়ে মেশানো (০ = BM25, ১ = dense)। R2 payload-এ `retrievalMode` আর `hybridAlpha` ঐচ্ছিক, না দিলে BM25। rag-017-এর hidden set-এ k=1: BM25 ০.৮০, dense ০.৮৫, hybrid ০.৯০ recall। |
+| Cross-encoder (G6) | ✅ Engine-এ আছে: `Xenova/ms-marco-MiniLM-L-6-v2` (q8, commit pin করা), `(question, chunk)` ধরে cache। R4-এর reranker-এ `cross-encoder` যোগ হয়েছে। rag-028-এ nDCG gain ০.৪৬ (title boost ০.২৬), তবে context ৫০২ token, budget ৫০০। Title boost এখন "heuristic baseline" হিসেবে লেখা। |
+| R4 rewrite আসলেই ব্যবহার (G8) | ✅ Rewrite prompt live model-এ চলে (system = learner-এর prompt, user = প্রশ্ন), উত্তরের প্রথম লাইন দিয়ে first stage খোঁজে। Reranker আসল প্রশ্নের সাথে মেলায়। rag-021-এ live rewrite দিয়ে nDCG gain ০.৩৫ (rewrite ছাড়া ০.২৬)। Lab-এ "Run rewrite" বাটন আছে। Estimate কখনো model ডাকে না, আর সেটা স্পষ্ট লেখা থাকে। Trace-এ "searched for" দেখায়। |
+| Model চালানোর ব্যবস্থা | ✅ Model file (মোট ~৫৬ MB) commit ধরে Hugging Face থেকে নামে `apps/api/.cache/models`-এ, আর সবসময় local file থেকে load হয়। Deploy-এ `npm run models:fetch` চালিয়ে `RAG_MODELS_ALLOW_DOWNLOAD=false` দেওয়া যায়। Score ছোট দশমিকে round করা হয়, যাতে CPU-ভেদে ranking না বদলায়। |
+| কোন exercise নতুন knob দেখায় | ⏭ **Phase D।** কোনো exercise-এর schema এখনো `retrievalMode`, `hybridAlpha` বা `cross-encoder` দেয় না। এখনকার exercise-এ এগুলো খুলে দিলে পুরনো puzzle সহজ হয়ে যেত, নতুন mechanic শেখাত না। R2b (hybrid) আর R2d (আসল reranker) নতুন corpus দিয়ে বানাতে হবে। |
+| বহুভাষিক embedding (R6) | ⏭ Phase D। bge-small শুধু ইংরেজি। বাংলা corpus এলে multilingual model pin করতে হবে। |
+| Embedding index আগে থেকে বানানো | ⏭ লাগেনি। Runtime-এ embed করে memory-তে cache রাখা হয়। পুরো content check (model load সহ) ~১৩ সেকেন্ডে চলে। Corpus ১০ হাজার chunk ছাড়ালে pgvector লাগবে। |
+
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে
 
 1. **Grading-এ আসল model:** প্রতিটা R3 attempt-এ ~৩০টা প্রশ্ন, মোটামুটি ২০–২৫ হাজার token। Cache থাকায় একই submission আবার দিলে খরচ শূন্য। এই খরচ মেনে নেওয়া যাবে, নাকি R3 simulated থাকবে আর UI-তে স্পষ্ট লেবেল দেওয়া হবে?

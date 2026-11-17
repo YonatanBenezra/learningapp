@@ -1,5 +1,5 @@
 import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
-import { costEurMicros, estimateTokens } from '../../gateway/pricing';
+import { costEurMicros, countTokens } from '../../gateway/pricing';
 import { advisoryClassB } from '../../judge/class-b';
 import { chunkCorpus, type CorpusDoc } from './chunking';
 import { citedChunkIds, isRefusal } from './grounded-generate';
@@ -9,6 +9,7 @@ import {
   EvalLedger,
   gateThreshold,
   goldSpanOverlap,
+  mapLimited,
   publicGold,
   publicTraceItems,
   toTraceQuery,
@@ -53,26 +54,6 @@ export function r3Context(ranked: RankedChunk[]) {
   return ranked.map((row) => ({ id: row.chunk.id, text: row.chunk.text }));
 }
 
-async function mapLimited<T, R>(
-  items: T[],
-  limit: number,
-  task: (item: T) => Promise<R>,
-): Promise<R[]> {
-  const results = new Array<R>(items.length);
-  let next = 0;
-  const workers = Array.from(
-    { length: Math.min(limit, items.length) },
-    async () => {
-      while (next < items.length) {
-        const index = next;
-        next += 1;
-        results[index] = await task(items[index]);
-      }
-    },
-  );
-  await Promise.all(workers);
-  return results;
-}
 const DEFAULT_OVERLAP = 0.85;
 const DEFAULT_UNANSWERABLE_NEED = 5;
 const DEFAULT_ANSWERABLE_REFUSE_MAX = 2;
@@ -105,7 +86,7 @@ export async function gradeR3(
     'answerable_refusals',
     DEFAULT_ANSWERABLE_REFUSE_MAX,
   );
-  const chunks = chunkCorpus(docs, 400, 80, 'heading-aware');
+  const chunks = chunkCorpus(docs, 400, 80, 'document');
   const usable = hidden.filter((item) => !isHiddenCanary(item.question));
   const answerable = answerableHidden(usable);
   const unanswerable = usable.filter((item) => !item.answerable);
@@ -134,8 +115,8 @@ export async function gradeR3(
         question: item.question,
         ranked,
       });
-      tokensIn += estimateTokens(`${payload.generationPrompt}\n${user}`);
-      tokensOut += estimateTokens(answer);
+      tokensIn += countTokens(`${payload.generationPrompt}\n${user}`);
+      tokensOut += countTokens(answer);
       return { item, ranked, answer };
     },
   );

@@ -23,16 +23,22 @@ const STOP = new Set([
   'may',
 ]);
 
+/** Letters (with their combining marks, so Bangla words stay whole) and digits. */
+const WORD = /[\p{L}\p{M}\p{N}]+/gu;
+
+/**
+ * Unicode-aware terms: NFKC-normalised and lowercased, so Bangla and other
+ * non-Latin text yields real terms instead of nothing. Only plain ASCII words
+ * get the English plural stemming.
+ */
 export function tokenize(text: string): string[] {
-  return text
-    .toLowerCase()
-    .split(/[^a-z0-9]+/)
+  return (text.normalize('NFKC').toLowerCase().match(WORD) ?? [])
     .filter((token) => token.length > 1 && !STOP.has(token))
     .map(stem);
 }
 
 function stem(token: string): string {
-  if (token.length <= 3) {
+  if (token.length <= 3 || !/^[a-z0-9]+$/.test(token)) {
     return token;
   }
   if (token.endsWith('ies')) {

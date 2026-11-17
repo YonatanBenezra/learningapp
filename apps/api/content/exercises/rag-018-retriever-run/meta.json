@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 3 · Re-tune Retrieval After a Re-index\n\nThe policy index was rebuilt with sentence-packed chunks, and the old top-k / chunk-size settings no longer fit. Re-tune them so recall holds and prompts stay within the new budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 300 on the hidden set.\n",
+  "briefMd": "# Phase 3 · Re-tune Retrieval After a Re-index\n\nThe policy index was rebuilt with sentence-packed chunks, and the old top-k / chunk-size settings no longer fit. Re-tune them so recall holds and prompts stay within the new budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 225 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,7 +46,7 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 300,
+    "mean_prompt_tokens": 225,
     "recall_at_k": 0.95
   },
   "budget": {
@@ -61,7 +61,7 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 300
+      "value": 225
     },
     {
       "id": "recall-at-k",

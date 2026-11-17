@@ -45,6 +45,7 @@ export class RagLabController {
       body.payload,
       body.question,
       body.queryClass,
+      body.runRewrite === true,
     );
   }
 

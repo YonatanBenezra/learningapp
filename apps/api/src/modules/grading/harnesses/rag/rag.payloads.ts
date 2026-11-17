@@ -4,6 +4,7 @@ import type {
   R4Payload,
   RagPayload,
   RerankerKind,
+  RetrievalMode,
   SplitStrategy,
 } from './rag.types';
 
@@ -14,7 +15,14 @@ const SPLIT_STRATEGIES: SplitStrategy[] = [
   'heading-aware',
 ];
 
-const RERANKERS: RerankerKind[] = ['none', 'title-boost', 'mmr'];
+const RERANKERS: RerankerKind[] = [
+  'none',
+  'title-boost',
+  'mmr',
+  'cross-encoder',
+];
+
+const RETRIEVAL_MODES: RetrievalMode[] = ['bm25', 'dense', 'hybrid'];
 
 export function parseR1Payload(payload: unknown): RagPayload {
   if (payload === null || typeof payload !== 'object') {
@@ -52,10 +60,23 @@ export function parseR2Payload(payload: unknown): R2Payload {
   ) {
     throw new Error('R2 payload is missing topK, rerank, or chunkSize');
   }
+  const mode = record.retrievalMode;
+  if (mode !== undefined && !RETRIEVAL_MODES.includes(mode as RetrievalMode)) {
+    throw new Error('R2 payload has an invalid retrievalMode');
+  }
+  const alpha = record.hybridAlpha;
+  if (
+    alpha !== undefined &&
+    (typeof alpha !== 'number' || !(alpha >= 0 && alpha <= 1))
+  ) {
+    throw new Error('R2 hybridAlpha must be a number from 0 to 1');
+  }
   return {
     topK: record.topK,
     rerank: record.rerank,
     chunkSize: record.chunkSize,
+    ...(mode !== undefined ? { retrievalMode: mode as RetrievalMode } : {}),
+    ...(alpha !== undefined ? { hybridAlpha: alpha } : {}),
   };
 }
 

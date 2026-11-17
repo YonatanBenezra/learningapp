@@ -17,7 +17,7 @@
       "name": "Chunking"
     }
   ],
-  "briefMd": "# Phase 1 · Overlap & Sliding Windows\n\nGold answers sit on chunk borders — a classic enterprise KB failure mode. Split on sentences and tune **overlap** so spans are not split across chunks.\n\n**Gates:** recall@5 ≥ 0.80 and mean context tokens (top-5 chunks) ≤ 220 on the hidden set (production-aligned retrieval metric).\n",
+  "briefMd": "# Phase 1 · Overlap & Sliding Windows\n\nGold answers sit on chunk borders — a classic enterprise KB failure mode. Split on sentences and tune **overlap** so spans are not split across chunks.\n\n**Gates:** recall@5 ≥ 0.80 and mean context tokens (top-5 chunks) ≤ 165 on the hidden set (production-aligned retrieval metric).\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -53,7 +53,7 @@
   },
   "thresholds": {
     "recall_at_5": 0.8,
-    "mean_context_tokens": 220
+    "mean_context_tokens": 165
   },
   "budget": {
     "max_model_calls": 0,
@@ -74,7 +74,7 @@
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 220
+      "value": 165
     }
   ],
   "feedback": {

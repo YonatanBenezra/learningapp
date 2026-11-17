@@ -20,7 +20,7 @@ import {
 import { gradeR1 } from './r1.grade';
 import { gradeR2 } from './r2.grade';
 import { gradeR3 } from './r3.grade';
-import { gradeR4 } from './r4.grade';
+import { gradeR4, REWRITE_MAX_TOKENS } from './r4.grade';
 import { gradeR5, parseR5Payload } from './r5.grade';
 import {
   gradeRedTeam,
@@ -114,8 +114,17 @@ export class RagHarness {
         input.docs,
         input.hidden,
         publicItems,
-        this.gateway,
-        input.runId,
+        // The rewrite prompt runs on the live model, billed to this run; the
+        // rewritten query is what the first stage searches with.
+        async (instruction, question) =>
+          (
+            await this.gateway.generate({
+              runId: input.runId,
+              system: instruction,
+              user: question,
+              maxTokens: REWRITE_MAX_TOKENS,
+            })
+          ).text,
         input.gates,
       );
     }

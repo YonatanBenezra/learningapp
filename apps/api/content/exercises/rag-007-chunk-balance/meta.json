@@ -17,7 +17,7 @@
       "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Phase 2 · Recall@k SLA on Policy KB\n\nYour internal bot has a **launch SLA**: recall@5 ≥ 0.80 with mean context tokens (top-5 chunks) ≤ 220 on ticket-style questions drawn from HR/policy docs. Chunk sizes that work on demos are failing on long-form articles.\n\nBalance **chunk size**, **overlap**, and **split strategy** to hit the SLA without hand-tuning per document.\n",
+  "briefMd": "# Phase 2 · Recall@k SLA on Policy KB\n\nYour internal bot has a **launch SLA**: recall@5 ≥ 0.80 with mean context tokens (top-5 chunks) ≤ 165 on ticket-style questions drawn from HR/policy docs. Chunk sizes that work on demos are failing on long-form articles.\n\nBalance **chunk size**, **overlap**, and **split strategy** to hit the SLA without hand-tuning per document.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -53,7 +53,7 @@
   },
   "thresholds": {
     "recall_at_5": 0.8,
-    "mean_context_tokens": 220
+    "mean_context_tokens": 165
   },
   "budget": {
     "max_model_calls": 0,
@@ -74,7 +74,7 @@
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 220
+      "value": 165
     }
   ],
   "feedback": {

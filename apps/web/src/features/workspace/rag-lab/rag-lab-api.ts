@@ -13,10 +13,17 @@ export const ragLabApi = {
     payload: Record<string, unknown>,
     question?: string,
     queryClass?: string | null,
+    /** R4: run the rewrite prompt on the live model (one call). */
+    runRewrite = false,
   ) =>
     apiClient<RagLabPreview>(`/exercises/${slug}/rag-lab/preview`, {
       method: "POST",
-      body: JSON.stringify({ payload, question, queryClass: queryClass ?? undefined }),
+      body: JSON.stringify({
+        payload,
+        question,
+        queryClass: queryClass ?? undefined,
+        ...(runRewrite ? { runRewrite: true } : {}),
+      }),
     }),
   target: (slug: string, message: string) =>
     apiClient<RagTargetReply>(`/exercises/${slug}/rag-lab/target`, {

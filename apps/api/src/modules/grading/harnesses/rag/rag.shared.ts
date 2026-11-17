@@ -1,6 +1,6 @@
 import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
-import type { CorpusDoc } from './chunking';
-import type { Chunk } from './chunking';
+import { docBody, sentencesOf } from './chunking';
+import type { Chunk, CorpusDoc } from './chunking';
 import type {
   EvalBreakdown,
   EvalSplit,
@@ -264,11 +264,9 @@ export function expandGoldSpan(
   if (!doc) {
     return goldSpan;
   }
-  const body = `${doc.title}. ${doc.text}`;
-  const sentence = body
-    .split(/(?<=[.!?])\s+/)
-    .map((part) => part.trim())
-    .find((part) => part.includes(goldSpan));
+  const sentence = sentencesOf(docBody(doc)).find((part) =>
+    part.includes(goldSpan),
+  );
   return sentence ?? goldSpan;
 }
 
@@ -291,4 +289,26 @@ export function goldSpanOverlap(chunkText: string, goldSpan: string): number {
 
 function normalize(text: string): string {
   return text.toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+/** Runs `task` over `items` with at most `limit` in flight, keeping order. */
+export async function mapLimited<T, R>(
+  items: T[],
+  limit: number,
+  task: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  const workers = Array.from(
+    { length: Math.min(limit, items.length) },
+    async () => {
+      while (next < items.length) {
+        const index = next;
+        next += 1;
+        results[index] = await task(items[index]);
+      }
+    },
+  );
+  await Promise.all(workers);
+  return results;
 }

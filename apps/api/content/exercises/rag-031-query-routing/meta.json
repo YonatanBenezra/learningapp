@@ -16,7 +16,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 4 · Query Routing\n\nThe support bot gets three kinds of questions, and the router already tells you which kind each one is:\n\n- **FAQ**: answered by one short line in the IT help desk FAQ.\n- **Policy**: answered by a policy document, but keyword-stuffed noise documents compete for the top spots.\n- **Procedural**: the answer is a three-step procedure spread over consecutive sentences, so the whole procedure has to sit in one chunk.\n\nSet a separate **top-k / rerank / chunk size** profile for each type. One profile for everything either misses procedures or blows the budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** FAQ and procedural recall ≥ 0.85, every policy question answered (recall = 1.00), and mean prompt tokens ≤ 100 on the hidden set.\n",
+  "briefMd": "# Phase 4 · Query Routing\n\nThe support bot gets three kinds of questions, and the router already tells you which kind each one is:\n\n- **FAQ**: answered by one short line in the IT help desk FAQ.\n- **Policy**: answered by a policy document, but keyword-stuffed noise documents compete for the top spots.\n- **Procedural**: the answer is a three-step procedure spread over consecutive sentences, so the whole procedure has to sit in one chunk.\n\nSet a separate **top-k / rerank / chunk size** profile for each type. One profile for everything either misses procedures or blows the budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** FAQ and procedural recall ≥ 0.85, every policy question answered (recall = 1.00), and mean prompt tokens ≤ 75 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -86,12 +86,12 @@
     "recall_faq": 0.85,
     "recall_policy": 1,
     "recall_procedural": 0.85,
-    "mean_prompt_tokens": 100
+    "mean_prompt_tokens": 75
   },
   "budget": {
     "max_model_calls": 0,
     "max_tokens": 0,
-    "max_cost_eur": 0.0,
+    "max_cost_eur": 0,
     "wall_clock_s": 60
   },
   "gates": [
@@ -121,7 +121,7 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 100
+      "value": 75
     }
   ],
   "feedback": {

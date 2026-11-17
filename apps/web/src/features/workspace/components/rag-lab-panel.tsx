@@ -179,6 +179,30 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
     }
   }
 
+  /** R4: run the rewrite prompt once on the live model for this question. */
+  async function runRewrite() {
+    if (!activeQuestion || previewing) {
+      return;
+    }
+    const request = ++previewRequestRef.current;
+    setPreviewing(true);
+    setError(null);
+    try {
+      const result = await ragLabApi.preview(slug, payload, activeQuestion, activeClass, true);
+      if (request === previewRequestRef.current) {
+        setPreview(result);
+      }
+    } catch (caught: unknown) {
+      if (request === previewRequestRef.current) {
+        setError(ragLabErrorMessage(caught, "The rewrite could not run."));
+      }
+    } finally {
+      if (request === previewRequestRef.current) {
+        setPreviewing(false);
+      }
+    }
+  }
+
   const archetype = preview?.archetype ?? context?.archetype ?? "unknown";
   const visibleTabs = useMemo(() => labTabsForArchetype(archetype), [archetype]);
   const showGenerate = visibleTabs.includes("generate");
@@ -329,8 +353,8 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
                       <header>
                         <code title={CHUNK_ID_TIP}>{chunk.id}</code>
                         <span>
-                          {chunk.text.length} chars · ~{Math.max(1, Math.ceil(chunk.text.length / 4))}{" "}
-                          tok
+                          {chunk.text.length} chars ·{" "}
+                          {chunk.tokens ?? `~${Math.max(1, Math.ceil(chunk.text.length / 4))}`} tok
                         </span>
                       </header>
                       <p>{chunk.text}</p>
@@ -380,6 +404,31 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
             </span>
             <p>{activeQuestion}</p>
           </div>
+
+          {preview?.rewrittenQuery ? (
+            <div className="lp-rag-lab-query-active lp-rag-lab-rewrite">
+              <span>
+                Searched for
+                <InfoTip text="Your rewrite prompt's output (first line). The first stage searches with it; the reranker still scores against the question as asked." />
+              </span>
+              <p>{preview.rewrittenQuery}</p>
+            </div>
+          ) : preview?.rewriteSkipped ? (
+            <div className="lp-rag-lab-rewrite-skipped">
+              <p>
+                Your rewrite prompt has not run on this question, so the ranking below uses the
+                question as asked. Grading runs it on every question.
+              </p>
+              <button
+                type="button"
+                className="lp-rag-lab-run"
+                disabled={previewing || !activeQuestion}
+                onClick={() => void runRewrite()}
+              >
+                {previewing ? "Rewriting…" : "Run rewrite (1 model call)"}
+              </button>
+            </div>
+          ) : null}
 
           {preview ? (
             <LabReadout
@@ -465,6 +514,12 @@ function LabReadout({
   const tokensOk = tokenGate ? withinGate(tokenGate, preview.contextTokens) : null;
   return (
     <dl className="lp-rag-lab-readout" aria-label="Preview readout">
+      {preview.retrieval ? (
+        <div>
+          <dt>first stage</dt>
+          <dd>{preview.retrieval}</dd>
+        </div>
+      ) : null}
       <div>
         <dt>{tokenGate ? gateMetricLabel(tokenGate.metric) : "context tokens"}</dt>
         <dd className={tokensOk === null ? undefined : tokensOk ? "is-pass" : "is-fail"}>

@@ -203,7 +203,7 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       icon: "llm",
       control: true,
       detail:
-        "An optional query-rewrite prompt adds one model call per question. The rewritten query is not used for ranking yet.",
+        "An optional query-rewrite prompt adds one model call per question; the first stage then searches for the rewritten query.",
     },
     {
       id: "search",

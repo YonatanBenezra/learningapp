@@ -13,7 +13,7 @@
       "name": "Content pipeline"
     }
   ],
-  "briefMd": "# Phase 6 · Spend Cap on Retrieval\n\nFinance capped prompt spend per question. Every retrieved chunk is billed in full, so top-k and chunk size trade directly against cost.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 200 on the hidden set.\n",
+  "briefMd": "# Phase 6 · Spend Cap on Retrieval\n\nFinance capped prompt spend per question. Every retrieved chunk is billed in full, so top-k and chunk size trade directly against cost.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 150 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -42,7 +42,7 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 200,
+    "mean_prompt_tokens": 150,
     "recall_at_k": 0.95
   },
   "budget": {
@@ -57,7 +57,7 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 200
+      "value": 150
     },
     {
       "id": "recall-at-k",

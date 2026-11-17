@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { estimateTokens } from '../../gateway/pricing';
+import { countTokens } from '../../gateway/pricing';
 import type { CorpusDoc } from './chunking';
 import {
   estimateRagLabWithCorpus,
@@ -24,8 +24,8 @@ const PUBLIC_GOLD = {
 const PAYLOAD = { topK: 2, rerank: true, chunkSize: 200 };
 
 describe('previewRagLabWithCorpus', () => {
-  it('marks the chunk that carries a public question gold sentence', () => {
-    const preview = previewRagLabWithCorpus(
+  it('marks the chunk that carries a public question gold sentence', async () => {
+    const preview = await previewRagLabWithCorpus(
       SLUG,
       PAYLOAD,
       QUESTION,
@@ -36,24 +36,34 @@ describe('previewRagLabWithCorpus', () => {
     expect(preview.retrieved.some((hit) => hit.containsAnswer)).toBe(true);
   });
 
-  it('has no answer key for custom queries', () => {
-    const preview = previewRagLabWithCorpus(SLUG, PAYLOAD, 'office dogs', docs);
+  it('has no answer key for custom queries', async () => {
+    const preview = await previewRagLabWithCorpus(
+      SLUG,
+      PAYLOAD,
+      'office dogs',
+      docs,
+    );
     expect(preview.answerFound).toBeNull();
     expect(preview.retrieved.every((hit) => hit.containsAnswer === null)).toBe(
       true,
     );
   });
 
-  it('reports R2 tokens exactly as the grader counts one question', () => {
-    const preview = previewRagLabWithCorpus(SLUG, PAYLOAD, QUESTION, docs);
+  it('reports R2 tokens exactly as the grader counts one question', async () => {
+    const preview = await previewRagLabWithCorpus(
+      SLUG,
+      PAYLOAD,
+      QUESTION,
+      docs,
+    );
     const joined = preview.retrieved.map((hit) => hit.text).join('\n\n');
-    expect(preview.contextTokens).toBe(estimateTokens(`Context:\n${joined}`));
+    expect(preview.contextTokens).toBe(countTokens(`Context:\n${joined}`));
   });
 });
 
 describe('estimateRagLabWithCorpus', () => {
-  it('runs every public question and counts answers that reach the context', () => {
-    const estimate = estimateRagLabWithCorpus(
+  it('runs every public question and counts answers that reach the context', async () => {
+    const estimate = await estimateRagLabWithCorpus(
       SLUG,
       PAYLOAD,
       [
@@ -68,5 +78,46 @@ describe('estimateRagLabWithCorpus', () => {
     expect(estimate.rows[0].goldRank).toBe(1);
     expect(estimate.rows[1].answerFound).toBeNull();
     expect(estimate.meanContextTokens).toBeGreaterThan(0);
+  });
+});
+
+describe('R4 lab preview', () => {
+  const R4 = 'rag-004-rerank-or-rethink';
+  const payload = {
+    reranker: 'title-boost',
+    rerankTopN: 20,
+    queryRewritePrompt: 'Rewrite the question as search keywords.',
+  };
+
+  it('skips the rewrite unless asked, and says so', async () => {
+    const preview = await previewRagLabWithCorpus(R4, payload, QUESTION, docs);
+    expect(preview.rewriteSkipped).toBe(true);
+    expect(preview.rewrittenQuery).toBeNull();
+  });
+
+  it('searches with the rewrite when a rewriter is given', async () => {
+    const preview = await previewRagLabWithCorpus(
+      R4,
+      payload,
+      QUESTION,
+      docs,
+      null,
+      null,
+      () => Promise.resolve('paid time off days'),
+    );
+    expect(preview.rewriteSkipped).toBe(false);
+    expect(preview.rewrittenQuery).toBe('paid time off days');
+  });
+
+  it('reports each chunk with its exact token count', async () => {
+    const preview = await previewRagLabWithCorpus(
+      SLUG,
+      PAYLOAD,
+      QUESTION,
+      docs,
+    );
+    for (const chunk of preview.chunks.slice(0, 5)) {
+      expect(chunk.tokens).toBe(countTokens(chunk.text));
+    }
   });
 });

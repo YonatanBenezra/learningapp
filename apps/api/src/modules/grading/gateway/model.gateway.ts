@@ -15,6 +15,7 @@ import {
 } from '../budget/budget.enforcer';
 import {
   costEurMicros,
+  countTokens,
   estimateTokens,
   PINNED_EMBED_MODEL,
   PINNED_GEN_MODEL,
@@ -137,7 +138,8 @@ export class ModelGateway {
         'Live generation needs OPENROUTER_API_KEY on the API and worker.',
       );
     }
-    const estimatedIn = estimateTokens(`${input.system}\n${input.user}`);
+    // Live calls are billed with the same tokenizer the RAG gates count with.
+    const estimatedIn = countTokens(`${input.system}\n${input.user}`);
     if (input.runId) {
       await this.budget.assertWithinBudget(input.runId, {
         calls: 1,
@@ -153,7 +155,7 @@ export class ModelGateway {
       ],
       { temperature: 0, maxTokens },
     );
-    const tokensOut = estimateTokens(text);
+    const tokensOut = countTokens(text);
     const micros = costEurMicros(estimatedIn, tokensOut);
     const blobUri = await writeGenCacheBlob(
       `${promptHash.slice(0, 24)}-${paramsHash.slice(0, 8)}`,

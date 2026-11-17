@@ -1,6 +1,29 @@
+import { crossEncoderScores } from './models/cross-encoder';
 import { tokenize } from './retrieve';
 import type { RankedChunk } from './retrieve';
 
+/**
+ * Real reranker: a cross-encoder (pinned ms-marco MiniLM) reads the question
+ * and each candidate together and scores relevance. The candidates' first
+ * stage scores are replaced by its scores.
+ */
+export async function crossEncoderRerank(
+  question: string,
+  ranked: RankedChunk[],
+): Promise<RankedChunk[]> {
+  const scores = await crossEncoderScores(
+    question,
+    ranked.map((row) => row.chunk.text),
+  );
+  return sortRanked(
+    ranked.map((row, index) => ({ chunk: row.chunk, score: scores[index] })),
+  );
+}
+
+/**
+ * Heuristic baseline, not a model: +weight for every question term that
+ * appears in the chunk's document title.
+ */
 export function titleBoost(
   query: string,
   ranked: RankedChunk[],

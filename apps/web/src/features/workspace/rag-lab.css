@@ -280,6 +280,31 @@
   line-height: 1.45;
 }
 
+/* R4: what the first stage searched for after the rewrite prompt. */
+.lp-rag-lab-rewrite {
+  border-style: solid;
+  background: color-mix(in srgb, var(--color-brand) 6%, transparent);
+}
+
+.lp-rag-lab-rewrite-skipped {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.85rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px dashed var(--lp-border);
+  border-radius: 0.45rem;
+}
+
+.lp-rag-lab-rewrite-skipped p {
+  flex: 1 1 16rem;
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
 .lp-rag-lab-compare {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -812,6 +837,13 @@
 }
 
 /* Errors the live estimate cannot hide (sign-in, rate limit, model down). */
+.lp-rag-meter-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
 .lp-rag-meter-error {
   margin: 0;
   font-size: 0.75rem;

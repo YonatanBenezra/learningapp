@@ -1,4 +1,4 @@
-import { estimateTokens } from '../../gateway/pricing';
+import { countTokens } from '../../gateway/pricing';
 import { chunkCorpus, type CorpusDoc } from './chunking';
 import { chunkContainsSpan, retrieveRanked } from './retrieve';
 import {
@@ -59,7 +59,7 @@ export function gradeR1(
   let contextTokenSum = 0;
   for (const item of answerable) {
     const ranked = retrieveRanked(item.question, chunks, K);
-    const tokens = estimateTokens(
+    const tokens = countTokens(
       ranked.map((row) => row.chunk.text).join('\n\n'),
     );
     contextTokenSum += tokens;
@@ -164,7 +164,7 @@ export function gradeR1(
           const ranked = retrieveRanked(item.question, chunks, K);
           return toTraceQuery('public', item.question, ranked, {
             gold: publicGold(docs, item),
-            contextTokens: estimateTokens(
+            contextTokens: countTokens(
               ranked.map((row) => row.chunk.text).join('\n\n'),
             ),
           });

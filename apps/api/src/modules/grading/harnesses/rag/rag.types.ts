@@ -7,17 +7,23 @@ export type RagPayload = {
   splitStrategy: SplitStrategy;
 };
 
+export type RetrievalMode = 'bm25' | 'dense' | 'hybrid';
+
 export type R2Payload = {
   topK: number;
   rerank: boolean;
   chunkSize: number;
+  /** First stage; BM25 when the exercise does not offer the choice. */
+  retrievalMode?: RetrievalMode;
+  /** Hybrid only: weight on the dense score (0 = BM25, 1 = dense). */
+  hybridAlpha?: number;
 };
 
 export type R3Payload = {
   generationPrompt: string;
 };
 
-export type RerankerKind = 'none' | 'title-boost' | 'mmr';
+export type RerankerKind = 'none' | 'title-boost' | 'mmr' | 'cross-encoder';
 
 export type R4Payload = {
   reranker: RerankerKind;
@@ -112,6 +118,8 @@ export type PublicItem = {
 export type TraceQuery = {
   source: 'public' | 'failing_sample';
   question: string;
+  /** R4: what the first stage searched for after the learner's rewrite. */
+  rewrittenQuery?: string;
   /** Public queries only: the gold sentence reached the context. */
   hit?: boolean;
   /** Tokens this query put into the context (as the grader counts them). */

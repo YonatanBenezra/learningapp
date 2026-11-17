@@ -16,7 +16,7 @@
       "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Phase 1 · Corpus Normalization & Chunk Boundaries\n\nProduction RAG is failing on an internal policy corpus: answers exist in source docs but **never appear in retrieved chunks**. The embedding model is fine — boundaries are wrong.\n\nTune **chunk size**, **overlap**, and **split strategy** (`fixed`, `sentence`, `recursive`, `heading-aware`). The starter config keeps each policy document whole: recall is high, but five whole documents blow the context budget.\n\n**Gates:** recall@5 ≥ 0.80 (same bar used for internal KB launch reviews) and mean context tokens (top-5 chunks) ≤ 220.\n",
+  "briefMd": "# Phase 1 · Corpus Normalization & Chunk Boundaries\n\nProduction RAG is failing on an internal policy corpus: answers exist in source docs but **never appear in retrieved chunks**. The embedding model is fine — boundaries are wrong.\n\nTune **chunk size**, **overlap**, and **split strategy** (`fixed`, `sentence`, `recursive`, `heading-aware`). The starter config keeps each policy document whole: recall is high, but five whole documents blow the context budget.\n\n**Gates:** recall@5 ≥ 0.80 (same bar used for internal KB launch reviews) and mean context tokens (top-5 chunks) ≤ 165.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -52,7 +52,7 @@
   },
   "thresholds": {
     "recall_at_5": 0.8,
-    "mean_context_tokens": 220
+    "mean_context_tokens": 165
   },
   "budget": {
     "max_model_calls": 0,
@@ -73,7 +73,7 @@
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 220
+      "value": 165
     }
   ],
   "feedback": {

@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 4 · Rerank to Full Recall on a Tight Budget\n\nEvery hidden question must find its answer, with a prompt of about one chunk. Without rerank the gold chunk sometimes sits just below your cut-off; reranking lets you keep k small and still catch it.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k = 1.00 (every question) and mean prompt tokens ≤ 120 on the hidden set.\n",
+  "briefMd": "# Phase 4 · Rerank to Full Recall on a Tight Budget\n\nEvery hidden question must find its answer, with a prompt of about one chunk. Without rerank the gold chunk sometimes sits just below your cut-off; reranking lets you keep k small and still catch it.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k = 1.00 (every question) and mean prompt tokens ≤ 90 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,8 +46,8 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 120,
-    "recall_at_k": 1.0
+    "mean_prompt_tokens": 90,
+    "recall_at_k": 1
   },
   "budget": {
     "max_model_calls": 0,
@@ -61,14 +61,14 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 120
+      "value": 90
     },
     {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 1.0
+      "value": 1
     }
   ],
   "feedback": {

@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsObject,
   IsOptional,
   IsString,
@@ -21,4 +22,9 @@ export class RagLabPreviewDto {
   @IsString()
   @MaxLength(20)
   queryClass?: string;
+
+  /** R4: run the rewrite prompt on the live model (one call). */
+  @IsOptional()
+  @IsBoolean()
+  runRewrite?: boolean;
 }

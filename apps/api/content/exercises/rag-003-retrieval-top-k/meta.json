@@ -18,7 +18,7 @@
       "name": "Vector search"
     }
   ],
-  "briefMd": "# Phase 1 · Retrieval Top-K Baseline\n\nYour embedding index is live on the shared HR policy corpus. Before you tune chunking again, establish a **defensible top-k** for production Q&A.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full. You control **top-k**, **rerank**, and **chunk size** within schema bounds.\n\n**Success criteria (hidden eval):** recall@k ≥ 0.90 with mean prompt tokens ≤ 400. Treat this like a launch gate for an internal support bot.\n",
+  "briefMd": "# Phase 1 · Retrieval Top-K Baseline\n\nYour embedding index is live on the shared HR policy corpus. Before you tune chunking again, establish a **defensible top-k** for production Q&A.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full. You control **top-k**, **rerank**, and **chunk size** within schema bounds.\n\n**Success criteria (hidden eval):** recall@k ≥ 0.90 with mean prompt tokens ≤ 300. Treat this like a launch gate for an internal support bot.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -47,7 +47,7 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 400,
+    "mean_prompt_tokens": 300,
     "recall_at_k": 0.9
   },
   "budget": {
@@ -62,7 +62,7 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 400
+      "value": 300
     },
     {
       "id": "recall-at-k",

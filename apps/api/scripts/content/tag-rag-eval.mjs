@@ -30,9 +30,13 @@ const STOP = new Set(
 );
 
 function tokens(text) {
-  return (text.toLowerCase().match(/[a-z0-9]+/g) ?? [])
+  return (text.normalize('NFKC').toLowerCase().match(/[\p{L}\p{M}\p{N}]+/gu) ?? [])
     .filter((t) => t.length > 1 && !STOP.has(t))
-    .map((t) => (t.length > 3 && t.endsWith('s') && !t.endsWith('ss') ? t.slice(0, -1) : t));
+    .map((t) =>
+      /^[a-z0-9]+$/.test(t) && t.length > 3 && t.endsWith('s') && !t.endsWith('ss')
+        ? t.slice(0, -1)
+        : t,
+    );
 }
 
 function isCanary(question) {

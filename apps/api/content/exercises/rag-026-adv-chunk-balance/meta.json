@@ -17,7 +17,7 @@
       "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Advanced · Recall@k SLA\n\nHarder policy KB: chunk balance must clear recall@5 without oversizing context.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 160.",
+  "briefMd": "# Advanced · Recall@k SLA\n\nHarder policy KB: chunk balance must clear recall@5 without oversizing context.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 130.",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -53,7 +53,7 @@
   },
   "thresholds": {
     "recall_at_5": 0.9,
-    "mean_context_tokens": 160
+    "mean_context_tokens": 130
   },
   "budget": {
     "max_model_calls": 0,
@@ -74,7 +74,7 @@
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 160
+      "value": 130
     }
   ],
   "feedback": {

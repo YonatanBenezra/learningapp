@@ -401,6 +401,9 @@ function QueryAccordion({
           <span className="min-w-0">
             <span className="lp-trace-query-source">{query.source}</span>
             <span className="lp-trace-query-question">{query.question}</span>
+            {query.rewrittenQuery ? (
+              <span className="lp-trace-query-rewrite">searched for: {query.rewrittenQuery}</span>
+            ) : null}
           </span>
         </span>
         <span className="flex shrink-0 items-center gap-1.5">

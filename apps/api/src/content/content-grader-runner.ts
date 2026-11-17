@@ -111,13 +111,13 @@ export async function runContentGrader(
     }
     case 'rag-r4': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
+      // No model offline: a rewrite prompt leaves the question as asked.
       return gradeR4(
         parseR4Payload(payload),
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
-        undefined,
-        contentRunId(bundle),
+        (_instruction, question) => Promise.resolve(question),
         bundle.meta.gates,
       );
     }

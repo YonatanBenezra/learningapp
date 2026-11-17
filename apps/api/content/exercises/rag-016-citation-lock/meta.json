@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 5 · Context Packing Under Token Budget\n\nPack the **maximum signal** into a small context window: tune top-k, rerank and chunk size so the gold sentence is in the context while the prompt stays tiny.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 120 on the hidden set.\n",
+  "briefMd": "# Phase 5 · Context Packing Under Token Budget\n\nPack the **maximum signal** into a small context window: tune top-k, rerank and chunk size so the gold sentence is in the context while the prompt stays tiny.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 90 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,7 +46,7 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 120,
+    "mean_prompt_tokens": 90,
     "recall_at_k": 0.95
   },
   "budget": {
@@ -61,7 +61,7 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 120
+      "value": 90
     },
     {
       "id": "recall-at-k",

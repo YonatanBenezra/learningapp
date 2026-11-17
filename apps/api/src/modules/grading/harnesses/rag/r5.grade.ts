@@ -1,6 +1,6 @@
 import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
-import { estimateTokens } from '../../gateway/pricing';
-import type { Chunk, CorpusDoc } from './chunking';
+import { countTokens } from '../../gateway/pricing';
+import type { CorpusDoc } from './chunking';
 import { chunkForR2, diagnoseR2Miss, retrieveForR2 } from './r2.grade';
 import {
   costEvidence,
@@ -12,7 +12,8 @@ import {
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
-import { chunkContainsSpan, retrieveRanked } from './retrieve';
+import { chunkContainsSpan } from './retrieve';
+import { bm25Retriever, type Retriever } from './retrievers';
 import type {
   GateResult,
   HiddenItem,
@@ -68,17 +69,17 @@ export function parseR5Payload(payload: unknown): R5Payload {
   };
 }
 
-/** Chunks per chunk size, so classes that share a size share the index. */
+/** BM25 index per chunk size, so classes that share a size share it. */
 function chunkCache(docs: CorpusDoc[]) {
-  const cache = new Map<number, Chunk[]>();
+  const cache = new Map<number, Retriever>();
   return (profile: R2Payload) => {
     const cached = cache.get(profile.chunkSize);
     if (cached) {
       return cached;
     }
-    const chunks = chunkForR2(docs, profile);
-    cache.set(profile.chunkSize, chunks);
-    return chunks;
+    const retriever = bm25Retriever(chunkForR2(docs, profile));
+    cache.set(profile.chunkSize, retriever);
+    return retriever;
   };
 }
 
@@ -99,12 +100,13 @@ export function routeR5(
   chunksFor = chunkCache(docs),
 ) {
   const profile = payload[cls];
-  const chunks = chunksFor(profile);
-  const ranked = retrieveForR2(question, chunks, profile);
-  const tokens = estimateTokens(
+  const retriever = chunksFor(profile);
+  const { chunks } = retriever;
+  const ranked = retrieveForR2(question, retriever, profile);
+  const tokens = countTokens(
     `Context:\n${ranked.map((row) => row.chunk.text).join('\n\n')}`,
   );
-  return { profile, chunks, ranked, tokens };
+  return { profile, chunks, retriever, ranked, tokens };
 }
 
 export function gradeR5(
@@ -135,7 +137,7 @@ export function gradeR5(
     const cls = item.class as R5Class;
     const {
       ranked,
-      chunks,
+      retriever,
       profile,
       tokens: used,
     } = routeR5(item.question, cls, docs, payload, chunksFor);
@@ -145,7 +147,7 @@ export function gradeR5(
     const gold = goldFor(docs, item);
     const hit = ranked.some((row) => chunkContainsSpan(row.chunk.text, gold));
     if (!hit) {
-      const cause = diagnoseR2Miss(item.question, chunks, profile, gold);
+      const cause = diagnoseR2Miss(item.question, retriever, profile, gold);
       // Per-class cause, e.g. "procedural:gold-split-by-chunking".
       ledger.record(item, hit, { ...cause, code: `${cls}:${cause.code}` });
     } else {
@@ -248,7 +250,7 @@ export function gradeR5(
       simulator: 'rag',
       payload,
       k: Math.max(...R5_CLASSES.map((cls) => payload[cls].topK)),
-      chunkCount: chunksFor(payload.policy).length,
+      chunkCount: chunksFor(payload.policy).chunks.length,
       tokensIn: Math.round(tokens.reduce((sum, value) => sum + value, 0)),
       tokensOut: 0,
       costEurMicros: 0,
@@ -271,9 +273,8 @@ export function gradeR5(
               {
                 gold: publicGold(docs, item),
                 firstStage: routed.profile.rerank
-                  ? retrieveRanked(
+                  ? routed.retriever.rank(
                       item.question,
-                      routed.chunks,
                       routed.ranked.length * 4,
                     )
                   : null,

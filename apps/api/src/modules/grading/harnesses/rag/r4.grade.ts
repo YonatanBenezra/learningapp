@@ -1,15 +1,15 @@
-import { estimateTokens } from '../../gateway/pricing';
-import type { ModelGateway } from '../../gateway/model.gateway';
+import { countTokens } from '../../gateway/pricing';
 import { advisoryClassB } from '../../judge/class-b';
 import { MetricsLibrary } from '../../metrics/metrics.library';
-import { chunkCorpus, type CorpusDoc } from './chunking';
-import { mmrRerank, titleBoost } from './rerank';
+import { chunkCorpus, type Chunk, type CorpusDoc } from './chunking';
+import { crossEncoderRerank, mmrRerank, titleBoost } from './rerank';
 import { retrieveByTermCount, type RankedChunk } from './retrieve';
 import {
   answerableHidden,
   diagnoseRetrievalMiss,
   EvalLedger,
   gateThreshold,
+  mapLimited,
   publicGold,
   publicTraceItems,
   toTraceQuery,
@@ -28,15 +28,62 @@ const DEFAULT_CONTEXT_CEILING = 3000;
 const DEFAULT_CALLS_PER_Q = 2;
 const FROZEN_CHUNK = 400;
 const FROZEN_OVERLAP = 80;
+const REWRITE_CONCURRENCY = 4;
+/** A search query is one line; cap the rewrite's output to keep calls cheap. */
+export const REWRITE_MAX_TOKENS = 60;
 const metrics = new MetricsLibrary();
+
+/**
+ * Rewrites one question into a search query. `instruction` is the learner's
+ * rewrite prompt (sent as the system message); the question is the user
+ * message. Graded runs call the live model; offline checks pass a stub.
+ */
+export type QueryRewriter = (
+  instruction: string,
+  question: string,
+) => Promise<string>;
+
+/** The model's first non-empty line, minus labels and quotes; the question if that is empty. */
+export function cleanRewrite(output: string, question: string): string {
+  const line =
+    output
+      .split('\n')
+      .map((part) => part.trim())
+      .find(Boolean) ?? '';
+  const query = line
+    .replace(/^(rewritten\s+query|search\s+query|query)\s*:\s*/i, '')
+    .replace(/^["'`]+|["'`]+$/g, '')
+    .trim()
+    .slice(0, 300);
+  return query || question;
+}
+
+/** Search query per question: rewritten when the payload sets a rewrite prompt. */
+export async function rewriteQueries(
+  payload: R4Payload,
+  questions: string[],
+  rewriter: QueryRewriter | undefined,
+): Promise<Map<string, string>> {
+  const instruction = payload.queryRewritePrompt.trim();
+  const unique = [...new Set(questions)];
+  if (!instruction) {
+    return new Map(unique.map((question) => [question, question]));
+  }
+  if (!rewriter) {
+    throw new Error('Query rewrite needs a model, and none is configured.');
+  }
+  const rewritten = await mapLimited(unique, REWRITE_CONCURRENCY, async (q) =>
+    cleanRewrite(await rewriter(instruction, q), q),
+  );
+  return new Map(unique.map((question, index) => [question, rewritten[index]]));
+}
 
 export async function gradeR4(
   payload: R4Payload,
   docs: CorpusDoc[],
   hidden: HiddenItem[],
   publicItems: PublicItem[] = [],
-  gateway: ModelGateway | undefined,
-  runId: string,
+  rewriter: QueryRewriter | undefined,
   gates?: unknown,
 ): Promise<RagGradeResult> {
   const improvementTarget = gateThreshold(
@@ -54,37 +101,32 @@ export async function gradeR4(
     'model_calls_per_question',
     DEFAULT_CALLS_PER_Q,
   );
-  const chunks = chunkCorpus(
-    docs,
-    FROZEN_CHUNK,
-    FROZEN_OVERLAP,
-    'heading-aware',
-  );
+  const chunks = chunkCorpus(docs, FROZEN_CHUNK, FROZEN_OVERLAP, 'document');
   const answerable = answerableHidden(hidden);
-  const rewrite = payload.queryRewritePrompt.trim();
-  const callsPerQuestion = rewrite ? 1 : 0;
+  const shownPublic = publicTraceItems(publicItems);
+  const searchQuery = await rewriteQueries(
+    payload,
+    [...answerable, ...shownPublic].map((item) => item.question),
+    rewriter,
+  );
+  const callsPerQuestion = payload.queryRewritePrompt.trim() ? 1 : 0;
   const misses: RagGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
   const improvements: number[] = [];
   const contextTokens: number[] = [];
   const ledger = new EvalLedger();
-  const window = Math.min(chunks.length, Math.max(payload.rerankTopN, K));
+  const window = rerankWindow(chunks, payload);
 
   for (const item of answerable) {
     const question = item.question;
-    if (rewrite && gateway) {
-      await gateway.complete({
-        runId,
-        prompt: `${payload.queryRewritePrompt}\n\nQuery: ${item.question}`,
-      });
-    }
+    const query = searchQuery.get(question) ?? question;
     const baseline = r4Baseline(question, chunks);
-    const reranked = rerankForR4(question, chunks, payload);
+    const reranked = await rerankForR4(question, chunks, payload, query);
     const baseNdcg = ndcgForGold(baseline, item.goldDocId as string);
     const nextNdcg = ndcgForGold(reranked, item.goldDocId as string);
     improvements.push(nextNdcg - baseNdcg);
     contextTokens.push(
-      estimateTokens(reranked.map((row) => row.chunk.text).join('\n\n')),
+      countTokens(reranked.map((row) => row.chunk.text).join('\n\n')),
     );
     const goldInTop = reranked.some(
       (row) => row.chunk.docId === item.goldDocId,
@@ -97,7 +139,7 @@ export async function gradeR4(
         : diagnoseRetrievalMiss({
             chunks,
             gold: item.goldSpan as string,
-            fullRanking: retrieveByTermCount(question, chunks, chunks.length),
+            fullRanking: retrieveByTermCount(query, chunks, chunks.length),
             k: K,
             pool: payload.reranker === 'none' ? null : window,
           }),
@@ -107,10 +149,12 @@ export async function gradeR4(
         question: item.question,
         goldSpan: item.goldSpan ?? undefined,
         retrieved: reranked.map((row) => row.chunk.text.slice(0, 220)),
+        ...(query !== question ? { note: `Searched for: ${query}` } : {}),
       });
-      failingQueries.push(
-        toTraceQuery('failing_sample', item.question, reranked),
-      );
+      failingQueries.push({
+        ...toTraceQuery('failing_sample', item.question, reranked),
+        ...(query !== question ? { rewrittenQuery: query } : {}),
+      });
     }
   }
 
@@ -128,6 +172,22 @@ export async function gradeR4(
   const contextPass = meanContext <= contextCeiling;
   const callsPass = callsPerQuestion <= callsCeiling;
   const passed = ndcgPass && contextPass && callsPass;
+
+  const publicQueries: TraceQuery[] = [];
+  for (const item of shownPublic) {
+    const query = searchQuery.get(item.question) ?? item.question;
+    const reranked = await rerankForR4(item.question, chunks, payload, query);
+    publicQueries.push({
+      ...toTraceQuery('public', item.question, reranked, {
+        gold: publicGold(docs, item),
+        firstStage: retrieveByTermCount(query, chunks, window),
+        contextTokens: countTokens(
+          reranked.map((row) => row.chunk.text).join('\n\n'),
+        ),
+      }),
+      ...(query !== item.question ? { rewrittenQuery: query } : {}),
+    });
+  }
 
   return {
     verdict: passed ? 'pass' : 'fail',
@@ -193,23 +253,7 @@ export async function gradeR4(
       tokensIn: Math.round(meanContext * answerable.length),
       tokensOut: 0,
       costEurMicros: 0,
-      queries: [
-        ...publicTraceItems(publicItems).map((item) => {
-          const reranked = rerankForR4(item.question, chunks, payload);
-          return toTraceQuery('public', item.question, reranked, {
-            gold: publicGold(docs, item),
-            firstStage: retrieveByTermCount(
-              item.question,
-              chunks,
-              Math.min(chunks.length, Math.max(payload.rerankTopN, K)),
-            ),
-            contextTokens: estimateTokens(
-              reranked.map((row) => row.chunk.text).join('\n\n'),
-            ),
-          });
-        }),
-        ...failingQueries,
-      ],
+      queries: [...publicQueries, ...failingQueries],
     },
   };
 }
@@ -217,26 +261,47 @@ export async function gradeR4(
 /** Shown in the lab so learners know what the reranker starts from. */
 export const R4_FIRST_STAGE_LABEL = 'First stage keyword count';
 
-/** R4's first stage is a deliberately weak keyword count; see retrieveByTermCount. */
-export function r4Baseline(
-  question: string,
-  chunks: ReturnType<typeof chunkCorpus>,
-): RankedChunk[] {
+/** Whole-document chunks: R4 locks chunking so only ranking changes. */
+export function chunkForR4(docs: CorpusDoc[]): Chunk[] {
+  return chunkCorpus(docs, FROZEN_CHUNK, FROZEN_OVERLAP, 'document');
+}
+
+/**
+ * The bar the learner must beat: the weak keyword count on the question as
+ * asked, with no rewrite and no rerank (see retrieveByTermCount).
+ */
+export function r4Baseline(question: string, chunks: Chunk[]): RankedChunk[] {
   return retrieveByTermCount(question, chunks, K);
 }
 
-export function rerankForR4(
+function rerankWindow(chunks: Chunk[], payload: R4Payload): number {
+  return Math.min(chunks.length, Math.max(payload.rerankTopN, K));
+}
+
+/**
+ * The learner's pipeline: the first stage searches with `searchQuery` (the
+ * rewritten query, or the question itself), then the reranker reorders the
+ * top rerankTopN candidates against the question as asked.
+ */
+export async function rerankForR4(
   question: string,
-  chunks: ReturnType<typeof chunkCorpus>,
+  chunks: Chunk[],
   payload: R4Payload,
-): RankedChunk[] {
-  const window = Math.min(chunks.length, Math.max(payload.rerankTopN, K));
-  const pool = retrieveByTermCount(question, chunks, window);
+  searchQuery: string = question,
+): Promise<RankedChunk[]> {
+  const pool = retrieveByTermCount(
+    searchQuery,
+    chunks,
+    rerankWindow(chunks, payload),
+  );
   if (payload.reranker === 'title-boost') {
     return titleBoost(question, pool).slice(0, K);
   }
   if (payload.reranker === 'mmr') {
     return mmrRerank(pool).slice(0, K);
+  }
+  if (payload.reranker === 'cross-encoder') {
+    return (await crossEncoderRerank(question, pool)).slice(0, K);
   }
   return pool.slice(0, K);
 }

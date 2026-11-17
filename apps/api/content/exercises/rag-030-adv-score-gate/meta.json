@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Advanced · Rerank Without Extra Model Calls\n\nNo model calls and a high bar: only the right reranker with a wide enough window passes.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt costs one model call per question; the rewritten query is not used for ranking yet.\n\n**Gates:** nDCG@5 improves by at least 0.25, context tokens ≤ 700, and 0 model calls per question.\n",
+  "briefMd": "# Advanced · Rerank Without Extra Model Calls\n\nNo model calls and a high bar: only the right reranker with a wide enough window passes.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt runs on the live model, one call per question: your prompt is the system message, the question is the user message, and the first line of the reply is what the first stage searches for. The reranker still scores candidates against the question as asked.\n\n**Gates:** nDCG@5 improves by at least 0.25, context tokens ≤ 500, and 0 model calls per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -53,7 +53,7 @@
   },
   "thresholds": {
     "ndcg_improvement": 0.25,
-    "context_tokens": 700,
+    "context_tokens": 500,
     "model_calls_per_question": 0
   },
   "budget": {
@@ -75,7 +75,7 @@
       "class": "A",
       "metric": "context_tokens",
       "op": "lte",
-      "value": 700
+      "value": 500
     },
     {
       "id": "model-calls",

@@ -1,4 +1,4 @@
-import { estimateTokens } from '../../gateway/pricing';
+import { countTokens } from '../../gateway/pricing';
 import {
   isRagR5Slug,
   isRagRedTeamSlug,
@@ -16,7 +16,14 @@ import {
   parseR4Payload,
 } from './rag.payloads';
 import { chunkForR2, R2_SPLIT, retrieveForR2 } from './r2.grade';
-import { R4_FIRST_STAGE_LABEL, r4Baseline, rerankForR4 } from './r4.grade';
+import {
+  chunkForR4,
+  type QueryRewriter,
+  R4_FIRST_STAGE_LABEL,
+  r4Baseline,
+  rerankForR4,
+  rewriteQueries,
+} from './r4.grade';
 import { isR5Class, parseR5Payload, routeR5 } from './r5.grade';
 import { titleBoost } from './rerank';
 import { expandGoldSpan } from './rag.shared';
@@ -25,6 +32,12 @@ import {
   retrieveRanked,
   type RankedChunk,
 } from './retrieve';
+import {
+  BM25_RETRIEVER,
+  prepareRetriever,
+  retrieverLabel,
+  retrieverSpecOf,
+} from './retrievers';
 
 export type RagLabArchetype =
   'r1' | 'r2' | 'r3' | 'r4' | 'r5' | 'redteam' | 'sandbox' | 'unknown';
@@ -50,10 +63,19 @@ export type RagLabPublicGold = {
   goldSpan: string;
 };
 
+/** A chunk as the lab shows it, with its exact token count. */
+export type RagLabChunk = Chunk & { tokens: number };
+
 export type RagLabPreview = {
   archetype: RagLabArchetype;
   chunkCount: number;
-  chunks: Chunk[];
+  chunks: RagLabChunk[];
+  /** How the first stage ranked: BM25, Dense, Hybrid (alpha), or R4's keyword count. */
+  retrieval: string;
+  /** R4: the query the first stage searched with, when a rewrite ran. */
+  rewrittenQuery: string | null;
+  /** R4: a rewrite prompt is set but was not run (it needs an explicit request). */
+  rewriteSkipped: boolean;
   retrieved: RagLabHit[];
   baseline: RagLabHit[] | null;
   generation: string | null;
@@ -70,7 +92,7 @@ const K = 5;
 const R3_FROZEN = {
   chunkSize: 400,
   overlap: 80,
-  splitStrategy: 'heading-aware' as const,
+  splitStrategy: 'document' as const,
 };
 
 export function ragLabArchetype(slug: string): RagLabArchetype {
@@ -103,7 +125,6 @@ export function ragLabFrozen(slug: string): RagLabFrozen | null {
   if (archetype === 'r3') {
     return {
       label: 'Retrieval locked',
-      // heading-aware keeps each document whole, whatever the chunk size.
       items: ['Whole-document chunks', 'BM25 + title boost', `Top k ${K}`],
     };
   }
@@ -135,7 +156,12 @@ export function ragLabFrozen(slug: string): RagLabFrozen | null {
   return null;
 }
 
-export function previewRagLabWithCorpus(
+/**
+ * The grader's own chunking and ranking for one question, on data the learner
+ * may see. R4 runs the rewrite prompt only when `rewriter` is given (a live
+ * model call); otherwise it ranks the question as asked and says so.
+ */
+export async function previewRagLabWithCorpus(
   slug: string,
   payload: unknown,
   question: string,
@@ -143,7 +169,8 @@ export function previewRagLabWithCorpus(
   publicGold: RagLabPublicGold | null = null,
   /** R5: which class profile to route the question through. */
   queryClass: string | null = null,
-): RagLabPreview {
+  rewriter: QueryRewriter | null = null,
+): Promise<RagLabPreview> {
   const archetype = ragLabArchetype(slug);
   if (archetype === 'sandbox') {
     throw new Error('Sandbox exercises use the Python editor lab');
@@ -157,7 +184,9 @@ export function previewRagLabWithCorpus(
   let chunks: Chunk[];
   let retrieved: RankedChunk[];
   let baseline: RankedChunk[] | null = null;
-  let generation: string | null = null;
+  let retrieval = retrieverLabel(BM25_RETRIEVER);
+  let rewrittenQuery: string | null = null;
+  let rewriteSkipped = false;
 
   if (archetype === 'r5') {
     const routed = routeR5(
@@ -168,20 +197,15 @@ export function previewRagLabWithCorpus(
     );
     chunks = routed.chunks;
     retrieved = routed.ranked;
-  } else if (archetype === 'r1' || archetype === 'unknown') {
-    const parsed = parseR1Payload(payload);
-    chunks = chunkCorpus(
-      docs,
-      parsed.chunkSize,
-      parsed.overlap,
-      parsed.splitStrategy,
-    );
-    retrieved = retrieveRanked(question, chunks, K);
   } else if (archetype === 'r2') {
     // Same chunking and retrieval as the R2 grader, so the preview matches grading.
     const parsed = parseR2Payload(payload);
     chunks = chunkForR2(docs, parsed);
-    retrieved = retrieveForR2(question, chunks, parsed);
+    const retriever = await prepareRetriever(chunks, retrieverSpecOf(parsed), [
+      question,
+    ]);
+    retrieval = retrieverLabel(retriever.spec);
+    retrieved = retrieveForR2(question, retriever, parsed);
   } else if (archetype === 'r3') {
     chunks = chunkCorpus(
       docs,
@@ -192,20 +216,25 @@ export function previewRagLabWithCorpus(
     // Validates the payload; the answer itself comes from the live model
     // (RagLabService.preview), the same call the grader makes.
     parseR3Payload(payload);
+    retrieval = 'BM25 + title boost';
     retrieved = frozenRetrieve(question, chunks);
   } else if (archetype === 'r4') {
     const parsed = parseR4Payload(payload);
-    chunks = chunkCorpus(
-      docs,
-      R3_FROZEN.chunkSize,
-      R3_FROZEN.overlap,
-      R3_FROZEN.splitStrategy,
-    );
+    chunks = chunkForR4(docs);
+    retrieval = R4_FIRST_STAGE_LABEL;
     baseline = r4Baseline(question, chunks);
-    retrieved = rerankForR4(question, chunks, parsed);
+    let searchQuery = question;
     if (parsed.queryRewritePrompt.trim()) {
-      generation = `[Rewrite prompt set: each graded question costs 1 model call. In this exercise the rewritten query does not change the ranking.]`;
+      if (rewriter) {
+        searchQuery =
+          (await rewriteQueries(parsed, [question], rewriter)).get(question) ??
+          question;
+        rewrittenQuery = searchQuery;
+      } else {
+        rewriteSkipped = true;
+      }
     }
+    retrieved = await rerankForR4(question, chunks, parsed, searchQuery);
   } else {
     const parsed = parseR1Payload(payload);
     chunks = chunkCorpus(
@@ -220,7 +249,7 @@ export function previewRagLabWithCorpus(
   const joined = retrieved.map((row) => row.chunk.text).join('\n\n');
   // R2 grades prompt tokens including the "Context:" header; the others grade
   // the bare context.
-  const contextTokens = estimateTokens(
+  const contextTokens = countTokens(
     archetype === 'r2' || archetype === 'r5' ? `Context:\n${joined}` : joined,
   );
   const gold = publicGold
@@ -231,10 +260,16 @@ export function previewRagLabWithCorpus(
   return {
     archetype,
     chunkCount: chunks.length,
-    chunks,
+    chunks: chunks.map((chunk) => ({
+      ...chunk,
+      tokens: countTokens(chunk.text),
+    })),
+    retrieval,
+    rewrittenQuery,
+    rewriteSkipped,
     retrieved: retrievedHits,
     baseline: baseline ? hitsToDto(baseline, gold) : null,
-    generation,
+    generation: null,
     citations: [],
     refused: false,
     contextTokens,
@@ -275,6 +310,8 @@ export type RagLabEstimateRow = {
 
 export type RagLabEstimate = {
   archetype: RagLabArchetype;
+  /** R4: the rewrite prompt was not run, so rows rank the questions as asked. */
+  rewriteSkipped: boolean;
   questions: number;
   meanContextTokens: number;
   answerable: number;
@@ -301,16 +338,19 @@ function goldRankOf(hits: RagLabHit[] | null): number | null {
 
 /**
  * Runs the current config over every PUBLIC sample question: the same numbers
- * the grader measures, on data the learner may see. Not a grade.
+ * the grader measures, on data the learner may see. Not a grade. Never calls
+ * a model, so R4 rewrites are skipped (and flagged).
  */
-export function estimateRagLabWithCorpus(
+export async function estimateRagLabWithCorpus(
   slug: string,
   payload: unknown,
   items: RagLabPublicItem[],
   docs: CorpusDoc[],
-): RagLabEstimate {
-  const rows = items.map((item) => {
-    const preview = previewRagLabWithCorpus(
+): Promise<RagLabEstimate> {
+  const rows: RagLabEstimateRow[] = [];
+  let rewriteSkipped = false;
+  for (const item of items) {
+    const preview = await previewRagLabWithCorpus(
       slug,
       payload,
       item.question,
@@ -318,7 +358,8 @@ export function estimateRagLabWithCorpus(
       item.gold,
       item.queryClass ?? null,
     );
-    return {
+    rewriteSkipped ||= preview.rewriteSkipped;
+    rows.push({
       id: item.id,
       question: item.question,
       answerable: item.answerable,
@@ -326,11 +367,12 @@ export function estimateRagLabWithCorpus(
       answerFound: preview.answerFound,
       goldRank: goldRankOf(preview.retrieved),
       firstStageGoldRank: goldRankOf(preview.baseline),
-    };
-  });
+    });
+  }
   const graded = rows.filter((row) => row.answerFound !== null);
   return {
     archetype: ragLabArchetype(slug),
+    rewriteSkipped,
     questions: rows.length,
     meanContextTokens:
       rows.length === 0

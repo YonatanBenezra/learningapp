@@ -5,8 +5,9 @@ import {
   R2_REFERENCE_PAYLOAD,
 } from '../../../catalogue/exercises/exercises.constants';
 import type { CorpusDoc } from './chunking';
-import { estimateTokens } from '../../gateway/pricing';
+import { countTokens } from '../../gateway/pricing';
 import { chunkForR2, gradeR2, retrieveForR2 } from './r2.grade';
+import { bm25Retriever } from './retrievers';
 import type { HiddenItem } from './rag.types';
 
 const docs = JSON.parse(
@@ -51,8 +52,8 @@ const tokenCeiling = gates.find(
 const recallTarget = gates.find((gate) => gate.metric === 'recall@k')!.value;
 
 describe('gradeR2', () => {
-  it('passes the reference config', () => {
-    const result = gradeR2(
+  it('passes the reference config', async () => {
+    const result = await gradeR2(
       R2_REFERENCE_PAYLOAD,
       docs,
       hidden,
@@ -69,8 +70,8 @@ describe('gradeR2', () => {
     expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL');
   });
 
-  it('fails the high-k near-miss on cost', () => {
-    const result = gradeR2(
+  it('fails the high-k near-miss on cost', async () => {
+    const result = await gradeR2(
       R2_NEAR_MISS_PAYLOAD,
       docs,
       hidden,
@@ -98,7 +99,7 @@ describe('gradeR2', () => {
     expect(large).toHaveLength(docs.length);
   });
 
-  it('counts tokens on the full retrieved chunks that recall is judged on', () => {
+  it('counts tokens on the full retrieved chunks that recall is judged on', async () => {
     const payload = { topK: 3, rerank: true, chunkSize: 50 };
     const chunks = chunkForR2(docs, payload);
     const answerable = hidden.filter(
@@ -111,19 +112,23 @@ describe('gradeR2', () => {
     const expected =
       answerable
         .map((item) =>
-          estimateTokens(
-            `Context:\n${retrieveForR2(item.question, chunks, payload)
+          countTokens(
+            `Context:\n${retrieveForR2(
+              item.question,
+              bm25Retriever(chunks),
+              payload,
+            )
               .map((row) => row.chunk.text)
               .join('\n\n')}`,
           ),
         )
         .reduce((sum, value) => sum + value, 0) / answerable.length;
-    const result = gradeR2(payload, docs, hidden, publicItems, gates);
+    const result = await gradeR2(payload, docs, hidden, publicItems, gates);
     expect(result.metrics.mean_prompt_tokens.value).toBeCloseTo(expected, 6);
   });
 
-  it('closes the retrieve-everything exploit with the token gate', () => {
-    const result = gradeR2(
+  it('closes the retrieve-everything exploit with the token gate', async () => {
+    const result = await gradeR2(
       { topK: 40, rerank: false, chunkSize: 50 },
       docs,
       hidden,
@@ -136,7 +141,7 @@ describe('gradeR2', () => {
     );
   });
 
-  it('marks gold only on public trace queries, never on hidden failing samples', () => {
+  it('marks gold only on public trace queries, never on hidden failing samples', async () => {
     const publicWithGold = [
       {
         question: 'Who approves PTO before the leave starts?',
@@ -144,7 +149,7 @@ describe('gradeR2', () => {
         goldSpan: 'Managers approve PTO in Workday',
       },
     ];
-    const result = gradeR2(
+    const result = await gradeR2(
       { topK: 1, rerank: true, chunkSize: 50 },
       docs,
       hidden,
@@ -166,4 +171,20 @@ describe('gradeR2', () => {
       );
     }
   });
+
+  it('grades with dense or hybrid retrieval when the payload asks for it', async () => {
+    for (const retrievalMode of ['dense', 'hybrid'] as const) {
+      const result = await gradeR2(
+        { ...R2_REFERENCE_PAYLOAD, retrievalMode, hybridAlpha: 0.5 },
+        docs,
+        hidden,
+        publicItems,
+        gates,
+      );
+      expect(result.scorecard.retrieval).toMatch(
+        retrievalMode === 'dense' ? /^Dense/ : /^Hybrid \(alpha 0\.50\)/,
+      );
+      expect(result.metrics.recall_at_k.value).toBeGreaterThan(0.8);
+    }
+  }, 180_000);
 });

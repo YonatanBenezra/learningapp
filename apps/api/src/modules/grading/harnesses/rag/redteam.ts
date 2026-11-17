@@ -1,5 +1,5 @@
 import { createHmac } from 'node:crypto';
-import { estimateTokens } from '../../gateway/pricing';
+import { countTokens } from '../../gateway/pricing';
 import { chunkCorpus, type CorpusDoc } from './chunking';
 import { retrieveRanked, type RankedChunk } from './retrieve';
 import type { GateResult, RagGradeResult } from './rag.types';
@@ -246,7 +246,7 @@ export function gradeRedTeam(
       payload: { flagLength: payload.flag.length },
       k: TOP_K,
       chunkCount: 0,
-      tokensIn: estimateTokens(payload.flag),
+      tokensIn: countTokens(payload.flag),
       tokensOut: 0,
       costEurMicros: 0,
       queries: [],

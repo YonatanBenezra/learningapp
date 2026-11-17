@@ -17,13 +17,16 @@ import {
   isRefusal,
 } from '../../grading/harnesses/rag/grounded-generate';
 import { r3UserMessage } from '../../grading/harnesses/rag/r3.grade';
+import { REWRITE_MAX_TOKENS } from '../../grading/harnesses/rag/r4.grade';
 import type { CorpusDoc } from '../../grading/harnesses/rag/chunking';
+import { RagModelUnavailableError } from '../../grading/harnesses/rag/models/model-runtime';
 import {
   estimateRagLabWithCorpus,
   previewRagLabWithCorpus,
   ragLabArchetype,
   ragLabFrozen,
   type RagLabArchetype,
+  type RagLabPreview,
   type RagLabPublicGold,
   type RagLabPublicItem,
 } from '../../grading/harnesses/rag/rag-lab.engine';
@@ -116,6 +119,8 @@ export class RagLabService {
     payload: Record<string, unknown>,
     question?: string,
     queryClass?: string,
+    /** R4: run the rewrite prompt on the live model (otherwise skipped). */
+    runRewrite = false,
   ) {
     const exercise = await this.loadExercise(slug);
     const context = await this.getContext(slug);
@@ -129,9 +134,9 @@ export class RagLabService {
       context.questions[0]?.question ||
       'How many PTO days do full-time staff get each year?';
 
-    let preview: ReturnType<typeof previewRagLabWithCorpus>;
+    let preview: RagLabPreview;
     try {
-      preview = previewRagLabWithCorpus(
+      preview = await previewRagLabWithCorpus(
         slug,
         payload,
         selected,
@@ -140,13 +145,20 @@ export class RagLabService {
         queryClass ??
           context.questions.find((item) => item.question === selected)?.class ??
           null,
+        runRewrite
+          ? async (instruction, query) =>
+              (
+                await this.gateway.generate({
+                  runId: null,
+                  system: instruction,
+                  user: query,
+                  maxTokens: REWRITE_MAX_TOKENS,
+                })
+              ).text
+          : null,
       );
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Invalid RAG lab preview payload';
-      throw new BadRequestException(message);
+      throw labError(error, 'Invalid RAG lab preview payload');
     }
     if (preview.archetype !== 'r3') {
       return preview;
@@ -189,18 +201,14 @@ export class RagLabService {
       );
     }
     try {
-      return estimateRagLabWithCorpus(
+      return await estimateRagLabWithCorpus(
         slug,
         payload,
         publicItems(exercise.publicSample),
         context.corpus,
       );
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Invalid RAG lab estimate payload';
-      throw new BadRequestException(message);
+      throw labError(error, 'Invalid RAG lab estimate payload');
     }
   }
 
@@ -352,4 +360,24 @@ async function readAsset(uri: string): Promise<string> {
     throw new Error('Refusing to read an asset outside content/');
   }
   return readFile(filePath, 'utf8');
+}
+
+/**
+ * A config the engine rejects is the learner's to fix (400); a model the
+ * server cannot run or reach is not (503).
+ */
+function labError(error: unknown, fallback: string): Error {
+  if (error instanceof ModelUnavailableError) {
+    return new ServiceUnavailableException(
+      'AI generation is not configured on this server.',
+    );
+  }
+  if (error instanceof RagModelUnavailableError) {
+    return new ServiceUnavailableException(
+      'The retrieval models are not available on this server yet.',
+    );
+  }
+  return new BadRequestException(
+    error instanceof Error ? error.message : fallback,
+  );
 }

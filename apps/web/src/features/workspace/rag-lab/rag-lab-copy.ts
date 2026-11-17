@@ -24,14 +24,16 @@ export const CHUNK_ID_TIP =
   "Document id and chunk index — e.g. pto:0 is the first chunk of the Paid time off doc.";
 
 export const SCORE_TIP =
-  "BM25 keyword relevance: rare matching words count more and long chunks are normalised. Not AI confidence.";
+  "Ranking score from the first stage (or the reranker, when one ran). BM25: keyword relevance, rare words count more. Dense: embedding similarity. Hybrid: both, rescaled to 0–1. Not AI confidence.";
 
 export const SPLIT_STRATEGY_TIPS: Record<string, string> = {
-  fixed: "Cut at fixed character lengths. Fast, but can split mid-sentence.",
-  sentence: "Pack whole sentences until the chunk size is reached.",
-  recursive: "Same as sentence packing — merges sentences up to your chunk size.",
+  fixed: "Word windows up to the chunk size. Never cuts a word, but can cut a sentence in two.",
+  sentence:
+    "Packs whole sentences up to the chunk size. Never cuts a sentence, so one long sentence can exceed the size.",
+  recursive:
+    "Splits by paragraph, then line, then sentence, then word, only where a piece is still too big. The size is a hard limit.",
   "heading-aware":
-    "Treat each document as one chunk. Easy recall, but whole documents use the most context.",
+    "One section per markdown heading, split inside the section, and every chunk starts with its document title and heading. Costs a few tokens per chunk.",
 };
 
 export const METRIC_TIPS: Record<string, string> = {

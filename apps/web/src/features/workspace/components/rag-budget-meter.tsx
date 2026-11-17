@@ -143,6 +143,12 @@ export function RagBudgetMeter({ slug, payload, gates }: RagBudgetMeterProps) {
           </span>
         </div>
       ) : null}
+      {estimate.rewriteSkipped ? (
+        <p className="lp-rag-meter-note">
+          Without your rewrite prompt: the estimate never calls the model. Grading runs the rewrite
+          on every question.
+        </p>
+      ) : null}
     </section>
   );
 }

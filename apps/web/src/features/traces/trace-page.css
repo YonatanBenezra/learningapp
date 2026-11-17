@@ -471,6 +471,15 @@
   color: var(--lp-ink);
 }
 
+.lp-trace-query-rewrite {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--lp-muted);
+}
+
 .lp-trace-query-timing {
   flex-shrink: 0;
   padding-top: 0.15rem;

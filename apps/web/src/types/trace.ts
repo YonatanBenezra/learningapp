@@ -12,6 +12,8 @@ export type TraceHit = {
 export type TraceQuery = {
   source: string;
   question: string;
+  /** R4: what the first stage searched for after the learner's rewrite prompt. */
+  rewrittenQuery?: string;
   retrieved: TraceHit[];
   /** Public queries only: the gold sentence reached the context. */
   hit?: boolean;

@@ -3,7 +3,7 @@ import type {
   SandboxJobInput,
   SandboxJobResult,
 } from '../../../sandbox/sandbox.types';
-import { estimateTokens } from '../../gateway/pricing';
+import { countTokens } from '../../gateway/pricing';
 import type { CorpusDoc } from '../rag/chunking';
 import {
   answerableHidden,
@@ -116,7 +116,7 @@ export async function gradeSandboxRetriever(
     invalidPassages += returned.length - passages.length;
     // Budget counts everything the program returned, valid or not.
     const tokens =
-      returned.length === 0 ? 0 : estimateTokens(returned.join('\n\n'));
+      returned.length === 0 ? 0 : countTokens(returned.join('\n\n'));
     contextTokenSum += tokens;
     perQuery.push({ tokens, chunks: returned.length });
     const gold = expandGoldSpan(

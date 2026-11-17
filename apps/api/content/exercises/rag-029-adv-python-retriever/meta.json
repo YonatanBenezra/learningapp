@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Advanced · Python Retriever\n\nThe sandbox task with a stricter bar: almost every hidden question must land its answer in your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Concatenated or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget, so whole documents are usually too expensive: split them into smaller passages and rank those.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 100, and every passage comes from the corpus.\n",
+  "briefMd": "# Advanced · Python Retriever\n\nThe sandbox task with a stricter bar: almost every hidden question must land its answer in your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Concatenated or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget, so whole documents are usually too expensive: split them into smaller passages and rank those.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 75, and every passage comes from the corpus.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -34,7 +34,7 @@
   },
   "thresholds": {
     "recall_at_5": 0.9,
-    "mean_context_tokens": 100
+    "mean_context_tokens": 75
   },
   "budget": {
     "max_model_calls": 0,
@@ -55,7 +55,7 @@
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 100
+      "value": 75
     },
     {
       "id": "passages-from-corpus",

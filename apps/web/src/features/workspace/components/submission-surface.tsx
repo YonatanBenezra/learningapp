@@ -17,6 +17,8 @@ type SchemaProperty = {
   type?: string;
   minimum?: number;
   maximum?: number;
+  /** Step for `number` fields (JSON Schema multipleOf). */
+  multipleOf?: number;
   enum?: unknown[];
   default?: unknown;
   description?: string;
@@ -69,6 +71,9 @@ const RAG_FIELD_UNITS: Record<string, string> = {
 const RAG_FIELD_HELP: Record<string, string> = {
   rerank:
     "Fetch 4× top-k candidates, then move chunks whose document title matches the query to the top.",
+  retrievalMode:
+    "bm25 matches keywords, dense matches meaning with embeddings, hybrid mixes both by hybridAlpha.",
+  hybridAlpha: "Weight on the dense score in hybrid mode: 0 is pure BM25, 1 is pure dense.",
 };
 
 function ragFieldHelp(name: string, property: SchemaProperty): string {
@@ -695,6 +700,35 @@ function Field({
     );
   }
 
+  if (property.type === "number") {
+    // Fractional knobs such as hybridAlpha: a slider when bounded.
+    const min = property.minimum ?? 0;
+    const max = property.maximum ?? 1;
+    const step = property.multipleOf ?? 0.05;
+    const numeric = typeof value === "number" && Number.isFinite(value) ? value : min;
+    return (
+      <label className={wide ? "lp-field lp-ws-field--wide" : "lp-field lp-rag-slider"}>
+        <span className="lp-rag-slider-top">
+          <span className="lp-field-label">{label}</span>
+          <strong>{numeric.toFixed(2)}</strong>
+        </span>
+        <input
+          type="range"
+          name={name}
+          min={min}
+          max={max}
+          step={step}
+          value={numeric}
+          onChange={(event) => onChange(Number(event.target.value))}
+          className="lp-rag-range"
+        />
+        <span className="lp-ws-field-hint">
+          {property.description ?? RAG_FIELD_HELP[name] ?? `${min}–${max}`}
+        </span>
+      </label>
+    );
+  }
+
   const long = isLongField(name);
   const text = typeof value === "string" ? value : "";
   if (codeLab && long) {
@@ -768,7 +802,7 @@ function defaultsFrom(schema: SubmissionSchema): Record<string, unknown> {
       values[key] = property.default;
       continue;
     }
-    if (property.type === "integer") {
+    if (property.type === "integer" || property.type === "number") {
       values[key] = property.minimum ?? 0;
       continue;
     }

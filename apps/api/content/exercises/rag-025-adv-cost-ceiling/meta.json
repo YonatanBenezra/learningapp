@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Advanced · Cost-Capped Retrieval\n\nThe strictest budget in the track: the whole prompt must fit in about 80 tokens. Only very small chunks with reranking get there without losing recall.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 80 on the hidden set.\n",
+  "briefMd": "# Advanced · Cost-Capped Retrieval\n\nThe strictest budget in the track: the whole prompt must fit in about 60 tokens. Only very small chunks with reranking get there without losing recall.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 60 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -46,7 +46,7 @@
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 80,
+    "mean_prompt_tokens": 60,
     "recall_at_k": 0.95
   },
   "budget": {
@@ -61,7 +61,7 @@
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 80
+      "value": 60
     },
     {
       "id": "recall-at-k",

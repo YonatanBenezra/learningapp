@@ -39,6 +39,8 @@ export type RagLabChunk = {
   docId: string;
   title: string;
   text: string;
+  /** Exact cl100k_base token count, as the grader counts it. */
+  tokens?: number;
 };
 
 export type RagLabHit = {
@@ -55,6 +57,12 @@ export type RagLabPreview = {
   archetype: RagLabArchetype;
   chunkCount: number;
   chunks: RagLabChunk[];
+  /** How the first stage ranked: "BM25", "Dense (…)", "Hybrid (alpha …)", or R4's keyword count. */
+  retrieval?: string;
+  /** R4: what the first stage searched for after the rewrite prompt ran. */
+  rewrittenQuery?: string | null;
+  /** R4: a rewrite prompt is set but was not run (it needs an explicit request). */
+  rewriteSkipped?: boolean;
   retrieved: RagLabHit[];
   baseline: RagLabHit[] | null;
   generation: string | null;
@@ -80,6 +88,8 @@ export type RagLabEstimateRow = {
 /** The current config over every public sample question (not a grade). */
 export type RagLabEstimate = {
   archetype: RagLabArchetype;
+  /** R4: the rewrite prompt was not run, so rows rank the questions as asked. */
+  rewriteSkipped?: boolean;
   questions: number;
   meanContextTokens: number;
   answerable: number;

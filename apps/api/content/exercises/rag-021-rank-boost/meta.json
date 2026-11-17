@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 4 · Title-Aware Reranking\n\nPolicy questions usually name their topic, and every policy document has a title. Pick the reranker that uses that signal and lift nDCG@5 well above the keyword-count first stage.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt costs one model call per question; the rewritten query is not used for ranking yet.\n\n**Gates:** nDCG@5 improves by at least 0.20, context tokens ≤ 3000, ≤ 2 model calls per question.\n",
+  "briefMd": "# Phase 4 · Title-Aware Reranking\n\nPolicy questions usually name their topic, and every policy document has a title. Pick the reranker that uses that signal and lift nDCG@5 well above the keyword-count first stage.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt runs on the live model, one call per question: your prompt is the system message, the question is the user message, and the first line of the reply is what the first stage searches for. The reranker still scores candidates against the question as asked.\n\n**Gates:** nDCG@5 improves by at least 0.20, context tokens ≤ 2200, ≤ 2 model calls per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -53,7 +53,7 @@
   },
   "thresholds": {
     "ndcg_improvement": 0.2,
-    "context_tokens": 3000,
+    "context_tokens": 2200,
     "model_calls_per_question": 2
   },
   "budget": {
@@ -75,7 +75,7 @@
       "class": "A",
       "metric": "context_tokens",
       "op": "lte",
-      "value": 3000
+      "value": 2200
     },
     {
       "id": "model-calls",
