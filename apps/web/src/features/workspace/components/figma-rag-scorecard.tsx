@@ -313,6 +313,12 @@ function FailingCaseCard({ item, id }: { item: FailingCase; id: string }) {
           <span>{item.note}</span>
         </p>
       ) : null}
+      {item.answer ? (
+        <p className="lp-rag-score-failure-answer">
+          <span className="lp-rag-score-failure-answer-label">Model answered</span>
+          {item.answer}
+        </p>
+      ) : null}
     </li>
   );
 }

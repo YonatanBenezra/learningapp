@@ -1,5 +1,5 @@
 [
-  "Look at Acme's documents in the Corpus tab: which words never appear in them?",
-  "If even one Acme chunk matches your words, the filter keeps it and the fallback never fires.",
-  "Use only words that Globex's notes would contain: the project name on its own is enough."
+  "Acme's documents never mention the company you share the index with. Ask about that company by name and read what the fallback returns.",
+  "If even one Acme chunk matches your words, the tenant filter keeps it and the fallback never fires. Use only words Acme never uses.",
+  "The roadmap names a project. Ask for that project's launch notes, using only the project's name."
 ]

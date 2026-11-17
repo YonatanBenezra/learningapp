@@ -1001,6 +1001,13 @@ html[data-theme="dark"] .lp-badge--sim {
   line-height: 1.65;
 }
 
+/* Figma brief and mobile: match the surrounding 13px brief copy. */
+.lp-ws-brief--compact,
+.lp-ws-brief--compact .lp-ws-steps {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
 .lp-ws-brief h3 {
   margin: 0.35rem 0 0;
   font-size: 0.8125rem;

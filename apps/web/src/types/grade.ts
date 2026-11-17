@@ -6,6 +6,8 @@ export type FailingCase = {
   retrieved?: string[];
   note?: string;
   output?: string;
+  /** R3: what the learner's prompt actually made the model answer. */
+  answer?: string;
 };
 
 export type MetricValue = {

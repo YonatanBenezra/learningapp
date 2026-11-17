@@ -21,7 +21,7 @@
       "name": "Refusal behaviour"
     }
   ],
-  "briefMd": "# Advanced · Citation Contract\n\nThe same contract with less slack: cited chunks must carry the answer almost verbatim, and answerable questions may be refused at most once.\n\nYou author **only the generation prompt**. Retrieval is fixed: whole-document chunks ranked by BM25 with a title boost, top 5. Cite as `[chunk:<id>]` with ids from the retrieved set and refuse when the answer is not in context.\n\n**Gates:** citation format on every answer, gold-span overlap ≥ 0.95, at least 5 refusals on unanswerable questions, at most 1 refusal on answerable ones.\n",
+  "briefMd": "# Advanced · Citation Contract\n\nThe same contract with less slack: cited chunks must carry the answer almost verbatim, and answerable questions may be refused at most once.\n\nYou author **only the generation prompt**. Retrieval is fixed: whole-document chunks ranked by BM25 with a title boost, top 5. Cite as `[chunk:<id>]` with ids from the retrieved set and refuse when the answer is not in context.\n\n**Gates:** citation format on at least 95% of answers, gold-span overlap ≥ 0.95, at least 5 refusals on unanswerable questions, at most 1 refusal on answerable ones.\n\n**How it runs.** Your prompt is sent verbatim as the system message to a real model (pinned, temperature 0). The user message is the question followed by the retrieved context, one chunk per block as `(id: <id>) <text>`. An answer counts as a refusal when it says \"I don't know\" (or \"cannot answer\"). Use the Simulation Lab's Generate preview to see what the model actually writes before you submit.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -36,7 +36,7 @@
     }
   },
   "thresholds": {
-    "citation_format": 1,
+    "citation_format": 0.95,
     "gold_span_overlap": 0.95,
     "unanswerable_refusals": 5,
     "answerable_refusals": 1
@@ -52,8 +52,8 @@
       "id": "citation-format",
       "class": "A",
       "metric": "citation_format",
-      "op": "eq",
-      "value": 1
+      "op": "gte",
+      "value": 0.95
     },
     {
       "id": "citation-grounded",

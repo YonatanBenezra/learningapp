@@ -42,6 +42,11 @@ export const envSchema = z.object({
   STRIPE_PRICE_ANNUAL: z.string().optional().default(''),
   OPENROUTER_API_KEY: z.string().optional().default(''),
   OPENROUTER_MODEL: z.string().default('google/gemini-2.5-flash'),
+  /** HMAC key for per-learner red team flags; rotate it to invalidate every flag. */
+  REDTEAM_FLAG_SECRET: z
+    .string()
+    .min(16)
+    .default('change-me-redteam-flag-secret'),
 });
 
 export type Env = z.infer<typeof envSchema>;

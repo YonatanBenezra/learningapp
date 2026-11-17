@@ -2,6 +2,7 @@ import type {
   SandboxJobInput,
   SandboxJobResult,
 } from '../../../sandbox/sandbox.types';
+import { estimateTokens } from '../../gateway/pricing';
 import type { CorpusDoc } from '../rag/chunking';
 import {
   answerableHidden,
@@ -18,6 +19,31 @@ import type { SandboxGradeResult, SandboxRetrieved } from './sandbox.types';
 
 const K = 5;
 const DEFAULT_THRESHOLD = 0.8;
+/** Used when an exercise declares no context budget; whole-corpus dumps fail it. */
+const DEFAULT_CONTEXT_TOKENS = 300;
+
+/** Lowercase, punctuation-insensitive form used to match passages to docs. */
+function normalizeForMatch(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+/**
+ * A passage counts only if it is a contiguous span of ONE corpus document
+ * (title + body, punctuation and case ignored). Concatenating documents, or
+ * inventing text, is not retrieval.
+ */
+export function passageMatcher(docs: CorpusDoc[]): (text: string) => boolean {
+  const bodies = docs.map((doc) =>
+    normalizeForMatch(`${doc.title} ${doc.text}`),
+  );
+  return (text: string) => {
+    const needle = normalizeForMatch(text);
+    return needle.length > 0 && bodies.some((body) => body.includes(needle));
+  };
+}
 
 export type SandboxExecutor = (
   input: SandboxJobInput,
@@ -33,6 +59,11 @@ export async function gradeSandboxRetriever(
   gates?: unknown,
 ): Promise<SandboxGradeResult> {
   const threshold = gateThreshold(gates, 'recall@5', DEFAULT_THRESHOLD);
+  const contextCeiling = gateThreshold(
+    gates,
+    'mean_context_tokens',
+    DEFAULT_CONTEXT_TOKENS,
+  );
   const executed = await execute({
     source: payload.source,
     workspaceFiles: { 'input.json': learnerInputJson(docs, hidden) },
@@ -52,12 +83,22 @@ export async function gradeSandboxRetriever(
   }
 
   const retrieved = parseResults(executed.stdout);
+  const fromCorpus = passageMatcher(docs);
   const misses: SandboxGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
   let hits = 0;
+  let passageCount = 0;
+  let invalidPassages = 0;
+  let contextTokenSum = 0;
   for (const item of answerable) {
     const row = retrieved.get(item.id);
-    const passages = row?.passages.slice(0, K) ?? [];
+    const returned = row?.passages.slice(0, K) ?? [];
+    const passages = returned.filter((text) => fromCorpus(text));
+    passageCount += returned.length;
+    invalidPassages += returned.length - passages.length;
+    // Budget counts everything the program returned, valid or not.
+    contextTokenSum +=
+      returned.length === 0 ? 0 : estimateTokens(returned.join('\n\n'));
     const gold = expandGoldSpan(
       docs,
       item.goldDocId as string,
@@ -70,7 +111,10 @@ export async function gradeSandboxRetriever(
       misses.push({
         question: item.question,
         goldSpan: gold,
-        retrieved: passages.map((text) => text.slice(0, 220)),
+        retrieved: returned.map((text) => text.slice(0, 220)),
+        ...(passages.length < returned.length
+          ? { note: 'passage-not-from-corpus' }
+          : {}),
       });
       failingQueries.push({
         source: 'failing_sample',
@@ -87,11 +131,33 @@ export async function gradeSandboxRetriever(
 
   const total = answerable.length;
   const recall = total === 0 ? 0 : hits / total;
-  const passed = recall >= threshold;
+  const meanContextTokens = total === 0 ? 0 : contextTokenSum / total;
+  const validShare =
+    passageCount === 0 ? 1 : (passageCount - invalidPassages) / passageCount;
+  const recallPass = recall >= threshold;
+  const contextPass = meanContextTokens <= contextCeiling;
+  const corpusPass = invalidPassages === 0;
+  const passed = recallPass && contextPass && corpusPass;
+  const failureClasses: string[] = [];
+  if (!corpusPass) {
+    failureClasses.push('passage-not-from-corpus');
+  }
+  if (!contextPass) {
+    failureClasses.push('context-over-budget');
+  }
+  if (!recallPass) {
+    failureClasses.push('retrieval-quality');
+  }
   return {
     verdict: passed ? 'pass' : 'fail',
     metrics: {
       recall_at_5: { value: recall, hits, total },
+      mean_context_tokens: { value: meanContextTokens },
+      passages_from_corpus: {
+        value: validShare,
+        invalid: invalidPassages,
+        total: passageCount,
+      },
     },
     gateResults: [
       {
@@ -101,13 +167,34 @@ export async function gradeSandboxRetriever(
         op: 'gte',
         value: threshold,
         actual: recall,
-        passed,
+        passed: recallPass,
+      },
+      {
+        id: 'mean-context-tokens',
+        class: 'A',
+        metric: 'mean_context_tokens',
+        op: 'lte',
+        value: contextCeiling,
+        actual: meanContextTokens,
+        passed: contextPass,
+      },
+      {
+        id: 'passages-from-corpus',
+        class: 'A',
+        metric: 'passages_from_corpus',
+        op: 'eq',
+        value: 1,
+        actual: validShare,
+        passed: corpusPass,
       },
     ],
-    failureClasses: passed ? [] : ['retrieval-quality'],
+    failureClasses: passed ? [] : failureClasses,
     scorecard: {
       recallAt5: recall,
       threshold,
+      meanContextTokens,
+      contextCeiling,
+      invalidPassages,
       durationMs: executed.durationMs,
       memoryPeakMb: executed.memoryPeakMb,
     },
@@ -125,7 +212,7 @@ export async function gradeSandboxRetriever(
       },
       k: K,
       chunkCount: docs.length,
-      tokensIn: 0,
+      tokensIn: Math.round(contextTokenSum),
       tokensOut: 0,
       costEurMicros: 0,
       queries: [

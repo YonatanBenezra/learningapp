@@ -14,6 +14,7 @@ import { RagLabPanel } from "./rag-lab-panel";
 import { RunPanel } from "./run-panel";
 import { SubmissionSurface } from "./submission-surface";
 import type { FigmaBriefContent } from "./brief-panel";
+import { BriefMarkdown } from "./brief-markdown";
 // Mobile layout styles (scoped to .lp-ws--mobile / .lp-ws-mobile-*).
 import "../demo/workspace-demo.css";
 
@@ -38,6 +39,8 @@ type WorkspaceDemoMobileProps = {
   pending: boolean;
   submitError: string | null;
   initialValues: Record<string, unknown>;
+  /** The learner's live config, restored when the Submit step remounts. */
+  restoreValues?: Record<string, unknown> | null;
   onSubmit: (payload: Record<string, unknown>) => void;
   onValidityChange?: (valid: boolean) => void;
   onValuesChange?: (payload: Record<string, unknown>) => void;
@@ -50,6 +53,8 @@ type WorkspaceDemoMobileProps = {
   /** Show the Simulation Lab step (RAG exercises with a lab). */
   showLab?: boolean;
   labPayload?: Record<string, unknown>;
+  /** Submissions left under the attempt policy; hidden when null. */
+  budget?: { label: string; exhausted: boolean } | null;
 };
 
 export function WorkspaceDemoMobile({
@@ -62,6 +67,7 @@ export function WorkspaceDemoMobile({
   pending,
   submitError,
   initialValues,
+  restoreValues,
   onSubmit,
   onValidityChange,
   onValuesChange,
@@ -70,6 +76,7 @@ export function WorkspaceDemoMobile({
   submittedAttempts,
   showLab = false,
   labPayload,
+  budget = null,
 }: WorkspaceDemoMobileProps) {
   const steps = MOBILE_STEPS.filter((item) => item.id !== "lab" || showLab);
   const activeIndex = Math.max(0, steps.findIndex((s) => s.id === step));
@@ -125,6 +132,7 @@ export function WorkspaceDemoMobile({
                 pending={pending}
                 error={submitError}
                 initialValues={initialValues}
+                restoreValues={restoreValues}
                 title={editorTitle}
                 onSubmit={onSubmit}
                 onValidityChange={onValidityChange}
@@ -132,6 +140,7 @@ export function WorkspaceDemoMobile({
                 figmaLayout
                 figmaGrade={grade}
                 figmaAttempt={nextAttempt}
+                figmaBudget={budget}
               />
             </div>
           </div>
@@ -233,6 +242,15 @@ function MobileBriefPane({
           ))}
           <p className="mt-1.5 text-[0.6875rem] text-lp-muted">{content.constraint.footnote}</p>
         </div>
+
+        {content.fullBriefMd ? (
+          <section className="mt-4">
+            <h2 className="mb-1.5 text-[0.625rem] font-bold uppercase tracking-[0.06em] text-lp-muted">
+              Full brief
+            </h2>
+            <BriefMarkdown text={content.fullBriefMd} compact />
+          </section>
+        ) : null}
 
         <button
           type="button"

@@ -677,10 +677,37 @@
   gap: 0.75rem;
 }
 
+.lp-rt-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
 .lp-rt-intro {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   font-size: 0.8125rem;
   color: var(--lp-muted);
+}
+
+.lp-rt-clear {
+  flex-shrink: 0;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lp-rt-clear:hover:not(:disabled) {
+  color: var(--lp-ink);
+}
+
+.lp-rt-clear:disabled {
+  opacity: 0.55;
 }
 
 .lp-rt-log {
@@ -738,6 +765,9 @@
 
 .lp-rt-bot p {
   margin: 0;
+  /* Bot replies can be multi-line (lists, leaked prompts): keep their newlines. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .lp-rt-bot.is-blocked {
@@ -779,4 +809,37 @@
 
 .lp-rt-form button:disabled {
   opacity: 0.55;
+}
+
+/* Errors the live estimate cannot hide (sign-in, rate limit, model down). */
+.lp-rag-meter-error {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lp-danger, #b91c1c);
+}
+
+/* R3: the answer preview calls a real model, so it runs on request. */
+.lp-rag-lab-run {
+  margin-left: auto;
+  padding: 0.35rem 0.75rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: var(--color-brand);
+  color: var(--color-brand-on);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lp-rag-lab-run:disabled {
+  opacity: 0.6;
+}
+
+.lp-rag-lab-gen-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
 }

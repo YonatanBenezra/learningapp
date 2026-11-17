@@ -1,12 +1,8 @@
 import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
-import type { ModelGateway } from '../../gateway/model.gateway';
+import { costEurMicros, estimateTokens } from '../../gateway/pricing';
 import { advisoryClassB } from '../../judge/class-b';
 import { chunkCorpus, type CorpusDoc } from './chunking';
-import {
-  citedChunkIds,
-  groundedGenerate,
-  isRefusal,
-} from './grounded-generate';
+import { citedChunkIds, isRefusal } from './grounded-generate';
 import {
   answerableHidden,
   expandGoldSpan,
@@ -18,7 +14,7 @@ import {
   toTraceQuery,
 } from './rag.shared';
 import { titleBoost } from './rerank';
-import { retrieveRanked } from './retrieve';
+import { retrieveRanked, type RankedChunk } from './retrieve';
 import type {
   HiddenItem,
   PublicItem,
@@ -28,7 +24,55 @@ import type {
 } from './rag.types';
 
 const K = 5;
+/** Parallel model calls per graded run; bookkeeping is serialised in the gateway. */
+const GENERATION_CONCURRENCY = 4;
 const DEFAULT_CITATION_FORMAT = 1;
+
+/**
+ * Produces the answer for one question. Graded runs and the lab use a real
+ * model through the gateway; offline content checks pass a simulator. The
+ * learner's generation prompt is the system message, verbatim.
+ */
+export type R3Generator = (input: {
+  system: string;
+  user: string;
+  question: string;
+  ranked: RankedChunk[];
+}) => Promise<string>;
+
+/** User turn sent to the model: the question plus the frozen top-5 context. */
+export function r3UserMessage(
+  question: string,
+  context: { id: string; text: string }[],
+): string {
+  const lines = context.map((row) => `(id: ${row.id}) ${row.text}`);
+  return `Question: ${question}\n\nRetrieved context:\n${lines.join('\n\n')}`;
+}
+
+export function r3Context(ranked: RankedChunk[]) {
+  return ranked.map((row) => ({ id: row.chunk.id, text: row.chunk.text }));
+}
+
+async function mapLimited<T, R>(
+  items: T[],
+  limit: number,
+  task: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  const workers = Array.from(
+    { length: Math.min(limit, items.length) },
+    async () => {
+      while (next < items.length) {
+        const index = next;
+        next += 1;
+        results[index] = await task(items[index]);
+      }
+    },
+  );
+  await Promise.all(workers);
+  return results;
+}
 const DEFAULT_OVERLAP = 0.85;
 const DEFAULT_UNANSWERABLE_NEED = 5;
 const DEFAULT_ANSWERABLE_REFUSE_MAX = 2;
@@ -38,8 +82,7 @@ export async function gradeR3(
   docs: CorpusDoc[],
   hidden: HiddenItem[],
   publicItems: PublicItem[] = [],
-  gateway: ModelGateway,
-  runId: string,
+  generate: R3Generator,
   gates?: unknown,
 ): Promise<RagGradeResult> {
   const formatTarget = gateThreshold(
@@ -76,16 +119,28 @@ export async function gradeR3(
   let unanswerableRefusals = 0;
   let answerableRefusals = 0;
 
-  for (const item of usable) {
-    const ranked = frozenRetrieve(item.question, chunks);
+  let tokensIn = 0;
+  let tokensOut = 0;
+  const generated = await mapLimited(
+    usable,
+    GENERATION_CONCURRENCY,
+    async (item) => {
+      const ranked = frozenRetrieve(item.question, chunks);
+      const user = r3UserMessage(item.question, r3Context(ranked));
+      const answer = await generate({
+        system: payload.generationPrompt,
+        user,
+        question: item.question,
+        ranked,
+      });
+      tokensIn += estimateTokens(`${payload.generationPrompt}\n${user}`);
+      tokensOut += estimateTokens(answer);
+      return { item, ranked, answer };
+    },
+  );
+
+  for (const { item, ranked, answer } of generated) {
     const retrievedIds = new Set(ranked.map((row) => row.chunk.id));
-    await gateway.complete({
-      runId,
-      prompt: `${payload.generationPrompt}\n\nQuestion: ${item.question}\nContext:\n${ranked
-        .map((row) => `[${row.chunk.id}] ${row.chunk.text}`)
-        .join('\n')}`,
-    });
-    const answer = groundedGenerate(payload.generationPrompt, ranked);
     const citations = citedChunkIds(answer);
     const refused = isRefusal(answer);
     const formatOk =
@@ -122,7 +177,12 @@ export async function gradeR3(
           question: item.question,
           goldSpan: gold,
           retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
-          note: refused ? 'over-refusal' : 'citation-outside-gold-span',
+          answer: answer.slice(0, 400),
+          note: refused
+            ? 'over-refusal'
+            : citations.length === 0
+              ? 'no-citation'
+              : 'citation-outside-gold-span',
         });
         failingQueries.push(
           toTraceQuery('failing_sample', item.question, ranked),
@@ -138,6 +198,7 @@ export async function gradeR3(
       misses.push({
         question: item.question,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
+        answer: answer.slice(0, 400),
         note: 'under-refusal',
       });
       failingQueries.push(
@@ -173,7 +234,7 @@ export async function gradeR3(
         id: 'citation-format',
         class: 'A',
         metric: 'citation_format',
-        op: 'eq',
+        op: 'gte',
         value: formatTarget,
         actual: formatRate,
         passed: formatPass,
@@ -229,9 +290,9 @@ export async function gradeR3(
       payload,
       k: K,
       chunkCount: chunks.length,
-      tokensIn: 0,
-      tokensOut: 0,
-      costEurMicros: 0,
+      tokensIn,
+      tokensOut,
+      costEurMicros: costEurMicros(tokensIn, tokensOut),
       queries: [
         ...publicTraceItems(publicItems).map((item) =>
           toTraceQuery(

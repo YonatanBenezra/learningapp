@@ -37,6 +37,7 @@ import type {
 import { gradeR1 } from '../modules/grading/harnesses/rag/r1.grade';
 import { gradeR2 } from '../modules/grading/harnesses/rag/r2.grade';
 import { gradeR3 } from '../modules/grading/harnesses/rag/r3.grade';
+import { groundedGenerate } from '../modules/grading/harnesses/rag/grounded-generate';
 import { gradeR4 } from '../modules/grading/harnesses/rag/r4.grade';
 import {
   gradeR5,
@@ -44,14 +45,19 @@ import {
   type RoutedItem,
 } from '../modules/grading/harnesses/rag/r5.grade';
 import {
+  FLAG_PLACEHOLDER,
   gradeRedTeam,
   parseRedTeamPayload,
-  parseRedTeamScenario,
+  redTeamScenarioFor,
 } from '../modules/grading/harnesses/rag/redteam';
 import { gradeSandboxRetriever } from '../modules/grading/harnesses/sandbox/sandbox.grade';
 import { parseSandboxPayload } from '../modules/grading/harnesses/sandbox/sandbox.payloads';
 import { runLocalPython } from '../modules/sandbox/local-python';
 import type { ExerciseContentBundle } from './content-loader';
+
+/** Identity the offline content checks grade red team levels as. */
+export const CONTENT_CHECK_USER = 'content-check';
+export const CONTENT_CHECK_FLAG_SECRET = 'content-check-flag-secret';
 
 export type GraderRunResult = {
   verdict: 'pass' | 'fail' | 'inconclusive';
@@ -91,13 +97,15 @@ export async function runContentGrader(
     }
     case 'rag-r3': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
+      // Offline content checks have no model access, so they run the keyword
+      // simulator. Graded runs use the live model (see RagHarness).
       return gradeR3(
         parseR3Payload(payload),
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
-        contentPipelineGateway(),
-        contentRunId(bundle),
+        ({ system, ranked }) =>
+          Promise.resolve(groundedGenerate(system, ranked)),
         bundle.meta.gates,
       );
     }
@@ -123,11 +131,20 @@ export async function runContentGrader(
         bundle.meta.gates,
       );
     }
-    case 'rag-redteam':
+    case 'rag-redteam': {
+      // Flags are per learner, so content checks grade as a fixed test learner;
+      // reference solutions write the flag as the {{FLAG}} placeholder.
+      const scenario = redTeamScenarioFor(hiddenRaw, {
+        secret: CONTENT_CHECK_FLAG_SECRET,
+        userId: CONTENT_CHECK_USER,
+        slug: bundle.meta.slug,
+      });
+      const submitted = parseRedTeamPayload(payload);
       return gradeRedTeam(
-        parseRedTeamPayload(payload),
-        parseRedTeamScenario(hiddenRaw),
+        { flag: submitted.flag.split(FLAG_PLACEHOLDER).join(scenario.flag) },
+        scenario,
       );
+    }
     case 'rag-sandbox': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
       return gradeSandboxRetriever(

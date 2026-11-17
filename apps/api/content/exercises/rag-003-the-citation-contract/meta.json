@@ -21,7 +21,7 @@
       "name": "Refusal behaviour"
     }
   ],
-  "briefMd": "# Phase 3 · Citation-Grounded Answers\n\nLegal/compliance blocked launch: answers must cite sources and refuse when context is insufficient.\n\nYou author **only the generation prompt**. Retrieval is fixed: whole-document chunks ranked by BM25 with a title boost, top 5.\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
+  "briefMd": "# Phase 3 · Citation-Grounded Answers\n\nLegal/compliance blocked launch: answers must cite sources and refuse when context is insufficient.\n\nYou author **only the generation prompt**. Retrieval is fixed: whole-document chunks ranked by BM25 with a title boost, top 5.\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation (at least 90% of answers in format), grounding, and refusal gates. Class B semantic support is advisory.\n\n**How it runs.** Your prompt is sent verbatim as the system message to a real model (pinned, temperature 0). The user message is the question followed by the retrieved context, one chunk per block as `(id: <id>) <text>`. An answer counts as a refusal when it says \"I don't know\" (or \"cannot answer\"). Use the Simulation Lab's Generate preview to see what the model actually writes before you submit.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -51,8 +51,8 @@
       "id": "citation-format",
       "class": "A",
       "metric": "citation_format",
-      "op": "eq",
-      "value": 1
+      "op": "gte",
+      "value": 0.9
     },
     {
       "id": "citation-grounded",

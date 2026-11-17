@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { AttemptBudget } from "@/types/attempt";
 import type { Exercise } from "@/types/exercise";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
@@ -29,7 +30,7 @@ import {
   WorkspaceDemoMobile,
   type WorkspaceMobileStep,
 } from "./workspace-demo-mobile";
-import { ragEditorTitle } from "./workspace-rag-utils";
+import { attemptBudgetLabel, ragEditorTitle } from "./workspace-rag-utils";
 import "../workspace.css";
 import "../workspace-figma.css";
 import "../workspace-rag-figma.css";
@@ -49,6 +50,7 @@ type WorkspaceRagFigmaShellProps = {
   onSubmit: (payload: Record<string, unknown>) => void;
   onValidityChange: (valid: boolean) => void;
   onValuesChange: (payload: Record<string, unknown>) => void;
+  /** Unused: the lab reads the shell's live form values (see `labConfig`). */
   labPayload?: Record<string, unknown>;
   briefCollapsed: boolean;
   onToggleBriefCollapsed: () => void;
@@ -102,7 +104,6 @@ export function WorkspaceRagFigmaShell({
   onSubmit,
   onValidityChange,
   onValuesChange,
-  labPayload,
   briefCollapsed,
   onToggleBriefCollapsed,
   resultsCollapsed,
@@ -125,6 +126,7 @@ export function WorkspaceRagFigmaShell({
   const [submitCount, setSubmitCount] = useState(0);
   const [history, setHistory] = useState<SubmissionHistoryItem[] | null>(null);
   const [formValues, setFormValues] = useState<Record<string, unknown> | null>(null);
+  const [attemptBudget, setAttemptBudget] = useState<AttemptBudget | null>(null);
   const lastGradedPayloadRef = useRef<string | null>(null);
 
   // Reload the learner's history on open and whenever a run settles.
@@ -150,6 +152,31 @@ export function WorkspaceRagFigmaShell({
       cancelled = true;
     };
   }, [slug, settledRunKey, demoMode]);
+
+  // Submissions left under the attempt policy: on open and whenever a submit
+  // settles (graded, failed or rejected with 429). Hidden if the call fails.
+  useEffect(() => {
+    if (demoMode || pending) {
+      return;
+    }
+    let cancelled = false;
+    workspaceApi
+      .attemptBudget(slug)
+      .then((result) => {
+        if (!cancelled) {
+          setAttemptBudget(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAttemptBudget(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, pending, demoMode]);
+  const budget = attemptBudgetLabel(attemptBudget);
 
   const submissions = useMemo(() => (history ? historyRows(history) : undefined), [history]);
   const submittedTotal = history ? history.length : submitCount;
@@ -186,6 +213,9 @@ export function WorkspaceRagFigmaShell({
   );
 
   const editorTitle = ragEditorTitle(exercise.submissionSchema);
+  // The learner's live config for the lab and budget meter. Before the form has
+  // mounted (mobile Lab step first) use the starter config, never `{}`.
+  const labConfig = formValues ?? formDefaults;
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 899px)");
@@ -212,11 +242,13 @@ export function WorkspaceRagFigmaShell({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [workTab, isMobileLayout, mobileStep]);
 
+  // Jump to Results only when a new grade arrives: a later submit that fails
+  // (e.g. 429) keeps the old grade and must leave the learner on Submit.
   useEffect(() => {
-    if (!pending && grade) {
+    if (grade) {
       setMobileStep((step) => (step === "submit" ? "results" : step));
     }
-  }, [pending, grade]);
+  }, [grade]);
 
   useEffect(() => {
     if (!pending && grade && formValues) {
@@ -256,14 +288,16 @@ export function WorkspaceRagFigmaShell({
           pending={pending}
           submitError={submitError}
           initialValues={formDefaults}
+          restoreValues={formValues}
           onSubmit={handleSubmit}
           onValidityChange={onValidityChange}
           onValuesChange={handleValuesChange}
           editorTitle={editorTitle}
+          budget={budget}
           nextAttempt={history ? history.length + 1 : pending ? submitCount : submitCount + 1}
           submittedAttempts={submittedTotal}
           showLab={showSimulationLab}
-          labPayload={labPayload ?? formDefaults}
+          labPayload={labConfig}
         />
       </div>
     );
@@ -338,7 +372,7 @@ export function WorkspaceRagFigmaShell({
                         {showSimulationLab && !("flag" in schemaProperties(exercise.submissionSchema)) ? (
                           <RagBudgetMeter
                             slug={slug}
-                            payload={labPayload ?? formDefaults}
+                            payload={labConfig}
                             gates={exercise.gates}
                           />
                         ) : null}
@@ -349,6 +383,7 @@ export function WorkspaceRagFigmaShell({
                           pending={pending}
                           error={submitError}
                           initialValues={formDefaults}
+                          restoreValues={formValues}
                           title={editorTitle}
                           onSubmit={handleSubmit}
                           onValidityChange={onValidityChange}
@@ -358,6 +393,7 @@ export function WorkspaceRagFigmaShell({
                           figmaAttempt={
                             history ? history.length + 1 : pending ? submitCount : submitCount + 1
                           }
+                          figmaBudget={budget}
                         />
                       </div>
                     }
@@ -367,7 +403,7 @@ export function WorkspaceRagFigmaShell({
                   showSimulationLab ? (
                     <RagLabPanel
                       slug={slug}
-                      payload={labPayload ?? formDefaults}
+                      payload={labConfig}
                       gates={exercise.gates}
                     />
                   ) : (

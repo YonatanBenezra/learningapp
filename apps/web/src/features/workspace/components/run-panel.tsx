@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelRight, ShieldCheck } from "lucide-react";
+import { AlertTriangle, PanelRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import type { FailingCase, Grade } from "@/types/grade";
@@ -113,6 +113,16 @@ export function RunPanel({
     run &&
     !grade &&
     (pending || run.status === "queued" || run.status === "running");
+  // A finished run with no grade (failed, over budget, or the grade fetch
+  // failed) would otherwise leave the figma results pane blank.
+  const figmaRunEnded =
+    figmaScorecard &&
+    (isRag || (isGuard && figmaGuardScorecard)) &&
+    run &&
+    !grade &&
+    !pending &&
+    run.status !== "queued" &&
+    run.status !== "running";
 
   return (
     <aside
@@ -241,9 +251,40 @@ export function RunPanel({
           <FigmaGuardScorecard run={run} grade={grade} />
         ) : grade ? (
           <Scorecard grade={grade} onboarding={onboarding} />
+        ) : figmaRunEnded && run ? (
+          <RunEndedState run={run} showShortcut={!mobileChrome} />
         ) : null}
       </div>
     </aside>
+  );
+}
+
+/** Results pane for a run that ended without a scorecard. */
+function RunEndedState({ run, showShortcut }: { run: Run; showShortcut: boolean }) {
+  const copy =
+    run.status === "killed_budget"
+      ? {
+          title: "Run stopped: over budget",
+          lead: "This run hit the exercise's time or cost budget before it finished, so it has no score. Try a lighter config and submit again.",
+        }
+      : run.status === "failed"
+        ? {
+            title: "Run failed",
+            lead: "The grader could not finish this run, so it has no score. Check your config and submit again.",
+          }
+        : {
+            title: "Grade not available",
+            lead: "The run finished but its grade could not be loaded. Submit again to get a scorecard.",
+          };
+  return (
+    <ScorecardEmptyState
+      title={copy.title}
+      lead={copy.lead}
+      detail={run.errorMessage ?? run.errorCode ?? null}
+      icon={<AlertTriangle strokeWidth={2.1} style={{ color: "var(--color-status-fail)" }} />}
+      shortcutLabel={showShortcut ? "⌘ ↵ to submit again" : null}
+      alert
+    />
   );
 }
 

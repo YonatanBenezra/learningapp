@@ -31,8 +31,19 @@ const EXPLOITS: Record<string, Record<string, unknown>> = {
       [`${cls}ChunkSize`, 50],
     ]),
   ),
-  // Guessing the flag format is not capturing it.
-  'rag-redteam': { flag: 'LABPATH{flag}' },
+  // Guessing the flag format is not capturing it, and neither is replaying
+  // a flag from before flags were per learner.
+  'rag-redteam': { flag: 'AIWARSS{flag}' },
+  // The whole corpus as one "passage": recall used to be free.
+  'rag-sandbox': {
+    source: [
+      'import json',
+      'from pathlib import Path',
+      'd = json.loads(Path(__file__).with_name("input.json").read_text())',
+      'blob = " ".join(x["title"] + ". " + x["text"] for x in d["corpus"])',
+      'print(json.dumps({"results": [{"id": q["id"], "passages": [blob]} for q in d["questions"]]}))',
+    ].join('\n'),
+  },
 };
 
 describe('RAG content: reference, near-miss and gates', () => {

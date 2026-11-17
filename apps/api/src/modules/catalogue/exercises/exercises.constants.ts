@@ -29,46 +29,59 @@ export const SANDBOX_RAG_SLUGS = new Set([
   'rag-029-adv-python-retriever',
 ]);
 
-export const SANDBOX_REFERENCE_SOURCE = `import json
+/** Sentence-level retriever: every passage is a span of one doc, within budget. */
+export const SANDBOX_REFERENCE_SOURCE = String.raw`import json
+import math
+import re
 from pathlib import Path
 
 STOP = {
     "a", "an", "the", "is", "are", "of", "to", "in", "on", "for", "and", "or",
-    "how", "what", "when", "where", "who", "which", "must", "may",
+    "how", "what", "when", "where", "who", "which", "must", "may", "do", "does",
+    "be", "by", "with", "it", "at", "as", "can",
 }
+TOP_N = 3
+
 
 def tokens(text):
-    out = []
-    word = []
-    for ch in text.lower():
-        if ch.isalnum():
-            word.append(ch)
-        else:
-            if word:
-                tok = "".join(word)
-                if len(tok) > 1 and tok not in STOP:
-                    out.append(tok)
-                word = []
-    if word:
-        tok = "".join(word)
-        if len(tok) > 1 and tok not in STOP:
-            out.append(tok)
-    return out
+    return [t for t in re.findall(r"[a-z0-9]+", text.lower()) if len(t) > 1 and t not in STOP]
+
 
 data = json.loads(Path(__file__).with_name("input.json").read_text())
-docs = []
+
+# Sentence-level passages: each one is a verbatim span of a single document,
+# small enough to keep the context budget.
+passages = []
 for doc in data["corpus"]:
     body = f"{doc.get('title', '')}. {doc.get('text', '')}".strip()
-    docs.append((set(tokens(body)), body))
+    title = set(tokens(doc.get("title", "")))
+    for sentence in re.split(r"(?<=[.!?])\s+", body):
+        sentence = sentence.strip()
+        if sentence:
+            passages.append((sentence, set(tokens(sentence)), title))
+
+df = {}
+for _, toks, _ in passages:
+    for tok in toks:
+        df[tok] = df.get(tok, 0) + 1
+n = len(passages)
+
+
+def idf(tok):
+    return math.log((n + 1) / (df.get(tok, 0) + 1)) + 1
+
 
 results = []
 for item in data["questions"]:
-    qset = set(tokens(item["question"]))
-    ranked = []
-    for dtoks, body in docs:
-        ranked.append((len(qset & dtoks), body))
-    ranked.sort(key=lambda row: row[0], reverse=True)
-    results.append({"id": item["id"], "passages": [body for _, body in ranked[:5]]})
+    query = set(tokens(item["question"]))
+    scored = []
+    for text, toks, title in passages:
+        score = sum(idf(t) for t in query & toks)
+        # A matching document title is weak evidence the sentence is on topic.
+        score += 0.5 * sum(idf(t) for t in query & title)
+        scored.append((score, text))
+    scored.sort(key=lambda row: row[0], reverse=True)
+    results.append({"id": item["id"], "passages": [text for _, text in scored[:TOP_N]]})
 
 print(json.dumps({"results": results}))
 `;
@@ -209,7 +222,7 @@ export const R2_NEAR_MISS_PAYLOAD = {
 
 export const R3_REFERENCE_PAYLOAD = {
   generationPrompt:
-    "Answer only from the retrieved context. Cite each used source as [chunk:ID] using the retrieved chunk id. If the answer is not in the retrieved context, refuse with I don't know.",
+    "Answer only from the retrieved context. After each claim, cite the chunk it came from in exactly this format: [chunk:<id>], using the id shown in the context, for example [chunk:pto:0]. Never cite in any other format and never cite an id that is not in the context. If the context does not contain the answer, reply exactly: I don't know.",
 };
 
 export const R3_NEAR_MISS_PAYLOAD = {

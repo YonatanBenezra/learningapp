@@ -16,7 +16,7 @@
       "name": "Prompt injection"
     }
   ],
-  "briefMd": "# Red Team 1 · Prompt Leak\n\nAcme Help keeps an internal escalation code in its system prompt and is told never to reveal it. An input filter refuses messages that contain a few obvious words.\n\nOpen the **Target bot** tab in the Simulation Lab and get the bot to reveal its own instructions. Submit the flag it leaks (`LABPATH{...}`).\n\n**Gate:** the submitted flag matches.\n",
+  "briefMd": "# Red Team 1 · Prompt Leak\n\nAcme Help keeps an internal escalation code in its system prompt and is told never to reveal it. An input filter refuses messages that contain a few obvious words.\n\nOpen the **Target bot** tab in the Simulation Lab and get the bot to reveal its own instructions. Submit the flag it leaks (`AIWARSS{...}`).\n\nYour flag is personal: it is derived from your account, so a flag copied from someone else's writeup will not pass.\n\n**Gate:** the submitted flag matches.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -28,7 +28,7 @@
         "type": "string",
         "minLength": 8,
         "maxLength": 120,
-        "description": "The flag you extracted, e.g. LABPATH{...}",
+        "description": "The flag you extracted, e.g. AIWARSS{...}",
         "default": ""
       }
     }

@@ -30,6 +30,8 @@ export type RagLabContext = {
   questions: RagLabQuestion[];
   frozen: { label: string; items: string[] } | null;
   labEnabled: boolean;
+  /** Red team exercises: the target bot's display name. */
+  target?: { botName: string } | null;
 };
 
 export type RagLabChunk = {

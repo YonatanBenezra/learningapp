@@ -1,3 +1,5 @@
+import type { AttemptBudget } from "@/types/attempt";
+
 export function isRagSandboxSchema(schema: unknown) {
   if (!schema || typeof schema !== "object") {
     return false;
@@ -44,4 +46,33 @@ export function ragEditorTitle(schema: unknown) {
     return "Retriever budget";
   }
   return "Chunking config";
+}
+
+/**
+ * "N of M submissions left · resets HH:MM" for the submit footer, or null when
+ * the exercise has no limit (or the budget could not be loaded).
+ */
+export function attemptBudgetLabel(
+  budget: AttemptBudget | null,
+  now = new Date(),
+): { label: string; exhausted: boolean } | null {
+  if (!budget || budget.max == null || budget.remaining == null) {
+    return null;
+  }
+  const left = `${budget.remaining} of ${budget.max} submissions left`;
+  const exhausted = budget.remaining <= 0;
+  const resets = budget.resetsAt ? new Date(budget.resetsAt) : null;
+  if (!resets || Number.isNaN(resets.getTime())) {
+    return { label: left, exhausted };
+  }
+  const time = resets.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+  const when =
+    resets.toDateString() === now.toDateString()
+      ? time
+      : `${resets.toLocaleDateString([], { weekday: "short" })} ${time}`;
+  return { label: `${left} · resets ${when}`, exhausted };
 }

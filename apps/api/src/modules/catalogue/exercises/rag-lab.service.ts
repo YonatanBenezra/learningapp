@@ -4,7 +4,19 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { Env } from '../../../core/config/env.schema';
+import {
+  ModelGateway,
+  ModelUnavailableError,
+} from '../../grading/gateway/model.gateway';
+import {
+  citedChunkIds,
+  isRefusal,
+} from '../../grading/harnesses/rag/grounded-generate';
+import { r3UserMessage } from '../../grading/harnesses/rag/r3.grade';
 import type { CorpusDoc } from '../../grading/harnesses/rag/chunking';
 import {
   estimateRagLabWithCorpus,
@@ -18,6 +30,7 @@ import {
 import { PrismaService } from '../../../core/prisma/prisma.service';
 import {
   parseRedTeamScenario,
+  redTeamScenarioFor,
   runTargetBot,
   type TargetReply,
 } from '../../grading/harnesses/rag/redteam';
@@ -39,11 +52,17 @@ export type RagLabContext = {
   questions: RagLabQuestion[];
   frozen: ReturnType<typeof ragLabFrozen>;
   labEnabled: boolean;
+  /** Red team only: public facts about the target bot (never its secrets). */
+  target: { botName: string } | null;
 };
 
 @Injectable()
 export class RagLabService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly gateway: ModelGateway,
+    private readonly config: ConfigService<Env, true>,
+  ) {}
 
   async getContext(slug: string): Promise<RagLabContext> {
     const exercise = await this.loadExercise(slug);
@@ -62,7 +81,34 @@ export class RagLabService {
       questions: publicQuestions(exercise.publicSample),
       frozen: ragLabFrozen(slug),
       labEnabled,
+      target: archetype === 'redteam' ? await this.targetInfo(exercise) : null,
     };
+  }
+
+  private async targetInfo(exercise: {
+    slug: string;
+    version: number;
+  }): Promise<{ botName: string }> {
+    const raw = await this.readScenario(exercise);
+    return { botName: parseRedTeamScenario(raw).botName };
+  }
+
+  private async readScenario(exercise: {
+    slug: string;
+    version: number;
+  }): Promise<unknown> {
+    const assets = await this.prisma.exerciseAsset.findUnique({
+      where: {
+        exerciseSlug_exerciseVersion: {
+          exerciseSlug: exercise.slug,
+          exerciseVersion: exercise.version,
+        },
+      },
+    });
+    if (!assets?.hiddenEvalUri) {
+      throw new NotFoundException('Target bot is not configured');
+    }
+    return JSON.parse(await readAsset(assets.hiddenEvalUri)) as unknown;
   }
 
   async preview(
@@ -83,8 +129,9 @@ export class RagLabService {
       context.questions[0]?.question ||
       'How many PTO days do full-time staff get each year?';
 
+    let preview: ReturnType<typeof previewRagLabWithCorpus>;
     try {
-      return previewRagLabWithCorpus(
+      preview = previewRagLabWithCorpus(
         slug,
         payload,
         selected,
@@ -100,6 +147,36 @@ export class RagLabService {
           ? error.message
           : 'Invalid RAG lab preview payload';
       throw new BadRequestException(message);
+    }
+    if (preview.archetype !== 'r3') {
+      return preview;
+    }
+    // R3: the same live model call the grader makes for this question.
+    const rawPrompt = (payload as { generationPrompt?: unknown })
+      .generationPrompt;
+    const generationPrompt = typeof rawPrompt === 'string' ? rawPrompt : '';
+    try {
+      const { text } = await this.gateway.generate({
+        runId: null,
+        system: generationPrompt,
+        user: r3UserMessage(
+          selected,
+          preview.retrieved.map((hit) => ({ id: hit.chunkId, text: hit.text })),
+        ),
+      });
+      return {
+        ...preview,
+        generation: text,
+        citations: citedChunkIds(text),
+        refused: isRefusal(text),
+      };
+    } catch (error) {
+      if (error instanceof ModelUnavailableError) {
+        throw new ServiceUnavailableException(
+          'AI generation is not configured on this server.',
+        );
+      }
+      throw error;
     }
   }
 
@@ -127,27 +204,25 @@ export class RagLabService {
     }
   }
 
-  /** Talk to a red team exercise's vulnerable bot. The secrets stay server-side. */
-  async target(slug: string, message: string): Promise<TargetReply> {
+  /**
+   * Talk to a red team exercise's vulnerable bot. The secrets stay server-side,
+   * and the flag it can leak is the caller's own (derived from their user id).
+   */
+  async target(
+    slug: string,
+    message: string,
+    userId: string,
+  ): Promise<TargetReply> {
     if (!isRagRedTeamSlug(slug)) {
       throw new BadRequestException('This exercise has no target bot');
     }
     const exercise = await this.loadExercise(slug);
-    const assets = await this.prisma.exerciseAsset.findUnique({
-      where: {
-        exerciseSlug_exerciseVersion: {
-          exerciseSlug: exercise.slug,
-          exerciseVersion: exercise.version,
-        },
-      },
+    const scenario = redTeamScenarioFor(await this.readScenario(exercise), {
+      secret: this.config.get('REDTEAM_FLAG_SECRET', { infer: true }),
+      userId,
+      slug: exercise.slug,
     });
-    if (!assets?.hiddenEvalUri || !assets.corpusUri) {
-      throw new NotFoundException('Target bot is not configured');
-    }
-    const scenario = parseRedTeamScenario(
-      JSON.parse(await readAsset(assets.hiddenEvalUri)) as unknown,
-    );
-    const docs = JSON.parse(await readAsset(assets.corpusUri)) as CorpusDoc[];
+    const docs = await this.loadCorpus(slug);
     return runTargetBot(scenario, docs, message);
   }
 

@@ -16,6 +16,7 @@ import type { Exercise } from "@/types/exercise";
 import { cn } from "@/lib/utils";
 import type { FigmaBriefContent, FigmaBriefSubmission } from "./brief-panel";
 import { configChanges, gateDeltas } from "../submission-diff";
+import { BriefMarkdown } from "./brief-markdown";
 import { CostQualityChart } from "./cost-quality-chart";
 
 const DIFFICULTY_LABELS = { E: "Easy", M: "Medium", H: "Hard" } as const;
@@ -128,6 +129,15 @@ export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
           </p>
         </div>
       </section>
+
+      {content.fullBriefMd ? (
+        <section>
+          <h2 className="mb-1.5 text-[0.625rem] font-bold uppercase tracking-[0.06em] text-lp-muted">
+            Full brief
+          </h2>
+          <BriefMarkdown text={content.fullBriefMd} compact />
+        </section>
+      ) : null}
 
       <section className="rounded-lg border border-lp-border bg-[color-mix(in_srgb,var(--color-ink)_4%,var(--color-card))]">
         <button

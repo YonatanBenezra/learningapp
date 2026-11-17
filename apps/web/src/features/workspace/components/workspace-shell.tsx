@@ -234,8 +234,6 @@ export function WorkspaceShell({
     abortRef.current = abort;
     setPending(true);
     setSubmitError(null);
-    setGrade(null);
-    setRun(null);
     if (resultsCollapsed) {
       setResultsCollapsed(false);
       window.localStorage.setItem("lp-ws-results-collapsed", "0");
@@ -243,9 +241,23 @@ export function WorkspaceShell({
     try {
       const attempt = await workspaceApi.startAttempt(slug);
       const queued = await workspaceApi.submit(attempt.id, payload);
+      if (abort.signal.aborted) {
+        return;
+      }
+      // Keep the previous scorecard until the new run exists, so a rejected
+      // submit (e.g. 429 from the attempt policy) leaves the last result visible.
+      setGrade(null);
+      setRun({ id: queued.runId, status: queued.status });
       const finished = await waitForRun(
         queued.runId,
-        setRun,
+        (next) => {
+          setRun(next);
+          if (next.status !== "queued") {
+            setSubmitError((current) =>
+              current === WORKER_OFFLINE_MESSAGE ? null : current,
+            );
+          }
+        },
         abort.signal,
         () => {
           setSubmitError(WORKER_OFFLINE_MESSAGE);

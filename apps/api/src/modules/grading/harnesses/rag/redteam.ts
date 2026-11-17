@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto';
 import { estimateTokens } from '../../gateway/pricing';
 import { chunkCorpus, type CorpusDoc } from './chunking';
 import { retrieveRanked, type RankedChunk } from './retrieve';
@@ -15,7 +16,37 @@ export type RedTeamLevel = 'prompt-leak' | 'poisoned-doc' | 'tenant-leak';
 /** A doc in the bot's index; only `tenant` docs equal to the learner's are visible. */
 export type TenantDoc = CorpusDoc & { tenant: string };
 
+/** Where a scenario's text puts the learner's personal flag. */
+export const FLAG_PLACEHOLDER = '{{FLAG}}';
+
+/** Brand prefix for every captured flag. */
+export const FLAG_PREFIX = 'AIWARSS';
+
+/**
+ * Per-learner flag: `AIWARSS{<tag>_<12 hex of HMAC(secret, userId:slug)>}`.
+ * Flags never live in git, and one learner's flag fails for everyone else, so
+ * a shared writeup does not capture the level.
+ */
+export function redTeamFlag(
+  secret: string,
+  tag: string,
+  userId: string,
+  slug: string,
+): string {
+  const digest = createHmac('sha256', secret)
+    .update(`${userId}:${slug}`)
+    .digest('hex')
+    .slice(0, 12);
+  return `${FLAG_PREFIX}{${tag}_${digest}}`;
+}
+
 /** Stored in eval_hidden.json: never served by the catalogue or lab APIs. */
+export type RedTeamScenarioTemplate = Omit<RedTeamScenario, 'flag'> & {
+  /** Readable part of the flag, e.g. `pr0mpt_l34k`. */
+  flagTag: string;
+};
+
+/** A scenario with the learner's flag substituted into its secrets. */
 export type RedTeamScenario = {
   canary: string;
   level: RedTeamLevel;
@@ -223,12 +254,13 @@ export function gradeRedTeam(
   };
 }
 
-export function parseRedTeamScenario(raw: unknown): RedTeamScenario {
-  const value = raw as Partial<RedTeamScenario> | null;
+export function parseRedTeamScenario(raw: unknown): RedTeamScenarioTemplate {
+  const value = raw as Partial<RedTeamScenarioTemplate> | null;
   if (
     !value ||
     typeof value !== 'object' ||
-    typeof value.flag !== 'string' ||
+    typeof value.flagTag !== 'string' ||
+    !/^[a-z0-9_]+$/i.test(value.flagTag) ||
     typeof value.level !== 'string' ||
     typeof value.systemPrompt !== 'string' ||
     typeof value.tenant !== 'string'
@@ -238,7 +270,7 @@ export function parseRedTeamScenario(raw: unknown): RedTeamScenario {
   return {
     canary: value.canary ?? '',
     level: value.level,
-    flag: value.flag,
+    flagTag: value.flagTag,
     botName: value.botName ?? 'Support bot',
     tenant: value.tenant,
     systemPrompt: value.systemPrompt,
@@ -247,4 +279,46 @@ export function parseRedTeamScenario(raw: unknown): RedTeamScenario {
     privilegedDoc: value.privilegedDoc,
     foreignDocs: value.foreignDocs,
   };
+}
+
+/** Substitutes the learner's flag wherever the scenario text holds the placeholder. */
+export function resolveRedTeamScenario(
+  template: RedTeamScenarioTemplate,
+  flag: string,
+): RedTeamScenario {
+  const fill = (text: string) => text.split(FLAG_PLACEHOLDER).join(flag);
+  return {
+    canary: template.canary,
+    level: template.level,
+    botName: template.botName,
+    tenant: template.tenant,
+    blockedWords: template.blockedWords,
+    blockDirectInjection: template.blockDirectInjection,
+    flag,
+    systemPrompt: fill(template.systemPrompt),
+    privilegedDoc: template.privilegedDoc
+      ? { ...template.privilegedDoc, text: fill(template.privilegedDoc.text) }
+      : undefined,
+    foreignDocs: template.foreignDocs?.map((doc) => ({
+      ...doc,
+      text: fill(doc.text),
+    })),
+  };
+}
+
+/** Parse a stored scenario and resolve it for one learner. */
+export function redTeamScenarioFor(
+  raw: unknown,
+  identity: { secret: string; userId: string; slug: string },
+): RedTeamScenario {
+  const template = parseRedTeamScenario(raw);
+  return resolveRedTeamScenario(
+    template,
+    redTeamFlag(
+      identity.secret,
+      template.flagTag,
+      identity.userId,
+      identity.slug,
+    ),
+  );
 }

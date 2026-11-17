@@ -5,6 +5,7 @@ import { RedisModule } from './core/redis/redis.module';
 import { QueueModule } from './core/queue/queue.module';
 import { LoggerModule } from './core/logger/logger.module';
 import { GradingModule } from './modules/grading/grading.module';
+import { LlmModule } from './modules/llm/llm.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { GradingModule } from './modules/grading/grading.module';
     PrismaModule,
     RedisModule,
     QueueModule,
+    LlmModule,
     GradingModule,
   ],
 })

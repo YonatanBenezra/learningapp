@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Phase 6 · Custom Retriever on the Full Policy Corpus\n\nThe same sandbox task on the larger 24-document corpus, with a stricter bar: almost every question must land its answer in your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Gate:** recall@5 ≥ 0.90 on the hidden set.\n",
+  "briefMd": "# Phase 6 · Custom Retriever on the Full Policy Corpus\n\nThe same sandbox task on the larger 24-document corpus, with a stricter bar: almost every question must land its answer in your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Concatenated or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget, so whole documents are usually too expensive: split them into smaller passages and rank those.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 150, and every passage comes from the corpus.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -33,7 +33,8 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.9
+    "recall_at_5": 0.9,
+    "mean_context_tokens": 150
   },
   "budget": {
     "max_model_calls": 0,
@@ -48,6 +49,20 @@
       "metric": "recall@5",
       "op": "gte",
       "value": 0.9
+    },
+    {
+      "id": "mean-context-tokens",
+      "class": "A",
+      "metric": "mean_context_tokens",
+      "op": "lte",
+      "value": 150
+    },
+    {
+      "id": "passages-from-corpus",
+      "class": "A",
+      "metric": "passages_from_corpus",
+      "op": "eq",
+      "value": 1
     }
   ],
   "feedback": {

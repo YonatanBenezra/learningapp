@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ApiError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { formatGateNumber, formatGateThreshold, gateMetricLabel, gradedGates } from "../gates";
-import { ragLabApi } from "../rag-lab/rag-lab-api";
+import { ragLabApi, ragLabErrorMessage } from "../rag-lab/rag-lab-api";
 import type { RagLabArchetype, RagLabEstimate } from "../rag-lab/rag-lab-types";
 import "../rag-lab.css";
 
@@ -32,6 +33,8 @@ type RagBudgetMeterProps = {
  */
 export function RagBudgetMeter({ slug, payload, gates }: RagBudgetMeterProps) {
   const [estimate, setEstimate] = useState<RagLabEstimate | null>(null);
+  /** Set for failures worth telling the learner about (sign-in, rate limit, outage). */
+  const [failure, setFailure] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
   const payloadKey = JSON.stringify(payload);
 
@@ -44,11 +47,18 @@ export function RagBudgetMeter({ slug, payload, gates }: RagBudgetMeterProps) {
           if (!cancelled) {
             setEstimate(result);
             setFailed(false);
+            setFailure(null);
           }
         })
-        .catch(() => {
+        .catch((caught: unknown) => {
           if (!cancelled) {
             setFailed(true);
+            // A half-typed config (400) stays quiet; the form validates on submit.
+            const visible =
+              !(caught instanceof ApiError) || [401, 429, 503].includes(caught.status);
+            setFailure(
+              visible ? ragLabErrorMessage(caught, "The public estimate is unavailable.") : null,
+            );
           }
         });
     }, 400);
@@ -57,6 +67,19 @@ export function RagBudgetMeter({ slug, payload, gates }: RagBudgetMeterProps) {
       window.clearTimeout(timer);
     };
   }, [slug, payloadKey]);
+
+  if (failed && failure) {
+    return (
+      <section className="lp-rag-meter" aria-label="Public estimate for the current config">
+        <p className="lp-rag-meter-title">
+          Public estimate <span>· not graded</span>
+        </p>
+        <p className="lp-rag-meter-error" role="status">
+          {failure}
+        </p>
+      </section>
+    );
+  }
 
   if (failed || !estimate || estimate.questions === 0) {
     return null;

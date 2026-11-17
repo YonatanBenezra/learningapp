@@ -54,6 +54,8 @@ export type FailingCase = {
   question: string;
   goldSpan?: string;
   retrieved?: string[];
+  /** R3: what the learner's prompt actually made the model answer. */
+  answer?: string;
   note?: string;
 };
 

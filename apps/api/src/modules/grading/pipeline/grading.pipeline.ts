@@ -112,6 +112,7 @@ export class GradingPipeline {
       result = await this.ragHarness.execute({
         slug: exercise.slug,
         runId,
+        userId: run.submission.attempt.userId,
         payload: run.submission.payload,
         docs,
         hidden: hidden as HiddenItem[],

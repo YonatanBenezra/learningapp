@@ -16,7 +16,7 @@
       "name": "Prompt injection"
     }
   ],
-  "briefMd": "# Red Team 2 · Poisoned Document\n\nDirect prompt injection is filtered now. But the bot treats text inside retrieved documents as instructions, and an outsider edited one note in Acme's knowledge base.\n\nRead the **Corpus** tab, find the poisoned note, and ask the **Target bot** a question that pulls that note into its context. The bot will leak a privileged runbook that contains the flag.\n\n**Gate:** the submitted flag matches.\n",
+  "briefMd": "# Red Team 2 · Poisoned Document\n\nDirect prompt injection is filtered now. But the bot treats text inside retrieved documents as instructions, and an outsider edited one note in Acme's knowledge base.\n\nRead the **Corpus** tab, find the poisoned note, and ask the **Target bot** a question that pulls that note into its context. The bot will leak a privileged runbook that contains the flag.\n\nYour flag is personal: it is derived from your account, so a flag copied from someone else's writeup will not pass.\n\n**Gate:** the submitted flag matches.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -28,7 +28,7 @@
         "type": "string",
         "minLength": 8,
         "maxLength": 120,
-        "description": "The flag you extracted, e.g. LABPATH{...}",
+        "description": "The flag you extracted, e.g. AIWARSS{...}",
         "default": ""
       }
     }

@@ -193,32 +193,100 @@ export async function listSubmissionHistory(
   });
 }
 
+/** Where the learner stands against the exercise's rolling submission limit. */
+export type AttemptBudget = {
+  /** Null when the exercise has no submission limit. */
+  max: number | null;
+  windowHours: number;
+  used: number;
+  remaining: number | null;
+  /** When the oldest counted submission leaves the window (frees a slot). */
+  resetsAt: Date | null;
+};
+
+function attemptPolicyOf(exercise: Exercise): {
+  max: number | null;
+  hours: number;
+} {
+  const policy =
+    exercise.attemptPolicy && typeof exercise.attemptPolicy === 'object'
+      ? (exercise.attemptPolicy as Record<string, unknown>)
+      : null;
+  return {
+    max:
+      typeof policy?.maxSubmissions === 'number' ? policy.maxSubmissions : null,
+    hours:
+      typeof policy?.cooldownHours === 'number' ? policy.cooldownHours : 24,
+  };
+}
+
+export async function attemptBudget(
+  prisma: PrismaService,
+  userId: string,
+  exercise: Exercise,
+  now = new Date(),
+): Promise<AttemptBudget> {
+  const { max, hours } = attemptPolicyOf(exercise);
+  if (max === null) {
+    return {
+      max,
+      windowHours: hours,
+      used: 0,
+      remaining: null,
+      resetsAt: null,
+    };
+  }
+  const windowMs = hours * 60 * 60 * 1000;
+  const since = new Date(now.getTime() - windowMs);
+  const where = {
+    createdAt: { gte: since },
+    attempt: { userId, exerciseId: exercise.id },
+  };
+  const [used, oldest] = await Promise.all([
+    prisma.submission.count({ where }),
+    prisma.submission.findFirst({
+      where,
+      orderBy: { createdAt: 'asc' },
+      select: { createdAt: true },
+    }),
+  ]);
+  return {
+    max,
+    windowHours: hours,
+    used,
+    remaining: Math.max(0, max - used),
+    resetsAt: oldest ? new Date(oldest.createdAt.getTime() + windowMs) : null,
+  };
+}
+
+/** Budget for the latest published version of an exercise (workspace counter). */
+export async function attemptBudgetForSlug(
+  prisma: PrismaService,
+  userId: string,
+  slug: string,
+): Promise<AttemptBudget> {
+  const exercise = await prisma.exercise.findFirst({
+    where: { slug, isPublished: true },
+    orderBy: { version: 'desc' },
+  });
+  if (!exercise) {
+    throw new NotFoundException();
+  }
+  return attemptBudget(prisma, userId, exercise);
+}
+
 async function assertAttemptPolicy(
   prisma: PrismaService,
   userId: string,
   exercise: Exercise,
 ): Promise<void> {
-  const policy =
-    exercise.attemptPolicy && typeof exercise.attemptPolicy === 'object'
-      ? (exercise.attemptPolicy as Record<string, unknown>)
-      : null;
-  const max =
-    typeof policy?.maxSubmissions === 'number' ? policy.maxSubmissions : null;
-  const hours =
-    typeof policy?.cooldownHours === 'number' ? policy.cooldownHours : 24;
-  if (max === null) {
-    return;
-  }
-  const since = new Date(Date.now() - hours * 60 * 60 * 1000);
-  const count = await prisma.submission.count({
-    where: {
-      createdAt: { gte: since },
-      attempt: { userId, exerciseId: exercise.id },
-    },
-  });
-  if (count >= max) {
+  const budget = await attemptBudget(prisma, userId, exercise);
+  if (budget.max !== null && budget.used >= budget.max) {
+    const resets = budget.resetsAt
+      ? ` Next slot opens at ${budget.resetsAt.toISOString()}.`
+      : '';
     throw new HttpException(
-      `Attempt policy: ${max} submissions then ${hours}h cooldown`,
+      `Attempt policy: ${budget.max} submissions then ${budget.windowHours}h cooldown.${resets}`,
       HttpStatus.TOO_MANY_REQUESTS,
     );
   }

@@ -10,11 +10,6 @@ import {
 } from '../../../catalogue/exercises/exercises.constants';
 import { chunkCorpus, type Chunk, type CorpusDoc } from './chunking';
 import {
-  citedChunkIds,
-  groundedGenerate,
-  isRefusal,
-} from './grounded-generate';
-import {
   parseR1Payload,
   parseR2Payload,
   parseR3Payload,
@@ -163,8 +158,6 @@ export function previewRagLabWithCorpus(
   let retrieved: RankedChunk[];
   let baseline: RankedChunk[] | null = null;
   let generation: string | null = null;
-  let citations: string[] = [];
-  let refused = false;
 
   if (archetype === 'r5') {
     const routed = routeR5(
@@ -190,17 +183,16 @@ export function previewRagLabWithCorpus(
     chunks = chunkForR2(docs, parsed);
     retrieved = retrieveForR2(question, chunks, parsed);
   } else if (archetype === 'r3') {
-    const parsed = parseR3Payload(payload);
     chunks = chunkCorpus(
       docs,
       R3_FROZEN.chunkSize,
       R3_FROZEN.overlap,
       R3_FROZEN.splitStrategy,
     );
+    // Validates the payload; the answer itself comes from the live model
+    // (RagLabService.preview), the same call the grader makes.
+    parseR3Payload(payload);
     retrieved = frozenRetrieve(question, chunks);
-    generation = groundedGenerate(parsed.generationPrompt, retrieved);
-    citations = citedChunkIds(generation);
-    refused = isRefusal(generation);
   } else if (archetype === 'r4') {
     const parsed = parseR4Payload(payload);
     chunks = chunkCorpus(
@@ -212,7 +204,7 @@ export function previewRagLabWithCorpus(
     baseline = r4Baseline(question, chunks);
     retrieved = rerankForR4(question, chunks, parsed);
     if (parsed.queryRewritePrompt.trim()) {
-      generation = `[Query rewrite prompt set — grading uses rewritten queries on submit.]`;
+      generation = `[Rewrite prompt set: each graded question costs 1 model call. In this exercise the rewritten query does not change the ranking.]`;
     }
   } else {
     const parsed = parseR1Payload(payload);
@@ -243,8 +235,8 @@ export function previewRagLabWithCorpus(
     retrieved: retrievedHits,
     baseline: baseline ? hitsToDto(baseline, gold) : null,
     generation,
-    citations,
-    refused,
+    citations: [],
+    refused: false,
     contextTokens,
     answerFound: gold
       ? retrievedHits.some((hit) => hit.containsAnswer === true)

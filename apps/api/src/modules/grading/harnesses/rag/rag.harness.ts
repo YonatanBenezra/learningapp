@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { Env } from '../../../../core/config/env.schema';
 import {
   isRagR5Slug,
   isRagRedTeamSlug,
@@ -23,13 +25,15 @@ import { gradeR5, parseR5Payload } from './r5.grade';
 import {
   gradeRedTeam,
   parseRedTeamPayload,
-  parseRedTeamScenario,
+  redTeamScenarioFor,
 } from './redteam';
 import type { HiddenItem, PublicItem, RagGradeResult } from './rag.types';
 
 export type RagExecuteInput = {
   slug: string;
   runId: string;
+  /** Learner who submitted; red team flags are derived per learner. */
+  userId: string;
   payload: unknown;
   docs: CorpusDoc[];
   hidden: HiddenItem[];
@@ -40,7 +44,10 @@ export type RagExecuteInput = {
 
 @Injectable()
 export class RagHarness {
-  constructor(private readonly gateway: ModelGateway) {}
+  constructor(
+    private readonly gateway: ModelGateway,
+    private readonly config: ConfigService<Env, true>,
+  ) {}
 
   async execute(input: RagExecuteInput): Promise<RagGradeResult> {
     const publicItems = input.publicItems ?? [];
@@ -48,7 +55,11 @@ export class RagHarness {
       // The hidden asset is the scenario object (flag, secrets), not a Q/A list.
       return gradeRedTeam(
         parseRedTeamPayload(input.payload),
-        parseRedTeamScenario(input.hidden),
+        redTeamScenarioFor(input.hidden, {
+          secret: this.config.get('REDTEAM_FLAG_SECRET', { infer: true }),
+          userId: input.userId,
+          slug: input.slug,
+        }),
       );
     }
     if (isRagR5Slug(input.slug)) {
@@ -84,8 +95,16 @@ export class RagHarness {
         input.docs,
         input.hidden,
         publicItems,
-        this.gateway,
-        input.runId,
+        // Real model, billed to this run; a missing provider fails the run
+        // instead of silently grading against a keyword simulator.
+        async ({ system, user }) =>
+          (
+            await this.gateway.generate({
+              runId: input.runId,
+              system,
+              user,
+            })
+          ).text,
         input.gates,
       );
     }

@@ -22,6 +22,11 @@ export function citedChunkIds(text: string): string[] {
   );
 }
 
+/**
+ * Keyword-driven stand-in for a model, used ONLY by offline content checks and
+ * unit tests that must run without network access. Graded runs and the lab
+ * call a real model; never wire this into a learner-facing path.
+ */
 export function groundedGenerate(
   prompt: string,
   retrieved: RankedChunk[],

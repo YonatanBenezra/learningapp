@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { InfoTip } from "./info-tip";
 import { RagTargetConsole } from "./rag-target-console";
-import { ragLabApi } from "../rag-lab/rag-lab-api";
+import { ragLabApi, ragLabErrorMessage } from "../rag-lab/rag-lab-api";
 import {
   CHUNK_ID_TIP,
   LAB_TAB_LABELS,
@@ -66,6 +67,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
   const [loading, setLoading] = useState(true);
   const [previewing, setPreviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** R3 only: which config + question the shown preview was generated for. */
+  const [previewedKey, setPreviewedKey] = useState<string | null>(null);
+  const previewRequestRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -79,9 +83,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
           setQuestionId(result.questions[0]?.id ?? "");
         }
       })
-      .catch(() => {
+      .catch((caught: unknown) => {
         if (!cancelled) {
-          setError("Could not load the RAG lab for this exercise.");
+          setError(ragLabErrorMessage(caught, "Could not load the RAG lab for this exercise."));
         }
       })
       .finally(() => {
@@ -107,8 +111,18 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
     return picked?.question ?? "";
   }, [context, questionId, customQuestion]);
 
+  // R3 previews call a real model (slow, rate limited, can be down), so they
+  // run on request instead of on every config edit.
+  const manualPreview = context?.archetype === "r3";
+  const previewKey = JSON.stringify([payload, activeQuestion, activeClass]);
+
   useEffect(() => {
-    if (!context?.labEnabled || !activeQuestion || context.archetype === "redteam") {
+    if (
+      !context?.labEnabled ||
+      !activeQuestion ||
+      context.archetype === "redteam" ||
+      context.archetype === "r3"
+    ) {
       return;
     }
     let cancelled = false;
@@ -125,11 +139,7 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
         .catch((caught: unknown) => {
           if (!cancelled) {
             setPreview(null);
-            setError(
-              caught instanceof Error
-                ? caught.message
-                : "Preview failed — check your config fields.",
-            );
+            setError(ragLabErrorMessage(caught, "Preview failed — check your config fields."));
           }
         })
         .finally(() => {
@@ -143,6 +153,31 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
       clearTimeout(timer);
     };
   }, [slug, payload, activeQuestion, activeClass, context?.labEnabled, context?.archetype]);
+
+  async function generatePreview() {
+    if (!activeQuestion || previewing) {
+      return;
+    }
+    const request = ++previewRequestRef.current;
+    const key = previewKey;
+    setPreviewing(true);
+    setError(null);
+    try {
+      const result = await ragLabApi.preview(slug, payload, activeQuestion, activeClass);
+      if (request === previewRequestRef.current) {
+        setPreview(result);
+        setPreviewedKey(key);
+      }
+    } catch (caught: unknown) {
+      if (request === previewRequestRef.current) {
+        setError(ragLabErrorMessage(caught, "Preview failed — check your config fields."));
+      }
+    } finally {
+      if (request === previewRequestRef.current) {
+        setPreviewing(false);
+      }
+    }
+  }
 
   const archetype = preview?.archetype ?? context?.archetype ?? "unknown";
   const visibleTabs = useMemo(() => labTabsForArchetype(archetype), [archetype]);
@@ -219,7 +254,16 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
             {LAB_TAB_LABELS[item]}
           </button>
         ))}
-        {archetype === "redteam" ? null : (
+        {archetype === "redteam" ? null : manualPreview ? (
+          <button
+            type="button"
+            className="lp-rag-lab-run"
+            disabled={previewing || !activeQuestion}
+            onClick={() => void generatePreview()}
+          >
+            {previewing ? "Generating…" : preview ? "Generate again" : "Generate preview"}
+          </button>
+        ) : (
           <span className={`lp-rag-lab-status${previewing ? " is-busy" : ""}`}>
             {previewing ? "Updating…" : preview ? `${preview.chunkCount} chunks` : "—"}
           </span>
@@ -232,7 +276,15 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
         </p>
       ) : null}
 
-      {activeTab === "target" ? <RagTargetConsole slug={slug} /> : null}
+      {manualPreview && preview && !previewing && previewedKey !== previewKey ? (
+        <p className="lp-rag-lab-empty">
+          Your config or question changed since this preview. Press Generate again to update it.
+        </p>
+      ) : null}
+
+      {activeTab === "target" ? (
+        <RagTargetConsole slug={slug} botName={context.target?.botName ?? "Target bot"} />
+      ) : null}
 
       {activeTab === "corpus" ? (
         <section className="lp-rag-lab-pane" aria-label="Corpus documents">
@@ -256,7 +308,11 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
         <section className="lp-rag-lab-pane" aria-label="Chunk preview">
           {Object.entries(chunksByDoc).length === 0 ? (
             <p className="lp-rag-lab-empty">
-              {previewing ? "Chunking…" : "Adjust the config to preview chunks."}
+              {previewing
+                ? "Chunking…"
+                : manualPreview
+                  ? "Press Generate preview to run the pipeline on the selected question."
+                  : "Adjust the config to preview chunks."}
             </p>
           ) : (
             Object.entries(chunksByDoc).map(([docId, chunks]) => (
@@ -353,7 +409,12 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
 
       {activeTab === "generate" ? (
         <section className="lp-rag-lab-pane" aria-label="Generation preview">
-          {preview?.generation ? (
+          {previewing ? (
+            <p className="lp-rag-lab-gen-loading" role="status" aria-busy="true">
+              <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+              Generating an answer with the model. This can take several seconds…
+            </p>
+          ) : preview?.generation ? (
             <div className="lp-rag-lab-gen">
               <div className="lp-rag-lab-gen-meta">
                 <span>{preview.refused ? "Refusal" : "Answer preview"}</span>
@@ -368,7 +429,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
             </div>
           ) : (
             <p className="lp-rag-lab-empty">
-              Set a generation prompt in Submission to preview an answer here.
+              {manualPreview && !preview
+                ? "Press Generate preview to run your generation prompt on the selected question."
+                : "Set a generation prompt in Submission to preview an answer here."}
             </p>
           )}
           {showGenerate && preview?.retrieved && preview.retrieved.length > 0 ? (

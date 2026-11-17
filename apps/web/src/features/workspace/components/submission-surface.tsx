@@ -36,6 +36,12 @@ type SubmissionSurfaceProps = {
   errorHref?: string | null;
   errorLinkLabel?: string | null;
   initialValues?: Record<string, unknown>;
+  /**
+   * Live values to start from when this surface (re)mounts, e.g. after a mobile
+   * step switch. Read on mount only; "Reset to starter config" still uses
+   * `initialValues`.
+   */
+  restoreValues?: Record<string, unknown> | null;
   lead?: string;
   title?: string;
   simulator?: string;
@@ -45,6 +51,8 @@ type SubmissionSurfaceProps = {
   figmaLayout?: boolean;
   figmaGrade?: Grade | null;
   figmaAttempt?: number;
+  /** "N of M submissions left · resets HH:MM"; hidden when null. */
+  figmaBudget?: { label: string; exhausted: boolean } | null;
 };
 
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
@@ -128,6 +136,7 @@ export function SubmissionSurface({
   errorHref,
   errorLinkLabel,
   initialValues,
+  restoreValues,
   lead,
   title = "Submission",
   simulator,
@@ -137,14 +146,27 @@ export function SubmissionSurface({
   figmaLayout = false,
   figmaGrade = null,
   figmaAttempt = 1,
+  figmaBudget = null,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
-  const [values, setValues] = useState<Record<string, unknown>>({});
+  const [values, setValues] = useState<Record<string, unknown>>(() => ({
+    ...defaultsFrom(parsed),
+    ...initialValues,
+    ...restoreValues,
+  }));
   const [validationError, setValidationError] = useState<string | null>(null);
   const isRag = simulator === "rag";
   const isGuard = simulator === "guardrails";
 
+  // Reset only when the schema or starter values change after mount; the
+  // mount itself is seeded above (so restored values are not overwritten).
+  const seededFromRef = useRef({ parsed, initialValues });
   useEffect(() => {
+    const seeded = seededFromRef.current;
+    if (seeded.parsed === parsed && seeded.initialValues === initialValues) {
+      return;
+    }
+    seededFromRef.current = { parsed, initialValues };
     setValues({ ...defaultsFrom(parsed), ...initialValues });
   }, [parsed, initialValues]);
 
@@ -263,6 +285,17 @@ export function SubmissionSurface({
             Reset to starter config
           </button>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            {figmaBudget ? (
+              <span
+                className={cn(
+                  "text-[0.6875rem] font-medium",
+                  figmaBudget.exhausted ? "text-lp-status-fail" : "text-lp-muted",
+                )}
+                aria-live="polite"
+              >
+                {figmaBudget.label}
+              </span>
+            ) : null}
             <span className="text-[0.6875rem] font-medium text-lp-muted">
               attempt {figmaAttempt}
             </span>
@@ -710,6 +743,9 @@ function Field({
           name={name}
           value={text}
           required={required}
+          placeholder={name === "flag" ? "AIWARSS{…}" : undefined}
+          spellCheck={name === "flag" ? false : undefined}
+          autoComplete={name === "flag" ? "off" : undefined}
           onChange={(event) => onChange(event.target.value)}
           className="lp-field-input"
         />

@@ -1,5 +1,5 @@
 import { apiClient, ApiError } from "@/lib/api-client";
-import type { Attempt } from "@/types/attempt";
+import type { Attempt, AttemptBudget } from "@/types/attempt";
 import type { Grade } from "@/types/grade";
 import type { QueuedSubmission, Run } from "@/types/run";
 import type { SubmissionHistoryItem } from "@/types/submission";
@@ -22,6 +22,9 @@ export const workspaceApi = {
   /** The signed-in learner's recent submissions for one exercise, newest first. */
   listSubmissions: (exerciseSlug: string) =>
     apiClient<SubmissionHistoryItem[]>(`/exercises/${exerciseSlug}/submissions`),
+  /** Signed-in: submissions left under the exercise's attempt policy. */
+  attemptBudget: (exerciseSlug: string) =>
+    apiClient<AttemptBudget>(`/exercises/${exerciseSlug}/attempt-budget`),
 };
 
 export async function waitForRun(

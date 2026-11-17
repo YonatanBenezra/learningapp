@@ -1,7 +1,7 @@
 import type { HintList } from "@/types/hint";
 import type { Exercise, PublicSampleItem } from "@/types/exercise";
 import type { FigmaBriefContent, FigmaBriefSubmission } from "./components/brief-panel";
-import { buildExerciseGuide } from "./exercise-brief-sections";
+import { briefAfterGoal, buildExerciseGuide } from "./exercise-brief-sections";
 import { formatGateThreshold, gateMetricLabel, gradedGates } from "./gates";
 
 function schemaFieldKeys(schema: unknown): string[] {
@@ -79,6 +79,7 @@ export function buildFigmaBriefFromExercise(
       solved: submissionCount > 0 ? `${submissionCount} submitted` : "Not submitted",
     },
     goal: guide.goal,
+    fullBriefMd: briefAfterGoal(exercise.briefMd ?? ""),
     constraint: {
       metric: primary?.metric ?? "Pass criteria",
       threshold: primary?.threshold ?? "",

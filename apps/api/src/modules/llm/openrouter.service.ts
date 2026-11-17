@@ -28,6 +28,11 @@ export class OpenRouterService {
     );
   }
 
+  /** The pinned OpenRouter model id every chat call uses. */
+  modelId(): string {
+    return this.config.get('OPENROUTER_MODEL', { infer: true });
+  }
+
   async chat(
     messages: ChatMessage[],
     options: ChatOptions = {},
@@ -52,7 +57,7 @@ export class OpenRouterService {
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
           'HTTP-Referer': referer,
-          'X-Title': 'LabPath',
+          'X-Title': 'AI Warss',
         },
         body: JSON.stringify({
           model,
