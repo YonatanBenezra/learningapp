@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { InfoTip } from "./info-tip";
+import { RagProbeTable } from "./rag-probe-table";
 import { RagTargetConsole } from "./rag-target-console";
 import { ragLabApi, ragLabErrorMessage } from "../rag-lab/rag-lab-api";
 import {
@@ -66,10 +67,19 @@ function withinGate(gate: GateSpec, value: number): boolean {
   }
 }
 
+/** The lab tab last open per exercise, so editing the config and coming back keeps it. */
+const lastLabTab = new Map<string, LabTab>();
+
 export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
   const [context, setContext] = useState<RagLabContext | null>(null);
   const [preview, setPreview] = useState<RagLabPreview | null>(null);
-  const [tab, setTab] = useState<LabTab>("query");
+  const [tab, setTabState] = useState<LabTab>(
+    () => lastLabTab.get(slug) ?? "query",
+  );
+  const setTab = (next: LabTab) => {
+    lastLabTab.set(slug, next);
+    setTabState(next);
+  };
   const [questionId, setQuestionId] = useState<string>("");
   const [customQuestion, setCustomQuestion] = useState("");
   const [loading, setLoading] = useState(true);
@@ -553,6 +563,12 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
           ) : (
             <HitList hits={preview?.retrieved ?? []} />
           )}
+        </section>
+      ) : null}
+
+      {activeTab === "probe" ? (
+        <section className="lp-rag-lab-pane" aria-label="Probe">
+          <RagProbeTable key={slug} slug={slug} payload={payload} />
         </section>
       ) : null}
 

@@ -469,6 +469,44 @@ Phase D ধাপে ধাপে হবে। প্রতিটা ধাপ�
 
 **Phase D শেষে যা বাকি থাকল:** ১০টা পুরনো clone এখনো একই corpus আর একই সহজ config দিয়ে pass হয়: `rag-001`, `005`, `007`, `026` (R1); `002`, `003-top-k`, `016`, `017`, `025` (R2); `004` (R4)। এর সাথে R3 `003-citation` আর sandbox-এর চারটা (`009`, `023`, `024`, `029`)। এগুলো নতুন mechanic দিয়ে বদলানো, অথবা বাদ দিয়ে ছোট track রাখা টিমের সিদ্ধান্ত।
 
+### Phase E-এর অবস্থা (২০২৬-১১-১৮)
+
+| কাজ | অবস্থা |
+|---|---|
+| Probe table | ✅ |
+| Run diff | ✅ |
+| Debrief | ✅ (scorecard-এ একসাথে) |
+| Trace waterfall | 🟡 আংশিক |
+| Pipeline builder, stage inspector, hint ladder | ⏳ বাকি |
+| Red team v2, blue team | ⛔ হয়নি (নিচে কারণ) |
+
+**যা হয়েছে:**
+- **Probe table:** Lab-এ নতুন "Probe" tab (R3 আর red team বাদে সব RAG exercise-এ)।
+  - এখনকার config দিয়ে প্রতিটা public প্রশ্ন চালায়: উত্তর context-এ এসেছে কিনা, উত্তরের chunk কত নম্বর rank-এ (rerank থাকলে `#৭ → #২`), আর কত token।
+  - আগের config-এর সাথে তুলনা করে: কোন knob বদলেছে, কয়টা প্রশ্ন ঠিক হলো আর কয়টা ভাঙল, আর প্রতিটা প্রশ্নের rank কোথায় সরল।
+  - Learner Submission tab-এ config বদলে Lab-এ ফিরলেও তুলনাটা থাকে, আর Probe tab-ও খোলা থাকে।
+  - Probe model ডাকে না, তাই rewrite prompt এখানে প্রয়োগ হয় না। Table-এ সেটা লেখা থাকে।
+- **Run diff:** Scorecard-এ "Since submission #N"। আগের graded submission-এর তুলনায় দেখায়:
+  - কোন config বদলেছে। লম্বা লেখা (prompt, rule) শুধু "edited" দেখায়।
+  - প্রতিটা gate কোন দিকে সরল।
+  - Feedback আর holdout প্রশ্নের সংখ্যা, আর প্রতিটা tag-এর সংখ্যা। শুধু সংখ্যা, তাই holdout প্রশ্ন দেখা যায় না।
+  - এর জন্য submission history API এখন grade-এর `breakdown` ফেরত দেয়। Scorecard-এর বাকি অংশ ফেরত দেয় না।
+- **Debrief:** Scorecard-এ এখন পাশাপাশি থাকে:
+  - "Why it missed" (feedback split থেকে প্রমাণ সহ কারণ)।
+  - Holdout-এর category অনুযায়ী সংখ্যা।
+  - Run diff।
+- **Trace waterfall (আংশিক):** Trace page-এ প্রতিটা প্রশ্ন খুললে ধাপগুলো দেখায়: কী search করা হয়েছে (rewrite থাকলে সেই query) → rerank-এ উত্তর কত থেকে কত নম্বরে গেল → context-এ কয়টা chunk আর কত token → ফল।
+  - Filter, candidate list আর প্রতিটা ধাপের সময় দেখায় না, কারণ trace এগুলো রেকর্ড করে না।
+  - এগুলো দেখাতে হলে আগে grader-কে trace-এ এগুলো লিখতে হবে।
+
+**যাচাই:** একটা আলাদা API, worker আর web চালিয়ে headless Chrome-এ `rag-018` দিয়ে পুরো loop চালানো হয়েছে: probe, config বদলানো, আবার probe, submit, scorecard, trace। চারটা অংশই ঠিকঠাক দেখিয়েছে। পরীক্ষার account পরে মুছে ফেলা হয়েছে।
+
+**Red team v2 আর blue team হয়নি:**
+- RT2-এর নতুন scenario বানানোর সময় একটা safety check কাজটা থামিয়ে দেয়। সেই scenario-তে learner নিজে একটা page বসিয়ে অন্য একজন কর্মীর session থেকে তথ্য বের করে আনত।
+- নতুন attack scenario আর তার payload এই workflow-তে বানানো হবে না।
+- Blue team-ও তাই আটকে আছে, কারণ ওটা grade করতে attack payload-এর hidden set লাগে।
+- এগুলো কীভাবে আর কে বানাবে, সেটা টিমের সিদ্ধান্ত (§৯)।
+
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে
 
 1. **Grading-এ আসল model:** প্রতিটা R3 attempt-এ ~৩০টা প্রশ্ন, মোটামুটি ২০–২৫ হাজার token। Cache থাকায় একই submission আবার দিলে খরচ শূন্য। এই খরচ মেনে নেওয়া যাবে, নাকি R3 simulated থাকবে আর UI-তে স্পষ্ট লেবেল দেওয়া হবে?

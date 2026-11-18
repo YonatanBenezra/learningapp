@@ -46,6 +46,8 @@ export type SubmissionHistoryItem = {
     verdict: string;
     gateResults: unknown;
     metrics: unknown;
+    /** Count-only hidden-set breakdown (RAG), for comparing two runs. */
+    breakdown: unknown;
   } | null;
 };
 
@@ -161,7 +163,12 @@ export async function listSubmissionHistory(
           startedAt: true,
           finishedAt: true,
           grade: {
-            select: { verdict: true, gateResults: true, metrics: true },
+            select: {
+              verdict: true,
+              gateResults: true,
+              metrics: true,
+              scorecard: true,
+            },
           },
         },
       },
@@ -187,10 +194,19 @@ export async function listSubmissionHistory(
             verdict: run.grade.verdict,
             gateResults: run.grade.gateResults,
             metrics: run.grade.metrics,
+            // Counts per split and tag only: never question text.
+            breakdown: breakdownOf(run.grade.scorecard),
           }
         : null,
     };
   });
+}
+
+function breakdownOf(scorecard: unknown): unknown {
+  if (!scorecard || typeof scorecard !== 'object') {
+    return null;
+  }
+  return (scorecard as { breakdown?: unknown }).breakdown ?? null;
 }
 
 /** Where the learner stands against the exercise's rolling submission limit. */

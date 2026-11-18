@@ -1077,3 +1077,64 @@
   width: 82%;
   opacity: 0.72;
 }
+
+/* This run vs the previous graded submission (config, gates, counts). */
+.lp-rag-diff {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.lp-rag-diff-config {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-diff-chip {
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 999px;
+  color: var(--lp-ink);
+}
+
+.lp-rag-diff-chip code {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-diff-list {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+}
+
+.lp-rag-diff-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--lp-ink);
+}
+
+.lp-rag-diff-move {
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  white-space: nowrap;
+}
+
+.lp-rag-diff-move.is-up {
+  color: var(--color-status-pass);
+}
+
+.lp-rag-diff-move.is-down {
+  color: var(--color-status-fail);
+}
+
+.lp-rag-diff-move.is-same {
+  color: var(--lp-muted);
+}

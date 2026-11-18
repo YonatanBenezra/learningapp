@@ -22,10 +22,13 @@ import {
   RagHiddenSetBreakdown,
   RagMissEvidence,
 } from "./rag-eval-breakdown";
+import { RagRunDiff, type RagRunSnapshot } from "./rag-run-diff";
 
 type FigmaRagScorecardProps = {
   run: Run;
   grade: Grade;
+  /** This run and the learner's previous graded submission, when there is one. */
+  diff?: { previous: RagRunSnapshot; current: RagRunSnapshot } | null;
   /** Submissions made in this workspace session, including the graded one. */
   attempt?: number;
   exerciseSlug?: string;
@@ -85,6 +88,7 @@ function rowsFromMetrics(grade: Grade): ScoreRow[] {
 export function FigmaRagScorecard({
   run,
   grade,
+  diff = null,
   attempt,
   exerciseSlug,
 }: FigmaRagScorecardProps) {
@@ -285,6 +289,8 @@ export function FigmaRagScorecard({
       ) : null}
 
       {breakdown ? <RagHiddenSetBreakdown breakdown={breakdown} /> : null}
+
+      {diff ? <RagRunDiff previous={diff.previous} current={diff.current} /> : null}
 
       {passed && nextCta ? (
         <footer className="lp-rag-score-footer">

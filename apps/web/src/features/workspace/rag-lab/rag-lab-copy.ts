@@ -1,11 +1,12 @@
 import type { RagLabArchetype } from "./rag-lab-types";
 
-export type LabTab = "corpus" | "chunks" | "query" | "generate" | "target";
+export type LabTab = "corpus" | "chunks" | "query" | "probe" | "generate" | "target";
 
 export const LAB_TAB_LABELS: Record<LabTab, string> = {
   corpus: "Corpus",
   chunks: "Chunks",
   query: "Query",
+  probe: "Probe",
   generate: "Generate",
   target: "Target bot",
 };
@@ -17,7 +18,7 @@ export function labTabsForArchetype(archetype: RagLabArchetype): LabTab[] {
   if (archetype === "r3") {
     return ["corpus", "chunks", "query", "generate"];
   }
-  return ["corpus", "chunks", "query"];
+  return ["corpus", "chunks", "query", "probe"];
 }
 
 export const CHUNK_ID_TIP =

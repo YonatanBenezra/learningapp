@@ -8,6 +8,7 @@ import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
 import { FigmaGuardScorecard } from "./figma-guard-scorecard";
 import { FigmaRagScorecard } from "./figma-rag-scorecard";
+import type { RagRunSnapshot } from "./rag-run-diff";
 import { FigmaRagScorecardGrading } from "./figma-rag-scorecard-grading";
 import { ScorecardEmptyState } from "./scorecard-empty-state";
 import { ScorecardIntervals } from "./scorecard-intervals";
@@ -33,6 +34,8 @@ type RunPanelProps = {
   exerciseSlug?: string;
   /** Mobile tab layout: no panel collapse control */
   mobileChrome?: boolean;
+  /** RAG: this run next to the previous graded submission. */
+  ragDiff?: { previous: RagRunSnapshot; current: RagRunSnapshot } | null;
 };
 
 export function RunPanel({
@@ -48,6 +51,7 @@ export function RunPanel({
   attempt = 1,
   exerciseSlug,
   mobileChrome = false,
+  ragDiff = null,
 }: RunPanelProps) {
   const isRag = simulator === "rag";
   const isGuard = simulator === "guardrails";
@@ -244,6 +248,7 @@ export function RunPanel({
           <FigmaRagScorecard
             run={run}
             grade={grade}
+            diff={ragDiff}
             attempt={attempt}
             exerciseSlug={exerciseSlug}
           />

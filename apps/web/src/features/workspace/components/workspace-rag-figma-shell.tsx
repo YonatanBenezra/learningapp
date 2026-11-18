@@ -22,6 +22,7 @@ import {
 import { RagBudgetMeter } from "./rag-budget-meter";
 import { RagFlowGraph } from "./rag-flow-graph";
 import { RagLabPanel } from "./rag-lab-panel";
+import type { RagRunSnapshot } from "./rag-run-diff";
 import { RunPanel } from "./run-panel";
 import { SubmissionSurface } from "./submission-surface";
 import { WorkspaceSplit } from "./workspace-split";
@@ -179,6 +180,8 @@ export function WorkspaceRagFigmaShell({
   const budget = attemptBudgetLabel(attemptBudget);
 
   const submissions = useMemo(() => (history ? historyRows(history) : undefined), [history]);
+  // The graded run on screen next to the learner's previous graded submission.
+  const ragDiff = useMemo(() => runDiffFrom(history, run?.id ?? null), [history, run?.id]);
   const submittedTotal = history ? history.length : submitCount;
   const historyTruncated = (history?.length ?? 0) >= HISTORY_LIMIT;
 
@@ -427,6 +430,7 @@ export function WorkspaceRagFigmaShell({
                     : submittedTotal
                 }
                 exerciseSlug={slug}
+                ragDiff={ragDiff}
               />
             }
           />
@@ -434,4 +438,30 @@ export function WorkspaceRagFigmaShell({
       />
     </div>
   );
+}
+
+function runDiffFrom(
+  history: SubmissionHistoryItem[] | null,
+  runId: string | null,
+): { previous: RagRunSnapshot; current: RagRunSnapshot } | null {
+  if (!history || !runId) {
+    return null;
+  }
+  const total = history.length;
+  const index = history.findIndex((item) => item.run?.id === runId);
+  if (index < 0 || !history[index].grade) {
+    return null;
+  }
+  // History is newest first: the previous graded submission comes after.
+  const previousIndex = history.findIndex((item, i) => i > index && item.grade !== null);
+  if (previousIndex < 0) {
+    return null;
+  }
+  const snapshot = (i: number): RagRunSnapshot => ({
+    n: total - i,
+    payload: history[i].payload ?? {},
+    gateResults: history[i].grade?.gateResults ?? null,
+    breakdown: history[i].grade?.breakdown ?? null,
+  });
+  return { previous: snapshot(previousIndex), current: snapshot(index) };
 }

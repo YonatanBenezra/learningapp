@@ -17,5 +17,7 @@ export type SubmissionHistoryItem = {
     verdict: Verdict;
     gateResults: unknown;
     metrics: unknown;
+    /** Count-only hidden-set breakdown (RAG). */
+    breakdown?: unknown;
   } | null;
 };

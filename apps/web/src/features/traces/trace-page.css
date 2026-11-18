@@ -698,3 +698,50 @@
   font-size: 0.6875rem;
   color: var(--lp-muted);
 }
+
+/* Stages one question went through (searched, rerank, context, result). */
+.lp-trace-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+}
+
+.lp-trace-path li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.4rem;
+}
+
+.lp-trace-path li + li::before {
+  content: "→";
+  margin-right: 0.2rem;
+  color: var(--lp-muted);
+}
+
+.lp-trace-path-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-trace-path-value {
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  color: var(--lp-ink);
+}
+
+.lp-trace-path li.is-pass .lp-trace-path-value {
+  color: var(--lp-success, #0f766e);
+}
+
+.lp-trace-path li.is-fail .lp-trace-path-value {
+  color: var(--lp-danger, #b91c1c);
+}

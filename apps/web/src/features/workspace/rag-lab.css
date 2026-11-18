@@ -905,3 +905,77 @@
   color: var(--lp-muted);
   font-size: 0.8125rem;
 }
+
+/* Probe: every public question under the current config. */
+.lp-rag-probe {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.lp-rag-probe-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-probe-summary strong {
+  color: var(--lp-ink);
+  font-weight: 650;
+}
+
+.lp-rag-probe-busy {
+  font-style: italic;
+}
+
+.lp-rag-probe-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.lp-rag-probe-table th,
+.lp-rag-probe-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--lp-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp-rag-probe-table thead th {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-probe-table tbody th {
+  font-weight: 500;
+  color: var(--lp-ink);
+}
+
+.lp-rag-probe-table td {
+  font-family: ui-monospace, monospace;
+  white-space: nowrap;
+  color: var(--lp-muted);
+}
+
+.lp-rag-probe .is-up,
+.lp-rag-probe-table td.is-up {
+  color: var(--color-status-pass);
+}
+
+.lp-rag-probe .is-down,
+.lp-rag-probe-table td.is-down {
+  color: var(--color-status-fail);
+}
+
+@media (max-width: 640px) {
+  .lp-rag-probe-table thead th:nth-child(4),
+  .lp-rag-probe-table td:nth-child(4) {
+    display: none;
+  }
+}

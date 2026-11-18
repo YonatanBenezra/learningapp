@@ -22,6 +22,10 @@ describe('listSubmissionHistory', () => {
               verdict: 'pass',
               gateResults: [{ metric: 'recall@k' }],
               metrics: {},
+              scorecard: {
+                breakdown: { bySplit: { holdout: { hits: 3, total: 4 } } },
+                retrieval: 'BM25',
+              },
             },
           },
         ],
@@ -54,6 +58,11 @@ describe('listSubmissionHistory', () => {
 
     expect(rows.map((row) => row.submissionId)).toEqual(['s2', 's1']);
     expect(rows[0].grade?.verdict).toBe('pass');
+    // Only the count-only breakdown leaves the scorecard.
+    expect(rows[0].grade?.breakdown).toEqual({
+      bySplit: { holdout: { hits: 3, total: 4 } },
+    });
+    expect(JSON.stringify(rows[0])).not.toContain('retrieval');
     expect(rows[1]).toMatchObject({ contest: true, run: null, grade: null });
   });
 });
