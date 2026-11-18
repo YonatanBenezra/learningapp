@@ -21,6 +21,11 @@ import {
 } from "./brief-panel";
 import { RagBudgetMeter } from "./rag-budget-meter";
 import { RagFlowGraph } from "./rag-flow-graph";
+import {
+  fieldsForStage,
+  pipelineForMode,
+  ragModeFromSchema,
+} from "../rag/rag-flow-pipeline";
 import { RagLabPanel } from "./rag-lab-panel";
 import type { RagRunSnapshot } from "./rag-run-diff";
 import { RunPanel } from "./run-panel";
@@ -219,6 +224,28 @@ export function WorkspaceRagFigmaShell({
   // The learner's live config for the lab and budget meter. Before the form has
   // mounted (mobile Lab step first) use the starter config, never `{}`.
   const labConfig = formValues ?? formDefaults;
+  // Stage inspector: the pipeline stage in focus, and the fields that set it.
+  const [stageFocus, setStageFocus] = useState<string | null>(null);
+  const inspect = useMemo(() => {
+    const stages = pipelineForMode(ragModeFromSchema(exercise.submissionSchema));
+    const stage =
+      stages.find((item) => item.id === stageFocus) ??
+      stages.find((item) => item.control) ??
+      null;
+    if (!stage) {
+      return null;
+    }
+    const keys = Object.keys(
+      (exercise.submissionSchema as { properties?: Record<string, unknown> } | null)
+        ?.properties ?? {},
+    );
+    return {
+      id: stage.id,
+      title: stage.title,
+      detail: stage.detail,
+      fields: fieldsForStage(stage.id, keys),
+    };
+  }, [exercise.submissionSchema, stageFocus]);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 899px)");
@@ -363,6 +390,9 @@ export function WorkspaceRagFigmaShell({
                     className="lp-ws-split--flow"
                     primary={
                       <RagFlowGraph
+                        values={labConfig}
+                        focusedId={inspect?.id ?? null}
+                        onFocusChange={setStageFocus}
                         className="lp-rag-graph--fill"
                         schema={exercise.submissionSchema}
                         pending={pending}
@@ -397,6 +427,7 @@ export function WorkspaceRagFigmaShell({
                             history ? history.length + 1 : pending ? submitCount : submitCount + 1
                           }
                           figmaBudget={budget}
+                          inspect={inspect}
                         />
                       </div>
                     }

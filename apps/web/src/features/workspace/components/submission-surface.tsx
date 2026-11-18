@@ -55,6 +55,11 @@ type SubmissionSurfaceProps = {
   figmaAttempt?: number;
   /** "N of M submissions left · resets HH:MM"; hidden when null. */
   figmaBudget?: { label: string; exhausted: boolean } | null;
+  /**
+   * Stage inspector: the pipeline stage in focus. Its fields come first,
+   * with their trade-off; the others stay editable but step back.
+   */
+  inspect?: { id: string; title: string; detail: string; fields: string[] } | null;
 };
 
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
@@ -98,6 +103,33 @@ const RAG_FIELD_HELP: Record<string, string> = {
     "Keep only this many sentences of each retrieved page, the ones sharing the most words with the question (0 = send pages whole).",
   expandNeighbors:
     "Send each retrieved chunk with this many neighbouring chunks on each side, from the same page (0 = the chunk alone).",
+};
+
+/** One line per knob: what you gain and what you pay when you raise it. */
+const RAG_FIELD_TRADEOFF: Record<string, string> = {
+  chunkSize: "Bigger chunks keep more context together, but every chunk sent costs more tokens.",
+  overlap: "More overlap keeps answers that straddle a boundary whole, but repeats text and adds chunks.",
+  splitStrategy: "Splitting on structure keeps units whole; fixed windows cut wherever the count runs out.",
+  topK: "More chunks catch answers that rank lower, and every one of them is paid for.",
+  retrievalMode: "Keywords win on exact terms and ids; embeddings win on reworded questions.",
+  hybridAlpha: "Higher leans on meaning, lower on exact words.",
+  embeddingModel: "The multilingual model reads across languages; the English one is sharper on English alone.",
+  rerank: "Reordering by title helps when titles name the topic, and hurts when they mislead.",
+  reranker: "Each reranker fixes a different problem: misleading titles, copies, or weak first-stage scores.",
+  rerankTopN: "A wider window lets the reranker reach lower answers, at more work per question.",
+  statusFilter: "Stricter filters drop stale versions, and anything without the right status.",
+  filterStage: "Filtering after top-k is cheaper but can leave fewer than k chunks.",
+  minScoreRatio: "A higher cutoff sends fewer chunks on clear wins, but can drop a close second.",
+  compressSentences: "Fewer sentences per chunk save tokens, but can drop the one that answers.",
+  expandNeighbors: "A wider window brings the sentences around a hit, and costs tokens for every one.",
+  dedupe: "Removing copies frees budget, but a loose threshold can drop the answer page.",
+  dedupeThreshold: "Lower treats more pages as copies.",
+  hops: "A second search finds what the first one only points to, at twice the retrieval.",
+  hopSeeds: "More seeds give the second search more to go on, and more noise.",
+  hopQuery: "Carrying names keeps the second search focused; whole passages drift.",
+  queryRewritePrompt: "A rewrite fixes how people ask, at one model call per question.",
+  generationPrompt: "Stricter instructions make citations reliable, but can make the model refuse too often.",
+  refuseBelowScore: "A higher threshold saves model calls, but refuses questions it could have answered.",
 };
 
 function ragFieldHelp(name: string, property: SchemaProperty): string {
@@ -176,6 +208,7 @@ export function SubmissionSurface({
   figmaGrade = null,
   figmaAttempt = 1,
   figmaBudget = null,
+  inspect = null,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
   const [values, setValues] = useState<Record<string, unknown>>(() => ({
@@ -268,7 +301,18 @@ export function SubmissionSurface({
               className="grid grid-cols-3 gap-3 max-sm:grid-cols-1"
               onSubmit={handleSubmit}
             >
-              {fields.map(([key, property]) => (
+              {inspect ? (
+                <div className="lp-ws-inspector col-span-full" aria-live="polite">
+                  <span className="lp-ws-inspector-kicker">Stage inspector</span>
+                  <strong>{inspect.title}</strong>
+                  <span>
+                    {inspect.fields.length > 0
+                      ? inspect.detail
+                      : "Fixed by the exercise: nothing to set here. Pick a stage marked “you control”."}
+                  </span>
+                </div>
+              ) : null}
+              {inspectedFirst(fields, inspect?.fields ?? []).map(([key, property]) => (
                 <Field
                   key={key}
                   name={key}
@@ -279,6 +323,16 @@ export function SubmissionSurface({
                   }
                   rag={isRag}
                   figmaLayout
+                  emphasis={
+                    inspect && inspect.fields.length > 0
+                      ? inspect.fields.includes(key)
+                        ? "focus"
+                        : "dim"
+                      : undefined
+                  }
+                  tradeoff={
+                    inspect?.fields.includes(key) ? RAG_FIELD_TRADEOFF[key] : undefined
+                  }
                   overlapPct={overlapPct}
                   onChange={(next) => {
                     setValidationError(null);
@@ -504,6 +558,8 @@ function Field({
   codeLab,
   figmaLayout = false,
   overlapPct,
+  emphasis,
+  tradeoff,
   onChange,
 }: {
   name: string;
@@ -515,9 +571,18 @@ function Field({
   figmaLayout?: boolean;
   chunkSize?: number;
   overlapPct?: number | null;
+  /** Stage inspector: this field sets the stage in focus, or another one. */
+  emphasis?: "focus" | "dim";
+  /** Stage inspector: what raising this knob gains and costs. */
+  tradeoff?: string;
   onChange: (value: unknown) => void;
 }) {
   const label = labelFor(name);
+  const emphasisClass =
+    emphasis === "focus" ? "lp-ws-field-focus" : emphasis === "dim" ? "lp-ws-field-dim" : undefined;
+  const tradeoffLine = tradeoff ? (
+    <span className="lp-ws-field-tradeoff">{tradeoff}</span>
+  ) : null;
   const wide = isWideField(property);
   const lang = languageFor(name);
 
@@ -525,7 +590,7 @@ function Field({
     if (rag && figmaLayout) {
       const options = property.enum.map(String);
       return (
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className={cn("flex min-w-0 flex-col gap-1", emphasisClass)}>
           <div className="flex items-center justify-between gap-2 font-mono text-[0.6875rem] text-lp-muted">
             <span className="flex items-center gap-1 text-lp-ink/90">
               {name}
@@ -555,6 +620,7 @@ function Field({
           <span className="font-mono text-[0.625rem] text-lp-muted">
             {options.join(" · ")}
           </span>
+          {tradeoffLine}
         </div>
       );
     }
@@ -616,7 +682,7 @@ function Field({
 
   if (property.type === "boolean") {
     return (
-      <label className={`lp-ws-check lp-ws-field--wide${rag ? " lp-rag-check" : ""}`}>
+      <label className={cn("lp-ws-check lp-ws-field--wide", rag && "lp-rag-check", emphasisClass)}>
         <input
           type="checkbox"
           name={name}
@@ -627,6 +693,7 @@ function Field({
           <span>
             <strong>{label}</strong>
             <span>{ragFieldHelp(name, property)}</span>
+            {tradeoffLine}
           </span>
         ) : (
           label
@@ -652,7 +719,7 @@ function Field({
           ? "border-lp-brand/55 focus-within:border-lp-brand"
           : "border-lp-border focus-within:border-lp-brand/70";
       return (
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className={cn("flex min-w-0 flex-col gap-1", emphasisClass)}>
           <div className="flex items-center justify-between gap-2 font-mono text-[0.6875rem]">
             <span className="text-lp-ink/90">{name}</span>
           </div>
@@ -678,6 +745,7 @@ function Field({
             ) : null}
           </div>
           <span className="font-mono text-[0.625rem] text-lp-muted">{footnote}</span>
+          {tradeoffLine}
         </div>
       );
     }
@@ -731,7 +799,12 @@ function Field({
     const step = property.multipleOf ?? 0.05;
     const numeric = typeof value === "number" && Number.isFinite(value) ? value : min;
     return (
-      <label className={wide ? "lp-field lp-ws-field--wide" : "lp-field lp-rag-slider"}>
+      <label
+        className={cn(
+          wide ? "lp-field lp-ws-field--wide" : "lp-field lp-rag-slider",
+          emphasisClass,
+        )}
+      >
         <span className="lp-rag-slider-top">
           <span className="lp-field-label">{label}</span>
           <strong>{numeric.toFixed(2)}</strong>
@@ -749,6 +822,7 @@ function Field({
         <span className="lp-ws-field-hint">
           {property.description ?? RAG_FIELD_HELP[name] ?? `${min}–${max}`}
         </span>
+        {tradeoffLine}
       </label>
     );
   }
@@ -783,8 +857,9 @@ function Field({
   }
 
   return (
-    <label className="lp-field lp-ws-field--wide">
+    <label className={cn("lp-field lp-ws-field--wide", emphasisClass)}>
       <span className="lp-field-label">{label}</span>
+      {tradeoffLine}
       {long ? (
         <textarea
           name={name}
@@ -810,6 +885,17 @@ function Field({
       )}
     </label>
   );
+}
+
+/** The inspected stage's fields first, then the rest, each in schema order. */
+function inspectedFirst<T extends [string, unknown]>(fields: T[], inspected: string[]): T[] {
+  if (inspected.length === 0) {
+    return fields;
+  }
+  return [
+    ...fields.filter(([key]) => inspected.includes(key)),
+    ...fields.filter(([key]) => !inspected.includes(key)),
+  ];
 }
 
 function asSchema(value: unknown): SubmissionSchema {

@@ -32,14 +32,17 @@ function hintsFromList(hints: HintList | null): FigmaBriefContent["hints"] {
   if (!hints) {
     return [];
   }
+  const costOf = (index: number) => hints.costs?.[index];
   const unlocked = hints.unlocked.map((hint, index) => ({
     n: index + 1,
     unlocked: true as const,
     text: hint.text,
+    cost: costOf(index),
   }));
   const locked = Array.from({ length: Math.max(0, hints.remaining) }, (_, index) => ({
     n: unlocked.length + index + 1,
     unlocked: false as const,
+    cost: costOf(unlocked.length + index),
   }));
   return [...unlocked, ...locked];
 }
@@ -92,6 +95,7 @@ export function buildFigmaBriefFromExercise(
     publicSampleNote: "Public sample — not used for grading",
     publicRows: publicRowsFromSample(exercise.publicSample),
     hints: hintsFromList(options?.hints ?? null),
+    hintPointsSpent: options?.hints?.spent ?? 0,
     onUnlockHint:
       options?.hints && options.hints.remaining > 0 ? options.onUnlockHint : undefined,
   };

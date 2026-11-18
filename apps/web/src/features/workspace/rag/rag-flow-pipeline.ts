@@ -711,6 +711,116 @@ const MODE_LABELS: Record<RagExerciseMode, string> = {
   redteam: "Red team · flag capture",
 };
 
+/** Which submission fields set each stage (stage ids are shared across modes). */
+const STAGE_FIELDS: Record<string, string[]> = {
+  chunker: ["chunkSize", "overlap", "splitStrategy"],
+  search: ["topK", "retrievalMode", "hybridAlpha", "embeddingModel"],
+  rerank: ["rerank", "reranker", "rerankTopN"],
+  filter: ["statusFilter", "filterStage"],
+  cutoff: ["minScoreRatio"],
+  compress: ["compressSentences"],
+  window: ["expandNeighbors"],
+  dedupe: ["dedupe", "dedupeThreshold"],
+  hop: ["hops", "hopSeeds", "hopQuery"],
+  rewrite: ["queryRewritePrompt"],
+  llm: ["generationPrompt", "refuseBelowScore"],
+  router: ["router", "defaultRoute", "routingRules"],
+  code: ["source"],
+};
+
+/** The fields of `keys` that set this stage, in schema order. */
+export function fieldsForStage(stageId: string, keys: string[]): string[] {
+  if (stageId === "profiles") {
+    return keys.filter((key) => /(TopK|Rerank|ChunkSize)$/.test(key));
+  }
+  const own = STAGE_FIELDS[stageId] ?? [];
+  return keys.filter((key) => own.includes(key));
+}
+
+/** A few characters for a node: what the current config sets at this stage. */
+export function stageValueSummary(
+  stageId: string,
+  values: Record<string, unknown> | null | undefined,
+): string | null {
+  if (!values) {
+    return null;
+  }
+  const has = (key: string) => values[key] !== undefined && values[key] !== "";
+  const plural = (n: unknown, word: string) =>
+    `${String(n)} ${word}${n === 1 ? "" : "s"}`;
+  switch (stageId) {
+    case "chunker":
+      return has("chunkSize")
+        ? [
+            `${String(values.chunkSize)} ch`,
+            has("overlap") && values.overlap !== 0 ? `+${String(values.overlap)}` : null,
+            has("splitStrategy") ? String(values.splitStrategy) : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")
+        : null;
+    case "search": {
+      const parts = [
+        has("retrievalMode") ? String(values.retrievalMode) : null,
+        values.retrievalMode === "hybrid" && has("hybridAlpha")
+          ? `α ${String(values.hybridAlpha)}`
+          : null,
+        has("topK") ? `k = ${String(values.topK)}` : null,
+      ].filter(Boolean);
+      return parts.length > 0 ? parts.join(" · ") : null;
+    }
+    case "rerank":
+      if (has("reranker")) {
+        return has("rerankTopN")
+          ? `${String(values.reranker)} · ${String(values.rerankTopN)}`
+          : String(values.reranker);
+      }
+      return has("rerank") ? (values.rerank ? "title boost" : "off") : null;
+    case "cutoff":
+      return has("minScoreRatio")
+        ? Number(values.minScoreRatio) > 0
+          ? `≥ ${String(values.minScoreRatio)} × best`
+          : "off"
+        : null;
+    case "compress":
+      return has("compressSentences")
+        ? Number(values.compressSentences) > 0
+          ? plural(values.compressSentences, "sentence")
+          : "whole chunks"
+        : null;
+    case "window":
+      return has("expandNeighbors")
+        ? Number(values.expandNeighbors) > 0
+          ? `±${String(values.expandNeighbors)} chunks`
+          : "chunk alone"
+        : null;
+    case "filter":
+      return has("statusFilter")
+        ? [String(values.statusFilter), has("filterStage") ? String(values.filterStage) : null]
+            .filter(Boolean)
+            .join(" · ")
+        : null;
+    case "dedupe":
+      return has("dedupe")
+        ? values.dedupe === "near" && has("dedupeThreshold")
+          ? `near ≥ ${String(values.dedupeThreshold)}`
+          : String(values.dedupe)
+        : null;
+    case "hop":
+      return has("hops") ? plural(values.hops, "search") : null;
+    case "rewrite":
+      return has("queryRewritePrompt")
+        ? String(values.queryRewritePrompt).trim()
+          ? "your prompt"
+          : "no rewrite"
+        : null;
+    case "router":
+      return has("router") ? String(values.router) : null;
+    default:
+      return null;
+  }
+}
+
 export function pipelineForMode(mode: RagExerciseMode): PipelineStage[] {
   if (mode === "rerankOnly") {
     return PIPELINES.rerank.filter((stage) => stage.id !== "rewrite");
@@ -745,22 +855,26 @@ export function buildPipelineGraph({
   phase,
   verdict = null,
   focusedId = null,
+  values = null,
 }: {
   mode: RagExerciseMode;
   phase: RagFlowPhase;
   verdict?: Verdict | null;
   focusedId?: string | null;
+  /** The current config: stages you control show what it sets there. */
+  values?: Record<string, unknown> | null;
 }): { nodes: Node<RagFlowNodeData>[]; edges: Edge[] } {
   const stages = pipelineForMode(mode);
   const nodes: Node<RagFlowNodeData>[] = stages.map((stage, index) => {
     const state = stageState(stage, phase, verdict);
+    const summary = stage.control ? stageValueSummary(stage.id, values) : null;
     return {
       id: stage.id,
       type: RAG_FLOW_NODE_TYPE,
       position: { x: index * STAGE_GAP, y: 72 },
       data: {
         title: stage.title,
-        subtitle: stage.subtitle,
+        subtitle: summary ?? stage.subtitle,
         state,
         badge:
           state === "done"

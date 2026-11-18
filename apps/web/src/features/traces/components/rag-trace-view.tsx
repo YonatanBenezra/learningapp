@@ -31,7 +31,7 @@ import {
 } from "@/features/traces/rag-trace-meta";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
-import type { RunTrace, TraceHit, TraceQuery } from "@/types/trace";
+import type { RunTrace, TraceHit, TraceQuery, TraceStage } from "@/types/trace";
 import { cn } from "@/lib/utils";
 import "@/features/traces/trace-page.css";
 
@@ -487,6 +487,9 @@ function QueryAccordion({
  * the context. Gold positions exist for public questions only.
  */
 function QueryPath({ query }: { query: TraceQuery }) {
+  if (query.stages && query.stages.length > 0) {
+    return <QueryWaterfall query={query} stages={query.stages} />;
+  }
   const goldIndex = query.retrieved.findIndex((hit) => hit.goldHit === true);
   const gold = goldIndex >= 0 ? query.retrieved[goldIndex] : null;
   const reranked = query.retrieved.some(
@@ -536,6 +539,83 @@ function QueryPath({ query }: { query: TraceQuery }) {
       ))}
     </ol>
   );
+}
+
+/**
+ * Every step the grader ran for this question, as a waterfall: each bar
+ * starts where the previous step ended and is as long as the step took. The
+ * answer column shows where the answer chunk stood after each step.
+ */
+function QueryWaterfall({
+  query,
+  stages,
+}: {
+  query: TraceQuery;
+  stages: TraceStage[];
+}) {
+  const total = stages.reduce((sum, stage) => sum + stage.ms, 0);
+  // Where each bar starts: when every step before it had finished.
+  const starts = stages.map((_, index) =>
+    stages.slice(0, index).reduce((sum, stage) => sum + stage.ms, 0),
+  );
+  return (
+    <div
+      className="lp-trace-fall"
+      aria-label="Steps this question went through"
+    >
+      <ol className="lp-trace-fall-list">
+        {stages.map((stage, index) => {
+          const left = total > 0 ? (starts[index] / total) * 100 : 0;
+          const width = total > 0 ? Math.max(1.5, (stage.ms / total) * 100) : 0;
+          const answer =
+            stage.goldRank === undefined
+              ? null
+              : stage.goldRank === null
+                ? { text: "answer gone", tone: "fail" }
+                : { text: `answer #${stage.goldRank}`, tone: "pass" };
+          return (
+            <li key={`${stage.id}-${index}`} className="lp-trace-fall-row">
+              <span className="lp-trace-fall-label">{stage.label}</span>
+              <span className="lp-trace-fall-detail">{stage.detail}</span>
+              <span
+                className={cn(
+                  "lp-trace-fall-answer",
+                  answer && `is-${answer.tone}`,
+                )}
+              >
+                {answer?.text ?? ""}
+              </span>
+              <span className="lp-trace-fall-track" aria-hidden>
+                <span
+                  className="lp-trace-fall-bar"
+                  style={{
+                    left: `${Math.min(left, 98.5)}%`,
+                    width: `${width}%`,
+                  }}
+                />
+              </span>
+              <span className="lp-trace-fall-ms">{formatMs(stage.ms)}</span>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="lp-trace-fall-foot">
+        {query.retrieved.length} chunk{query.retrieved.length === 1 ? "" : "s"}{" "}
+        in context
+        {typeof query.contextTokens === "number"
+          ? ` · ${query.contextTokens} tok`
+          : ""}{" "}
+        · {formatMs(total)} in total
+      </p>
+    </div>
+  );
+}
+
+function formatMs(ms: number): string {
+  if (ms < 0.01) {
+    return "<0.01 ms";
+  }
+  return `${ms < 10 ? ms.toFixed(2) : Math.round(ms)} ms`;
 }
 
 function HitRow({

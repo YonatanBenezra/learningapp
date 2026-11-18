@@ -127,6 +127,11 @@ type RagFlowGraphProps = {
   graded?: boolean;
   verdict?: Verdict | null;
   className?: string;
+  /** The current config, shown on the stages you control. */
+  values?: Record<string, unknown> | null;
+  /** Controlled focus: set both to drive the stage inspector from outside. */
+  focusedId?: string | null;
+  onFocusChange?: (stageId: string) => void;
 };
 
 function RagFlowGraphCanvas({
@@ -135,14 +140,25 @@ function RagFlowGraphCanvas({
   graded = false,
   verdict = null,
   className,
+  values = null,
+  focusedId: controlledFocus,
+  onFocusChange,
 }: RagFlowGraphProps) {
   const mode = useMemo(() => ragModeFromSchema(schema), [schema]);
   const phase = ragFlowPhaseFromFlags(pending, graded);
   const stages = useMemo(() => pipelineForMode(mode), [mode]);
   const defaultFocus = stages.find((stage) => stage.control)?.id ?? stages[0]?.id ?? null;
-  const [focusedId, setFocusedId] = useState<string | null>(null);
+  const [ownFocus, setOwnFocus] = useState<string | null>(null);
+  const focusedId = controlledFocus !== undefined ? controlledFocus : ownFocus;
+  const setFocusedId = (id: string | null) => {
+    setOwnFocus(id);
+    if (id) {
+      onFocusChange?.(id);
+    }
+  };
   const focus = stages.find((stage) => stage.id === focusedId) ?? stages.find((stage) => stage.id === defaultFocus);
   const focusIndex = focus ? stages.indexOf(focus) : 0;
+  const valuesKey = JSON.stringify(values ?? null);
 
   const graph = useMemo(
     () =>
@@ -151,8 +167,9 @@ function RagFlowGraphCanvas({
         phase,
         verdict: graded ? verdict : null,
         focusedId: focus?.id ?? null,
+        values: JSON.parse(valuesKey) as Record<string, unknown> | null,
       }),
-    [mode, phase, graded, verdict, focus?.id],
+    [mode, phase, graded, verdict, focus?.id, valuesKey],
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(graph.nodes);

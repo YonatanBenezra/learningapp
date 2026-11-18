@@ -36,12 +36,14 @@ export function RootNav() {
     return null;
   }
 
+  /* Signed-in app pages draw the app navbar in their own layout (DashboardHtbShell). */
   if (
     pathname === routes.dashboard ||
     pathname.startsWith(`${routes.dashboard}/`) ||
     pathname === routes.contestHub ||
     pathname === routes.practiceHub ||
-    pathname.startsWith("/events/")
+    pathname.startsWith("/events/") ||
+    pathname.startsWith("/runs/")
   ) {
     return null;
   }

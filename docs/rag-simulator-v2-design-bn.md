@@ -476,8 +476,8 @@ Phase D ধাপে ধাপে হবে। প্রতিটা ধাপ�
 | Probe table | ✅ |
 | Run diff | ✅ |
 | Debrief | ✅ (scorecard-এ একসাথে) |
-| Trace waterfall | 🟡 আংশিক |
-| Pipeline builder, stage inspector, hint ladder | ⏳ বাকি |
+| Trace waterfall | ✅ (২০২৬-১১-১৯) |
+| Pipeline builder, stage inspector, hint ladder | ✅ (২০২৬-১১-১৯) |
 | Red team v2, blue team | ⛔ হয়নি (নিচে কারণ) |
 
 **যা হয়েছে:**
@@ -500,6 +500,24 @@ Phase D ধাপে ধাপে হবে। প্রতিটা ধাপ�
   - এগুলো দেখাতে হলে আগে grader-কে trace-এ এগুলো লিখতে হবে।
 
 **যাচাই:** একটা আলাদা API, worker আর web চালিয়ে headless Chrome-এ `rag-018` দিয়ে পুরো loop চালানো হয়েছে: probe, config বদলানো, আবার probe, submit, scorecard, trace। চারটা অংশই ঠিকঠাক দেখিয়েছে। পরীক্ষার account পরে মুছে ফেলা হয়েছে।
+
+**বাকি UI-এর কাজ যা হয়েছে (২০২৬-১১-১৯):**
+- **Trace waterfall:** Grader প্রতিটা public প্রশ্নের প্রতিটা ধাপ নিজে log করে, grading-এর একই code path থেকে। ধাপগুলো হলো search, filter, title boost, cutoff, second hop, window, compress, dedupe, pack আর context।
+  - প্রতিটা ধাপে কয়টা chunk বের হলো, উত্তরের chunk কত নম্বরে আছে বা বাদ পড়েছে, আর কত সময় লাগল, সব trace-এ থাকে।
+  - Trace page এগুলো waterfall হিসেবে আঁকে: প্রতিটা bar আগের ধাপ যেখানে শেষ সেখান থেকে শুরু হয়।
+  - R1, R2 আর R4-এ এটা আছে। পুরনো run-এ আগের সংক্ষিপ্ত path দেখায়।
+  - Determinism test এখন শুধু সময় বাদ দিয়ে trace মেলায়।
+- **Pipeline builder:** Learner যে ধাপ নিয়ন্ত্রণ করে, pipeline node-এ সেখানকার এখনকার মান দেখায়, যেমন "k = 3", "≥ 0.7 × best", "±1 chunks", "300 ch · recursive"।
+- **Stage inspector:** Node-এ click করলে form-এ সেই ধাপের knob সবার আগে আসে, প্রতিটার নিচে এক লাইনে trade-off লেখা থাকে। বাকি knob হালকা হয়ে যায় কিন্তু edit করা যায়। Exercise যে ধাপ আটকে রেখেছে, সেখানে লেখা থাকে যে কিছু বদলানোর নেই।
+- **Probe-এ budget:** Probe-এর সারাংশে mean token আর index-এর chunk সংখ্যা exercise-এর gate-এর সাথে pass/fail রঙে দেখায়।
+- **Hint ladder:**
+  - Hint একটা একটা করে খোলে। প্রথমটা free, পরেরগুলো ৫, ১০, ১৫… point। খরচ শুধু সেই problem-এ লাগে যেটা solve হয়েছে, আর এক problem-এ সর্বোচ্চ ৫০।
+  - Leaderboard আর profile-এর rating = solve × ১০০ − hint point + গত ৩০ দিনের pass। Leaderboard এখন rating অনুযায়ী সাজানো হয়।
+  - Brief-এ প্রতিটা hint খোলার আগেই তার খরচ দেখায়।
+  - **টিমকে জানাতে হবে:** এটা পুরনো hint-এর ক্ষেত্রেও খাটে। Pro user যারা একটার বেশি hint খুলেছেন, তাদের rating কমে যাবে।
+- **Bug fix:** Web form required `number` field (যেমন `minScoreRatio`) সবসময় খালি ধরত, তাই `rag-002`-এর submit button বন্ধ থাকত। এখন `integer`-এর মতোই যাচাই হয়।
+
+**যাচাই:** একটা আলাদা stack চালিয়ে headless Chrome-এ `rag-002` দিয়ে পুরো loop দেখা হয়েছে: node-এ মান, Cutoff ধাপে click করলে inspector আর trade-off, hint-এর খরচ, probe-এ gate, submit, আর trace-এর waterfall।
 
 **Red team v2 আর blue team হয়নি:**
 - RT2-এর নতুন scenario বানানোর সময় একটা safety check কাজটা থামিয়ে দেয়। সেই scenario-তে learner নিজে একটা page বসিয়ে অন্য একজন কর্মীর session থেকে তথ্য বের করে আনত।
@@ -573,7 +591,7 @@ Phase D-র মতোই কাজ হবে: slug একই থাকবে, `v
 **যাচাই:** Clean HEAD-এ যে ১৬টা test suite fail করে (folder না থাকা agent, benchmark, nn, ft ইত্যাদি), এখনো ঠিক সেগুলোই fail করে। নতুন করে কিছু fail করে না। Browser-এ সাতটা rebuilt exercise খুলে দেখা হয়েছে: field, pipeline diagram আর estimate meter ঠিক দেখায়।
 
 **যা বাকি থাকল:**
-- Citation exercise (`rag-003-citation`) এখনো আসল model দিয়ে চালিয়ে দেখা হয়নি, শুধু offline simulator দিয়ে।
+- ~~Citation exercise আসল model দিয়ে যাচাই~~ ✅ (২০২৬-১১-১৯): reference prompt pass করেছে। Citation format ১.০০, gold overlap ১.০০, উত্তর-নেই এমন ১০টা প্রশ্নের ১০টাতেই refusal, আর উত্তরযোগ্য প্রশ্নে কোনো refusal নেই।
 - পুরনো `internal-policy` corpus এখন শুধু engine test fixture আর red team ব্যবহার করে।
 
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে

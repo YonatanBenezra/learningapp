@@ -423,7 +423,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
                     {doc.meta.effective ? (
                       <span>effective {doc.meta.effective}</span>
                     ) : null}
-                    {doc.meta.language ? <span>language {doc.meta.language}</span> : null}
+                    {doc.meta.language ? (
+                      <span>language {doc.meta.language}</span>
+                    ) : null}
                   </p>
                 ) : null}
                 <p>{doc.text}</p>
@@ -568,7 +570,17 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
 
       {activeTab === "probe" ? (
         <section className="lp-rag-lab-pane" aria-label="Probe">
-          <RagProbeTable key={slug} slug={slug} payload={payload} />
+          <RagProbeTable
+            key={slug}
+            slug={slug}
+            payload={payload}
+            tokenGate={tokenGate}
+            indexGate={
+              gradedGates(gates).find(
+                (gate) => gate.metric === "index_chunks",
+              ) ?? null
+            }
+          />
         </section>
       ) : null}
 

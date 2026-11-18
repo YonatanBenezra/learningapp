@@ -96,6 +96,14 @@ describe('RagHarness R1', () => {
     const b = gradeR1(R1_REFERENCE_PAYLOAD, docs, hidden, publicItems, gates);
     expect(a.verdict).toBe(b.verdict);
     expect(a.metrics.recall_at_5.value).toBe(b.metrics.recall_at_5.value);
-    expect(a.trace.queries).toEqual(b.trace.queries);
+    // Stage timings are wall-clock; everything else must match.
+    const withoutTimings = (queries: typeof a.trace.queries) =>
+      queries.map((query) => ({
+        ...query,
+        stages: query.stages?.map((stage) => ({ ...stage, ms: 0 })),
+      }));
+    expect(withoutTimings(a.trace.queries)).toEqual(
+      withoutTimings(b.trace.queries),
+    );
   });
 });

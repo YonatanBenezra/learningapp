@@ -211,12 +211,43 @@ export function publicTraceItems<T extends { question: string }>(
   return publicItems.filter((item) => !isHiddenCanary(item.question));
 }
 
+/** A pipeline step as the grader ran it, before it is written to a trace. */
+export type LoggedStage = {
+  id: string;
+  label: string;
+  detail: string;
+  /** What came out of the step, in rank order. */
+  rows: RankedChunk[];
+  ms: number;
+};
+
+/** Collects stages; pass `log.add` to a pipeline, read `log.stages` after. */
+export function stageLog(): {
+  stages: LoggedStage[];
+  add: (stage: Omit<LoggedStage, 'ms'>) => void;
+} {
+  const stages: LoggedStage[] = [];
+  let last = performance.now();
+  return {
+    stages,
+    add(stage) {
+      const now = performance.now();
+      stages.push({ ...stage, ms: now - last });
+      last = now;
+    },
+  };
+}
+
+export type StageSink = (stage: Omit<LoggedStage, 'ms'>) => void;
+
 export type TraceExtras = {
   /** Expanded gold sentence. Pass it for PUBLIC queries only, never hidden ones. */
   gold?: Gold | null;
   /** Ranking before the rerank/boost step, to show how ranks moved. */
   firstStage?: RankedChunk[] | null;
   contextTokens?: number;
+  /** Every step of the pipeline, for public queries. */
+  stages?: LoggedStage[];
 };
 
 export function toTraceQuery(
@@ -240,9 +271,27 @@ export function toTraceQuery(
         : {}),
     };
   });
+  const stages = extras.stages?.map((stage) => ({
+    id: stage.id,
+    label: stage.label,
+    detail: stage.detail,
+    count: stage.rows.length,
+    ...(gold
+      ? {
+          goldRank: (() => {
+            const index = stage.rows.findIndex((row) =>
+              holdsGold(row.chunk, gold),
+            );
+            return index < 0 ? null : index + 1;
+          })(),
+        }
+      : {}),
+    ms: Math.round(stage.ms * 100) / 100,
+  }));
   return {
     source,
     question,
+    ...(stages && source === 'public' ? { stages } : {}),
     ...(gold ? { hit: retrieved.some((row) => row.goldHit === true) } : {}),
     ...(extras.contextTokens !== undefined
       ? { contextTokens: extras.contextTokens }

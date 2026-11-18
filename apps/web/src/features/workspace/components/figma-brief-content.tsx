@@ -190,6 +190,9 @@ export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
           </h2>
           <span className="text-[0.625rem] font-medium text-lp-muted">
             {unlockedHints} of {content.hints.length} unlocked
+            {content.hintPointsSpent
+              ? ` · −${content.hintPointsSpent} points when solved`
+              : ""}
           </span>
         </div>
         <div className="flex flex-col gap-2">
@@ -202,6 +205,11 @@ export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
                 <div className="mb-1 flex items-center gap-1.5 text-[0.5625rem] font-bold uppercase tracking-wide text-lp-brand">
                   <Lightbulb className="size-3.5 text-amber-400" aria-hidden />
                   Hint {hint.n}
+                  {hint.cost ? (
+                    <span className="font-medium normal-case tracking-normal text-lp-muted">
+                      · −{hint.cost} points
+                    </span>
+                  ) : null}
                 </div>
                 <p className="text-[0.8125rem] leading-relaxed text-lp-muted">{hint.text}</p>
               </div>
@@ -213,6 +221,11 @@ export function FigmaBriefBody({ content }: FigmaBriefBodyProps) {
                 <div className="mb-1 flex items-center gap-1.5 text-[0.6875rem] font-semibold text-lp-muted">
                   <Lock className="size-3.5" aria-hidden />
                   Hint {hint.n}
+                  {hint.cost !== undefined ? (
+                    <span className="font-medium text-lp-muted">
+                      · {hint.cost === 0 ? "free" : `costs ${hint.cost} points when solved`}
+                    </span>
+                  ) : null}
                 </div>
                 {hint.unlockAfter != null ? (
                   <p className="text-[0.75rem] text-lp-muted">

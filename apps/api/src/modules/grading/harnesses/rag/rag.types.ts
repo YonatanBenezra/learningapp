@@ -192,9 +192,26 @@ export type PublicItem = {
   class?: string | null;
 };
 
+/** One step a question went through, in order (public questions only). */
+export type TraceStage = {
+  /** Matches the stage ids of the web pipeline diagram (search, filter…). */
+  id: string;
+  label: string;
+  /** What this step did for this question, in a few words. */
+  detail: string;
+  /** How many chunks came out of this step. */
+  count: number;
+  /** 1-based rank of the answer chunk after this step; null when it is gone. */
+  goldRank?: number | null;
+  /** Wall-clock time of the step. */
+  ms: number;
+};
+
 export type TraceQuery = {
   source: 'public' | 'failing_sample';
   question: string;
+  /** Public queries: every step of the pipeline, with timings. */
+  stages?: TraceStage[];
   /** R4: what the first stage searched for after the learner's rewrite. */
   rewrittenQuery?: string;
   /** Public queries only: the gold sentence reached the context. */

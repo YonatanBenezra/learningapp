@@ -9,9 +9,23 @@ export type TraceHit = {
   firstStageRank?: number | null;
 };
 
+/** One pipeline step a question went through, as the grader ran it. */
+export type TraceStage = {
+  id: string;
+  label: string;
+  detail: string;
+  /** Chunks that came out of the step. */
+  count: number;
+  /** Public questions: rank of the answer chunk after the step; null when gone. */
+  goldRank?: number | null;
+  ms: number;
+};
+
 export type TraceQuery = {
   source: string;
   question: string;
+  /** Public questions: every pipeline step, with timings (newer runs only). */
+  stages?: TraceStage[];
   /** R4: what the first stage searched for after the learner's rewrite prompt. */
   rewrittenQuery?: string;
   retrieved: TraceHit[];

@@ -11,6 +11,7 @@ import {
   gateThreshold,
   publicGold,
   publicTraceItems,
+  stageLog,
   toTraceQuery,
 } from './rag.shared';
 import type {
@@ -183,8 +184,16 @@ export function gradeR1(
       costEurMicros: 0,
       queries: [
         ...publicTraceItems(publicItems).map((item) => {
+          const log = stageLog();
           const ranked = retrieveRanked(item.question, chunks, K);
+          log.add({
+            id: 'search',
+            label: 'BM25',
+            detail: `top ${ranked.length} of ${chunks.length} chunks`,
+            rows: ranked,
+          });
           return toTraceQuery('public', item.question, ranked, {
+            stages: log.stages,
             gold: publicGold(docs, item),
             contextTokens: countTokens(
               ranked.map((row) => row.chunk.text).join('\n\n'),

@@ -24,6 +24,8 @@ import {
   gateThreshold,
   type MissCause,
   publicGold,
+  type StageSink,
+  stageLog,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
@@ -273,13 +275,16 @@ export async function gradeR2(
       costEurMicros: 0,
       queries: [
         ...shownPublic.map((item) => {
+          const log = stageLog();
           const { context: ranked } = contextForR2(
             item.question,
             retriever,
             payload,
             tokenCeiling,
+            log.add,
           );
           return toTraceQuery('public', item.question, ranked, {
+            stages: log.stages,
             gold: publicGold(docs, item),
             firstStage: payload.rerank
               ? firstStageForR2(item.question, retriever, payload).slice(
@@ -350,6 +355,7 @@ export function contextForR2(
   retriever: Retriever,
   payload: R2Payload,
   budget: number,
+  log?: StageSink,
 ): {
   retrieved: RankedChunk[];
   /** After the sentence window and compression. */
@@ -358,18 +364,43 @@ export function contextForR2(
   duplicates: RankedChunk[];
   context: RankedChunk[];
 } {
-  const retrieved = withSecondHop(
-    question,
-    retriever,
-    payload,
-    retrieveForR2(question, retriever, payload),
-  );
-  const shaped = compress(
-    question,
-    withNeighbors(retriever.chunks, retrieved, payload.expandNeighbors ?? 0),
-    payload.compressSentences ?? 0,
-  );
+  const first = retrieveForR2(question, retriever, payload, log);
+  const retrieved = withSecondHop(question, retriever, payload, first);
+  if (payload.hops === 2) {
+    log?.({
+      id: 'hop',
+      label: 'Second search',
+      detail: `added ${retrieved.length - first.length} new passages`,
+      rows: retrieved,
+    });
+  }
+  const radius = payload.expandNeighbors ?? 0;
+  const widened = withNeighbors(retriever.chunks, retrieved, radius);
+  if (radius > 0) {
+    log?.({
+      id: 'window',
+      label: 'Window',
+      detail: `±${radius} neighbours: ${widened.length} window${widened.length === 1 ? '' : 's'}`,
+      rows: widened,
+    });
+  }
+  const keep = payload.compressSentences ?? 0;
+  const shaped = compress(question, widened, keep);
+  if (keep > 0) {
+    log?.({
+      id: 'compress',
+      label: 'Compress',
+      detail: `kept ${keep} sentence${keep === 1 ? '' : 's'} per chunk`,
+      rows: shaped,
+    });
+  }
   if (payload.dedupe === undefined) {
+    log?.({
+      id: 'context',
+      label: 'Context',
+      detail: `${shaped.length} chunk${shaped.length === 1 ? '' : 's'} sent`,
+      rows: shaped,
+    });
     return { retrieved, shaped, duplicates: [], context: shaped };
   }
   const kept: RankedChunk[] = [];
@@ -381,12 +412,24 @@ export function contextForR2(
       kept.push(row);
     }
   }
+  log?.({
+    id: 'dedupe',
+    label: 'Dedupe',
+    detail: `dropped ${duplicates.length} duplicate${duplicates.length === 1 ? '' : 's'}`,
+    rows: kept,
+  });
   const context: RankedChunk[] = [];
   for (const row of kept) {
     if (countTokens(contextText([...context, row])) <= budget) {
       context.push(row);
     }
   }
+  log?.({
+    id: 'context',
+    label: 'Pack',
+    detail: `${context.length} of ${kept.length} fit the budget`,
+    rows: context,
+  });
   return { retrieved, shaped, duplicates, context };
 }
 
@@ -602,25 +645,76 @@ export function retrieveForR2(
   question: string,
   retriever: Retriever,
   payload: R2Payload,
+  log?: StageSink,
 ): RankedChunk[] {
   const pool = payload.rerank
     ? rerankPool(payload, retriever.chunks)
     : payload.topK;
   const stage = filterStage(payload);
-  const ranked =
-    stage === 'pre'
-      ? firstStageForR2(question, retriever, payload).slice(0, pool)
-      : retriever.rank(question, pool);
+  let ranked: RankedChunk[];
+  if (stage === 'pre') {
+    const all = retriever.rank(question, retriever.chunks.length);
+    log?.({
+      id: 'search',
+      label: retrieverLabel(retriever.spec),
+      detail: `ranked ${all.length} chunks`,
+      rows: all,
+    });
+    // Same as firstStageForR2: filter the whole ranking, then take the pool.
+    ranked = all
+      .filter((row) => passesStatusFilter(row.chunk, payload.statusFilter))
+      .slice(0, pool);
+    log?.({
+      id: 'filter',
+      label: 'Filter',
+      detail: `${payload.statusFilter} before top-k: ${ranked.length} kept`,
+      rows: ranked,
+    });
+  } else {
+    ranked = retriever.rank(question, pool);
+    log?.({
+      id: 'search',
+      label: retrieverLabel(retriever.spec),
+      detail: `top ${ranked.length} of ${retriever.chunks.length} chunks`,
+      rows: ranked,
+    });
+  }
   const top = (payload.rerank ? titleBoost(question, ranked) : ranked).slice(
     0,
     payload.topK,
   );
+  if (payload.rerank) {
+    log?.({
+      id: 'rerank',
+      label: 'Title boost',
+      detail: `${ranked.length} candidates, kept ${top.length}`,
+      rows: top,
+    });
+  }
   // Post-filter: the top k come back first, then non-matching ones are dropped.
   const kept =
     stage === 'post'
       ? top.filter((row) => passesStatusFilter(row.chunk, payload.statusFilter))
       : top;
-  return scoreCutoff(kept, payload.minScoreRatio ?? 0);
+  if (stage === 'post') {
+    log?.({
+      id: 'filter',
+      label: 'Filter',
+      detail: `${payload.statusFilter} after top-k: ${kept.length} of ${top.length} kept`,
+      rows: kept,
+    });
+  }
+  const ratio = payload.minScoreRatio ?? 0;
+  const cut = scoreCutoff(kept, ratio);
+  if (ratio > 0) {
+    log?.({
+      id: 'cutoff',
+      label: 'Cutoff',
+      detail: `${cut.length} of ${kept.length} scored ≥ ${ratio} × the best`,
+      rows: cut,
+    });
+  }
+  return cut;
 }
 
 /** Keeps the chunks scoring at least `ratio` of the best one's score. */

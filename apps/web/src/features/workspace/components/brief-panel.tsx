@@ -107,9 +107,11 @@ export type FigmaBriefContent = {
   publicSampleNote: string;
   publicRows: ReadonlyArray<{ question: string; file: string; tag: string }>;
   hints: ReadonlyArray<
-    | { n: number; unlocked: true; text: string }
-    | { n: number; unlocked: false; unlockAfter?: number }
+    | { n: number; unlocked: true; text: string; cost?: number }
+    | { n: number; unlocked: false; unlockAfter?: number; cost?: number }
   >;
+  /** Points the unlocked hints cost once the problem is solved. */
+  hintPointsSpent?: number;
   /** Unlocks the next hint via the hints API; omitted where hints are disabled. */
   onUnlockHint?: () => Promise<void>;
 };

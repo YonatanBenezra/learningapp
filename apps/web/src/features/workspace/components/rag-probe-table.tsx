@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { formatGateThreshold, type GateSpec } from "../gates";
 import { ragLabApi, ragLabErrorMessage } from "../rag-lab/rag-lab-api";
 import type {
   RagLabEstimate,
@@ -67,9 +68,15 @@ function rankLabel(row: RagLabEstimateRow): string {
 export function RagProbeTable({
   slug,
   payload,
+  tokenGate = null,
+  indexGate = null,
 }: {
   slug: string;
   payload: Record<string, unknown>;
+  /** The exercise's token gate, so the mean reads against the budget. */
+  tokenGate?: GateSpec | null;
+  /** R1 index-size gate, when the exercise has one. */
+  indexGate?: GateSpec | null;
 }) {
   const [probes, setProbes] = useState<Probes>(
     () => lastProbes.get(slug) ?? { current: null, previous: null },
@@ -162,14 +169,40 @@ export function RagProbeTable({
         </span>
         <span>
           Mean tokens{" "}
-          <strong>{Math.round(current.estimate.meanContextTokens)}</strong>
+          <strong
+            className={cn(
+              tokenGate &&
+                (current.estimate.meanContextTokens <= tokenGate.value
+                  ? "is-up"
+                  : "is-down"),
+            )}
+          >
+            {Math.round(current.estimate.meanContextTokens)}
+          </strong>
+          {tokenGate ? ` ${formatGateThreshold(tokenGate)}` : null}
         </span>
+        {indexGate && current.estimate.indexChunks !== undefined ? (
+          <span>
+            Chunks in index{" "}
+            <strong
+              className={
+                current.estimate.indexChunks <= indexGate.value
+                  ? "is-up"
+                  : "is-down"
+              }
+            >
+              {current.estimate.indexChunks}
+            </strong>{" "}
+            {formatGateThreshold(indexGate)}
+          </span>
+        ) : null}
         {previous ? (
           <span>
             Since the last config:{" "}
             <strong className={fixed > 0 ? "is-up" : undefined}>
               {fixed} fixed
-            </strong>,{" "}
+            </strong>
+            ,{" "}
             <strong className={broke > 0 ? "is-down" : undefined}>
               {broke} broke
             </strong>

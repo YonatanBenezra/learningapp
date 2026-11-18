@@ -12,6 +12,8 @@ import {
   mapLimited,
   publicGold,
   publicTraceItems,
+  type StageSink,
+  stageLog,
   toTraceQuery,
 } from './rag.shared';
 import type {
@@ -179,9 +181,17 @@ export async function gradeR4(
   const publicQueries: TraceQuery[] = [];
   for (const item of shownPublic) {
     const query = searchQuery.get(item.question) ?? item.question;
-    const reranked = await rerankForR4(item.question, chunks, payload, query);
+    const log = stageLog();
+    const reranked = await rerankForR4(
+      item.question,
+      chunks,
+      payload,
+      query,
+      log.add,
+    );
     publicQueries.push({
       ...toTraceQuery('public', item.question, reranked, {
+        stages: log.stages,
         gold: publicGold(docs, item),
         firstStage: retrieveByTermCount(query, chunks, window),
         contextTokens: countTokens(
@@ -291,22 +301,41 @@ export async function rerankForR4(
   chunks: Chunk[],
   payload: R4Payload,
   searchQuery: string = question,
+  log?: StageSink,
 ): Promise<RankedChunk[]> {
   const pool = retrieveByTermCount(
     searchQuery,
     chunks,
     rerankWindow(chunks, payload),
   );
+  log?.({
+    id: 'search',
+    label: 'Keyword count',
+    detail: `${searchQuery === question ? 'the question' : 'the rewrite'}: top ${pool.length} candidates`,
+    rows: pool,
+  });
+  let top: RankedChunk[];
   if (payload.reranker === 'title-boost') {
-    return titleBoost(question, pool).slice(0, K);
+    top = titleBoost(question, pool).slice(0, K);
+  } else if (payload.reranker === 'mmr') {
+    top = mmrRerank(pool).slice(0, K);
+  } else if (payload.reranker === 'cross-encoder') {
+    top = (await crossEncoderRerank(question, pool)).slice(0, K);
+  } else {
+    top = pool.slice(0, K);
   }
-  if (payload.reranker === 'mmr') {
-    return mmrRerank(pool).slice(0, K);
-  }
-  if (payload.reranker === 'cross-encoder') {
-    return (await crossEncoderRerank(question, pool)).slice(0, K);
-  }
-  return pool.slice(0, K);
+  log?.({
+    id: 'rerank',
+    label:
+      payload.reranker === 'none' ? 'No rerank' : capitalise(payload.reranker),
+    detail: `top ${top.length} kept`,
+    rows: top,
+  });
+  return top;
+}
+
+function capitalise(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 function ndcgForGold(ranked: RankedChunk[], goldDocId: string): number {
