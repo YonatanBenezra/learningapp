@@ -1,9 +1,9 @@
 {
   "slug": "rag-031-query-routing",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Query Routing: One Profile per Question Type",
+  "title": "Build the Router",
   "difficulty": "H",
   "catalogPhase": 4,
   "skills": [
@@ -16,11 +16,13 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 4 · Query Routing\n\nThe support bot gets three kinds of questions, and the router already tells you which kind each one is:\n\n- **FAQ**: answered by one short line in the IT help desk FAQ.\n- **Policy**: answered by a policy document, but keyword-stuffed noise documents compete for the top spots.\n- **Procedural**: the answer is a three-step procedure spread over consecutive sentences, so the whole procedure has to sit in one chunk.\n\nSet a separate **top-k / rerank / chunk size** profile for each type. One profile for everything either misses procedures or blows the budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** FAQ and procedural recall ≥ 0.85, every policy question answered (recall = 1.00), and mean prompt tokens ≤ 75 on the hidden set.\n",
+  "briefMd": "# Phase 4 · Build the Router\n\nThe support bot gets three kinds of questions, and each needs a different retrieval profile:\n\n- **FAQ**: answered by one short line in the IT help desk FAQ.\n- **Policy**: answered by a policy document, but keyword-stuffed operations logs compete for the top spots.\n- **Procedural**: the answer is a three-step procedure spread over consecutive sentences, so the whole procedure has to sit in one chunk.\n\nNobody labels the questions any more: you build the router. Set a **top-k / rerank / chunk size** profile per type, then choose how a question picks its profile:\n\n- `none`: every question uses the **defaultRoute** profile.\n- `rules`: your **routingRules**, one per line as `phrase | phrase => faq` (or `policy`, `procedural`). The first line with a phrase the question contains wins; `*` matches anything. Questions no rule matches use defaultRoute.\n- `top-document`: a quick search over whole documents, and the question takes the type of the best match (the FAQ page, a policy, or a procedure). Operations logs have no type, so a question whose best match is a log uses defaultRoute.\n\nA misrouted question runs through the wrong profile; the scorecard says which type went where.\n\n**Gates:** FAQ and procedural recall ≥ 0.85, every policy question answered (recall = 1.00), and mean prompt tokens ≤ 75 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
+      "router",
+      "defaultRoute",
       "faqTopK",
       "faqChunkSize",
       "faqRerank",
@@ -32,6 +34,30 @@
       "proceduralRerank"
     ],
     "properties": {
+      "router": {
+        "type": "string",
+        "enum": [
+          "none",
+          "rules",
+          "top-document"
+        ],
+        "default": "none",
+        "description": "How a question picks its profile."
+      },
+      "defaultRoute": {
+        "type": "string",
+        "enum": [
+          "faq",
+          "policy",
+          "procedural"
+        ],
+        "default": "policy",
+        "description": "Profile for questions no rule matches, and for every question when the router is none."
+      },
+      "routingRules": {
+        "type": "string",
+        "default": "# phrase | phrase => faq, policy or procedural\n* => policy"
+      },
       "faqTopK": {
         "type": "integer",
         "minimum": 1,

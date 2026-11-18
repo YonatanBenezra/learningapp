@@ -1,5 +1,6 @@
 {
-  "reranker": "none",
-  "rerankTopN": 20,
-  "queryRewritePrompt": ""
+  "topK": 3,
+  "hops": 2,
+  "hopSeeds": 1,
+  "hopQuery": "passage"
 }

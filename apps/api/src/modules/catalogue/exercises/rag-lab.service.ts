@@ -16,7 +16,12 @@ import {
   citedChunkIds,
   isRefusal,
 } from '../../grading/harnesses/rag/grounded-generate';
-import { r3UserMessage } from '../../grading/harnesses/rag/r3.grade';
+import {
+  r3UserMessage,
+  refusedByScore,
+  SCORE_REFUSAL,
+} from '../../grading/harnesses/rag/r3.grade';
+import { parseR3Payload } from '../../grading/harnesses/rag/rag.payloads';
 import { REWRITE_MAX_TOKENS } from '../../grading/harnesses/rag/r4.grade';
 import type { CorpusDoc } from '../../grading/harnesses/rag/chunking';
 import { RagModelUnavailableError } from '../../grading/harnesses/rag/models/model-runtime';
@@ -165,10 +170,19 @@ export class RagLabService {
     if (preview.archetype !== 'r3') {
       return preview;
     }
+    // R3: below the learner's score threshold the grader refuses without a
+    // model call, and so does the preview.
+    const r3 = parseR3Payload(payload);
+    if (refusedByScore(selected, preview.chunks, r3)) {
+      return {
+        ...preview,
+        generation: SCORE_REFUSAL,
+        citations: [],
+        refused: true,
+      };
+    }
     // R3: the same live model call the grader makes for this question.
-    const rawPrompt = (payload as { generationPrompt?: unknown })
-      .generationPrompt;
-    const generationPrompt = typeof rawPrompt === 'string' ? rawPrompt : '';
+    const generationPrompt = r3.generationPrompt;
     try {
       const { text } = await this.gateway.generate({
         runId: null,

@@ -1,5 +1,5 @@
 {
   "chunkSize": 200,
-  "overlap": 40,
+  "overlap": 100,
   "splitStrategy": "sentence"
 }

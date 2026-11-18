@@ -1,261 +1,1045 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "What is the nightly hotel limit for the sales kickoff?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "190 euros",
+    "goldDocId": "travel-munich",
+    "goldSpan": "Hotels in Munich may cost at most 190 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-sales-kickoff",
+        "span": "This year the sales kickoff takes place in Munich in January"
+      },
+      {
+        "docId": "travel-munich",
+        "span": "Hotels in Munich may cost at most 190 euros a night on business trips"
+      }
+    ],
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "question": "How much can a hotel cost per night when I attend the sales kickoff?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "190 euros",
+    "goldDocId": "travel-munich",
+    "goldSpan": "Hotels in Munich may cost at most 190 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-sales-kickoff",
+        "span": "This year the sales kickoff takes place in Munich in January"
+      },
+      {
+        "docId": "travel-munich",
+        "span": "Hotels in Munich may cost at most 190 euros a night on business trips"
+      }
+    ],
     "split": "holdout",
     "tags": [
       "numeric",
-      "paraphrase"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "What is the nightly hotel limit for the engineering offsite?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
+    "goldAnswer": "110 euros",
+    "goldDocId": "travel-krakow",
+    "goldSpan": "Hotels in Krakow may cost at most 110 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-engineering-offsite",
+        "span": "This year the engineering offsite takes place in Krakow in May"
+      },
+      {
+        "docId": "travel-krakow",
+        "span": "Hotels in Krakow may cost at most 110 euros a night on business trips"
+      }
+    ],
     "split": "holdout",
     "tags": [
+      "numeric",
+      "multi-hop",
       "paraphrase",
       "distractor"
     ]
   },
   {
     "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "question": "How much can a hotel cost per night when I attend the engineering offsite?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
-    "split": "holdout",
+    "goldAnswer": "110 euros",
+    "goldDocId": "travel-krakow",
+    "goldSpan": "Hotels in Krakow may cost at most 110 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-engineering-offsite",
+        "span": "This year the engineering offsite takes place in Krakow in May"
+      },
+      {
+        "docId": "travel-krakow",
+        "span": "Hotels in Krakow may cost at most 110 euros a night on business trips"
+      }
+    ],
+    "split": "feedback",
     "tags": [
-      "paraphrase"
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "question": "What is the nightly hotel limit for the security week?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents",
-    "split": "feedback",
+    "goldAnswer": "165 euros",
+    "goldDocId": "travel-vienna",
+    "goldSpan": "Hotels in Vienna may cost at most 165 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-security-week",
+        "span": "This year the security week takes place in Vienna in October"
+      },
+      {
+        "docId": "travel-vienna",
+        "span": "Hotels in Vienna may cost at most 165 euros a night on business trips"
+      }
+    ],
+    "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "How much can a hotel cost per night when I attend the security week?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days",
-    "split": "feedback",
+    "goldAnswer": "165 euros",
+    "goldDocId": "travel-vienna",
+    "goldSpan": "Hotels in Vienna may cost at most 165 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-security-week",
+        "span": "This year the security week takes place in Vienna in October"
+      },
+      {
+        "docId": "travel-vienna",
+        "span": "Hotels in Vienna may cost at most 165 euros a night on business trips"
+      }
+    ],
+    "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "What is the nightly hotel limit for the partner forum?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
+    "goldAnswer": "185 euros",
+    "goldDocId": "travel-milan",
+    "goldSpan": "Hotels in Milan may cost at most 185 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-partner-forum",
+        "span": "This year the partner forum takes place in Milan in June"
+      },
+      {
+        "docId": "travel-milan",
+        "span": "Hotels in Milan may cost at most 185 euros a night on business trips"
+      }
+    ],
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "How much can a hotel cost per night when I attend the partner forum?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "holdout",
+    "goldAnswer": "185 euros",
+    "goldDocId": "travel-milan",
+    "goldSpan": "Hotels in Milan may cost at most 185 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-partner-forum",
+        "span": "This year the partner forum takes place in Milan in June"
+      },
+      {
+        "docId": "travel-milan",
+        "span": "Hotels in Milan may cost at most 185 euros a night on business trips"
+      }
+    ],
+    "split": "feedback",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "What is the nightly hotel limit for the data science retreat?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
-    "split": "holdout",
+    "goldAnswer": "125 euros",
+    "goldDocId": "travel-ghent",
+    "goldSpan": "Hotels in Ghent may cost at most 125 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-data-science-retreat",
+        "span": "This year the data science retreat takes place in Ghent in September"
+      },
+      {
+        "docId": "travel-ghent",
+        "span": "Hotels in Ghent may cost at most 125 euros a night on business trips"
+      }
+    ],
+    "split": "feedback",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "How much can a hotel cost per night when I attend the data science retreat?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days",
-    "split": "holdout",
+    "goldAnswer": "125 euros",
+    "goldDocId": "travel-ghent",
+    "goldSpan": "Hotels in Ghent may cost at most 125 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-data-science-retreat",
+        "span": "This year the data science retreat takes place in Ghent in September"
+      },
+      {
+        "docId": "travel-ghent",
+        "span": "Hotels in Ghent may cost at most 125 euros a night on business trips"
+      }
+    ],
+    "split": "feedback",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "What is the nightly hotel limit for the support conference?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
-    "split": "holdout",
+    "goldAnswer": "150 euros",
+    "goldDocId": "travel-lyon",
+    "goldSpan": "Hotels in Lyon may cost at most 150 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-support-conference",
+        "span": "This year the support conference takes place in Lyon in April"
+      },
+      {
+        "docId": "travel-lyon",
+        "span": "Hotels in Lyon may cost at most 150 euros a night on business trips"
+      }
+    ],
+    "split": "feedback",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "question": "How much can a hotel cost per night when I attend the support conference?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement",
-    "split": "feedback",
+    "goldAnswer": "150 euros",
+    "goldDocId": "travel-lyon",
+    "goldSpan": "Hotels in Lyon may cost at most 150 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-support-conference",
+        "span": "This year the support conference takes place in Lyon in April"
+      },
+      {
+        "docId": "travel-lyon",
+        "span": "Hotels in Lyon may cost at most 150 euros a night on business trips"
+      }
+    ],
+    "split": "holdout",
     "tags": [
       "numeric",
-      "lexical",
+      "multi-hop",
+      "paraphrase",
       "distractor"
     ]
   },
   {
     "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "question": "What is the nightly hotel limit for the leadership seminar?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night",
+    "goldAnswer": "175 euros",
+    "goldDocId": "travel-hamburg",
+    "goldSpan": "Hotels in Hamburg may cost at most 175 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-leadership-seminar",
+        "span": "This year the leadership seminar takes place in Hamburg in November"
+      },
+      {
+        "docId": "travel-hamburg",
+        "span": "Hotels in Hamburg may cost at most 175 euros a night on business trips"
+      }
+    ],
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "question": "How much can a hotel cost per night when I attend the leadership seminar?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours",
+    "goldAnswer": "175 euros",
+    "goldDocId": "travel-hamburg",
+    "goldSpan": "Hotels in Hamburg may cost at most 175 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-leadership-seminar",
+        "span": "This year the leadership seminar takes place in Hamburg in November"
+      },
+      {
+        "docId": "travel-hamburg",
+        "span": "Hotels in Hamburg may cost at most 175 euros a night on business trips"
+      }
+    ],
     "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h15",
-    "question": "Where must staff store passwords?",
+    "question": "Who approves the budget for Project Northwind migration?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password",
-    "split": "feedback",
+    "goldAnswer": "Priya Raman",
+    "goldDocId": "team-cobalt",
+    "goldSpan": "The Cobalt team is led by Priya Raman, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-northwind-migration",
+        "span": "Project Northwind migration is run by the Cobalt team"
+      },
+      {
+        "docId": "team-cobalt",
+        "span": "The Cobalt team is led by Priya Raman, who approves the team budget and hiring"
+      }
+    ],
+    "split": "holdout",
     "tags": [
-      "numeric",
-      "paraphrase"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
+    "question": "Who signs off hiring for Project Northwind migration?",
     "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default",
-    "split": "feedback",
+    "goldAnswer": "Priya Raman",
+    "goldDocId": "team-cobalt",
+    "goldSpan": "The Cobalt team is led by Priya Raman, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-northwind-migration",
+        "span": "Project Northwind migration is run by the Cobalt team"
+      },
+      {
+        "docId": "team-cobalt",
+        "span": "The Cobalt team is led by Priya Raman, who approves the team budget and hiring"
+      }
+    ],
+    "split": "holdout",
     "tags": [
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "question": "Who approves the budget for Project Bluebird checkout?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision",
+    "goldAnswer": "Kenji Watanabe",
+    "goldDocId": "team-falcon",
+    "goldSpan": "The Falcon team is led by Kenji Watanabe, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-bluebird-checkout",
+        "span": "Project Bluebird checkout is run by the Falcon team"
+      },
+      {
+        "docId": "team-falcon",
+        "span": "The Falcon team is led by Kenji Watanabe, who approves the team budget and hiring"
+      }
+    ],
     "split": "holdout",
     "tags": [
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
+    "question": "Who signs off hiring for Project Bluebird checkout?",
     "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report",
-    "split": "holdout",
+    "goldAnswer": "Kenji Watanabe",
+    "goldDocId": "team-falcon",
+    "goldSpan": "The Falcon team is led by Kenji Watanabe, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-bluebird-checkout",
+        "span": "Project Bluebird checkout is run by the Falcon team"
+      },
+      {
+        "docId": "team-falcon",
+        "span": "The Falcon team is led by Kenji Watanabe, who approves the team budget and hiring"
+      }
+    ],
+    "split": "feedback",
     "tags": [
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
+    "question": "Who approves the budget for Project Quartz analytics?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours",
-    "split": "holdout",
+    "goldAnswer": "Elena Petrova",
+    "goldDocId": "team-iris",
+    "goldSpan": "The Iris team is led by Elena Petrova, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-quartz-analytics",
+        "span": "Project Quartz analytics is run by the Iris team"
+      },
+      {
+        "docId": "team-iris",
+        "span": "The Iris team is led by Elena Petrova, who approves the team budget and hiring"
+      }
+    ],
+    "split": "feedback",
     "tags": [
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
+    "question": "Who signs off hiring for Project Quartz analytics?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest",
+    "goldAnswer": "Elena Petrova",
+    "goldDocId": "team-iris",
+    "goldSpan": "The Iris team is led by Elena Petrova, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-quartz-analytics",
+        "span": "Project Quartz analytics is run by the Iris team"
+      },
+      {
+        "docId": "team-iris",
+        "span": "The Iris team is led by Elena Petrova, who approves the team budget and hiring"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "Who approves the budget for Project Tidewater billing?",
+    "answerable": true,
+    "goldAnswer": "Hannah Becker",
+    "goldDocId": "team-kestrel",
+    "goldSpan": "The Kestrel team is led by Hannah Becker, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-tidewater-billing",
+        "span": "Project Tidewater billing is run by the Kestrel team"
+      },
+      {
+        "docId": "team-kestrel",
+        "span": "The Kestrel team is led by Hannah Becker, who approves the team budget and hiring"
+      }
+    ],
+    "split": "feedback",
+    "tags": [
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "Who signs off hiring for Project Tidewater billing?",
+    "answerable": true,
+    "goldAnswer": "Hannah Becker",
+    "goldDocId": "team-kestrel",
+    "goldSpan": "The Kestrel team is led by Hannah Becker, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-tidewater-billing",
+        "span": "Project Tidewater billing is run by the Kestrel team"
+      },
+      {
+        "docId": "team-kestrel",
+        "span": "The Kestrel team is led by Hannah Becker, who approves the team budget and hiring"
+      }
+    ],
+    "split": "feedback",
+    "tags": [
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "Who approves the budget for Project Orchid search?",
+    "answerable": true,
+    "goldAnswer": "Jonas Weber",
+    "goldDocId": "team-delta",
+    "goldSpan": "The Delta team is led by Jonas Weber, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-orchid-search",
+        "span": "Project Orchid search is run by the Delta team"
+      },
+      {
+        "docId": "team-delta",
+        "span": "The Delta team is led by Jonas Weber, who approves the team budget and hiring"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "Who signs off hiring for Project Orchid search?",
+    "answerable": true,
+    "goldAnswer": "Jonas Weber",
+    "goldDocId": "team-delta",
+    "goldSpan": "The Delta team is led by Jonas Weber, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-orchid-search",
+        "span": "Project Orchid search is run by the Delta team"
+      },
+      {
+        "docId": "team-delta",
+        "span": "The Delta team is led by Jonas Weber, who approves the team budget and hiring"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "Who approves the budget for Project Pinecone mobile?",
+    "answerable": true,
+    "goldAnswer": "Omar Haddad",
+    "goldDocId": "team-lumen",
+    "goldSpan": "The Lumen team is led by Omar Haddad, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-pinecone-mobile",
+        "span": "Project Pinecone mobile is run by the Lumen team"
+      },
+      {
+        "docId": "team-lumen",
+        "span": "The Lumen team is led by Omar Haddad, who approves the team budget and hiring"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "Who signs off hiring for Project Pinecone mobile?",
+    "answerable": true,
+    "goldAnswer": "Omar Haddad",
+    "goldDocId": "team-lumen",
+    "goldSpan": "The Lumen team is led by Omar Haddad, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-pinecone-mobile",
+        "span": "Project Pinecone mobile is run by the Lumen team"
+      },
+      {
+        "docId": "team-lumen",
+        "span": "The Lumen team is led by Omar Haddad, who approves the team budget and hiring"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "Who approves the budget for Project Copperline API?",
+    "answerable": true,
+    "goldAnswer": "Amara Nwosu",
+    "goldDocId": "team-granite",
+    "goldSpan": "The Granite team is led by Amara Nwosu, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-copperline-api",
+        "span": "Project Copperline API is run by the Granite team"
+      },
+      {
+        "docId": "team-granite",
+        "span": "The Granite team is led by Amara Nwosu, who approves the team budget and hiring"
+      }
+    ],
+    "split": "feedback",
+    "tags": [
+      "multi-hop",
+      "abbreviation",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "Who signs off hiring for Project Copperline API?",
+    "answerable": true,
+    "goldAnswer": "Amara Nwosu",
+    "goldDocId": "team-granite",
+    "goldSpan": "The Granite team is led by Amara Nwosu, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-copperline-api",
+        "span": "Project Copperline API is run by the Granite team"
+      },
+      {
+        "docId": "team-granite",
+        "span": "The Granite team is led by Amara Nwosu, who approves the team budget and hiring"
+      }
+    ],
+    "split": "feedback",
+    "tags": [
+      "multi-hop",
+      "abbreviation",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "In which month does the contract with the maker of the Aero desk lamp renew?",
+    "answerable": true,
+    "goldAnswer": "July",
+    "goldDocId": "supplier-calder-optics",
+    "goldSpan": "Our contract with Calder Optics renews every July, and ending it needs 45 days of notice",
+    "evidence": [
+      {
+        "docId": "product-aero-desk-lamp",
+        "span": "The Aero desk lamp is manufactured for us by Calder Optics"
+      },
+      {
+        "docId": "supplier-calder-optics",
+        "span": "Our contract with Calder Optics renews every July, and ending it needs 45 days of notice"
+      }
+    ],
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "How much notice is needed to end the contract with whoever makes the Aero desk lamp?",
+    "answerable": true,
+    "goldAnswer": "45 days",
+    "goldDocId": "supplier-calder-optics",
+    "goldSpan": "Our contract with Calder Optics renews every July, and ending it needs 45 days of notice",
+    "evidence": [
+      {
+        "docId": "product-aero-desk-lamp",
+        "span": "The Aero desk lamp is manufactured for us by Calder Optics"
+      },
+      {
+        "docId": "supplier-calder-optics",
+        "span": "Our contract with Calder Optics renews every July, and ending it needs 45 days of notice"
+      }
+    ],
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "In which month does the contract with the maker of the Trail power bank renew?",
+    "answerable": true,
+    "goldAnswer": "December",
+    "goldDocId": "supplier-quill-batteries",
+    "goldSpan": "Our contract with Quill Batteries renews every December, and ending it needs 90 days of notice",
+    "evidence": [
+      {
+        "docId": "product-trail-power-bank",
+        "span": "The Trail power bank is manufactured for us by Quill Batteries"
+      },
+      {
+        "docId": "supplier-quill-batteries",
+        "span": "Our contract with Quill Batteries renews every December, and ending it needs 90 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How much notice is needed to end the contract with whoever makes the Trail power bank?",
+    "answerable": true,
+    "goldAnswer": "90 days",
+    "goldDocId": "supplier-quill-batteries",
+    "goldSpan": "Our contract with Quill Batteries renews every December, and ending it needs 90 days of notice",
+    "evidence": [
+      {
+        "docId": "product-trail-power-bank",
+        "span": "The Trail power bank is manufactured for us by Quill Batteries"
+      },
+      {
+        "docId": "supplier-quill-batteries",
+        "span": "Our contract with Quill Batteries renews every December, and ending it needs 90 days of notice"
+      }
+    ],
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "In which month does the contract with the maker of the Atlas backpack renew?",
+    "answerable": true,
+    "goldAnswer": "September",
+    "goldDocId": "supplier-marlow-textiles",
+    "goldSpan": "Our contract with Marlow Textiles renews every September, and ending it needs 30 days of notice",
+    "evidence": [
+      {
+        "docId": "product-atlas-backpack",
+        "span": "The Atlas backpack is manufactured for us by Marlow Textiles"
+      },
+      {
+        "docId": "supplier-marlow-textiles",
+        "span": "Our contract with Marlow Textiles renews every September, and ending it needs 30 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "How much notice is needed to end the contract with whoever makes the Atlas backpack?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "supplier-marlow-textiles",
+    "goldSpan": "Our contract with Marlow Textiles renews every September, and ending it needs 30 days of notice",
+    "evidence": [
+      {
+        "docId": "product-atlas-backpack",
+        "span": "The Atlas backpack is manufactured for us by Marlow Textiles"
+      },
+      {
+        "docId": "supplier-marlow-textiles",
+        "span": "Our contract with Marlow Textiles renews every September, and ending it needs 30 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "In which month does the contract with the maker of the Glint smart mirror renew?",
+    "answerable": true,
+    "goldAnswer": "November",
+    "goldDocId": "supplier-pellham-glass",
+    "goldSpan": "Our contract with Pellham Glass renews every November, and ending it needs 45 days of notice",
+    "evidence": [
+      {
+        "docId": "product-glint-smart-mirror",
+        "span": "The Glint smart mirror is manufactured for us by Pellham Glass"
+      },
+      {
+        "docId": "supplier-pellham-glass",
+        "span": "Our contract with Pellham Glass renews every November, and ending it needs 45 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "How much notice is needed to end the contract with whoever makes the Glint smart mirror?",
+    "answerable": true,
+    "goldAnswer": "45 days",
+    "goldDocId": "supplier-pellham-glass",
+    "goldSpan": "Our contract with Pellham Glass renews every November, and ending it needs 45 days of notice",
+    "evidence": [
+      {
+        "docId": "product-glint-smart-mirror",
+        "span": "The Glint smart mirror is manufactured for us by Pellham Glass"
+      },
+      {
+        "docId": "supplier-pellham-glass",
+        "span": "Our contract with Pellham Glass renews every November, and ending it needs 45 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h37",
+    "question": "In which month does the contract with the maker of the Pulse fitness band renew?",
+    "answerable": true,
+    "goldAnswer": "August",
+    "goldDocId": "supplier-fennick-circuits",
+    "goldSpan": "Our contract with Fennick Circuits renews every August, and ending it needs 90 days of notice",
+    "evidence": [
+      {
+        "docId": "product-pulse-fitness-band",
+        "span": "The Pulse fitness band is manufactured for us by Fennick Circuits"
+      },
+      {
+        "docId": "supplier-fennick-circuits",
+        "span": "Our contract with Fennick Circuits renews every August, and ending it needs 90 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h38",
+    "question": "How much notice is needed to end the contract with whoever makes the Pulse fitness band?",
+    "answerable": true,
+    "goldAnswer": "90 days",
+    "goldDocId": "supplier-fennick-circuits",
+    "goldSpan": "Our contract with Fennick Circuits renews every August, and ending it needs 90 days of notice",
+    "evidence": [
+      {
+        "docId": "product-pulse-fitness-band",
+        "span": "The Pulse fitness band is manufactured for us by Fennick Circuits"
+      },
+      {
+        "docId": "supplier-fennick-circuits",
+        "span": "Our contract with Fennick Circuits renews every August, and ending it needs 90 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h39",
+    "question": "In which month does the contract with the maker of the Drift e-scooter renew?",
+    "answerable": true,
+    "goldAnswer": "May",
+    "goldDocId": "supplier-stellan-motors",
+    "goldSpan": "Our contract with Stellan Motors renews every May, and ending it needs 60 days of notice",
+    "evidence": [
+      {
+        "docId": "product-drift-e-scooter",
+        "span": "The Drift e-scooter is manufactured for us by Stellan Motors"
+      },
+      {
+        "docId": "supplier-stellan-motors",
+        "span": "Our contract with Stellan Motors renews every May, and ending it needs 60 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h40",
+    "question": "How much notice is needed to end the contract with whoever makes the Drift e-scooter?",
+    "answerable": true,
+    "goldAnswer": "60 days",
+    "goldDocId": "supplier-stellan-motors",
+    "goldSpan": "Our contract with Stellan Motors renews every May, and ending it needs 60 days of notice",
+    "evidence": [
+      {
+        "docId": "product-drift-e-scooter",
+        "span": "The Drift e-scooter is manufactured for us by Stellan Motors"
+      },
+      {
+        "docId": "supplier-stellan-motors",
+        "span": "Our contract with Stellan Motors renews every May, and ending it needs 60 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h41",
+    "question": "In which month does the contract with the maker of the Nest storage box renew?",
+    "answerable": true,
+    "goldAnswer": "April",
+    "goldDocId": "supplier-sorrel-plastics",
+    "goldSpan": "Our contract with Sorrel Plastics renews every April, and ending it needs 30 days of notice",
+    "evidence": [
+      {
+        "docId": "product-nest-storage-box",
+        "span": "The Nest storage box is manufactured for us by Sorrel Plastics"
+      },
+      {
+        "docId": "supplier-sorrel-plastics",
+        "span": "Our contract with Sorrel Plastics renews every April, and ending it needs 30 days of notice"
+      }
+    ],
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h42",
+    "question": "How much notice is needed to end the contract with whoever makes the Nest storage box?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "supplier-sorrel-plastics",
+    "goldSpan": "Our contract with Sorrel Plastics renews every April, and ending it needs 30 days of notice",
+    "evidence": [
+      {
+        "docId": "product-nest-storage-box",
+        "span": "The Nest storage box is manufactured for us by Sorrel Plastics"
+      },
+      {
+        "docId": "supplier-sorrel-plastics",
+        "span": "Our contract with Sorrel Plastics renews every April, and ending it needs 30 days of notice"
+      }
+    ],
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "multi-hop",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "canary",
-    "question": "What is the HIDDEN_EVAL_C15_R06_CANARY listed in the unpublished runbook?",
+    "question": "What is the HIDDEN_EVAL_R30_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,

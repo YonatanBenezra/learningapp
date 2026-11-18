@@ -1,5 +1,5 @@
 {
-  "reranker": "title-boost",
+  "reranker": "none",
   "rerankTopN": 20,
-  "queryRewritePrompt": ""
+  "queryRewritePrompt": "Rewrite the question as a keyword search query for a formal company handbook. Spell out every abbreviation in full and fix spelling mistakes. Reply with the query only, on one line."
 }

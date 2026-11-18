@@ -1,0 +1,427 @@
+[
+  {
+    "id": "policy-pto",
+    "title": "Annual paid time off",
+    "text": "Full-time employees accrue twenty-five days of paid time off per calendar year. At most five unused days carry over into the following year."
+  },
+  {
+    "id": "policy-wfh",
+    "title": "Working from home",
+    "text": "Staff may work from home up to three days per week with manager agreement. Home working equipment is ordered through the service desk."
+  },
+  {
+    "id": "policy-ooo",
+    "title": "Out-of-office replies",
+    "text": "Set an automatic out-of-office reply when absent for more than one working day. The reply must name a colleague who can help while you are away."
+  },
+  {
+    "id": "policy-mfa",
+    "title": "Multi-factor authentication",
+    "text": "Multi-factor authentication is required for email, the VPN and the expense tool. Hardware security keys are issued by the service desk."
+  },
+  {
+    "id": "policy-po",
+    "title": "Purchase orders",
+    "text": "A purchase order is needed for any supplier spend above 2,000 euros. The purchase order must be approved before the invoice arrives."
+  },
+  {
+    "id": "policy-nda",
+    "title": "Confidentiality agreements",
+    "text": "Visitors and contractors sign a non-disclosure agreement before seeing unreleased products. Legal keeps the signed copies for seven years."
+  },
+  {
+    "id": "policy-pip",
+    "title": "Performance improvement plans",
+    "text": "A performance improvement plan lasts eight weeks. There is a check-in with the manager every two weeks during the plan."
+  },
+  {
+    "id": "policy-rto",
+    "title": "Office attendance",
+    "text": "Teams return to the office on Tuesdays and Thursdays. The other weekdays are flexible."
+  },
+  {
+    "id": "policy-okr",
+    "title": "Quarterly objectives and key results",
+    "text": "Each team sets three objectives and key results per quarter. They are reviewed in the second week of the following quarter."
+  },
+  {
+    "id": "policy-sla",
+    "title": "Service level agreements",
+    "text": "Under the service level agreement, priority one tickets are answered within 30 minutes. Priority one tickets are resolved within four hours."
+  },
+  {
+    "id": "policy-byod",
+    "title": "Personal devices",
+    "text": "Personal phones may access email only after enrolling in device management. Personal laptops are not allowed on the internal network."
+  },
+  {
+    "id": "policy-eap",
+    "title": "Employee assistance programme",
+    "text": "The employee assistance programme offers six free counselling sessions a year. Sessions are fully confidential and are not reported to managers."
+  },
+  {
+    "id": "policy-dpo",
+    "title": "Data protection officer",
+    "text": "Report a suspected personal data breach to the data protection officer within 24 hours. Do not contact affected customers before the officer has assessed the breach."
+  },
+  {
+    "id": "policy-sow",
+    "title": "Statements of work",
+    "text": "Every contractor engagement needs a signed statement of work. The statement of work lists the deliverables and an end date."
+  },
+  {
+    "id": "policy-rfp",
+    "title": "Requests for proposal",
+    "text": "Purchases above 50,000 euros require a request for proposal. The request for proposal goes to at least three suppliers."
+  },
+  {
+    "id": "policy-eol",
+    "title": "Hardware end of life",
+    "text": "Laptops and phones reach end of life after five years. IT collects end-of-life devices for certified recycling."
+  },
+  {
+    "id": "policy-toil",
+    "title": "Time off in lieu",
+    "text": "Overtime can be taken as time off in lieu within three months of being worked. Time off in lieu needs manager approval like any other leave."
+  },
+  {
+    "id": "policy-cpd",
+    "title": "Continuing professional development",
+    "text": "Engineers log at least twenty hours of continuing professional development each year. Conference talks and certified courses both count toward the hours."
+  },
+  {
+    "id": "policy-dei",
+    "title": "Diversity, equity and inclusion",
+    "text": "Every hiring panel includes at least one interviewer from outside the hiring team. Job adverts are reviewed for biased wording before they are published."
+  },
+  {
+    "id": "policy-kyc",
+    "title": "Know your customer checks",
+    "text": "New business customers pass know your customer checks before their first invoice. The checks are repeated every two years."
+  },
+  {
+    "id": "policy-rif",
+    "title": "Unpaid leave of absence",
+    "text": "An unpaid leave of absence can last up to six months. Benefits pause during the leave and restart on return."
+  },
+  {
+    "id": "policy-ndr",
+    "title": "Employee share purchase plan",
+    "text": "Employees can buy company shares at a fifteen percent discount through the employee share purchase plan. Purchases happen twice a year, in March and September."
+  },
+  {
+    "id": "glossary-1",
+    "title": "Glossary of abbreviations, part 1",
+    "text": "PTO means paid time off. WFH means working from home. OOO means out of office. MFA means multi-factor authentication. PO means purchase order. NDA means non-disclosure agreement. PIP means performance improvement plan. RTO means return to office."
+  },
+  {
+    "id": "glossary-2",
+    "title": "Glossary of abbreviations, part 2",
+    "text": "OKR means objectives and key results. SLA means service level agreement. BYOD means bring your own device. EAP means employee assistance programme. DPO means data protection officer. SOW means statement of work. RFP means request for proposal. EOL means end of life."
+  },
+  {
+    "id": "glossary-3",
+    "title": "Glossary of abbreviations, part 3",
+    "text": "TOIL means time off in lieu. CPD means continuing professional development. DEI means diversity, equity and inclusion. KYC means know your customer checks. LOA means leave of absence. ESPP means employee share purchase plan."
+  },
+  {
+    "id": "notice-kitchen-1",
+    "title": "Kitchen update 1",
+    "text": "The kitchen will be closed on Monday for 1 hour of work. How many days a week staff use the kitchen is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-kitchen-2",
+    "title": "Kitchen update 2",
+    "text": "The kitchen will be closed on Tuesday for 2 hours of work. How many days a week staff use the kitchen is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-kitchen-3",
+    "title": "Kitchen update 3",
+    "text": "The kitchen will be closed on Wednesday for 3 hours of work. How many days a week staff use the kitchen is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-kitchen-4",
+    "title": "Kitchen update 4",
+    "text": "The kitchen will be closed on Thursday for 4 hours of work. How many days a week staff use the kitchen is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-kitchen-5",
+    "title": "Kitchen update 5",
+    "text": "The kitchen will be closed on Friday for 5 hours of work. How many days a week staff use the kitchen is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-kitchen-6",
+    "title": "Kitchen update 6",
+    "text": "The kitchen will be closed on Monday for 6 hours of work. How many days a week staff use the kitchen is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-car-park-1",
+    "title": "Car park update 1",
+    "text": "The car park will be closed on Tuesday for 1 hour of work. How many days a week staff use the car park is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-car-park-2",
+    "title": "Car park update 2",
+    "text": "The car park will be closed on Wednesday for 2 hours of work. How many days a week staff use the car park is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-car-park-3",
+    "title": "Car park update 3",
+    "text": "The car park will be closed on Thursday for 3 hours of work. How many days a week staff use the car park is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-car-park-4",
+    "title": "Car park update 4",
+    "text": "The car park will be closed on Friday for 4 hours of work. How many days a week staff use the car park is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-car-park-5",
+    "title": "Car park update 5",
+    "text": "The car park will be closed on Monday for 5 hours of work. How many days a week staff use the car park is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-car-park-6",
+    "title": "Car park update 6",
+    "text": "The car park will be closed on Tuesday for 6 hours of work. How many days a week staff use the car park is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-lift-1",
+    "title": "Lift update 1",
+    "text": "The lift will be closed on Wednesday for 1 hour of work. How many days a week staff use the lift is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-lift-2",
+    "title": "Lift update 2",
+    "text": "The lift will be closed on Thursday for 2 hours of work. How many days a week staff use the lift is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-lift-3",
+    "title": "Lift update 3",
+    "text": "The lift will be closed on Friday for 3 hours of work. How many days a week staff use the lift is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-lift-4",
+    "title": "Lift update 4",
+    "text": "The lift will be closed on Monday for 4 hours of work. How many days a week staff use the lift is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-lift-5",
+    "title": "Lift update 5",
+    "text": "The lift will be closed on Tuesday for 5 hours of work. How many days a week staff use the lift is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-lift-6",
+    "title": "Lift update 6",
+    "text": "The lift will be closed on Wednesday for 6 hours of work. How many days a week staff use the lift is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-reception-1",
+    "title": "Reception update 1",
+    "text": "The reception will be closed on Thursday for 1 hour of work. How many days a week staff use the reception is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-reception-2",
+    "title": "Reception update 2",
+    "text": "The reception will be closed on Friday for 2 hours of work. How many days a week staff use the reception is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-reception-3",
+    "title": "Reception update 3",
+    "text": "The reception will be closed on Monday for 3 hours of work. How many days a week staff use the reception is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-reception-4",
+    "title": "Reception update 4",
+    "text": "The reception will be closed on Tuesday for 4 hours of work. How many days a week staff use the reception is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-reception-5",
+    "title": "Reception update 5",
+    "text": "The reception will be closed on Wednesday for 5 hours of work. How many days a week staff use the reception is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-reception-6",
+    "title": "Reception update 6",
+    "text": "The reception will be closed on Thursday for 6 hours of work. How many days a week staff use the reception is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-printer-1",
+    "title": "Printer update 1",
+    "text": "The printer will be closed on Friday for 1 hour of work. How many days a week staff use the printer is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-printer-2",
+    "title": "Printer update 2",
+    "text": "The printer will be closed on Monday for 2 hours of work. How many days a week staff use the printer is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-printer-3",
+    "title": "Printer update 3",
+    "text": "The printer will be closed on Tuesday for 3 hours of work. How many days a week staff use the printer is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-printer-4",
+    "title": "Printer update 4",
+    "text": "The printer will be closed on Wednesday for 4 hours of work. How many days a week staff use the printer is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-printer-5",
+    "title": "Printer update 5",
+    "text": "The printer will be closed on Thursday for 5 hours of work. How many days a week staff use the printer is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-printer-6",
+    "title": "Printer update 6",
+    "text": "The printer will be closed on Friday for 6 hours of work. How many days a week staff use the printer is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-meeting-room-1",
+    "title": "Meeting room update 1",
+    "text": "The meeting room will be closed on Monday for 1 hour of work. How many days a week staff use the meeting room is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-meeting-room-2",
+    "title": "Meeting room update 2",
+    "text": "The meeting room will be closed on Tuesday for 2 hours of work. How many days a week staff use the meeting room is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-meeting-room-3",
+    "title": "Meeting room update 3",
+    "text": "The meeting room will be closed on Wednesday for 3 hours of work. How many days a week staff use the meeting room is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-meeting-room-4",
+    "title": "Meeting room update 4",
+    "text": "The meeting room will be closed on Thursday for 4 hours of work. How many days a week staff use the meeting room is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-meeting-room-5",
+    "title": "Meeting room update 5",
+    "text": "The meeting room will be closed on Friday for 5 hours of work. How many days a week staff use the meeting room is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-meeting-room-6",
+    "title": "Meeting room update 6",
+    "text": "The meeting room will be closed on Monday for 6 hours of work. How many days a week staff use the meeting room is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-cafe-1",
+    "title": "Cafe update 1",
+    "text": "The cafe will be closed on Tuesday for 1 hour of work. How many days a week staff use the cafe is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-cafe-2",
+    "title": "Cafe update 2",
+    "text": "The cafe will be closed on Wednesday for 2 hours of work. How many days a week staff use the cafe is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-cafe-3",
+    "title": "Cafe update 3",
+    "text": "The cafe will be closed on Thursday for 3 hours of work. How many days a week staff use the cafe is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-cafe-4",
+    "title": "Cafe update 4",
+    "text": "The cafe will be closed on Friday for 4 hours of work. How many days a week staff use the cafe is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-cafe-5",
+    "title": "Cafe update 5",
+    "text": "The cafe will be closed on Monday for 5 hours of work. How many days a week staff use the cafe is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-cafe-6",
+    "title": "Cafe update 6",
+    "text": "The cafe will be closed on Tuesday for 6 hours of work. How many days a week staff use the cafe is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-gym-1",
+    "title": "Gym update 1",
+    "text": "The gym will be closed on Wednesday for 1 hour of work. How many days a week staff use the gym is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-gym-2",
+    "title": "Gym update 2",
+    "text": "The gym will be closed on Thursday for 2 hours of work. How many days a week staff use the gym is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-gym-3",
+    "title": "Gym update 3",
+    "text": "The gym will be closed on Friday for 3 hours of work. How many days a week staff use the gym is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-gym-4",
+    "title": "Gym update 4",
+    "text": "The gym will be closed on Monday for 4 hours of work. How many days a week staff use the gym is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-gym-5",
+    "title": "Gym update 5",
+    "text": "The gym will be closed on Tuesday for 5 hours of work. How many days a week staff use the gym is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-gym-6",
+    "title": "Gym update 6",
+    "text": "The gym will be closed on Wednesday for 6 hours of work. How many days a week staff use the gym is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-bike-shed-1",
+    "title": "Bike shed update 1",
+    "text": "The bike shed will be closed on Thursday for 1 hour of work. How many days a week staff use the bike shed is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-bike-shed-2",
+    "title": "Bike shed update 2",
+    "text": "The bike shed will be closed on Friday for 2 hours of work. How many days a week staff use the bike shed is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-bike-shed-3",
+    "title": "Bike shed update 3",
+    "text": "The bike shed will be closed on Monday for 3 hours of work. How many days a week staff use the bike shed is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-bike-shed-4",
+    "title": "Bike shed update 4",
+    "text": "The bike shed will be closed on Tuesday for 4 hours of work. How many days a week staff use the bike shed is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-bike-shed-5",
+    "title": "Bike shed update 5",
+    "text": "The bike shed will be closed on Wednesday for 5 hours of work. How many days a week staff use the bike shed is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-bike-shed-6",
+    "title": "Bike shed update 6",
+    "text": "The bike shed will be closed on Thursday for 6 hours of work. How many days a week staff use the bike shed is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-roof-terrace-1",
+    "title": "Roof terrace update 1",
+    "text": "The roof terrace will be closed on Friday for 1 hour of work. How many days a week staff use the roof terrace is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-roof-terrace-2",
+    "title": "Roof terrace update 2",
+    "text": "The roof terrace will be closed on Monday for 2 hours of work. How many days a week staff use the roof terrace is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-roof-terrace-3",
+    "title": "Roof terrace update 3",
+    "text": "The roof terrace will be closed on Tuesday for 3 hours of work. How many days a week staff use the roof terrace is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-roof-terrace-4",
+    "title": "Roof terrace update 4",
+    "text": "The roof terrace will be closed on Wednesday for 4 hours of work. How many days a week staff use the roof terrace is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  },
+  {
+    "id": "notice-roof-terrace-5",
+    "title": "Roof terrace update 5",
+    "text": "The roof terrace will be closed on Thursday for 5 hours of work. How many days a week staff use the roof terrace is reviewed each year, and teams can request changes through the office team. Please tell your manager and colleagues if you need help while it is closed."
+  },
+  {
+    "id": "notice-roof-terrace-6",
+    "title": "Roof terrace update 6",
+    "text": "The roof terrace will be closed on Friday for 6 hours of work. How many days a week staff use the roof terrace is reviewed each year, and teams can request changes through the office team. Signed requests are kept by the office team, and approved changes start the following week."
+  }
+]

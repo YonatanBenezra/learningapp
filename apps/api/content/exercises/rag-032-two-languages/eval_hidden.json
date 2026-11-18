@@ -1,0 +1,512 @@
+[
+  {
+    "id": "h01",
+    "question": "শেষ কর্মদিবসে ল্যাপটপ কোথায় ফেরত দিতে হবে?",
+    "answerable": true,
+    "goldAnswer": "Return your laptop to the IT desk on your last working day",
+    "goldDocId": "en-laptop-returns",
+    "goldSpan": "Return your laptop to the IT desk on your last working day",
+    "split": "feedback",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h02",
+    "question": "রাত নয়টার পরে কাজ করলে রাতের খাবারের জন্য কত ভাতা পাওয়া যায়?",
+    "answerable": true,
+    "goldAnswer": "Staff working past 9 pm can claim a dinner allowance of 15 pounds",
+    "goldDocId": "en-meal-allowance",
+    "goldSpan": "Staff working past 9 pm can claim a dinner allowance of 15 pounds",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h03",
+    "question": "লন্ডন অফিসে পার্কিং পারমিটের খরচ মাসে কত?",
+    "answerable": true,
+    "goldAnswer": "Parking permits for the London office cost 40 pounds a month",
+    "goldDocId": "en-parking",
+    "goldSpan": "Parking permits for the London office cost 40 pounds a month",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h04",
+    "question": "বছরে কত দিন বেতনসহ প্রশিক্ষণ নেওয়া যায়?",
+    "answerable": true,
+    "goldAnswer": "Each employee gets five paid training days per year",
+    "goldDocId": "en-training-days",
+    "goldSpan": "Each employee gets five paid training days per year",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h05",
+    "question": "অতিথিদের ওয়াই-ফাই ভাউচার কত ঘণ্টা চলে?",
+    "answerable": true,
+    "goldAnswer": "Visitors get a Wi-Fi voucher from reception that lasts eight hours",
+    "goldDocId": "en-visitor-wifi",
+    "goldSpan": "Visitors get a Wi-Fi voucher from reception that lasts eight hours",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h06",
+    "question": "কেনাকাটার কত দিনের মধ্যে খরচের দাবি জমা দিতে হয়?",
+    "answerable": true,
+    "goldAnswer": "Submit expense claims within 30 days of the purchase",
+    "goldDocId": "en-expense-deadline",
+    "goldSpan": "Submit expense claims within 30 days of the purchase",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h07",
+    "question": "টানা কত দিন অসুস্থ থাকলে ডাক্তারের সনদ লাগে?",
+    "answerable": true,
+    "goldAnswer": "A doctor's note is required after three consecutive sick days",
+    "goldDocId": "en-sick-notes",
+    "goldSpan": "A doctor's note is required after three consecutive sick days",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h08",
+    "question": "নতুন ইঞ্জিনিয়াররা কত মাস একজন মেন্টর পান?",
+    "answerable": true,
+    "goldAnswer": "New engineers are paired with a mentor for their first six months",
+    "goldDocId": "en-mentoring",
+    "goldSpan": "New engineers are paired with a mentor for their first six months",
+    "split": "feedback",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h09",
+    "question": "সাইকেল স্কিমে সর্বোচ্চ কত দামের সাইকেল কেনা যায়?",
+    "answerable": true,
+    "goldAnswer": "The cycle to work scheme covers bikes up to 1,000 pounds",
+    "goldDocId": "en-cycle-scheme",
+    "goldSpan": "The cycle to work scheme covers bikes up to 1,000 pounds",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h10",
+    "question": "লন্ডন অফিসে ডেস্ক কত দিন আগে বুক করা যায়?",
+    "answerable": true,
+    "goldAnswer": "Bookings open seven days ahead",
+    "goldDocId": "en-desk-booking",
+    "goldSpan": "Bookings open seven days ahead",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h11",
+    "question": "কাউকে রেফার করে চাকরি হলে কত বোনাস পাওয়া যায়?",
+    "answerable": true,
+    "goldAnswer": "Referring a candidate who is hired earns a bonus of 1,500 pounds",
+    "goldDocId": "en-referrals",
+    "goldSpan": "Referring a candidate who is hired earns a bonus of 1,500 pounds",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h12",
+    "question": "মাঠকর্মীরা মোবাইল বিলের জন্য মাসে কত পান?",
+    "answerable": true,
+    "goldAnswer": "Field staff receive 20 pounds a month toward their mobile phone bill",
+    "goldDocId": "en-phone-allowance",
+    "goldSpan": "Field staff receive 20 pounds a month toward their mobile phone bill",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h13",
+    "question": "কোম্পানি পেনশনে বেতনের কত শতাংশ পর্যন্ত মিলিয়ে দেয়?",
+    "answerable": true,
+    "goldAnswer": "The company matches pension contributions up to 5 percent of salary",
+    "goldDocId": "en-pension",
+    "goldSpan": "The company matches pension contributions up to 5 percent of salary",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h14",
+    "question": "অব্যবহৃত কত দিনের ছুটি পরের বছরে নেওয়া যায়?",
+    "answerable": true,
+    "goldAnswer": "Up to five unused holiday days can be carried into the next year",
+    "goldDocId": "en-holiday-carry-over",
+    "goldSpan": "Up to five unused holiday days can be carried into the next year",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h15",
+    "question": "কতক্ষণ কিছু না করলে ল্যাপটপ নিজে থেকে লক হতে হবে?",
+    "answerable": true,
+    "goldAnswer": "Laptops must lock automatically after five minutes of inactivity",
+    "goldDocId": "en-screen-lock",
+    "goldSpan": "Laptops must lock automatically after five minutes of inactivity",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h16",
+    "question": "How many Eid bonuses do employees get each year?",
+    "answerable": true,
+    "goldAnswer": "প্রত্যেক কর্মী বছরে দুটি ঈদ বোনাস পান, প্রতিটি মূল বেতনের সমান",
+    "goldDocId": "bn-eid-bonus",
+    "goldSpan": "প্রত্যেক কর্মী বছরে দুটি ঈদ বোনাস পান, প্রতিটি মূল বেতনের সমান",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h17",
+    "question": "What days and hours is the Dhaka office open?",
+    "answerable": true,
+    "goldAnswer": "ঢাকা অফিস রবিবার থেকে বৃহস্পতিবার সকাল নয়টা থেকে বিকেল ছয়টা পর্যন্ত খোলা থাকে",
+    "goldDocId": "bn-office-hours",
+    "goldSpan": "ঢাকা অফিস রবিবার থেকে বৃহস্পতিবার সকাল নয়টা থেকে বিকেল ছয়টা পর্যন্ত খোলা থাকে",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h18",
+    "question": "How much transport allowance do Dhaka staff receive per month?",
+    "answerable": true,
+    "goldAnswer": "ঢাকা অফিসের কর্মীরা মাসে তিন হাজার টাকা যাতায়াত ভাতা পান",
+    "goldDocId": "bn-transport",
+    "goldSpan": "ঢাকা অফিসের কর্মীরা মাসে তিন হাজার টাকা যাতায়াত ভাতা পান",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h19",
+    "question": "Is lunch in the office canteen free?",
+    "answerable": true,
+    "goldAnswer": "অফিসের ক্যান্টিনে কর্মীদের দুপুরের খাবার বিনামূল্যে দেওয়া হয়",
+    "goldDocId": "bn-lunch",
+    "goldSpan": "অফিসের ক্যান্টিনে কর্মীদের দুপুরের খাবার বিনামূল্যে দেওয়া হয়",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h20",
+    "question": "How long is maternity leave, and is it paid?",
+    "answerable": true,
+    "goldAnswer": "নারী কর্মীরা পূর্ণ বেতনে ছয় মাসের মাতৃত্বকালীন ছুটি পান",
+    "goldDocId": "bn-maternity",
+    "goldSpan": "নারী কর্মীরা পূর্ণ বেতনে ছয় মাসের মাতৃত্বকালীন ছুটি পান",
+    "split": "feedback",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "How quickly does the office generator start during a power cut?",
+    "answerable": true,
+    "goldAnswer": "বিদ্যুৎ চলে গেলে অফিসের জেনারেটর দুই মিনিটের মধ্যে চালু হয়",
+    "goldDocId": "bn-generator",
+    "goldSpan": "বিদ্যুৎ চলে গেলে অফিসের জেনারেটর দুই মিনিটের মধ্যে চালু হয়",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "How much internet allowance do people working from home get?",
+    "answerable": true,
+    "goldAnswer": "বাসা থেকে কাজ করা কর্মীরা মাসে এক হাজার পাঁচশো টাকা ইন্টারনেট ভাতা পান",
+    "goldDocId": "bn-home-internet",
+    "goldSpan": "বাসা থেকে কাজ করা কর্মীরা মাসে এক হাজার পাঁচশো টাকা ইন্টারনেট ভাতা পান",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "How much of my medical costs can I claim back each year?",
+    "answerable": true,
+    "goldAnswer": "প্রত্যেক কর্মী বছরে বিশ হাজার টাকা পর্যন্ত চিকিৎসা খরচ ফেরত পেতে পারেন",
+    "goldDocId": "bn-medical",
+    "goldSpan": "প্রত্যেক কর্মী বছরে বিশ হাজার টাকা পর্যন্ত চিকিৎসা খরচ ফেরত পেতে পারেন",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "What is the fee for replacing a lost ID card?",
+    "answerable": true,
+    "goldAnswer": "হারানো পরিচয়পত্র নতুন করে পেতে পাঁচশো টাকা ফি দিতে হয়",
+    "goldDocId": "bn-id-card",
+    "goldSpan": "হারানো পরিচয়পত্র নতুন করে পেতে পাঁচশো টাকা ফি দিতে হয়",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "abbreviation",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "At what rate is overtime paid?",
+    "answerable": true,
+    "goldAnswer": "সপ্তাহে চল্লিশ ঘণ্টার বেশি কাজ করলে ঘণ্টাপ্রতি দেড় গুণ হারে ওভারটাইম দেওয়া হয়",
+    "goldDocId": "bn-overtime",
+    "goldSpan": "সপ্তাহে চল্লিশ ঘণ্টার বেশি কাজ করলে ঘণ্টাপ্রতি দেড় গুণ হারে ওভারটাইম দেওয়া হয়",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "How many extra days off are given for Puja and Christmas?",
+    "answerable": true,
+    "goldAnswer": "পূজা ও বড়দিনে কর্মীরা দুই দিনের অতিরিক্ত ছুটি নিতে পারেন",
+    "goldDocId": "bn-festival-leave",
+    "goldSpan": "পূজা ও বড়দিনে কর্মীরা দুই দিনের অতিরিক্ত ছুটি নিতে পারেন",
+    "split": "feedback",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "What share of basic salary goes into the provident fund?",
+    "answerable": true,
+    "goldAnswer": "প্রভিডেন্ট ফান্ডে কর্মী মূল বেতনের দশ শতাংশ জমা দেন, আর কোম্পানিও সমপরিমাণ জমা দেয়",
+    "goldDocId": "bn-provident-fund",
+    "goldSpan": "প্রভিডেন্ট ফান্ডে কর্মী মূল বেতনের দশ শতাংশ জমা দেন, আর কোম্পানিও সমপরিমাণ জমা দেয়",
+    "split": "feedback",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "Should I use the lift if there is a fire?",
+    "answerable": true,
+    "goldAnswer": "আগুন লাগলে লিফট ব্যবহার না করে সিঁড়ি দিয়ে নামতে হবে",
+    "goldDocId": "bn-fire-safety",
+    "goldSpan": "আগুন লাগলে লিফট ব্যবহার না করে সিঁড়ি দিয়ে নামতে হবে",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "How soon do I get a replacement when my laptop breaks?",
+    "answerable": true,
+    "goldAnswer": "নষ্ট ল্যাপটপ আইটি ডেস্কে জমা দিলে দুই কর্মদিবসের মধ্যে বদলি ল্যাপটপ দেওয়া হয়",
+    "goldDocId": "bn-laptop-repair",
+    "goldSpan": "নষ্ট ল্যাপটপ আইটি ডেস্কে জমা দিলে দুই কর্মদিবসের মধ্যে বদলি ল্যাপটপ দেওয়া হয়",
+    "split": "holdout",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "On which days is formal dress required?",
+    "answerable": true,
+    "goldAnswer": "সোমবার থেকে বৃহস্পতিবার অফিসে ফরমাল পোশাক পরতে হয়",
+    "goldDocId": "bn-dress-code",
+    "goldSpan": "সোমবার থেকে বৃহস্পতিবার অফিসে ফরমাল পোশাক পরতে হয়",
+    "split": "feedback",
+    "tags": [
+      "cross-lingual",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "When must carried-over holiday days be used?",
+    "answerable": true,
+    "goldAnswer": "Carried days must be used by the end of March",
+    "goldDocId": "en-holiday-carry-over",
+    "goldSpan": "Carried days must be used by the end of March",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How often do mentors meet their mentee?",
+    "answerable": true,
+    "goldAnswer": "Mentors meet their mentee every two weeks",
+    "goldDocId": "en-mentoring",
+    "goldSpan": "Mentors meet their mentee every two weeks",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "Who issues parking permits for the London office?",
+    "answerable": true,
+    "goldAnswer": "Permits are issued by the facilities team on the first Monday of each month",
+    "goldDocId": "en-parking",
+    "goldSpan": "Permits are issued by the facilities team on the first Monday of each month",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "নতুন পরিচয়পত্র তৈরি হতে কত দিন লাগে?",
+    "answerable": true,
+    "goldAnswer": "নতুন কার্ড তিন কর্মদিবসের মধ্যে তৈরি হয়",
+    "goldDocId": "bn-id-card",
+    "goldSpan": "নতুন কার্ড তিন কর্মদিবসের মধ্যে তৈরি হয়",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "মাতৃত্বকালীন ছুটির কত আগে মানবসম্পদ বিভাগকে জানাতে হয়?",
+    "answerable": true,
+    "goldAnswer": "ছুটি শুরুর অন্তত এক মাস আগে মানবসম্পদ বিভাগকে জানাতে হয়",
+    "goldDocId": "bn-maternity",
+    "goldSpan": "ছুটি শুরুর অন্তত এক মাস আগে মানবসম্পদ বিভাগকে জানাতে হয়",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "চিকিৎসা খরচের দাবির সঙ্গে কী জমা দিতে হয়?",
+    "answerable": true,
+    "goldAnswer": "দাবির সঙ্গে ডাক্তারের প্রেসক্রিপশন জমা দিতে হয়",
+    "goldDocId": "bn-medical",
+    "goldSpan": "দাবির সঙ্গে ডাক্তারের প্রেসক্রিপশন জমা দিতে হয়",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R32_CANARY_PHRASE listed in the unpublished runbook?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
+  }
+]

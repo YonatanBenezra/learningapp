@@ -55,6 +55,7 @@ import { parseSandboxPayload } from '../modules/grading/harnesses/sandbox/sandbo
 import { runLocalPython } from '../modules/sandbox/local-python';
 import type { ExerciseContentBundle } from './content-loader';
 import { corpusPathFor } from './content-paths';
+import { simulatedRewriter } from './simulated-rewriter';
 
 /** Identity the offline content checks grade red team levels as. */
 export const CONTENT_CHECK_USER = 'content-check';
@@ -112,13 +113,15 @@ export async function runContentGrader(
     }
     case 'rag-r4': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
-      // No model offline: a rewrite prompt leaves the question as asked.
+      // No model offline: a rewrite prompt runs a simulated rewrite that
+      // expands the corpus's abbreviations and fixes typos (graded runs call
+      // the live model).
       return gradeR4(
         parseR4Payload(payload),
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
-        (_instruction, question) => Promise.resolve(question),
+        simulatedRewriter(docs),
         bundle.meta.gates,
       );
     }

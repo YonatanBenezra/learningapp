@@ -1,0 +1,42 @@
+[
+  {
+    "id": "laptops",
+    "title": "Laptops",
+    "text": "## Office range\n\n| Model | Memory | Price |\n| --- | --- | --- |\n| Air | 32 GB | 430 euros |\n| Pro | 16 GB | 929 euros |\n| Max | 8 GB | 554 euros |\n| Mini | 64 GB | 733 euros |\n\n## Studio range\n\n| Model | Memory | Price |\n| --- | --- | --- |\n| Air | 32 GB | 255 euros |\n| Pro | 64 GB | 506 euros |\n| Max | 16 GB | 482 euros |\n| Mini | 64 GB | 1056 euros |"
+  },
+  {
+    "id": "monitors",
+    "title": "Monitors",
+    "text": "## Office range\n\n| Model | Screen | Price |\n| --- | --- | --- |\n| Air | 24 inch | 843 euros |\n| Pro | 24 inch | 218 euros |\n| Max | 32 inch | 558 euros |\n| Mini | 34 inch | 299 euros |\n\n## Studio range\n\n| Model | Screen | Price |\n| --- | --- | --- |\n| Air | 24 inch | 493 euros |\n| Pro | 34 inch | 736 euros |\n| Max | 32 inch | 421 euros |\n| Mini | 34 inch | 275 euros |"
+  },
+  {
+    "id": "keyboards",
+    "title": "Keyboards",
+    "text": "## Office range\n\n| Model | Layout | Price |\n| --- | --- | --- |\n| Air | split | 366 euros |\n| Pro | split | 210 euros |\n| Max | full size | 598 euros |\n| Mini | tenkeyless | 103 euros |\n\n## Studio range\n\n| Model | Layout | Price |\n| --- | --- | --- |\n| Air | full size | 874 euros |\n| Pro | full size | 842 euros |\n| Max | compact | 609 euros |\n| Mini | full size | 452 euros |"
+  },
+  {
+    "id": "headsets",
+    "title": "Headsets",
+    "text": "## Office range\n\n| Model | Battery | Price |\n| --- | --- | --- |\n| Air | 40 hours | 196 euros |\n| Pro | 40 hours | 886 euros |\n| Max | 50 hours | 158 euros |\n| Mini | 50 hours | 313 euros |\n\n## Studio range\n\n| Model | Battery | Price |\n| --- | --- | --- |\n| Air | 50 hours | 1080 euros |\n| Pro | 20 hours | 789 euros |\n| Max | 30 hours | 866 euros |\n| Mini | 20 hours | 269 euros |"
+  },
+  {
+    "id": "docks",
+    "title": "Docks",
+    "text": "## Office range\n\n| Model | Ports | Price |\n| --- | --- | --- |\n| Air | 11 ports | 134 euros |\n| Pro | 6 ports | 635 euros |\n| Max | 11 ports | 859 euros |\n| Mini | 4 ports | 764 euros |\n\n## Studio range\n\n| Model | Ports | Price |\n| --- | --- | --- |\n| Air | 11 ports | 782 euros |\n| Pro | 4 ports | 229 euros |\n| Max | 6 ports | 665 euros |\n| Mini | 4 ports | 826 euros |"
+  },
+  {
+    "id": "webcams",
+    "title": "Webcams",
+    "text": "## Office range\n\n| Model | Resolution | Price |\n| --- | --- | --- |\n| Air | 4K | 953 euros |\n| Pro | 1080p | 228 euros |\n| Max | 720p | 125 euros |\n| Mini | 1080p | 658 euros |\n\n## Studio range\n\n| Model | Resolution | Price |\n| --- | --- | --- |\n| Air | 1440p | 560 euros |\n| Pro | 1440p | 339 euros |\n| Max | 720p | 792 euros |\n| Mini | 1440p | 1071 euros |"
+  },
+  {
+    "id": "desk-chairs",
+    "title": "Desk chairs",
+    "text": "## Office range\n\n| Model | Warranty | Price |\n| --- | --- | --- |\n| Air | 2 years | 593 euros |\n| Pro | 2 years | 419 euros |\n| Max | 7 years | 437 euros |\n| Mini | 2 years | 146 euros |\n\n## Studio range\n\n| Model | Warranty | Price |\n| --- | --- | --- |\n| Air | 5 years | 490 euros |\n| Pro | 2 years | 320 euros |\n| Max | 5 years | 1033 euros |\n| Mini | 5 years | 1078 euros |"
+  },
+  {
+    "id": "phones",
+    "title": "Phones",
+    "text": "## Office range\n\n| Model | Storage | Price |\n| --- | --- | --- |\n| Air | 128 GB | 813 euros |\n| Pro | 128 GB | 229 euros |\n| Max | 128 GB | 206 euros |\n| Mini | 1 TB | 781 euros |\n\n## Studio range\n\n| Model | Storage | Price |\n| --- | --- | --- |\n| Air | 256 GB | 597 euros |\n| Pro | 128 GB | 1097 euros |\n| Max | 512 GB | 259 euros |\n| Mini | 128 GB | 429 euros |"
+  }
+]

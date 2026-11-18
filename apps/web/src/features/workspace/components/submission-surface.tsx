@@ -74,11 +74,21 @@ const RAG_FIELD_HELP: Record<string, string> = {
   retrievalMode:
     "bm25 matches keywords, dense matches meaning with embeddings, hybrid mixes both by hybridAlpha.",
   hybridAlpha: "Weight on the dense score in hybrid mode: 0 is pure BM25, 1 is pure dense.",
+  embeddingModel:
+    "english is bge-small, trained on English; multilingual is e5-small, trained on about 100 languages including Bangla.",
   statusFilter: "Which documents may reach the context, by their status metadata.",
   reranker:
     "title-boost and mmr are heuristics; cross-encoder is a model that reads the question and each candidate together.",
   dedupe: "exact drops identical pages; near drops pages whose words overlap at least the threshold.",
   dedupeThreshold: "Share of distinct words two pages must share to count as copies.",
+  hops: "1 searches once; 2 searches again with the question plus what the first search found.",
+  router:
+    "none sends every question to the default profile; rules uses your routing rules; top-document routes by the best-matching document's type.",
+  defaultRoute: "Profile for questions no rule matches (and for every question when the router is none).",
+  refuseBelowScore:
+    "Refuse without calling the model when the best BM25 score is below this (0 = always call the model).",
+  hopSeeds: "How many passages from the first search feed the second query.",
+  hopQuery: "passage adds whole passages to the second query; entities adds only the new names they mention.",
   filterStage: "pre filters the index before top-k; post drops failing chunks after top-k.",
 };
 
@@ -842,7 +852,8 @@ function isLongField(name: string) {
     key.includes("spec") ||
     key.includes("content") ||
     key.includes("source") ||
-    key.includes("schema")
+    key.includes("schema") ||
+    key.includes("rules")
   );
 }
 

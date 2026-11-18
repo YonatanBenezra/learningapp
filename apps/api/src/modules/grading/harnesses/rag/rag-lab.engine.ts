@@ -24,7 +24,8 @@ import {
   rerankForR4,
   rewriteQueries,
 } from './r4.grade';
-import { isR5Class, parseR5Payload, routeR5 } from './r5.grade';
+import { isR5Class, parseR5Payload, routeFor, routeR5 } from './r5.grade';
+import { topRetrievalScore } from './r3.grade';
 import { titleBoost } from './rerank';
 import { goldOf } from './rag.shared';
 import {
@@ -77,6 +78,8 @@ export type RagLabPreview = {
   rewrittenQuery: string | null;
   /** R4: a rewrite prompt is set but was not run (it needs an explicit request). */
   rewriteSkipped: boolean;
+  /** R3: best first-stage BM25 score, what refuseBelowScore is compared with. */
+  topScore: number | null;
   retrieved: RagLabHit[];
   baseline: RagLabHit[] | null;
   generation: string | null;
@@ -137,11 +140,10 @@ export function ragLabFrozen(slug: string): RagLabFrozen | null {
   }
   if (archetype === 'r5') {
     return {
-      label: 'Router given',
+      label: 'Split locked',
       items: [
         `Strategy ${R2_SPLIT.splitStrategy}`,
         `Overlap ${R2_SPLIT.overlap}`,
-        'Class from the router',
       ],
     };
   }
@@ -190,14 +192,18 @@ export async function previewRagLabWithCorpus(
   let retrieval = retrieverLabel(BM25_RETRIEVER);
   let rewrittenQuery: string | null = null;
   let rewriteSkipped = false;
+  let topScore: number | null = null;
 
   if (archetype === 'r5') {
-    const routed = routeR5(
+    const parsed = parseR5Payload(payload);
+    const route = routeFor(
       question,
-      isR5Class(queryClass) ? queryClass : 'faq',
+      parsed.router,
       docs,
-      parseR5Payload(payload),
+      isR5Class(queryClass) ? queryClass : null,
     );
+    retrieval = `Routed to ${route}`;
+    const routed = routeR5(question, route, docs, parsed);
     chunks = routed.chunks;
     retrieved = routed.ranked;
   } else if (archetype === 'r2') {
@@ -219,6 +225,7 @@ export async function previewRagLabWithCorpus(
     // Validates the payload; the answer itself comes from the live model
     // (RagLabService.preview), the same call the grader makes.
     parseR3Payload(payload);
+    topScore = topRetrievalScore(question, chunks);
     retrieval = 'BM25 + title boost';
     retrieved = frozenRetrieve(question, chunks);
   } else if (archetype === 'r4') {
@@ -270,6 +277,7 @@ export async function previewRagLabWithCorpus(
     retrieval,
     rewrittenQuery,
     rewriteSkipped,
+    topScore,
     retrieved: retrievedHits,
     baseline: baseline ? hitsToDto(baseline, gold) : null,
     generation: null,

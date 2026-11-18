@@ -1,42 +1,34 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO, and where?",
+    "question": "How much storage does the Air phone in the office range have?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "128 GB",
+    "goldDocId": "phones",
+    "goldSpan": "| Air | 128 GB | 813 euros |"
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "question": "How much storage does the Pro phone in the office range have?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "128 GB",
+    "goldDocId": "phones",
+    "goldSpan": "| Pro | 128 GB | 229 euros |"
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "How much storage does the Max phone in the office range have?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "128 GB",
+    "goldDocId": "phones",
+    "goldSpan": "| Max | 128 GB | 206 euros |"
   },
   {
     "id": "p4",
-    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "question": "How much storage does the Mini phone in the office range have?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
-  },
-  {
-    "id": "p5",
-    "question": "What happens to a purchase order when the vendor security report is missing?",
-    "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "1 TB",
+    "goldDocId": "phones",
+    "goldSpan": "| Mini | 1 TB | 781 euros |"
   }
 ]

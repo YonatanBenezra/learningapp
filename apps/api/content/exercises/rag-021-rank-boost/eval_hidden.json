@@ -506,6 +506,7 @@
     "goldSpan": "Workspaces created in Europe are stored in Frankfurt and copied to Dublin for backup",
     "split": "holdout",
     "tags": [
+      "abbreviation",
       "paraphrase",
       "distractor"
     ]

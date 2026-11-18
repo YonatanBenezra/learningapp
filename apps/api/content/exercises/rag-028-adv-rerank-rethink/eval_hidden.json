@@ -1,50 +1,51 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How many WFH days are allowed per week?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "Staff may work from home up to three days per week with manager agreement",
+    "goldDocId": "policy-wfh",
+    "goldSpan": "Staff may work from home up to three days per week with manager agreement",
     "split": "holdout",
     "tags": [
-      "numeric",
-      "lexical"
+      "abbreviation",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "question": "Where do I ordr equipmnt for home?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "Home working equipment is ordered through the service desk",
+    "goldDocId": "policy-wfh",
+    "goldSpan": "Home working equipment is ordered through the service desk",
     "split": "holdout",
     "tags": [
-      "numeric",
       "paraphrase"
     ]
   },
   {
     "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "When do I need to set an OOO message?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
+    "goldAnswer": "Set an automatic out-of-office reply when absent for more than one working day",
+    "goldDocId": "policy-ooo",
+    "goldSpan": "Set an automatic out-of-office reply when absent for more than one working day",
     "split": "holdout",
     "tags": [
+      "abbreviation",
       "paraphrase",
       "distractor"
     ]
   },
   {
     "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "question": "Who should my automatc absnce reply name?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
+    "goldAnswer": "The reply must name a colleague who can help while you are away",
+    "goldDocId": "policy-ooo",
+    "goldSpan": "The reply must name a colleague who can help while you are away",
     "split": "holdout",
     "tags": [
       "paraphrase"
@@ -52,210 +53,474 @@
   },
   {
     "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "question": "Above what amount is a PO required?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents",
+    "goldAnswer": "A purchase order is needed for any supplier spend above 2,000 euros",
+    "goldDocId": "policy-po",
+    "goldSpan": "A purchase order is needed for any supplier spend above 2,000 euros",
     "split": "feedback",
     "tags": [
-      "lexical"
+      "numeric",
+      "abbreviation",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "Must a purchse ordr be aproved before the invoce?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days",
-    "split": "feedback",
+    "goldAnswer": "The purchase order must be approved before the invoice arrives",
+    "goldDocId": "policy-po",
+    "goldSpan": "The purchase order must be approved before the invoice arrives",
+    "split": "holdout",
     "tags": [
-      "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "Who keeps signed NDAs, and for how long?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
-    "split": "holdout",
+    "goldAnswer": "Legal keeps the signed copies for seven years",
+    "goldDocId": "policy-nda",
+    "goldSpan": "Legal keeps the signed copies for seven years",
+    "split": "feedback",
     "tags": [
-      "numeric",
+      "abbreviation",
       "lexical"
     ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "Do contractrs sign befor seeing unreleasd products?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
+    "goldAnswer": "Visitors and contractors sign a non-disclosure agreement before seeing unreleased products",
+    "goldDocId": "policy-nda",
+    "goldSpan": "Visitors and contractors sign a non-disclosure agreement before seeing unreleased products",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "How long does a PIP last?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
-    "split": "holdout",
+    "goldAnswer": "A performance improvement plan lasts eight weeks",
+    "goldDocId": "policy-pip",
+    "goldSpan": "A performance improvement plan lasts eight weeks",
+    "split": "feedback",
     "tags": [
-      "numeric",
-      "lexical"
+      "abbreviation",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "How oftn are chek-ins during an improvment plan?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days",
-    "split": "holdout",
+    "goldAnswer": "There is a check-in with the manager every two weeks during the plan",
+    "goldDocId": "policy-pip",
+    "goldSpan": "There is a check-in with the manager every two weeks during the plan",
+    "split": "feedback",
     "tags": [
-      "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "Which days are RTO days?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
+    "goldAnswer": "Teams return to the office on Tuesdays and Thursdays",
+    "goldDocId": "policy-rto",
+    "goldSpan": "Teams return to the office on Tuesdays and Thursdays",
     "split": "holdout",
     "tags": [
-      "numeric",
-      "lexical"
+      "abbreviation",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "question": "Which weekdys are flexibl?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement",
-    "split": "feedback",
+    "goldAnswer": "The other weekdays are flexible",
+    "goldDocId": "policy-rto",
+    "goldSpan": "The other weekdays are flexible",
+    "split": "holdout",
     "tags": [
-      "numeric",
-      "lexical",
+      "paraphrase",
       "distractor"
     ]
   },
   {
     "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "question": "How many OKRs does a team set?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night",
+    "goldAnswer": "Each team sets three objectives and key results per quarter",
+    "goldDocId": "policy-okr",
+    "goldSpan": "Each team sets three objectives and key results per quarter",
     "split": "holdout",
     "tags": [
-      "numeric",
+      "abbreviation",
       "lexical"
     ]
   },
   {
     "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "question": "When are quartrly objectivs reviewd?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours",
+    "goldAnswer": "They are reviewed in the second week of the following quarter",
+    "goldDocId": "policy-okr",
+    "goldSpan": "They are reviewed in the second week of the following quarter",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h15",
-    "question": "Where must staff store passwords?",
+    "question": "What is the SLA response time for priority one tickets?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password",
-    "split": "feedback",
+    "goldAnswer": "Under the service level agreement, priority one tickets are answered within 30 minutes",
+    "goldDocId": "policy-sla",
+    "goldSpan": "Under the service level agreement, priority one tickets are answered within 30 minutes",
+    "split": "holdout",
     "tags": [
       "numeric",
-      "paraphrase"
-    ]
-  },
-  {
-    "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
-    "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default",
-    "split": "feedback",
-    "tags": [
+      "abbreviation",
       "lexical"
     ]
   },
   {
-    "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "id": "h16",
+    "question": "How fast are priorty one tickts resolvd?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision",
+    "goldAnswer": "Priority one tickets are resolved within four hours",
+    "goldDocId": "policy-sla",
+    "goldSpan": "Priority one tickets are resolved within four hours",
     "split": "holdout",
     "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h17",
+    "question": "Is BYOD allowed for laptops?",
+    "answerable": true,
+    "goldAnswer": "Personal laptops are not allowed on the internal network",
+    "goldDocId": "policy-byod",
+    "goldSpan": "Personal laptops are not allowed on the internal network",
+    "split": "holdout",
+    "tags": [
+      "abbreviation",
       "lexical"
     ]
   },
   {
     "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
+    "question": "Can personl phnes acess email?",
     "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report",
-    "split": "holdout",
+    "goldAnswer": "Personal phones may access email only after enrolling in device management",
+    "goldDocId": "policy-byod",
+    "goldSpan": "Personal phones may access email only after enrolling in device management",
+    "split": "feedback",
     "tags": [
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
+    "question": "How many EAP sessions are free?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours",
-    "split": "holdout",
+    "goldAnswer": "The employee assistance programme offers six free counselling sessions a year",
+    "goldDocId": "policy-eap",
+    "goldSpan": "The employee assistance programme offers six free counselling sessions a year",
+    "split": "feedback",
     "tags": [
+      "abbreviation",
       "lexical"
     ]
   },
   {
     "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
+    "question": "Are counseling sesions confidental?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest",
-    "split": "holdout",
+    "goldAnswer": "Sessions are fully confidential and are not reported to managers",
+    "goldDocId": "policy-eap",
+    "goldSpan": "Sessions are fully confidential and are not reported to managers",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "How quickly must a breach go to the DPO?",
+    "answerable": true,
+    "goldAnswer": "Report a suspected personal data breach to the data protection officer within 24 hours",
+    "goldDocId": "policy-dpo",
+    "goldSpan": "Report a suspected personal data breach to the data protection officer within 24 hours",
+    "split": "feedback",
     "tags": [
       "numeric",
+      "abbreviation",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "Can I contct affectd custmers about a breech?",
+    "answerable": true,
+    "goldAnswer": "Do not contact affected customers before the officer has assessed the breach",
+    "goldDocId": "policy-dpo",
+    "goldSpan": "Do not contact affected customers before the officer has assessed the breach",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "What must an SOW list?",
+    "answerable": true,
+    "goldAnswer": "The statement of work lists the deliverables and an end date",
+    "goldDocId": "policy-sow",
+    "goldSpan": "The statement of work lists the deliverables and an end date",
+    "split": "holdout",
+    "tags": [
+      "abbreviation",
       "lexical"
     ]
   },
   {
+    "id": "h24",
+    "question": "Does every contractr engagment ned a signd statemnt?",
+    "answerable": true,
+    "goldAnswer": "Every contractor engagement needs a signed statement of work",
+    "goldDocId": "policy-sow",
+    "goldSpan": "Every contractor engagement needs a signed statement of work",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "When do we need an RFP?",
+    "answerable": true,
+    "goldAnswer": "Purchases above 50,000 euros require a request for proposal",
+    "goldDocId": "policy-rfp",
+    "goldSpan": "Purchases above 50,000 euros require a request for proposal",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "abbreviation",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "How many supplirs must recieve the proposl?",
+    "answerable": true,
+    "goldAnswer": "The request for proposal goes to at least three suppliers",
+    "goldDocId": "policy-rfp",
+    "goldSpan": "The request for proposal goes to at least three suppliers",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "After how many years do laptops hit EOL?",
+    "answerable": true,
+    "goldAnswer": "Laptops and phones reach end of life after five years",
+    "goldDocId": "policy-eol",
+    "goldSpan": "Laptops and phones reach end of life after five years",
+    "split": "holdout",
+    "tags": [
+      "abbreviation",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "Who colects devices for certifed recyling?",
+    "answerable": true,
+    "goldAnswer": "IT collects end-of-life devices for certified recycling",
+    "goldDocId": "policy-eol",
+    "goldSpan": "IT collects end-of-life devices for certified recycling",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "How long do I have to use TOIL?",
+    "answerable": true,
+    "goldAnswer": "Overtime can be taken as time off in lieu within three months of being worked",
+    "goldDocId": "policy-toil",
+    "goldSpan": "Overtime can be taken as time off in lieu within three months of being worked",
+    "split": "feedback",
+    "tags": [
+      "abbreviation",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "Does overtme leave ned managr aproval?",
+    "answerable": true,
+    "goldAnswer": "Time off in lieu needs manager approval like any other leave",
+    "goldDocId": "policy-toil",
+    "goldSpan": "Time off in lieu needs manager approval like any other leave",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "How many CPD hours must engineers log?",
+    "answerable": true,
+    "goldAnswer": "Engineers log at least twenty hours of continuing professional development each year",
+    "goldDocId": "policy-cpd",
+    "goldSpan": "Engineers log at least twenty hours of continuing professional development each year",
+    "split": "feedback",
+    "tags": [
+      "abbreviation",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "Do conferance talks and certifid courses count?",
+    "answerable": true,
+    "goldAnswer": "Conference talks and certified courses both count toward the hours",
+    "goldDocId": "policy-cpd",
+    "goldSpan": "Conference talks and certified courses both count toward the hours",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "What is the DEI rule for hiring panels?",
+    "answerable": true,
+    "goldAnswer": "Every hiring panel includes at least one interviewer from outside the hiring team",
+    "goldDocId": "policy-dei",
+    "goldSpan": "Every hiring panel includes at least one interviewer from outside the hiring team",
+    "split": "feedback",
+    "tags": [
+      "abbreviation",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "Are job advrts reviewd for biasd wording?",
+    "answerable": true,
+    "goldAnswer": "Job adverts are reviewed for biased wording before they are published",
+    "goldDocId": "policy-dei",
+    "goldSpan": "Job adverts are reviewed for biased wording before they are published",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "When do new customers go through KYC?",
+    "answerable": true,
+    "goldAnswer": "New business customers pass know your customer checks before their first invoice",
+    "goldDocId": "policy-kyc",
+    "goldSpan": "New business customers pass know your customer checks before their first invoice",
+    "split": "holdout",
+    "tags": [
+      "abbreviation",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "How oftn are custmer chcks repeatd?",
+    "answerable": true,
+    "goldAnswer": "The checks are repeated every two years",
+    "goldDocId": "policy-kyc",
+    "goldSpan": "The checks are repeated every two years",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h37",
+    "question": "How long can an LOA last?",
+    "answerable": true,
+    "goldAnswer": "An unpaid leave of absence can last up to six months",
+    "goldDocId": "policy-rif",
+    "goldSpan": "An unpaid leave of absence can last up to six months",
+    "split": "holdout",
+    "tags": [
+      "abbreviation",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h38",
+    "question": "What hapens to benfits during unpaid leve?",
+    "answerable": true,
+    "goldAnswer": "Benefits pause during the leave and restart on return",
+    "goldDocId": "policy-rif",
+    "goldSpan": "Benefits pause during the leave and restart on return",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h39",
+    "question": "What discount does the ESPP give?",
+    "answerable": true,
+    "goldAnswer": "Employees can buy company shares at a fifteen percent discount through the employee share purchase plan",
+    "goldDocId": "policy-ndr",
+    "goldSpan": "Employees can buy company shares at a fifteen percent discount through the employee share purchase plan",
+    "split": "holdout",
+    "tags": [
+      "abbreviation",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h40",
+    "question": "In which monts are share purchses made?",
+    "answerable": true,
+    "goldAnswer": "Purchases happen twice a year, in March and September",
+    "goldDocId": "policy-ndr",
+    "goldSpan": "Purchases happen twice a year, in March and September",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
     "id": "canary",
-    "question": "What is the HIDDEN_EVAL_C15_R04_CANARY listed in the unpublished runbook?",
+    "question": "What is the HIDDEN_EVAL_R28_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,

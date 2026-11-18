@@ -74,27 +74,33 @@ async function fetchPinned(model) {
 }
 
 const started = Date.now();
-const embed = pinned('EMBED_MODEL');
+const embedders = [pinned('EMBED_MODEL'), pinned('MULTILINGUAL_EMBED_MODEL')];
 const rerank = pinned('RERANK_MODEL');
-const states = [await fetchPinned(embed), await fetchPinned(rerank)];
+const embedStates = [];
+for (const model of embedders) {
+  embedStates.push(await fetchPinned(model));
+}
+const rerankState = await fetchPinned(rerank);
 
-// Load both exactly as the engine does: local files only.
+// Load every model exactly as the engine does: local files only.
 const tx = require('@huggingface/transformers');
 tx.env.allowRemoteModels = false;
 tx.env.allowLocalModels = true;
 tx.env.localModelPath = cacheDir;
 tx.env.useFSCache = false;
 
-const embedTokenizer = await tx.AutoTokenizer.from_pretrained(embed.id);
-const embedModel = await tx.AutoModel.from_pretrained(embed.id, {
-  dtype: embed.dtype,
-});
-const { last_hidden_state: hidden } = await embedModel(
-  embedTokenizer(['warm-up'], { padding: true, truncation: true }),
-);
-console.log(
-  `${embed.id}@${embed.revision.slice(0, 8)} (${states[0]}): ${hidden.dims[2]} dims`,
-);
+for (const [index, model] of embedders.entries()) {
+  const tokenizer = await tx.AutoTokenizer.from_pretrained(model.id);
+  const encoder = await tx.AutoModel.from_pretrained(model.id, {
+    dtype: model.dtype,
+  });
+  const { last_hidden_state: hidden } = await encoder(
+    tokenizer(['warm-up'], { padding: true, truncation: true }),
+  );
+  console.log(
+    `${model.id}@${model.revision.slice(0, 8)} (${embedStates[index]}): ${hidden.dims[2]} dims`,
+  );
+}
 
 const rerankTokenizer = await tx.AutoTokenizer.from_pretrained(rerank.id);
 const rerankModel = await tx.AutoModelForSequenceClassification.from_pretrained(
@@ -107,6 +113,6 @@ const { logits } = await rerankModel(
   rerankTokenizer(['warm-up'], { text_pair: ['warm-up'] }),
 );
 console.log(
-  `${rerank.id}@${rerank.revision.slice(0, 8)} (${states[1]}): score ${logits.data[0].toFixed(2)}`,
+  `${rerank.id}@${rerank.revision.slice(0, 8)} (${rerankState}): score ${logits.data[0].toFixed(2)}`,
 );
 console.log(`models in ${cacheDir} (${Date.now() - started} ms)`);

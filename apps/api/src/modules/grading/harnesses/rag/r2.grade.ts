@@ -99,7 +99,14 @@ export async function gradeR2(
       item.goldDocId as string,
       item.goldSpan as string,
     );
-    const hit = ranked.some((row) => holdsGold(row.chunk, gold));
+    // Multi-hop questions need every piece of evidence in context.
+    const evidence = item.evidence?.length
+      ? item.evidence.map((piece) => goldOf(docs, piece.docId, piece.span))
+      : [gold];
+    const missing = evidence.filter(
+      (piece) => !ranked.some((row) => holdsGold(row.chunk, piece)),
+    );
+    const hit = missing.length === 0;
     const family = familyOf.get(gold.docId);
     if (family) {
       versioned += 1;
@@ -118,14 +125,21 @@ export async function gradeR2(
       hit,
       hit
         ? null
-        : retrieved.some((row) => holdsGold(row.chunk, gold))
-          ? // Retrieved, then lost while packing the context.
-            {
-              code: duplicates.some((row) => holdsGold(row.chunk, gold))
-                ? 'deduped-away'
-                : 'packed-out-by-budget',
+        : evidence.length > 1
+          ? {
+              // Which link of the chain the context lacks.
+              code: missing.includes(evidence[0])
+                ? 'bridge-passage-missing'
+                : 'answer-passage-missing',
             }
-          : diagnoseR2Miss(item.question, retriever, payload, gold),
+          : retrieved.some((row) => holdsGold(row.chunk, gold))
+            ? // Retrieved, then lost while packing the context.
+              {
+                code: duplicates.some((row) => holdsGold(row.chunk, gold))
+                  ? 'deduped-away'
+                  : 'packed-out-by-budget',
+              }
+            : diagnoseR2Miss(item.question, retriever, payload, gold),
     );
     if (hit) {
       hits += 1;
@@ -322,7 +336,12 @@ export function contextForR2(
   duplicates: RankedChunk[];
   context: RankedChunk[];
 } {
-  const retrieved = retrieveForR2(question, retriever, payload);
+  const retrieved = withSecondHop(
+    question,
+    retriever,
+    payload,
+    retrieveForR2(question, retriever, payload),
+  );
   if (payload.dedupe === undefined) {
     return { retrieved, duplicates: [], context: retrieved };
   }
@@ -365,6 +384,57 @@ function isDuplicate(
 
 const normalizeText = (text: string) =>
   text.toLowerCase().replace(/\s+/g, ' ').trim();
+
+/**
+ * Multi-hop: search again with the question plus the top `hopSeeds` passages
+ * of the first search, and add new results after the first ones. The second
+ * query carries what the first search learned (a city, a team, a supplier).
+ */
+function withSecondHop(
+  question: string,
+  retriever: Retriever,
+  payload: R2Payload,
+  first: RankedChunk[],
+): RankedChunk[] {
+  if (payload.hops !== 2) {
+    return first;
+  }
+  if (retriever.spec.mode !== 'bm25') {
+    throw new Error('A second hop runs on BM25 retrieval only');
+  }
+  const seeds = first.slice(0, payload.hopSeeds ?? 1);
+  const followUp =
+    payload.hopQuery === 'entities'
+      ? [question, ...newNames(question, seeds)].join(' ')
+      : [question, ...seeds.map((row) => row.chunk.text)].join(' ');
+  const seen = new Set(first.map((row) => row.chunk.id));
+  const second = retriever
+    .rank(followUp, retriever.chunks.length)
+    .filter((row) => !seen.has(row.chunk.id))
+    .slice(0, payload.topK);
+  return [...first, ...second];
+}
+
+/**
+ * Names the seed passages mention that the question does not: capitalised
+ * words that do not start a sentence ("in Porto in March", "by Quill
+ * Batteries"). What a reader would carry into the next search.
+ */
+export function newNames(question: string, seeds: RankedChunk[]): string[] {
+  const asked = new Set(question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []);
+  const names = new Set<string>();
+  for (const row of seeds) {
+    for (const sentence of row.chunk.text.split(/(?<=[.!?])\s+/)) {
+      const words = sentence.match(/[\p{L}\p{N}][\p{L}\p{N}'-]*/gu) ?? [];
+      words.slice(1).forEach((word) => {
+        if (/^\p{Lu}/u.test(word) && !asked.has(word.toLowerCase())) {
+          names.add(word);
+        }
+      });
+    }
+  }
+  return [...names];
+}
 
 /** Does a chunk pass a status filter? Documents without a status always do. */
 export function passesStatusFilter(

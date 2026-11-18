@@ -1,6 +1,6 @@
 import { isHiddenCanary } from '../../../catalogue/exercises/exercises.constants';
 import { countTokens } from '../../gateway/pricing';
-import type { CorpusDoc } from './chunking';
+import { chunkCorpus, type Chunk, type CorpusDoc } from './chunking';
 import { chunkForR2, diagnoseR2Miss, retrieveForR2 } from './r2.grade';
 import {
   costEvidence,
@@ -12,7 +12,7 @@ import {
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
-import { type Gold, holdsGold } from './retrieve';
+import { type Gold, holdsGold, retrieveRanked } from './retrieve';
 import { bm25Retriever, type Retriever } from './retrievers';
 import type {
   GateResult,
@@ -34,7 +34,99 @@ import type {
 export const R5_CLASSES = ['faq', 'policy', 'procedural'] as const;
 export type R5Class = (typeof R5_CLASSES)[number];
 
-export type R5Payload = Record<R5Class, R2Payload>;
+/**
+ * How each question picks its profile:
+ * - given: the class labelled on the question (the old, oracle router).
+ * - none: every question uses the default route.
+ * - rules: the first rule whose phrase the question contains, else default.
+ * - top-document: the route of the best-matching document (BM25 over whole
+ *   documents), else default.
+ */
+export type R5RouterMode = 'given' | 'none' | 'rules' | 'top-document';
+export const R5_ROUTER_MODES: R5RouterMode[] = [
+  'given',
+  'none',
+  'rules',
+  'top-document',
+];
+
+export type RoutingRule = { phrases: string[]; route: R5Class };
+
+export type R5Router = {
+  mode: R5RouterMode;
+  rules: RoutingRule[];
+  defaultRoute: R5Class;
+};
+
+export type R5Payload = Record<R5Class, R2Payload> & { router: R5Router };
+
+/**
+ * Routing rules, one per line: `phrase | phrase => class`. A question takes
+ * the first line with a phrase it contains (case-insensitive); `*` matches
+ * everything. Blank lines and lines starting with # are skipped.
+ */
+export function parseRoutingRules(text: string): RoutingRule[] {
+  const rules: RoutingRule[] = [];
+  text.split('\n').forEach((raw, index) => {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) {
+      return;
+    }
+    const [left, right, extra] = line.split('=>');
+    const route = right?.trim().toLowerCase();
+    if (extra !== undefined || !isR5Class(route)) {
+      throw new Error(
+        `Routing rule line ${index + 1} must look like "phrase | phrase => faq", with faq, policy or procedural`,
+      );
+    }
+    const phrases = left
+      .split('|')
+      .map((phrase) => phrase.trim().toLowerCase())
+      .filter(Boolean);
+    if (phrases.length === 0) {
+      throw new Error(`Routing rule line ${index + 1} has no phrase`);
+    }
+    rules.push({ phrases, route });
+  });
+  return rules;
+}
+
+/** The profile a question is sent to under the payload's router. */
+export function routeFor(
+  question: string,
+  router: R5Router,
+  docs: CorpusDoc[],
+  givenClass: R5Class | null,
+): R5Class {
+  if (router.mode === 'given') {
+    return givenClass ?? router.defaultRoute;
+  }
+  if (router.mode === 'rules') {
+    const lower = question.toLowerCase();
+    const rule = router.rules.find((candidate) =>
+      candidate.phrases.some(
+        (phrase) => phrase === '*' || lower.includes(phrase),
+      ),
+    );
+    return rule?.route ?? router.defaultRoute;
+  }
+  if (router.mode === 'top-document') {
+    const top = retrieveRanked(question, wholeDocuments(docs), 1)[0]?.chunk.meta
+      ?.route;
+    return isR5Class(top) ? top : router.defaultRoute;
+  }
+  return router.defaultRoute;
+}
+
+const documentCache = new WeakMap<CorpusDoc[], Chunk[]>();
+function wholeDocuments(docs: CorpusDoc[]): Chunk[] {
+  let chunks = documentCache.get(docs);
+  if (!chunks) {
+    chunks = chunkCorpus(docs, 400, 0, 'document');
+    documentCache.set(docs, chunks);
+  }
+  return chunks;
+}
 
 export type RoutedItem = HiddenItem & { class?: string };
 export type RoutedPublicItem = PublicItem;
@@ -62,10 +154,27 @@ export function parseR5Payload(payload: unknown): R5Payload {
     }
     return { topK, rerank, chunkSize };
   };
+  const mode = record.router ?? 'given';
+  if (!R5_ROUTER_MODES.includes(mode as R5RouterMode)) {
+    throw new Error('R5 router must be given, none, rules or top-document');
+  }
+  const defaultRoute = record.defaultRoute ?? 'policy';
+  if (!isR5Class(defaultRoute)) {
+    throw new Error('R5 defaultRoute must be faq, policy or procedural');
+  }
+  const rulesText = record.routingRules ?? '';
+  if (typeof rulesText !== 'string') {
+    throw new Error('R5 routingRules must be text');
+  }
   return {
     faq: profile('faq'),
     policy: profile('policy'),
     procedural: profile('procedural'),
+    router: {
+      mode: mode as R5RouterMode,
+      rules: mode === 'rules' ? parseRoutingRules(rulesText) : [],
+      defaultRoute,
+    },
   };
 }
 
@@ -129,21 +238,27 @@ export function gradeR5(
   const misses: RagGradeResult['failingCases'] = [];
   const failingQueries: TraceQuery[] = [];
 
+  let routedRight = 0;
   for (const item of answerable) {
     const cls = item.class as R5Class;
+    const routed = routeFor(item.question, payload.router, docs, cls);
+    routedRight += routed === cls ? 1 : 0;
     const {
       ranked,
       retriever,
       profile,
       tokens: used,
-    } = routeR5(item.question, cls, docs, payload, chunksFor);
+    } = routeR5(item.question, routed, docs, payload, chunksFor);
     tokens.push(used);
     perQuery.push({ tokens: used, chunks: ranked.length });
     totals[cls] += 1;
     const gold = goldFor(docs, item);
     const hit = ranked.some((row) => holdsGold(row.chunk, gold));
     if (!hit) {
-      const cause = diagnoseR2Miss(item.question, retriever, profile, gold);
+      const cause =
+        routed === cls
+          ? diagnoseR2Miss(item.question, retriever, profile, gold)
+          : { code: `misrouted-to-${routed}` };
       // Per-class cause, e.g. "procedural:gold-split-by-chunking".
       ledger.record(item, hit, { ...cause, code: `${cls}:${cause.code}` });
     } else {
@@ -156,7 +271,10 @@ export function gradeR5(
         question: item.question,
         goldSpan: gold.text,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
-        note: `${cls} profile missed`,
+        note:
+          routed === cls
+            ? `${cls} profile missed`
+            : `${cls} question routed to the ${routed} profile`,
       });
       failingQueries.push(
         toTraceQuery('failing_sample', item.question, ranked, {
@@ -224,6 +342,11 @@ export function gradeR5(
         total: totals.procedural,
       },
       mean_prompt_tokens: { value: meanTokens },
+      routing_accuracy: {
+        value: answerable.length === 0 ? 0 : routedRight / answerable.length,
+        routed: routedRight,
+        total: answerable.length,
+      },
     },
     gateResults,
     // Evidence only: which class missed and why, never which knob to turn.
@@ -255,16 +378,19 @@ export function gradeR5(
           .filter((item) => isR5Class(item.class))
           .map((item) => {
             const cls = item.class as R5Class;
+            const route = routeFor(item.question, payload.router, docs, cls);
             const routed = routeR5(
               item.question,
-              cls,
+              route,
               docs,
               payload,
               chunksFor,
             );
             return toTraceQuery(
               'public',
-              `[${cls}] ${item.question}`,
+              route === cls
+                ? `[${cls}] ${item.question}`
+                : `[${cls} → routed ${route}] ${item.question}`,
               routed.ranked,
               {
                 gold: publicGold(docs, item),

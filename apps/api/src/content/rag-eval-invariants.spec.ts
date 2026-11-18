@@ -66,6 +66,11 @@ describe('RAG eval invariants', () => {
     'build-policy-history.mjs',
     'build-help-center.mjs',
     'build-team-wiki.mjs',
+    'build-staff-handbook.mjs',
+    'build-company-facts.mjs',
+    'build-it-procedures.mjs',
+    'build-hardware-catalog.mjs',
+    'build-bilingual-kb.mjs',
   ])('generated corpora are current (re-run scripts/content/%s)', (script) => {
     expect(() =>
       execFileSync('node', [`scripts/content/${script}`, '--check'], {
@@ -150,14 +155,20 @@ describe('RAG eval invariants', () => {
         corpusOf(bundle).map((doc) => [doc.id, `${doc.title}. ${doc.text}`]),
       );
       for (const item of [...hidden, ...publicItems]) {
-        if (!item.goldDocId || !item.goldSpan) {
-          continue;
+        // The gold span and, for multi-hop questions, every evidence passage.
+        const pieces = [
+          ...(item.goldDocId && item.goldSpan
+            ? [{ docId: item.goldDocId, span: item.goldSpan }]
+            : []),
+          ...((item as HiddenItem).evidence ?? []),
+        ];
+        for (const piece of pieces) {
+          expect({
+            slug,
+            gold: piece.span,
+            found: docs.get(piece.docId)?.includes(piece.span) ?? false,
+          }).toEqual({ slug, gold: piece.span, found: true });
         }
-        expect({
-          slug,
-          gold: item.goldSpan,
-          found: docs.get(item.goldDocId)?.includes(item.goldSpan) ?? false,
-        }).toEqual({ slug, gold: item.goldSpan, found: true });
       }
     }
   });

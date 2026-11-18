@@ -14,6 +14,8 @@ export type RagLabDocMeta = {
   version?: string;
   status?: "current" | "superseded" | "draft";
   effective?: string;
+  /** Page language (en, bn). */
+  language?: string;
 };
 
 export type RagLabDoc = {
@@ -72,6 +74,8 @@ export type RagLabPreview = {
   rewrittenQuery?: string | null;
   /** R4: a rewrite prompt is set but was not run (it needs an explicit request). */
   rewriteSkipped?: boolean;
+  /** R3: best first-stage BM25 score, what refuseBelowScore is compared with. */
+  topScore?: number | null;
   retrieved: RagLabHit[];
   baseline: RagLabHit[] | null;
   generation: string | null;

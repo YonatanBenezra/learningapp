@@ -1,39 +1,23 @@
 [
   {
     "id": "p1",
-    "question": "What is the minimum TLS version for data in transit?",
+    "question": "How many unused days of paid time off carry over into the next year?",
     "answerable": true,
-    "goldAnswer": "TLS 1.2",
-    "goldDocId": "encryption",
-    "goldSpan": "TLS 1.2 is the minimum in transit"
+    "goldAnswer": "At most five unused days carry over into the following year",
+    "goldDocId": "policy-pto",
+    "goldSpan": "At most five unused days carry over into the following year"
   },
   {
     "id": "p2",
-    "question": "Can backups be stored outside the EU?",
+    "question": "Who issues hardware security keys?",
     "answerable": true,
-    "goldAnswer": "No, backups never leave the EU region",
-    "goldDocId": "backup",
-    "goldSpan": "Backups never leave the EU region"
+    "goldAnswer": "Hardware security keys are issued by the service desk",
+    "goldDocId": "policy-mfa",
+    "goldSpan": "Hardware security keys are issued by the service desk"
   },
   {
     "id": "p3",
-    "question": "How large is the referral bonus and when is it paid?",
-    "answerable": true,
-    "goldAnswer": "Two hundred euros after ninety days of employment",
-    "goldDocId": "hiring",
-    "goldSpan": "two-hundred-euro bonus after ninety days of employment"
-  },
-  {
-    "id": "p4",
-    "question": "Can vendors share a login?",
-    "answerable": true,
-    "goldAnswer": "No, shared logins are forbidden even for vendors",
-    "goldDocId": "password",
-    "goldSpan": "Shared logins are forbidden even for vendors"
-  },
-  {
-    "id": "p5",
-    "question": "What is the policy for bringing pets to the office?",
+    "question": "Is there a free breakfast on Fridays?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,

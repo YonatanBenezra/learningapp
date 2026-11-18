@@ -38,6 +38,15 @@ const COPY: Record<string, string> = {
   "flag-mismatch": "The submitted flag is not your flag for this level.",
   "stale-version-in-context":
     "Another version of the same policy reached the context, so two answers disagree.",
+  "bridge-passage-missing":
+    "The first link of the chain (the page that names the city, team or supplier) never reached the context.",
+  "answer-passage-missing":
+    "The context found the first link but not the page it points to: the question alone cannot find it.",
+  "refused-below-score-threshold":
+    "Your score threshold refused a question the handbook answers: it is set above that question's retrieval score.",
+  "misrouted-to-faq": "Your router sent it to the FAQ profile.",
+  "misrouted-to-policy": "Your router sent it to the policy profile.",
+  "misrouted-to-procedural": "Your router sent it to the procedural profile.",
   "deduped-away":
     "The answer page was dropped as a duplicate of a higher-ranked page: the threshold is too loose.",
   "packed-out-by-budget":
@@ -72,6 +81,9 @@ export const EVAL_TAG_LABEL: Record<string, string> = {
   distractor: "Another doc looks closer",
   "id-lookup": "Asked by model number or code",
   "stale-version": "Older versions exist",
+  abbreviation: "Uses an abbreviation",
+  "multi-hop": "Needs two linked pages",
+  "cross-lingual": "Asked in the other language",
   faq: "FAQ",
   policy: "Policy",
   procedural: "Procedural",

@@ -1,0 +1,354 @@
+[
+  {
+    "topic": "pto",
+    "question": "How much PTO do I get each year?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-pto",
+    "goldSpan": "Full-time employees accrue twenty-five days of paid time off per calendar year",
+    "goldAnswer": "Full-time employees accrue twenty-five days of paid time off per calendar year"
+  },
+  {
+    "topic": "pto",
+    "question": "How many unusd days cary over?",
+    "kind": "typo",
+    "goldDocId": "policy-pto",
+    "goldSpan": "At most five unused days carry over into the following year",
+    "goldAnswer": "At most five unused days carry over into the following year"
+  },
+  {
+    "topic": "wfh",
+    "question": "How many WFH days are allowed per week?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-wfh",
+    "goldSpan": "Staff may work from home up to three days per week with manager agreement",
+    "goldAnswer": "Staff may work from home up to three days per week with manager agreement"
+  },
+  {
+    "topic": "wfh",
+    "question": "Where do I ordr equipmnt for home?",
+    "kind": "typo",
+    "goldDocId": "policy-wfh",
+    "goldSpan": "Home working equipment is ordered through the service desk",
+    "goldAnswer": "Home working equipment is ordered through the service desk"
+  },
+  {
+    "topic": "ooo",
+    "question": "When do I need to set an OOO message?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-ooo",
+    "goldSpan": "Set an automatic out-of-office reply when absent for more than one working day",
+    "goldAnswer": "Set an automatic out-of-office reply when absent for more than one working day"
+  },
+  {
+    "topic": "ooo",
+    "question": "Who should my automatc absnce reply name?",
+    "kind": "typo",
+    "goldDocId": "policy-ooo",
+    "goldSpan": "The reply must name a colleague who can help while you are away",
+    "goldAnswer": "The reply must name a colleague who can help while you are away"
+  },
+  {
+    "topic": "mfa",
+    "question": "Which systems need MFA?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-mfa",
+    "goldSpan": "Multi-factor authentication is required for email, the VPN and the expense tool",
+    "goldAnswer": "Multi-factor authentication is required for email, the VPN and the expense tool"
+  },
+  {
+    "topic": "mfa",
+    "question": "Who issues hardwre securty keys?",
+    "kind": "typo",
+    "goldDocId": "policy-mfa",
+    "goldSpan": "Hardware security keys are issued by the service desk",
+    "goldAnswer": "Hardware security keys are issued by the service desk"
+  },
+  {
+    "topic": "po",
+    "question": "Above what amount is a PO required?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-po",
+    "goldSpan": "A purchase order is needed for any supplier spend above 2,000 euros",
+    "goldAnswer": "A purchase order is needed for any supplier spend above 2,000 euros"
+  },
+  {
+    "topic": "po",
+    "question": "Must a purchse ordr be aproved before the invoce?",
+    "kind": "typo",
+    "goldDocId": "policy-po",
+    "goldSpan": "The purchase order must be approved before the invoice arrives",
+    "goldAnswer": "The purchase order must be approved before the invoice arrives"
+  },
+  {
+    "topic": "nda",
+    "question": "Who keeps signed NDAs, and for how long?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-nda",
+    "goldSpan": "Legal keeps the signed copies for seven years",
+    "goldAnswer": "Legal keeps the signed copies for seven years"
+  },
+  {
+    "topic": "nda",
+    "question": "Do contractrs sign befor seeing unreleasd products?",
+    "kind": "typo",
+    "goldDocId": "policy-nda",
+    "goldSpan": "Visitors and contractors sign a non-disclosure agreement before seeing unreleased products",
+    "goldAnswer": "Visitors and contractors sign a non-disclosure agreement before seeing unreleased products"
+  },
+  {
+    "topic": "pip",
+    "question": "How long does a PIP last?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-pip",
+    "goldSpan": "A performance improvement plan lasts eight weeks",
+    "goldAnswer": "A performance improvement plan lasts eight weeks"
+  },
+  {
+    "topic": "pip",
+    "question": "How oftn are chek-ins during an improvment plan?",
+    "kind": "typo",
+    "goldDocId": "policy-pip",
+    "goldSpan": "There is a check-in with the manager every two weeks during the plan",
+    "goldAnswer": "There is a check-in with the manager every two weeks during the plan"
+  },
+  {
+    "topic": "rto",
+    "question": "Which days are RTO days?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-rto",
+    "goldSpan": "Teams return to the office on Tuesdays and Thursdays",
+    "goldAnswer": "Teams return to the office on Tuesdays and Thursdays"
+  },
+  {
+    "topic": "rto",
+    "question": "Which weekdys are flexibl?",
+    "kind": "typo",
+    "goldDocId": "policy-rto",
+    "goldSpan": "The other weekdays are flexible",
+    "goldAnswer": "The other weekdays are flexible"
+  },
+  {
+    "topic": "okr",
+    "question": "How many OKRs does a team set?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-okr",
+    "goldSpan": "Each team sets three objectives and key results per quarter",
+    "goldAnswer": "Each team sets three objectives and key results per quarter"
+  },
+  {
+    "topic": "okr",
+    "question": "When are quartrly objectivs reviewd?",
+    "kind": "typo",
+    "goldDocId": "policy-okr",
+    "goldSpan": "They are reviewed in the second week of the following quarter",
+    "goldAnswer": "They are reviewed in the second week of the following quarter"
+  },
+  {
+    "topic": "sla",
+    "question": "What is the SLA response time for priority one tickets?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-sla",
+    "goldSpan": "Under the service level agreement, priority one tickets are answered within 30 minutes",
+    "goldAnswer": "Under the service level agreement, priority one tickets are answered within 30 minutes"
+  },
+  {
+    "topic": "sla",
+    "question": "How fast are priorty one tickts resolvd?",
+    "kind": "typo",
+    "goldDocId": "policy-sla",
+    "goldSpan": "Priority one tickets are resolved within four hours",
+    "goldAnswer": "Priority one tickets are resolved within four hours"
+  },
+  {
+    "topic": "byod",
+    "question": "Is BYOD allowed for laptops?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-byod",
+    "goldSpan": "Personal laptops are not allowed on the internal network",
+    "goldAnswer": "Personal laptops are not allowed on the internal network"
+  },
+  {
+    "topic": "byod",
+    "question": "Can personl phnes acess email?",
+    "kind": "typo",
+    "goldDocId": "policy-byod",
+    "goldSpan": "Personal phones may access email only after enrolling in device management",
+    "goldAnswer": "Personal phones may access email only after enrolling in device management"
+  },
+  {
+    "topic": "eap",
+    "question": "How many EAP sessions are free?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-eap",
+    "goldSpan": "The employee assistance programme offers six free counselling sessions a year",
+    "goldAnswer": "The employee assistance programme offers six free counselling sessions a year"
+  },
+  {
+    "topic": "eap",
+    "question": "Are counseling sesions confidental?",
+    "kind": "typo",
+    "goldDocId": "policy-eap",
+    "goldSpan": "Sessions are fully confidential and are not reported to managers",
+    "goldAnswer": "Sessions are fully confidential and are not reported to managers"
+  },
+  {
+    "topic": "dpo",
+    "question": "How quickly must a breach go to the DPO?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-dpo",
+    "goldSpan": "Report a suspected personal data breach to the data protection officer within 24 hours",
+    "goldAnswer": "Report a suspected personal data breach to the data protection officer within 24 hours"
+  },
+  {
+    "topic": "dpo",
+    "question": "Can I contct affectd custmers about a breech?",
+    "kind": "typo",
+    "goldDocId": "policy-dpo",
+    "goldSpan": "Do not contact affected customers before the officer has assessed the breach",
+    "goldAnswer": "Do not contact affected customers before the officer has assessed the breach"
+  },
+  {
+    "topic": "sow",
+    "question": "What must an SOW list?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-sow",
+    "goldSpan": "The statement of work lists the deliverables and an end date",
+    "goldAnswer": "The statement of work lists the deliverables and an end date"
+  },
+  {
+    "topic": "sow",
+    "question": "Does every contractr engagment ned a signd statemnt?",
+    "kind": "typo",
+    "goldDocId": "policy-sow",
+    "goldSpan": "Every contractor engagement needs a signed statement of work",
+    "goldAnswer": "Every contractor engagement needs a signed statement of work"
+  },
+  {
+    "topic": "rfp",
+    "question": "When do we need an RFP?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-rfp",
+    "goldSpan": "Purchases above 50,000 euros require a request for proposal",
+    "goldAnswer": "Purchases above 50,000 euros require a request for proposal"
+  },
+  {
+    "topic": "rfp",
+    "question": "How many supplirs must recieve the proposl?",
+    "kind": "typo",
+    "goldDocId": "policy-rfp",
+    "goldSpan": "The request for proposal goes to at least three suppliers",
+    "goldAnswer": "The request for proposal goes to at least three suppliers"
+  },
+  {
+    "topic": "eol",
+    "question": "After how many years do laptops hit EOL?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-eol",
+    "goldSpan": "Laptops and phones reach end of life after five years",
+    "goldAnswer": "Laptops and phones reach end of life after five years"
+  },
+  {
+    "topic": "eol",
+    "question": "Who colects devices for certifed recyling?",
+    "kind": "typo",
+    "goldDocId": "policy-eol",
+    "goldSpan": "IT collects end-of-life devices for certified recycling",
+    "goldAnswer": "IT collects end-of-life devices for certified recycling"
+  },
+  {
+    "topic": "toil",
+    "question": "How long do I have to use TOIL?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-toil",
+    "goldSpan": "Overtime can be taken as time off in lieu within three months of being worked",
+    "goldAnswer": "Overtime can be taken as time off in lieu within three months of being worked"
+  },
+  {
+    "topic": "toil",
+    "question": "Does overtme leave ned managr aproval?",
+    "kind": "typo",
+    "goldDocId": "policy-toil",
+    "goldSpan": "Time off in lieu needs manager approval like any other leave",
+    "goldAnswer": "Time off in lieu needs manager approval like any other leave"
+  },
+  {
+    "topic": "cpd",
+    "question": "How many CPD hours must engineers log?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-cpd",
+    "goldSpan": "Engineers log at least twenty hours of continuing professional development each year",
+    "goldAnswer": "Engineers log at least twenty hours of continuing professional development each year"
+  },
+  {
+    "topic": "cpd",
+    "question": "Do conferance talks and certifid courses count?",
+    "kind": "typo",
+    "goldDocId": "policy-cpd",
+    "goldSpan": "Conference talks and certified courses both count toward the hours",
+    "goldAnswer": "Conference talks and certified courses both count toward the hours"
+  },
+  {
+    "topic": "dei",
+    "question": "What is the DEI rule for hiring panels?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-dei",
+    "goldSpan": "Every hiring panel includes at least one interviewer from outside the hiring team",
+    "goldAnswer": "Every hiring panel includes at least one interviewer from outside the hiring team"
+  },
+  {
+    "topic": "dei",
+    "question": "Are job advrts reviewd for biasd wording?",
+    "kind": "typo",
+    "goldDocId": "policy-dei",
+    "goldSpan": "Job adverts are reviewed for biased wording before they are published",
+    "goldAnswer": "Job adverts are reviewed for biased wording before they are published"
+  },
+  {
+    "topic": "kyc",
+    "question": "When do new customers go through KYC?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-kyc",
+    "goldSpan": "New business customers pass know your customer checks before their first invoice",
+    "goldAnswer": "New business customers pass know your customer checks before their first invoice"
+  },
+  {
+    "topic": "kyc",
+    "question": "How oftn are custmer chcks repeatd?",
+    "kind": "typo",
+    "goldDocId": "policy-kyc",
+    "goldSpan": "The checks are repeated every two years",
+    "goldAnswer": "The checks are repeated every two years"
+  },
+  {
+    "topic": "rif",
+    "question": "How long can an LOA last?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-rif",
+    "goldSpan": "An unpaid leave of absence can last up to six months",
+    "goldAnswer": "An unpaid leave of absence can last up to six months"
+  },
+  {
+    "topic": "rif",
+    "question": "What hapens to benfits during unpaid leve?",
+    "kind": "typo",
+    "goldDocId": "policy-rif",
+    "goldSpan": "Benefits pause during the leave and restart on return",
+    "goldAnswer": "Benefits pause during the leave and restart on return"
+  },
+  {
+    "topic": "ndr",
+    "question": "What discount does the ESPP give?",
+    "kind": "abbreviation",
+    "goldDocId": "policy-ndr",
+    "goldSpan": "Employees can buy company shares at a fifteen percent discount through the employee share purchase plan",
+    "goldAnswer": "Employees can buy company shares at a fifteen percent discount through the employee share purchase plan"
+  },
+  {
+    "topic": "ndr",
+    "question": "In which monts are share purchses made?",
+    "kind": "typo",
+    "goldDocId": "policy-ndr",
+    "goldSpan": "Purchases happen twice a year, in March and September",
+    "goldAnswer": "Purchases happen twice a year, in March and September"
+  }
+]

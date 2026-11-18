@@ -11,6 +11,10 @@ export type DocMeta = {
   status?: 'current' | 'superseded' | 'draft';
   /** ISO date the version takes effect. */
   effective?: string;
+  /** Which query route this document serves (R5 top-document routing). */
+  route?: string;
+  /** Language of the page (en, bn). */
+  language?: string;
 };
 
 export type Chunk = {
@@ -105,9 +109,12 @@ function splitDoc(
   }
 }
 
-const SENTENCE_END = /(?<=[.!?।])\s+/u;
+const SENTENCE_END = /(?<=[.!?।])\s+|\n+/u;
 
-/** Sentences, ending at . ! ? or the Bangla danda (।). */
+/**
+ * Sentences, ending at . ! ? or the Bangla danda (।). A line break also ends
+ * one, so headings and table rows are units of their own.
+ */
 export function sentencesOf(text: string): string[] {
   return text
     .split(SENTENCE_END)

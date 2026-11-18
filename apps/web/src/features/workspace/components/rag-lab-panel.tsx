@@ -17,7 +17,12 @@ import type {
   RagLabContext,
   RagLabPreview,
 } from "../rag-lab/rag-lab-types";
-import { formatGateThreshold, gateMetricLabel, gradedGates, type GateSpec } from "../gates";
+import {
+  formatGateThreshold,
+  gateMetricLabel,
+  gradedGates,
+  type GateSpec,
+} from "../gates";
 import "../rag-lab.css";
 
 type RagLabPanelProps = {
@@ -35,7 +40,10 @@ const TOKEN_GATE_BY_ARCHETYPE: Partial<Record<RagLabArchetype, string>> = {
   r5: "mean_prompt_tokens",
 };
 
-function tokenGateFor(archetype: RagLabArchetype, gates: unknown): GateSpec | null {
+function tokenGateFor(
+  archetype: RagLabArchetype,
+  gates: unknown,
+): GateSpec | null {
   const metric = TOKEN_GATE_BY_ARCHETYPE[archetype];
   if (!metric) {
     return null;
@@ -85,7 +93,12 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
       })
       .catch((caught: unknown) => {
         if (!cancelled) {
-          setError(ragLabErrorMessage(caught, "Could not load the RAG lab for this exercise."));
+          setError(
+            ragLabErrorMessage(
+              caught,
+              "Could not load the RAG lab for this exercise.",
+            ),
+          );
         }
       })
       .finally(() => {
@@ -139,7 +152,12 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
         .catch((caught: unknown) => {
           if (!cancelled) {
             setPreview(null);
-            setError(ragLabErrorMessage(caught, "Preview failed — check your config fields."));
+            setError(
+              ragLabErrorMessage(
+                caught,
+                "Preview failed — check your config fields.",
+              ),
+            );
           }
         })
         .finally(() => {
@@ -152,7 +170,14 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [slug, payload, activeQuestion, activeClass, context?.labEnabled, context?.archetype]);
+  }, [
+    slug,
+    payload,
+    activeQuestion,
+    activeClass,
+    context?.labEnabled,
+    context?.archetype,
+  ]);
 
   async function generatePreview() {
     if (!activeQuestion || previewing) {
@@ -163,14 +188,24 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
     setPreviewing(true);
     setError(null);
     try {
-      const result = await ragLabApi.preview(slug, payload, activeQuestion, activeClass);
+      const result = await ragLabApi.preview(
+        slug,
+        payload,
+        activeQuestion,
+        activeClass,
+      );
       if (request === previewRequestRef.current) {
         setPreview(result);
         setPreviewedKey(key);
       }
     } catch (caught: unknown) {
       if (request === previewRequestRef.current) {
-        setError(ragLabErrorMessage(caught, "Preview failed — check your config fields."));
+        setError(
+          ragLabErrorMessage(
+            caught,
+            "Preview failed — check your config fields.",
+          ),
+        );
       }
     } finally {
       if (request === previewRequestRef.current) {
@@ -188,7 +223,13 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
     setPreviewing(true);
     setError(null);
     try {
-      const result = await ragLabApi.preview(slug, payload, activeQuestion, activeClass, true);
+      const result = await ragLabApi.preview(
+        slug,
+        payload,
+        activeQuestion,
+        activeClass,
+        true,
+      );
       if (request === previewRequestRef.current) {
         setPreview(result);
       }
@@ -204,9 +245,14 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
   }
 
   const archetype = preview?.archetype ?? context?.archetype ?? "unknown";
-  const visibleTabs = useMemo(() => labTabsForArchetype(archetype), [archetype]);
+  const visibleTabs = useMemo(
+    () => labTabsForArchetype(archetype),
+    [archetype],
+  );
   const showGenerate = visibleTabs.includes("generate");
-  const activeTab = visibleTabs.includes(tab) ? tab : (visibleTabs[0] ?? "query");
+  const activeTab = visibleTabs.includes(tab)
+    ? tab
+    : (visibleTabs[0] ?? "query");
 
   if (loading) {
     return (
@@ -229,7 +275,10 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
   if (!context.labEnabled) {
     return (
       <div className="lp-rag-lab lp-rag-lab--disabled">
-        <p>This sandbox exercise uses the Python editor. Run your retriever code, then submit to grade.</p>
+        <p>
+          This sandbox exercise uses the Python editor. Run your retriever code,
+          then submit to grade.
+        </p>
       </div>
     );
   }
@@ -254,7 +303,10 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
           </p>
         </div>
         {frozen ? (
-          <div className="lp-rag-lab-frozen" aria-label="Fixed pipeline settings">
+          <div
+            className="lp-rag-lab-frozen"
+            aria-label="Fixed pipeline settings"
+          >
             <span className="lp-rag-lab-frozen-label">{frozen.label}</span>
             {frozen.items.map((item) => (
               <span key={item} className="lp-rag-lab-frozen-chip">
@@ -265,7 +317,11 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
         ) : null}
       </div>
 
-      <div className="lp-rag-lab-tabs" role="tablist" aria-label="RAG lab views">
+      <div
+        className="lp-rag-lab-tabs"
+        role="tablist"
+        aria-label="RAG lab views"
+      >
         {visibleTabs.map((item) => (
           <button
             key={item}
@@ -285,11 +341,19 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
             disabled={previewing || !activeQuestion}
             onClick={() => void generatePreview()}
           >
-            {previewing ? "Generating…" : preview ? "Generate again" : "Generate preview"}
+            {previewing
+              ? "Generating…"
+              : preview
+                ? "Generate again"
+                : "Generate preview"}
           </button>
         ) : (
           <span className={`lp-rag-lab-status${previewing ? " is-busy" : ""}`}>
-            {previewing ? "Updating…" : preview ? `${preview.chunkCount} chunks` : "—"}
+            {previewing
+              ? "Updating…"
+              : preview
+                ? `${preview.chunkCount} chunks`
+                : "—"}
           </span>
         )}
       </div>
@@ -300,14 +364,21 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
         </p>
       ) : null}
 
-      {manualPreview && preview && !previewing && previewedKey !== previewKey ? (
+      {manualPreview &&
+      preview &&
+      !previewing &&
+      previewedKey !== previewKey ? (
         <p className="lp-rag-lab-empty">
-          Your config or question changed since this preview. Press Generate again to update it.
+          Your config or question changed since this preview. Press Generate
+          again to update it.
         </p>
       ) : null}
 
       {activeTab === "target" ? (
-        <RagTargetConsole slug={slug} botName={context.target?.botName ?? "Target bot"} />
+        <RagTargetConsole
+          slug={slug}
+          botName={context.target?.botName ?? "Target bot"}
+        />
       ) : null}
 
       {activeTab === "corpus" ? (
@@ -322,15 +393,27 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
                   </span>
                 </div>
                 {doc.meta ? (
-                  <p className="lp-rag-lab-doc-meta" aria-label="Document metadata">
+                  <p
+                    className="lp-rag-lab-doc-meta"
+                    aria-label="Document metadata"
+                  >
                     {doc.meta.status ? (
-                      <span className={`lp-rag-lab-doc-status is-${doc.meta.status}`}>
+                      <span
+                        className={`lp-rag-lab-doc-status is-${doc.meta.status}`}
+                      >
                         {doc.meta.status}
                       </span>
                     ) : null}
-                    {doc.meta.family ? <span>family {doc.meta.family}</span> : null}
-                    {doc.meta.version ? <span>version {doc.meta.version}</span> : null}
-                    {doc.meta.effective ? <span>effective {doc.meta.effective}</span> : null}
+                    {doc.meta.family ? (
+                      <span>family {doc.meta.family}</span>
+                    ) : null}
+                    {doc.meta.version ? (
+                      <span>version {doc.meta.version}</span>
+                    ) : null}
+                    {doc.meta.effective ? (
+                      <span>effective {doc.meta.effective}</span>
+                    ) : null}
+                    {doc.meta.language ? <span>language {doc.meta.language}</span> : null}
                   </p>
                 ) : null}
                 <p>{doc.text}</p>
@@ -366,7 +449,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
                         <code title={CHUNK_ID_TIP}>{chunk.id}</code>
                         <span>
                           {chunk.text.length} chars ·{" "}
-                          {chunk.tokens ?? `~${Math.max(1, Math.ceil(chunk.text.length / 4))}`} tok
+                          {chunk.tokens ??
+                            `~${Math.max(1, Math.ceil(chunk.text.length / 4))}`}{" "}
+                          tok
                         </span>
                       </header>
                       <p>{chunk.text}</p>
@@ -411,7 +496,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
 
           <div className="lp-rag-lab-query-active">
             <span>
-              {archetype === "r5" && activeClass ? `Query · routed as ${activeClass}` : "Query"}
+              {archetype === "r5" && preview?.retrieval
+                ? `Query · ${preview.retrieval.toLowerCase()}`
+                : "Query"}
               <InfoTip text="Pick a sample question or type your own to preview retrieval." />
             </span>
             <p>{activeQuestion}</p>
@@ -428,8 +515,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
           ) : preview?.rewriteSkipped ? (
             <div className="lp-rag-lab-rewrite-skipped">
               <p>
-                Your rewrite prompt has not run on this question, so the ranking below uses the
-                question as asked. Grading runs it on every question.
+                Your rewrite prompt has not run on this question, so the ranking
+                below uses the question as asked. Grading runs it on every
+                question.
               </p>
               <button
                 type="button"
@@ -471,14 +559,24 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
       {activeTab === "generate" ? (
         <section className="lp-rag-lab-pane" aria-label="Generation preview">
           {previewing ? (
-            <p className="lp-rag-lab-gen-loading" role="status" aria-busy="true">
+            <p
+              className="lp-rag-lab-gen-loading"
+              role="status"
+              aria-busy="true"
+            >
               <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
-              Generating an answer with the model. This can take several seconds…
+              Generating an answer with the model. This can take several
+              seconds…
             </p>
           ) : preview?.generation ? (
             <div className="lp-rag-lab-gen">
               <div className="lp-rag-lab-gen-meta">
                 <span>{preview.refused ? "Refusal" : "Answer preview"}</span>
+                {typeof preview.topScore === "number" ? (
+                  <span title="Best BM25 score of the retrieved documents; refuseBelowScore is compared with it.">
+                    top score {preview.topScore.toFixed(2)}
+                  </span>
+                ) : null}
                 <span>{preview.contextTokens} context tokens</span>
               </div>
               <pre>{preview.generation}</pre>
@@ -495,7 +593,9 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
                 : "Set a generation prompt in Submission to preview an answer here."}
             </p>
           )}
-          {showGenerate && preview?.retrieved && preview.retrieved.length > 0 ? (
+          {showGenerate &&
+          preview?.retrieved &&
+          preview.retrieved.length > 0 ? (
             <div className="lp-rag-lab-context">
               <h3>
                 Context passed to generator
@@ -523,7 +623,9 @@ function LabReadout({
   /** Public sample the corpus cannot answer: a grounded answer should refuse. */
   unanswerable: boolean;
 }) {
-  const tokensOk = tokenGate ? withinGate(tokenGate, preview.contextTokens) : null;
+  const tokensOk = tokenGate
+    ? withinGate(tokenGate, preview.contextTokens)
+    : null;
   return (
     <dl className="lp-rag-lab-readout" aria-label="Preview readout">
       {preview.retrieval ? (
@@ -533,12 +635,19 @@ function LabReadout({
         </div>
       ) : null}
       <div>
-        <dt>{tokenGate ? gateMetricLabel(tokenGate.metric) : "context tokens"}</dt>
-        <dd className={tokensOk === null ? undefined : tokensOk ? "is-pass" : "is-fail"}>
+        <dt>
+          {tokenGate ? gateMetricLabel(tokenGate.metric) : "context tokens"}
+        </dt>
+        <dd
+          className={
+            tokensOk === null ? undefined : tokensOk ? "is-pass" : "is-fail"
+          }
+        >
           {preview.contextTokens}
           {tokenGate ? (
             <span className="lp-rag-lab-readout-sub">
-              budget {formatGateThreshold(tokenGate)} (graded as a mean over the hidden set)
+              budget {formatGateThreshold(tokenGate)} (graded as a mean over the
+              hidden set)
             </span>
           ) : null}
         </dd>
@@ -547,7 +656,11 @@ function LabReadout({
         <dt>answer in context</dt>
         <dd
           className={
-            preview.answerFound === null ? undefined : preview.answerFound ? "is-pass" : "is-fail"
+            preview.answerFound === null
+              ? undefined
+              : preview.answerFound
+                ? "is-pass"
+                : "is-fail"
           }
         >
           {preview.answerFound === null

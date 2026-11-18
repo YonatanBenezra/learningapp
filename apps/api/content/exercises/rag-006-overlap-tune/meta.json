@@ -1,10 +1,10 @@
 {
   "slug": "rag-006-overlap-tune",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r1",
-  "title": "Overlap & Sliding Windows",
+  "title": "Answers on the Border",
   "difficulty": "E",
   "catalogPhase": 1,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Chunking"
     }
   ],
-  "briefMd": "# Phase 1 · Overlap & Sliding Windows\n\nGold answers sit on chunk borders — a classic enterprise KB failure mode. Split on sentences and tune **overlap** so spans are not split across chunks.\n\n**Gates:** recall@5 ≥ 0.80 and mean context tokens (top-5 chunks) ≤ 165 on the hidden set (production-aligned retrieval metric).\n",
+  "briefMd": "# Phase 1 · Answers on the Border\n\nThe IT how-to pages answer every question in two consecutive sentences: the step, then what follows from it (\"Open the badge app and choose Reset PIN. The new PIN arrives by text message within five minutes.\"). A chunk boundary between the two cuts the answer in half, and with a tight context budget the chunks have to be small, so some boundary always lands in the wrong place.\n\nYou control **chunk size**, **overlap** (characters carried from the end of one chunk into the start of the next; only whole words or sentences are carried) and **split strategy**. Retrieval is BM25, top 5 chunks.\n\nA question counts only when both sentences of its answer sit in one retrieved chunk.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 165 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -37,7 +37,7 @@
         "type": "integer",
         "minimum": 0,
         "maximum": 400,
-        "default": 50
+        "default": 0
       },
       "splitStrategy": {
         "type": "string",
@@ -52,7 +52,7 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.8,
+    "recall_at_5": 0.9,
     "mean_context_tokens": 165
   },
   "budget": {
@@ -67,7 +67,7 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
     },
     {
       "id": "mean-context-tokens",
@@ -84,5 +84,6 @@
   "attemptPolicy": {
     "maxSubmissions": 20,
     "cooldownHours": 1
-  }
+  },
+  "corpusFile": "it-procedures"
 }

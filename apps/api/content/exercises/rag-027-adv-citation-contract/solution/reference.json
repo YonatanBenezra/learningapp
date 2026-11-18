@@ -1,3 +1,4 @@
 {
-  "generationPrompt": "Answer only from the retrieved context. After each claim, cite the chunk it came from in exactly this format: [chunk:<id>], using the id shown in the context, for example [chunk:pto:0]. Never cite in any other format and never cite an id that is not in the context. If the context does not contain the answer, reply exactly: I don't know."
+  "generationPrompt": "Answer only from the retrieved context. After each claim, cite the chunk it came from in exactly this format: [chunk:<id>], using the id shown in the context, for example [chunk:pto:0]. Never cite in any other format and never cite an id that is not in the context. If the context does not contain the answer, reply exactly: I don't know.",
+  "refuseBelowScore": 8
 }

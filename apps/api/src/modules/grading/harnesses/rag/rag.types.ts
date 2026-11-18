@@ -9,6 +9,9 @@ export type RagPayload = {
 
 export type RetrievalMode = 'bm25' | 'dense' | 'hybrid';
 
+/** english: bge-small. multilingual: e5-small, Bangla and English together. */
+export type EmbeddingChoice = 'english' | 'multilingual';
+
 /**
  * Metadata filter on document status: keep everything, drop superseded
  * versions (drafts stay), or keep current versions only.
@@ -33,6 +36,8 @@ export type R2Payload = {
   retrievalMode?: RetrievalMode;
   /** Hybrid only: weight on the dense score (0 = BM25, 1 = dense). */
   hybridAlpha?: number;
+  /** Dense and hybrid: which embedding model (default english). */
+  embeddingModel?: EmbeddingChoice;
   /** Metadata filter on document status; none when the exercise does not offer it. */
   statusFilter?: StatusFilter;
   /** Where the filter runs relative to top-k (default pre). */
@@ -44,10 +49,31 @@ export type R2Payload = {
   dedupe?: DedupeMode;
   /** near only: Jaccard overlap that counts as a duplicate (default 0.8). */
   dedupeThreshold?: number;
+  /**
+   * Multi-hop: 2 runs a second search whose query is the question plus the
+   * top `hopSeeds` passages of the first search. Context holds both result
+   * sets. BM25 only.
+   */
+  hops?: 1 | 2;
+  /** How many first-search passages feed the second query (default 1). */
+  hopSeeds?: number;
+  /**
+   * What the second query adds to the question: the seed passages in full
+   * (`passage`), or only the names they mention that the question does not
+   * (`entities`: "Porto", "Iris", "Quill Batteries").
+   */
+  hopQuery?: HopQuery;
 };
+
+export type HopQuery = 'passage' | 'entities';
 
 export type R3Payload = {
   generationPrompt: string;
+  /**
+   * Refuse without calling the model when the best first-stage (BM25) score
+   * is below this. 0 or absent: always call the model.
+   */
+  refuseBelowScore?: number;
 };
 
 export type RerankerKind = 'none' | 'title-boost' | 'mmr' | 'cross-encoder';
@@ -76,6 +102,12 @@ export type HiddenItem = {
   split?: EvalSplit;
   /** Question categories for the per-tag breakdown (see EVAL_TAGS). */
   tags?: string[];
+  /**
+   * Multi-hop questions: every passage the answer needs, in chain order
+   * (bridge first). A hit needs all of them in context. When absent, the
+   * evidence is goldDocId + goldSpan alone.
+   */
+  evidence?: { docId: string; span: string }[];
 };
 
 /** Counted outcome for a group of hidden questions. */

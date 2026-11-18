@@ -1,12 +1,12 @@
 {
   "slug": "rag-027-adv-citation-contract",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Citation-Grounded Answers (Advanced)",
+  "title": "Refuse Before You Spend",
   "difficulty": "H",
   "catalogPhase": 7,
-  "corpusFile": "shared",
+  "corpusFile": "staff-handbook",
   "skills": [
     {
       "slug": "grounding",
@@ -21,7 +21,7 @@
       "name": "Refusal behaviour"
     }
   ],
-  "briefMd": "# Advanced · Citation Contract\n\nThe same contract with less slack: cited chunks must carry the answer almost verbatim, and answerable questions may be refused at most once.\n\nYou author **only the generation prompt**. Retrieval is fixed: whole-document chunks ranked by BM25 with a title boost, top 5. Cite as `[chunk:<id>]` with ids from the retrieved set and refuse when the answer is not in context.\n\n**Gates:** citation format on at least 95% of answers, gold-span overlap ≥ 0.95, at least 5 refusals on unanswerable questions, at most 1 refusal on answerable ones.\n\n**How it runs.** Your prompt is sent verbatim as the system message to a real model (pinned, temperature 0). The user message is the question followed by the retrieved context, one chunk per block as `(id: <id>) <text>`. An answer counts as a refusal when it says \"I don't know\" (or \"cannot answer\"). Use the Simulation Lab's Generate preview to see what the model actually writes before you submit.\n",
+  "briefMd": "# Advanced · Refuse Before You Spend\n\nThe handbook assistant answers staff questions with citations, and a third of what it gets asked is not in the handbook at all (\"Can I bring my dog to work?\"). Every question costs a model call today. Answer what the handbook covers, refuse what it does not, and stop paying the model for questions retrieval already knows it cannot answer.\n\nYou control two things:\n\n- The **generation prompt**: sent verbatim as the system message to a real model (pinned, temperature 0). The user message is the question followed by the retrieved context, one chunk per block as `(id: <id>) <text>`. Cite as `[chunk:<id>]`; an answer counts as a refusal when it says \"I don't know\".\n- **refuseBelowScore**: when the best keyword (BM25) score of the retrieved documents is below this, the assistant refuses straight away and the model is never called. 0 turns it off. Set it too low and you still pay for hopeless questions; set it too high and you refuse questions the handbook answers.\n\nRetrieval is fixed: whole documents ranked by BM25 with a title boost, top 5. The Simulation Lab shows each question's top score.\n\n**Gates:** citation format on at least 90% of answers, gold-span overlap ≥ 0.90, at least 11 refusals on unanswerable questions, at most 1 refusal on answerable ones, and at most 0.8 model calls per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -32,14 +32,23 @@
       "generationPrompt": {
         "type": "string",
         "default": ""
+      },
+      "refuseBelowScore": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 40,
+        "multipleOf": 0.5,
+        "default": 0,
+        "description": "Refuse without calling the model when the best BM25 score is below this (0 = always call)."
       }
     }
   },
   "thresholds": {
-    "citation_format": 0.95,
-    "gold_span_overlap": 0.95,
-    "unanswerable_refusals": 5,
-    "answerable_refusals": 1
+    "citation_format": 0.9,
+    "gold_span_overlap": 0.9,
+    "unanswerable_refusals": 11,
+    "answerable_refusals": 1,
+    "model_calls_per_question": 0.8
   },
   "budget": {
     "max_model_calls": 40,
@@ -53,21 +62,21 @@
       "class": "A",
       "metric": "citation_format",
       "op": "gte",
-      "value": 0.95
+      "value": 0.9
     },
     {
       "id": "citation-grounded",
       "class": "A",
       "metric": "gold_span_overlap",
       "op": "gte",
-      "value": 0.95
+      "value": 0.9
     },
     {
       "id": "refusal-unanswerable",
       "class": "A",
       "metric": "unanswerable_refusals",
       "op": "gte",
-      "value": 5
+      "value": 11
     },
     {
       "id": "refusal-answerable",
@@ -75,6 +84,13 @@
       "metric": "answerable_refusals",
       "op": "lte",
       "value": 1
+    },
+    {
+      "id": "model-calls",
+      "class": "A",
+      "metric": "model_calls_per_question",
+      "op": "lte",
+      "value": 0.8
     }
   ],
   "feedback": {

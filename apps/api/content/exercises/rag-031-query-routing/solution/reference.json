@@ -1,4 +1,7 @@
 {
+  "router": "top-document",
+  "defaultRoute": "policy",
+  "routingRules": "",
   "faqTopK": 1,
   "faqRerank": false,
   "faqChunkSize": 100,

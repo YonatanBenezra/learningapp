@@ -1,42 +1,56 @@
 [
   {
     "id": "p1",
-    "question": "Who sets the severity of an incident?",
+    "question": "What is the nightly hotel limit for the design summit?",
     "answerable": true,
-    "goldAnswer": "The incident commander",
-    "goldDocId": "incident",
-    "goldSpan": "Severity is set by the incident commander"
+    "goldAnswer": "140 euros",
+    "goldDocId": "travel-porto",
+    "goldSpan": "Hotels in Porto may cost at most 140 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-design-summit",
+        "span": "This year the design summit takes place in Porto in March"
+      },
+      {
+        "docId": "travel-porto",
+        "span": "Hotels in Porto may cost at most 140 euros a night on business trips"
+      }
+    ]
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on ordinary workdays?",
+    "question": "Who approves the budget for Project Saffron onboarding?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "Mira Okafor",
+    "goldDocId": "team-atlas",
+    "goldSpan": "The Atlas team is led by Mira Okafor, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-saffron-onboarding",
+        "span": "Project Saffron onboarding is run by the Atlas team"
+      },
+      {
+        "docId": "team-atlas",
+        "span": "The Atlas team is led by Mira Okafor, who approves the team budget and hiring"
+      }
+    ]
   },
   {
     "id": "p3",
-    "question": "Which retention clock do backup tapes follow?",
+    "question": "In which month does the contract with the maker of the Nimbus speaker renew?",
     "answerable": true,
-    "goldAnswer": "The same clock as the source system",
-    "goldDocId": "retention",
-    "goldSpan": "Backup tapes follow the same clock as the source system"
-  },
-  {
-    "id": "p4",
-    "question": "Are personal USB drives allowed on company laptops?",
-    "answerable": true,
-    "goldAnswer": "No, they are blocked on the endpoint",
-    "goldDocId": "laptop",
-    "goldSpan": "personal USB drives are blocked on the endpoint"
-  },
-  {
-    "id": "p5",
-    "question": "How quickly must a leaked credential be rotated?",
-    "answerable": true,
-    "goldAnswer": "Within one hour of detection",
-    "goldDocId": "password",
-    "goldSpan": "Rotate a leaked credential within one hour of detection"
+    "goldAnswer": "January",
+    "goldDocId": "supplier-varden-electronics",
+    "goldSpan": "Our contract with Varden Electronics renews every January, and ending it needs 60 days of notice",
+    "evidence": [
+      {
+        "docId": "product-nimbus-speaker",
+        "span": "The Nimbus speaker is manufactured for us by Varden Electronics"
+      },
+      {
+        "docId": "supplier-varden-electronics",
+        "span": "Our contract with Varden Electronics renews every January, and ending it needs 60 days of notice"
+      }
+    ]
   }
 ]

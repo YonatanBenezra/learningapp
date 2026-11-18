@@ -1,0 +1,770 @@
+[
+  {
+    "chain": "event",
+    "key": "design summit",
+    "question": "What is the nightly hotel limit for the design summit?",
+    "goldAnswer": "140 euros",
+    "evidence": [
+      {
+        "docId": "event-design-summit",
+        "span": "This year the design summit takes place in Porto in March"
+      },
+      {
+        "docId": "travel-porto",
+        "span": "Hotels in Porto may cost at most 140 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "design summit",
+    "question": "How much can a hotel cost per night when I attend the design summit?",
+    "goldAnswer": "140 euros",
+    "evidence": [
+      {
+        "docId": "event-design-summit",
+        "span": "This year the design summit takes place in Porto in March"
+      },
+      {
+        "docId": "travel-porto",
+        "span": "Hotels in Porto may cost at most 140 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "sales kickoff",
+    "question": "What is the nightly hotel limit for the sales kickoff?",
+    "goldAnswer": "190 euros",
+    "evidence": [
+      {
+        "docId": "event-sales-kickoff",
+        "span": "This year the sales kickoff takes place in Munich in January"
+      },
+      {
+        "docId": "travel-munich",
+        "span": "Hotels in Munich may cost at most 190 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "sales kickoff",
+    "question": "How much can a hotel cost per night when I attend the sales kickoff?",
+    "goldAnswer": "190 euros",
+    "evidence": [
+      {
+        "docId": "event-sales-kickoff",
+        "span": "This year the sales kickoff takes place in Munich in January"
+      },
+      {
+        "docId": "travel-munich",
+        "span": "Hotels in Munich may cost at most 190 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "engineering offsite",
+    "question": "What is the nightly hotel limit for the engineering offsite?",
+    "goldAnswer": "110 euros",
+    "evidence": [
+      {
+        "docId": "event-engineering-offsite",
+        "span": "This year the engineering offsite takes place in Krakow in May"
+      },
+      {
+        "docId": "travel-krakow",
+        "span": "Hotels in Krakow may cost at most 110 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "engineering offsite",
+    "question": "How much can a hotel cost per night when I attend the engineering offsite?",
+    "goldAnswer": "110 euros",
+    "evidence": [
+      {
+        "docId": "event-engineering-offsite",
+        "span": "This year the engineering offsite takes place in Krakow in May"
+      },
+      {
+        "docId": "travel-krakow",
+        "span": "Hotels in Krakow may cost at most 110 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "security week",
+    "question": "What is the nightly hotel limit for the security week?",
+    "goldAnswer": "165 euros",
+    "evidence": [
+      {
+        "docId": "event-security-week",
+        "span": "This year the security week takes place in Vienna in October"
+      },
+      {
+        "docId": "travel-vienna",
+        "span": "Hotels in Vienna may cost at most 165 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "security week",
+    "question": "How much can a hotel cost per night when I attend the security week?",
+    "goldAnswer": "165 euros",
+    "evidence": [
+      {
+        "docId": "event-security-week",
+        "span": "This year the security week takes place in Vienna in October"
+      },
+      {
+        "docId": "travel-vienna",
+        "span": "Hotels in Vienna may cost at most 165 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "partner forum",
+    "question": "What is the nightly hotel limit for the partner forum?",
+    "goldAnswer": "185 euros",
+    "evidence": [
+      {
+        "docId": "event-partner-forum",
+        "span": "This year the partner forum takes place in Milan in June"
+      },
+      {
+        "docId": "travel-milan",
+        "span": "Hotels in Milan may cost at most 185 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "partner forum",
+    "question": "How much can a hotel cost per night when I attend the partner forum?",
+    "goldAnswer": "185 euros",
+    "evidence": [
+      {
+        "docId": "event-partner-forum",
+        "span": "This year the partner forum takes place in Milan in June"
+      },
+      {
+        "docId": "travel-milan",
+        "span": "Hotels in Milan may cost at most 185 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "data science retreat",
+    "question": "What is the nightly hotel limit for the data science retreat?",
+    "goldAnswer": "125 euros",
+    "evidence": [
+      {
+        "docId": "event-data-science-retreat",
+        "span": "This year the data science retreat takes place in Ghent in September"
+      },
+      {
+        "docId": "travel-ghent",
+        "span": "Hotels in Ghent may cost at most 125 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "data science retreat",
+    "question": "How much can a hotel cost per night when I attend the data science retreat?",
+    "goldAnswer": "125 euros",
+    "evidence": [
+      {
+        "docId": "event-data-science-retreat",
+        "span": "This year the data science retreat takes place in Ghent in September"
+      },
+      {
+        "docId": "travel-ghent",
+        "span": "Hotels in Ghent may cost at most 125 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "support conference",
+    "question": "What is the nightly hotel limit for the support conference?",
+    "goldAnswer": "150 euros",
+    "evidence": [
+      {
+        "docId": "event-support-conference",
+        "span": "This year the support conference takes place in Lyon in April"
+      },
+      {
+        "docId": "travel-lyon",
+        "span": "Hotels in Lyon may cost at most 150 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "support conference",
+    "question": "How much can a hotel cost per night when I attend the support conference?",
+    "goldAnswer": "150 euros",
+    "evidence": [
+      {
+        "docId": "event-support-conference",
+        "span": "This year the support conference takes place in Lyon in April"
+      },
+      {
+        "docId": "travel-lyon",
+        "span": "Hotels in Lyon may cost at most 150 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "leadership seminar",
+    "question": "What is the nightly hotel limit for the leadership seminar?",
+    "goldAnswer": "175 euros",
+    "evidence": [
+      {
+        "docId": "event-leadership-seminar",
+        "span": "This year the leadership seminar takes place in Hamburg in November"
+      },
+      {
+        "docId": "travel-hamburg",
+        "span": "Hotels in Hamburg may cost at most 175 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "event",
+    "key": "leadership seminar",
+    "question": "How much can a hotel cost per night when I attend the leadership seminar?",
+    "goldAnswer": "175 euros",
+    "evidence": [
+      {
+        "docId": "event-leadership-seminar",
+        "span": "This year the leadership seminar takes place in Hamburg in November"
+      },
+      {
+        "docId": "travel-hamburg",
+        "span": "Hotels in Hamburg may cost at most 175 euros a night on business trips"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Northwind migration",
+    "question": "Who approves the budget for Project Northwind migration?",
+    "goldAnswer": "Priya Raman",
+    "evidence": [
+      {
+        "docId": "project-northwind-migration",
+        "span": "Project Northwind migration is run by the Cobalt team"
+      },
+      {
+        "docId": "team-cobalt",
+        "span": "The Cobalt team is led by Priya Raman, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Northwind migration",
+    "question": "Who signs off hiring for Project Northwind migration?",
+    "goldAnswer": "Priya Raman",
+    "evidence": [
+      {
+        "docId": "project-northwind-migration",
+        "span": "Project Northwind migration is run by the Cobalt team"
+      },
+      {
+        "docId": "team-cobalt",
+        "span": "The Cobalt team is led by Priya Raman, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Bluebird checkout",
+    "question": "Who approves the budget for Project Bluebird checkout?",
+    "goldAnswer": "Kenji Watanabe",
+    "evidence": [
+      {
+        "docId": "project-bluebird-checkout",
+        "span": "Project Bluebird checkout is run by the Falcon team"
+      },
+      {
+        "docId": "team-falcon",
+        "span": "The Falcon team is led by Kenji Watanabe, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Bluebird checkout",
+    "question": "Who signs off hiring for Project Bluebird checkout?",
+    "goldAnswer": "Kenji Watanabe",
+    "evidence": [
+      {
+        "docId": "project-bluebird-checkout",
+        "span": "Project Bluebird checkout is run by the Falcon team"
+      },
+      {
+        "docId": "team-falcon",
+        "span": "The Falcon team is led by Kenji Watanabe, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Quartz analytics",
+    "question": "Who approves the budget for Project Quartz analytics?",
+    "goldAnswer": "Elena Petrova",
+    "evidence": [
+      {
+        "docId": "project-quartz-analytics",
+        "span": "Project Quartz analytics is run by the Iris team"
+      },
+      {
+        "docId": "team-iris",
+        "span": "The Iris team is led by Elena Petrova, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Quartz analytics",
+    "question": "Who signs off hiring for Project Quartz analytics?",
+    "goldAnswer": "Elena Petrova",
+    "evidence": [
+      {
+        "docId": "project-quartz-analytics",
+        "span": "Project Quartz analytics is run by the Iris team"
+      },
+      {
+        "docId": "team-iris",
+        "span": "The Iris team is led by Elena Petrova, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Saffron onboarding",
+    "question": "Who approves the budget for Project Saffron onboarding?",
+    "goldAnswer": "Mira Okafor",
+    "evidence": [
+      {
+        "docId": "project-saffron-onboarding",
+        "span": "Project Saffron onboarding is run by the Atlas team"
+      },
+      {
+        "docId": "team-atlas",
+        "span": "The Atlas team is led by Mira Okafor, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Saffron onboarding",
+    "question": "Who signs off hiring for Project Saffron onboarding?",
+    "goldAnswer": "Mira Okafor",
+    "evidence": [
+      {
+        "docId": "project-saffron-onboarding",
+        "span": "Project Saffron onboarding is run by the Atlas team"
+      },
+      {
+        "docId": "team-atlas",
+        "span": "The Atlas team is led by Mira Okafor, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Tidewater billing",
+    "question": "Who approves the budget for Project Tidewater billing?",
+    "goldAnswer": "Hannah Becker",
+    "evidence": [
+      {
+        "docId": "project-tidewater-billing",
+        "span": "Project Tidewater billing is run by the Kestrel team"
+      },
+      {
+        "docId": "team-kestrel",
+        "span": "The Kestrel team is led by Hannah Becker, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Tidewater billing",
+    "question": "Who signs off hiring for Project Tidewater billing?",
+    "goldAnswer": "Hannah Becker",
+    "evidence": [
+      {
+        "docId": "project-tidewater-billing",
+        "span": "Project Tidewater billing is run by the Kestrel team"
+      },
+      {
+        "docId": "team-kestrel",
+        "span": "The Kestrel team is led by Hannah Becker, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Orchid search",
+    "question": "Who approves the budget for Project Orchid search?",
+    "goldAnswer": "Jonas Weber",
+    "evidence": [
+      {
+        "docId": "project-orchid-search",
+        "span": "Project Orchid search is run by the Delta team"
+      },
+      {
+        "docId": "team-delta",
+        "span": "The Delta team is led by Jonas Weber, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Orchid search",
+    "question": "Who signs off hiring for Project Orchid search?",
+    "goldAnswer": "Jonas Weber",
+    "evidence": [
+      {
+        "docId": "project-orchid-search",
+        "span": "Project Orchid search is run by the Delta team"
+      },
+      {
+        "docId": "team-delta",
+        "span": "The Delta team is led by Jonas Weber, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Pinecone mobile",
+    "question": "Who approves the budget for Project Pinecone mobile?",
+    "goldAnswer": "Omar Haddad",
+    "evidence": [
+      {
+        "docId": "project-pinecone-mobile",
+        "span": "Project Pinecone mobile is run by the Lumen team"
+      },
+      {
+        "docId": "team-lumen",
+        "span": "The Lumen team is led by Omar Haddad, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Pinecone mobile",
+    "question": "Who signs off hiring for Project Pinecone mobile?",
+    "goldAnswer": "Omar Haddad",
+    "evidence": [
+      {
+        "docId": "project-pinecone-mobile",
+        "span": "Project Pinecone mobile is run by the Lumen team"
+      },
+      {
+        "docId": "team-lumen",
+        "span": "The Lumen team is led by Omar Haddad, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Copperline API",
+    "question": "Who approves the budget for Project Copperline API?",
+    "goldAnswer": "Amara Nwosu",
+    "evidence": [
+      {
+        "docId": "project-copperline-api",
+        "span": "Project Copperline API is run by the Granite team"
+      },
+      {
+        "docId": "team-granite",
+        "span": "The Granite team is led by Amara Nwosu, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "project",
+    "key": "Copperline API",
+    "question": "Who signs off hiring for Project Copperline API?",
+    "goldAnswer": "Amara Nwosu",
+    "evidence": [
+      {
+        "docId": "project-copperline-api",
+        "span": "Project Copperline API is run by the Granite team"
+      },
+      {
+        "docId": "team-granite",
+        "span": "The Granite team is led by Amara Nwosu, who approves the team budget and hiring"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Aero desk lamp",
+    "question": "In which month does the contract with the maker of the Aero desk lamp renew?",
+    "goldAnswer": "July",
+    "evidence": [
+      {
+        "docId": "product-aero-desk-lamp",
+        "span": "The Aero desk lamp is manufactured for us by Calder Optics"
+      },
+      {
+        "docId": "supplier-calder-optics",
+        "span": "Our contract with Calder Optics renews every July, and ending it needs 45 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Aero desk lamp",
+    "question": "How much notice is needed to end the contract with whoever makes the Aero desk lamp?",
+    "goldAnswer": "45 days",
+    "evidence": [
+      {
+        "docId": "product-aero-desk-lamp",
+        "span": "The Aero desk lamp is manufactured for us by Calder Optics"
+      },
+      {
+        "docId": "supplier-calder-optics",
+        "span": "Our contract with Calder Optics renews every July, and ending it needs 45 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Nimbus speaker",
+    "question": "In which month does the contract with the maker of the Nimbus speaker renew?",
+    "goldAnswer": "January",
+    "evidence": [
+      {
+        "docId": "product-nimbus-speaker",
+        "span": "The Nimbus speaker is manufactured for us by Varden Electronics"
+      },
+      {
+        "docId": "supplier-varden-electronics",
+        "span": "Our contract with Varden Electronics renews every January, and ending it needs 60 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Nimbus speaker",
+    "question": "How much notice is needed to end the contract with whoever makes the Nimbus speaker?",
+    "goldAnswer": "60 days",
+    "evidence": [
+      {
+        "docId": "product-nimbus-speaker",
+        "span": "The Nimbus speaker is manufactured for us by Varden Electronics"
+      },
+      {
+        "docId": "supplier-varden-electronics",
+        "span": "Our contract with Varden Electronics renews every January, and ending it needs 60 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Trail power bank",
+    "question": "In which month does the contract with the maker of the Trail power bank renew?",
+    "goldAnswer": "December",
+    "evidence": [
+      {
+        "docId": "product-trail-power-bank",
+        "span": "The Trail power bank is manufactured for us by Quill Batteries"
+      },
+      {
+        "docId": "supplier-quill-batteries",
+        "span": "Our contract with Quill Batteries renews every December, and ending it needs 90 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Trail power bank",
+    "question": "How much notice is needed to end the contract with whoever makes the Trail power bank?",
+    "goldAnswer": "90 days",
+    "evidence": [
+      {
+        "docId": "product-trail-power-bank",
+        "span": "The Trail power bank is manufactured for us by Quill Batteries"
+      },
+      {
+        "docId": "supplier-quill-batteries",
+        "span": "Our contract with Quill Batteries renews every December, and ending it needs 90 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Atlas backpack",
+    "question": "In which month does the contract with the maker of the Atlas backpack renew?",
+    "goldAnswer": "September",
+    "evidence": [
+      {
+        "docId": "product-atlas-backpack",
+        "span": "The Atlas backpack is manufactured for us by Marlow Textiles"
+      },
+      {
+        "docId": "supplier-marlow-textiles",
+        "span": "Our contract with Marlow Textiles renews every September, and ending it needs 30 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Atlas backpack",
+    "question": "How much notice is needed to end the contract with whoever makes the Atlas backpack?",
+    "goldAnswer": "30 days",
+    "evidence": [
+      {
+        "docId": "product-atlas-backpack",
+        "span": "The Atlas backpack is manufactured for us by Marlow Textiles"
+      },
+      {
+        "docId": "supplier-marlow-textiles",
+        "span": "Our contract with Marlow Textiles renews every September, and ending it needs 30 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Glint smart mirror",
+    "question": "In which month does the contract with the maker of the Glint smart mirror renew?",
+    "goldAnswer": "November",
+    "evidence": [
+      {
+        "docId": "product-glint-smart-mirror",
+        "span": "The Glint smart mirror is manufactured for us by Pellham Glass"
+      },
+      {
+        "docId": "supplier-pellham-glass",
+        "span": "Our contract with Pellham Glass renews every November, and ending it needs 45 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Glint smart mirror",
+    "question": "How much notice is needed to end the contract with whoever makes the Glint smart mirror?",
+    "goldAnswer": "45 days",
+    "evidence": [
+      {
+        "docId": "product-glint-smart-mirror",
+        "span": "The Glint smart mirror is manufactured for us by Pellham Glass"
+      },
+      {
+        "docId": "supplier-pellham-glass",
+        "span": "Our contract with Pellham Glass renews every November, and ending it needs 45 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Pulse fitness band",
+    "question": "In which month does the contract with the maker of the Pulse fitness band renew?",
+    "goldAnswer": "August",
+    "evidence": [
+      {
+        "docId": "product-pulse-fitness-band",
+        "span": "The Pulse fitness band is manufactured for us by Fennick Circuits"
+      },
+      {
+        "docId": "supplier-fennick-circuits",
+        "span": "Our contract with Fennick Circuits renews every August, and ending it needs 90 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Pulse fitness band",
+    "question": "How much notice is needed to end the contract with whoever makes the Pulse fitness band?",
+    "goldAnswer": "90 days",
+    "evidence": [
+      {
+        "docId": "product-pulse-fitness-band",
+        "span": "The Pulse fitness band is manufactured for us by Fennick Circuits"
+      },
+      {
+        "docId": "supplier-fennick-circuits",
+        "span": "Our contract with Fennick Circuits renews every August, and ending it needs 90 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Drift e-scooter",
+    "question": "In which month does the contract with the maker of the Drift e-scooter renew?",
+    "goldAnswer": "May",
+    "evidence": [
+      {
+        "docId": "product-drift-e-scooter",
+        "span": "The Drift e-scooter is manufactured for us by Stellan Motors"
+      },
+      {
+        "docId": "supplier-stellan-motors",
+        "span": "Our contract with Stellan Motors renews every May, and ending it needs 60 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Drift e-scooter",
+    "question": "How much notice is needed to end the contract with whoever makes the Drift e-scooter?",
+    "goldAnswer": "60 days",
+    "evidence": [
+      {
+        "docId": "product-drift-e-scooter",
+        "span": "The Drift e-scooter is manufactured for us by Stellan Motors"
+      },
+      {
+        "docId": "supplier-stellan-motors",
+        "span": "Our contract with Stellan Motors renews every May, and ending it needs 60 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Nest storage box",
+    "question": "In which month does the contract with the maker of the Nest storage box renew?",
+    "goldAnswer": "April",
+    "evidence": [
+      {
+        "docId": "product-nest-storage-box",
+        "span": "The Nest storage box is manufactured for us by Sorrel Plastics"
+      },
+      {
+        "docId": "supplier-sorrel-plastics",
+        "span": "Our contract with Sorrel Plastics renews every April, and ending it needs 30 days of notice"
+      }
+    ]
+  },
+  {
+    "chain": "product",
+    "key": "Nest storage box",
+    "question": "How much notice is needed to end the contract with whoever makes the Nest storage box?",
+    "goldAnswer": "30 days",
+    "evidence": [
+      {
+        "docId": "product-nest-storage-box",
+        "span": "The Nest storage box is manufactured for us by Sorrel Plastics"
+      },
+      {
+        "docId": "supplier-sorrel-plastics",
+        "span": "Our contract with Sorrel Plastics renews every April, and ending it needs 30 days of notice"
+      }
+    ]
+  }
+]

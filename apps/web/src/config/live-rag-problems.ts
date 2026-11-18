@@ -18,14 +18,14 @@ export const LIVE_RAG_PROBLEMS: readonly LiveRagProblem[] = [
     summary:
       "Normalize docs and fix chunk boundaries until recall@5 meets the launch gate.",
     href: routes.exercise("rag-001-chunk-it-right"),
-    nextCta: "Overlap & sliding windows",
+    nextCta: "Answers on the border",
   },
   {
     id: "P1-R2",
     slug: "rag-006-overlap-tune",
-    title: "Overlap & Sliding Windows",
+    title: "Answers on the Border",
     summary:
-      "Sentence splits and overlap that keep gold sentences whole within a context budget.",
+      "Two-sentence answers get cut at chunk boundaries; use overlap so every pair stays together.",
     href: routes.exercise("rag-006-overlap-tune"),
     nextCta: "Retrieval top-k baseline",
   },
@@ -36,14 +36,14 @@ export const LIVE_RAG_PROBLEMS: readonly LiveRagProblem[] = [
     summary:
       "Set top-k and rerank on a frozen index — recall@k under token budget.",
     href: routes.exercise("rag-003-retrieval-top-k"),
-    nextCta: "Metadata scope & window fit",
+    nextCta: "Keep the heading with the row",
   },
   {
     id: "P2-R1",
     slug: "rag-010-window-fit",
-    title: "Metadata Scope & Window Fit",
+    title: "Keep the Heading with the Row",
     summary:
-      "Align chunk windows with policy sections — scope before retrieval.",
+      "Markdown tables reuse the same model names; split so each row keeps its page and section heading.",
     href: routes.exercise("rag-010-window-fit"),
     nextCta: "Recall@k SLA",
   },
@@ -169,10 +169,19 @@ export const LIVE_RAG_PROBLEMS: readonly LiveRagProblem[] = [
   {
     id: "P4-R5",
     slug: "rag-031-query-routing",
-    title: "Query Routing: One Profile per Question Type",
+    title: "Build the Router",
     summary:
-      "Separate retrieval profiles for FAQ, policy and procedural questions under one budget.",
+      "Nobody labels the questions any more: route each one to the FAQ, policy or procedural profile yourself.",
     href: routes.exercise("rag-031-query-routing"),
+    nextCta: "Two offices, two languages",
+  },
+  {
+    id: "P4-R6",
+    slug: "rag-032-two-languages",
+    title: "Two Offices, Two Languages",
+    summary:
+      "Bangla questions about English pages and the reverse: pick a retriever that crosses languages.",
+    href: routes.exercise("rag-032-two-languages"),
     nextCta: "Advanced: cost-capped retrieval",
   },
   {
@@ -190,23 +199,23 @@ export const LIVE_RAG_PROBLEMS: readonly LiveRagProblem[] = [
     title: "Recall@k SLA on Policy KB (Advanced)",
     summary: "Clear recall@5 ≥ 0.90 with top-5 context under 130 tokens.",
     href: routes.exercise("rag-026-adv-chunk-balance"),
-    nextCta: "Advanced: citation contract",
+    nextCta: "Advanced: refuse before you spend",
   },
   {
     id: "ADV-3",
     slug: "rag-027-adv-citation-contract",
-    title: "Citation-Grounded Answers (Advanced)",
+    title: "Refuse Before You Spend (Advanced)",
     summary:
-      "Cite chunks that carry the answer almost verbatim and refuse only when you must.",
+      "Cited answers from a real model, and a score threshold that refuses hopeless questions without a model call.",
     href: routes.exercise("rag-027-adv-citation-contract"),
-    nextCta: "Advanced: retrieve + rerank",
+    nextCta: "Advanced: speak the handbook's language",
   },
   {
     id: "ADV-4",
     slug: "rag-028-adv-rerank-rethink",
-    title: "Two-Stage Retrieve + Rerank (Advanced)",
+    title: "Speak the Handbook's Language (Advanced)",
     summary:
-      "Lift nDCG@5 by 0.25 when the gold document sits outside a narrow window.",
+      "Staff ask with abbreviations and typos; write a query rewrite that finds the formal policy.",
     href: routes.exercise("rag-028-adv-rerank-rethink"),
     nextCta: "Advanced: custom retriever",
   },
@@ -217,14 +226,14 @@ export const LIVE_RAG_PROBLEMS: readonly LiveRagProblem[] = [
     summary:
       "Python retriever that lands almost every hidden answer in its top 5.",
     href: routes.exercise("rag-029-adv-python-retriever"),
-    nextCta: "Advanced: rerank without model calls",
+    nextCta: "Advanced: two hops to the answer",
   },
   {
     id: "ADV-6",
     slug: "rag-030-adv-score-gate",
-    title: "Rerank Without Extra Model Calls (Advanced)",
+    title: "Two Hops to the Answer (Advanced)",
     summary:
-      "Lift nDCG@5 by 0.25 with zero model calls and a 500-token context.",
+      "Answers that need a chain of pages: search again with what the first search found.",
     href: routes.exercise("rag-030-adv-score-gate"),
     nextCta: "Red team: prompt leak",
   },

@@ -1,0 +1,322 @@
+[
+  {
+    "id": "travel-porto",
+    "title": "Business travel: Porto",
+    "text": "Hotels in Porto may cost at most 140 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-lisbon",
+    "title": "Business travel: Lisbon",
+    "text": "Hotels in Lisbon may cost at most 155 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-madrid",
+    "title": "Business travel: Madrid",
+    "text": "Hotels in Madrid may cost at most 170 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-valencia",
+    "title": "Business travel: Valencia",
+    "text": "Hotels in Valencia may cost at most 135 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-lyon",
+    "title": "Business travel: Lyon",
+    "text": "Hotels in Lyon may cost at most 150 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-marseille",
+    "title": "Business travel: Marseille",
+    "text": "Hotels in Marseille may cost at most 145 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-milan",
+    "title": "Business travel: Milan",
+    "text": "Hotels in Milan may cost at most 185 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-turin",
+    "title": "Business travel: Turin",
+    "text": "Hotels in Turin may cost at most 130 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-munich",
+    "title": "Business travel: Munich",
+    "text": "Hotels in Munich may cost at most 190 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-hamburg",
+    "title": "Business travel: Hamburg",
+    "text": "Hotels in Hamburg may cost at most 175 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-vienna",
+    "title": "Business travel: Vienna",
+    "text": "Hotels in Vienna may cost at most 165 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-prague",
+    "title": "Business travel: Prague",
+    "text": "Hotels in Prague may cost at most 120 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-krakow",
+    "title": "Business travel: Krakow",
+    "text": "Hotels in Krakow may cost at most 110 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-gdansk",
+    "title": "Business travel: Gdansk",
+    "text": "Hotels in Gdansk may cost at most 105 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-ghent",
+    "title": "Business travel: Ghent",
+    "text": "Hotels in Ghent may cost at most 125 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "travel-rotterdam",
+    "title": "Business travel: Rotterdam",
+    "text": "Hotels in Rotterdam may cost at most 160 euros a night on business trips. Book through the travel portal and keep the receipt for the expense claim."
+  },
+  {
+    "id": "event-design-summit",
+    "title": "The design summit",
+    "text": "This year the design summit takes place in Porto in March. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "event-sales-kickoff",
+    "title": "The sales kickoff",
+    "text": "This year the sales kickoff takes place in Munich in January. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "event-engineering-offsite",
+    "title": "The engineering offsite",
+    "text": "This year the engineering offsite takes place in Krakow in May. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "event-security-week",
+    "title": "The security week",
+    "text": "This year the security week takes place in Vienna in October. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "event-partner-forum",
+    "title": "The partner forum",
+    "text": "This year the partner forum takes place in Milan in June. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "event-data-science-retreat",
+    "title": "The data science retreat",
+    "text": "This year the data science retreat takes place in Ghent in September. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "event-support-conference",
+    "title": "The support conference",
+    "text": "This year the support conference takes place in Lyon in April. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "event-leadership-seminar",
+    "title": "The leadership seminar",
+    "text": "This year the leadership seminar takes place in Hamburg in November. Registration opens six weeks before, and the agenda is shared in the events channel."
+  },
+  {
+    "id": "team-atlas",
+    "title": "Atlas team",
+    "text": "The Atlas team is led by Mira Okafor, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-beacon",
+    "title": "Beacon team",
+    "text": "The Beacon team is led by Tomas Lindqvist, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-cobalt",
+    "title": "Cobalt team",
+    "text": "The Cobalt team is led by Priya Raman, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-delta",
+    "title": "Delta team",
+    "text": "The Delta team is led by Jonas Weber, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-ember",
+    "title": "Ember team",
+    "text": "The Ember team is led by Sofia Marchetti, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-falcon",
+    "title": "Falcon team",
+    "text": "The Falcon team is led by Kenji Watanabe, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-granite",
+    "title": "Granite team",
+    "text": "The Granite team is led by Amara Nwosu, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-harbor",
+    "title": "Harbor team",
+    "text": "The Harbor team is led by Lucas Moreau, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-iris",
+    "title": "Iris team",
+    "text": "The Iris team is led by Elena Petrova, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-juniper",
+    "title": "Juniper team",
+    "text": "The Juniper team is led by Diego Alvarez, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-kestrel",
+    "title": "Kestrel team",
+    "text": "The Kestrel team is led by Hannah Becker, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "team-lumen",
+    "title": "Lumen team",
+    "text": "The Lumen team is led by Omar Haddad, who approves the team budget and hiring. The team meets on Mondays and posts updates in its channel."
+  },
+  {
+    "id": "project-northwind-migration",
+    "title": "Project Northwind migration",
+    "text": "Project Northwind migration is run by the Cobalt team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "project-bluebird-checkout",
+    "title": "Project Bluebird checkout",
+    "text": "Project Bluebird checkout is run by the Falcon team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "project-quartz-analytics",
+    "title": "Project Quartz analytics",
+    "text": "Project Quartz analytics is run by the Iris team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "project-saffron-onboarding",
+    "title": "Project Saffron onboarding",
+    "text": "Project Saffron onboarding is run by the Atlas team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "project-tidewater-billing",
+    "title": "Project Tidewater billing",
+    "text": "Project Tidewater billing is run by the Kestrel team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "project-orchid-search",
+    "title": "Project Orchid search",
+    "text": "Project Orchid search is run by the Delta team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "project-pinecone-mobile",
+    "title": "Project Pinecone mobile",
+    "text": "Project Pinecone mobile is run by the Lumen team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "project-copperline-api",
+    "title": "Project Copperline API",
+    "text": "Project Copperline API is run by the Granite team. Status reports go out every second Friday, and the roadmap lives in the project space."
+  },
+  {
+    "id": "supplier-varden-electronics",
+    "title": "Supplier: Varden Electronics",
+    "text": "Our contract with Varden Electronics renews every January, and ending it needs 60 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-holm-components",
+    "title": "Supplier: Holm Components",
+    "text": "Our contract with Holm Components renews every March, and ending it needs 90 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-sorrel-plastics",
+    "title": "Supplier: Sorrel Plastics",
+    "text": "Our contract with Sorrel Plastics renews every April, and ending it needs 30 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-brightwater-metals",
+    "title": "Supplier: Brightwater Metals",
+    "text": "Our contract with Brightwater Metals renews every June, and ending it needs 60 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-calder-optics",
+    "title": "Supplier: Calder Optics",
+    "text": "Our contract with Calder Optics renews every July, and ending it needs 45 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-fennick-circuits",
+    "title": "Supplier: Fennick Circuits",
+    "text": "Our contract with Fennick Circuits renews every August, and ending it needs 90 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-marlow-textiles",
+    "title": "Supplier: Marlow Textiles",
+    "text": "Our contract with Marlow Textiles renews every September, and ending it needs 30 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-oakridge-packaging",
+    "title": "Supplier: Oakridge Packaging",
+    "text": "Our contract with Oakridge Packaging renews every October, and ending it needs 60 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-pellham-glass",
+    "title": "Supplier: Pellham Glass",
+    "text": "Our contract with Pellham Glass renews every November, and ending it needs 45 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-quill-batteries",
+    "title": "Supplier: Quill Batteries",
+    "text": "Our contract with Quill Batteries renews every December, and ending it needs 90 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-rook-fasteners",
+    "title": "Supplier: Rook Fasteners",
+    "text": "Our contract with Rook Fasteners renews every February, and ending it needs 30 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "supplier-stellan-motors",
+    "title": "Supplier: Stellan Motors",
+    "text": "Our contract with Stellan Motors renews every May, and ending it needs 60 days of notice. Orders go through the procurement portal."
+  },
+  {
+    "id": "product-aero-desk-lamp",
+    "title": "Aero desk lamp",
+    "text": "The Aero desk lamp is manufactured for us by Calder Optics. Spare parts are stocked for five years after the last batch."
+  },
+  {
+    "id": "product-nimbus-speaker",
+    "title": "Nimbus speaker",
+    "text": "The Nimbus speaker is manufactured for us by Varden Electronics. Spare parts are stocked for five years after the last batch."
+  },
+  {
+    "id": "product-trail-power-bank",
+    "title": "Trail power bank",
+    "text": "The Trail power bank is manufactured for us by Quill Batteries. Spare parts are stocked for five years after the last batch."
+  },
+  {
+    "id": "product-atlas-backpack",
+    "title": "Atlas backpack",
+    "text": "The Atlas backpack is manufactured for us by Marlow Textiles. Spare parts are stocked for five years after the last batch."
+  },
+  {
+    "id": "product-glint-smart-mirror",
+    "title": "Glint smart mirror",
+    "text": "The Glint smart mirror is manufactured for us by Pellham Glass. Spare parts are stocked for five years after the last batch."
+  },
+  {
+    "id": "product-pulse-fitness-band",
+    "title": "Pulse fitness band",
+    "text": "The Pulse fitness band is manufactured for us by Fennick Circuits. Spare parts are stocked for five years after the last batch."
+  },
+  {
+    "id": "product-drift-e-scooter",
+    "title": "Drift e-scooter",
+    "text": "The Drift e-scooter is manufactured for us by Stellan Motors. Spare parts are stocked for five years after the last batch."
+  },
+  {
+    "id": "product-nest-storage-box",
+    "title": "Nest storage box",
+    "text": "The Nest storage box is manufactured for us by Sorrel Plastics. Spare parts are stocked for five years after the last batch."
+  }
+]

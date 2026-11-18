@@ -2,7 +2,12 @@ import type { Chunk } from './chunking';
 import { cosine, embedPassages, embedQueries } from './models/embedder';
 import { stableScore } from './models/model-runtime';
 import { retrieveRanked, type RankedChunk } from './retrieve';
-import type { R2Payload, RetrievalMode } from './rag.types';
+import type { EmbeddingChoice, R2Payload, RetrievalMode } from './rag.types';
+import {
+  EMBED_MODEL,
+  type EmbedModel,
+  MULTILINGUAL_EMBED_MODEL,
+} from './models/model-runtime';
 
 /**
  * First-stage retrieval modes:
@@ -20,9 +25,16 @@ export type RetrieverSpec = {
   mode: RetrievalMode;
   /** Hybrid only: weight on the dense score. */
   alpha: number;
+  /** Dense and hybrid: which embedding model. */
+  embedding?: EmbeddingChoice;
 };
 
 export const BM25_RETRIEVER: RetrieverSpec = { mode: 'bm25', alpha: 0 };
+
+const EMBEDDINGS: Record<EmbeddingChoice, EmbedModel> = {
+  english: EMBED_MODEL,
+  multilingual: MULTILINGUAL_EMBED_MODEL,
+};
 
 const DEFAULT_HYBRID_ALPHA = 0.5;
 
@@ -31,6 +43,9 @@ export function retrieverSpecOf(payload: R2Payload): RetrieverSpec {
   const mode = payload.retrievalMode ?? 'bm25';
   return {
     mode,
+    ...(mode !== 'bm25' && payload.embeddingModel
+      ? { embedding: payload.embeddingModel }
+      : {}),
     alpha:
       mode === 'dense'
         ? 1
@@ -69,9 +84,13 @@ export async function prepareRetriever(
     return bm25Retriever(chunks);
   }
   const unique = [...new Set(questions)];
+  const model = EMBEDDINGS[spec.embedding ?? 'english'];
   const [chunkVectors, queryVectors] = await Promise.all([
-    embedPassages(chunks.map((chunk) => chunk.text)),
-    embedQueries(unique),
+    embedPassages(
+      chunks.map((chunk) => chunk.text),
+      model,
+    ),
+    embedQueries(unique, model),
   ]);
   const queryVector = new Map(
     unique.map((question, index) => [question, queryVectors[index]]),
@@ -79,7 +98,7 @@ export async function prepareRetriever(
   const alpha = Math.min(1, Math.max(0, spec.alpha));
 
   return {
-    spec: { mode: spec.mode, alpha },
+    spec: { ...spec, alpha },
     chunks,
     rank(question, k) {
       const vector = queryVector.get(question);
@@ -132,11 +151,14 @@ export function sortRanked(ranked: RankedChunk[]): RankedChunk[] {
 
 /** Display label for traces and the lab. */
 export function retrieverLabel(spec: RetrieverSpec): string {
+  const model = EMBEDDINGS[spec.embedding ?? 'english'].name;
   if (spec.mode === 'dense') {
-    return 'Dense (bge-small cosine)';
+    return `Dense (${model} cosine)`;
   }
   if (spec.mode === 'hybrid') {
-    return `Hybrid (alpha ${spec.alpha.toFixed(2)})`;
+    return spec.embedding
+      ? `Hybrid (alpha ${spec.alpha.toFixed(2)}, ${model})`
+      : `Hybrid (alpha ${spec.alpha.toFixed(2)})`;
   }
   return 'BM25';
 }

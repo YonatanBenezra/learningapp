@@ -1,5 +1,7 @@
 import type {
   DedupeMode,
+  EmbeddingChoice,
+  HopQuery,
   R2Payload,
   R3Payload,
   R4Payload,
@@ -26,6 +28,7 @@ const RERANKERS: RerankerKind[] = [
 ];
 
 const RETRIEVAL_MODES: RetrievalMode[] = ['bm25', 'dense', 'hybrid'];
+const EMBEDDING_CHOICES: EmbeddingChoice[] = ['english', 'multilingual'];
 const STATUS_FILTERS: StatusFilter[] = [
   'none',
   'exclude-superseded',
@@ -33,6 +36,7 @@ const STATUS_FILTERS: StatusFilter[] = [
 ];
 const FILTER_STAGES: FilterStage[] = ['pre', 'post'];
 const DEDUPE_MODES: DedupeMode[] = ['none', 'exact', 'near'];
+const HOP_QUERIES: HopQuery[] = ['passage', 'entities'];
 
 export function parseR1Payload(payload: unknown): RagPayload {
   if (payload === null || typeof payload !== 'object') {
@@ -93,11 +97,40 @@ export function parseR2Payload(payload: unknown): R2Payload {
     chunkSize,
     ...(mode !== undefined ? { retrievalMode: mode as RetrievalMode } : {}),
     ...(alpha !== undefined ? { hybridAlpha: alpha } : {}),
+    ...optionalEnum(record, 'embeddingModel', EMBEDDING_CHOICES),
     ...optionalEnum(record, 'statusFilter', STATUS_FILTERS),
     ...optionalEnum(record, 'filterStage', FILTER_STAGES),
     ...optionalEnum(record, 'dedupe', DEDUPE_MODES),
     ...unitInterval(record, 'dedupeThreshold'),
+    ...hopFields(record),
   };
+}
+
+function hopFields(
+  record: Record<string, unknown>,
+): Pick<R2Payload, 'hops' | 'hopSeeds' | 'hopQuery'> {
+  const out: Pick<R2Payload, 'hops' | 'hopSeeds' | 'hopQuery'> = {
+    ...optionalEnum(record, 'hopQuery', HOP_QUERIES),
+  };
+  if (record.hops !== undefined) {
+    if (record.hops !== 1 && record.hops !== 2) {
+      throw new Error('R2 hops must be 1 or 2');
+    }
+    out.hops = record.hops;
+  }
+  if (record.hopSeeds !== undefined) {
+    const seeds = record.hopSeeds;
+    if (
+      typeof seeds !== 'number' ||
+      !Number.isInteger(seeds) ||
+      seeds < 1 ||
+      seeds > 5
+    ) {
+      throw new Error('R2 hopSeeds must be an integer from 1 to 5');
+    }
+    out.hopSeeds = seeds;
+  }
+  return out;
 }
 
 /** `{ [key]: value }` for a number from 0 to 1, `{}` when absent. */
@@ -139,7 +172,17 @@ export function parseR3Payload(payload: unknown): R3Payload {
   if (typeof record.generationPrompt !== 'string') {
     throw new Error('R3 payload is missing generationPrompt');
   }
-  return { generationPrompt: record.generationPrompt };
+  const threshold = record.refuseBelowScore;
+  if (
+    threshold !== undefined &&
+    (typeof threshold !== 'number' || !(threshold >= 0))
+  ) {
+    throw new Error('R3 refuseBelowScore must be a number of 0 or more');
+  }
+  return {
+    generationPrompt: record.generationPrompt,
+    ...(threshold !== undefined ? { refuseBelowScore: threshold } : {}),
+  };
 }
 
 export function parseR4Payload(payload: unknown): R4Payload {

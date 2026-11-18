@@ -2,82 +2,130 @@
   {
     "id": "pto",
     "title": "Paid time off",
-    "text": "Full-time staff receive twenty-two (22) days of paid time off each calendar year. Requests must be submitted at least fourteen (14) days before the first day of leave, except for documented emergencies. Unused days may be carried into the next year up to a maximum of five (5) days; any remainder is forfeited on 31 January. Managers approve PTO in Workday before the leave starts. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Full-time staff receive twenty-two (22) days of paid time off each calendar year. Requests must be submitted at least fourteen (14) days before the first day of leave, except for documented emergencies. Unused days may be carried into the next year up to a maximum of five (5) days; any remainder is forfeited on 31 January. Managers approve PTO in Workday before the leave starts. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "vpn",
     "title": "VPN and remote access",
-    "text": "Remote access to production networks requires the corporate VPN with hardware MFA enrolled in Okta. Split tunneling is disabled; all traffic must egress through the company gateway. Contractors use the same VPN image and must be offboarded within four hours of contract end. Personal devices are not permitted on the production VPN profile. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Remote access to production networks requires the corporate VPN with hardware MFA enrolled in Okta. Split tunneling is disabled; all traffic must egress through the company gateway. Contractors use the same VPN image and must be offboarded within four hours of contract end. Personal devices are not permitted on the production VPN profile. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "incident",
     "title": "Incident response",
-    "text": "Priority-1 incidents must be acknowledged within fifteen (15) minutes. Page the on-call primary and post a timeline in Slack channel #incidents. A P1 is any event that blocks customer-facing checkout or authentication. Priority-2 events have a sixty-minute acknowledge target. Severity is set by the incident commander, not the reporter. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Priority-1 incidents must be acknowledged within fifteen (15) minutes. Page the on-call primary and post a timeline in Slack channel #incidents. A P1 is any event that blocks customer-facing checkout or authentication. Priority-2 events have a sixty-minute acknowledge target. Severity is set by the incident commander, not the reporter. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "model-usage",
     "title": "Model usage and PII",
-    "text": "Customer personally identifiable information must not be placed in prompts sent to external model providers. Prompt and completion logs are retained for thirty (30) days and then deleted. Internal fine-tunes may use hashed identifiers only. Screenshots of production PII in tickets are treated as a PII incident. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Customer personally identifiable information must not be placed in prompts sent to external model providers. Prompt and completion logs are retained for thirty (30) days and then deleted. Internal fine-tunes may use hashed identifiers only. Screenshots of production PII in tickets are treated as a PII incident. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "expense",
     "title": "Expense policy",
-    "text": "Team meals are reimbursed up to forty-five euros (€45) per person excluding tax. Alcohol is never reimbursable. Expense reports must be submitted within thirty (30) days of the transaction date or they are declined automatically. Ride-hailing to the office is not reimbursable on ordinary workdays. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Team meals are reimbursed up to forty-five euros (€45) per person excluding tax. Alcohol is never reimbursable. Expense reports must be submitted within thirty (30) days of the transaction date or they are declined automatically. Ride-hailing to the office is not reimbursable on ordinary workdays. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "retention",
     "title": "Data retention",
-    "text": "Support tickets are kept for eighteen (18) months after close. Chat transcripts are kept for ninety (90) days. Laptop disk images from offboarding are retained for three (3) years for legal hold, then destroyed. Backup tapes follow the same clock as the source system. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Support tickets are kept for eighteen (18) months after close. Chat transcripts are kept for ninety (90) days. Laptop disk images from offboarding are retained for three (3) years for legal hold, then destroyed. Backup tapes follow the same clock as the source system. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "oncall",
     "title": "On-call roster",
-    "text": "Primary on-call rotates every Monday at 09:00 UTC. The previous primary becomes backup for that week. Handoff notes live in the oncall-handbook repo under /handoffs. Secondary pages escalate after ten minutes without an ack. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Primary on-call rotates every Monday at 09:00 UTC. The previous primary becomes backup for that week. Handoff notes live in the oncall-handbook repo under /handoffs. Secondary pages escalate after ten minutes without an ack. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "vendor",
     "title": "Vendor security",
-    "text": "Production SaaS vendors must present a current SOC 2 Type II report before procurement. Shadow IT is prohibited; new tools are requested through the security-review form. Exceptions require a director and a time-boxed waiver no longer than ninety days. A missing report blocks the purchase order. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Production SaaS vendors must present a current SOC 2 Type II report before procurement. Shadow IT is prohibited; new tools are requested through the security-review form. Exceptions require a director and a time-boxed waiver no longer than ninety days. A missing report blocks the purchase order. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "travel",
     "title": "Travel booking",
-    "text": "Domestic flights below three hours must be economy. International long-haul may be premium economy when the one-way scheduled time exceeds eight hours. Book through the Navan profile tied to your cost centre. Hotel cap is one hundred eighty euros (€180) per night in Tier-1 cities unless a director approves an exception. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Domestic flights below three hours must be economy. International long-haul may be premium economy when the one-way scheduled time exceeds eight hours. Book through the Navan profile tied to your cost centre. Hotel cap is one hundred eighty euros (€180) per night in Tier-1 cities unless a director approves an exception. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "laptop",
     "title": "Laptop standard",
-    "text": "Engineering receives a 14-inch Linux workstation with disk encryption enforced by MDM. Lost devices must be reported to IT within two hours. Staff may not dual-boot unsanctioned operating systems. Docking stations are provided; personal USB drives are blocked on the endpoint. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Engineering receives a 14-inch Linux workstation with disk encryption enforced by MDM. Lost devices must be reported to IT within two hours. Staff may not dual-boot unsanctioned operating systems. Docking stations are provided; personal USB drives are blocked on the endpoint. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "password",
     "title": "Password and secrets",
-    "text": "Passwords are at least sixteen characters and stored only in 1Password. Production secrets never live in git. Rotate a leaked credential within one hour of detection. Shared logins are forbidden even for vendors. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Passwords are at least sixteen characters and stored only in 1Password. Production secrets never live in git. Rotate a leaked credential within one hour of detection. Shared logins are forbidden even for vendors. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "slack",
     "title": "Slack channels",
-    "text": "Customer incidents are discussed in #incidents, not DMs. Public channels are the default. External guests require a time-boxed multi-channel guest account. Do not paste production credentials into Slack. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Customer incidents are discussed in #incidents, not DMs. Public channels are the default. External guests require a time-boxed multi-channel guest account. Do not paste production credentials into Slack. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "hiring",
     "title": "Hiring loop",
-    "text": "Every role has a hiring manager, a bar-raiser, and at least one skills interviewer. Offer letters are issued by People Ops within five business days of a hire decision. Referrals receive a two-hundred-euro bonus after ninety days of employment. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Every role has a hiring manager, a bar-raiser, and at least one skills interviewer. Offer letters are issued by People Ops within five business days of a hire decision. Referrals receive a two-hundred-euro bonus after ninety days of employment. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "badge",
     "title": "Office badge",
-    "text": "Office doors require a personal badge. Tailgating is reported. Lost badges are deactivated within thirty minutes of the report. Visitors sign in at reception and wear a red lanyard. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Office doors require a personal badge. Tailgating is reported. Lost badges are deactivated within thirty minutes of the report. Visitors sign in at reception and wear a red lanyard. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "backup",
     "title": "Backup policy",
-    "text": "Production databases take encrypted snapshots every four hours and retain them for fourteen days. Point-in-time recovery is tested quarterly. Backups never leave the EU region. Restore drills are logged in the reliability calendar. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "Production databases take encrypted snapshots every four hours and retain them for fourteen days. Point-in-time recovery is tested quarterly. Backups never leave the EU region. Restore drills are logged in the reliability calendar. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "encryption",
     "title": "Encryption at rest",
-    "text": "All customer data volumes use AES-256 at rest. TLS 1.2 is the minimum in transit. Key material lives in the cloud KMS with annual rotation. Engineers do not copy customer exports to laptops. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present."
+    "text": "All customer data volumes use AES-256 at rest. TLS 1.2 is the minimum in transit. Key material lives in the cloud KMS with annual rotation. Engineers do not copy customer exports to laptops. This document is an internal operating note. Managers apply it consistently. Edge cases go to the policy owner. Do not copy this file into public repositories. Review happens each fiscal cycle with legal counsel present.",
+    "meta": {
+      "route": "policy"
+    }
   },
   {
     "id": "noise-a",
@@ -122,56 +170,89 @@
   {
     "id": "it-faq",
     "title": "IT help desk FAQ",
-    "text": "The guest Wi-Fi passphrase rotates every Monday and is posted at reception. Lost laptop chargers are replaced at the help desk on floor three. Extra monitors are requested through the hardware form and arrive within five working days. The VPN client must be updated to version 4.2 or later. Printer jams are reported in the #it-help channel. Badge photos are retaken at the security desk on Tuesdays. Design tool licences are approved by the studio lead. Desk phone numbers for new starters are assigned on their first working day. Desk booking opens fourteen days ahead in the workplace app. Shared drives are archived after twelve months without edits."
+    "text": "The guest Wi-Fi passphrase rotates every Monday and is posted at reception. Lost laptop chargers are replaced at the help desk on floor three. Extra monitors are requested through the hardware form and arrive within five working days. The VPN client must be updated to version 4.2 or later. Printer jams are reported in the #it-help channel. Badge photos are retaken at the security desk on Tuesdays. Design tool licences are approved by the studio lead. Desk phone numbers for new starters are assigned on their first working day. Desk booking opens fourteen days ahead in the workplace app. Shared drives are archived after twelve months without edits.",
+    "meta": {
+      "route": "faq"
+    }
   },
   {
     "id": "proc-contractor",
     "title": "Onboarding a contractor",
-    "text": "To onboard a contractor, first open a ticket in the access portal with the contract end date. Next, the hiring manager approves the ticket and assigns a buddy. Finally, IT ships a locked-down laptop and enables remote access for the contract period. Tickets without an end date are rejected by the portal. Access reviews for contractors happen monthly."
+    "text": "To onboard a contractor, first open a ticket in the access portal with the contract end date. Next, the hiring manager approves the ticket and assigns a buddy. Finally, IT ships a locked-down laptop and enables remote access for the contract period. Tickets without an end date are rejected by the portal. Access reviews for contractors happen monthly.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-restore",
     "title": "Restoring a deleted file",
-    "text": "To restore a deleted file, first check the recycle bin of the shared drive. Next, file a restore request with the drive path and the deletion date. Finally, the storage team restores the file from the nightly snapshot within one working day. Files deleted more than ninety days ago cannot be restored. Restores of personal folders need manager approval."
+    "text": "To restore a deleted file, first check the recycle bin of the shared drive. Next, file a restore request with the drive path and the deletion date. Finally, the storage team restores the file from the nightly snapshot within one working day. Files deleted more than ninety days ago cannot be restored. Restores of personal folders need manager approval.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-phishing",
     "title": "Reporting a phishing email",
-    "text": "To report a phishing email, first leave every link and attachment unopened. Next, press the Report Phish button in the mail client. Finally, delete the message once the security team confirms receipt. If you already clicked a link, call the security hotline at once. Reports are triaged within one hour."
+    "text": "To report a phishing email, first leave every link and attachment unopened. Next, press the Report Phish button in the mail client. Finally, delete the message once the security team confirms receipt. If you already clicked a link, call the security hotline at once. Reports are triaged within one hour.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-db-change",
     "title": "Changing a production database",
-    "text": "To change a production database, first write a migration plan with a rollback step. Next, get approval from a second engineer in the change ticket. Finally, run the migration in the maintenance window and attach the logs to the ticket. Emergency changes need an incident number. Migrations outside the window are rolled back."
+    "text": "To change a production database, first write a migration plan with a rollback step. Next, get approval from a second engineer in the change ticket. Finally, run the migration in the maintenance window and attach the logs to the ticket. Emergency changes need an incident number. Migrations outside the window are rolled back.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-offboarding",
     "title": "Offboarding a leaver",
-    "text": "To offboard a leaver, first the manager files the exit form two weeks before the last day. Next, IT schedules account suspension for the evening of the last day. Finally, the leaver returns the laptop and badge to the help desk and receives a signed receipt. Shared mailboxes move to the manager. Personal files are kept for thirty days."
+    "text": "To offboard a leaver, first the manager files the exit form two weeks before the last day. Next, IT schedules account suspension for the evening of the last day. Finally, the leaver returns the laptop and badge to the help desk and receives a signed receipt. Shared mailboxes move to the manager. Personal files are kept for thirty days.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-new-repo",
     "title": "Creating a new code repository",
-    "text": "To create a new code repository, first request it in the engineering portal with an owning team. Next, apply the standard template so branch protection and CI are switched on. Finally, add a CODEOWNERS file and invite at least two maintainers. Repositories without an owner are archived after sixty days. Public repositories need security review."
+    "text": "To create a new code repository, first request it in the engineering portal with an owning team. Next, apply the standard template so branch protection and CI are switched on. Finally, add a CODEOWNERS file and invite at least two maintainers. Repositories without an owner are archived after sixty days. Public repositories need security review.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-travel-booking",
     "title": "Booking business travel",
-    "text": "To book business travel, first get written approval from your budget holder. Next, book flights and hotels only through the travel portal so the trip is insured. Finally, upload the itinerary to the expense tool before departure. Bookings made outside the portal are not reimbursed. Trips longer than two weeks need director approval."
+    "text": "To book business travel, first get written approval from your budget holder. Next, book flights and hotels only through the travel portal so the trip is insured. Finally, upload the itinerary to the expense tool before departure. Bookings made outside the portal are not reimbursed. Trips longer than two weeks need director approval.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-access-review",
     "title": "Running a quarterly access review",
-    "text": "To run a quarterly access review, first export the group memberships from the identity provider. Next, each team lead confirms or removes every member of their groups. Finally, the security team revokes unconfirmed access and archives the signed export. Reviews are due by the tenth day of the quarter. Missed reviews are escalated to the CISO."
+    "text": "To run a quarterly access review, first export the group memberships from the identity provider. Next, each team lead confirms or removes every member of their groups. Finally, the security team revokes unconfirmed access and archives the signed export. Reviews are due by the tenth day of the quarter. Missed reviews are escalated to the CISO.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-hardware-return",
     "title": "Returning faulty hardware",
-    "text": "To return faulty hardware, first log a fault ticket with the asset tag and a photo. Next, back up any local data to your shared drive. Finally, drop the device at the help desk and collect a loan replacement. Loan devices are wiped every Friday. Physical damage may be charged to the team budget."
+    "text": "To return faulty hardware, first log a fault ticket with the asset tag and a photo. Next, back up any local data to your shared drive. Finally, drop the device at the help desk and collect a loan replacement. Loan devices are wiped every Friday. Physical damage may be charged to the team budget.",
+    "meta": {
+      "route": "procedural"
+    }
   },
   {
     "id": "proc-key-rotation",
     "title": "Rotating an API key",
-    "text": "To rotate an API key, first create the new key in the secrets manager. Next, deploy every service that reads the key and confirm it starts with the new value. Finally, revoke the old key and note the rotation in the change log. Keys older than ninety days are flagged in the weekly report. Leaked keys are rotated within one hour."
+    "text": "To rotate an API key, first create the new key in the secrets manager. Next, deploy every service that reads the key and confirm it starts with the new value. Finally, revoke the old key and note the rotation in the change log. Keys older than ninety days are flagged in the weekly report. Leaked keys are rotated within one hour.",
+    "meta": {
+      "route": "procedural"
+    }
   }
 ]

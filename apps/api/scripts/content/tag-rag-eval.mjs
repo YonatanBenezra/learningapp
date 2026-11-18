@@ -9,7 +9,11 @@
  *
  * Tags are computed from the content, never hand-picked:
  *   unanswerable, numeric, multi-sentence, id-lookup (asks by a model number
- *   or error code) or else lexical | paraphrase, distractor, stale-version
+ *   or error code) or else lexical | paraphrase, abbreviation (an acronym
+ *   such as PTO that the answer's document never uses), multi-hop (the
+ *   answer needs a chain of passages), cross-lingual (asked in Bangla and
+ *   answered in English, or the reverse), distractor,
+ *   stale-version
  *   (older or draft versions of the answer exist), and the R5 class
  *   (faq | policy | procedural).
  *
@@ -43,6 +47,8 @@ function tokens(text) {
 
 /** A model number or error code: RT-4712, E-2041. */
 const ID_PATTERN = /\b[A-Z]{1,3}-\d{3,5}\b/;
+/** An acronym the question uses instead of the spelled-out term (PTO, NDAs). */
+const ABBREVIATION = /\b([A-Z]{2,5})s?\b(?!-\d)/g;
 
 function isCanary(question) {
   return question.includes('HIDDEN_EVAL');
@@ -55,7 +61,7 @@ export function splitFor(question) {
 }
 
 function sentences(text) {
-  return text.split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+  return text.split(/(?<=[.!?।])\s+|\n+/u).map((s) => s.trim()).filter(Boolean);
 }
 
 function goldSentence(doc, span) {
@@ -96,6 +102,14 @@ function tagsFor(item, docs) {
   const gold = goldSentence(doc, item.goldSpan ?? '');
   if (/\d/.test(item.goldAnswer ?? '') || /\d/.test(item.goldSpan ?? '')) tags.push('numeric');
   if (sentences(item.goldSpan ?? '').length > 1) tags.push('multi-sentence');
+  if ((item.evidence?.length ?? 0) > 1) tags.push('multi-hop');
+  // Asked in one script, answered in another (Bangla <-> Latin).
+  const bangla = (text) => /[\u0980-\u09FF]/u.test(text);
+  if (doc && bangla(item.question) !== bangla(`${doc.title} ${doc.text}`)) tags.push('cross-lingual');
+  // An acronym the answer's document never uses: the words must be bridged.
+  const docWords = new Set(`${doc?.title ?? ''} ${doc?.text ?? ''}`.toLowerCase().match(/[a-z0-9]+/g) ?? []);
+  const acronyms = [...item.question.matchAll(ABBREVIATION)].map((m) => m[1].toLowerCase());
+  if (acronyms.some((acronym) => !docWords.has(acronym))) tags.push('abbreviation');
   if (ID_PATTERN.test(item.question)) {
     // Asked by an exact id: word overlap with the answer says nothing here.
     tags.push('id-lookup');

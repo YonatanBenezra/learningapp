@@ -1,11 +1,14 @@
 {
-  "faqTopK": 2,
+  "router": "none",
+  "defaultRoute": "policy",
+  "routingRules": "",
+  "faqTopK": 1,
   "faqRerank": false,
-  "faqChunkSize": 300,
-  "policyTopK": 2,
-  "policyRerank": false,
+  "faqChunkSize": 100,
+  "policyTopK": 1,
+  "policyRerank": true,
   "policyChunkSize": 300,
-  "proceduralTopK": 2,
+  "proceduralTopK": 1,
   "proceduralRerank": false,
-  "proceduralChunkSize": 300
+  "proceduralChunkSize": 400
 }

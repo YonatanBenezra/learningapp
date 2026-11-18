@@ -14,13 +14,40 @@ export type PinnedModel = {
  * Changing either one changes grades: bump it on purpose and re-run the
  * content checks.
  */
+/** An embedding model and how it wants its inputs pooled and prefixed. */
+export type EmbedModel = PinnedModel & {
+  /** Short name used in labels and cache keys. */
+  name: string;
+  pooling: 'cls' | 'mean';
+  queryPrefix: string;
+  passagePrefix: string;
+};
+
+/** English: bge-small, CLS pooling, a search instruction on queries. */
 export const EMBED_MODEL = {
   id: 'Xenova/bge-small-en-v1.5',
   revision: 'ea104dacec62c0de699686887e3f920caeb4f3e3',
   dtype: 'q8',
-  /** bge expects this instruction on queries (not on passages). */
-  queryInstruction: 'Represent this sentence for searching relevant passages: ',
-} as const satisfies PinnedModel & { queryInstruction: string };
+  name: 'bge-small',
+  pooling: 'cls',
+  queryPrefix: 'Represent this sentence for searching relevant passages: ',
+  passagePrefix: '',
+} as const satisfies EmbedModel;
+
+/**
+ * Multilingual (about 100 languages, Bangla included): e5-small, mean pooling,
+ * "query: " / "passage: " prefixes. Questions in one language find passages
+ * in another.
+ */
+export const MULTILINGUAL_EMBED_MODEL = {
+  id: 'Xenova/multilingual-e5-small',
+  revision: '761b726dd34fb83930e26aab4e9ac3899aa1fa78',
+  dtype: 'q8',
+  name: 'multilingual-e5-small',
+  pooling: 'mean',
+  queryPrefix: 'query: ',
+  passagePrefix: 'passage: ',
+} as const satisfies EmbedModel;
 
 export const RERANK_MODEL = {
   id: 'Xenova/ms-marco-MiniLM-L-6-v2',

@@ -1,17 +1,13 @@
 {
   "slug": "rag-030-adv-score-gate",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Rerank Without Extra Model Calls (Advanced)",
+  "title": "Two Hops to the Answer",
   "difficulty": "H",
   "catalogPhase": 7,
-  "corpusFile": "shared",
+  "corpusFile": "company-facts",
   "skills": [
-    {
-      "slug": "reranking",
-      "name": "Reranking"
-    },
     {
       "slug": "retrieval-quality",
       "name": "Retrieval quality"
@@ -21,68 +17,70 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Advanced · Rerank Without Extra Model Calls\n\nNo model calls and a high bar: only the right reranker with a wide enough window passes.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt runs on the live model, one call per question: your prompt is the system message, the question is the user message, and the first line of the reply is what the first stage searches for. The reranker still scores candidates against the question as asked.\n\n**Gates:** nDCG@5 improves by at least 0.25, context tokens ≤ 500, and 0 model calls per question.\n",
+  "briefMd": "# Advanced · Two Hops to the Answer\n\nSome questions are only answered by a chain of pages. \"What is the nightly hotel limit for the design summit?\" needs the event page (the summit is in Porto) and then the travel page for Porto, one of sixteen near-identical city pages. Searching with the question alone finds the event page but has no way to pick the right city.\n\nRetrieval is BM25 over whole pages. You control:\n\n- **topK**: results per search.\n- **hops**: 1 searches once; 2 runs a second search built from the question and the top **hopSeeds** passages of the first.\n- **hopQuery**: what the second search adds to the question: the seed passages in full (`passage`), or only the names they mention that the question does not (`entities`, such as \"Porto\").\n\nThe context holds the results of every search, and every passage in it counts toward the budget. A question counts as answered only when every page of its chain is in the context.\n\n**Gates:** recall@k ≥ 0.90 (every link of the chain in context) and mean prompt tokens ≤ 220 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
-      "reranker",
-      "rerankTopN"
+      "topK",
+      "hops"
     ],
     "properties": {
-      "reranker": {
+      "topK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10,
+        "default": 3
+      },
+      "hops": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 2,
+        "default": 1,
+        "description": "1 searches once; 2 searches again with the question plus what the first search found."
+      },
+      "hopSeeds": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5,
+        "default": 1,
+        "description": "How many passages from the first search are added to the second query."
+      },
+      "hopQuery": {
         "type": "string",
         "enum": [
-          "none",
-          "title-boost",
-          "mmr"
+          "passage",
+          "entities"
         ],
-        "default": "none"
-      },
-      "rerankTopN": {
-        "type": "integer",
-        "minimum": 5,
-        "maximum": 50,
-        "default": 20
-      },
-      "queryRewritePrompt": {
-        "type": "string",
-        "default": ""
+        "default": "passage",
+        "description": "What the second search adds to the question: the seed passages in full, or only the new names they mention."
       }
     }
   },
   "thresholds": {
-    "ndcg_improvement": 0.25,
-    "context_tokens": 500,
-    "model_calls_per_question": 0
+    "recall_at_k": 0.9,
+    "mean_prompt_tokens": 220
   },
   "budget": {
-    "max_model_calls": 50,
-    "max_tokens": 80000,
-    "max_cost_eur": 0.2,
-    "wall_clock_s": 180
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
   },
   "gates": [
     {
-      "id": "ndcg-improvement",
+      "id": "recall-at-k",
       "class": "A",
-      "metric": "ndcg_improvement",
+      "metric": "recall@k",
       "op": "gte",
-      "value": 0.25
+      "value": 0.9
     },
     {
-      "id": "context-tokens",
+      "id": "mean-prompt-tokens",
       "class": "A",
-      "metric": "context_tokens",
+      "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 500
-    },
-    {
-      "id": "model-calls",
-      "class": "A",
-      "metric": "model_calls_per_question",
-      "op": "lte",
-      "value": 0
+      "value": 220
     }
   ],
   "feedback": {
@@ -93,6 +91,6 @@
     "maxSubmissions": 20,
     "cooldownHours": 1
   },
-  "graderArchetype": "rag-r4",
+  "graderArchetype": "rag-r2",
   "isPublished": true
 }

@@ -15,6 +15,7 @@ export type RagExerciseMode =
   | "hybrid"
   | "filter"
   | "packing"
+  | "multihop"
   | "prompt"
   | "rerank"
   | "rerankOnly"
@@ -71,6 +72,9 @@ export function ragModeFromKeys(keys: string[]): RagExerciseMode {
   }
   if (keys.includes("dedupe")) {
     return "packing";
+  }
+  if (keys.includes("hops")) {
+    return "multihop";
   }
   if (keys.includes("retrievalMode")) {
     return "hybrid";
@@ -228,6 +232,45 @@ const PIPELINES: Record<
       control: false,
       detail:
         "Checks citation format, gold-span overlap of cited chunks, and refusal behaviour.",
+    },
+  ],
+  multihop: [
+    QUERY,
+    {
+      id: "search",
+      title: "Search 1",
+      subtitle: "you set top-k",
+      icon: "vsearch",
+      control: true,
+      detail:
+        "BM25 over whole pages with the question as asked; it usually finds the first link of the chain.",
+    },
+    {
+      id: "hop",
+      title: "Search 2",
+      subtitle: "optional hop",
+      icon: "planner",
+      control: true,
+      detail:
+        "With two hops, a second BM25 search runs on the question plus what the first search found: whole passages, or only the new names in them.",
+    },
+    {
+      id: "context",
+      title: "Context",
+      subtitle: "both searches",
+      icon: "context",
+      control: false,
+      detail:
+        "Results of every search are sent in full and count toward the token budget.",
+    },
+    {
+      id: "grade",
+      title: "Grade",
+      subtitle: "full chain · tokens",
+      icon: "grade",
+      control: false,
+      detail:
+        "A question counts only when every page of its chain is in the context.",
     },
   ],
   packing: [
@@ -389,11 +432,11 @@ const PIPELINES: Record<
     {
       id: "router",
       title: "Router",
-      subtitle: "class given",
+      subtitle: "you build it",
       icon: "planner",
-      control: false,
+      control: true,
       detail:
-        "Each question arrives labelled FAQ, policy or procedural and is sent to that class's profile.",
+        "Your router picks each question's profile: rules you write, the type of the best-matching document, or one default profile.",
     },
     {
       id: "profiles",
@@ -507,6 +550,7 @@ const MODE_LABELS: Record<RagExerciseMode, string> = {
   hybrid: "R2 · hybrid search",
   filter: "R2 · metadata filter",
   packing: "R2 · context packing",
+  multihop: "R2 · multi-hop retrieval",
   prompt: "R3 · grounded generation",
   rerank: "R4 · rerank",
   rerankOnly: "R4 · rerank",

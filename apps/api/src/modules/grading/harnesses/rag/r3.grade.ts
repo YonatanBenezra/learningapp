@@ -5,6 +5,7 @@ import { chunkCorpus, type CorpusDoc } from './chunking';
 import { citedChunkIds, isRefusal } from './grounded-generate';
 import {
   answerableHidden,
+  declaresGate,
   expandGoldSpan,
   EvalLedger,
   gateThreshold,
@@ -103,11 +104,17 @@ export async function gradeR3(
   let tokensIn = 0;
   let tokensOut = 0;
   const ledger = new EvalLedger();
+  let modelCalls = 0;
   const generated = await mapLimited(
     usable,
     GENERATION_CONCURRENCY,
     async (item) => {
       const ranked = frozenRetrieve(item.question, chunks);
+      if (refusedByScore(item.question, chunks, payload)) {
+        // Weak retrieval: refuse without spending a model call.
+        return { item, ranked, answer: SCORE_REFUSAL, skipped: true };
+      }
+      modelCalls += 1;
       const user = r3UserMessage(item.question, r3Context(ranked));
       const answer = await generate({
         system: payload.generationPrompt,
@@ -117,11 +124,11 @@ export async function gradeR3(
       });
       tokensIn += countTokens(`${payload.generationPrompt}\n${user}`);
       tokensOut += countTokens(answer);
-      return { item, ranked, answer };
+      return { item, ranked, answer, skipped: false };
     },
   );
 
-  for (const { item, ranked, answer } of generated) {
+  for (const { item, ranked, answer, skipped } of generated) {
     const retrievedIds = new Set(ranked.map((row) => row.chunk.id));
     const citations = citedChunkIds(answer);
     const refused = isRefusal(answer);
@@ -154,11 +161,13 @@ export async function gradeR3(
       }
       const grounded =
         !refused && overlap >= overlapThreshold && citations.length > 0;
-      const cause = refused
-        ? 'over-refusal'
-        : citations.length === 0
-          ? 'no-citation'
-          : 'citation-outside-gold-span';
+      const cause = skipped
+        ? 'refused-below-score-threshold'
+        : refused
+          ? 'over-refusal'
+          : citations.length === 0
+            ? 'no-citation'
+            : 'citation-outside-gold-span';
       ledger.record(item, grounded, grounded ? null : { code: cause });
       if (!grounded && ledger.reveal(item)) {
         misses.push({
@@ -197,7 +206,12 @@ export async function gradeR3(
   const overlapPass = meanOverlap >= overlapThreshold;
   const underRefusePass = unanswerableRefusals >= unanswerableNeed;
   const overRefusePass = answerableRefusals <= answerableRefuseMax;
-  const passed = formatPass && overlapPass && underRefusePass && overRefusePass;
+  const callsPerQuestion = usable.length === 0 ? 0 : modelCalls / usable.length;
+  const callsGate = declaresGate(gates, 'model_calls_per_question');
+  const callsCeiling = gateThreshold(gates, 'model_calls_per_question', 1);
+  const callsPass = !callsGate || callsPerQuestion <= callsCeiling;
+  const passed =
+    formatPass && overlapPass && underRefusePass && overRefusePass && callsPass;
 
   return {
     verdict: passed ? 'pass' : 'fail',
@@ -212,6 +226,7 @@ export async function gradeR3(
         value: answerableRefusals,
         total: answerable.length,
       },
+      model_calls_per_question: { value: callsPerQuestion, calls: modelCalls },
     },
     gateResults: [
       {
@@ -250,17 +265,33 @@ export async function gradeR3(
         actual: answerableRefusals,
         passed: overRefusePass,
       },
+      ...(callsGate
+        ? [
+            {
+              id: 'model-calls',
+              class: 'A' as const,
+              metric: 'model_calls_per_question',
+              op: 'lte',
+              value: callsCeiling,
+              actual: callsPerQuestion,
+              passed: callsPass,
+            },
+          ]
+        : []),
       advisoryClassB('citation-supports-claim', 'citation_supports_claim'),
     ],
     failureClasses: passed
       ? []
-      : r3FailureClasses({
-          formatPass,
-          fabricated,
-          overlapPass,
-          underRefusePass,
-          overRefusePass,
-        }),
+      : [
+          ...(callsPass ? [] : ['model-calls-over-budget']),
+          ...r3FailureClasses({
+            formatPass,
+            fabricated,
+            overlapPass,
+            underRefusePass,
+            overRefusePass,
+          }).filter((code) => callsPass || code !== 'grounding'),
+        ],
     scorecard: {
       goldSpanOverlap: meanOverlap,
       unanswerableRefusals: unanswerableRefusals,
@@ -324,6 +355,27 @@ function r3FailureClasses(flags: {
     classes.push('over-refusal');
   }
   return classes.length > 0 ? classes : ['grounding'];
+}
+
+/** What a skipped question answers: a refusal isRefusal() recognises. */
+export const SCORE_REFUSAL =
+  "I don't know: nothing retrieved scores high enough to answer from.";
+
+/** Best first-stage BM25 score for the question (before the title boost). */
+export function topRetrievalScore(
+  question: string,
+  chunks: ReturnType<typeof chunkCorpus>,
+): number {
+  return retrieveRanked(question, chunks, 1)[0]?.score ?? 0;
+}
+
+export function refusedByScore(
+  question: string,
+  chunks: ReturnType<typeof chunkCorpus>,
+  payload: R3Payload,
+): boolean {
+  const threshold = payload.refuseBelowScore ?? 0;
+  return threshold > 0 && topRetrievalScore(question, chunks) < threshold;
 }
 
 function frozenRetrieve(

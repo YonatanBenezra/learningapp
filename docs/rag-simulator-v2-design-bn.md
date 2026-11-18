@@ -362,9 +362,9 @@ Phase D ধাপে ধাপে হবে। প্রতিটা ধাপ�
 | D1 | নতুন corpus `support-kb` (১৯০টা doc) আর **hybrid search** (R2b) | `rag-018-retriever-run` | ✅ |
 | D2 | **Metadata filter / freshness** (R2c): একই policy-র পুরনো আর নতুন version | `rag-008-spend-cap` | ✅ |
 | D3 | **আসল reranker** (R2d): title বিভ্রান্ত করে এমন corpus, cross-encoder; আর **context packing** (R2e) | `rag-021-rank-boost`, `rag-022-score-gate` | ✅ |
-| D4 | **Query rewrite** (সংক্ষিপ্ত রূপ, বানান ভুল) আর **multi-hop** (R4b) | `rag-028`, `rag-030` | ⏳ |
-| D5 | **Overlap** (R1b), **structure-aware split** (R1c, markdown আর table), **refusal calibration** (R3b) | `rag-006`, `rag-010`, `rag-027` | ⏳ |
-| D6 | **Learner-এর বানানো router** (R5), **বাংলা + ইংরেজি** (R6, multilingual embedding), সব exercise জুড়ে transfer test | `rag-031`, নতুন slug | ⏳ |
+| D4 | **Query rewrite** (সংক্ষিপ্ত রূপ, বানান ভুল) আর **multi-hop** (R4b) | `rag-028`, `rag-030` | ✅ |
+| D5 | **Overlap** (R1b), **structure-aware split** (R1c, markdown আর table), **refusal calibration** (R3b) | `rag-006`, `rag-010`, `rag-027` | ✅ |
+| D6 | **Learner-এর বানানো router** (R5), **বাংলা + ইংরেজি** (R6, multilingual embedding), সব exercise জুড়ে transfer test | `rag-031`, নতুন `rag-032` | ✅ |
 
 **D1-এ যা হয়েছে:**
 - **Corpus `support-kb`:** device-support টিমের knowledge base। ৮০টা product sheet আর ৪৮টা error article, যাদের id-তে শুধু অঙ্কের ক্রম আলাদা (RT-4712, RT-4127…), আর model number থাকে শুধু title-এ। এর সাথে ২৪টা policy, ২২টা note যেগুলো মানুষের প্রশ্নের শব্দ ব্যবহার করে, আর ১৬টা notice। Corpus বানায় `scripts/content/build-support-kb.mjs` (seed দেওয়া, তাই একই ফল)। CI-তে `--check` দিয়ে যাচাই হয় যে corpus আর script মিলে আছে।
@@ -417,6 +417,57 @@ Phase D ধাপে ধাপে হবে। প্রতিটা ধাপ�
   - `near` আর threshold ০.২–০.৮ pass করে।
   - Miss-এর কারণ আলাদা করে দেখায়: `packed-out-by-budget` বা `deduped-away`।
 - **Engine:** R2-তে নতুন packing ধাপ (`contextForR2`: dedupe, তারপর budget পর্যন্ত ভরা), যা lab-এও একই budget দিয়ে চলে। Lab-এর web-এ packing আর rewrite-ছাড়া rerank pipeline-এর diagram, আর নতুন miss কারণের ব্যাখ্যা।
+
+**D4-এ যা হয়েছে:**
+- **Corpus `staff-handbook` (৮৫টা doc):** ২২টা policy, সবগুলোতে term পুরো লেখা ("paid time off", "purchase order")। সাথে তিন পাতার glossary ("PTO means paid time off") আর দৈনন্দিন শব্দে ভরা ৬০টা notice। প্রশ্নে থাকে abbreviation বা বানান ভুল ("How much PTO…", "purchse ordr")।
+- **Exercise (`rag-028`, version 2) "Speak the Handbook's Language":** এখানে query rewrite প্রথমবার আসলেই কাজে লাগে। Gate: nDCG gain ≥ ০.২৫, model call ≤ ১।
+  - Rewrite ছাড়া কোনো reranker বা window দিয়ে pass হয় না (gain ≤ ০.০৫৮), কারণ search পায় glossary আর notice। Reranker শুধু পাওয়া জিনিস সাজাতে পারে।
+  - Rewrite দিলে gain ০.৩০–০.৩৭।
+  - **আসল model দিয়েও যাচাই করা:** reference prompt live model-এ gain ০.৩৭০ দিয়ে pass করেছে ("How much PTO…" → "Paid Time Off annual entitlement")।
+  - Offline content check-এ live model থাকে না। তাই `src/content/simulated-rewriter.ts` corpus-এর glossary থেকে abbreviation খুলে দেয় আর বানান ঠিক করে, ঠিক যেমন R3-এর offline check simulator চালায়।
+- **Corpus `company-facts` (৬৪টা doc):** তিন ধরনের chain: event → শহর → hotel limit, project → team → lead, product → supplier → contract। ১৬টা প্রায় একই রকম শহরের page, ১২টা team, ১২টা supplier।
+- **Exercise (`rag-030`, version 2) "Two Hops to the Answer":** archetype R4 থেকে R2 করা হয়েছে। Knob: `topK`, `hops`, `hopSeeds` আর `hopQuery` (`passage` / `entities`)। প্রশ্নটা তখনই ধরা হয় যখন chain-এর সব page context-এ থাকে।
+  - এক search কখনো pass করে না (recall ≤ ০.৬৪)।
+  - পুরো passage জুড়ে দেওয়া second hop কখনো pass করে না, কারণ query একই template-এর অন্য event page-এর দিকে drift করে। Budget-এর মধ্যে recall ≤ ০.৮৮।
+  - নাম ধরে second hop (`entities`, যেমন "Porto") pass করে k ১–২-এ (recall ১.০০)।
+- **Engine:** R2-তে `hops` / `hopSeeds` / `hopQuery`। Hidden item-এ `evidence` list (bridge আগে)। নতুন miss কারণ `bridge-passage-missing` আর `answer-passage-missing`। নতুন tag `abbreviation` (প্রশ্নে এমন acronym যা উত্তরের doc-এ নেই) আর `multi-hop`। Web-এ multi-hop pipeline-এর diagram।
+
+**D5-এ যা হয়েছে:**
+- **Overlap (`rag-006`, version 2) "Answers on the Border":**
+  - Corpus `it-procedures`: ১২টা IT how-to page। প্রতিটা উত্তর পরপর দুটো বাক্যে থাকে (ধাপ, তারপর তার ফল)।
+  - Overlap ছাড়া কোনো strategy বা size-এ pass হয় না। ৫০–৬০০ অক্ষর পর্যন্ত চালিয়ে দেখা হয়েছে, budget-এর মধ্যে সর্বোচ্চ recall ০.৮২।
+  - পুরো বাক্য বহন করা overlap দিয়ে pass করে (sentence ২০০/১০০ → recall ১.০০)।
+- **Structure-aware split (`rag-010`, version 2) "Keep the Heading with the Row":**
+  - Corpus `hardware-catalog`: ৮টা markdown page, প্রতিটা range-এর জন্য একটা table। সব table-এ একই model নাম (Air/Pro/Max/Mini)।
+  - শুধু heading-aware pass করে, কারণ প্রতিটা chunk-এর শুরুতে "Laptops › Studio range" থাকে।
+  - Fixed, sentence আর recursive কোনো size-এ pass করে না। ছোট chunk-এ row-টা কোন category-র তা বোঝা যায় না, আর বড় chunk budget ছাড়িয়ে যায়।
+  - Engine-এ একটা পরিবর্তন: line break-ও এখন বাক্যের শেষ ধরা হয়, তাই heading আর table-এর row নিজেরাই একক। আগের corpus-গুলোতে line break নেই, তাই সেগুলোর ফল বদলায়নি।
+- **Refusal calibration (`rag-027`, version 2) "Refuse Before You Spend":**
+  - Corpus `staff-handbook`-এর সাথে নতুন hidden set: ২০টা উত্তরযোগ্য প্রশ্ন, ১২টা handbook-এর বাইরের, আর ৫টা কাছাকাছি কিন্তু উত্তর নেই এমন।
+  - নতুন knob `refuseBelowScore`: সবচেয়ে ভালো BM25 score এর নিচে হলে model না ডেকেই refuse করে।
+  - নতুন gate: model call ≤ ০.৮ প্রতি প্রশ্নে।
+  - Threshold ০.০ থেকে ৪.৫ পর্যন্ত fail (call খুব বেশি), ৫.৫ থেকে ১১ pass, ১২-র বেশি হলে fail (উত্তরযোগ্য প্রশ্নে refuse করে)।
+  - **আসল model দিয়ে যাচাই:** pass করেছে। Call ০.৬৭৬ প্রতি প্রশ্নে, refusal ১৭টা, কারণ live model কাছাকাছি-বিষয়ের ৫টা প্রশ্নেও নিজে থেকে refuse করেছে।
+  - Lab-এ প্রতিটা প্রশ্নের top score দেখায়, আর threshold-এর নিচে হলে preview-ও model ডাকে না।
+
+**D6-এ যা হয়েছে:**
+- **Router (`rag-031`, version 2) "Build the Router":** প্রশ্নের ধরন আর আগে থেকে বলে দেওয়া হয় না।
+  - Learner router বেছে নেয়: `none` (সব প্রশ্ন একটা default profile-এ), `rules` (নিজের লেখা rule, যেমন `how do i | steps => procedural`), অথবা `top-document` (সবচেয়ে ভালো মেলা doc-এর ধরন অনুযায়ী)। প্রতিটা ধরনের জন্য profile-ও learner ঠিক করে।
+  - একটা profile দিয়ে সব প্রশ্ন চালালে কখনো pass হয় না (৭২টা config চালিয়ে দেখা)।
+  - `rules` আর `top-document` দুটোই pass করে, routing accuracy ১.০০।
+  - Scorecard দেখায় কোন প্রশ্ন কোথায় গেছে, যেমন `faq:misrouted-to-policy`।
+  - Doc-এ `meta.route` যোগ হয়েছে। ভুল rule লিখলে lab ৪০০ দেয়, সাথে কোন লাইনে ভুল তা বলে।
+- **বাংলা + ইংরেজি (`rag-032-two-languages`, নতুন slug) "Two Offices, Two Languages":**
+  - Corpus `bilingual-kb`: লন্ডন অফিসের ১৬টা ইংরেজি page আর ঢাকা অফিসের ১৬টা বাংলা page। ৩০টা প্রশ্ন এক ভাষায় করা, উত্তর অন্য ভাষার page-এ।
+  - নতুন pinned model `Xenova/multilingual-e5-small` (q8, ১১৮ MB, mean pooling, `query:`/`passage:` prefix)।
+  - R2-তে `embeddingModel` (`english` / `multilingual`)।
+  - BM25 আর ইংরেজি embedding কোনো k বা alpha-য় pass করে না (recall ≤ ০.৩৩)। Multilingual dense pass করে (recall ০.৯৪)।
+  - বাংলা page token-এ বেশি খরচ হয়, তাই budget ৩০০।
+  - নতুন tag `cross-lingual`।
+  - এখন মোট model ফাইল ~১৮৬ MB।
+- **Transfer test (`rag-transfer.spec.ts`):** অন্য কোনো exercise-এর reference নতুন বানানো কোনো exercise pass করতে পারে না। শুধু যে উত্তর লক্ষ্য exercise-এর schema মানে, সেটাই ধরা হয়। ১০টা পুরনো clone exercise আলাদা তালিকায় রাখা আছে (নিচে দেখুন)।
+
+**Phase D শেষে যা বাকি থাকল:** ১০টা পুরনো clone এখনো একই corpus আর একই সহজ config দিয়ে pass হয়: `rag-001`, `005`, `007`, `026` (R1); `002`, `003-top-k`, `016`, `017`, `025` (R2); `004` (R4)। এর সাথে R3 `003-citation` আর sandbox-এর চারটা (`009`, `023`, `024`, `029`)। এগুলো নতুন mechanic দিয়ে বদলানো, অথবা বাদ দিয়ে ছোট track রাখা টিমের সিদ্ধান্ত।
 
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে
 
