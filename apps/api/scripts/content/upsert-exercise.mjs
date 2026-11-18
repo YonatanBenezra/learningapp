@@ -1,7 +1,7 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { contentRoot, sharedCorpusUri } from './paths.mjs';
+import { contentRoot, corpusPathFor } from './paths.mjs';
 
 const publishedSlugs = new Set(
   JSON.parse(
@@ -20,12 +20,8 @@ export async function readJson(dir, name) {
 export async function upsertExercise(prisma, dir) {
   const meta = await readJson(dir, 'meta.json');
   const publicSample = await readJson(dir, 'eval_public.json');
-  const corpusUri =
-    meta.corpusFile === 'shared'
-      ? sharedCorpusUri
-      : existsSync(path.join(dir, 'corpus.json'))
-        ? fileUri(dir, 'corpus.json')
-        : null;
+  const corpusPath = corpusPathFor(dir, meta);
+  const corpusUri = corpusPath ? `file:${corpusPath}` : null;
 
   const skills = [];
   for (const skill of meta.skills) {

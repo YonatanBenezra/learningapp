@@ -8,10 +8,19 @@ export type RagLabArchetype =
   | "sandbox"
   | "unknown";
 
+/** Filterable document metadata (versioned policy corpora). */
+export type RagLabDocMeta = {
+  family?: string;
+  version?: string;
+  status?: "current" | "superseded" | "draft";
+  effective?: string;
+};
+
 export type RagLabDoc = {
   id: string;
   title: string;
   text: string;
+  meta?: RagLabDocMeta;
 };
 
 export type RagLabQuestion = {

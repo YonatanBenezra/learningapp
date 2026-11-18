@@ -1,5 +1,5 @@
 {
-  "topK": 2,
-  "rerank": true,
-  "chunkSize": 200
+  "statusFilter": "current-only",
+  "filterStage": "pre",
+  "topK": 2
 }

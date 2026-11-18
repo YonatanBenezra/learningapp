@@ -9,7 +9,7 @@ import type {
   PublicItem,
   TraceQuery,
 } from './rag.types';
-import { chunkContainsSpan, type RankedChunk } from './retrieve';
+import { type Gold, holdsGold, type RankedChunk } from './retrieve';
 
 export const FAILING_SAMPLE_LIMIT = 3;
 
@@ -21,6 +21,8 @@ export const EVAL_TAGS = [
   'multi-sentence',
   'unanswerable',
   'distractor',
+  'id-lookup',
+  'stale-version',
   'faq',
   'policy',
   'procedural',
@@ -114,20 +116,18 @@ export type MissCause = { code: string; rank?: number };
  */
 export function diagnoseRetrievalMiss(input: {
   chunks: Chunk[];
-  gold: string;
+  gold: Gold;
   /** First-stage ranking over every chunk. */
   fullRanking: RankedChunk[];
   k: number;
   /** Rerank candidate pool size, or null when no rerank ran. */
   pool: number | null;
 }): MissCause {
-  if (
-    !input.chunks.some((chunk) => chunkContainsSpan(chunk.text, input.gold))
-  ) {
+  if (!input.chunks.some((chunk) => holdsGold(chunk, input.gold))) {
     return { code: 'gold-split-by-chunking' };
   }
   const index = input.fullRanking.findIndex((row) =>
-    chunkContainsSpan(row.chunk.text, input.gold),
+    holdsGold(row.chunk, input.gold),
   );
   const rank = index < 0 ? input.fullRanking.length + 1 : index + 1;
   if (input.pool === null) {
@@ -210,7 +210,7 @@ export function publicTraceItems<T extends { question: string }>(
 
 export type TraceExtras = {
   /** Expanded gold sentence. Pass it for PUBLIC queries only, never hidden ones. */
-  gold?: string | null;
+  gold?: Gold | null;
   /** Ranking before the rerank/boost step, to show how ranks moved. */
   firstStage?: RankedChunk[] | null;
   contextTokens?: number;
@@ -231,7 +231,7 @@ export function toTraceQuery(
       docId: row.chunk.docId,
       score: row.score,
       text: row.chunk.text.slice(0, 400),
-      ...(gold ? { goldHit: chunkContainsSpan(row.chunk.text, gold) } : {}),
+      ...(gold ? { goldHit: holdsGold(row.chunk, gold) } : {}),
       ...(firstStageIds
         ? { firstStageRank: firstIndex < 0 ? null : firstIndex + 1 }
         : {}),
@@ -249,10 +249,15 @@ export function toTraceQuery(
 }
 
 /** Expanded gold sentence for a public sample, or null when it has none. */
-export function publicGold(docs: CorpusDoc[], item: PublicItem): string | null {
+export function publicGold(docs: CorpusDoc[], item: PublicItem): Gold | null {
   return item.goldDocId && item.goldSpan
-    ? expandGoldSpan(docs, item.goldDocId, item.goldSpan)
+    ? goldOf(docs, item.goldDocId, item.goldSpan)
     : null;
+}
+
+/** The gold sentence for a span, tied to its document. */
+export function goldOf(docs: CorpusDoc[], docId: string, span: string): Gold {
+  return { docId, text: expandGoldSpan(docs, docId, span) };
 }
 
 export function expandGoldSpan(

@@ -1,42 +1,34 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO before the leave starts?",
+    "question": "How much can I claim per day for food on a business trip?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "45 euros a day",
+    "goldDocId": "meals-2026",
+    "goldSpan": "On business trips you can claim up to 45 euros a day for food"
   },
   {
     "id": "p2",
-    "question": "Do domestic flights under three hours have to be economy?",
+    "question": "What is the limit for accepting supplier gifts?",
     "answerable": true,
-    "goldAnswer": "Yes",
-    "goldDocId": "travel",
-    "goldSpan": "Domestic flights below three hours must be economy"
+    "goldAnswer": "50 euros",
+    "goldDocId": "gifts-2026",
+    "goldSpan": "You may accept gifts from suppliers worth up to 50 euros"
   },
   {
     "id": "p3",
-    "question": "How long before an unacknowledged page escalates to the secondary on-call?",
+    "question": "What is the notice period after probation?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "two months",
+    "goldDocId": "notice-2026",
+    "goldSpan": "After probation, the notice period is two months"
   },
   {
     "id": "p4",
-    "question": "What happens to a purchase order when a vendor security report is missing?",
+    "question": "What is the maximum bike value for leasing?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
-  },
-  {
-    "id": "p5",
-    "question": "Where must production secrets never live?",
-    "answerable": true,
-    "goldAnswer": "git",
-    "goldDocId": "password",
-    "goldSpan": "Production secrets never live in git"
+    "goldAnswer": "3,500 euros",
+    "goldDocId": "bikes-2026",
+    "goldSpan": "Staff can lease a bike worth up to 3,500 euros through payroll"
   }
 ]

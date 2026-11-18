@@ -1,42 +1,34 @@
 [
   {
     "id": "p1",
-    "question": "Who sets the severity of an incident?",
+    "question": "Which day has no meetings for engineers?",
     "answerable": true,
-    "goldAnswer": "The incident commander",
-    "goldDocId": "incident",
-    "goldSpan": "Severity is set by the incident commander"
+    "goldAnswer": "Wednesdays are meeting-free for engineering teams",
+    "goldDocId": "meetings-page",
+    "goldSpan": "Wednesdays are meeting-free for engineering teams"
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on ordinary workdays?",
+    "question": "How long may a standup last?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "Standups last at most 15 minutes",
+    "goldDocId": "meetings-page",
+    "goldSpan": "Standups last at most 15 minutes"
   },
   {
     "id": "p3",
-    "question": "Which retention clock do backup tapes follow?",
+    "question": "Can a conference speaker fly business class?",
     "answerable": true,
-    "goldAnswer": "The same clock as the source system",
-    "goldDocId": "retention",
-    "goldSpan": "Backup tapes follow the same clock as the source system"
+    "goldAnswer": "Engineers who give a conference talk can book business class for flights over six hours",
+    "goldDocId": "travel-page",
+    "goldSpan": "Engineers who give a conference talk can book business class for flights over six hours"
   },
   {
     "id": "p4",
-    "question": "Are personal USB drives allowed on company laptops?",
+    "question": "Who approves conference talk proposals?",
     "answerable": true,
-    "goldAnswer": "No, they are blocked on the endpoint",
-    "goldDocId": "laptop",
-    "goldSpan": "personal USB drives are blocked on the endpoint"
-  },
-  {
-    "id": "p5",
-    "question": "How quickly must a leaked credential be rotated?",
-    "answerable": true,
-    "goldAnswer": "Within one hour of detection",
-    "goldDocId": "password",
-    "goldSpan": "Rotate a leaked credential within one hour of detection"
+    "goldAnswer": "Talk proposals need approval from the engineering director",
+    "goldDocId": "travel-page",
+    "goldSpan": "Talk proposals need approval from the engineering director"
   }
 ]

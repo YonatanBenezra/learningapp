@@ -8,8 +8,10 @@
  * everywhere. Holdout questions are never shown to learners, in any exercise.
  *
  * Tags are computed from the content, never hand-picked:
- *   unanswerable, numeric, multi-sentence, lexical | paraphrase, distractor,
- *   and the R5 class (faq | policy | procedural).
+ *   unanswerable, numeric, multi-sentence, id-lookup (asks by a model number
+ *   or error code) or else lexical | paraphrase, distractor, stale-version
+ *   (older or draft versions of the answer exist), and the R5 class
+ *   (faq | policy | procedural).
  *
  * Usage: node scripts/content/tag-rag-eval.mjs [--check]
  *   --check  exit 1 if any file would change (for CI)
@@ -17,7 +19,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
-import { contentRoot, exercisesRoot } from './paths.mjs';
+import { corpusPathFor, exercisesRoot, sharedCorpusPath } from './paths.mjs';
 
 const CHECK = process.argv.includes('--check');
 /** Share of questions that may be revealed when they fail. */
@@ -38,6 +40,9 @@ function tokens(text) {
         : t,
     );
 }
+
+/** A model number or error code: RT-4712, E-2041. */
+const ID_PATTERN = /\b[A-Z]{1,3}-\d{3,5}\b/;
 
 function isCanary(question) {
   return question.includes('HIDDEN_EVAL');
@@ -91,23 +96,27 @@ function tagsFor(item, docs) {
   const gold = goldSentence(doc, item.goldSpan ?? '');
   if (/\d/.test(item.goldAnswer ?? '') || /\d/.test(item.goldSpan ?? '')) tags.push('numeric');
   if (sentences(item.goldSpan ?? '').length > 1) tags.push('multi-sentence');
-  const q = new Set(tokens(item.question));
-  const g = new Set(tokens(gold));
-  const shared = [...q].filter((t) => g.has(t)).length;
-  tags.push(q.size > 0 && shared / q.size >= 0.5 ? 'lexical' : 'paraphrase');
+  if (ID_PATTERN.test(item.question)) {
+    // Asked by an exact id: word overlap with the answer says nothing here.
+    tags.push('id-lookup');
+  } else {
+    const q = new Set(tokens(item.question));
+    const g = new Set(tokens(gold));
+    const shared = [...q].filter((t) => g.has(t)).length;
+    tags.push(q.size > 0 && shared / q.size >= 0.5 ? 'lexical' : 'paraphrase');
+  }
   if (doc && (bm25Ranks(item.question, docs).get(doc.id) ?? 1) > 1) tags.push('distractor');
+  // Other versions of the same policy exist (only one of them is current).
+  const family = doc?.meta?.family;
+  if (family && docs.some((d) => d.id !== doc.id && d.meta?.family === family)) {
+    tags.push('stale-version');
+  }
   if (['faq', 'policy', 'procedural'].includes(item.class)) tags.push(item.class);
   return tags;
 }
 
 function corpusFor(dir, meta) {
-  if (meta.corpusFile && meta.corpusFile !== 'shared' && existsSync(path.join(dir, meta.corpusFile))) {
-    return JSON.parse(readFileSync(path.join(dir, meta.corpusFile), 'utf8'));
-  }
-  if (existsSync(path.join(dir, 'corpus.json'))) {
-    return JSON.parse(readFileSync(path.join(dir, 'corpus.json'), 'utf8'));
-  }
-  return JSON.parse(readFileSync(path.join(contentRoot, 'corpora', 'internal-policy.json'), 'utf8'));
+  return JSON.parse(readFileSync(corpusPathFor(dir, meta) ?? sharedCorpusPath, 'utf8'));
 }
 
 let changed = 0;

@@ -1,37 +1,370 @@
 [
   {
-    "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "id": "id01",
+    "question": "How do I clear error E-1042?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "swap the network cable and check the port lights",
+    "goldDocId": "err-1042",
+    "goldSpan": "To clear it, swap the network cable and check the port lights",
     "split": "holdout",
     "tags": [
-      "numeric",
-      "lexical"
+      "id-lookup"
     ]
   },
   {
-    "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "id": "id02",
+    "question": "Which team handles E-4012 if it keeps coming back?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "Network Operations",
+    "goldDocId": "err-4012",
+    "goldSpan": "If it comes back within 72 hours, open a ticket with the Network Operations team",
     "split": "holdout",
     "tags": [
       "numeric",
-      "paraphrase"
+      "id-lookup"
     ]
   },
   {
-    "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "id": "id03",
+    "question": "Which team handles E-2580 if it keeps coming back?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
+    "goldAnswer": "Firmware",
+    "goldDocId": "err-2580",
+    "goldSpan": "If it comes back within 72 hours, open a ticket with the Firmware team",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id04",
+    "question": "How do I clear error E-5802?",
+    "answerable": true,
+    "goldAnswer": "move the unit away from heat sources and clean the air intake",
+    "goldDocId": "err-5802",
+    "goldSpan": "To clear it, move the unit away from heat sources and clean the air intake",
+    "split": "feedback",
+    "tags": [
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id05",
+    "question": "How do I clear error E-6085?",
+    "answerable": true,
+    "goldAnswer": "replace the fuse on the main board with a 5 A fuse",
+    "goldDocId": "err-6085",
+    "goldSpan": "To clear it, replace the fuse on the main board with a 5 A fuse",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id06",
+    "question": "Which team handles E-8506 if it keeps coming back?",
+    "answerable": true,
+    "goldAnswer": "Logistics",
+    "goldDocId": "err-8506",
+    "goldSpan": "If it comes back within 72 hours, open a ticket with the Logistics team",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id07",
+    "question": "Which team handles E-3271 if it keeps coming back?",
+    "answerable": true,
+    "goldAnswer": "Network Operations",
+    "goldDocId": "err-3271",
+    "goldSpan": "If it comes back within 4 hours, open a ticket with the Network Operations team",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id08",
+    "question": "How do I clear error E-7132?",
+    "answerable": true,
+    "goldAnswer": "swap the network cable and check the port lights",
+    "goldDocId": "err-7132",
+    "goldSpan": "To clear it, swap the network cable and check the port lights",
+    "split": "feedback",
+    "tags": [
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id09",
+    "question": "Which team handles E-4371 if it keeps coming back?",
+    "answerable": true,
+    "goldAnswer": "Firmware",
+    "goldDocId": "err-4371",
+    "goldSpan": "If it comes back within 48 hours, open a ticket with the Firmware team",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id10",
+    "question": "How do I clear error E-7341?",
+    "answerable": true,
+    "goldAnswer": "recalibrate it from the service menu under Diagnostics",
+    "goldDocId": "err-7341",
+    "goldSpan": "To clear it, recalibrate it from the service menu under Diagnostics",
+    "split": "holdout",
+    "tags": [
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id11",
+    "question": "Which team handles E-6349 if it keeps coming back?",
+    "answerable": true,
+    "goldAnswer": "Field Service",
+    "goldDocId": "err-6349",
+    "goldSpan": "If it comes back within 48 hours, open a ticket with the Field Service team",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id12",
+    "question": "How do I clear error E-3946?",
+    "answerable": true,
+    "goldAnswer": "swap the network cable and check the port lights",
+    "goldDocId": "err-3946",
+    "goldSpan": "To clear it, swap the network cable and check the port lights",
+    "split": "feedback",
+    "tags": [
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id13",
+    "question": "Which spare part fits the AQ-5381?",
+    "answerable": true,
+    "goldAnswer": "fan module FM-88",
+    "goldDocId": "sku-aq-5381",
+    "goldSpan": "The spare fan module FM-88 fits it",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id14",
+    "question": "How long is the warranty on the AQ-8315?",
+    "answerable": true,
+    "goldAnswer": "36 months",
+    "goldDocId": "sku-aq-8315",
+    "goldSpan": "It carries a 36-month warranty from the delivery date",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id15",
+    "question": "What is the minimum firmware version for the BP-7528?",
+    "answerable": true,
+    "goldAnswer": "2.1.9",
+    "goldDocId": "sku-bp-7528",
+    "goldSpan": "It needs firmware 2.1.9 or later",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id16",
+    "question": "How many watts does the BP-2578 use at full load?",
+    "answerable": true,
+    "goldAnswer": "18 W",
+    "goldDocId": "sku-bp-2578",
+    "goldSpan": "It draws 18 W at full load",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id17",
+    "question": "Which spare part fits the BR-7305?",
+    "answerable": true,
+    "goldAnswer": "power brick PB-17",
+    "goldDocId": "sku-br-7305",
+    "goldSpan": "The spare power brick PB-17 fits it",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id18",
+    "question": "How long is the warranty on the BR-3507?",
+    "answerable": true,
+    "goldAnswer": "24 months",
+    "goldDocId": "sku-br-3507",
+    "goldSpan": "It carries a 24-month warranty from the delivery date",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id19",
+    "question": "What is the minimum firmware version for the DC-9624?",
+    "answerable": true,
+    "goldAnswer": "2.0.2",
+    "goldDocId": "sku-dc-9624",
+    "goldSpan": "It needs firmware 2.0.2 or later",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id20",
+    "question": "How many watts does the DC-2964 use at full load?",
+    "answerable": true,
+    "goldAnswer": "17 W",
+    "goldDocId": "sku-dc-2964",
+    "goldSpan": "It draws 17 W at full load",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id21",
+    "question": "Which spare part fits the GW-1945?",
+    "answerable": true,
+    "goldAnswer": "mounting bracket MB-60",
+    "goldDocId": "sku-gw-1945",
+    "goldSpan": "The spare mounting bracket MB-60 fits it",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id22",
+    "question": "How long is the warranty on the GW-4951?",
+    "answerable": true,
+    "goldAnswer": "12 months",
+    "goldDocId": "sku-gw-4951",
+    "goldSpan": "It carries a 12-month warranty from the delivery date",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id23",
+    "question": "What is the minimum firmware version for the RT-1742?",
+    "answerable": true,
+    "goldAnswer": "4.2.8",
+    "goldDocId": "sku-rt-1742",
+    "goldSpan": "It needs firmware 4.2.8 or later",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id24",
+    "question": "How many watts does the RT-4271 use at full load?",
+    "answerable": true,
+    "goldAnswer": "43 W",
+    "goldDocId": "sku-rt-4271",
+    "goldSpan": "It draws 43 W at full load",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id25",
+    "question": "Which spare part fits the SW-2684?",
+    "answerable": true,
+    "goldAnswer": "antenna kit AK-12",
+    "goldDocId": "sku-sw-2684",
+    "goldSpan": "The spare antenna kit AK-12 fits it",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id26",
+    "question": "How long is the warranty on the SW-6248?",
+    "answerable": true,
+    "goldAnswer": "36 months",
+    "goldDocId": "sku-sw-6248",
+    "goldSpan": "It carries a 36-month warranty from the delivery date",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id27",
+    "question": "What is the minimum firmware version for the TC-3169?",
+    "answerable": true,
+    "goldAnswer": "3.5.8",
+    "goldDocId": "sku-tc-3169",
+    "goldSpan": "It needs firmware 3.5.8 or later",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "id28",
+    "question": "How many watts does the TC-3961 use at full load?",
+    "answerable": true,
+    "goldAnswer": "40 W",
+    "goldDocId": "sku-tc-3961",
+    "goldSpan": "It draws 40 W at full load",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "id-lookup"
+    ]
+  },
+  {
+    "id": "pp01",
+    "question": "How long can a mom or dad stay home with a newborn and keep getting paid?",
+    "answerable": true,
+    "goldAnswer": "Twenty weeks",
+    "goldDocId": "policy-parental-leave",
+    "goldSpan": "New parents may take twenty weeks away from work at full salary",
     "split": "holdout",
     "tags": [
       "paraphrase",
@@ -39,218 +372,269 @@
     ]
   },
   {
-    "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "id": "pp02",
+    "question": "If someone in my family passes away, how much time can I take?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
-    "split": "holdout",
-    "tags": [
-      "paraphrase"
-    ]
-  },
-  {
-    "id": "h05",
-    "question": "Where should staff post an incident timeline?",
-    "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents",
+    "goldAnswer": "Five working days, paid",
+    "goldDocId": "policy-compassionate-leave",
+    "goldSpan": "After the death of a close relative, staff receive five working days off without loss of salary",
     "split": "feedback",
     "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
-    "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days",
-    "split": "feedback",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
-    "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
-    "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h09",
-    "question": "How long are support tickets kept after close?",
-    "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h10",
-    "question": "How many days are chat transcripts kept?",
-    "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
-    "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h12",
-    "question": "What report must vendors present before procurement?",
-    "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement",
-    "split": "feedback",
-    "tags": [
-      "numeric",
-      "lexical",
+      "paraphrase",
       "distractor"
     ]
   },
   {
-    "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "id": "pp03",
+    "question": "Does the company keep paying me while I sit on a trial panel as a citizen?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night",
+    "goldAnswer": "Yes, full salary",
+    "goldDocId": "policy-civic-duty",
+    "goldSpan": "Employees summoned to serve on a jury keep their full salary for the whole period of service",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp04",
+    "question": "Once I have been here a long time, can I take an extended break and come back to my job?",
+    "answerable": true,
+    "goldAnswer": "After seven years, up to three months",
+    "goldDocId": "policy-sabbatical",
+    "goldSpan": "After seven years of continuous service you can take a sabbatical of up to three months",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp05",
+    "question": "If I am transferred to a different town, what help do I get with moving house?",
+    "answerable": true,
+    "goldAnswer": "Removal costs and four weeks of housing",
+    "goldDocId": "policy-relocation",
+    "goldSpan": "When the company asks you to move to another city, it covers removal costs and four weeks of temporary housing",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp06",
+    "question": "How much can I spend each year on training and getting better at my job?",
+    "answerable": true,
+    "goldAnswer": "1,500 euros a year",
+    "goldDocId": "policy-learning-budget",
+    "goldSpan": "Every employee has 1,500 euros a year for courses, books and conference tickets",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase",
+      "distractor"
     ]
   },
   {
-    "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "id": "pp07",
+    "question": "Will a more experienced colleague be assigned to guide me when I am new?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours",
+    "goldAnswer": "Yes, a senior mentor from another team",
+    "goldDocId": "policy-mentoring",
+    "goldSpan": "Engineers in their first year are paired with a senior mentor from another team",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "paraphrase",
+      "distractor"
     ]
   },
   {
-    "id": "h15",
-    "question": "Where must staff store passwords?",
+    "id": "pp08",
+    "question": "What extra do I earn if I put in more than a normal working week?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password",
+    "goldAnswer": "One and a half times the rate",
+    "goldDocId": "policy-overtime",
+    "goldSpan": "Hours worked beyond forty in a week are paid at one and a half times the normal rate",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp09",
+    "question": "Can I do my job from overseas for a while, and for how long?",
+    "answerable": true,
+    "goldAnswer": "Up to thirty days a year",
+    "goldDocId": "policy-work-abroad",
+    "goldSpan": "You may work from a country other than your contract country for up to thirty days a year",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp10",
+    "question": "What do I get back for each km when I drive my private vehicle for work?",
+    "answerable": true,
+    "goldAnswer": "0.30 euros per kilometre",
+    "goldDocId": "policy-mileage",
+    "goldSpan": "Business trips in your own car are reimbursed at 0.30 euros per kilometre",
     "split": "feedback",
     "tags": [
       "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp11",
+    "question": "How much can I spend on lunch and dinner per day when I am on the road for a client?",
+    "answerable": true,
+    "goldAnswer": "Up to 45 euros a day",
+    "goldDocId": "policy-travel-meals",
+    "goldSpan": "On business trips you can claim up to 45 euros a day for food",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp12",
+    "question": "What is the most I can pay for a room to sleep in on a work trip?",
+    "answerable": true,
+    "goldAnswer": "160 euros a night in most cities",
+    "goldDocId": "policy-hotels",
+    "goldSpan": "Hotels must be booked through the travel portal and may cost at most 160 euros a night in most cities",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp13",
+    "question": "Can I keep a present that a vendor sends me?",
+    "answerable": true,
+    "goldAnswer": "Yes, up to 50 euros",
+    "goldDocId": "policy-supplier-gifts",
+    "goldSpan": "You may accept gifts from suppliers worth up to 50 euros",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp14",
+    "question": "Where am I supposed to save my login secrets?",
+    "answerable": true,
+    "goldAnswer": "In the company password manager",
+    "goldDocId": "policy-password-manager",
+    "goldSpan": "Every employee must store work credentials in the company password manager",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp15",
+    "question": "A strange message wants me to open a file, what should I do with it?",
+    "answerable": true,
+    "goldAnswer": "Report it to the security inbox without opening it",
+    "goldDocId": "policy-phishing",
+    "goldSpan": "Forward any suspicious email to the security inbox with the Report button and do not open its attachments",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp16",
+    "question": "My computer went missing on the train, who do I tell?",
+    "answerable": true,
+    "goldAnswer": "The service desk, at once",
+    "goldDocId": "policy-lost-devices",
+    "goldSpan": "If a laptop or phone is lost or stolen, call the service desk at once so it can be wiped remotely",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp17",
+    "question": "Someone from outside the company is coming over tomorrow; what must I arrange first?",
+    "answerable": true,
+    "goldAnswer": "Register them the day before and escort them",
+    "goldDocId": "policy-visitors",
+    "goldSpan": "Guests must be registered at reception the day before and escorted at all times",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp18",
+    "question": "Before I leave each evening, what has to happen to sensitive documents on my table?",
+    "answerable": true,
+    "goldAnswer": "Empty, papers locked away",
+    "goldDocId": "policy-clean-desk",
+    "goldSpan": "At the end of each day, lock confidential papers in your pedestal and leave the desk empty",
+    "split": "holdout",
+    "tags": [
       "paraphrase"
     ]
   },
   {
-    "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
+    "id": "pp19",
+    "question": "Do I need multiple offers before paying for a pricey app subscription?",
     "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default",
+    "goldAnswer": "Above 5,000 euros a year, three quotes",
+    "goldDocId": "policy-software-purchases",
+    "goldSpan": "Software purchases above 5,000 euros a year need three quotes and approval from Procurement",
     "split": "feedback",
     "tags": [
-      "lexical"
+      "numeric",
+      "paraphrase",
+      "distractor"
     ]
   },
   {
-    "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "id": "pp20",
+    "question": "How much extra do I get for a week of being reachable for outages after hours?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
-    "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
-    "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
-    "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest",
+    "goldAnswer": "200 euros a week",
+    "goldDocId": "policy-on-call-pay",
+    "goldSpan": "Engineers on the on-call rota receive 200 euros for each week on call",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "pp21",
+    "question": "After how long do we throw away old help desk conversations?",
+    "answerable": true,
+    "goldAnswer": "Three years after closing",
+    "goldDocId": "policy-ticket-retention",
+    "goldSpan": "Customer support tickets are deleted three years after they are closed",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
     ]
   },
   {

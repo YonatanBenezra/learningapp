@@ -20,6 +20,7 @@ import { r3UserMessage } from '../../grading/harnesses/rag/r3.grade';
 import { REWRITE_MAX_TOKENS } from '../../grading/harnesses/rag/r4.grade';
 import type { CorpusDoc } from '../../grading/harnesses/rag/chunking';
 import { RagModelUnavailableError } from '../../grading/harnesses/rag/models/model-runtime';
+import { gateThreshold } from '../../grading/harnesses/rag/rag.shared';
 import {
   estimateRagLabWithCorpus,
   previewRagLabWithCorpus,
@@ -156,6 +157,7 @@ export class RagLabService {
                 })
               ).text
           : null,
+        packBudget(exercise.gates),
       );
     } catch (error) {
       throw labError(error, 'Invalid RAG lab preview payload');
@@ -206,6 +208,7 @@ export class RagLabService {
         payload,
         publicItems(exercise.publicSample),
         context.corpus,
+        packBudget(exercise.gates),
       );
     } catch (error) {
       throw labError(error, 'Invalid RAG lab estimate payload');
@@ -360,6 +363,11 @@ async function readAsset(uri: string): Promise<string> {
     throw new Error('Refusing to read an asset outside content/');
   }
   return readFile(filePath, 'utf8');
+}
+
+/** Exercises that pack the context fill it up to their prompt-token gate. */
+function packBudget(gates: unknown): number {
+  return gateThreshold(gates, 'mean_prompt_tokens', Number.POSITIVE_INFINITY);
 }
 
 /**

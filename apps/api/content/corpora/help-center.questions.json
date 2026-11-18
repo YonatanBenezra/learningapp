@@ -1,0 +1,386 @@
+[
+  {
+    "topic": "refunds",
+    "question": "If I cancel right after being charged, do I get my money back?",
+    "goldDocId": "refunds-answer",
+    "goldSpan": "If you downgrade or cancel within 14 days of a charge, the unused part is returned to the original card",
+    "goldAnswer": "If you downgrade or cancel within 14 days of a charge, the unused part is returned to the original card",
+    "phrasing": 0
+  },
+  {
+    "topic": "refunds",
+    "question": "How long does it take for refunded money to reach my card?",
+    "goldDocId": "refunds-answer",
+    "goldSpan": "The money reaches the card within 5 to 7 business days",
+    "goldAnswer": "The money reaches the card within 5 to 7 business days",
+    "phrasing": 1
+  },
+  {
+    "topic": "proration",
+    "question": "If I invite a new teammate halfway through the month, do I pay for the whole month?",
+    "goldDocId": "proration-answer",
+    "goldSpan": "When you add a member partway through a billing month, you pay only for the remaining days",
+    "goldAnswer": "When you add a member partway through a billing month, you pay only for the remaining days",
+    "phrasing": 0
+  },
+  {
+    "topic": "proration",
+    "question": "Where does the charge for a member added mid-month show up?",
+    "goldDocId": "proration-answer",
+    "goldSpan": "That partial amount appears as a separate line on the next invoice",
+    "goldAnswer": "That partial amount appears as a separate line on the next invoice",
+    "phrasing": 1
+  },
+  {
+    "topic": "export",
+    "question": "How can I get all my projects out of the app?",
+    "goldDocId": "export-answer",
+    "goldSpan": "Workspace owners can download every project as a ZIP of CSV files from Settings, then Data",
+    "goldAnswer": "Workspace owners can download every project as a ZIP of CSV files from Settings, then Data",
+    "phrasing": 0
+  },
+  {
+    "topic": "export",
+    "question": "How long does the download link for a large export keep working?",
+    "goldDocId": "export-answer",
+    "goldSpan": "Exports over 2 GB are emailed as a link that stays valid for 72 hours",
+    "goldAnswer": "Exports over 2 GB are emailed as a link that stays valid for 72 hours",
+    "phrasing": 1
+  },
+  {
+    "topic": "trash",
+    "question": "I removed a task by mistake, can I bring it back?",
+    "goldDocId": "trash-answer",
+    "goldSpan": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "goldAnswer": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "phrasing": 0
+  },
+  {
+    "topic": "trash",
+    "question": "How long do deleted tasks stay recoverable?",
+    "goldDocId": "trash-answer",
+    "goldSpan": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "goldAnswer": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "phrasing": 1
+  },
+  {
+    "topic": "backup-codes",
+    "question": "I lost my phone and cannot log in with the code, what now?",
+    "goldDocId": "backup-codes-answer",
+    "goldSpan": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "goldAnswer": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "phrasing": 0
+  },
+  {
+    "topic": "backup-codes",
+    "question": "How many backup codes do I get for two-step sign-in?",
+    "goldDocId": "backup-codes-answer",
+    "goldSpan": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "goldAnswer": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "phrasing": 1
+  },
+  {
+    "topic": "guests",
+    "question": "Do external collaborators cost a seat?",
+    "goldDocId": "guests-answer",
+    "goldSpan": "Guests are free and do not count as paid seats",
+    "goldAnswer": "Guests are free and do not count as paid seats",
+    "phrasing": 0
+  },
+  {
+    "topic": "guests",
+    "question": "What can a client I invite actually see?",
+    "goldDocId": "guests-answer",
+    "goldSpan": "Guests can see only the projects they are invited to and cannot create new projects",
+    "goldAnswer": "Guests can see only the projects they are invited to and cannot create new projects",
+    "phrasing": 1
+  },
+  {
+    "topic": "attachments",
+    "question": "What is the biggest file I can attach on the free plan?",
+    "goldDocId": "attachments-answer",
+    "goldSpan": "On the free plan the limit is 10 MB per file",
+    "goldAnswer": "On the free plan the limit is 10 MB per file",
+    "phrasing": 0
+  },
+  {
+    "topic": "attachments",
+    "question": "How large can one upload be on a paid plan?",
+    "goldDocId": "attachments-answer",
+    "goldSpan": "Each file attached to a task can be up to 250 MB on paid plans",
+    "goldAnswer": "Each file attached to a task can be up to 250 MB on paid plans",
+    "phrasing": 1
+  },
+  {
+    "topic": "repeating",
+    "question": "Can a task come back every week automatically?",
+    "goldDocId": "repeating-answer",
+    "goldSpan": "Set a task to repeat daily, weekly or monthly from its due date menu",
+    "goldAnswer": "Set a task to repeat daily, weekly or monthly from its due date menu",
+    "phrasing": 0
+  },
+  {
+    "topic": "repeating",
+    "question": "When is the next copy of a repeating task created?",
+    "goldDocId": "repeating-answer",
+    "goldSpan": "The next copy is created when the current one is marked complete, not on a fixed date",
+    "goldAnswer": "The next copy is created when the current one is marked complete, not on a fixed date",
+    "phrasing": 1
+  },
+  {
+    "topic": "time-zones",
+    "question": "My colleague abroad sees a different deadline time, why?",
+    "goldDocId": "time-zones-answer",
+    "goldSpan": "Due times are stored in the time zone of the person who set them",
+    "goldAnswer": "Due times are stored in the time zone of the person who set them",
+    "phrasing": 0
+  },
+  {
+    "topic": "time-zones",
+    "question": "Whose time zone decides a due time?",
+    "goldDocId": "time-zones-answer",
+    "goldSpan": "Due times are stored in the time zone of the person who set them",
+    "goldAnswer": "Due times are stored in the time zone of the person who set them",
+    "phrasing": 1
+  },
+  {
+    "topic": "digest",
+    "question": "I get too many emails, can I get one summary per day?",
+    "goldDocId": "digest-answer",
+    "goldSpan": "Choose a daily digest to receive one email at 8:00 local time instead of an email for every change",
+    "goldAnswer": "Choose a daily digest to receive one email at 8:00 local time instead of an email for every change",
+    "phrasing": 0
+  },
+  {
+    "topic": "digest",
+    "question": "Are mentions delayed when I switch to the daily summary?",
+    "goldDocId": "digest-answer",
+    "goldSpan": "Mentions and assignments are still sent right away",
+    "goldAnswer": "Mentions and assignments are still sent right away",
+    "phrasing": 1
+  },
+  {
+    "topic": "rate-limits",
+    "question": "How many calls per minute can my integration make?",
+    "goldDocId": "rate-limits-answer",
+    "goldSpan": "Each API token may make 100 requests per minute",
+    "goldAnswer": "Each API token may make 100 requests per minute",
+    "phrasing": 0
+  },
+  {
+    "topic": "rate-limits",
+    "question": "What happens when my script sends too many requests?",
+    "goldDocId": "rate-limits-answer",
+    "goldSpan": "Extra requests receive status 429 and should be retried after the time in the Retry-After header",
+    "goldAnswer": "Extra requests receive status 429 and should be retried after the time in the Retry-After header",
+    "phrasing": 1
+  },
+  {
+    "topic": "sso",
+    "question": "Which plan lets us log in with our corporate identity provider?",
+    "goldDocId": "sso-answer",
+    "goldSpan": "Single sign-on with SAML is available on the Enterprise plan",
+    "goldAnswer": "Single sign-on with SAML is available on the Enterprise plan",
+    "phrasing": 0
+  },
+  {
+    "topic": "sso",
+    "question": "Do passwords still work after we enforce single sign-on?",
+    "goldDocId": "sso-answer",
+    "goldSpan": "Once single sign-on is enforced, passwords stop working for members",
+    "goldAnswer": "Once single sign-on is enforced, passwords stop working for members",
+    "phrasing": 1
+  },
+  {
+    "topic": "closing",
+    "question": "Who is allowed to shut down our whole account?",
+    "goldDocId": "closing-answer",
+    "goldSpan": "Only the owner can close a workspace",
+    "goldAnswer": "Only the owner can close a workspace",
+    "phrasing": 0
+  },
+  {
+    "topic": "closing",
+    "question": "Can a closed workspace be reopened, and for how long?",
+    "goldDocId": "closing-answer",
+    "goldSpan": "Everything is kept for 14 days in case you change your mind, then permanently removed",
+    "goldAnswer": "Everything is kept for 14 days in case you change your mind, then permanently removed",
+    "phrasing": 1
+  },
+  {
+    "topic": "offline",
+    "question": "Can I see my tasks on a plane without internet?",
+    "goldDocId": "offline-answer",
+    "goldSpan": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "goldAnswer": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "phrasing": 0
+  },
+  {
+    "topic": "offline",
+    "question": "How much of my work is available offline on the phone?",
+    "goldDocId": "offline-answer",
+    "goldSpan": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "goldAnswer": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "phrasing": 1
+  },
+  {
+    "topic": "csv-import",
+    "question": "How do I move my to-do list from Excel into the app?",
+    "goldDocId": "csv-import-answer",
+    "goldSpan": "Upload a CSV with one row per task; the first row must hold the column names",
+    "goldAnswer": "Upload a CSV with one row per task; the first row must hold the column names",
+    "phrasing": 0
+  },
+  {
+    "topic": "csv-import",
+    "question": "How many rows can one CSV import have?",
+    "goldDocId": "csv-import-answer",
+    "goldSpan": "Up to 5,000 rows are imported at once",
+    "goldAnswer": "Up to 5,000 rows are imported at once",
+    "phrasing": 1
+  },
+  {
+    "topic": "roles",
+    "question": "Can someone with read-only rights leave comments?",
+    "goldDocId": "roles-answer",
+    "goldSpan": "Viewers can only read and comment",
+    "goldAnswer": "Viewers can only read and comment",
+    "phrasing": 0
+  },
+  {
+    "topic": "roles",
+    "question": "Which role can change the payment details?",
+    "goldDocId": "roles-answer",
+    "goldSpan": "Admins manage billing and members, and editors can change any task",
+    "goldAnswer": "Admins manage billing and members, and editors can change any task",
+    "phrasing": 1
+  },
+  {
+    "topic": "storage",
+    "question": "How much room for files do we get per person on a paid plan?",
+    "goldDocId": "storage-answer",
+    "goldSpan": "Each paid seat adds 10 GB of shared storage",
+    "goldAnswer": "Each paid seat adds 10 GB of shared storage",
+    "phrasing": 0
+  },
+  {
+    "topic": "storage",
+    "question": "What is the storage limit on the free plan?",
+    "goldDocId": "storage-answer",
+    "goldSpan": "The free plan has 2 GB for the whole workspace",
+    "goldAnswer": "The free plan has 2 GB for the whole workspace",
+    "phrasing": 1
+  },
+  {
+    "topic": "vat",
+    "question": "Our accountant needs the tax ID on the bill, how do we add it?",
+    "goldDocId": "vat-answer",
+    "goldSpan": "Add your VAT number in Billing settings and it appears on every future invoice",
+    "goldAnswer": "Add your VAT number in Billing settings and it appears on every future invoice",
+    "phrasing": 0
+  },
+  {
+    "topic": "vat",
+    "question": "Can a VAT number be added to invoices already issued?",
+    "goldDocId": "vat-answer",
+    "goldSpan": "Invoices already issued cannot be changed",
+    "goldAnswer": "Invoices already issued cannot be changed",
+    "phrasing": 1
+  },
+  {
+    "topic": "calendar",
+    "question": "Can my deadlines show up in Outlook?",
+    "goldDocId": "calendar-answer",
+    "goldSpan": "Subscribe to your personal calendar feed link to see due dates in Google or Outlook",
+    "goldAnswer": "Subscribe to your personal calendar feed link to see due dates in Google or Outlook",
+    "phrasing": 0
+  },
+  {
+    "topic": "calendar",
+    "question": "How often does the calendar feed update?",
+    "goldDocId": "calendar-answer",
+    "goldSpan": "The feed refreshes about once an hour",
+    "goldAnswer": "The feed refreshes about once an hour",
+    "phrasing": 1
+  },
+  {
+    "topic": "free-plan",
+    "question": "How many projects can I make without paying?",
+    "goldDocId": "free-plan-answer",
+    "goldSpan": "The free plan allows up to 3 projects and 5 members",
+    "goldAnswer": "The free plan allows up to 3 projects and 5 members",
+    "phrasing": 0
+  },
+  {
+    "topic": "free-plan",
+    "question": "How far back can I see history on the free plan?",
+    "goldDocId": "free-plan-answer",
+    "goldSpan": "History older than 90 days is hidden until you upgrade",
+    "goldAnswer": "History older than 90 days is hidden until you upgrade",
+    "phrasing": 1
+  },
+  {
+    "topic": "login-email",
+    "question": "I have a new work address, how do I switch my login to it?",
+    "goldDocId": "login-email-answer",
+    "goldSpan": "Change the address you sign in with under Profile, and we send a confirmation link to the new address",
+    "goldAnswer": "Change the address you sign in with under Profile, and we send a confirmation link to the new address",
+    "phrasing": 0
+  },
+  {
+    "topic": "login-email",
+    "question": "Does my old sign-in address stop working right away?",
+    "goldDocId": "login-email-answer",
+    "goldSpan": "The old address keeps working until the link is clicked",
+    "goldAnswer": "The old address keeps working until the link is clicked",
+    "phrasing": 1
+  },
+  {
+    "topic": "automation",
+    "question": "Can tasks be assigned automatically when they reach a column?",
+    "goldDocId": "automation-answer",
+    "goldSpan": "Rules can move, assign or tag tasks when a status changes",
+    "goldAnswer": "Rules can move, assign or tag tasks when a status changes",
+    "phrasing": 0
+  },
+  {
+    "topic": "automation",
+    "question": "How many automations can be switched on at once?",
+    "goldDocId": "automation-answer",
+    "goldSpan": "Each workspace can have 50 active rules on the Business plan",
+    "goldAnswer": "Each workspace can have 50 active rules on the Business plan",
+    "phrasing": 1
+  },
+  {
+    "topic": "audit-log",
+    "question": "Can I find out which colleague deleted a project last month?",
+    "goldDocId": "audit-log-answer",
+    "goldSpan": "Enterprise workspaces keep a log of member actions for 12 months",
+    "goldAnswer": "Enterprise workspaces keep a log of member actions for 12 months",
+    "phrasing": 0
+  },
+  {
+    "topic": "audit-log",
+    "question": "How long is the record of member actions kept?",
+    "goldDocId": "audit-log-answer",
+    "goldSpan": "Enterprise workspaces keep a log of member actions for 12 months",
+    "goldAnswer": "Enterprise workspaces keep a log of member actions for 12 months",
+    "phrasing": 1
+  },
+  {
+    "topic": "data-region",
+    "question": "Is our information kept inside the EU?",
+    "goldDocId": "data-region-answer",
+    "goldSpan": "Workspaces created in Europe are stored in Frankfurt and copied to Dublin for backup",
+    "goldAnswer": "Workspaces created in Europe are stored in Frankfurt and copied to Dublin for backup",
+    "phrasing": 0
+  },
+  {
+    "topic": "data-region",
+    "question": "Can we move our workspace to another country after creating it?",
+    "goldDocId": "data-region-answer",
+    "goldSpan": "A workspace cannot be moved between regions after it is created",
+    "goldAnswer": "A workspace cannot be moved between regions after it is created",
+    "phrasing": 1
+  }
+]

@@ -74,6 +74,12 @@ const RAG_FIELD_HELP: Record<string, string> = {
   retrievalMode:
     "bm25 matches keywords, dense matches meaning with embeddings, hybrid mixes both by hybridAlpha.",
   hybridAlpha: "Weight on the dense score in hybrid mode: 0 is pure BM25, 1 is pure dense.",
+  statusFilter: "Which documents may reach the context, by their status metadata.",
+  reranker:
+    "title-boost and mmr are heuristics; cross-encoder is a model that reads the question and each candidate together.",
+  dedupe: "exact drops identical pages; near drops pages whose words overlap at least the threshold.",
+  dedupeThreshold: "Share of distinct words two pages must share to count as copies.",
+  filterStage: "pre filters the index before top-k; post drops failing chunks after top-k.",
 };
 
 function ragFieldHelp(name: string, property: SchemaProperty): string {

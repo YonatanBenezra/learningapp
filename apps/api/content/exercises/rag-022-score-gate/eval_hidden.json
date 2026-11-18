@@ -1,113 +1,114 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "When does the on-call handover happen?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "The handover happens every Monday at 10:00 in the #oncall channel",
+    "goldDocId": "on-call-page",
+    "goldSpan": "The handover happens every Monday at 10:00 in the #oncall channel",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
-    "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "paraphrase"
-    ]
-  },
-  {
-    "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
-    "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
-    "split": "holdout",
-    "tags": [
-      "paraphrase",
+      "lexical",
       "distractor"
     ]
   },
   {
-    "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "id": "h02",
+    "question": "Which channel is the on-call handover in?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
+    "goldAnswer": "The handover happens every Monday at 10:00 in the #oncall channel",
+    "goldDocId": "on-call-page",
+    "goldSpan": "The handover happens every Monday at 10:00 in the #oncall channel",
     "split": "holdout",
     "tags": [
-      "paraphrase"
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h03",
+    "question": "What does the outgoing on-call engineer post at handover?",
+    "answerable": true,
+    "goldAnswer": "The outgoing engineer posts every open incident and every silenced alert",
+    "goldDocId": "on-call-page",
+    "goldSpan": "The outgoing engineer posts every open incident and every silenced alert",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h04",
+    "question": "Can I deploy to production on a Friday afternoon?",
+    "answerable": true,
+    "goldAnswer": "No production deploys go out after 15:00 on Fridays",
+    "goldDocId": "deploys-page",
+    "goldSpan": "No production deploys go out after 15:00 on Fridays",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "question": "What is the cutoff time for production deploys on Fridays?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents",
+    "goldAnswer": "No production deploys go out after 15:00 on Fridays",
+    "goldDocId": "deploys-page",
+    "goldSpan": "No production deploys go out after 15:00 on Fridays",
     "split": "feedback",
     "tags": [
+      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "What may be released during the December freeze?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days",
+    "goldAnswer": "During the December freeze only rollbacks and security fixes are released",
+    "goldDocId": "deploys-page",
+    "goldSpan": "During the December freeze only rollbacks and security fixes are released",
     "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "How many approvals does a billing pull request need before merge?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
-    "split": "holdout",
+    "goldAnswer": "A pull request needs two approvals before merge when it touches billing code",
+    "goldDocId": "code-review-page",
+    "goldSpan": "A pull request needs two approvals before merge when it touches billing code",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "How quickly should reviewers respond to a pull request?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "holdout",
+    "goldAnswer": "Reviewers should answer within one working day",
+    "goldDocId": "code-review-page",
+    "goldSpan": "Reviewers should answer within one working day",
+    "split": "feedback",
     "tags": [
-      "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "When is the postmortem for a severity 1 incident due?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
+    "goldAnswer": "A postmortem is due within five working days of a severity 1 incident",
+    "goldDocId": "incidents-page",
+    "goldSpan": "A postmortem is due within five working days of a severity 1 incident",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -116,24 +117,39 @@
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "How often is the status page updated during an incident?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days",
+    "goldAnswer": "The status page is updated every 30 minutes until the incident is resolved",
+    "goldDocId": "incidents-page",
+    "goldSpan": "The status page is updated every 30 minutes until the incident is resolved",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "For how long does read access to the production database last?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
+    "goldAnswer": "Read access to the production database expires after 8 hours",
+    "goldDocId": "access-page",
+    "goldSpan": "Read access to the production database expires after 8 hours",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h12",
+    "question": "After how many hours does production database read access expire?",
+    "answerable": true,
+    "goldAnswer": "Read access to the production database expires after 8 hours",
+    "goldDocId": "access-page",
+    "goldSpan": "Read access to the production database expires after 8 hours",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -141,12 +157,233 @@
     ]
   },
   {
-    "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "id": "h13",
+    "question": "Who approves write access to the production database?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement",
+    "goldAnswer": "Write access needs a ticket approved by the database owner",
+    "goldDocId": "access-page",
+    "goldSpan": "Write access needs a ticket approved by the database owner",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h14",
+    "question": "When is a flaky test quarantined?",
+    "answerable": true,
+    "goldAnswer": "A test that fails twice in a week without a code change is quarantined",
+    "goldDocId": "testing-page",
+    "goldSpan": "A test that fails twice in a week without a code change is quarantined",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h15",
+    "question": "What coverage must new code keep?",
+    "answerable": true,
+    "goldAnswer": "New code must keep line coverage at or above 80 percent",
+    "goldDocId": "testing-page",
+    "goldSpan": "New code must keep line coverage at or above 80 percent",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h16",
+    "question": "How often are service keys rotated?",
+    "answerable": true,
+    "goldAnswer": "Service keys in the vault are rotated every 90 days",
+    "goldDocId": "secrets-page",
+    "goldSpan": "Service keys in the vault are rotated every 90 days",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h17",
+    "question": "How many days can a vault service key stay in use?",
+    "answerable": true,
+    "goldAnswer": "Service keys in the vault are rotated every 90 days",
+    "goldDocId": "secrets-page",
+    "goldSpan": "Service keys in the vault are rotated every 90 days",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h18",
+    "question": "How fast must a leaked key be rotated?",
+    "answerable": true,
+    "goldAnswer": "A leaked key must be rotated within one hour",
+    "goldDocId": "secrets-page",
+    "goldSpan": "A leaked key must be rotated within one hour",
+    "split": "feedback",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h19",
+    "question": "When are idle development instances stopped?",
+    "answerable": true,
+    "goldAnswer": "Development instances idle for 7 days are stopped automatically",
+    "goldDocId": "cloud-costs-page",
+    "goldSpan": "Development instances idle for 7 days are stopped automatically",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h20",
+    "question": "When does a team get a cloud budget alert?",
+    "answerable": true,
+    "goldAnswer": "Teams get an alert when they pass 80 percent of the monthly cloud budget",
+    "goldDocId": "cloud-costs-page",
+    "goldSpan": "Teams get an alert when they pass 80 percent of the monthly cloud budget",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "How long are application logs kept?",
+    "answerable": true,
+    "goldAnswer": "Application logs are kept for 30 days and audit logs for one year",
+    "goldDocId": "logging-page",
+    "goldSpan": "Application logs are kept for 30 days and audit logs for one year",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "How long are audit logs kept?",
+    "answerable": true,
+    "goldAnswer": "Application logs are kept for 30 days and audit logs for one year",
+    "goldDocId": "logging-page",
+    "goldSpan": "Application logs are kept for 30 days and audit logs for one year",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "For how long may debug logging stay on in production?",
+    "answerable": true,
+    "goldAnswer": "Debug logging in production must be switched off within 24 hours",
+    "goldDocId": "logging-page",
+    "goldSpan": "Debug logging in production must be switched off within 24 hours",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "How soon must interview feedback be submitted?",
+    "answerable": true,
+    "goldAnswer": "Interviewers submit written feedback within 24 hours of the interview",
+    "goldDocId": "interviews-page",
+    "goldSpan": "Interviewers submit written feedback within 24 hours of the interview",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "How many interviews does a candidate have?",
+    "answerable": true,
+    "goldAnswer": "A candidate needs four interviews, including one with a hiring manager",
+    "goldDocId": "interviews-page",
+    "goldSpan": "A candidate needs four interviews, including one with a hiring manager",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "How much memory do engineering laptops have?",
+    "answerable": true,
+    "goldAnswer": "Engineers get a laptop with 32 GB of memory",
+    "goldDocId": "laptops-page",
+    "goldSpan": "Engineers get a laptop with 32 GB of memory",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "How quickly is a broken laptop replaced?",
+    "answerable": true,
+    "goldAnswer": "A broken laptop is replaced within two working days",
+    "goldDocId": "laptops-page",
+    "goldSpan": "A broken laptop is replaced within two working days",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "What must every production service have?",
+    "answerable": true,
+    "goldAnswer": "Every production service needs a runbook with a named owner",
+    "goldDocId": "docs-page",
+    "goldSpan": "Every production service needs a runbook with a named owner",
+    "split": "feedback",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "How often are runbooks reviewed?",
+    "answerable": true,
+    "goldAnswer": "Runbooks are reviewed every six months",
+    "goldDocId": "docs-page",
+    "goldSpan": "Runbooks are reviewed every six months",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "How fast are critical library vulnerabilities patched?",
+    "answerable": true,
+    "goldAnswer": "Critical library vulnerabilities are patched within 72 hours",
+    "goldDocId": "dependencies-page",
+    "goldSpan": "Critical library vulnerabilities are patched within 72 hours",
     "split": "feedback",
     "tags": [
       "numeric",
@@ -155,98 +392,39 @@
     ]
   },
   {
-    "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "id": "h31",
+    "question": "When are non-critical dependency upgrades done?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night",
+    "goldAnswer": "Other dependency upgrades are batched into the monthly upgrade day",
+    "goldDocId": "dependencies-page",
+    "goldSpan": "Other dependency upgrades are batched into the monthly upgrade day",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How long do we have to answer a customer data export request?",
+    "answerable": true,
+    "goldAnswer": "A customer data export request must be answered within 30 days",
+    "goldDocId": "data-requests-page",
+    "goldSpan": "A customer data export request must be answered within 30 days",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "lexical",
+      "distractor"
     ]
   },
   {
-    "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "id": "h33",
+    "question": "How quickly are customer deletion requests completed?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h15",
-    "question": "Where must staff store passwords?",
-    "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password",
-    "split": "feedback",
-    "tags": [
-      "numeric",
-      "paraphrase"
-    ]
-  },
-  {
-    "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
-    "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default",
-    "split": "feedback",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
-    "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
-    "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
-    "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
-    "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest",
+    "goldAnswer": "Deletion requests are completed within 14 days",
+    "goldDocId": "data-requests-page",
+    "goldSpan": "Deletion requests are completed within 14 days",
     "split": "holdout",
     "tags": [
       "numeric",

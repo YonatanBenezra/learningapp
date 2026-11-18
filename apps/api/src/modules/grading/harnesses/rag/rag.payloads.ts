@@ -1,11 +1,14 @@
 import type {
+  DedupeMode,
   R2Payload,
   R3Payload,
   R4Payload,
   RagPayload,
   RerankerKind,
+  FilterStage,
   RetrievalMode,
   SplitStrategy,
+  StatusFilter,
 } from './rag.types';
 
 const SPLIT_STRATEGIES: SplitStrategy[] = [
@@ -23,6 +26,13 @@ const RERANKERS: RerankerKind[] = [
 ];
 
 const RETRIEVAL_MODES: RetrievalMode[] = ['bm25', 'dense', 'hybrid'];
+const STATUS_FILTERS: StatusFilter[] = [
+  'none',
+  'exclude-superseded',
+  'current-only',
+];
+const FILTER_STAGES: FilterStage[] = ['pre', 'post'];
+const DEDUPE_MODES: DedupeMode[] = ['none', 'exact', 'near'];
 
 export function parseR1Payload(payload: unknown): RagPayload {
   if (payload === null || typeof payload !== 'object') {
@@ -48,15 +58,21 @@ export function parseR1Payload(payload: unknown): RagPayload {
   };
 }
 
+/** Chunk size when an R2 exercise does not offer it as a knob. */
+export const R2_DEFAULT_CHUNK_SIZE = 400;
+
 export function parseR2Payload(payload: unknown): R2Payload {
   if (payload === null || typeof payload !== 'object') {
     throw new Error('R2 payload must be an object');
   }
   const record = payload as Record<string, unknown>;
+  // Exercises that lock rerank or chunk size leave them out of the schema.
+  const rerank = record.rerank ?? false;
+  const chunkSize = record.chunkSize ?? R2_DEFAULT_CHUNK_SIZE;
   if (
     typeof record.topK !== 'number' ||
-    typeof record.rerank !== 'boolean' ||
-    typeof record.chunkSize !== 'number'
+    typeof rerank !== 'boolean' ||
+    typeof chunkSize !== 'number'
   ) {
     throw new Error('R2 payload is missing topK, rerank, or chunkSize');
   }
@@ -73,11 +89,46 @@ export function parseR2Payload(payload: unknown): R2Payload {
   }
   return {
     topK: record.topK,
-    rerank: record.rerank,
-    chunkSize: record.chunkSize,
+    rerank,
+    chunkSize,
     ...(mode !== undefined ? { retrievalMode: mode as RetrievalMode } : {}),
     ...(alpha !== undefined ? { hybridAlpha: alpha } : {}),
+    ...optionalEnum(record, 'statusFilter', STATUS_FILTERS),
+    ...optionalEnum(record, 'filterStage', FILTER_STAGES),
+    ...optionalEnum(record, 'dedupe', DEDUPE_MODES),
+    ...unitInterval(record, 'dedupeThreshold'),
   };
+}
+
+/** `{ [key]: value }` for a number from 0 to 1, `{}` when absent. */
+function unitInterval(
+  record: Record<string, unknown>,
+  key: string,
+): Record<string, number> {
+  const value = record[key];
+  if (value === undefined) {
+    return {};
+  }
+  if (typeof value !== 'number' || !(value >= 0 && value <= 1)) {
+    throw new Error(`R2 ${key} must be a number from 0 to 1`);
+  }
+  return { [key]: value };
+}
+
+/** `{ [key]: value }` when the payload sets an allowed value, `{}` when absent. */
+function optionalEnum<K extends string, V extends string>(
+  record: Record<string, unknown>,
+  key: K,
+  allowed: readonly V[],
+): Partial<Record<K, V>> {
+  const value = record[key];
+  if (value === undefined) {
+    return {};
+  }
+  if (typeof value !== 'string' || !allowed.includes(value as V)) {
+    throw new Error(`R2 payload has an invalid ${key}`);
+  }
+  return { [key]: value } as Partial<Record<K, V>>;
 }
 
 export function parseR3Payload(payload: unknown): R3Payload {

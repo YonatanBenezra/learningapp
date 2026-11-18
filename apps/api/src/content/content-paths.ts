@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 export const contentRoot = path.join(process.cwd(), 'content');
@@ -7,6 +7,27 @@ export const publishedSlugsPath = path.join(
   contentRoot,
   'published-slugs.json',
 );
+
+/**
+ * The corpus an exercise grades against: "shared" (the internal policy
+ * corpus), the name of a corpus in content/corpora/ (e.g. "support-kb"), or
+ * the exercise's own corpus.json. Mirrors scripts/content/paths.mjs.
+ */
+export function corpusPathFor(
+  dir: string,
+  meta: { corpusFile?: string },
+): string {
+  if (meta.corpusFile === 'shared') {
+    return path.join(contentRoot, 'corpora', 'internal-policy.json');
+  }
+  if (meta.corpusFile) {
+    const named = path.join(contentRoot, 'corpora', `${meta.corpusFile}.json`);
+    if (existsSync(named)) {
+      return named;
+    }
+  }
+  return path.join(dir, 'corpus.json');
+}
 
 export function loadPublishedSlugs(): string[] {
   const raw = JSON.parse(readFileSync(publishedSlugsPath, 'utf8')) as {

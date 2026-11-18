@@ -147,6 +147,36 @@
   background: color-mix(in srgb, var(--lp-surface-elevated) 92%, transparent);
 }
 
+/* Versioned corpora: status, family, version and effective date. */
+.lp-rag-lab-doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+  margin: 0 0 0.35rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-doc-status {
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: color-mix(in srgb, var(--lp-ink) 8%, transparent);
+}
+
+.lp-rag-lab-doc-status.is-current {
+  color: var(--lp-grd-teal, #0f766e);
+  background: color-mix(in srgb, var(--lp-grd-teal, #0f766e) 14%, transparent);
+}
+
+.lp-rag-lab-doc-status.is-draft {
+  color: var(--lp-grd-fail-accent, #b45309);
+  background: color-mix(in srgb, var(--lp-grd-fail-accent, #b45309) 12%, transparent);
+}
+
 .lp-rag-lab-doc-head {
   display: flex;
   flex-wrap: wrap;

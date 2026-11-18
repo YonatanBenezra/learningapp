@@ -1,60 +1,64 @@
 {
   "slug": "rag-022-score-gate",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Rerank Without Extra Model Calls",
-  "difficulty": "H",
+  "title": "Pack the Context",
+  "difficulty": "M",
   "catalogPhase": 6,
-  "corpusFile": "shared",
+  "corpusFile": "team-wiki",
   "skills": [
-    {
-      "slug": "reranking",
-      "name": "Reranking"
-    },
     {
       "slug": "retrieval-quality",
       "name": "Retrieval quality"
+    },
+    {
+      "slug": "cost-engineering",
+      "name": "Cost engineering"
     },
     {
       "slug": "evaluation-reading",
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 6 · Rerank Without Extra Model Calls\n\nThe latency budget leaves no room for an LLM in the retrieval path. Lift nDCG@5 with reranking alone: no query rewrite.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt runs on the live model, one call per question: your prompt is the system message, the question is the user message, and the first line of the reply is what the first stage searches for. The reranker still scores candidates against the question as asked.\n\n**Gates:** nDCG@5 improves by at least 0.15, context tokens ≤ 2200, and 0 model calls per question.\n",
+  "briefMd": "# Phase 6 · Pack the Context\n\nEvery team copied the engineering handbooks into its own wiki space and changed a word or two. A search now returns five near-identical copies of a handbook before the one page that actually answers, and the copies fill the context budget before the answer gets in.\n\nRetrieval is BM25 over whole pages. The context is then **packed**: duplicates are dropped, and the remaining pages are added in rank order while they fit the token budget. You control **topK** (how many pages the search returns), **dedupe** (`none`, `exact`: identical text only, or `near`: pages whose words overlap enough) and **dedupeThreshold** (for `near`: the share of distinct words two pages must have in common to count as copies).\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 130 on the hidden set. The budget is also the packing limit: pages that do not fit are left out.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
-      "reranker",
-      "rerankTopN"
+      "topK",
+      "dedupe"
     ],
     "properties": {
-      "reranker": {
+      "topK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10,
+        "default": 4
+      },
+      "dedupe": {
         "type": "string",
         "enum": [
           "none",
-          "title-boost",
-          "mmr"
+          "exact",
+          "near"
         ],
-        "default": "none"
+        "default": "none",
+        "description": "exact drops identical pages; near drops pages whose words overlap at least the threshold."
       },
-      "rerankTopN": {
-        "type": "integer",
-        "minimum": 5,
-        "maximum": 50,
-        "default": 20
-      },
-      "queryRewritePrompt": {
-        "type": "string",
-        "default": ""
+      "dedupeThreshold": {
+        "type": "number",
+        "minimum": 0.1,
+        "maximum": 1,
+        "multipleOf": 0.05,
+        "default": 0.95,
+        "description": "near only: share of distinct words two pages must share to count as copies."
       }
     }
   },
   "thresholds": {
-    "ndcg_improvement": 0.15,
-    "context_tokens": 2200,
-    "model_calls_per_question": 0
+    "recall_at_k": 0.9,
+    "mean_prompt_tokens": 130
   },
   "budget": {
     "max_model_calls": 50,
@@ -64,25 +68,18 @@
   },
   "gates": [
     {
-      "id": "ndcg-improvement",
+      "id": "recall-at-k",
       "class": "A",
-      "metric": "ndcg_improvement",
+      "metric": "recall@k",
       "op": "gte",
-      "value": 0.15
+      "value": 0.9
     },
     {
-      "id": "context-tokens",
+      "id": "mean-prompt-tokens",
       "class": "A",
-      "metric": "context_tokens",
+      "metric": "mean_prompt_tokens",
       "op": "lte",
-      "value": 2200
-    },
-    {
-      "id": "model-calls",
-      "class": "A",
-      "metric": "model_calls_per_question",
-      "op": "lte",
-      "value": 0
+      "value": 130
     }
   ],
   "feedback": {
@@ -93,5 +90,6 @@
     "maxSubmissions": 20,
     "cooldownHours": 1
   },
-  "graderArchetype": "rag-r4"
+  "graderArchetype": "rag-r2",
+  "isPublished": true
 }

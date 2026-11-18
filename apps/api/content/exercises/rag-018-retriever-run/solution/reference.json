@@ -1,5 +1,5 @@
 {
-  "topK": 2,
-  "rerank": true,
-  "chunkSize": 200
+  "retrievalMode": "hybrid",
+  "hybridAlpha": 0.6,
+  "topK": 3
 }

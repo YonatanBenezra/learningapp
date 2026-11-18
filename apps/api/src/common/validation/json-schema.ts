@@ -9,6 +9,8 @@ export type JsonSchemaProperty = {
   type?: string;
   minimum?: number;
   maximum?: number;
+  /** UI step only; not enforced. */
+  multipleOf?: number;
   enum?: unknown[];
   default?: unknown;
 };
@@ -60,6 +62,17 @@ function validateProperty(
   if (property.type === 'integer') {
     if (typeof value !== 'number' || !Number.isInteger(value)) {
       return [`${key} must be an integer`];
+    }
+    if (property.minimum !== undefined && value < property.minimum) {
+      return [`${key} must be >= ${property.minimum}`];
+    }
+    if (property.maximum !== undefined && value > property.maximum) {
+      return [`${key} must be <= ${property.maximum}`];
+    }
+  }
+  if (property.type === 'number') {
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+      return [`${key} must be a number`];
     }
     if (property.minimum !== undefined && value < property.minimum) {
       return [`${key} must be >= ${property.minimum}`];

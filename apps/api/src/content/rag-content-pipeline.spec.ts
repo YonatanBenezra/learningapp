@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { loadAllExerciseBundles } from './content-loader';
 import { runContentGrader } from './content-grader-runner';
-import { loadPublishedSlugs } from './content-paths';
+import { corpusPathFor, loadPublishedSlugs } from './content-paths';
 
 type Gate = { metric: string; op: string; value: number; advisory?: boolean };
 
@@ -115,19 +115,19 @@ describe('RAG content: public samples stay off the hidden sets', () => {
       return Array.isArray(value) ? (value as EvalItem[]) : [];
     };
     const corpusOf = (bundle: (typeof bundles)[number]) =>
-      bundle.meta.corpusFile === 'shared'
-        ? path.join(process.cwd(), 'content/corpora/internal-policy.json')
-        : path.join(bundle.dir, 'corpus.json');
+      corpusPathFor(bundle.dir, bundle.meta);
 
-    // Hidden gold facts, pooled per corpus content: a public sample of one
-    // exercise must not reveal a hidden answer of another on the same docs.
+    // Hidden gold facts (document + sentence), pooled per corpus content: a
+    // public sample of one exercise must not reveal a hidden answer of
+    // another on the same docs. Boilerplate repeated in other documents
+    // ("It draws 24 W at full load.") is a different fact.
     const hiddenByCorpus = new Map<string, Set<string>>();
     for (const bundle of bundles) {
       const corpus = readFileSync(corpusOf(bundle), 'utf8');
       const spans = hiddenByCorpus.get(corpus) ?? new Set<string>();
       for (const item of read(path.join(bundle.dir, 'eval_hidden.json'))) {
-        if (item.goldSpan) {
-          spans.add(normalize(item.goldSpan));
+        if (item.goldSpan && item.goldDocId) {
+          spans.add(`${item.goldDocId}\u0000${normalize(item.goldSpan)}`);
         }
       }
       hiddenByCorpus.set(corpus, spans);
@@ -154,9 +154,13 @@ describe('RAG content: public samples stay off the hidden sets', () => {
           where,
           inDoc: true,
         });
-        const leaks = [...hidden].some(
-          (gold) => gold.includes(span) || span.includes(gold),
-        );
+        const leaks = [...hidden].some((entry) => {
+          const [docId, gold] = entry.split('\u0000');
+          return (
+            docId === item.goldDocId &&
+            (gold.includes(span) || span.includes(gold))
+          );
+        });
         expect({ where, leaks }).toEqual({ where, leaks: false });
       }
     }

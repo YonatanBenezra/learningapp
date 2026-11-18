@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO before the leave starts?",
+    "question": "How do I clear error E-4201?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "reset the unit to factory settings and restore its saved profile",
+    "goldDocId": "err-4201",
+    "goldSpan": "To clear it, reset the unit to factory settings and restore its saved profile"
   },
   {
     "id": "p2",
-    "question": "Do domestic flights under three hours have to be economy?",
+    "question": "Which team handles E-8502 if it keeps coming back?",
     "answerable": true,
-    "goldAnswer": "Yes",
-    "goldDocId": "travel",
-    "goldSpan": "Domestic flights below three hours must be economy"
+    "goldAnswer": "Logistics",
+    "goldDocId": "err-8502",
+    "goldSpan": "If it comes back within 12 hours, open a ticket with the Logistics team"
   },
   {
     "id": "p3",
-    "question": "How long before an unacknowledged page escalates to the secondary on-call?",
+    "question": "How do I clear error E-5680?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "recalibrate it from the service menu under Diagnostics",
+    "goldDocId": "err-5680",
+    "goldSpan": "To clear it, recalibrate it from the service menu under Diagnostics"
   },
   {
     "id": "p4",
-    "question": "What happens to a purchase order when a vendor security report is missing?",
+    "question": "What reward do I get for bringing a friend into the company?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "2,000 euros after six months",
+    "goldDocId": "policy-referrals",
+    "goldSpan": "If someone you recommend is hired and stays six months, you receive a 2,000 euro bonus"
   },
   {
     "id": "p5",
-    "question": "Where must production secrets never live?",
+    "question": "How long is the trial period when I start, and how quickly can it be ended?",
     "answerable": true,
-    "goldAnswer": "git",
-    "goldDocId": "password",
-    "goldSpan": "Production secrets never live in git"
+    "goldAnswer": "Six months; two weeks of notice",
+    "goldDocId": "policy-probation",
+    "goldSpan": "New hires have a six-month probation period with a review at three months"
+  },
+  {
+    "id": "p6",
+    "question": "If I have a health condition, can I get a special chair or different working times?",
+    "answerable": true,
+    "goldAnswer": "Yes, adjustments can be requested",
+    "goldDocId": "policy-adjustments",
+    "goldSpan": "Staff with a disability or long-term condition can request adjustments such as special equipment or flexible hours"
   }
 ]

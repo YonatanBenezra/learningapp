@@ -83,7 +83,8 @@ function sortRanked(ranked: RankedChunk[]): RankedChunk[] {
   });
 }
 
-function jaccard(left: string, right: string): number {
+/** Share of distinct terms two texts have in common (0 to 1). */
+export function jaccard(left: string, right: string): number {
   const a = new Set(tokenize(left));
   const b = new Set(tokenize(right));
   if (a.size === 0 && b.size === 0) {

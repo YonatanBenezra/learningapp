@@ -1,0 +1,952 @@
+[
+  {
+    "id": "sku-rt-4712",
+    "title": "Kite edge router RT-4712",
+    "text": "This edge router is built for branch offices. It draws 24 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 4.3.2 or later. The spare fan module FM-68 fits it."
+  },
+  {
+    "id": "sku-rt-4217",
+    "title": "Kite edge router RT-4217",
+    "text": "This edge router is built for branch offices. It draws 29 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 3.3.6 or later. The spare mounting bracket MB-79 fits it."
+  },
+  {
+    "id": "sku-rt-4271",
+    "title": "Kite edge router RT-4271",
+    "text": "This edge router is built for branch offices. It draws 43 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 4.2.4 or later. The spare sensor head SH-55 fits it."
+  },
+  {
+    "id": "sku-rt-7124",
+    "title": "Kite edge router RT-7124",
+    "text": "This edge router is built for branch offices. It draws 53 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.3.3 or later. The spare front bezel FB-79 fits it."
+  },
+  {
+    "id": "sku-rt-2417",
+    "title": "Kite edge router RT-2417",
+    "text": "This edge router is built for branch offices. It draws 24 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 4.8.4 or later. The spare power brick PB-14 fits it."
+  },
+  {
+    "id": "sku-rt-1274",
+    "title": "Kite edge router RT-1274",
+    "text": "This edge router is built for branch offices. It draws 18 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 2.1.1 or later. The spare antenna kit AK-53 fits it."
+  },
+  {
+    "id": "sku-rt-7142",
+    "title": "Kite edge router RT-7142",
+    "text": "This edge router is built for branch offices. It draws 50 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 3.2.5 or later. The spare mounting bracket MB-20 fits it."
+  },
+  {
+    "id": "sku-rt-1742",
+    "title": "Kite edge router RT-1742",
+    "text": "This edge router is built for branch offices. It draws 26 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.2.8 or later. The spare mounting bracket MB-47 fits it."
+  },
+  {
+    "id": "sku-rt-4721",
+    "title": "Kite edge router RT-4721",
+    "text": "This edge router is built for branch offices. It draws 5 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 3.8.6 or later. The spare fan module FM-10 fits it."
+  },
+  {
+    "id": "sku-rt-7241",
+    "title": "Kite edge router RT-7241",
+    "text": "This edge router is built for branch offices. It draws 53 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 3.6.0 or later. The spare power brick PB-50 fits it."
+  },
+  {
+    "id": "sku-aq-5813",
+    "title": "Brook air-quality sensor AQ-5813",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 14 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.4.4 or later. The spare front bezel FB-51 fits it."
+  },
+  {
+    "id": "sku-aq-5831",
+    "title": "Brook air-quality sensor AQ-5831",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 59 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.7.7 or later. The spare sensor head SH-43 fits it."
+  },
+  {
+    "id": "sku-aq-8315",
+    "title": "Brook air-quality sensor AQ-8315",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 13 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 4.5.0 or later. The spare antenna kit AK-49 fits it."
+  },
+  {
+    "id": "sku-aq-1385",
+    "title": "Brook air-quality sensor AQ-1385",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 17 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 4.6.5 or later. The spare front bezel FB-95 fits it."
+  },
+  {
+    "id": "sku-aq-5183",
+    "title": "Brook air-quality sensor AQ-5183",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 40 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 2.2.4 or later. The spare antenna kit AK-10 fits it."
+  },
+  {
+    "id": "sku-aq-3158",
+    "title": "Brook air-quality sensor AQ-3158",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 58 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 4.8.8 or later. The spare front bezel FB-20 fits it."
+  },
+  {
+    "id": "sku-aq-3851",
+    "title": "Brook air-quality sensor AQ-3851",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 42 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.2.5 or later. The spare antenna kit AK-74 fits it."
+  },
+  {
+    "id": "sku-aq-5318",
+    "title": "Brook air-quality sensor AQ-5318",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 31 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 2.7.8 or later. The spare fan module FM-45 fits it."
+  },
+  {
+    "id": "sku-aq-5381",
+    "title": "Brook air-quality sensor AQ-5381",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 55 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.8.5 or later. The spare fan module FM-88 fits it."
+  },
+  {
+    "id": "sku-aq-1835",
+    "title": "Brook air-quality sensor AQ-1835",
+    "text": "This air-quality sensor is built for meeting rooms. It draws 39 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.5.8 or later. The spare sensor head SH-61 fits it."
+  },
+  {
+    "id": "sku-dc-4629",
+    "title": "Ridge door controller DC-4629",
+    "text": "This door controller is built for secured doors. It draws 29 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 2.2.3 or later. The spare front bezel FB-67 fits it."
+  },
+  {
+    "id": "sku-dc-4692",
+    "title": "Ridge door controller DC-4692",
+    "text": "This door controller is built for secured doors. It draws 17 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 3.9.2 or later. The spare front bezel FB-12 fits it."
+  },
+  {
+    "id": "sku-dc-2469",
+    "title": "Ridge door controller DC-2469",
+    "text": "This door controller is built for secured doors. It draws 52 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 3.2.5 or later. The spare mounting bracket MB-91 fits it."
+  },
+  {
+    "id": "sku-dc-6942",
+    "title": "Ridge door controller DC-6942",
+    "text": "This door controller is built for secured doors. It draws 51 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 4.6.0 or later. The spare sensor head SH-21 fits it."
+  },
+  {
+    "id": "sku-dc-4962",
+    "title": "Ridge door controller DC-4962",
+    "text": "This door controller is built for secured doors. It draws 30 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 4.4.8 or later. The spare mounting bracket MB-51 fits it."
+  },
+  {
+    "id": "sku-dc-4269",
+    "title": "Ridge door controller DC-4269",
+    "text": "This door controller is built for secured doors. It draws 11 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 2.4.7 or later. The spare sensor head SH-11 fits it."
+  },
+  {
+    "id": "sku-dc-2649",
+    "title": "Ridge door controller DC-2649",
+    "text": "This door controller is built for secured doors. It draws 47 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 3.3.3 or later. The spare front bezel FB-93 fits it."
+  },
+  {
+    "id": "sku-dc-9264",
+    "title": "Ridge door controller DC-9264",
+    "text": "This door controller is built for secured doors. It draws 56 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 4.1.0 or later. The spare sensor head SH-31 fits it."
+  },
+  {
+    "id": "sku-dc-2964",
+    "title": "Ridge door controller DC-2964",
+    "text": "This door controller is built for secured doors. It draws 17 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 3.5.5 or later. The spare sensor head SH-71 fits it."
+  },
+  {
+    "id": "sku-dc-9624",
+    "title": "Ridge door controller DC-9624",
+    "text": "This door controller is built for secured doors. It draws 22 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 2.0.2 or later. The spare antenna kit AK-55 fits it."
+  },
+  {
+    "id": "sku-br-3507",
+    "title": "Wren badge reader BR-3507",
+    "text": "This badge reader is built for turnstiles. It draws 40 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 4.9.9 or later. The spare sensor head SH-62 fits it."
+  },
+  {
+    "id": "sku-br-5073",
+    "title": "Wren badge reader BR-5073",
+    "text": "This badge reader is built for turnstiles. It draws 53 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 3.1.6 or later. The spare sensor head SH-10 fits it."
+  },
+  {
+    "id": "sku-br-5703",
+    "title": "Wren badge reader BR-5703",
+    "text": "This badge reader is built for turnstiles. It draws 35 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 2.9.5 or later. The spare antenna kit AK-71 fits it."
+  },
+  {
+    "id": "sku-br-3750",
+    "title": "Wren badge reader BR-3750",
+    "text": "This badge reader is built for turnstiles. It draws 34 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 2.1.3 or later. The spare fan module FM-39 fits it."
+  },
+  {
+    "id": "sku-br-5370",
+    "title": "Wren badge reader BR-5370",
+    "text": "This badge reader is built for turnstiles. It draws 40 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 4.3.5 or later. The spare power brick PB-21 fits it."
+  },
+  {
+    "id": "sku-br-7503",
+    "title": "Wren badge reader BR-7503",
+    "text": "This badge reader is built for turnstiles. It draws 55 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 2.3.8 or later. The spare fan module FM-96 fits it."
+  },
+  {
+    "id": "sku-br-3570",
+    "title": "Wren badge reader BR-3570",
+    "text": "This badge reader is built for turnstiles. It draws 18 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 2.7.7 or later. The spare antenna kit AK-34 fits it."
+  },
+  {
+    "id": "sku-br-3057",
+    "title": "Wren badge reader BR-3057",
+    "text": "This badge reader is built for turnstiles. It draws 8 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 4.6.3 or later. The spare front bezel FB-28 fits it."
+  },
+  {
+    "id": "sku-br-7053",
+    "title": "Wren badge reader BR-7053",
+    "text": "This badge reader is built for turnstiles. It draws 35 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 2.2.2 or later. The spare mounting bracket MB-16 fits it."
+  },
+  {
+    "id": "sku-br-7305",
+    "title": "Wren badge reader BR-7305",
+    "text": "This badge reader is built for turnstiles. It draws 27 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 3.7.1 or later. The spare power brick PB-17 fits it."
+  },
+  {
+    "id": "sku-sw-8462",
+    "title": "Larch PoE switch SW-8462",
+    "text": "This PoE switch is built for ceiling access points. It draws 28 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 4.6.0 or later. The spare power brick PB-30 fits it."
+  },
+  {
+    "id": "sku-sw-4682",
+    "title": "Larch PoE switch SW-4682",
+    "text": "This PoE switch is built for ceiling access points. It draws 7 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 3.8.9 or later. The spare power brick PB-11 fits it."
+  },
+  {
+    "id": "sku-sw-2648",
+    "title": "Larch PoE switch SW-2648",
+    "text": "This PoE switch is built for ceiling access points. It draws 52 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 2.6.0 or later. The spare front bezel FB-39 fits it."
+  },
+  {
+    "id": "sku-sw-2486",
+    "title": "Larch PoE switch SW-2486",
+    "text": "This PoE switch is built for ceiling access points. It draws 7 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 4.3.4 or later. The spare fan module FM-81 fits it."
+  },
+  {
+    "id": "sku-sw-6842",
+    "title": "Larch PoE switch SW-6842",
+    "text": "This PoE switch is built for ceiling access points. It draws 58 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 2.1.3 or later. The spare power brick PB-87 fits it."
+  },
+  {
+    "id": "sku-sw-6482",
+    "title": "Larch PoE switch SW-6482",
+    "text": "This PoE switch is built for ceiling access points. It draws 31 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 2.7.0 or later. The spare fan module FM-85 fits it."
+  },
+  {
+    "id": "sku-sw-8264",
+    "title": "Larch PoE switch SW-8264",
+    "text": "This PoE switch is built for ceiling access points. It draws 50 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 3.5.0 or later. The spare antenna kit AK-78 fits it."
+  },
+  {
+    "id": "sku-sw-6248",
+    "title": "Larch PoE switch SW-6248",
+    "text": "This PoE switch is built for ceiling access points. It draws 30 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.9.7 or later. The spare front bezel FB-19 fits it."
+  },
+  {
+    "id": "sku-sw-2846",
+    "title": "Larch PoE switch SW-2846",
+    "text": "This PoE switch is built for ceiling access points. It draws 56 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.9.8 or later. The spare mounting bracket MB-96 fits it."
+  },
+  {
+    "id": "sku-sw-2684",
+    "title": "Larch PoE switch SW-2684",
+    "text": "This PoE switch is built for ceiling access points. It draws 9 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.3.0 or later. The spare antenna kit AK-12 fits it."
+  },
+  {
+    "id": "sku-tc-1639",
+    "title": "Fjord thermal camera TC-1639",
+    "text": "This thermal camera is built for server rooms. It draws 59 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.3.3 or later. The spare front bezel FB-89 fits it."
+  },
+  {
+    "id": "sku-tc-9316",
+    "title": "Fjord thermal camera TC-9316",
+    "text": "This thermal camera is built for server rooms. It draws 59 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.9.0 or later. The spare antenna kit AK-79 fits it."
+  },
+  {
+    "id": "sku-tc-1963",
+    "title": "Fjord thermal camera TC-1963",
+    "text": "This thermal camera is built for server rooms. It draws 34 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 2.4.2 or later. The spare front bezel FB-38 fits it."
+  },
+  {
+    "id": "sku-tc-1369",
+    "title": "Fjord thermal camera TC-1369",
+    "text": "This thermal camera is built for server rooms. It draws 34 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 4.1.4 or later. The spare sensor head SH-44 fits it."
+  },
+  {
+    "id": "sku-tc-3916",
+    "title": "Fjord thermal camera TC-3916",
+    "text": "This thermal camera is built for server rooms. It draws 22 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 4.1.6 or later. The spare antenna kit AK-62 fits it."
+  },
+  {
+    "id": "sku-tc-3619",
+    "title": "Fjord thermal camera TC-3619",
+    "text": "This thermal camera is built for server rooms. It draws 16 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 2.5.2 or later. The spare power brick PB-89 fits it."
+  },
+  {
+    "id": "sku-tc-9613",
+    "title": "Fjord thermal camera TC-9613",
+    "text": "This thermal camera is built for server rooms. It draws 21 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.8.9 or later. The spare fan module FM-93 fits it."
+  },
+  {
+    "id": "sku-tc-6139",
+    "title": "Fjord thermal camera TC-6139",
+    "text": "This thermal camera is built for server rooms. It draws 14 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 4.9.1 or later. The spare antenna kit AK-16 fits it."
+  },
+  {
+    "id": "sku-tc-3169",
+    "title": "Fjord thermal camera TC-3169",
+    "text": "This thermal camera is built for server rooms. It draws 57 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.5.8 or later. The spare sensor head SH-82 fits it."
+  },
+  {
+    "id": "sku-tc-3961",
+    "title": "Fjord thermal camera TC-3961",
+    "text": "This thermal camera is built for server rooms. It draws 40 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.1.5 or later. The spare sensor head SH-10 fits it."
+  },
+  {
+    "id": "sku-bp-8275",
+    "title": "Moss battery pack BP-8275",
+    "text": "This battery pack is built for field kits. It draws 53 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 3.8.5 or later. The spare power brick PB-62 fits it."
+  },
+  {
+    "id": "sku-bp-2785",
+    "title": "Moss battery pack BP-2785",
+    "text": "This battery pack is built for field kits. It draws 27 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 4.1.6 or later. The spare mounting bracket MB-67 fits it."
+  },
+  {
+    "id": "sku-bp-2875",
+    "title": "Moss battery pack BP-2875",
+    "text": "This battery pack is built for field kits. It draws 17 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.1.8 or later. The spare power brick PB-40 fits it."
+  },
+  {
+    "id": "sku-bp-5872",
+    "title": "Moss battery pack BP-5872",
+    "text": "This battery pack is built for field kits. It draws 24 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 3.8.9 or later. The spare antenna kit AK-72 fits it."
+  },
+  {
+    "id": "sku-bp-7528",
+    "title": "Moss battery pack BP-7528",
+    "text": "This battery pack is built for field kits. It draws 29 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 2.1.9 or later. The spare sensor head SH-64 fits it."
+  },
+  {
+    "id": "sku-bp-7852",
+    "title": "Moss battery pack BP-7852",
+    "text": "This battery pack is built for field kits. It draws 7 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.7.3 or later. The spare power brick PB-55 fits it."
+  },
+  {
+    "id": "sku-bp-2857",
+    "title": "Moss battery pack BP-2857",
+    "text": "This battery pack is built for field kits. It draws 43 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.1.5 or later. The spare antenna kit AK-68 fits it."
+  },
+  {
+    "id": "sku-bp-5278",
+    "title": "Moss battery pack BP-5278",
+    "text": "This battery pack is built for field kits. It draws 59 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.2.8 or later. The spare antenna kit AK-36 fits it."
+  },
+  {
+    "id": "sku-bp-2758",
+    "title": "Moss battery pack BP-2758",
+    "text": "This battery pack is built for field kits. It draws 27 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.8.3 or later. The spare antenna kit AK-50 fits it."
+  },
+  {
+    "id": "sku-bp-2578",
+    "title": "Moss battery pack BP-2578",
+    "text": "This battery pack is built for field kits. It draws 18 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 4.9.8 or later. The spare power brick PB-97 fits it."
+  },
+  {
+    "id": "sku-gw-5419",
+    "title": "Cedar IoT gateway GW-5419",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 46 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.7.0 or later. The spare front bezel FB-66 fits it."
+  },
+  {
+    "id": "sku-gw-9514",
+    "title": "Cedar IoT gateway GW-9514",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 11 W at full load. It carries a 24-month warranty from the delivery date. It needs firmware 3.2.7 or later. The spare fan module FM-92 fits it."
+  },
+  {
+    "id": "sku-gw-4195",
+    "title": "Cedar IoT gateway GW-4195",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 19 W at full load. It carries a 36-month warranty from the delivery date. It needs firmware 3.7.1 or later. The spare power brick PB-84 fits it."
+  },
+  {
+    "id": "sku-gw-4915",
+    "title": "Cedar IoT gateway GW-4915",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 50 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 3.1.5 or later. The spare mounting bracket MB-54 fits it."
+  },
+  {
+    "id": "sku-gw-1945",
+    "title": "Cedar IoT gateway GW-1945",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 10 W at full load. It carries a 48-month warranty from the delivery date. It needs firmware 3.1.7 or later. The spare mounting bracket MB-60 fits it."
+  },
+  {
+    "id": "sku-gw-5941",
+    "title": "Cedar IoT gateway GW-5941",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 11 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 4.0.5 or later. The spare fan module FM-58 fits it."
+  },
+  {
+    "id": "sku-gw-9451",
+    "title": "Cedar IoT gateway GW-9451",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 47 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 3.3.1 or later. The spare fan module FM-63 fits it."
+  },
+  {
+    "id": "sku-gw-5491",
+    "title": "Cedar IoT gateway GW-5491",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 7 W at full load. It carries a 60-month warranty from the delivery date. It needs firmware 2.3.1 or later. The spare power brick PB-20 fits it."
+  },
+  {
+    "id": "sku-gw-4951",
+    "title": "Cedar IoT gateway GW-4951",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 29 W at full load. It carries a 12-month warranty from the delivery date. It needs firmware 2.1.5 or later. The spare mounting bracket MB-33 fits it."
+  },
+  {
+    "id": "sku-gw-5194",
+    "title": "Cedar IoT gateway GW-5194",
+    "text": "This IoT gateway is built for warehouse sensors. It draws 30 W at full load. It carries an 18-month warranty from the delivery date. It needs firmware 4.9.0 or later. The spare antenna kit AK-13 fits it."
+  },
+  {
+    "id": "err-1042",
+    "title": "Error E-1042: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, swap the network cable and check the port lights. If it comes back within 4 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-4120",
+    "title": "Error E-4120: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, replace the fuse on the main board with a 5 A fuse. If it comes back within 72 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-4021",
+    "title": "Error E-4021: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, power-cycle the unit and wait two minutes before reconnecting it. If it comes back within 48 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-2140",
+    "title": "Error E-2140: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, power-cycle the unit and wait two minutes before reconnecting it. If it comes back within 12 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-4012",
+    "title": "Error E-4012: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, roll the firmware back one version from the admin page. If it comes back within 72 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-4201",
+    "title": "Error E-4201: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 24 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-4210",
+    "title": "Error E-4210: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 12 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-1402",
+    "title": "Error E-1402: fan controller",
+    "text": "This error means the fan controller stopped reporting speed. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 72 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-7123",
+    "title": "Error E-7123: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 72 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-3712",
+    "title": "Error E-3712: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, swap the network cable and check the port lights. If it comes back within 4 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-2137",
+    "title": "Error E-2137: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, replace the fuse on the main board with a 5 A fuse. If it comes back within 48 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-7321",
+    "title": "Error E-7321: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 72 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-2371",
+    "title": "Error E-2371: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, reseat the ribbon cable behind the front panel. If it comes back within 72 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-7132",
+    "title": "Error E-7132: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, swap the network cable and check the port lights. If it comes back within 4 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-1723",
+    "title": "Error E-1723: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, reseat the ribbon cable behind the front panel. If it comes back within 48 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-3271",
+    "title": "Error E-3271: power supply",
+    "text": "This error means the power supply saw a voltage drop. To clear it, move the unit away from heat sources and clean the air intake. If it comes back within 4 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-8052",
+    "title": "Error E-8052: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, roll the firmware back one version from the admin page. If it comes back within 4 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-2085",
+    "title": "Error E-2085: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, move the unit away from heat sources and clean the air intake. If it comes back within 24 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-8502",
+    "title": "Error E-8502: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, reseat the ribbon cable behind the front panel. If it comes back within 12 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-5802",
+    "title": "Error E-5802: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, move the unit away from heat sources and clean the air intake. If it comes back within 72 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-8025",
+    "title": "Error E-8025: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 48 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-5280",
+    "title": "Error E-5280: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, move the unit away from heat sources and clean the air intake. If it comes back within 4 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-2580",
+    "title": "Error E-2580: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 72 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-2850",
+    "title": "Error E-2850: storage module",
+    "text": "This error means the storage module failed a write check. To clear it, move the unit away from heat sources and clean the air intake. If it comes back within 72 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-6349",
+    "title": "Error E-6349: radio",
+    "text": "This error means the radio lost its uplink. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 48 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-4639",
+    "title": "Error E-4639: radio",
+    "text": "This error means the radio lost its uplink. To clear it, power-cycle the unit and wait two minutes before reconnecting it. If it comes back within 12 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-6943",
+    "title": "Error E-6943: radio",
+    "text": "This error means the radio lost its uplink. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 4 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-4369",
+    "title": "Error E-4369: radio",
+    "text": "This error means the radio lost its uplink. To clear it, replace the fuse on the main board with a 5 A fuse. If it comes back within 24 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-6493",
+    "title": "Error E-6493: radio",
+    "text": "This error means the radio lost its uplink. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 24 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-4963",
+    "title": "Error E-4963: radio",
+    "text": "This error means the radio lost its uplink. To clear it, swap the network cable and check the port lights. If it comes back within 72 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-3946",
+    "title": "Error E-3946: radio",
+    "text": "This error means the radio lost its uplink. To clear it, swap the network cable and check the port lights. If it comes back within 4 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-3964",
+    "title": "Error E-3964: radio",
+    "text": "This error means the radio lost its uplink. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 48 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-3417",
+    "title": "Error E-3417: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, reset the unit to factory settings and restore its saved profile. If it comes back within 72 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-4731",
+    "title": "Error E-4731: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, reseat the ribbon cable behind the front panel. If it comes back within 48 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-7341",
+    "title": "Error E-7341: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 24 hours, open a ticket with the Network Operations team."
+  },
+  {
+    "id": "err-1374",
+    "title": "Error E-1374: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, replace the fuse on the main board with a 5 A fuse. If it comes back within 72 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-4371",
+    "title": "Error E-4371: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, power-cycle the unit and wait two minutes before reconnecting it. If it comes back within 48 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-4137",
+    "title": "Error E-4137: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, roll the firmware back one version from the admin page. If it comes back within 72 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-1347",
+    "title": "Error E-1347: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, reseat the ribbon cable behind the front panel. If it comes back within 72 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-7143",
+    "title": "Error E-7143: clock chip",
+    "text": "This error means the clock chip drifted out of sync. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 24 hours, open a ticket with the Hardware Engineering team."
+  },
+  {
+    "id": "err-5680",
+    "title": "Error E-5680: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 24 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-6580",
+    "title": "Error E-6580: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, swap the network cable and check the port lights. If it comes back within 72 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-6850",
+    "title": "Error E-6850: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, power-cycle the unit and wait two minutes before reconnecting it. If it comes back within 12 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-8605",
+    "title": "Error E-8605: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, power-cycle the unit and wait two minutes before reconnecting it. If it comes back within 4 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-6085",
+    "title": "Error E-6085: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, replace the fuse on the main board with a 5 A fuse. If it comes back within 72 hours, open a ticket with the Field Service team."
+  },
+  {
+    "id": "err-8506",
+    "title": "Error E-8506: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, replace the fuse on the main board with a 5 A fuse. If it comes back within 72 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "err-6058",
+    "title": "Error E-6058: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, reseat the ribbon cable behind the front panel. If it comes back within 4 hours, open a ticket with the Firmware team."
+  },
+  {
+    "id": "err-8560",
+    "title": "Error E-8560: tamper switch",
+    "text": "This error means the tamper switch reported an open case. To clear it, recalibrate it from the service menu under Diagnostics. If it comes back within 48 hours, open a ticket with the Logistics team."
+  },
+  {
+    "id": "policy-parental-leave",
+    "title": "Parental leave",
+    "text": "New parents may take twenty weeks away from work at full salary, starting any time in the first twelve months after a birth or adoption. The weeks can be split into at most three blocks. Tell your manager eight weeks before the first block starts."
+  },
+  {
+    "id": "policy-compassionate-leave",
+    "title": "Compassionate leave",
+    "text": "After the death of a close relative, staff receive five working days off without loss of salary. Up to ten further unpaid days can be added when the funeral is abroad."
+  },
+  {
+    "id": "policy-civic-duty",
+    "title": "Civic duty",
+    "text": "Employees summoned to serve on a jury keep their full salary for the whole period of service. Forward the summons to People Operations within three days of receiving it."
+  },
+  {
+    "id": "policy-sabbatical",
+    "title": "Sabbatical",
+    "text": "After seven years of continuous service you can take a sabbatical of up to three months. It is unpaid, but your role, benefits and seniority are kept."
+  },
+  {
+    "id": "policy-relocation",
+    "title": "Relocation support",
+    "text": "When the company asks you to move to another city, it covers removal costs and four weeks of temporary housing. Claims must be filed within ninety days of the move."
+  },
+  {
+    "id": "policy-learning-budget",
+    "title": "Learning budget",
+    "text": "Every employee has 1,500 euros a year for courses, books and conference tickets. Unused money does not roll over into the next year."
+  },
+  {
+    "id": "policy-mentoring",
+    "title": "Mentoring programme",
+    "text": "Engineers in their first year are paired with a senior mentor from another team. Pairs meet every two weeks for at least six months."
+  },
+  {
+    "id": "policy-overtime",
+    "title": "Overtime",
+    "text": "Hours worked beyond forty in a week are paid at one and a half times the normal rate, or taken later as time off in lieu. Overtime must be approved in advance by your manager."
+  },
+  {
+    "id": "policy-work-abroad",
+    "title": "Working from another country",
+    "text": "You may work from a country other than your contract country for up to thirty days a year. Longer stays need written approval from Legal because of tax rules."
+  },
+  {
+    "id": "policy-mileage",
+    "title": "Mileage",
+    "text": "Business trips in your own car are reimbursed at 0.30 euros per kilometre. Commuting between home and your usual office is never reimbursed."
+  },
+  {
+    "id": "policy-travel-meals",
+    "title": "Meals while travelling",
+    "text": "On business trips you can claim up to 45 euros a day for food. Alcohol is never covered."
+  },
+  {
+    "id": "policy-hotels",
+    "title": "Hotel bookings",
+    "text": "Hotels must be booked through the travel portal and may cost at most 160 euros a night in most cities. London, Paris and New York allow up to 260 euros."
+  },
+  {
+    "id": "policy-supplier-gifts",
+    "title": "Gifts and hospitality",
+    "text": "You may accept gifts from suppliers worth up to 50 euros. Anything above that must be declared to Compliance within a week and usually returned."
+  },
+  {
+    "id": "policy-password-manager",
+    "title": "Password manager",
+    "text": "Every employee must store work credentials in the company password manager. Writing them on paper or in notes apps is forbidden."
+  },
+  {
+    "id": "policy-phishing",
+    "title": "Reporting phishing",
+    "text": "Forward any suspicious email to the security inbox with the Report button and do not open its attachments. Security replies within one working hour."
+  },
+  {
+    "id": "policy-lost-devices",
+    "title": "Lost or stolen devices",
+    "text": "If a laptop or phone is lost or stolen, call the service desk at once so it can be wiped remotely. A police report is needed within 48 hours for insurance."
+  },
+  {
+    "id": "policy-visitors",
+    "title": "Visitors",
+    "text": "Guests must be registered at reception the day before and escorted at all times. They receive a red badge that is returned when they leave."
+  },
+  {
+    "id": "policy-clean-desk",
+    "title": "Clean desk",
+    "text": "At the end of each day, lock confidential papers in your pedestal and leave the desk empty. Cleaners remove anything left on desks on Fridays."
+  },
+  {
+    "id": "policy-software-purchases",
+    "title": "Buying software",
+    "text": "Software purchases above 5,000 euros a year need three quotes and approval from Procurement. Smaller purchases can be made with a team card."
+  },
+  {
+    "id": "policy-on-call-pay",
+    "title": "On-call pay",
+    "text": "Engineers on the on-call rota receive 200 euros for each week on call, plus normal overtime for any incident work outside office hours."
+  },
+  {
+    "id": "policy-referrals",
+    "title": "Employee referrals",
+    "text": "If someone you recommend is hired and stays six months, you receive a 2,000 euro bonus. Referrals for interns and contractors do not qualify."
+  },
+  {
+    "id": "policy-probation",
+    "title": "Probation",
+    "text": "New hires have a six-month probation period with a review at three months. During probation either side can end the contract with two weeks of notice."
+  },
+  {
+    "id": "policy-ticket-retention",
+    "title": "Customer data retention",
+    "text": "Customer support tickets are deleted three years after they are closed. Invoices are kept for ten years to meet tax law."
+  },
+  {
+    "id": "policy-adjustments",
+    "title": "Workplace adjustments",
+    "text": "Staff with a disability or long-term condition can request adjustments such as special equipment or flexible hours. People Operations replies within ten working days and the cost is covered centrally."
+  },
+  {
+    "id": "note-home-office-kit",
+    "title": "Home office kit",
+    "text": "Staff who work from home can order a monitor and a chair once a year. The kit stays company property and must be returned when you leave. Orders placed before the 10th are paid and shipped by the 20th."
+  },
+  {
+    "id": "note-family-day",
+    "title": "Family day",
+    "text": "Family day is held every June. Bring your family to the office and see how much time the robots in the lab save; slots pass quickly, so book early."
+  },
+  {
+    "id": "note-panel-series",
+    "title": "Panel discussion series",
+    "text": "Our monthly panel invites a citizen scientist or a guest speaker. The company keeps paying for snacks, and a trial run of the new format starts in March."
+  },
+  {
+    "id": "note-new-year-closure",
+    "title": "New Year closure",
+    "text": "During the extended break around New Year the office is closed; come back on January 3rd. We use the long quiet time to clean the kitchen."
+  },
+  {
+    "id": "note-desk-moves",
+    "title": "Desk moves",
+    "text": "Moving desks within the office? Facilities can help you move house plants and monitors. Transferred equipment must be tagged before the move."
+  },
+  {
+    "id": "note-gym",
+    "title": "Gym partnership",
+    "text": "Getting better at your fitness costs less with the gym partnership: each year you spend less on training, because staff pay 20 euros a month for unlimited sessions."
+  },
+  {
+    "id": "note-first-week",
+    "title": "Your first week",
+    "text": "When you are new, collect your laptop, guide card and badge on day one. An assigned colleague will show you the kitchen and the experienced barista."
+  },
+  {
+    "id": "note-step-challenge",
+    "title": "Step challenge",
+    "text": "Put in more effort this season: every normal week you walk 50,000 steps you earn extra raffle points, and more than three weeks earns a hoodie."
+  },
+  {
+    "id": "note-overseas-customers",
+    "title": "Overseas customers",
+    "text": "Overseas customers can do a free trial for a while. The job of the support desk is to answer them within a day, however long the queue."
+  },
+  {
+    "id": "note-car-park",
+    "title": "Car park rules",
+    "text": "Private vehicles park on level -2. Each km of the ring road is closed for work in May, so drive carefully and get back early."
+  },
+  {
+    "id": "note-client-lunch",
+    "title": "Client visits and lunch",
+    "text": "When a client comes to see you, book lunch or dinner in the canteen. We host at most two client groups per day on the road side of the building."
+  },
+  {
+    "id": "note-quiet-room",
+    "title": "Quiet room",
+    "text": "The quiet room on floor 3 is for focused work or a short sleep; book a room slot for at most one hour. Mind the trip hazard at the door and pay attention to the maximum of four people."
+  },
+  {
+    "id": "note-present-drive",
+    "title": "Holiday present drive",
+    "text": "Our holiday present drive collects toys for the children's hospital. A vendor sends the boxes, and you can keep the wrapping paper."
+  },
+  {
+    "id": "note-canteen-app",
+    "title": "Canteen app",
+    "text": "Save the date: login to the new canteen app opens on Monday. The chef will reveal the secrets of the winter menu, so save your spot."
+  },
+  {
+    "id": "note-train-tickets",
+    "title": "Train tickets",
+    "text": "Missing a train? Tell the travel desk who issued the ticket, and your computer-generated booking can be changed on the next train."
+  },
+  {
+    "id": "note-app-of-the-month",
+    "title": "App of the month",
+    "text": "Every month we pick an app worth trying. This month the subscription offer gives you multiple pricey features before paying anything."
+  },
+  {
+    "id": "note-bonus-quiz",
+    "title": "Bonus quiz",
+    "text": "Bonus quiz: who carried the oldest pager in the company? Seven days left to answer, and the winner gets a bonus day off."
+  },
+  {
+    "id": "note-charity-run",
+    "title": "Charity run",
+    "text": "Bring a friend to the charity run in September. Every runner from the company gets a reward medal and a free coffee."
+  },
+  {
+    "id": "note-coffee-trial",
+    "title": "New coffee machine",
+    "text": "The trial period of the new coffee machine starts when you start your week on Monday. It can be ended quickly if the beans run out."
+  },
+  {
+    "id": "note-help-desk-hours",
+    "title": "Help desk hours",
+    "text": "The help desk is open from 8 to 18. Old conversations about lunch orders are thrown away after a week, and we never throw away feedback."
+  },
+  {
+    "id": "note-chair-yoga",
+    "title": "Chair yoga",
+    "text": "Chair yoga is special: different times each week, a good fit for any health condition, and you can get a mat at reception."
+  },
+  {
+    "id": "note-night-shift",
+    "title": "Night shift parking",
+    "text": "When you go home at night after a late shift, use the workspace exit on level -1. The barrier opens until midnight."
+  },
+  {
+    "id": "notice-f1-0",
+    "title": "Floor 1 notice 1",
+    "text": "The floor 1 kitchen closes on Tuesday for a deep clean. Use the kitchen on floor 2 instead."
+  },
+  {
+    "id": "notice-f1-1",
+    "title": "Floor 1 notice 2",
+    "text": "The floor 1 kitchen closes on Wednesday for new flooring. Use the kitchen on floor 2 instead."
+  },
+  {
+    "id": "notice-f1-2",
+    "title": "Floor 1 notice 3",
+    "text": "The floor 1 kitchen closes on Thursday for a fire drill. Use the kitchen on floor 2 instead."
+  },
+  {
+    "id": "notice-f1-3",
+    "title": "Floor 1 notice 4",
+    "text": "The floor 1 kitchen closes on Monday for pipe repairs. Use the kitchen on floor 2 instead."
+  },
+  {
+    "id": "notice-f2-0",
+    "title": "Floor 2 notice 1",
+    "text": "The floor 2 kitchen closes on Wednesday for a deep clean. Use the kitchen on floor 3 instead."
+  },
+  {
+    "id": "notice-f2-1",
+    "title": "Floor 2 notice 2",
+    "text": "The floor 2 kitchen closes on Thursday for new flooring. Use the kitchen on floor 3 instead."
+  },
+  {
+    "id": "notice-f2-2",
+    "title": "Floor 2 notice 3",
+    "text": "The floor 2 kitchen closes on Monday for a fire drill. Use the kitchen on floor 3 instead."
+  },
+  {
+    "id": "notice-f2-3",
+    "title": "Floor 2 notice 4",
+    "text": "The floor 2 kitchen closes on Tuesday for pipe repairs. Use the kitchen on floor 3 instead."
+  },
+  {
+    "id": "notice-f3-0",
+    "title": "Floor 3 notice 1",
+    "text": "The floor 3 kitchen closes on Thursday for a deep clean. Use the kitchen on floor 4 instead."
+  },
+  {
+    "id": "notice-f3-1",
+    "title": "Floor 3 notice 2",
+    "text": "The floor 3 kitchen closes on Monday for new flooring. Use the kitchen on floor 4 instead."
+  },
+  {
+    "id": "notice-f3-2",
+    "title": "Floor 3 notice 3",
+    "text": "The floor 3 kitchen closes on Tuesday for a fire drill. Use the kitchen on floor 4 instead."
+  },
+  {
+    "id": "notice-f3-3",
+    "title": "Floor 3 notice 4",
+    "text": "The floor 3 kitchen closes on Wednesday for pipe repairs. Use the kitchen on floor 4 instead."
+  },
+  {
+    "id": "notice-f4-0",
+    "title": "Floor 4 notice 1",
+    "text": "The floor 4 kitchen closes on Monday for a deep clean. Use the kitchen on floor 1 instead."
+  },
+  {
+    "id": "notice-f4-1",
+    "title": "Floor 4 notice 2",
+    "text": "The floor 4 kitchen closes on Tuesday for new flooring. Use the kitchen on floor 1 instead."
+  },
+  {
+    "id": "notice-f4-2",
+    "title": "Floor 4 notice 3",
+    "text": "The floor 4 kitchen closes on Wednesday for a fire drill. Use the kitchen on floor 1 instead."
+  },
+  {
+    "id": "notice-f4-3",
+    "title": "Floor 4 notice 4",
+    "text": "The floor 4 kitchen closes on Thursday for pipe repairs. Use the kitchen on floor 1 instead."
+  }
+]

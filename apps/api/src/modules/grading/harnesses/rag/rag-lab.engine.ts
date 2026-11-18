@@ -15,7 +15,7 @@ import {
   parseR3Payload,
   parseR4Payload,
 } from './rag.payloads';
-import { chunkForR2, R2_SPLIT, retrieveForR2 } from './r2.grade';
+import { chunkForR2, contextForR2, R2_SPLIT } from './r2.grade';
 import {
   chunkForR4,
   type QueryRewriter,
@@ -26,9 +26,10 @@ import {
 } from './r4.grade';
 import { isR5Class, parseR5Payload, routeR5 } from './r5.grade';
 import { titleBoost } from './rerank';
-import { expandGoldSpan } from './rag.shared';
+import { goldOf } from './rag.shared';
 import {
-  chunkContainsSpan,
+  type Gold,
+  holdsGold,
   retrieveRanked,
   type RankedChunk,
 } from './retrieve';
@@ -170,6 +171,8 @@ export async function previewRagLabWithCorpus(
   /** R5: which class profile to route the question through. */
   queryClass: string | null = null,
   rewriter: QueryRewriter | null = null,
+  /** The exercise's prompt-token ceiling; packing exercises fill up to it. */
+  packBudget: number = Number.POSITIVE_INFINITY,
 ): Promise<RagLabPreview> {
   const archetype = ragLabArchetype(slug);
   if (archetype === 'sandbox') {
@@ -205,7 +208,7 @@ export async function previewRagLabWithCorpus(
       question,
     ]);
     retrieval = retrieverLabel(retriever.spec);
-    retrieved = retrieveForR2(question, retriever, parsed);
+    retrieved = contextForR2(question, retriever, parsed, packBudget).context;
   } else if (archetype === 'r3') {
     chunks = chunkCorpus(
       docs,
@@ -253,7 +256,7 @@ export async function previewRagLabWithCorpus(
     archetype === 'r2' || archetype === 'r5' ? `Context:\n${joined}` : joined,
   );
   const gold = publicGold
-    ? expandGoldSpan(docs, publicGold.goldDocId, publicGold.goldSpan)
+    ? goldOf(docs, publicGold.goldDocId, publicGold.goldSpan)
     : null;
   const retrievedHits = hitsToDto(retrieved, gold);
 
@@ -280,14 +283,14 @@ export async function previewRagLabWithCorpus(
   };
 }
 
-function hitsToDto(ranked: RankedChunk[], gold: string | null): RagLabHit[] {
+function hitsToDto(ranked: RankedChunk[], gold: Gold | null): RagLabHit[] {
   return ranked.map((row) => ({
     chunkId: row.chunk.id,
     docId: row.chunk.docId,
     title: row.chunk.title,
     score: row.score,
     text: row.chunk.text,
-    containsAnswer: gold ? chunkContainsSpan(row.chunk.text, gold) : null,
+    containsAnswer: gold ? holdsGold(row.chunk, gold) : null,
   }));
 }
 
@@ -346,6 +349,7 @@ export async function estimateRagLabWithCorpus(
   payload: unknown,
   items: RagLabPublicItem[],
   docs: CorpusDoc[],
+  packBudget: number = Number.POSITIVE_INFINITY,
 ): Promise<RagLabEstimate> {
   const rows: RagLabEstimateRow[] = [];
   let rewriteSkipped = false;
@@ -357,6 +361,8 @@ export async function estimateRagLabWithCorpus(
       docs,
       item.gold,
       item.queryClass ?? null,
+      null,
+      packBudget,
     );
     rewriteSkipped ||= preview.rewriteSkipped;
     rows.push({

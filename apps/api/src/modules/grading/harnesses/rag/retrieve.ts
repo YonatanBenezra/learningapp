@@ -152,6 +152,17 @@ export function retrieveTopK(
   return retrieveRanked(question, chunks, k).map((row) => row.chunk);
 }
 
+/**
+ * The answer a chunk must carry: the gold sentence, from the gold document.
+ * A knowledge base repeats boilerplate ("It carries a 24-month warranty"), so
+ * the same sentence in another document is not the answer.
+ */
+export type Gold = { docId: string; text: string };
+
+export function holdsGold(chunk: Chunk, gold: Gold): boolean {
+  return chunk.docId === gold.docId && chunkContainsSpan(chunk.text, gold.text);
+}
+
 export function chunkContainsSpan(
   chunkText: string,
   goldSpan: string,

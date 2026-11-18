@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { CorpusDoc } from '../modules/grading/harnesses/rag/chunking';
 import { EVAL_TAGS } from '../modules/grading/harnesses/rag/rag.shared';
@@ -11,7 +11,7 @@ import type {
 } from '../modules/grading/harnesses/rag/rag.types';
 import { runContentGrader } from './content-grader-runner';
 import { loadAllExerciseBundles } from './content-loader';
-import { loadPublishedSlugs } from './content-paths';
+import { corpusPathFor, loadPublishedSlugs } from './content-paths';
 
 const root = process.cwd();
 const norm = (text: string) => text.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -24,12 +24,7 @@ function readJson<T>(file: string): T {
 }
 
 function corpusOf(bundle: Bundle): CorpusDoc[] {
-  const own = path.join(bundle.dir, 'corpus.json');
-  return readJson<CorpusDoc[]>(
-    existsSync(own)
-      ? own
-      : path.join(root, 'content/corpora/internal-policy.json'),
-  );
+  return readJson<CorpusDoc[]>(corpusPathFor(bundle.dir, bundle.meta));
 }
 
 /** Published RAG exercises whose hidden set is a question list. */
@@ -60,6 +55,20 @@ describe('RAG eval invariants', () => {
   it('split and tags are current (re-run scripts/content/tag-rag-eval.mjs)', () => {
     expect(() =>
       execFileSync('node', ['scripts/content/tag-rag-eval.mjs', '--check'], {
+        cwd: root,
+        stdio: 'pipe',
+      }),
+    ).not.toThrow();
+  });
+
+  it.each([
+    'build-support-kb.mjs',
+    'build-policy-history.mjs',
+    'build-help-center.mjs',
+    'build-team-wiki.mjs',
+  ])('generated corpora are current (re-run scripts/content/%s)', (script) => {
+    expect(() =>
+      execFileSync('node', [`scripts/content/${script}`, '--check'], {
         cwd: root,
         stdio: 'pipe',
       }),

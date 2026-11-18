@@ -353,6 +353,71 @@ Grade হবে দুটো hidden suite-এ: attack suite-এর ≥ X% আট
 | বহুভাষিক embedding (R6) | ⏭ Phase D। bge-small শুধু ইংরেজি। বাংলা corpus এলে multilingual model pin করতে হবে। |
 | Embedding index আগে থেকে বানানো | ⏭ লাগেনি। Runtime-এ embed করে memory-তে cache রাখা হয়। পুরো content check (model load সহ) ~১৩ সেকেন্ডে চলে। Corpus ১০ হাজার chunk ছাড়ালে pgvector লাগবে। |
 
+### Phase D-এর পরিকল্পনা আর অবস্থা (২০২৬-১১-১৮)
+
+Phase D ধাপে ধাপে হবে। প্রতিটা ধাপে একটা clone exercise-এর slug রেখে content নতুন mechanic দিয়ে বদলানো হবে (`version` বাড়িয়ে, যাতে পুরনো attempt-এর ইতিহাস থাকে)। প্রতিটা ধাপে CI-তে "one mechanic" test যোগ হবে: mechanic এড়িয়ে যাওয়া সব config fail করবে, reference pass করবে (`rag-mechanics.spec.ts`)।
+
+| ধাপ | কাজ | Slug | অবস্থা |
+|---|---|---|---|
+| D1 | নতুন corpus `support-kb` (১৯০টা doc) আর **hybrid search** (R2b) | `rag-018-retriever-run` | ✅ |
+| D2 | **Metadata filter / freshness** (R2c): একই policy-র পুরনো আর নতুন version | `rag-008-spend-cap` | ✅ |
+| D3 | **আসল reranker** (R2d): title বিভ্রান্ত করে এমন corpus, cross-encoder; আর **context packing** (R2e) | `rag-021-rank-boost`, `rag-022-score-gate` | ✅ |
+| D4 | **Query rewrite** (সংক্ষিপ্ত রূপ, বানান ভুল) আর **multi-hop** (R4b) | `rag-028`, `rag-030` | ⏳ |
+| D5 | **Overlap** (R1b), **structure-aware split** (R1c, markdown আর table), **refusal calibration** (R3b) | `rag-006`, `rag-010`, `rag-027` | ⏳ |
+| D6 | **Learner-এর বানানো router** (R5), **বাংলা + ইংরেজি** (R6, multilingual embedding), সব exercise জুড়ে transfer test | `rag-031`, নতুন slug | ⏳ |
+
+**D1-এ যা হয়েছে:**
+- **Corpus `support-kb`:** device-support টিমের knowledge base। ৮০টা product sheet আর ৪৮টা error article, যাদের id-তে শুধু অঙ্কের ক্রম আলাদা (RT-4712, RT-4127…), আর model number থাকে শুধু title-এ। এর সাথে ২৪টা policy, ২২টা note যেগুলো মানুষের প্রশ্নের শব্দ ব্যবহার করে, আর ১৬টা notice। Corpus বানায় `scripts/content/build-support-kb.mjs` (seed দেওয়া, তাই একই ফল)। CI-তে `--check` দিয়ে যাচাই হয় যে corpus আর script মিলে আছে।
+- **Exercise (`rag-018`, version 2) "Hybrid Search for the Support Desk":** knob হলো `retrievalMode`, `hybridAlpha` আর `topK`। Hidden set এই exercise-এর নিজের: ২৮টা id-lookup প্রশ্ন আর ২১টা অন্য ভাষায় লেখা প্রশ্ন। Gate: recall@k ≥ ০.৯০ আর token ≤ ২৫০।
+- **পুরো config space চালিয়ে দেখা:**
+  - শুধু BM25 কখনো pass করে না: অন্য ভাষায় লেখা প্রশ্নে k=১০-এও ১০/২১।
+  - শুধু dense কখনো pass করে না: id প্রশ্নে k=১০-এও ২১/২৮।
+  - Hybrid pass করে alpha ০.৪–০.৮ আর k ২–৪-এ। Reference (alpha ০.৬, k=৩) recall ০.৯৬।
+  - Scorecard-এর tag breakdown-এ সরাসরি দেখা যায় কোনটা miss হলো, যেমন dense-এ "id-lookup ১৪/২৮", BM25-এ "paraphrase ৩/২১"।
+- **Engine-এ যা বদলেছে:**
+  - Gold এখন document-সহ (`{docId, text}`)। ফলে অন্য doc-এ একই boilerplate বাক্য থাকলে সেটা আর উত্তর হিসেবে গোনা হয় না।
+  - `corpusFile`-এ নাম দিয়ে corpus বলা যায় (`content/corpora/<name>.json`)।
+  - নতুন tag `id-lookup`।
+  - R2-তে `rerank` আর `chunkSize` না দিলে default বসে।
+  - Submission validation এখন ভগ্নাংশের সংখ্যা (`number`) বোঝে।
+  - Web-এ hybrid pipeline-এর diagram আর alpha-র slider যোগ হয়েছে।
+
+**D2-এ যা হয়েছে:**
+- **Corpus `policy-history` (৭৫টা doc):** ২৪টা policy, প্রতিটার সব version রাখা আছে: ৩১টা superseded, ২৪টা current, ১০টা অনুমোদন-না-পাওয়া draft, আর ১০টা notice। Version-গুলো প্রায় একই রকম পড়ে, শুধু বদলানো সংখ্যা আর এক-দুটো লাইন আলাদা। Draft-এর শুরুতে policy-র নাম থাকে, তাই BM25-এ সেগুলো ভালো rank পায়। প্রতিটা doc-এ metadata আছে: `family`, `version`, `status` আর `effective`। Corpus বানায় `scripts/content/build-policy-history.mjs`, CI-তে `--check` হয়।
+- **Exercise (`rag-008`, version 2) "Current Policies Only":** knob তিনটা: `statusFilter` (`none` / `exclude-superseded` / `current-only`), `filterStage` (`pre` / `post`) আর `topK`। Gate: recall ≥ ০.৯০, **stale context rate ≤ ০.০৫** (একই policy-র অন্য version context-এ এলে stale), আর token ≤ ১২০।
+- **পুরো config space চালিয়ে দেখা:**
+  - Filter ছাড়া কখনো pass করে না: stale ০.৮৫–১.০০।
+  - `exclude-superseded` কখনো pass করে না: draft ঢুকে যায়, stale ০.১৩–০.৪৫।
+  - `current-only` + `pre` pass করে k ১–৩-এ।
+  - `current-only` + `post` pass করে শুধু k ৪–৮-এ। এটাই oversampling-এর শিক্ষা: post-filter আগে top-k নেয়, তারপর ফেলে দেয়, তাই k=১–৩-এ context খালি হয়ে যায়।
+- **Engine-এ যা বদলেছে:**
+  - `CorpusDoc`/`Chunk`-এ metadata যোগ হয়েছে।
+  - R2-তে status filter আর pre/post stage।
+  - নতুন metric `stale_context_rate` (gate দেওয়া থাকলে enforce হয়)।
+  - নতুন miss কারণ `post-filter-dropped-results` আর failure class `stale-version-in-context`।
+  - নতুন tag `stale-version`।
+  - Web: Corpus tab-এ metadata badge, filter pipeline-এর diagram, আর field-এর ব্যাখ্যা।
+
+**D3-এ যা হয়েছে:**
+- **Corpus `help-center` (৮৮টা doc):** একটা task-management app-এর help center, ২৪টা topic।
+  - প্রতিটা topic-এ একটা article আসলে উত্তর দেয়: সাধারণ title, নির্দিষ্ট তথ্য।
+  - সাথে দুটো "bait" article: blog teaser বা webinar promo। এদের title আর text-এ গ্রাহকের প্রশ্নের শব্দগুলোই বারবার আসে, কিন্তু কোনো তথ্য থাকে না।
+  - এর বাইরে ১৬টা filler article।
+- **Exercise (`rag-021`, version 2) "A Reranker That Reads":** reranker বেছে নিতে হয় (`none` / `title-boost` / `mmr` / `cross-encoder`), সাথে candidate window। Query rewrite বন্ধ (model call ০)। Gate: nDCG gain ≥ ০.১৮।
+- **rag-021-এর পুরো config space চালিয়ে দেখা:**
+  - Title boost সব window-এ ক্ষতি করে (gain −০.০৭ থেকে −০.১৬৫), কারণ bait title-ই প্রশ্নের সাথে মেলে।
+  - MMR প্রায় কিছুই করে না (≤ ০.০৩)।
+  - Cross-encoder window ৩০–৫০-এ pass করে (০.১৯৭–০.২০৯)। Window ছোট হলে fail করে, আর scorecard-এ `gold-outside-rerank-pool` দেখায়।
+- **Corpus `team-wiki` (৯৬টা doc):** প্রতিটা handbook-এর index page প্রতিটা team নিজের space-এ copy করে এক-দুটো শব্দ বদলেছে। Index-এ সার্চের শব্দ আছে, উত্তর নেই। ফলে উত্তরের page-এর আগে পাঁচটা প্রায় একই copy আসে।
+- **Exercise (`rag-022`, version 2) "Pack the Context":** archetype R4 থেকে R2 করা হয়েছে। Knob: `topK`, `dedupe` (`none` / `exact` / `near`) আর `dedupeThreshold`। Context pack হয় token budget (১৩০) পর্যন্ত, rank অনুযায়ী।
+- **rag-022-এর পুরো config space চালিয়ে দেখা:**
+  - Dedupe ছাড়া কখনো pass করে না (recall ≤ ০.৭১)।
+  - `exact` কখনো pass করে না, কারণ copy-গুলো এক শব্দে আলাদা।
+  - Threshold ০.৯৫ কখনো pass করে না।
+  - `near` আর threshold ০.২–০.৮ pass করে।
+  - Miss-এর কারণ আলাদা করে দেখায়: `packed-out-by-budget` বা `deduped-away`।
+- **Engine:** R2-তে নতুন packing ধাপ (`contextForR2`: dedupe, তারপর budget পর্যন্ত ভরা), যা lab-এও একই budget দিয়ে চলে। Lab-এর web-এ packing আর rewrite-ছাড়া rerank pipeline-এর diagram, আর নতুন miss কারণের ব্যাখ্যা।
+
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে
 
 1. **Grading-এ আসল model:** প্রতিটা R3 attempt-এ ~৩০টা প্রশ্ন, মোটামুটি ২০–২৫ হাজার token। Cache থাকায় একই submission আবার দিলে খরচ শূন্য। এই খরচ মেনে নেওয়া যাবে, নাকি R3 simulated থাকবে আর UI-তে স্পষ্ট লেবেল দেওয়া হবে?

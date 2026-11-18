@@ -6,13 +6,13 @@ import {
   costEvidence,
   declaresGate,
   EvalLedger,
-  expandGoldSpan,
+  goldOf,
   gateThreshold,
   publicGold,
   publicTraceItems,
   toTraceQuery,
 } from './rag.shared';
-import { chunkContainsSpan } from './retrieve';
+import { type Gold, holdsGold } from './retrieve';
 import { bm25Retriever, type Retriever } from './retrievers';
 import type {
   GateResult,
@@ -83,13 +83,9 @@ function chunkCache(docs: CorpusDoc[]) {
   };
 }
 
-/** Gold text for an item: the containing sentence, or the span itself when it covers several. */
-function goldFor(docs: CorpusDoc[], item: RoutedItem): string {
-  return expandGoldSpan(
-    docs,
-    item.goldDocId as string,
-    item.goldSpan as string,
-  );
+/** Gold for an item: the containing sentence (or the span itself when it covers several), in its document. */
+function goldFor(docs: CorpusDoc[], item: RoutedItem): Gold {
+  return goldOf(docs, item.goldDocId as string, item.goldSpan as string);
 }
 
 export function routeR5(
@@ -145,7 +141,7 @@ export function gradeR5(
     perQuery.push({ tokens: used, chunks: ranked.length });
     totals[cls] += 1;
     const gold = goldFor(docs, item);
-    const hit = ranked.some((row) => chunkContainsSpan(row.chunk.text, gold));
+    const hit = ranked.some((row) => holdsGold(row.chunk, gold));
     if (!hit) {
       const cause = diagnoseR2Miss(item.question, retriever, profile, gold);
       // Per-class cause, e.g. "procedural:gold-split-by-chunking".
@@ -158,7 +154,7 @@ export function gradeR5(
     } else if (ledger.reveal(item)) {
       misses.push({
         question: item.question,
-        goldSpan: gold,
+        goldSpan: gold.text,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
         note: `${cls} profile missed`,
       });

@@ -54,6 +54,7 @@ import { gradeSandboxRetriever } from '../modules/grading/harnesses/sandbox/sand
 import { parseSandboxPayload } from '../modules/grading/harnesses/sandbox/sandbox.payloads';
 import { runLocalPython } from '../modules/sandbox/local-python';
 import type { ExerciseContentBundle } from './content-loader';
+import { corpusPathFor } from './content-paths';
 
 /** Identity the offline content checks grade red team levels as. */
 export const CONTENT_CHECK_USER = 'content-check';
@@ -257,11 +258,9 @@ async function loadCorpus(
   dir: string,
   meta: { corpusFile?: string },
 ): Promise<CorpusDoc[]> {
-  const corpusPath =
-    meta.corpusFile === 'shared'
-      ? path.join(process.cwd(), 'content/corpora/internal-policy.json')
-      : path.join(dir, 'corpus.json');
-  return JSON.parse(await readFile(corpusPath, 'utf8')) as CorpusDoc[];
+  return JSON.parse(
+    await readFile(corpusPathFor(dir, meta), 'utf8'),
+  ) as CorpusDoc[];
 }
 
 function contentRunId(bundle: ExerciseContentBundle): string {

@@ -138,7 +138,10 @@ export async function gradeR4(
         ? null
         : diagnoseRetrievalMiss({
             chunks,
-            gold: item.goldSpan as string,
+            gold: {
+              docId: item.goldDocId as string,
+              text: item.goldSpan as string,
+            },
             fullRanking: retrieveByTermCount(query, chunks, chunks.length),
             k: K,
             pool: payload.reranker === 'none' ? null : window,

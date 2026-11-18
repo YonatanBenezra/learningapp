@@ -321,6 +321,18 @@ export function RagLabPanel({ slug, payload, gates }: RagLabPanelProps) {
                     {doc.id} · {doc.text.length} chars
                   </span>
                 </div>
+                {doc.meta ? (
+                  <p className="lp-rag-lab-doc-meta" aria-label="Document metadata">
+                    {doc.meta.status ? (
+                      <span className={`lp-rag-lab-doc-status is-${doc.meta.status}`}>
+                        {doc.meta.status}
+                      </span>
+                    ) : null}
+                    {doc.meta.family ? <span>family {doc.meta.family}</span> : null}
+                    {doc.meta.version ? <span>version {doc.meta.version}</span> : null}
+                    {doc.meta.effective ? <span>effective {doc.meta.effective}</span> : null}
+                  </p>
+                ) : null}
                 <p>{doc.text}</p>
               </li>
             ))}

@@ -1,13 +1,13 @@
 import { countTokens } from '../../gateway/pricing';
 import { chunkCorpus, type CorpusDoc } from './chunking';
-import { chunkContainsSpan, retrieveRanked } from './retrieve';
+import { holdsGold, retrieveRanked } from './retrieve';
 import {
   answerableHidden,
   costEvidence,
   declaresGate,
   diagnoseRetrievalMiss,
   EvalLedger,
-  expandGoldSpan,
+  goldOf,
   gateThreshold,
   publicGold,
   publicTraceItems,
@@ -64,12 +64,12 @@ export function gradeR1(
     );
     contextTokenSum += tokens;
     perQuery.push({ tokens, chunks: ranked.length });
-    const gold = expandGoldSpan(
+    const gold = goldOf(
       docs,
       item.goldDocId as string,
       item.goldSpan as string,
     );
-    const hit = ranked.some((row) => chunkContainsSpan(row.chunk.text, gold));
+    const hit = ranked.some((row) => holdsGold(row.chunk, gold));
     ledger.record(
       item,
       hit,
@@ -88,7 +88,7 @@ export function gradeR1(
     } else if (ledger.reveal(item)) {
       misses.push({
         question: item.question,
-        goldSpan: gold,
+        goldSpan: gold.text,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
       });
       failingQueries.push(

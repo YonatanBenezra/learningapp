@@ -1,0 +1,482 @@
+[
+  {
+    "id": "on-call-handbook",
+    "title": "On-call handbook",
+    "text": "On-call handbook index for every team. Linked pages explain when the on-call handover happens, and what the outgoing engineer posts at handover. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "on-call-handbook-payments",
+    "title": "On-call handbook (Payments)",
+    "text": "On-call handbook index for the Payments team. Linked pages explain when the on-call handover happens, and what the outgoing engineer posts at handover. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "on-call-handbook-search",
+    "title": "On-call handbook (Search)",
+    "text": "On-call handbook index for every team. Linked pages explain when the on-call handover happens, and what the outgoing engineer posts at handover. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "on-call-handbook-mobile",
+    "title": "On-call handbook (Mobile)",
+    "text": "On-call handbook index for the Mobile team. Linked pages explain when the on-call handover happens, and what the outgoing engineer posts at handover. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "on-call-handbook-platform",
+    "title": "On-call handbook (Platform)",
+    "text": "On-call handbook index for every team. Linked pages explain when the on-call handover happens, and what the outgoing engineer posts at handover. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "on-call-page",
+    "title": "Weekly on-call handover",
+    "text": "The handover happens every Monday at 10:00 in the #oncall channel. The outgoing engineer posts every open incident and every silenced alert."
+  },
+  {
+    "id": "deploys-handbook",
+    "title": "Deployment handbook",
+    "text": "Deployment handbook index for every team. Linked pages explain whether you can deploy to production on a Friday afternoon, and what may be released during the December freeze. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "deploys-handbook-payments",
+    "title": "Deployment handbook (Payments)",
+    "text": "Deployment handbook index for the Payments team. Linked pages explain whether you can deploy to production on a Friday afternoon, and what may be released during the December freeze. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "deploys-handbook-search",
+    "title": "Deployment handbook (Search)",
+    "text": "Deployment handbook index for every team. Linked pages explain whether you can deploy to production on a Friday afternoon, and what may be released during the December freeze. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "deploys-handbook-mobile",
+    "title": "Deployment handbook (Mobile)",
+    "text": "Deployment handbook index for the Mobile team. Linked pages explain whether you can deploy to production on a Friday afternoon, and what may be released during the December freeze. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "deploys-handbook-platform",
+    "title": "Deployment handbook (Platform)",
+    "text": "Deployment handbook index for every team. Linked pages explain whether you can deploy to production on a Friday afternoon, and what may be released during the December freeze. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "deploys-page",
+    "title": "Release freeze calendar",
+    "text": "No production deploys go out after 15:00 on Fridays. During the December freeze only rollbacks and security fixes are released."
+  },
+  {
+    "id": "code-review-handbook",
+    "title": "Code review handbook",
+    "text": "Code review handbook index for every team. Linked pages explain how many approvals a billing pull request needs before merge, and how quickly reviewers respond. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "code-review-handbook-payments",
+    "title": "Code review handbook (Payments)",
+    "text": "Code review handbook index for the Payments team. Linked pages explain how many approvals a billing pull request needs before merge, and how quickly reviewers respond. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "code-review-handbook-search",
+    "title": "Code review handbook (Search)",
+    "text": "Code review handbook index for every team. Linked pages explain how many approvals a billing pull request needs before merge, and how quickly reviewers respond. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "code-review-handbook-mobile",
+    "title": "Code review handbook (Mobile)",
+    "text": "Code review handbook index for the Mobile team. Linked pages explain how many approvals a billing pull request needs before merge, and how quickly reviewers respond. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "code-review-handbook-platform",
+    "title": "Code review handbook (Platform)",
+    "text": "Code review handbook index for every team. Linked pages explain how many approvals a billing pull request needs before merge, and how quickly reviewers respond. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "code-review-page",
+    "title": "Review turnaround",
+    "text": "A pull request needs two approvals before merge when it touches billing code. Reviewers should answer within one working day."
+  },
+  {
+    "id": "incidents-handbook",
+    "title": "Incident handbook",
+    "text": "Incident handbook index for every team. Linked pages explain when a severity 1 postmortem is due, and how often the status page is updated during an incident. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "incidents-handbook-payments",
+    "title": "Incident handbook (Payments)",
+    "text": "Incident handbook index for the Payments team. Linked pages explain when a severity 1 postmortem is due, and how often the status page is updated during an incident. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "incidents-handbook-search",
+    "title": "Incident handbook (Search)",
+    "text": "Incident handbook index for every team. Linked pages explain when a severity 1 postmortem is due, and how often the status page is updated during an incident. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "incidents-handbook-mobile",
+    "title": "Incident handbook (Mobile)",
+    "text": "Incident handbook index for the Mobile team. Linked pages explain when a severity 1 postmortem is due, and how often the status page is updated during an incident. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "incidents-handbook-platform",
+    "title": "Incident handbook (Platform)",
+    "text": "Incident handbook index for every team. Linked pages explain when a severity 1 postmortem is due, and how often the status page is updated during an incident. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "incidents-page",
+    "title": "Postmortem deadlines",
+    "text": "A postmortem is due within five working days of a severity 1 incident. The status page is updated every 30 minutes until the incident is resolved."
+  },
+  {
+    "id": "access-handbook",
+    "title": "Access handbook",
+    "text": "Access handbook index for every team. Linked pages explain how long read access to the production database lasts, and who approves write access. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "access-handbook-payments",
+    "title": "Access handbook (Payments)",
+    "text": "Access handbook index for the Payments team. Linked pages explain how long read access to the production database lasts, and who approves write access. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "access-handbook-search",
+    "title": "Access handbook (Search)",
+    "text": "Access handbook index for every team. Linked pages explain how long read access to the production database lasts, and who approves write access. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "access-handbook-mobile",
+    "title": "Access handbook (Mobile)",
+    "text": "Access handbook index for the Mobile team. Linked pages explain how long read access to the production database lasts, and who approves write access. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "access-handbook-platform",
+    "title": "Access handbook (Platform)",
+    "text": "Access handbook index for every team. Linked pages explain how long read access to the production database lasts, and who approves write access. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "access-page",
+    "title": "Production database access",
+    "text": "Read access to the production database expires after 8 hours. Write access needs a ticket approved by the database owner."
+  },
+  {
+    "id": "testing-handbook",
+    "title": "Testing handbook",
+    "text": "Testing handbook index for every team. Linked pages explain when a flaky test is quarantined, and what coverage new code must keep. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "testing-handbook-payments",
+    "title": "Testing handbook (Payments)",
+    "text": "Testing handbook index for the Payments team. Linked pages explain when a flaky test is quarantined, and what coverage new code must keep. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "testing-handbook-search",
+    "title": "Testing handbook (Search)",
+    "text": "Testing handbook index for every team. Linked pages explain when a flaky test is quarantined, and what coverage new code must keep. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "testing-handbook-mobile",
+    "title": "Testing handbook (Mobile)",
+    "text": "Testing handbook index for the Mobile team. Linked pages explain when a flaky test is quarantined, and what coverage new code must keep. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "testing-handbook-platform",
+    "title": "Testing handbook (Platform)",
+    "text": "Testing handbook index for every team. Linked pages explain when a flaky test is quarantined, and what coverage new code must keep. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "testing-page",
+    "title": "Flaky test policy",
+    "text": "A test that fails twice in a week without a code change is quarantined. New code must keep line coverage at or above 80 percent."
+  },
+  {
+    "id": "secrets-handbook",
+    "title": "Secrets handbook",
+    "text": "Secrets handbook index for every team. Linked pages explain how often service keys are rotated, and how fast a leaked key must be rotated. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "secrets-handbook-payments",
+    "title": "Secrets handbook (Payments)",
+    "text": "Secrets handbook index for the Payments team. Linked pages explain how often service keys are rotated, and how fast a leaked key must be rotated. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "secrets-handbook-search",
+    "title": "Secrets handbook (Search)",
+    "text": "Secrets handbook index for every team. Linked pages explain how often service keys are rotated, and how fast a leaked key must be rotated. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "secrets-handbook-mobile",
+    "title": "Secrets handbook (Mobile)",
+    "text": "Secrets handbook index for the Mobile team. Linked pages explain how often service keys are rotated, and how fast a leaked key must be rotated. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "secrets-handbook-platform",
+    "title": "Secrets handbook (Platform)",
+    "text": "Secrets handbook index for every team. Linked pages explain how often service keys are rotated, and how fast a leaked key must be rotated. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "secrets-page",
+    "title": "Key rotation schedule",
+    "text": "Service keys in the vault are rotated every 90 days. A leaked key must be rotated within one hour."
+  },
+  {
+    "id": "cloud-costs-handbook",
+    "title": "Cloud cost handbook",
+    "text": "Cloud cost handbook index for every team. Linked pages explain when idle development instances are stopped, and when a team gets a cloud budget alert. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "cloud-costs-handbook-payments",
+    "title": "Cloud cost handbook (Payments)",
+    "text": "Cloud cost handbook index for the Payments team. Linked pages explain when idle development instances are stopped, and when a team gets a cloud budget alert. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "cloud-costs-handbook-search",
+    "title": "Cloud cost handbook (Search)",
+    "text": "Cloud cost handbook index for every team. Linked pages explain when idle development instances are stopped, and when a team gets a cloud budget alert. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "cloud-costs-handbook-mobile",
+    "title": "Cloud cost handbook (Mobile)",
+    "text": "Cloud cost handbook index for the Mobile team. Linked pages explain when idle development instances are stopped, and when a team gets a cloud budget alert. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "cloud-costs-handbook-platform",
+    "title": "Cloud cost handbook (Platform)",
+    "text": "Cloud cost handbook index for every team. Linked pages explain when idle development instances are stopped, and when a team gets a cloud budget alert. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "cloud-costs-page",
+    "title": "Idle instance cleanup",
+    "text": "Development instances idle for 7 days are stopped automatically. Teams get an alert when they pass 80 percent of the monthly cloud budget."
+  },
+  {
+    "id": "logging-handbook",
+    "title": "Logging handbook",
+    "text": "Logging handbook index for every team. Linked pages explain how long application logs are kept, and how long debug logging may stay on in production. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "logging-handbook-payments",
+    "title": "Logging handbook (Payments)",
+    "text": "Logging handbook index for the Payments team. Linked pages explain how long application logs are kept, and how long debug logging may stay on in production. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "logging-handbook-search",
+    "title": "Logging handbook (Search)",
+    "text": "Logging handbook index for every team. Linked pages explain how long application logs are kept, and how long debug logging may stay on in production. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "logging-handbook-mobile",
+    "title": "Logging handbook (Mobile)",
+    "text": "Logging handbook index for the Mobile team. Linked pages explain how long application logs are kept, and how long debug logging may stay on in production. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "logging-handbook-platform",
+    "title": "Logging handbook (Platform)",
+    "text": "Logging handbook index for every team. Linked pages explain how long application logs are kept, and how long debug logging may stay on in production. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "logging-page",
+    "title": "Log retention",
+    "text": "Application logs are kept for 30 days and audit logs for one year. Debug logging in production must be switched off within 24 hours."
+  },
+  {
+    "id": "interviews-handbook",
+    "title": "Hiring handbook",
+    "text": "Hiring handbook index for every team. Linked pages explain how soon interview feedback must be submitted, and how many interviews a candidate has. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "interviews-handbook-payments",
+    "title": "Hiring handbook (Payments)",
+    "text": "Hiring handbook index for the Payments team. Linked pages explain how soon interview feedback must be submitted, and how many interviews a candidate has. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "interviews-handbook-search",
+    "title": "Hiring handbook (Search)",
+    "text": "Hiring handbook index for every team. Linked pages explain how soon interview feedback must be submitted, and how many interviews a candidate has. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "interviews-handbook-mobile",
+    "title": "Hiring handbook (Mobile)",
+    "text": "Hiring handbook index for the Mobile team. Linked pages explain how soon interview feedback must be submitted, and how many interviews a candidate has. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "interviews-handbook-platform",
+    "title": "Hiring handbook (Platform)",
+    "text": "Hiring handbook index for every team. Linked pages explain how soon interview feedback must be submitted, and how many interviews a candidate has. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "interviews-page",
+    "title": "Interview feedback rules",
+    "text": "Interviewers submit written feedback within 24 hours of the interview. A candidate needs four interviews, including one with a hiring manager."
+  },
+  {
+    "id": "laptops-handbook",
+    "title": "Equipment handbook",
+    "text": "Equipment handbook index for every team. Linked pages explain how much memory engineering laptops have, and how quickly a broken laptop is replaced. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "laptops-handbook-payments",
+    "title": "Equipment handbook (Payments)",
+    "text": "Equipment handbook index for the Payments team. Linked pages explain how much memory engineering laptops have, and how quickly a broken laptop is replaced. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "laptops-handbook-search",
+    "title": "Equipment handbook (Search)",
+    "text": "Equipment handbook index for every team. Linked pages explain how much memory engineering laptops have, and how quickly a broken laptop is replaced. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "laptops-handbook-mobile",
+    "title": "Equipment handbook (Mobile)",
+    "text": "Equipment handbook index for the Mobile team. Linked pages explain how much memory engineering laptops have, and how quickly a broken laptop is replaced. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "laptops-handbook-platform",
+    "title": "Equipment handbook (Platform)",
+    "text": "Equipment handbook index for every team. Linked pages explain how much memory engineering laptops have, and how quickly a broken laptop is replaced. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "laptops-page",
+    "title": "Engineering laptop specs",
+    "text": "Engineers get a laptop with 32 GB of memory. A broken laptop is replaced within two working days."
+  },
+  {
+    "id": "docs-handbook",
+    "title": "Documentation handbook",
+    "text": "Documentation handbook index for every team. Linked pages explain what every production service must have, and how often runbooks are reviewed. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "docs-handbook-payments",
+    "title": "Documentation handbook (Payments)",
+    "text": "Documentation handbook index for the Payments team. Linked pages explain what every production service must have, and how often runbooks are reviewed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "docs-handbook-search",
+    "title": "Documentation handbook (Search)",
+    "text": "Documentation handbook index for every team. Linked pages explain what every production service must have, and how often runbooks are reviewed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "docs-handbook-mobile",
+    "title": "Documentation handbook (Mobile)",
+    "text": "Documentation handbook index for the Mobile team. Linked pages explain what every production service must have, and how often runbooks are reviewed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "docs-handbook-platform",
+    "title": "Documentation handbook (Platform)",
+    "text": "Documentation handbook index for every team. Linked pages explain what every production service must have, and how often runbooks are reviewed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "docs-page",
+    "title": "Runbook ownership",
+    "text": "Every production service needs a runbook with a named owner. Runbooks are reviewed every six months."
+  },
+  {
+    "id": "dependencies-handbook",
+    "title": "Dependency handbook",
+    "text": "Dependency handbook index for every team. Linked pages explain how fast critical library vulnerabilities are patched, and when non-critical dependency upgrades are done. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "dependencies-handbook-payments",
+    "title": "Dependency handbook (Payments)",
+    "text": "Dependency handbook index for the Payments team. Linked pages explain how fast critical library vulnerabilities are patched, and when non-critical dependency upgrades are done. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "dependencies-handbook-search",
+    "title": "Dependency handbook (Search)",
+    "text": "Dependency handbook index for every team. Linked pages explain how fast critical library vulnerabilities are patched, and when non-critical dependency upgrades are done. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "dependencies-handbook-mobile",
+    "title": "Dependency handbook (Mobile)",
+    "text": "Dependency handbook index for the Mobile team. Linked pages explain how fast critical library vulnerabilities are patched, and when non-critical dependency upgrades are done. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "dependencies-handbook-platform",
+    "title": "Dependency handbook (Platform)",
+    "text": "Dependency handbook index for every team. Linked pages explain how fast critical library vulnerabilities are patched, and when non-critical dependency upgrades are done. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "dependencies-page",
+    "title": "Vulnerability patch windows",
+    "text": "Critical library vulnerabilities are patched within 72 hours. Other dependency upgrades are batched into the monthly upgrade day."
+  },
+  {
+    "id": "data-requests-handbook",
+    "title": "Data handbook",
+    "text": "Data handbook index for every team. Linked pages explain how long we have to answer a customer data export request, and how quickly deletion requests are completed. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "data-requests-handbook-payments",
+    "title": "Data handbook (Payments)",
+    "text": "Data handbook index for the Payments team. Linked pages explain how long we have to answer a customer data export request, and how quickly deletion requests are completed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "data-requests-handbook-search",
+    "title": "Data handbook (Search)",
+    "text": "Data handbook index for every team. Linked pages explain how long we have to answer a customer data export request, and how quickly deletion requests are completed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "data-requests-handbook-mobile",
+    "title": "Data handbook (Mobile)",
+    "text": "Data handbook index for the Mobile team. Linked pages explain how long we have to answer a customer data export request, and how quickly deletion requests are completed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "data-requests-handbook-platform",
+    "title": "Data handbook (Platform)",
+    "text": "Data handbook index for every team. Linked pages explain how long we have to answer a customer data export request, and how quickly deletion requests are completed. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "data-requests-page",
+    "title": "Customer data requests",
+    "text": "A customer data export request must be answered within 30 days. Deletion requests are completed within 14 days."
+  },
+  {
+    "id": "meetings-handbook",
+    "title": "Meetings handbook",
+    "text": "Meetings handbook index for every team. Linked pages explain which day has no meetings for engineers, and how long a standup may last. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "meetings-handbook-payments",
+    "title": "Meetings handbook (Payments)",
+    "text": "Meetings handbook index for the Payments team. Linked pages explain which day has no meetings for engineers, and how long a standup may last. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "meetings-handbook-search",
+    "title": "Meetings handbook (Search)",
+    "text": "Meetings handbook index for every team. Linked pages explain which day has no meetings for engineers, and how long a standup may last. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "meetings-handbook-mobile",
+    "title": "Meetings handbook (Mobile)",
+    "text": "Meetings handbook index for the Mobile team. Linked pages explain which day has no meetings for engineers, and how long a standup may last. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "meetings-handbook-platform",
+    "title": "Meetings handbook (Platform)",
+    "text": "Meetings handbook index for every team. Linked pages explain which day has no meetings for engineers, and how long a standup may last. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "meetings-page",
+    "title": "Focus time",
+    "text": "Wednesdays are meeting-free for engineering teams. Standups last at most 15 minutes."
+  },
+  {
+    "id": "travel-handbook",
+    "title": "Travel handbook",
+    "text": "Travel handbook index for every team. Linked pages explain whether a conference speaker can fly business class, and who approves conference talk proposals. Each topic has its own page; ask in the team channel if a link is broken."
+  },
+  {
+    "id": "travel-handbook-payments",
+    "title": "Travel handbook (Payments)",
+    "text": "Travel handbook index for the Payments team. Linked pages explain whether a conference speaker can fly business class, and who approves conference talk proposals. Each topic has its own page; ask in the team channel if a link is broken. Copied by Payments."
+  },
+  {
+    "id": "travel-handbook-search",
+    "title": "Travel handbook (Search)",
+    "text": "Travel handbook index for every team. Linked pages explain whether a conference speaker can fly business class, and who approves conference talk proposals. Each topic has its own page; ask in the team channel if a link is broken. Copied by Search."
+  },
+  {
+    "id": "travel-handbook-mobile",
+    "title": "Travel handbook (Mobile)",
+    "text": "Travel handbook index for the Mobile team. Linked pages explain whether a conference speaker can fly business class, and who approves conference talk proposals. Each topic has its own page; ask in the team channel if a link is broken. Copied by Mobile."
+  },
+  {
+    "id": "travel-handbook-platform",
+    "title": "Travel handbook (Platform)",
+    "text": "Travel handbook index for every team. Linked pages explain whether a conference speaker can fly business class, and who approves conference talk proposals. Each topic has its own page; ask in the team channel if a link is broken. Copied by Platform."
+  },
+  {
+    "id": "travel-page",
+    "title": "Conference talks",
+    "text": "Engineers who give a conference talk can book business class for flights over six hours. Talk proposals need approval from the engineering director."
+  }
+]

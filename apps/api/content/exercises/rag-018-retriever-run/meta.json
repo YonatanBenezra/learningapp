@@ -1,53 +1,64 @@
 {
   "slug": "rag-018-retriever-run",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Re-tune Retrieval After a Re-index",
+  "title": "Hybrid Search for the Support Desk",
   "difficulty": "M",
   "catalogPhase": 3,
-  "corpusFile": "shared",
+  "corpusFile": "support-kb",
   "skills": [
+    {
+      "slug": "vector-search",
+      "name": "Vector search"
+    },
     {
       "slug": "retrieval-quality",
       "name": "Retrieval quality"
     },
     {
-      "slug": "cost-engineering",
-      "name": "Cost engineering"
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 3 · Re-tune Retrieval After a Re-index\n\nThe policy index was rebuilt with sentence-packed chunks, and the old top-k / chunk-size settings no longer fit. Re-tune them so recall holds and prompts stay within the new budget.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 225 on the hidden set.\n",
+  "briefMd": "# Phase 3 · Hybrid Search for the Support Desk\n\nThe support desk asks two kinds of questions. Some name an exact model or error code (\"How long is the warranty on the RT-4712?\"). Others are everyday wording that shares almost no words with the policy that answers them (\"How long can a mom or dad stay home with a newborn and keep getting paid?\"). Pick a retrieval mode that answers both.\n\nThe knowledge base has 190 documents: product sheets and error articles that come in families of near-identical models (the model number appears only in the title), staff policies, and short office notes that happen to use the words people ask with.\n\nYou control the **retrieval mode** (`bm25` keyword match, `dense` embedding similarity with a pinned bge-small model, or `hybrid`), **hybridAlpha** (in hybrid mode, the weight on the dense score: 0 is pure BM25, 1 is pure dense) and **topK**. Documents are short enough that each one is a single chunk, and every retrieved chunk is sent to the model in full.\n\nThe hidden-set breakdown on your scorecard counts hits per question type, so you can see which kind of question your mode misses.\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 250 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
-      "topK",
-      "rerank",
-      "chunkSize"
+      "retrievalMode",
+      "topK"
     ],
     "properties": {
+      "retrievalMode": {
+        "type": "string",
+        "enum": [
+          "bm25",
+          "dense",
+          "hybrid"
+        ],
+        "default": "bm25",
+        "description": "bm25 matches keywords, dense matches meaning with embeddings, hybrid mixes both by hybridAlpha."
+      },
+      "hybridAlpha": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "multipleOf": 0.05,
+        "default": 0.5,
+        "description": "Hybrid only: weight on the dense score (0 = BM25, 1 = dense)."
+      },
       "topK": {
         "type": "integer",
         "minimum": 1,
-        "maximum": 40,
-        "default": 20
-      },
-      "rerank": {
-        "type": "boolean",
-        "default": false
-      },
-      "chunkSize": {
-        "type": "integer",
-        "minimum": 50,
-        "maximum": 2000,
-        "default": 400
+        "maximum": 10,
+        "default": 5
       }
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 225,
-    "recall_at_k": 0.95
+    "recall_at_k": 0.9,
+    "mean_prompt_tokens": 250
   },
   "budget": {
     "max_model_calls": 0,
@@ -57,18 +68,18 @@
   },
   "gates": [
     {
-      "id": "mean-prompt-tokens",
-      "class": "A",
-      "metric": "mean_prompt_tokens",
-      "op": "lte",
-      "value": 225
-    },
-    {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.95
+      "value": 0.9
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 250
     }
   ],
   "feedback": {

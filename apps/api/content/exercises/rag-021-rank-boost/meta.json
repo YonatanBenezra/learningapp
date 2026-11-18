@@ -1,12 +1,12 @@
 {
   "slug": "rag-021-rank-boost",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Title-Aware Reranking",
+  "title": "A Reranker That Reads",
   "difficulty": "H",
   "catalogPhase": 4,
-  "corpusFile": "shared",
+  "corpusFile": "help-center",
   "skills": [
     {
       "slug": "reranking",
@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 4 · Title-Aware Reranking\n\nPolicy questions usually name their topic, and every policy document has a title. Pick the reranker that uses that signal and lift nDCG@5 well above the keyword-count first stage.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN** (the candidate window) and an optional **query rewrite prompt**. The first stage is a plain keyword count over whole documents, so keyword-stuffed noise documents often outrank the right policy. The rewrite prompt runs on the live model, one call per question: your prompt is the system message, the question is the user message, and the first line of the reply is what the first stage searches for. The reranker still scores candidates against the question as asked.\n\n**Gates:** nDCG@5 improves by at least 0.20, context tokens ≤ 2200, ≤ 2 model calls per question.\n",
+  "briefMd": "# Phase 4 · A Reranker That Reads\n\nThe help center is full of marketing: blog teasers and webinar promos whose titles repeat exactly what customers type (\"Refund questions answered\") and whose text never says anything concrete. The article that actually answers has a plain title (\"Plan changes and money back\"). Lift the answer into the top 5.\n\nThe first stage is a plain keyword count over whole articles, so the promos usually come first. You control the **reranker** that reorders the top **rerankTopN** candidates:\n\n- `title-boost`: a heuristic that moves articles whose title shares the question's words up.\n- `mmr`: reorders for variety between the candidates.\n- `cross-encoder`: a small model (pinned ms-marco MiniLM) that reads the question and each candidate together and scores how well the candidate answers it.\n\nThere is no room for an LLM call in this path: query rewriting is off.\n\n**Gates:** nDCG@5 improves by at least 0.18 over the first stage, context tokens ≤ 250, and 0 model calls per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -35,26 +35,24 @@
         "enum": [
           "none",
           "title-boost",
-          "mmr"
+          "mmr",
+          "cross-encoder"
         ],
-        "default": "none"
+        "default": "none",
+        "description": "title-boost and mmr are heuristics; cross-encoder is a model that reads the question and passage together."
       },
       "rerankTopN": {
         "type": "integer",
         "minimum": 5,
         "maximum": 50,
-        "default": 20
-      },
-      "queryRewritePrompt": {
-        "type": "string",
-        "default": ""
+        "default": 10
       }
     }
   },
   "thresholds": {
-    "ndcg_improvement": 0.2,
-    "context_tokens": 2200,
-    "model_calls_per_question": 2
+    "ndcg_improvement": 0.18,
+    "context_tokens": 250,
+    "model_calls_per_question": 0
   },
   "budget": {
     "max_model_calls": 50,
@@ -68,21 +66,21 @@
       "class": "A",
       "metric": "ndcg_improvement",
       "op": "gte",
-      "value": 0.2
+      "value": 0.18
     },
     {
       "id": "context-tokens",
       "class": "A",
       "metric": "context_tokens",
       "op": "lte",
-      "value": 2200
+      "value": 250
     },
     {
       "id": "model-calls",
       "class": "A",
       "metric": "model_calls_per_question",
       "op": "lte",
-      "value": 2
+      "value": 0
     }
   ],
   "feedback": {

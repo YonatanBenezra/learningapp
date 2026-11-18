@@ -1,8 +1,8 @@
 import { countTokens } from '../../gateway/pricing';
 import { advisoryClassB } from '../../judge/class-b';
 import { chunkCorpus, type Chunk, type CorpusDoc } from './chunking';
-import { titleBoost } from './rerank';
-import { chunkContainsSpan, type RankedChunk } from './retrieve';
+import { jaccard, titleBoost } from './rerank';
+import { type Gold, holdsGold, type RankedChunk } from './retrieve';
 import {
   prepareRetriever,
   type Retriever,
@@ -12,9 +12,10 @@ import {
 import {
   answerableHidden,
   costEvidence,
+  declaresGate,
   diagnoseRetrievalMiss,
   EvalLedger,
-  expandGoldSpan,
+  goldOf,
   gateThreshold,
   type MissCause,
   publicGold,
@@ -22,15 +23,19 @@ import {
   toTraceQuery,
 } from './rag.shared';
 import type {
+  GateResult,
   HiddenItem,
   PublicItem,
   R2Payload,
   RagGradeResult,
+  StatusFilter,
   TraceQuery,
 } from './rag.types';
 
 const DEFAULT_RECALL = 0.8;
 const DEFAULT_TOKEN_CEILING = 2000;
+const DEFAULT_STALE_CEILING = 0.05;
+const DEFAULT_DEDUPE_THRESHOLD = 0.8;
 
 /**
  * R2 learners pick chunk size, top-k and rerank; the split itself is fixed.
@@ -75,31 +80,59 @@ export async function gradeR2(
   const perQuery: { tokens: number; chunks: number }[] = [];
   let hits = 0;
   const tokenCounts: number[] = [];
+  const familyOf = new Map(docs.map((doc) => [doc.id, doc.meta?.family]));
+  let versioned = 0;
+  let staleQuestions = 0;
 
   for (const item of answerable) {
-    const ranked = retrieveForR2(item.question, retriever, payload);
+    const {
+      retrieved,
+      duplicates,
+      context: ranked,
+    } = contextForR2(item.question, retriever, payload, tokenCeiling);
     // Recall is judged on exactly the text that is sent as context.
-    const packed = ranked.map((row) => row.chunk.text).join('\n\n');
-    const tokens = countTokens(`Context:\n${packed}`);
+    const tokens = countTokens(contextText(ranked));
     tokenCounts.push(tokens);
     perQuery.push({ tokens, chunks: ranked.length });
-    const gold = expandGoldSpan(
+    const gold = goldOf(
       docs,
       item.goldDocId as string,
       item.goldSpan as string,
     );
-    const hit = ranked.some((row) => chunkContainsSpan(row.chunk.text, gold));
+    const hit = ranked.some((row) => holdsGold(row.chunk, gold));
+    const family = familyOf.get(gold.docId);
+    if (family) {
+      versioned += 1;
+      // Another version of the same policy in context: two answers disagree.
+      if (
+        ranked.some(
+          (row) =>
+            row.chunk.docId !== gold.docId && row.chunk.meta?.family === family,
+        )
+      ) {
+        staleQuestions += 1;
+      }
+    }
     ledger.record(
       item,
       hit,
-      hit ? null : diagnoseR2Miss(item.question, retriever, payload, gold),
+      hit
+        ? null
+        : retrieved.some((row) => holdsGold(row.chunk, gold))
+          ? // Retrieved, then lost while packing the context.
+            {
+              code: duplicates.some((row) => holdsGold(row.chunk, gold))
+                ? 'deduped-away'
+                : 'packed-out-by-budget',
+            }
+          : diagnoseR2Miss(item.question, retriever, payload, gold),
     );
     if (hit) {
       hits += 1;
     } else if (ledger.reveal(item)) {
       misses.push({
         question: item.question,
-        goldSpan: gold,
+        goldSpan: gold.text,
         retrieved: ranked.map((row) => row.chunk.text.slice(0, 220)),
       });
       failingQueries.push(
@@ -114,16 +147,47 @@ export async function gradeR2(
     tokenCounts.length === 0
       ? 0
       : tokenCounts.reduce((sum, value) => sum + value, 0) / tokenCounts.length;
+  const staleRate = versioned === 0 ? 0 : staleQuestions / versioned;
+  const staleCeiling = gateThreshold(
+    gates,
+    'stale_context_rate',
+    DEFAULT_STALE_CEILING,
+  );
+  const staleGate = declaresGate(gates, 'stale_context_rate');
+  const stalePass = !staleGate || staleRate <= staleCeiling;
   const recallPass = recall >= recallThreshold;
   const costPass = meanTokens <= tokenCeiling;
-  const passed = recallPass && costPass;
+  const passed = recallPass && costPass && stalePass;
   ledger.setCost(costEvidence(perQuery, tokenCeiling));
+  ledger.note('stale-version-in-context', staleQuestions);
+  const staleGates: GateResult[] = staleGate
+    ? [
+        {
+          id: 'stale-context-rate',
+          class: 'A',
+          metric: 'stale_context_rate',
+          op: 'lte',
+          value: staleCeiling,
+          actual: staleRate,
+          passed: stalePass,
+        },
+      ]
+    : [];
 
   return {
     verdict: passed ? 'pass' : 'fail',
     metrics: {
       recall_at_k: { value: recall, hits, total },
       mean_prompt_tokens: { value: meanTokens },
+      ...(versioned > 0
+        ? {
+            stale_context_rate: {
+              value: staleRate,
+              stale: staleQuestions,
+              total: versioned,
+            },
+          }
+        : {}),
     },
     gateResults: [
       {
@@ -144,13 +208,19 @@ export async function gradeR2(
         actual: meanTokens,
         passed: costPass,
       },
+      ...staleGates,
       advisoryClassB('answer-correctness', 'answer_correctness'),
     ],
     failureClasses: passed
       ? []
       : [
           ...(costPass ? [] : ['context-over-budget']),
-          ...(recallPass ? [] : ledger.topCauses()),
+          ...(stalePass ? [] : ['stale-version-in-context']),
+          ...(recallPass
+            ? []
+            : ledger
+                .topCauses()
+                .filter((code) => code !== 'stale-version-in-context')),
         ],
     scorecard: {
       recallAtK: recall,
@@ -159,6 +229,12 @@ export async function gradeR2(
       topK: payload.topK,
       rerank: payload.rerank,
       retrieval: retrieverLabel(retriever.spec),
+      ...(payload.statusFilter
+        ? {
+            statusFilter: payload.statusFilter,
+            filterStage: payload.filterStage ?? 'pre',
+          }
+        : {}),
       chunks: chunks.length,
       breakdown: ledger.breakdown(),
     },
@@ -173,15 +249,21 @@ export async function gradeR2(
       costEurMicros: 0,
       queries: [
         ...shownPublic.map((item) => {
-          const ranked = retrieveForR2(item.question, retriever, payload);
+          const { context: ranked } = contextForR2(
+            item.question,
+            retriever,
+            payload,
+            tokenCeiling,
+          );
           return toTraceQuery('public', item.question, ranked, {
             gold: publicGold(docs, item),
             firstStage: payload.rerank
-              ? retriever.rank(item.question, rerankPool(payload, chunks))
+              ? firstStageForR2(item.question, retriever, payload).slice(
+                  0,
+                  rerankPool(payload, chunks),
+                )
               : null,
-            contextTokens: countTokens(
-              `Context:\n${ranked.map((row) => row.chunk.text).join('\n\n')}`,
-            ),
+            contextTokens: countTokens(contextText(ranked)),
           });
         }),
         ...failingQueries,
@@ -195,16 +277,129 @@ export function diagnoseR2Miss(
   question: string,
   retriever: Retriever,
   payload: R2Payload,
-  gold: string,
+  gold: Gold,
 ): MissCause {
   const { chunks } = retriever;
+  const fullRanking = firstStageForR2(question, retriever, payload);
+  if (
+    filterStage(payload) === 'post' &&
+    retrieveForR2(question, retriever, payload).length < payload.topK
+  ) {
+    // The filter ran after top-k and threw results away.
+    const index = fullRanking.findIndex((row) => holdsGold(row.chunk, gold));
+    return {
+      code: 'post-filter-dropped-results',
+      rank: index < 0 ? fullRanking.length + 1 : index + 1,
+    };
+  }
   return diagnoseRetrievalMiss({
     chunks,
     gold,
-    fullRanking: retriever.rank(question, chunks.length),
+    fullRanking,
     k: payload.topK,
     pool: payload.rerank ? rerankPool(payload, chunks) : null,
   });
+}
+
+/** The prompt text the context tokens are counted on. */
+export function contextText(ranked: RankedChunk[]): string {
+  return `Context:\n${ranked.map((row) => row.chunk.text).join('\n\n')}`;
+}
+
+/**
+ * What reaches the model: the retrieved chunks, then (when the exercise packs
+ * the context) duplicates dropped and the rest added in rank order while
+ * they fit `budget` tokens.
+ */
+export function contextForR2(
+  question: string,
+  retriever: Retriever,
+  payload: R2Payload,
+  budget: number,
+): {
+  retrieved: RankedChunk[];
+  /** Dropped as a duplicate of a higher-ranked chunk. */
+  duplicates: RankedChunk[];
+  context: RankedChunk[];
+} {
+  const retrieved = retrieveForR2(question, retriever, payload);
+  if (payload.dedupe === undefined) {
+    return { retrieved, duplicates: [], context: retrieved };
+  }
+  const kept: RankedChunk[] = [];
+  const duplicates: RankedChunk[] = [];
+  for (const row of retrieved) {
+    if (kept.some((other) => isDuplicate(other, row, payload))) {
+      duplicates.push(row);
+    } else {
+      kept.push(row);
+    }
+  }
+  const context: RankedChunk[] = [];
+  for (const row of kept) {
+    if (countTokens(contextText([...context, row])) <= budget) {
+      context.push(row);
+    }
+  }
+  return { retrieved, duplicates, context };
+}
+
+function isDuplicate(
+  kept: RankedChunk,
+  candidate: RankedChunk,
+  payload: R2Payload,
+): boolean {
+  if (payload.dedupe === 'exact') {
+    return (
+      normalizeText(kept.chunk.text) === normalizeText(candidate.chunk.text)
+    );
+  }
+  if (payload.dedupe === 'near') {
+    return (
+      jaccard(kept.chunk.text, candidate.chunk.text) >=
+      (payload.dedupeThreshold ?? DEFAULT_DEDUPE_THRESHOLD)
+    );
+  }
+  return false;
+}
+
+const normalizeText = (text: string) =>
+  text.toLowerCase().replace(/\s+/g, ' ').trim();
+
+/** Does a chunk pass a status filter? Documents without a status always do. */
+export function passesStatusFilter(
+  chunk: Chunk,
+  filter: StatusFilter | undefined,
+): boolean {
+  const status = chunk.meta?.status;
+  if (!filter || filter === 'none' || !status) {
+    return true;
+  }
+  if (filter === 'exclude-superseded') {
+    return status !== 'superseded';
+  }
+  return status === 'current';
+}
+
+function filterStage(payload: R2Payload): 'pre' | 'post' | null {
+  if (!payload.statusFilter || payload.statusFilter === 'none') {
+    return null;
+  }
+  return payload.filterStage ?? 'pre';
+}
+
+/** Full first-stage ranking, with a pre-filter applied when there is one. */
+export function firstStageForR2(
+  question: string,
+  retriever: Retriever,
+  payload: R2Payload,
+): RankedChunk[] {
+  const ranked = retriever.rank(question, retriever.chunks.length);
+  return filterStage(payload) === 'pre'
+    ? ranked.filter((row) =>
+        passesStatusFilter(row.chunk, payload.statusFilter),
+      )
+    : ranked;
 }
 
 /** Candidates fetched before the title boost when rerank is on. */
@@ -220,9 +415,17 @@ export function retrieveForR2(
   const pool = payload.rerank
     ? rerankPool(payload, retriever.chunks)
     : payload.topK;
-  const ranked = retriever.rank(question, pool);
-  if (!payload.rerank) {
-    return ranked.slice(0, payload.topK);
-  }
-  return titleBoost(question, ranked).slice(0, payload.topK);
+  const stage = filterStage(payload);
+  const ranked =
+    stage === 'pre'
+      ? firstStageForR2(question, retriever, payload).slice(0, pool)
+      : retriever.rank(question, pool);
+  const top = (payload.rerank ? titleBoost(question, ranked) : ranked).slice(
+    0,
+    payload.topK,
+  );
+  // Post-filter: the top k come back first, then non-matching ones are dropped.
+  return stage === 'post'
+    ? top.filter((row) => passesStatusFilter(row.chunk, payload.statusFilter))
+    : top;
 }

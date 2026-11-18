@@ -1,16 +1,32 @@
 import type { SplitStrategy } from './rag.types';
 
+/**
+ * Document metadata a retriever can filter on. A policy that changed over
+ * time has one document per version, all in the same `family`; only one of
+ * them is `current`.
+ */
+export type DocMeta = {
+  family?: string;
+  version?: string;
+  status?: 'current' | 'superseded' | 'draft';
+  /** ISO date the version takes effect. */
+  effective?: string;
+};
+
 export type Chunk = {
   id: string;
   docId: string;
   title: string;
   text: string;
+  /** The document's metadata, carried by every chunk cut from it. */
+  meta?: DocMeta;
 };
 
 export type CorpusDoc = {
   id: string;
   title: string;
   text: string;
+  meta?: DocMeta;
 };
 
 /**
@@ -52,6 +68,7 @@ export function chunkCorpus(
         docId: doc.id,
         title: doc.title,
         text,
+        ...(doc.meta ? { meta: doc.meta } : {}),
       });
     });
   }

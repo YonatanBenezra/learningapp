@@ -9,6 +9,22 @@ export type RagPayload = {
 
 export type RetrievalMode = 'bm25' | 'dense' | 'hybrid';
 
+/**
+ * Metadata filter on document status: keep everything, drop superseded
+ * versions (drafts stay), or keep current versions only.
+ */
+export type StatusFilter = 'none' | 'exclude-superseded' | 'current-only';
+
+/** pre: filter, then take the top k. post: take the top k, then filter. */
+export type FilterStage = 'pre' | 'post';
+
+/**
+ * Context packing: drop duplicate chunks before filling the token budget.
+ * exact: identical text only. near: term overlap (Jaccard) at or above the
+ * threshold.
+ */
+export type DedupeMode = 'none' | 'exact' | 'near';
+
 export type R2Payload = {
   topK: number;
   rerank: boolean;
@@ -17,6 +33,17 @@ export type R2Payload = {
   retrievalMode?: RetrievalMode;
   /** Hybrid only: weight on the dense score (0 = BM25, 1 = dense). */
   hybridAlpha?: number;
+  /** Metadata filter on document status; none when the exercise does not offer it. */
+  statusFilter?: StatusFilter;
+  /** Where the filter runs relative to top-k (default pre). */
+  filterStage?: FilterStage;
+  /**
+   * Set when the exercise packs the context: chunks are deduplicated, then
+   * added in rank order while they fit the token budget.
+   */
+  dedupe?: DedupeMode;
+  /** near only: Jaccard overlap that counts as a duplicate (default 0.8). */
+  dedupeThreshold?: number;
 };
 
 export type R3Payload = {

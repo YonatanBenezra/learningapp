@@ -1,0 +1,386 @@
+[
+  {
+    "family": "hotels",
+    "question": "What is the nightly hotel limit in most cities?",
+    "goldDocId": "hotels-2026",
+    "goldSpan": "Hotels may cost at most 160 euros a night in most cities",
+    "goldAnswer": "160 euros a night",
+    "phrasing": 0
+  },
+  {
+    "family": "hotels",
+    "question": "How much can a hotel room cost per night on a business trip?",
+    "goldDocId": "hotels-2026",
+    "goldSpan": "Hotels may cost at most 160 euros a night in most cities",
+    "goldAnswer": "160 euros a night",
+    "phrasing": 1
+  },
+  {
+    "family": "meals",
+    "question": "How much can I claim per day for food on a business trip?",
+    "goldDocId": "meals-2026",
+    "goldSpan": "On business trips you can claim up to 45 euros a day for food",
+    "goldAnswer": "45 euros a day",
+    "phrasing": 0
+  },
+  {
+    "family": "meals",
+    "question": "What is the daily meal allowance when travelling?",
+    "goldDocId": "meals-2026",
+    "goldSpan": "On business trips you can claim up to 45 euros a day for food",
+    "goldAnswer": "45 euros a day",
+    "phrasing": 1
+  },
+  {
+    "family": "mileage",
+    "question": "What is the mileage rate for using my own car?",
+    "goldDocId": "mileage-2026",
+    "goldSpan": "Business trips in your own car are reimbursed at 0.30 euros per kilometre",
+    "goldAnswer": "0.30 euros per kilometre",
+    "phrasing": 0
+  },
+  {
+    "family": "mileage",
+    "question": "How much is reimbursed per kilometre when I drive my car for work?",
+    "goldDocId": "mileage-2026",
+    "goldSpan": "Business trips in your own car are reimbursed at 0.30 euros per kilometre",
+    "goldAnswer": "0.30 euros per kilometre",
+    "phrasing": 1
+  },
+  {
+    "family": "learning",
+    "question": "How big is the yearly learning budget?",
+    "goldDocId": "learning-2026",
+    "goldSpan": "Every employee has 1,500 euros a year for courses, books and conference tickets",
+    "goldAnswer": "1,500 euros a year",
+    "phrasing": 0
+  },
+  {
+    "family": "learning",
+    "question": "How much money do I get each year for courses and books?",
+    "goldDocId": "learning-2026",
+    "goldSpan": "Every employee has 1,500 euros a year for courses, books and conference tickets",
+    "goldAnswer": "1,500 euros a year",
+    "phrasing": 1
+  },
+  {
+    "family": "parental",
+    "question": "How many weeks of paid parental leave do new parents get?",
+    "goldDocId": "parental-2026",
+    "goldSpan": "New parents may take twenty weeks away from work at full salary",
+    "goldAnswer": "twenty weeks",
+    "phrasing": 0
+  },
+  {
+    "family": "parental",
+    "question": "How long is parental leave at full salary?",
+    "goldDocId": "parental-2026",
+    "goldSpan": "New parents may take twenty weeks away from work at full salary",
+    "goldAnswer": "twenty weeks",
+    "phrasing": 1
+  },
+  {
+    "family": "abroad",
+    "question": "How many days a year can I work from another country?",
+    "goldDocId": "abroad-2026",
+    "goldSpan": "You may work from a country other than your contract country for up to thirty days a year",
+    "goldAnswer": "thirty days a year",
+    "phrasing": 0
+  },
+  {
+    "family": "abroad",
+    "question": "For how long may I work abroad each year?",
+    "goldDocId": "abroad-2026",
+    "goldSpan": "You may work from a country other than your contract country for up to thirty days a year",
+    "goldAnswer": "thirty days a year",
+    "phrasing": 1
+  },
+  {
+    "family": "on-call",
+    "question": "How much is on-call pay per week?",
+    "goldDocId": "on-call-2026",
+    "goldSpan": "Engineers receive 200 euros for each week on the on-call rota",
+    "goldAnswer": "200 euros a week",
+    "phrasing": 0
+  },
+  {
+    "family": "on-call",
+    "question": "What do engineers get for a week on the on-call rota?",
+    "goldDocId": "on-call-2026",
+    "goldSpan": "Engineers receive 200 euros for each week on the on-call rota",
+    "goldAnswer": "200 euros a week",
+    "phrasing": 1
+  },
+  {
+    "family": "referrals",
+    "question": "How big is the referral bonus?",
+    "goldDocId": "referrals-2026",
+    "goldSpan": "A successful referral earns a 2,000 euro bonus once the new hire has stayed six months",
+    "goldAnswer": "2,000 euros",
+    "phrasing": 0
+  },
+  {
+    "family": "referrals",
+    "question": "What bonus do I get when someone I referred is hired?",
+    "goldDocId": "referrals-2026",
+    "goldSpan": "A successful referral earns a 2,000 euro bonus once the new hire has stayed six months",
+    "goldAnswer": "2,000 euros",
+    "phrasing": 1
+  },
+  {
+    "family": "gifts",
+    "question": "What is the limit for accepting supplier gifts?",
+    "goldDocId": "gifts-2026",
+    "goldSpan": "You may accept gifts from suppliers worth up to 50 euros",
+    "goldAnswer": "50 euros",
+    "phrasing": 0
+  },
+  {
+    "family": "gifts",
+    "question": "How much can a gift from a supplier be worth?",
+    "goldDocId": "gifts-2026",
+    "goldSpan": "You may accept gifts from suppliers worth up to 50 euros",
+    "goldAnswer": "50 euros",
+    "phrasing": 1
+  },
+  {
+    "family": "passwords",
+    "question": "How long must a work password be?",
+    "goldDocId": "passwords-2026",
+    "goldSpan": "Work passwords must be at least 16 characters long",
+    "goldAnswer": "16 characters",
+    "phrasing": 0
+  },
+  {
+    "family": "passwords",
+    "question": "What is the minimum password length?",
+    "goldDocId": "passwords-2026",
+    "goldSpan": "Work passwords must be at least 16 characters long",
+    "goldAnswer": "16 characters",
+    "phrasing": 1
+  },
+  {
+    "family": "laptops",
+    "question": "How often are laptops replaced?",
+    "goldDocId": "laptops-2026",
+    "goldSpan": "Laptops are replaced every four years",
+    "goldAnswer": "four years",
+    "phrasing": 0
+  },
+  {
+    "family": "laptops",
+    "question": "After how many years do I get a new laptop?",
+    "goldDocId": "laptops-2026",
+    "goldSpan": "Laptops are replaced every four years",
+    "goldAnswer": "four years",
+    "phrasing": 1
+  },
+  {
+    "family": "probation",
+    "question": "How long is the probation period for new hires?",
+    "goldDocId": "probation-2026",
+    "goldSpan": "New hires have a probation period of six months",
+    "goldAnswer": "six months",
+    "phrasing": 0
+  },
+  {
+    "family": "probation",
+    "question": "How many months does probation last?",
+    "goldDocId": "probation-2026",
+    "goldSpan": "New hires have a probation period of six months",
+    "goldAnswer": "six months",
+    "phrasing": 1
+  },
+  {
+    "family": "notice",
+    "question": "What is the notice period after probation?",
+    "goldDocId": "notice-2026",
+    "goldSpan": "After probation, the notice period is two months",
+    "goldAnswer": "two months",
+    "phrasing": 0
+  },
+  {
+    "family": "notice",
+    "question": "How much notice do I have to give once probation is over?",
+    "goldDocId": "notice-2026",
+    "goldSpan": "After probation, the notice period is two months",
+    "goldAnswer": "two months",
+    "phrasing": 1
+  },
+  {
+    "family": "tickets",
+    "question": "When are closed support tickets deleted?",
+    "goldDocId": "tickets-2026",
+    "goldSpan": "Support tickets are deleted three years after they are closed",
+    "goldAnswer": "three years",
+    "phrasing": 0
+  },
+  {
+    "family": "tickets",
+    "question": "How long do we keep closed support tickets?",
+    "goldDocId": "tickets-2026",
+    "goldSpan": "Support tickets are deleted three years after they are closed",
+    "goldAnswer": "three years",
+    "phrasing": 1
+  },
+  {
+    "family": "sabbatical",
+    "question": "After how many years can I take a sabbatical?",
+    "goldDocId": "sabbatical-2026",
+    "goldSpan": "After seven years of continuous service you can take an unpaid sabbatical of up to three months",
+    "goldAnswer": "seven years",
+    "phrasing": 0
+  },
+  {
+    "family": "sabbatical",
+    "question": "How long do I need to work here before a sabbatical?",
+    "goldDocId": "sabbatical-2026",
+    "goldSpan": "After seven years of continuous service you can take an unpaid sabbatical of up to three months",
+    "goldAnswer": "seven years",
+    "phrasing": 1
+  },
+  {
+    "family": "home-office",
+    "question": "How much is the yearly home office allowance?",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Remote staff can claim 450 euros a year for home office equipment",
+    "goldAnswer": "450 euros a year",
+    "phrasing": 0
+  },
+  {
+    "family": "home-office",
+    "question": "How much can remote staff claim for home office equipment?",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Remote staff can claim 450 euros a year for home office equipment",
+    "goldAnswer": "450 euros a year",
+    "phrasing": 1
+  },
+  {
+    "family": "phones",
+    "question": "How much does the company pay toward my phone plan?",
+    "goldDocId": "phones-2026",
+    "goldSpan": "The company pays up to 35 euros a month toward a work phone plan",
+    "goldAnswer": "35 euros a month",
+    "phrasing": 0
+  },
+  {
+    "family": "phones",
+    "question": "What is the monthly phone plan allowance?",
+    "goldDocId": "phones-2026",
+    "goldSpan": "The company pays up to 35 euros a month toward a work phone plan",
+    "goldAnswer": "35 euros a month",
+    "phrasing": 1
+  },
+  {
+    "family": "overtime",
+    "question": "What is the overtime pay rate?",
+    "goldDocId": "overtime-2026",
+    "goldSpan": "Hours beyond forty a week are paid at 1.5 times the normal rate",
+    "goldAnswer": "1.5 times the rate",
+    "phrasing": 0
+  },
+  {
+    "family": "overtime",
+    "question": "How are hours beyond forty a week paid?",
+    "goldDocId": "overtime-2026",
+    "goldSpan": "Hours beyond forty a week are paid at 1.5 times the normal rate",
+    "goldAnswer": "1.5 times the rate",
+    "phrasing": 1
+  },
+  {
+    "family": "sick-notes",
+    "question": "After how many sick days do I need a doctor's note?",
+    "goldDocId": "sick-notes-2026",
+    "goldSpan": "A doctor's note is needed after three days of sick leave",
+    "goldAnswer": "three days",
+    "phrasing": 0
+  },
+  {
+    "family": "sick-notes",
+    "question": "When do I have to bring a note from a doctor for sick leave?",
+    "goldDocId": "sick-notes-2026",
+    "goldSpan": "A doctor's note is needed after three days of sick leave",
+    "goldAnswer": "three days",
+    "phrasing": 1
+  },
+  {
+    "family": "bikes",
+    "question": "What is the maximum bike value for leasing?",
+    "goldDocId": "bikes-2026",
+    "goldSpan": "Staff can lease a bike worth up to 3,500 euros through payroll",
+    "goldAnswer": "3,500 euros",
+    "phrasing": 0
+  },
+  {
+    "family": "bikes",
+    "question": "How expensive a bike can I lease through payroll?",
+    "goldDocId": "bikes-2026",
+    "goldSpan": "Staff can lease a bike worth up to 3,500 euros through payroll",
+    "goldAnswer": "3,500 euros",
+    "phrasing": 1
+  },
+  {
+    "family": "visitors",
+    "question": "How far ahead must guests be registered?",
+    "goldDocId": "visitors-2026",
+    "goldSpan": "Guests must be registered at reception at least 24 hours before they arrive",
+    "goldAnswer": "24 hours",
+    "phrasing": 0
+  },
+  {
+    "family": "visitors",
+    "question": "How many hours before a visit do I have to register a guest?",
+    "goldDocId": "visitors-2026",
+    "goldSpan": "Guests must be registered at reception at least 24 hours before they arrive",
+    "goldAnswer": "24 hours",
+    "phrasing": 1
+  },
+  {
+    "family": "expenses",
+    "question": "Within how many days must I file an expense claim?",
+    "goldDocId": "expenses-2026",
+    "goldSpan": "Expense claims must be filed within 30 days of the purchase",
+    "goldAnswer": "30 days",
+    "phrasing": 0
+  },
+  {
+    "family": "expenses",
+    "question": "What is the deadline for filing expenses after a purchase?",
+    "goldDocId": "expenses-2026",
+    "goldSpan": "Expense claims must be filed within 30 days of the purchase",
+    "goldAnswer": "30 days",
+    "phrasing": 1
+  },
+  {
+    "family": "conferences",
+    "question": "How many paid conferences can I attend each year?",
+    "goldDocId": "conferences-2026",
+    "goldSpan": "Each employee may attend up to two paid conferences a year",
+    "goldAnswer": "two conferences a year",
+    "phrasing": 0
+  },
+  {
+    "family": "conferences",
+    "question": "How many conferences a year does the company pay for?",
+    "goldDocId": "conferences-2026",
+    "goldSpan": "Each employee may attend up to two paid conferences a year",
+    "goldAnswer": "two conferences a year",
+    "phrasing": 1
+  },
+  {
+    "family": "wellbeing",
+    "question": "How much is the monthly wellbeing allowance?",
+    "goldDocId": "wellbeing-2026",
+    "goldSpan": "Staff receive 30 euros a month toward a gym or sports club",
+    "goldAnswer": "30 euros a month",
+    "phrasing": 0
+  },
+  {
+    "family": "wellbeing",
+    "question": "How much does the company give toward a gym each month?",
+    "goldDocId": "wellbeing-2026",
+    "goldSpan": "Staff receive 30 euros a month toward a gym or sports club",
+    "goldAnswer": "30 euros a month",
+    "phrasing": 1
+  }
+]

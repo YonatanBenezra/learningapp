@@ -1,0 +1,298 @@
+[
+  {
+    "topic": "on-call",
+    "question": "When does the on-call handover happen?",
+    "goldDocId": "on-call-page",
+    "goldSpan": "The handover happens every Monday at 10:00 in the #oncall channel",
+    "goldAnswer": "The handover happens every Monday at 10:00 in the #oncall channel",
+    "phrasing": 0
+  },
+  {
+    "topic": "on-call",
+    "question": "Which channel is the on-call handover in?",
+    "goldDocId": "on-call-page",
+    "goldSpan": "The handover happens every Monday at 10:00 in the #oncall channel",
+    "goldAnswer": "The handover happens every Monday at 10:00 in the #oncall channel",
+    "phrasing": 1
+  },
+  {
+    "topic": "on-call",
+    "question": "What does the outgoing on-call engineer post at handover?",
+    "goldDocId": "on-call-page",
+    "goldSpan": "The outgoing engineer posts every open incident and every silenced alert",
+    "goldAnswer": "The outgoing engineer posts every open incident and every silenced alert",
+    "phrasing": 2
+  },
+  {
+    "topic": "deploys",
+    "question": "Can I deploy to production on a Friday afternoon?",
+    "goldDocId": "deploys-page",
+    "goldSpan": "No production deploys go out after 15:00 on Fridays",
+    "goldAnswer": "No production deploys go out after 15:00 on Fridays",
+    "phrasing": 0
+  },
+  {
+    "topic": "deploys",
+    "question": "What is the cutoff time for production deploys on Fridays?",
+    "goldDocId": "deploys-page",
+    "goldSpan": "No production deploys go out after 15:00 on Fridays",
+    "goldAnswer": "No production deploys go out after 15:00 on Fridays",
+    "phrasing": 1
+  },
+  {
+    "topic": "deploys",
+    "question": "What may be released during the December freeze?",
+    "goldDocId": "deploys-page",
+    "goldSpan": "During the December freeze only rollbacks and security fixes are released",
+    "goldAnswer": "During the December freeze only rollbacks and security fixes are released",
+    "phrasing": 2
+  },
+  {
+    "topic": "code-review",
+    "question": "How many approvals does a billing pull request need before merge?",
+    "goldDocId": "code-review-page",
+    "goldSpan": "A pull request needs two approvals before merge when it touches billing code",
+    "goldAnswer": "A pull request needs two approvals before merge when it touches billing code",
+    "phrasing": 0
+  },
+  {
+    "topic": "code-review",
+    "question": "How quickly should reviewers respond to a pull request?",
+    "goldDocId": "code-review-page",
+    "goldSpan": "Reviewers should answer within one working day",
+    "goldAnswer": "Reviewers should answer within one working day",
+    "phrasing": 1
+  },
+  {
+    "topic": "incidents",
+    "question": "When is the postmortem for a severity 1 incident due?",
+    "goldDocId": "incidents-page",
+    "goldSpan": "A postmortem is due within five working days of a severity 1 incident",
+    "goldAnswer": "A postmortem is due within five working days of a severity 1 incident",
+    "phrasing": 0
+  },
+  {
+    "topic": "incidents",
+    "question": "How often is the status page updated during an incident?",
+    "goldDocId": "incidents-page",
+    "goldSpan": "The status page is updated every 30 minutes until the incident is resolved",
+    "goldAnswer": "The status page is updated every 30 minutes until the incident is resolved",
+    "phrasing": 1
+  },
+  {
+    "topic": "access",
+    "question": "For how long does read access to the production database last?",
+    "goldDocId": "access-page",
+    "goldSpan": "Read access to the production database expires after 8 hours",
+    "goldAnswer": "Read access to the production database expires after 8 hours",
+    "phrasing": 0
+  },
+  {
+    "topic": "access",
+    "question": "After how many hours does production database read access expire?",
+    "goldDocId": "access-page",
+    "goldSpan": "Read access to the production database expires after 8 hours",
+    "goldAnswer": "Read access to the production database expires after 8 hours",
+    "phrasing": 1
+  },
+  {
+    "topic": "access",
+    "question": "Who approves write access to the production database?",
+    "goldDocId": "access-page",
+    "goldSpan": "Write access needs a ticket approved by the database owner",
+    "goldAnswer": "Write access needs a ticket approved by the database owner",
+    "phrasing": 2
+  },
+  {
+    "topic": "testing",
+    "question": "When is a flaky test quarantined?",
+    "goldDocId": "testing-page",
+    "goldSpan": "A test that fails twice in a week without a code change is quarantined",
+    "goldAnswer": "A test that fails twice in a week without a code change is quarantined",
+    "phrasing": 0
+  },
+  {
+    "topic": "testing",
+    "question": "What coverage must new code keep?",
+    "goldDocId": "testing-page",
+    "goldSpan": "New code must keep line coverage at or above 80 percent",
+    "goldAnswer": "New code must keep line coverage at or above 80 percent",
+    "phrasing": 1
+  },
+  {
+    "topic": "secrets",
+    "question": "How often are service keys rotated?",
+    "goldDocId": "secrets-page",
+    "goldSpan": "Service keys in the vault are rotated every 90 days",
+    "goldAnswer": "Service keys in the vault are rotated every 90 days",
+    "phrasing": 0
+  },
+  {
+    "topic": "secrets",
+    "question": "How many days can a vault service key stay in use?",
+    "goldDocId": "secrets-page",
+    "goldSpan": "Service keys in the vault are rotated every 90 days",
+    "goldAnswer": "Service keys in the vault are rotated every 90 days",
+    "phrasing": 1
+  },
+  {
+    "topic": "secrets",
+    "question": "How fast must a leaked key be rotated?",
+    "goldDocId": "secrets-page",
+    "goldSpan": "A leaked key must be rotated within one hour",
+    "goldAnswer": "A leaked key must be rotated within one hour",
+    "phrasing": 2
+  },
+  {
+    "topic": "cloud-costs",
+    "question": "When are idle development instances stopped?",
+    "goldDocId": "cloud-costs-page",
+    "goldSpan": "Development instances idle for 7 days are stopped automatically",
+    "goldAnswer": "Development instances idle for 7 days are stopped automatically",
+    "phrasing": 0
+  },
+  {
+    "topic": "cloud-costs",
+    "question": "When does a team get a cloud budget alert?",
+    "goldDocId": "cloud-costs-page",
+    "goldSpan": "Teams get an alert when they pass 80 percent of the monthly cloud budget",
+    "goldAnswer": "Teams get an alert when they pass 80 percent of the monthly cloud budget",
+    "phrasing": 1
+  },
+  {
+    "topic": "logging",
+    "question": "How long are application logs kept?",
+    "goldDocId": "logging-page",
+    "goldSpan": "Application logs are kept for 30 days and audit logs for one year",
+    "goldAnswer": "Application logs are kept for 30 days and audit logs for one year",
+    "phrasing": 0
+  },
+  {
+    "topic": "logging",
+    "question": "How long are audit logs kept?",
+    "goldDocId": "logging-page",
+    "goldSpan": "Application logs are kept for 30 days and audit logs for one year",
+    "goldAnswer": "Application logs are kept for 30 days and audit logs for one year",
+    "phrasing": 1
+  },
+  {
+    "topic": "logging",
+    "question": "For how long may debug logging stay on in production?",
+    "goldDocId": "logging-page",
+    "goldSpan": "Debug logging in production must be switched off within 24 hours",
+    "goldAnswer": "Debug logging in production must be switched off within 24 hours",
+    "phrasing": 2
+  },
+  {
+    "topic": "interviews",
+    "question": "How soon must interview feedback be submitted?",
+    "goldDocId": "interviews-page",
+    "goldSpan": "Interviewers submit written feedback within 24 hours of the interview",
+    "goldAnswer": "Interviewers submit written feedback within 24 hours of the interview",
+    "phrasing": 0
+  },
+  {
+    "topic": "interviews",
+    "question": "How many interviews does a candidate have?",
+    "goldDocId": "interviews-page",
+    "goldSpan": "A candidate needs four interviews, including one with a hiring manager",
+    "goldAnswer": "A candidate needs four interviews, including one with a hiring manager",
+    "phrasing": 1
+  },
+  {
+    "topic": "laptops",
+    "question": "How much memory do engineering laptops have?",
+    "goldDocId": "laptops-page",
+    "goldSpan": "Engineers get a laptop with 32 GB of memory",
+    "goldAnswer": "Engineers get a laptop with 32 GB of memory",
+    "phrasing": 0
+  },
+  {
+    "topic": "laptops",
+    "question": "How quickly is a broken laptop replaced?",
+    "goldDocId": "laptops-page",
+    "goldSpan": "A broken laptop is replaced within two working days",
+    "goldAnswer": "A broken laptop is replaced within two working days",
+    "phrasing": 1
+  },
+  {
+    "topic": "docs",
+    "question": "What must every production service have?",
+    "goldDocId": "docs-page",
+    "goldSpan": "Every production service needs a runbook with a named owner",
+    "goldAnswer": "Every production service needs a runbook with a named owner",
+    "phrasing": 0
+  },
+  {
+    "topic": "docs",
+    "question": "How often are runbooks reviewed?",
+    "goldDocId": "docs-page",
+    "goldSpan": "Runbooks are reviewed every six months",
+    "goldAnswer": "Runbooks are reviewed every six months",
+    "phrasing": 1
+  },
+  {
+    "topic": "dependencies",
+    "question": "How fast are critical library vulnerabilities patched?",
+    "goldDocId": "dependencies-page",
+    "goldSpan": "Critical library vulnerabilities are patched within 72 hours",
+    "goldAnswer": "Critical library vulnerabilities are patched within 72 hours",
+    "phrasing": 0
+  },
+  {
+    "topic": "dependencies",
+    "question": "When are non-critical dependency upgrades done?",
+    "goldDocId": "dependencies-page",
+    "goldSpan": "Other dependency upgrades are batched into the monthly upgrade day",
+    "goldAnswer": "Other dependency upgrades are batched into the monthly upgrade day",
+    "phrasing": 1
+  },
+  {
+    "topic": "data-requests",
+    "question": "How long do we have to answer a customer data export request?",
+    "goldDocId": "data-requests-page",
+    "goldSpan": "A customer data export request must be answered within 30 days",
+    "goldAnswer": "A customer data export request must be answered within 30 days",
+    "phrasing": 0
+  },
+  {
+    "topic": "data-requests",
+    "question": "How quickly are customer deletion requests completed?",
+    "goldDocId": "data-requests-page",
+    "goldSpan": "Deletion requests are completed within 14 days",
+    "goldAnswer": "Deletion requests are completed within 14 days",
+    "phrasing": 1
+  },
+  {
+    "topic": "meetings",
+    "question": "Which day has no meetings for engineers?",
+    "goldDocId": "meetings-page",
+    "goldSpan": "Wednesdays are meeting-free for engineering teams",
+    "goldAnswer": "Wednesdays are meeting-free for engineering teams",
+    "phrasing": 0
+  },
+  {
+    "topic": "meetings",
+    "question": "How long may a standup last?",
+    "goldDocId": "meetings-page",
+    "goldSpan": "Standups last at most 15 minutes",
+    "goldAnswer": "Standups last at most 15 minutes",
+    "phrasing": 1
+  },
+  {
+    "topic": "travel",
+    "question": "Can a conference speaker fly business class?",
+    "goldDocId": "travel-page",
+    "goldSpan": "Engineers who give a conference talk can book business class for flights over six hours",
+    "goldAnswer": "Engineers who give a conference talk can book business class for flights over six hours",
+    "phrasing": 0
+  },
+  {
+    "topic": "travel",
+    "question": "Who approves conference talk proposals?",
+    "goldDocId": "travel-page",
+    "goldSpan": "Talk proposals need approval from the engineering director",
+    "goldAnswer": "Talk proposals need approval from the engineering director",
+    "phrasing": 1
+  }
+]

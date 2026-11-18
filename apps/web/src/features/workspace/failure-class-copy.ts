@@ -19,7 +19,8 @@ const COPY: Record<string, string> = {
   "ndcg-gain-below-target":
     "Reranking did not lift nDCG enough over the baseline ranking.",
   "model-calls-over-budget": "More model calls per question than allowed.",
-  "no-citation": "The model answered without a citation in the required format.",
+  "no-citation":
+    "The model answered without a citation in the required format.",
   "citation-outside-gold-span":
     "The model cited a chunk that does not contain the answer.",
   "hallucinated-citation":
@@ -32,8 +33,17 @@ const COPY: Record<string, string> = {
     "Some passages are not a contiguous span of one corpus document.",
   "right-doc-wrong-span":
     "You returned the right document, but not the part that holds the answer.",
-  "gold-doc-not-returned": "None of your passages came from the answer's document.",
+  "gold-doc-not-returned":
+    "None of your passages came from the answer's document.",
   "flag-mismatch": "The submitted flag is not your flag for this level.",
+  "stale-version-in-context":
+    "Another version of the same policy reached the context, so two answers disagree.",
+  "deduped-away":
+    "The answer page was dropped as a duplicate of a higher-ranked page: the threshold is too loose.",
+  "packed-out-by-budget":
+    "The answer page was retrieved, but higher-ranked pages filled the token budget first.",
+  "post-filter-dropped-results":
+    "The filter ran after top-k and threw results away, so fewer chunks than k reached the context.",
 };
 
 const CLASS_LABEL: Record<string, string> = {
@@ -48,7 +58,9 @@ export function failureClassCopy(code: string): string | null {
   if (!copy) {
     return null;
   }
-  return prefix && CLASS_LABEL[prefix] ? `${CLASS_LABEL[prefix]}: ${copy}` : copy;
+  return prefix && CLASS_LABEL[prefix]
+    ? `${CLASS_LABEL[prefix]}: ${copy}`
+    : copy;
 }
 
 export const EVAL_TAG_LABEL: Record<string, string> = {
@@ -58,6 +70,8 @@ export const EVAL_TAG_LABEL: Record<string, string> = {
   "multi-sentence": "Multi-sentence answers",
   unanswerable: "Not in the corpus",
   distractor: "Another doc looks closer",
+  "id-lookup": "Asked by model number or code",
+  "stale-version": "Older versions exist",
   faq: "FAQ",
   policy: "Policy",
   procedural: "Procedural",

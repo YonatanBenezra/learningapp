@@ -12,8 +12,12 @@ export const RAG_FLOW_NODE_TYPE = "ragFlow";
 export type RagExerciseMode =
   | "chunk"
   | "budget"
+  | "hybrid"
+  | "filter"
+  | "packing"
   | "prompt"
   | "rerank"
+  | "rerankOnly"
   | "routing"
   | "redteam"
   | "sandbox";
@@ -36,7 +40,8 @@ export type PipelineStage = {
 
 /** Which grader archetype a submission schema belongs to. */
 export function ragModeFromSchema(schema: unknown): RagExerciseMode {
-  const properties = (schema as { properties?: Record<string, unknown> })?.properties ?? {};
+  const properties =
+    (schema as { properties?: Record<string, unknown> })?.properties ?? {};
   return ragModeFromKeys(Object.keys(properties));
 }
 
@@ -54,8 +59,21 @@ export function ragModeFromKeys(keys: string[]): RagExerciseMode {
   if (keys.includes("generationPrompt")) {
     return "prompt";
   }
-  if (keys.includes("reranker") || keys.includes("queryRewritePrompt")) {
+  if (keys.includes("queryRewritePrompt")) {
     return "rerank";
+  }
+  if (keys.includes("reranker")) {
+    // Rerank exercises that do not offer a query rewrite.
+    return "rerankOnly";
+  }
+  if (keys.includes("statusFilter")) {
+    return "filter";
+  }
+  if (keys.includes("dedupe")) {
+    return "packing";
+  }
+  if (keys.includes("retrievalMode")) {
+    return "hybrid";
   }
   if (keys.includes("topK")) {
     return "budget";
@@ -63,7 +81,10 @@ export function ragModeFromKeys(keys: string[]): RagExerciseMode {
   return "chunk";
 }
 
-export function ragFlowPhaseFromFlags(pending?: boolean, graded?: boolean): RagFlowPhase {
+export function ragFlowPhaseFromFlags(
+  pending?: boolean,
+  graded?: boolean,
+): RagFlowPhase {
   if (pending) {
     return "running";
   }
@@ -80,7 +101,10 @@ const QUERY: PipelineStage = {
 };
 
 /** Mirrors the graders in apps/api/src/modules/grading/harnesses. */
-const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
+const PIPELINES: Record<
+  Exclude<RagExerciseMode, "rerankOnly">,
+  PipelineStage[]
+> = {
   chunk: [
     QUERY,
     {
@@ -89,7 +113,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "you control",
       icon: "vdb",
       control: true,
-      detail: "Your chunk size, overlap and split strategy cut every document into chunks.",
+      detail:
+        "Your chunk size, overlap and split strategy cut every document into chunks.",
     },
     {
       id: "search",
@@ -105,7 +130,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "token budget",
       icon: "context",
       control: false,
-      detail: "The top-5 chunks form the context; their size counts against the token budget.",
+      detail:
+        "The top-5 chunks form the context; their size counts against the token budget.",
     },
     {
       id: "grade",
@@ -113,7 +139,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "recall@5 · tokens",
       icon: "grade",
       control: false,
-      detail: "Pass when the gold sentence is in the top 5 often enough, within the budget.",
+      detail:
+        "Pass when the gold sentence is in the top 5 often enough, within the budget.",
     },
   ],
   budget: [
@@ -124,7 +151,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "you set size",
       icon: "vdb",
       control: true,
-      detail: "Documents are packed into whole-sentence chunks up to your chunk size.",
+      detail:
+        "Documents are packed into whole-sentence chunks up to your chunk size.",
     },
     {
       id: "search",
@@ -132,7 +160,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "you set top-k",
       icon: "vsearch",
       control: true,
-      detail: "BM25 keyword search returns your top-k chunks (4× top-k candidates when rerank is on).",
+      detail:
+        "BM25 keyword search returns your top-k chunks (4× top-k candidates when rerank is on).",
     },
     {
       id: "rerank",
@@ -140,7 +169,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "optional",
       icon: "evaluator",
       control: true,
-      detail: "When on, chunks whose document title matches the query move to the top.",
+      detail:
+        "When on, chunks whose document title matches the query move to the top.",
     },
     {
       id: "context",
@@ -148,7 +178,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "sent in full",
       icon: "context",
       control: false,
-      detail: "Every retrieved chunk is sent in full; prompt tokens are counted on exactly this text.",
+      detail:
+        "Every retrieved chunk is sent in full; prompt tokens are counted on exactly this text.",
     },
     {
       id: "grade",
@@ -156,7 +187,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "recall@k · tokens",
       icon: "grade",
       control: false,
-      detail: "Pass when the gold sentence is in the context often enough, within the token budget.",
+      detail:
+        "Pass when the gold sentence is in the context often enough, within the token budget.",
     },
   ],
   prompt: [
@@ -167,7 +199,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "fixed",
       icon: "vsearch",
       control: false,
-      detail: "Retrieval is locked: BM25 plus title boost over whole documents, top 5.",
+      detail:
+        "Retrieval is locked: BM25 plus title boost over whole documents, top 5.",
     },
     {
       id: "context",
@@ -175,7 +208,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "chunk ids",
       icon: "context",
       control: false,
-      detail: "The top-5 chunks are passed to the generator with their chunk ids.",
+      detail:
+        "The top-5 chunks are passed to the generator with their chunk ids.",
     },
     {
       id: "llm",
@@ -183,7 +217,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "your prompt",
       icon: "llm",
       control: true,
-      detail: "Your generation prompt decides citation format and when to refuse.",
+      detail:
+        "Your generation prompt decides citation format and when to refuse.",
     },
     {
       id: "grade",
@@ -191,7 +226,124 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "citations · refusals",
       icon: "grade",
       control: false,
-      detail: "Checks citation format, gold-span overlap of cited chunks, and refusal behaviour.",
+      detail:
+        "Checks citation format, gold-span overlap of cited chunks, and refusal behaviour.",
+    },
+  ],
+  packing: [
+    QUERY,
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "you set top-k",
+      icon: "vsearch",
+      control: true,
+      detail:
+        "BM25 keyword search over whole wiki pages returns your top-k candidates.",
+    },
+    {
+      id: "dedupe",
+      title: "Dedupe",
+      subtitle: "you set it",
+      icon: "evaluator",
+      control: true,
+      detail:
+        "Drops a page that duplicates a higher-ranked one: identical text (exact) or enough shared words (near, by your threshold).",
+    },
+    {
+      id: "context",
+      title: "Pack",
+      subtitle: "token budget",
+      icon: "context",
+      control: false,
+      detail:
+        "Pages are added in rank order while they fit the token budget; the rest are left out.",
+    },
+    {
+      id: "grade",
+      title: "Grade",
+      subtitle: "recall · tokens",
+      icon: "grade",
+      control: false,
+      detail:
+        "Pass when the answer page makes it into the packed context often enough.",
+    },
+  ],
+  filter: [
+    QUERY,
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "whole documents",
+      icon: "vsearch",
+      control: false,
+      detail:
+        "BM25 keyword search over whole documents, every version of every policy included.",
+    },
+    {
+      id: "filter",
+      title: "Filter",
+      subtitle: "you set it",
+      icon: "evaluator",
+      control: true,
+      detail:
+        "Your status filter keeps documents by their metadata. Pre runs it before top-k; post takes the top k first and then drops what fails.",
+    },
+    {
+      id: "context",
+      title: "Context",
+      subtitle: "what survives",
+      icon: "context",
+      control: false,
+      detail:
+        "Every chunk that survives the filter is sent in full; two versions of one policy in context count as stale.",
+    },
+    {
+      id: "grade",
+      title: "Grade",
+      subtitle: "recall · stale · tokens",
+      icon: "grade",
+      control: false,
+      detail:
+        "Pass when the current version reaches the context, no other version does, and the prompt fits the budget.",
+    },
+  ],
+  hybrid: [
+    QUERY,
+    {
+      id: "chunker",
+      title: "Chunks",
+      subtitle: "one per doc",
+      icon: "vdb",
+      control: false,
+      detail: "Each document is short enough to be a single chunk.",
+    },
+    {
+      id: "search",
+      title: "Retrieve",
+      subtitle: "you pick the mode",
+      icon: "vsearch",
+      control: true,
+      detail:
+        "BM25 keyword match, dense embedding similarity (bge-small), or hybrid: both rescaled per question and mixed by your alpha. Your top-k chunks are kept.",
+    },
+    {
+      id: "context",
+      title: "Context",
+      subtitle: "sent in full",
+      icon: "context",
+      control: false,
+      detail:
+        "Every retrieved chunk is sent in full; prompt tokens are counted on exactly this text.",
+    },
+    {
+      id: "grade",
+      title: "Grade",
+      subtitle: "recall@k · tokens",
+      icon: "grade",
+      control: false,
+      detail:
+        "Pass when the answer's document is in the context often enough, within the token budget.",
     },
   ],
   rerank: [
@@ -219,7 +371,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "you choose",
       icon: "evaluator",
       control: true,
-      detail: "Your reranker and window size reorder the candidates; the top 5 are kept.",
+      detail:
+        "Your reranker and window size reorder the candidates; the top 5 are kept.",
     },
     {
       id: "grade",
@@ -227,7 +380,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "nDCG gain · tokens",
       icon: "grade",
       control: false,
-      detail: "Pass when nDCG@5 improves enough over the first stage within token and call caps.",
+      detail:
+        "Pass when nDCG@5 improves enough over the first stage within token and call caps.",
     },
   ],
   routing: [
@@ -238,7 +392,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "class given",
       icon: "planner",
       control: false,
-      detail: "Each question arrives labelled FAQ, policy or procedural and is sent to that class's profile.",
+      detail:
+        "Each question arrives labelled FAQ, policy or procedural and is sent to that class's profile.",
     },
     {
       id: "profiles",
@@ -246,7 +401,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "you control",
       icon: "retriever",
       control: true,
-      detail: "One top-k / rerank / chunk size profile per class. Chunks are whole sentences packed up to that size.",
+      detail:
+        "One top-k / rerank / chunk size profile per class. Chunks are whole sentences packed up to that size.",
     },
     {
       id: "search",
@@ -254,7 +410,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "per profile",
       icon: "vsearch",
       control: false,
-      detail: "BM25 keyword search over that profile's chunks, with the title boost when the profile reranks.",
+      detail:
+        "BM25 keyword search over that profile's chunks, with the title boost when the profile reranks.",
     },
     {
       id: "context",
@@ -262,7 +419,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "sent in full",
       icon: "context",
       control: false,
-      detail: "Every retrieved chunk is sent in full; prompt tokens are averaged over all classes.",
+      detail:
+        "Every retrieved chunk is sent in full; prompt tokens are averaged over all classes.",
     },
     {
       id: "grade",
@@ -270,7 +428,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "recall per class · tokens",
       icon: "grade",
       control: false,
-      detail: "Pass when each class meets its recall bar and the mean prompt stays within budget.",
+      detail:
+        "Pass when each class meets its recall bar and the mean prompt stays within budget.",
     },
   ],
   redteam: [
@@ -280,7 +439,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "Target bot tab",
       icon: "query",
       control: true,
-      detail: "Everything you type in the Target bot tab goes to the vulnerable bot. Nothing there is graded.",
+      detail:
+        "Everything you type in the Target bot tab goes to the vulnerable bot. Nothing there is graded.",
     },
     {
       id: "filter",
@@ -288,7 +448,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "blocks some asks",
       icon: "evaluator",
       control: false,
-      detail: "A simple filter refuses some words and, on later levels, direct injection phrasing.",
+      detail:
+        "A simple filter refuses some words and, on later levels, direct injection phrasing.",
     },
     {
       id: "search",
@@ -296,7 +457,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "tenant index",
       icon: "vsearch",
       control: false,
-      detail: "Keyword search over the knowledge base. How it filters, and what it trusts, is the bug you are looking for.",
+      detail:
+        "Keyword search over the knowledge base. How it filters, and what it trusts, is the bug you are looking for.",
     },
     {
       id: "llm",
@@ -304,7 +466,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "vulnerable",
       icon: "llm",
       control: false,
-      detail: "The bot answers from what it retrieved and trusts more than it should.",
+      detail:
+        "The bot answers from what it retrieved and trusts more than it should.",
     },
     {
       id: "grade",
@@ -323,7 +486,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "Python",
       icon: "retriever",
       control: true,
-      detail: "Your Python retriever returns passages for every question in a sandbox.",
+      detail:
+        "Your Python retriever returns passages for every question in a sandbox.",
     },
     {
       id: "grade",
@@ -331,7 +495,8 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
       subtitle: "recall@5",
       icon: "grade",
       control: false,
-      detail: "Pass when the gold sentence is in your top 5 passages often enough.",
+      detail:
+        "Pass when the gold sentence is in your top 5 passages often enough.",
     },
   ],
 };
@@ -339,14 +504,21 @@ const PIPELINES: Record<RagExerciseMode, PipelineStage[]> = {
 const MODE_LABELS: Record<RagExerciseMode, string> = {
   chunk: "R1 · chunking",
   budget: "R2 · cost-capped retrieval",
+  hybrid: "R2 · hybrid search",
+  filter: "R2 · metadata filter",
+  packing: "R2 · context packing",
   prompt: "R3 · grounded generation",
   rerank: "R4 · rerank",
+  rerankOnly: "R4 · rerank",
   sandbox: "Custom retriever",
   routing: "R5 · query routing",
   redteam: "Red team · flag capture",
 };
 
 export function pipelineForMode(mode: RagExerciseMode): PipelineStage[] {
+  if (mode === "rerankOnly") {
+    return PIPELINES.rerank.filter((stage) => stage.id !== "rewrite");
+  }
   return PIPELINES[mode];
 }
 
@@ -395,7 +567,11 @@ export function buildPipelineGraph({
         subtitle: stage.subtitle,
         state,
         badge:
-          state === "done" ? "done" : phase === "idle" && stage.control ? "control" : undefined,
+          state === "done"
+            ? "done"
+            : phase === "idle" && stage.control
+              ? "control"
+              : undefined,
         focused: stage.id === focusedId,
         icon: ragFlowIcon(stage.icon),
         iconAccent: ragFlowIconAccent(stage.icon),

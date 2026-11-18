@@ -1,5 +1,5 @@
 {
-  "reranker": "none",
-  "rerankTopN": 20,
-  "queryRewritePrompt": ""
+  "topK": 8,
+  "dedupe": "exact",
+  "dedupeThreshold": 0.95
 }
