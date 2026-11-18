@@ -1,42 +1,42 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO, and where?",
+    "question": "What happens to my pension savings when I leave, and when is a transfer free?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "When you leave the company, your pension savings stay in the plan and keep growing, and you continue to receive the yearly statement at the home address that you gave to the people team. You can also move the savings to the pension plan of your new employer, and the transfer is free of charge as long as you request it within two years after your last working day.",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "When you leave the company, your pension savings stay in the plan and keep growing, and you continue to receive the yearly statement at the home address that you gave to the people team. You can also move the savings to the pension plan of your new employer, and the transfer is free of charge as long as you request it within two years after your last working day."
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "question": "How many extra holiday days can I buy, and what happens to bought days I do not use?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "You can buy up to five extra days of holiday each year in the benefits window in November, and the cost is spread over the twelve monthly salary payments of the following year. Bought days are always used before your normal holiday days, and any bought days that are left unused at the end of the year are paid back to you with the January salary.",
+    "goldDocId": "time-off",
+    "goldSpan": "You can buy up to five extra days of holiday each year in the benefits window in November, and the cost is spread over the twelve monthly salary payments of the following year. Bought days are always used before your normal holiday days, and any bought days that are left unused at the end of the year are paid back to you with the January salary."
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "How much leave is there for fertility treatment, and who is told about it?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Fertility treatment is supported with up to three paid days of leave for each round of treatment, and the health insurance pays for up to three rounds over the whole time you work here. The days can be taken at short notice, and you only need to tell the people team in confidence, because your manager is told that you are on paid leave without being told the reason.",
+    "goldDocId": "family",
+    "goldSpan": "Fertility treatment is supported with up to three paid days of leave for each round of treatment, and the health insurance pays for up to three rounds over the whole time you work here. The days can be taken at short notice, and you only need to tell the people team in confidence, because your manager is told that you are on paid leave without being told the reason."
   },
   {
     "id": "p4",
-    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "question": "How much does the company pay for a degree, and what if I leave soon after?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "A degree or a long professional qualification can be paid by the company up to eight thousand euros a year, on top of the normal learning budget, when it is useful for your current role or your next one. If you leave within two years after the course ends, you pay back part of the cost: everything in the first year, and half of it in the second year, taken from your last salary.",
+    "goldDocId": "learning",
+    "goldSpan": "A degree or a long professional qualification can be paid by the company up to eight thousand euros a year, on top of the normal learning budget, when it is useful for your current role or your next one. If you leave within two years after the course ends, you pay back part of the cost: everything in the first year, and half of it in the second year, taken from your last salary."
   },
   {
     "id": "p5",
-    "question": "What happens to a purchase order when the vendor security report is missing?",
+    "question": "How much is paid for glasses for screen work, and who pays for the eye test?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "Glasses for screen work are paid up to one hundred and fifty euros every two years when an optician confirms that you need them, and this applies to both normal glasses and lenses. The optician test itself is free at the opticians in the company network, and a test at another optician is paid back up to forty euros when you send the invoice to the people team.",
+    "goldDocId": "health-at-work",
+    "goldSpan": "Glasses for screen work are paid up to one hundred and fifty euros every two years when an optician confirms that you need them, and this applies to both normal glasses and lenses. The optician test itself is free at the opticians in the company network, and a test at another optician is paid back up to forty euros when you send the invoice to the people team."
   }
 ]

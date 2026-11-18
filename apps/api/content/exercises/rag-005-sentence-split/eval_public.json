@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO, and where?",
+    "question": "How much may a hotel room cost per night outside capital cities?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "Hotel rooms are booked by the travel desk at least ten days before arrival, and a room may cost up to 160 euros a night in capital cities and 120 euros a night elsewhere.",
+    "goldDocId": "booking-travel",
+    "goldSpan": "Hotel rooms are booked by the travel desk at least ten days before arrival, and a room may cost up to 160 euros a night in capital cities and 120 euros a night elsewhere."
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "question": "Can I claim coffee and snacks bought while travelling separately?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "Coffee and snacks bought while travelling are covered by the daily allowance and cannot be claimed separately, even when the receipt lists a client meeting as the reason.",
+    "goldDocId": "meals-and-allowances",
+    "goldSpan": "Coffee and snacks bought while travelling are covered by the daily allowance and cannot be claimed separately, even when the receipt lists a client meeting as the reason."
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "When is a card statement accepted instead of a receipt?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Every expense above twenty-five euros needs a photo of the original receipt, and a card statement alone is accepted only when the shop refuses to print a receipt.",
+    "goldDocId": "claiming-expenses",
+    "goldSpan": "Every expense above twenty-five euros needs a photo of the original receipt, and a card statement alone is accepted only when the shop refuses to print a receipt."
   },
   {
     "id": "p4",
-    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "question": "What happens to company card lines without a matching receipt?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "The company card statement is reconciled on the first working day of each month, and every line without a matching receipt is deducted from the next salary payment.",
+    "goldDocId": "company-cards",
+    "goldSpan": "The company card statement is reconciled on the first working day of each month, and every line without a matching receipt is deducted from the next salary payment."
   },
   {
     "id": "p5",
-    "question": "What happens to a purchase order when the vendor security report is missing?",
+    "question": "How many days a year may I work from another country?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "Working from another country is allowed for up to twenty working days a year, and each stay must be approved by the manager and the tax team two weeks before travel.",
+    "goldDocId": "working-away-from-home",
+    "goldSpan": "Working from another country is allowed for up to twenty working days a year, and each stay must be approved by the manager and the tax team two weeks before travel."
+  },
+  {
+    "id": "p6",
+    "question": "How much is paid per person for a team building event?",
+    "answerable": true,
+    "goldAnswer": "Team building events are paid once a year with up to eighty euros per person, and the event has to take place within the region unless the director signs off.",
+    "goldDocId": "events-and-gifts",
+    "goldSpan": "Team building events are paid once a year with up to eighty euros per person, and the event has to take place within the region unless the director signs off."
   }
 ]

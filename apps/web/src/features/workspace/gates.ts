@@ -14,6 +14,7 @@ const OP_SYMBOL: Record<string, string> = {
 
 const METRIC_LABELS: Record<string, string> = {
   mean_prompt_tokens: "mean prompt tokens",
+  index_chunks: "chunks in index",
   context_tokens: "context tokens",
   ndcg_improvement: "nDCG gain",
   model_calls_per_question: "model calls / question",

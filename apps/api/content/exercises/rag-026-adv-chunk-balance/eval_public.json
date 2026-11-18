@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO, and where?",
+    "question": "What voucher was added to the account after the blender call?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "as a thank you for your patience i have added a voucher for fifteen euros to your account for your next order",
+    "goldDocId": "call-about-a-broken-blender",
+    "goldSpan": "as a thank you for your patience i have added a voucher for fifteen euros to your account for your next order"
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "question": "Do I need to contact my bank about the reversed duplicate payment?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "your bank may show the reversed payment as pending for a while but you do not need to contact them about it",
+    "goldDocId": "call-about-a-double-charge",
+    "goldSpan": "your bank may show the reversed payment as pending for a while but you do not need to contact them about it"
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "Will support ever ask for my password on the phone?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "we never ask for your password on the phone so if anyone calls and asks for it please hang up and report it",
+    "goldDocId": "call-about-a-password-reset",
+    "goldSpan": "we never ask for your password on the phone so if anyone calls and asks for it please hang up and report it"
   },
   {
     "id": "p4",
-    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "question": "Are the coffee settings kept if I restart the subscription?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "you can restart the coffee subscription at any time in the app and your old grind and roast settings are kept",
+    "goldDocId": "call-about-a-subscription-cancellation",
+    "goldSpan": "you can restart the coffee subscription at any time in the app and your old grind and roast settings are kept"
   },
   {
     "id": "p5",
-    "question": "What happens to a purchase order when the vendor security report is missing?",
+    "question": "What happens if the washing machine fault comes back after the repair?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "if the same fault comes back within ninety days of the repair we replace the whole washing machine instead",
+    "goldDocId": "call-about-a-warranty-repair",
+    "goldSpan": "if the same fault comes back within ninety days of the repair we replace the whole washing machine instead"
+  },
+  {
+    "id": "p6",
+    "question": "Within how many days are price drops matched?",
+    "answerable": true,
+    "goldAnswer": "price drops are only matched within fourteen days of purchase and only for the exact same model in our own shop",
+    "goldDocId": "call-about-a-price-drop",
+    "goldSpan": "price drops are only matched within fourteen days of purchase and only for the exact same model in our own shop"
   }
 ]

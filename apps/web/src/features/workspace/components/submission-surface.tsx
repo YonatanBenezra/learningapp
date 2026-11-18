@@ -65,6 +65,8 @@ const RAG_FIELD_UNITS: Record<string, string> = {
   overlap: "chars",
   topK: "chunks",
   rerankTopN: "chunks",
+  compressSentences: "sentences",
+  expandNeighbors: "chunks",
 };
 
 /** What each RAG toggle does in the grader, when the schema has no description. */
@@ -90,6 +92,12 @@ const RAG_FIELD_HELP: Record<string, string> = {
   hopSeeds: "How many passages from the first search feed the second query.",
   hopQuery: "passage adds whole passages to the second query; entities adds only the new names they mention.",
   filterStage: "pre filters the index before top-k; post drops failing chunks after top-k.",
+  minScoreRatio:
+    "After top-k, drop every chunk scoring below this share of the best chunk's score (0 = keep all k).",
+  compressSentences:
+    "Keep only this many sentences of each retrieved page, the ones sharing the most words with the question (0 = send pages whole).",
+  expandNeighbors:
+    "Send each retrieved chunk with this many neighbouring chunks on each side, from the same page (0 = the chunk alone).",
 };
 
 function ragFieldHelp(name: string, property: SchemaProperty): string {

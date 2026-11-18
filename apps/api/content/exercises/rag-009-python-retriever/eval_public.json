@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO, and where?",
+    "question": "How much notice do I need to give for an electric car charger?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "Ask at least 9 working days in advance.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Ask at least 9 working days in advance."
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "question": "Which phone extension takes requests for a spare laptop?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "Requests go to phone extension 2586.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Requests go to phone extension 2586."
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "Which phone extension takes requests for a massage session?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Requests go to phone extension 2545.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Requests go to phone extension 2545."
   },
   {
     "id": "p4",
-    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "question": "During which hours is meeting catering available?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "It is available from 10:00 until 19:00.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "It is available from 10:00 until 19:00."
   },
   {
     "id": "p5",
-    "question": "What happens to a purchase order when the vendor security report is missing?",
+    "question": "How late can I cancel the homework club without being charged?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "Cancel at least 8 hours before, or the slot is charged.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Cancel at least 8 hours before, or the slot is charged."
+  },
+  {
+    "id": "p6",
+    "question": "How often may I use relocation support each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 7 times a month.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Each person may use it 7 times a month."
   }
 ]

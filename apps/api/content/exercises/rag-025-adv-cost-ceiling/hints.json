@@ -1,6 +1,6 @@
 [
-  "Top-k of 20 packs a large slice of the corpus into the prompt. Cut k and keep recall by reranking.",
-  "Rerank lifts chunks whose document title matches the query. It matters most when k is small.",
-  "Every retrieved chunk is sent in full, so prompt tokens grow with chunk size times k. Smaller chunks let you keep more of them.",
-  "A working point on this corpus is topK 2, rerank true, chunkSize 200."
+  "With whole pages, how many fit the budget, and how many answers do they catch?",
+  "A smaller chunk holds fewer sentences, so each one costs fewer tokens. The same budget then buys more chunks.",
+  "The answer is one sentence. A chunk size that holds a single sentence (about 60 characters) wastes nothing.",
+  "With one sentence per chunk, five or six chunks fit the budget and get past the news pages."
 ]

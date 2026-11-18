@@ -1,11 +1,11 @@
 {
   "slug": "rag-005-sentence-split",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r1",
-  "title": "Public vs Hidden Eval Discipline",
-  "difficulty": "M",
+  "title": "Never Cut a Rule in Half",
+  "difficulty": "E",
   "catalogPhase": 3,
   "skills": [
     {
@@ -17,13 +17,12 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 3 · Public vs Hidden Eval Discipline\n\nYour team overfit to the **visible QA set**. Hidden eval still fails until chunking generalizes. Tune sentence-aware splits so recall@5 ≥ 0.80 on the **held-out** set with mean context tokens (top-5 chunks) ≤ 165 — no tuning to public samples.\n",
+  "briefMd": "# Phase 3 · Never Cut a Rule in Half\n\nThe travel and expense rules are written one rule per sentence, and each rule is long: a condition and a limit, 140 to 220 characters (\"Hotel rooms are booked by the travel desk at least ten days before arrival, and a room may cost up to 160 euros a night in capital cities and 120 euros a night elsewhere.\"). Half a rule is a wrong answer, so a question counts only when the whole rule sits in one retrieved chunk.\n\nYou control **chunk size** (characters) and **split strategy**. There is no overlap here. Retrieval is BM25, top 5 chunks, and all five go into the context.\n\nFixed windows cut wherever the character count runs out. Bigger windows cut fewer rules, but five of them cost too many tokens.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 180 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
       "chunkSize",
-      "overlap",
       "splitStrategy"
     ],
     "properties": {
@@ -31,13 +30,7 @@
         "type": "integer",
         "minimum": 50,
         "maximum": 2000,
-        "default": 400
-      },
-      "overlap": {
-        "type": "integer",
-        "minimum": 0,
-        "maximum": 400,
-        "default": 50
+        "default": 300
       },
       "splitStrategy": {
         "type": "string",
@@ -47,13 +40,13 @@
           "recursive",
           "heading-aware"
         ],
-        "default": "sentence"
+        "default": "fixed"
       }
     }
   },
   "thresholds": {
-    "recall_at_5": 0.8,
-    "mean_context_tokens": 165
+    "recall_at_5": 0.9,
+    "mean_context_tokens": 180
   },
   "budget": {
     "max_model_calls": 0,
@@ -67,14 +60,14 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
     },
     {
       "id": "mean-context-tokens",
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 165
+      "value": 180
     }
   ],
   "feedback": {
@@ -84,5 +77,6 @@
   "attemptPolicy": {
     "maxSubmissions": 20,
     "cooldownHours": 1
-  }
+  },
+  "corpusFile": "travel-rules"
 }

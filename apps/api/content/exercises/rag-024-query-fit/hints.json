@@ -1,0 +1,6 @@
+[
+  "Print every document titled \"Hotel stays\": how do the versions differ?",
+  "Keyword search scores the versions almost the same, because only their numbers differ.",
+  "Read the first sentence: \"Effective YYYY-MM.\" gives the date; drafts have no date.",
+  "Keep the newest dated version of each title, then rank only those and return the best one."
+]

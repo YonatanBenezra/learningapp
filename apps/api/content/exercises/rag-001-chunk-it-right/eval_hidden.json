@@ -1,99 +1,102 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "What is the monthly fee for a staff parking permit?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
-    "split": "holdout",
+    "goldAnswer": "The fee is 52 euros a month.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "The fee is 52 euros a month.",
+    "split": "feedback",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "How often may I use a bicycle locker each month?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "Each person may use it 7 times a month.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Each person may use it 7 times a month.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "What is the monthly fee for the shuttle bus?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days",
+    "goldAnswer": "The fee is 42 euros a month.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "The fee is 42 euros a month.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
-    "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
-    "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
-    "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled",
-    "split": "holdout",
-    "tags": [
       "paraphrase"
     ]
   },
   {
-    "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "id": "h04",
+    "question": "How often may I use an electric car charger each month?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
+    "goldAnswer": "Each person may use it 5 times a month.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Each person may use it 5 times a month.",
     "split": "holdout",
     "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h05",
+    "question": "What is the monthly fee for a public transport pass?",
+    "answerable": true,
+    "goldAnswer": "The fee is 12 euros a month.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "The fee is 12 euros a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h06",
+    "question": "How often may I use the boardroom each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 9 times a month.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Each person may use it 9 times a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
       "lexical"
     ]
   },
   {
-    "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "id": "h07",
+    "question": "What is the monthly fee for a quiet booth?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes",
+    "goldAnswer": "The fee is 53 euros a month.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "The fee is 53 euros a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h08",
+    "question": "How often may I use the rooftop terrace each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 5 times a month.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Each person may use it 5 times a month.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -102,48 +105,50 @@
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "What is the monthly fee for the training kitchen?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication",
+    "goldAnswer": "The fee is 17 euros a month.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "The fee is 17 euros a month.",
     "split": "holdout",
     "tags": [
+      "numeric",
       "paraphrase"
     ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "How often may I use the prayer and rest room each month?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target",
-    "split": "feedback",
+    "goldAnswer": "Each person may use it 3 times a month.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Each person may use it 3 times a month.",
+    "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "What is the monthly fee for a spare laptop?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers",
+    "goldAnswer": "The fee is 92 euros a month.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "The fee is 92 euros a month.",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "paraphrase"
     ]
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "How often may I use a portable projector each month?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted",
+    "goldAnswer": "Each person may use it 3 times a month.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Each person may use it 3 times a month.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -152,49 +157,51 @@
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "What is the monthly fee for a standing desk converter?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only",
-    "split": "holdout",
+    "goldAnswer": "The fee is 60 euros a month.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "The fee is 60 euros a month.",
+    "split": "feedback",
     "tags": [
-      "lexical"
+      "numeric",
+      "paraphrase"
     ]
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "How often may I use a noise-cancelling headset each month?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
-    "split": "holdout",
+    "goldAnswer": "Each person may use it 10 times a month.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Each person may use it 10 times a month.",
+    "split": "feedback",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "What is the monthly fee for a camera kit?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable",
+    "goldAnswer": "The fee is 19 euros a month.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "The fee is 19 euros a month.",
     "split": "holdout",
     "tags": [
+      "numeric",
       "paraphrase"
     ]
   },
   {
     "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "question": "How often may I use the company gym each month?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "feedback",
+    "goldAnswer": "Each person may use it 7 times a month.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Each person may use it 7 times a month.",
+    "split": "holdout",
     "tags": [
       "numeric",
       "lexical"
@@ -202,25 +209,25 @@
   },
   {
     "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "question": "What is the monthly fee for a massage session?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
+    "goldAnswer": "The fee is 31 euros a month.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "The fee is 31 euros a month.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "How often may I use the yoga class each month?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days",
-    "split": "feedback",
+    "goldAnswer": "Each person may use it 8 times a month.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Each person may use it 8 times a month.",
+    "split": "holdout",
     "tags": [
       "numeric",
       "lexical"
@@ -228,11 +235,24 @@
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "What is the monthly fee for an eye test?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold",
+    "goldAnswer": "The fee is 64 euros a month.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "The fee is 64 euros a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h20",
+    "question": "How often may I use a counselling session each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 11 times a month.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Each person may use it 11 times a month.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -240,12 +260,12 @@
     ]
   },
   {
-    "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "id": "h21",
+    "question": "What is the monthly fee for lunch vouchers?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
+    "goldAnswer": "The fee is 21 euros a month.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "The fee is 21 euros a month.",
     "split": "feedback",
     "tags": [
       "numeric",
@@ -253,36 +273,12 @@
     ]
   },
   {
-    "id": "h21",
-    "question": "Who is backup on-call for the week?",
-    "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "How often may I use a fruit box each month?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
-    "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report",
+    "goldAnswer": "Each person may use it 7 times a month.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Each person may use it 7 times a month.",
     "split": "feedback",
     "tags": [
       "numeric",
@@ -290,25 +286,39 @@
     ]
   },
   {
-    "id": "h24",
-    "question": "How are new tools requested?",
+    "id": "h23",
+    "question": "What is the monthly fee for meeting catering?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form",
+    "goldAnswer": "The fee is 63 euros a month.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "The fee is 63 euros a month.",
     "split": "feedback",
     "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "How often may I use the barista bar each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 6 times a month.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Each person may use it 6 times a month.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "What is the monthly fee for a sparkling water cooler?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days",
-    "split": "holdout",
+    "goldAnswer": "The fee is 60 euros a month.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "The fee is 60 euros a month.",
+    "split": "feedback",
     "tags": [
       "numeric",
       "paraphrase"
@@ -316,60 +326,207 @@
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "How often may I use the childcare centre each month?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
-    "split": "holdout",
+    "goldAnswer": "Each person may use it 4 times a month.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Each person may use it 4 times a month.",
+    "split": "feedback",
     "tags": [
+      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h27",
-    "question": "What is the HIDDEN_EVAL_R1_CANARY_PHRASE listed in the unpublished runbook?",
+    "question": "What is the monthly fee for the holiday camp?",
+    "answerable": true,
+    "goldAnswer": "The fee is 17 euros a month.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "The fee is 17 euros a month.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "How often may I use the parent room each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 11 times a month.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Each person may use it 11 times a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "What is the monthly fee for a backup carer?",
+    "answerable": true,
+    "goldAnswer": "The fee is 43 euros a month.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "The fee is 43 euros a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "How often may I use the homework club each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 8 times a month.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Each person may use it 8 times a month.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "What is the monthly fee for a language course?",
+    "answerable": true,
+    "goldAnswer": "The fee is 65 euros a month.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "The fee is 65 euros a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How often may I use the leadership programme each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 6 times a month.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Each person may use it 6 times a month.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "What is the monthly fee for an online learning licence?",
+    "answerable": true,
+    "goldAnswer": "The fee is 49 euros a month.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "The fee is 49 euros a month.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "How late can I cancel mentoring without being charged?",
+    "answerable": true,
+    "goldAnswer": "Cancel at least 31 hours before, or the slot is charged.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Cancel at least 31 hours before, or the slot is charged.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "What is the monthly fee for a conference ticket?",
+    "answerable": true,
+    "goldAnswer": "The fee is 91 euros a month.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "The fee is 91 euros a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "How late can I cancel relocation support without being charged?",
+    "answerable": true,
+    "goldAnswer": "Cancel at least 4 hours before, or the slot is charged.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Cancel at least 4 hours before, or the slot is charged.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h37",
+    "question": "What is the monthly fee for a temporary apartment?",
+    "answerable": true,
+    "goldAnswer": "The fee is 48 euros a month.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "The fee is 48 euros a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h38",
+    "question": "How often may I use the tax adviser each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 11 times a month.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Each person may use it 11 times a month.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h39",
+    "question": "During which hours is a storage unit available?",
+    "answerable": true,
+    "goldAnswer": "It is available from 9:00 until 18:00.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "It is available from 9:00 until 18:00.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h40",
+    "question": "How late can I cancel a moving van without being charged?",
+    "answerable": true,
+    "goldAnswer": "Cancel at least 30 hours before, or the slot is charged.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Cancel at least 30 hours before, or the slot is charged.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R01_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
     "goldSpan": null,
     "split": "holdout",
     "tags": []
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "feedback",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
   }
 ]

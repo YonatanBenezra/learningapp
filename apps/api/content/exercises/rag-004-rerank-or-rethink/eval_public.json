@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who sets the severity of an incident?",
+    "question": "How far ahead do I book trips on the new travel booking site?",
     "answerable": true,
-    "goldAnswer": "The incident commander",
-    "goldDocId": "incident",
-    "goldSpan": "Severity is set by the incident commander"
+    "goldAnswer": "Flights and trains on the booking site are booked at least seven days before the trip.",
+    "goldDocId": "travel-handbook-part-2",
+    "goldSpan": "Flights and trains on the booking site are booked at least seven days before the trip."
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on ordinary workdays?",
+    "question": "How often are laptops replaced in the new laptop refresh?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "Laptops are replaced every four years, or earlier when a repair costs more than half.",
+    "goldDocId": "it-handbook-part-1",
+    "goldSpan": "Laptops are replaced every four years, or earlier when a repair costs more than half."
   },
   {
     "id": "p3",
-    "question": "Which retention clock do backup tapes follow?",
+    "question": "When do payslips appear in the new payslip portal?",
     "answerable": true,
-    "goldAnswer": "The same clock as the source system",
-    "goldDocId": "retention",
-    "goldSpan": "Backup tapes follow the same clock as the source system"
+    "goldAnswer": "Payslips appear in the portal two days before the salary is paid.",
+    "goldDocId": "payroll-handbook-part-2",
+    "goldSpan": "Payslips appear in the portal two days before the salary is paid."
   },
   {
     "id": "p4",
-    "question": "Are personal USB drives allowed on company laptops?",
+    "question": "Who registers visitors in the new visitor registration, and when?",
     "answerable": true,
-    "goldAnswer": "No, they are blocked on the endpoint",
-    "goldDocId": "laptop",
-    "goldSpan": "personal USB drives are blocked on the endpoint"
+    "goldAnswer": "Visitors are registered by their host at least one day before the visit.",
+    "goldDocId": "reception-handbook-part-2",
+    "goldSpan": "Visitors are registered by their host at least one day before the visit."
   },
   {
     "id": "p5",
-    "question": "How quickly must a leaked credential be rotated?",
+    "question": "How much data abroad does the new phone plan include?",
     "answerable": true,
-    "goldAnswer": "Within one hour of detection",
-    "goldDocId": "password",
-    "goldSpan": "Rotate a leaked credential within one hour of detection"
+    "goldAnswer": "The plan includes ten gigabytes of data abroad every month.",
+    "goldDocId": "it-handbook-part-6",
+    "goldSpan": "The plan includes ten gigabytes of data abroad every month."
+  },
+  {
+    "id": "p6",
+    "question": "When are permits renewed in the new parking permit system?",
+    "answerable": true,
+    "goldAnswer": "Permits in the system are renewed every year in January.",
+    "goldDocId": "facilities-handbook-part-3",
+    "goldSpan": "Permits in the system are renewed every year in January."
   }
 ]

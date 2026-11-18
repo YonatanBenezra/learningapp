@@ -507,6 +507,75 @@ Phase D ধাপে ধাপে হবে। প্রতিটা ধাপ�
 - Blue team-ও তাই আটকে আছে, কারণ ওটা grade করতে attack payload-এর hidden set লাগে।
 - এগুলো কীভাবে আর কে বানাবে, সেটা টিমের সিদ্ধান্ত (§৯)।
 
+### Phase F: বাকি clone exercise নতুন করে বানানো (২০২৬-১১-১৮)
+
+Phase D-র মতোই কাজ হবে: slug একই থাকবে, `version` বাড়বে, প্রতিটা exercise নিজের corpus আর hidden set পাবে, আর `rag-mechanics.spec.ts`-এ shortcut config-গুলো fail করতে হবে। নতুন বানানো exercise `rag-transfer.spec.ts`-এর legacy তালিকা থেকে সরে যায়। প্রতিটা ধাপের mechanic সেই ধাপেই ঠিক করা হবে।
+
+| ধাপ | কাজ | Slug | অবস্থা |
+|---|---|---|---|
+| F1 | R1-এর দুটো ভিত্তি: chunk size বনাম budget, আর sentence split | `rag-001`, `rag-005` | ✅ |
+| F2 | Paragraph split, আর punctuation ছাড়া transcript-এ overlap + index budget | `rag-007`, `rag-026` | ✅ |
+| F3 | Top-k, score cutoff, আর ছোট chunk বেশি সংখ্যায় | `rag-003-top-k`, `rag-002`, `rag-025` | ✅ |
+| F4 | Context compression আর sentence window | `rag-016`, `rag-017` | ✅ |
+| F5 | MMR (R4) আর citation contract (R3) | `rag-004`, `rag-003-citation` | ✅ |
+| F6 | Sandbox: paragraph retriever, বাক্য বেছে ফেরত, spam, version | `rag-009`, `rag-029`, `rag-023`, `rag-024` | ✅ |
+
+**F1-এ যা হয়েছে:**
+- **Chunk size বনাম budget (`rag-001`, version 2) "Keep the Subject in the Chunk":**
+  - নতুন corpus `office-services`: ৮টা page, ৪০টা service, প্রতিটা service একটা paragraph।
+  - Paragraph-এর প্রথম বাক্যে service-এর নাম থাকে। পরের তিনটা বাক্য শুধু "it" বলে, যেমন "The fee is 25 euros a month."।
+  - সব service-এর তথ্য একই ধরনের, তাই নাম ছাড়া একটা fee-র বাক্য আরও চল্লিশটার মতো দেখায়।
+  - Gate: recall@5 ≥ ০.৯০, token ≤ ২৮০।
+  - **পুরো config space চালিয়ে দেখা:**
+    - ১৫০ অক্ষর বা তার ছোট chunk-এ কোনো strategy pass করে না (recall ≤ ০.৭২)।
+    - ৪২৫ বা তার বড় chunk-এ কোনোটাই pass করে না, কারণ দুটো paragraph এক chunk-এ চলে আসে (token ≥ ৩০৮)।
+    - Recursive pass করে ২০০–৪০০-তে, heading-aware ১৭৫–৪০০-তে। Sentence pass করে শুধু সেই কয়েকটা size-এ, যেখানে chunk ঘটনাক্রমে paragraph-এর সাথে মিলে যায়।
+  - **Onboarding:** `rag-001` onboarding-এর exercise। Starter config নতুন reference-এ বদলানো হয়েছে (recursive, ৩০০, overlap ০), তাই "starter রেখে submit করো" এখনো pass করে।
+  - Landing page-এর simulator preview আগে exercise folder-এর পুরনো `corpus.json` পড়ত। এখন `corpusFile` আর exercise-এর gate দিয়ে চলে।
+  - Home page-এ exercise-এর নাম আর gate ঠিক করা হয়েছে।
+- **Sentence split (`rag-005`, version 2) "Never Cut a Rule in Half":**
+  - নতুন corpus `travel-rules`: ৭টা page, ৪২টা rule। প্রতিটা rule একটা লম্বা বাক্য (১৪০–২২০ অক্ষর), আর উত্তর হলো পুরো rule।
+  - এই exercise-এ overlap knob নেই। Engine-এ R1 payload-এ overlap না থাকলে ০ ধরা হয়।
+  - Gate: recall@5 ≥ ০.৯০, token ≤ ১৮০। Difficulty M থেকে E করা হয়েছে।
+  - **পুরো config space চালিয়ে দেখা:** Fixed কোনো size-এ pass করে না। সবচেয়ে ভালো recall ০.৮৩, ৭০০ অক্ষরে, তখন token budget-এর অনেক বেশি। Sentence ৩০০ পর্যন্ত যেকোনো size-এ pass করে।
+  - **Overlap কেন নেই:** overlap থাকলে `rag-006`-এর উত্তর (sentence + overlap) এখানেও pass করত।
+  - **যে বিকল্প কাজ করেনি:** rule-এর মাঝে abbreviation ("e.g.", "a.m.") রেখে sentence splitter-কে ভাঙানো। সেখানে sentence + overlap sliding window-এর মতো কাজ করে pass করত, আর overlap ছাড়া sentence কিছু size-এ ভাগ্যক্রমে pass করত।
+
+**F2–F6-এ যা হয়েছে:** প্রতিটা exercise-এর নিজের corpus বা নিজের প্রশ্ন আছে। `rag-mechanics.spec.ts`-এ প্রতিটার shortcut config fail করে। `rag-transfer.spec.ts`-এর legacy তালিকা এখন খালি, অর্থাৎ R1–R5-এর প্রতিটা exercise যাচাই হয়।
+
+| Exercise | Mechanic | Corpus | Gate | কী pass করে, কী করে না |
+|---|---|---|---|---|
+| `rag-007` "Split on Paragraphs, Not Overlap" | প্রতিটা উত্তর দুই বাক্যের এক paragraph, দৈর্ঘ্য ১২০–৩৯০ অক্ষর | নতুন `benefits-faq` | recall ≥ ০.৯০, token ≤ ৩৪০ | শুধু recursive/heading-aware ৪০০–৫০০ অক্ষরে pass। Fixed আর sentence কোনো size বা overlap-এ pass করে না |
+| `rag-026` "Transcripts Without Full Stops" | Punctuation ছাড়া call transcript। Overlap লাগে, আর index-এ সর্বোচ্চ ১২০টা chunk | নতুন `call-transcripts` | recall ≥ ০.৯৫, token ≤ ৩০০, index ≤ ১২০ | শুধু overlap দেওয়া window ২৫০–৩২৫ অক্ষরে pass। Overlap ছাড়া, বা খুব ছোট step-এ (index ভরে যায়) fail |
+| `rag-003-top-k` "Find the Right k" | শুধু top-k | নতুন `parcel-help` | recall ≥ ০.৯০, token ≤ ২০০ | k = ২–৩ pass। k = ১ বা ৪-এর বেশি fail |
+| `rag-002` "Stop When the Scores Drop" | Score cutoff (নতুন knob `minScoreRatio`) | `parcel-help` | recall ≥ ০.৯০, token ≤ ১৫০ | কোনো fixed k pass করে না। Ratio ০.৫–০.৮ pass করে |
+| `rag-025` "Smaller Chunks, More of Them" | Chunk size আর top-k একসাথে, খুব কম budget | `parcel-help` | recall ≥ ০.৯০, token ≤ ১০০ | এক বাক্যের chunk, k = ৫–৬ pass। ১৫০ অক্ষর বা বড় chunk-এ যেকোনো k fail |
+| `rag-016` "Send the Sentence, Not the Page" | Extractive compression (নতুন knob `compressSentences`) | `parcel-help` | recall ≥ ০.৯০, token ≤ ১২০ | পুরো page কোনো k-তে pass করে না। প্রতি page-এ ১–২ বাক্য রাখলে pass |
+| `rag-017` "Search Small, Read Around" | Sentence window (নতুন knob `expandNeighbors`) | নতুন `front-desk` | recall ≥ ০.৯৫, token ≤ ৯০ | Window ছাড়া কোনো config pass করে না। ছোট chunk আর window ১ pass করে |
+| `rag-004` "Five Copies and One Answer" | MMR। Repost-গুলো top ভরে রাখে | নতুন `mirror-posts` | nDCG gain ≥ ০.২৫, token ≤ ৩০০, model call ০ | কোনো rerank না দিলে gain ০, title boost-এ −০.২১। MMR window ৫-এ ০.০৮, window ৬ বা বেশিতে ০.৪০ |
+| `rag-003-citation` "The Citation Contract" | Prompt দিয়ে citation আর refusal | `parcel-help`-এর ৩০টা প্রশ্ন, সাথে ১১টা প্রশ্ন যার উত্তর corpus-এ নেই | format ≥ ০.৯০, overlap ≥ ০.৮৫, refusal ≥ ৮, ভুল refusal ≤ ২ | Offline simulator-এ reference pass করে। Refusal বা citation ছাড়া prompt fail করে |
+| `rag-009` "Write the Paragraph Retriever" | Python-এ paragraph BM25 | `office-services`-এর বাকি প্রশ্নের অর্ধেক | recall ≥ ০.৯০, token ≤ ১৬০ | Paragraph top-৩: recall ১.০০। বাক্য-ভিত্তিক search: ০.১৯ |
+| `rag-029` "Rank the Paragraph, Return the Sentence" | Paragraph দিয়ে rank, তারপর শুধু উত্তরের বাক্য ফেরত | `office-services`-এর বাকি অর্ধেক | recall ≥ ০.৯০, token ≤ ৪৫ | Reference ৩৪ token-এ recall ১.০০। পুরো paragraph ১৪৯ token, budget-এর বাইরে |
+| `rag-023` "Retrieval Against Keyword Spam" | Keyword spam, যেখানে BM25-ও ঠকে যায় | নতুন `forum-posts` | recall ≥ ০.৯০, token ≤ ১২০ | শব্দের বৈচিত্র্য দিয়ে score করলে ১.০০। BM25-এ ০.৭৯ |
+| `rag-024` "Only the Version in Force" | Text থেকে "Effective YYYY-MM" পড়ে চালু version বাছা | নতুন `policy-archive` | recall ≥ ০.৯০, token ≤ ৬০ | Reference ০.৯৭। BM25 top-১-এ ০.০৭ |
+
+**Engine-এ যা বদলেছে:**
+- R1-এ ঐচ্ছিক gate `index_chunks`। Lab-এর estimate আর web meter-এ index-এ কয়টা chunk আছে, সেটা দেখায়।
+- R2-এ তিনটা নতুন ঐচ্ছিক knob:
+  - `minScoreRatio`: score cutoff। এতে miss হলে কারণ দেখায় `cut-by-score-ratio`।
+  - `compressSentences`: extractive compression। Miss-এর কারণ `compressed-away`।
+  - `expandNeighbors`: একই page-এর আশপাশের chunk একসাথে পাঠায়। গায়ে গায়ে লাগা window এক হয়ে যায়।
+- Lab আর grader একই `contextForR2` ব্যবহার করে।
+- Gold span এখন ৬০০ অক্ষরের বেশি লম্বা "বাক্যে" বাড়ানো হয় না। Punctuation ছাড়া transcript এমনিতে পুরোটা একটা বাক্য হয়ে যায়।
+- Web-এ পাঁচটা নতুন R2 pipeline diagram (top-k, granularity, cutoff, compress, window), নতুন field-এর ব্যাখ্যা, আর miss-এর কারণের লেখা।
+- Engine-এর unit test (`r2`, `r3`, `r4`, sandbox) আগে পুরনো clone exercise-এর ফাইল fixture হিসেবে পড়ত। সেগুলো এখন `src/modules/grading/harnesses/__fixtures__/internal-policy/`-এ রাখা আছে, তাই content বদলালে engine test বদলায় না।
+
+**যাচাই:** Clean HEAD-এ যে ১৬টা test suite fail করে (folder না থাকা agent, benchmark, nn, ft ইত্যাদি), এখনো ঠিক সেগুলোই fail করে। নতুন করে কিছু fail করে না। Browser-এ সাতটা rebuilt exercise খুলে দেখা হয়েছে: field, pipeline diagram আর estimate meter ঠিক দেখায়।
+
+**যা বাকি থাকল:**
+- Citation exercise (`rag-003-citation`) এখনো আসল model দিয়ে চালিয়ে দেখা হয়নি, শুধু offline simulator দিয়ে।
+- পুরনো `internal-policy` corpus এখন শুধু engine test fixture আর red team ব্যবহার করে।
+
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে
 
 1. **Grading-এ আসল model:** প্রতিটা R3 attempt-এ ~৩০টা প্রশ্ন, মোটামুটি ২০–২৫ হাজার token। Cache থাকায় একই submission আবার দিলে খরচ শূন্য। এই খরচ মেনে নেওয়া যাবে, নাকি R3 simulated থাকবে আর UI-তে স্পষ্ট লেবেল দেওয়া হবে?

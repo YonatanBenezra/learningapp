@@ -1,0 +1,194 @@
+[
+  {
+    "question": "How much does the company pay into my pension, and how much can I add myself?",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "The company pays six percent of your gross salary into the pension plan every month. You can add up to ten percent yourself through the payroll portal.",
+    "goldAnswer": "The company pays six percent of your gross salary into the pension plan every month. You can add up to ten percent yourself through the payroll portal."
+  },
+  {
+    "question": "Where is my pension invested, and what does it cost to switch funds?",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "The pension plan invests your savings in a default fund that slowly moves to safer investments as you get closer to the retirement age that you chose when you joined the plan. You can switch to one of the four other funds at any time, but every switch after the second one in the same calendar year costs a fee of twenty-five euros, which is taken from your savings.",
+    "goldAnswer": "The pension plan invests your savings in a default fund that slowly moves to safer investments as you get closer to the retirement age that you chose when you joined the plan. You can switch to one of the four other funds at any time, but every switch after the second one in the same calendar year costs a fee of twenty-five euros, which is taken from your savings."
+  },
+  {
+    "question": "What discount does the share purchase plan give, and how long must I keep the shares?",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "The share purchase plan lets you buy company shares at a fifteen percent discount. Shares bought through the plan must be held for at least twelve months.",
+    "goldAnswer": "The share purchase plan lets you buy company shares at a fifteen percent discount. Shares bought through the plan must be held for at least twelve months."
+  },
+  {
+    "question": "What happens to my pension savings when I leave, and when is a transfer free?",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "When you leave the company, your pension savings stay in the plan and keep growing, and you continue to receive the yearly statement at the home address that you gave to the people team. You can also move the savings to the pension plan of your new employer, and the transfer is free of charge as long as you request it within two years after your last working day.",
+    "goldAnswer": "When you leave the company, your pension savings stay in the plan and keep growing, and you continue to receive the yearly statement at the home address that you gave to the people team. You can also move the savings to the pension plan of your new employer, and the transfer is free of charge as long as you request it within two years after your last working day."
+  },
+  {
+    "question": "Who does the health insurance cover, and what does it cost to add a partner?",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "Private health insurance covers you and your children up to the age of eighteen. A partner can be added for forty euros a month through the benefits portal.",
+    "goldAnswer": "Private health insurance covers you and your children up to the age of eighteen. A partner can be added for forty euros a month through the benefits portal."
+  },
+  {
+    "question": "What does the dental plan pay for, and is orthodontic treatment covered?",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "The dental plan pays for two check-ups and two cleanings a year at any dentist in the national network, and it also pays half of the cost of fillings and other basic treatment. Orthodontic treatment such as braces is only covered for children, and the plan pays at most one thousand five hundred euros per child over the whole time they are insured.",
+    "goldAnswer": "The dental plan pays for two check-ups and two cleanings a year at any dentist in the national network, and it also pays half of the cost of fillings and other basic treatment. Orthodontic treatment such as braces is only covered for children, and the plan pays at most one thousand five hundred euros per child over the whole time they are insured."
+  },
+  {
+    "question": "How much does the life insurance pay out, and can I change who receives it?",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "Life insurance pays out three times your yearly salary to the people you name. You can change the names at any time in the benefits portal.",
+    "goldAnswer": "Life insurance pays out three times your yearly salary to the people you name. You can change the names at any time in the benefits portal."
+  },
+  {
+    "question": "When does income protection start paying, and for how long does it pay?",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "Income protection insurance pays seventy percent of your salary if you cannot work because of a long illness, and the payments start after you have been ill for more than six months in a row. The payments continue until you are able to work again or until you reach the state pension age, and they are reduced by any payments that you receive from the state for the same illness.",
+    "goldAnswer": "Income protection insurance pays seventy percent of your salary if you cannot work because of a long illness, and the payments start after you have been ill for more than six months in a row. The payments continue until you are able to work again or until you reach the state pension age, and they are reduced by any payments that you receive from the state for the same illness."
+  },
+  {
+    "question": "How many holiday days do I get, and how many can I carry over?",
+    "goldDocId": "time-off",
+    "goldSpan": "Full-time staff receive twenty-eight days of paid holiday each year. Up to five unused days can be carried over to the first quarter of the next year.",
+    "goldAnswer": "Full-time staff receive twenty-eight days of paid holiday each year. Up to five unused days can be carried over to the first quarter of the next year."
+  },
+  {
+    "question": "How many extra holiday days can I buy, and what happens to bought days I do not use?",
+    "goldDocId": "time-off",
+    "goldSpan": "You can buy up to five extra days of holiday each year in the benefits window in November, and the cost is spread over the twelve monthly salary payments of the following year. Bought days are always used before your normal holiday days, and any bought days that are left unused at the end of the year are paid back to you with the January salary.",
+    "goldAnswer": "You can buy up to five extra days of holiday each year in the benefits window in November, and the cost is spread over the twelve monthly salary payments of the following year. Bought days are always used before your normal holiday days, and any bought days that are left unused at the end of the year are paid back to you with the January salary."
+  },
+  {
+    "question": "How much volunteering leave do I get, and how is it approved?",
+    "goldDocId": "time-off",
+    "goldSpan": "Volunteering leave gives you two paid days a year to work for a registered charity. Your manager approves the days in the absence tool at least a week ahead.",
+    "goldAnswer": "Volunteering leave gives you two paid days a year to work for a registered charity. Your manager approves the days in the absence tool at least a week ahead."
+  },
+  {
+    "question": "When can I take a sabbatical, and how far ahead must I ask for it?",
+    "goldDocId": "time-off",
+    "goldSpan": "After five years with the company you can take a sabbatical of up to three months, and during the sabbatical your job, your pension contributions and your health insurance are kept for you. A sabbatical is unpaid, but you can spread the lost salary over the twelve months before it starts, and you must ask your manager at least six months before the date you want to leave.",
+    "goldAnswer": "After five years with the company you can take a sabbatical of up to three months, and during the sabbatical your job, your pension contributions and your health insurance are kept for you. A sabbatical is unpaid, but you can spread the lost salary over the twelve months before it starts, and you must ask your manager at least six months before the date you want to leave."
+  },
+  {
+    "question": "How much paid parental leave do I get, and can I split it up?",
+    "goldDocId": "family",
+    "goldSpan": "Parents receive sixteen weeks of fully paid leave after the birth or adoption of a child. The leave can be taken in up to three blocks within the first year.",
+    "goldAnswer": "Parents receive sixteen weeks of fully paid leave after the birth or adoption of a child. The leave can be taken in up to three blocks within the first year."
+  },
+  {
+    "question": "How much is the childcare allowance, and when does it start and stop?",
+    "goldDocId": "family",
+    "goldSpan": "The childcare allowance pays two hundred euros a month for each child under the age of four who goes to a registered nursery or a registered childminder near your home or the office. The allowance is paid with your salary from the month after you send the contract with the nursery to the people team, and it stops automatically in the month that the child turns four.",
+    "goldAnswer": "The childcare allowance pays two hundred euros a month for each child under the age of four who goes to a registered nursery or a registered childminder near your home or the office. The allowance is paid with your salary from the month after you send the contract with the nursery to the people team, and it stops automatically in the month that the child turns four."
+  },
+  {
+    "question": "How many days of carers leave do I get, and how do I ask for them?",
+    "goldDocId": "family",
+    "goldSpan": "Carers leave gives you ten paid days a year to look after a family member who is ill. You only need to tell your manager on the first day of the leave.",
+    "goldAnswer": "Carers leave gives you ten paid days a year to look after a family member who is ill. You only need to tell your manager on the first day of the leave."
+  },
+  {
+    "question": "How much leave is there for fertility treatment, and who is told about it?",
+    "goldDocId": "family",
+    "goldSpan": "Fertility treatment is supported with up to three paid days of leave for each round of treatment, and the health insurance pays for up to three rounds over the whole time you work here. The days can be taken at short notice, and you only need to tell the people team in confidence, because your manager is told that you are on paid leave without being told the reason.",
+    "goldAnswer": "Fertility treatment is supported with up to three paid days of leave for each round of treatment, and the health insurance pays for up to three rounds over the whole time you work here. The days can be taken at short notice, and you only need to tell the people team in confidence, because your manager is told that you are on paid leave without being told the reason."
+  },
+  {
+    "question": "What bike can I lease, and can I buy it when the lease ends?",
+    "goldDocId": "getting-around",
+    "goldSpan": "The bike lease lets you lease a bike of up to three thousand euros through your salary. The lease runs for three years, and you can buy the bike for ten percent at the end.",
+    "goldAnswer": "The bike lease lets you lease a bike of up to three thousand euros through your salary. The lease runs for three years, and you can buy the bike for ten percent at the end."
+  },
+  {
+    "question": "What happens to my leased bike if I leave early, and what if it is stolen?",
+    "goldDocId": "getting-around",
+    "goldSpan": "If you leave the company before the bike lease has ended, the remaining monthly payments are taken from your last salary, and the bike then becomes yours without any further payment to the leasing company. If the bike is stolen during the lease, the insurance that comes with every lease pays for a new bike of the same value, but you pay the first one hundred euros of the cost yourself.",
+    "goldAnswer": "If you leave the company before the bike lease has ended, the remaining monthly payments are taken from your last salary, and the bike then becomes yours without any further payment to the leasing company. If the bike is stolen during the lease, the insurance that comes with every lease pays for a new bike of the same value, but you pay the first one hundred euros of the cost yourself."
+  },
+  {
+    "question": "Is my public transport to work paid, and how do I order the pass?",
+    "goldDocId": "getting-around",
+    "goldSpan": "Public transport for travel to work is paid in full for every member of staff. The yearly pass is ordered through the travel desk before the first of the month.",
+    "goldAnswer": "Public transport for travel to work is paid in full for every member of staff. The yearly pass is ordered through the travel desk before the first of the month."
+  },
+  {
+    "question": "What does a parking space at the office cost, and who gets one first?",
+    "goldDocId": "getting-around",
+    "goldSpan": "Staff who drive to work can rent a parking space in the office garage for sixty euros a month, and the cost is taken from the salary before tax, which makes it cheaper than it sounds. There are fewer spaces than people who ask for them, so new requests go on a waiting list, and staff with a disability or with children at the nursery next door are always placed first.",
+    "goldAnswer": "Staff who drive to work can rent a parking space in the office garage for sixty euros a month, and the cost is taken from the salary before tax, which makes it cheaper than it sounds. There are fewer spaces than people who ask for them, so new requests go on a waiting list, and staff with a disability or with children at the nursery next door are always placed first."
+  },
+  {
+    "question": "How big is my learning budget, and what can I spend it on?",
+    "goldDocId": "learning",
+    "goldSpan": "Every member of staff has a learning budget of one thousand euros a year. The budget can be spent on courses, books, conferences and exam fees.",
+    "goldAnswer": "Every member of staff has a learning budget of one thousand euros a year. The budget can be spent on courses, books, conferences and exam fees."
+  },
+  {
+    "question": "How much does the company pay for a degree, and what if I leave soon after?",
+    "goldDocId": "learning",
+    "goldSpan": "A degree or a long professional qualification can be paid by the company up to eight thousand euros a year, on top of the normal learning budget, when it is useful for your current role or your next one. If you leave within two years after the course ends, you pay back part of the cost: everything in the first year, and half of it in the second year, taken from your last salary.",
+    "goldAnswer": "A degree or a long professional qualification can be paid by the company up to eight thousand euros a year, on top of the normal learning budget, when it is useful for your current role or your next one. If you leave within two years after the course ends, you pay back part of the cost: everything in the first year, and half of it in the second year, taken from your last salary."
+  },
+  {
+    "question": "How much study leave is there, and how do I book it?",
+    "goldDocId": "learning",
+    "goldSpan": "Study leave gives you five paid days a year to prepare for exams. The days are booked in the absence tool like holiday days.",
+    "goldAnswer": "Study leave gives you five paid days a year to prepare for exams. The days are booked in the absence tool like holiday days."
+  },
+  {
+    "question": "Who gets free language lessons, and can my partner join them?",
+    "goldDocId": "learning",
+    "goldSpan": "Language lessons in the language of the country you work in are free for new staff during their first two years, and the lessons take place during working hours in small groups at the office. Staff who move to another country with the company receive the same lessons for the new language, and their partners can join the evening groups for free during the first year after the move.",
+    "goldAnswer": "Language lessons in the language of the country you work in are free for new staff during their first two years, and the lessons take place during working hours in small groups at the office. Staff who move to another country with the company receive the same lessons for the new language, and their partners can join the evening groups for free during the first year after the move."
+  },
+  {
+    "question": "How much of my gym membership is paid, and how do I claim it?",
+    "goldDocId": "health-at-work",
+    "goldSpan": "The gym subsidy pays half of any gym membership up to thirty euros a month. Send the membership contract once, and the subsidy runs with your salary.",
+    "goldAnswer": "The gym subsidy pays half of any gym membership up to thirty euros a month. Send the membership contract once, and the subsidy runs with your salary."
+  },
+  {
+    "question": "What does the employee assistance line offer, and what does the company find out?",
+    "goldDocId": "health-at-work",
+    "goldSpan": "The employee assistance line offers free and confidential advice on money, legal questions and personal problems, by phone or video, at any time of the day and on every day of the year. Up to six sessions with a counsellor per problem are free, and nothing about the calls is shared with the company, which only receives a yearly report on how many people used the service.",
+    "goldAnswer": "The employee assistance line offers free and confidential advice on money, legal questions and personal problems, by phone or video, at any time of the day and on every day of the year. Up to six sessions with a counsellor per problem are free, and nothing about the calls is shared with the company, which only receives a yearly report on how many people used the service."
+  },
+  {
+    "question": "What does the yearly health check measure, and who sees the results?",
+    "goldDocId": "health-at-work",
+    "goldSpan": "A yearly health check at the office measures blood pressure, cholesterol and weight. The results go only to you and to your doctor if you ask for it.",
+    "goldAnswer": "A yearly health check at the office measures blood pressure, cholesterol and weight. The results go only to you and to your doctor if you ask for it."
+  },
+  {
+    "question": "How much is paid for glasses for screen work, and who pays for the eye test?",
+    "goldDocId": "health-at-work",
+    "goldSpan": "Glasses for screen work are paid up to one hundred and fifty euros every two years when an optician confirms that you need them, and this applies to both normal glasses and lenses. The optician test itself is free at the opticians in the company network, and a test at another optician is paid back up to forty euros when you send the invoice to the people team.",
+    "goldAnswer": "Glasses for screen work are paid up to one hundred and fifty euros every two years when an optician confirms that you need them, and this applies to both normal glasses and lenses. The optician test itself is free at the opticians in the company network, and a test at another optician is paid back up to forty euros when you send the invoice to the people team."
+  },
+  {
+    "question": "When is the yearly bonus paid, and who receives it?",
+    "goldDocId": "money-and-extras",
+    "goldSpan": "The yearly bonus is paid in March and depends on company results and your review. You must work here on the first of March to receive it.",
+    "goldAnswer": "The yearly bonus is paid in March and depends on company results and your review. You must work here on the first of March to receive it."
+  },
+  {
+    "question": "How is the referral bonus paid, and when is it not paid?",
+    "goldDocId": "money-and-extras",
+    "goldSpan": "Staff who recommend a new colleague receive a referral bonus of two thousand euros, paid in two parts: one half when the new colleague starts and the other half after their trial period. The bonus is not paid for people who report to you, for former staff who come back within a year, or when the role was filled through an agency that already had the same candidate.",
+    "goldAnswer": "Staff who recommend a new colleague receive a referral bonus of two thousand euros, paid in two parts: one half when the new colleague starts and the other half after their trial period. The bonus is not paid for people who report to you, for former staff who come back within a year, or when the role was filled through an agency that already had the same candidate."
+  },
+  {
+    "question": "Which devices do I get, and may I use them privately?",
+    "goldDocId": "money-and-extras",
+    "goldSpan": "The company gives every member of staff a phone and a laptop to use for work. Both may be used privately within reason, and both stay company property.",
+    "goldAnswer": "The company gives every member of staff a phone and a laptop to use for work. Both may be used privately within reason, and both stay company property."
+  },
+  {
+    "question": "How big are the staff discounts, and who else may use them?",
+    "goldDocId": "money-and-extras",
+    "goldSpan": "Staff discounts give you up to thirty percent off at more than two hundred shops, gyms and restaurants, and the list of partners is updated every month in the benefits portal on the intranet. The discount is shown as a code or a card in the benefits app, and it may also be used by the people you live with, but it may never be sold or shared with anyone outside your household.",
+    "goldAnswer": "Staff discounts give you up to thirty percent off at more than two hundred shops, gyms and restaurants, and the list of partners is updated every month in the benefits portal on the intranet. The discount is shown as a code or a card in the benefits app, and it may also be used by the people you live with, but it may never be sold or shared with anyone outside your household."
+  }
+]

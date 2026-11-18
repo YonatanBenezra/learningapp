@@ -1,10 +1,10 @@
 {
   "slug": "rag-024-query-fit",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-sandbox",
-  "title": "Custom Retriever on the Full Policy Corpus",
+  "title": "Only the Version in Force",
   "difficulty": "H",
   "catalogPhase": 6,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Phase 6 · Custom Retriever on the Full Policy Corpus\n\nThe same sandbox task on the larger 24-document corpus, with a stricter bar: almost every question must land its answer in your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Concatenated or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget, so whole documents are usually too expensive: split them into smaller passages and rank those.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 115, and every passage comes from the corpus.\n",
+  "briefMd": "# Phase 6 · Only the Version in Force\n\nThe policy archive keeps every version of every policy. Versions are worded the same and differ only in their numbers and their first sentence, which says when they took effect (\"Effective 2025-04.\") or that they are a draft (\"Draft, not yet approved.\"). Nothing else marks the current one. A question counts only when the version in force answers it. Write the retriever in Python.\n\nYour program reads `input.json` (in the same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` holds the corpus (`id`, `title`, `text` for every document) and the questions to answer. Gold answers are not in the sandbox. Return up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Joined or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget.\n\nThe budget fits about one version per question.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 60, and every passage comes from the corpus.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -34,7 +34,7 @@
   },
   "thresholds": {
     "recall_at_5": 0.9,
-    "mean_context_tokens": 115
+    "mean_context_tokens": 60
   },
   "budget": {
     "max_model_calls": 0,
@@ -55,7 +55,7 @@
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 115
+      "value": 60
     },
     {
       "id": "passages-from-corpus",
@@ -73,5 +73,5 @@
     "maxSubmissions": 20,
     "cooldownHours": 1
   },
-  "corpusFile": "shared"
+  "corpusFile": "policy-archive"
 }

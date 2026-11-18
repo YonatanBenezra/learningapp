@@ -1,6 +1,6 @@
 [
-  "Top-k of 20 packs a large slice of the corpus into the prompt. Cut k and keep recall by reranking.",
-  "Rerank lifts chunks whose document title matches the query. It matters most when k is small.",
-  "Every retrieved chunk is sent in full, so prompt tokens grow with chunk size times k. Smaller chunks let you keep more of them.",
-  "A working point on this corpus is topK 2, rerank true, chunkSize 200."
+  "Without a cutoff, find the smallest top-k that catches the answers. What does it cost?",
+  "Open the Query tab for a service with no news pages: how far below the first page does the second one score?",
+  "Now look at a crowded service: the news pages and the real page score close together.",
+  "A cutoff around 0.6 to 0.8 drops the distant pages and keeps the close ones."
 ]

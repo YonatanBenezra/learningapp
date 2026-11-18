@@ -71,6 +71,13 @@ describe('RAG eval invariants', () => {
     'build-it-procedures.mjs',
     'build-hardware-catalog.mjs',
     'build-bilingual-kb.mjs',
+    'build-office-services.mjs',
+    'build-travel-rules.mjs',
+    'build-benefits-faq.mjs',
+    'build-call-transcripts.mjs',
+    'build-parcel-help.mjs',
+    'build-front-desk.mjs',
+    'build-mirror-posts.mjs',
   ])('generated corpora are current (re-run scripts/content/%s)', (script) => {
     expect(() =>
       execFileSync('node', [`scripts/content/${script}`, '--check'], {

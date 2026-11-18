@@ -1,8 +1,13 @@
 import { countTokens } from '../../gateway/pricing';
 import { advisoryClassB } from '../../judge/class-b';
-import { chunkCorpus, type Chunk, type CorpusDoc } from './chunking';
+import {
+  chunkCorpus,
+  type Chunk,
+  type CorpusDoc,
+  sentencesOf,
+} from './chunking';
 import { jaccard, titleBoost } from './rerank';
-import { type Gold, holdsGold, type RankedChunk } from './retrieve';
+import { type Gold, holdsGold, type RankedChunk, tokenize } from './retrieve';
 import {
   prepareRetriever,
   type Retriever,
@@ -87,6 +92,7 @@ export async function gradeR2(
   for (const item of answerable) {
     const {
       retrieved,
+      shaped,
       duplicates,
       context: ranked,
     } = contextForR2(item.question, retriever, payload, tokenCeiling);
@@ -132,14 +138,18 @@ export async function gradeR2(
                 ? 'bridge-passage-missing'
                 : 'answer-passage-missing',
             }
-          : retrieved.some((row) => holdsGold(row.chunk, gold))
-            ? // Retrieved, then lost while packing the context.
-              {
-                code: duplicates.some((row) => holdsGold(row.chunk, gold))
-                  ? 'deduped-away'
-                  : 'packed-out-by-budget',
-              }
-            : diagnoseR2Miss(item.question, retriever, payload, gold),
+          : retrieved.some((row) => holdsGold(row.chunk, gold)) &&
+              !shaped.some((row) => holdsGold(row.chunk, gold))
+            ? // Retrieved, then cut out by compression.
+              { code: 'compressed-away' }
+            : shaped.some((row) => holdsGold(row.chunk, gold))
+              ? // Retrieved, then lost while packing the context.
+                {
+                  code: duplicates.some((row) => holdsGold(row.chunk, gold))
+                    ? 'deduped-away'
+                    : 'packed-out-by-budget',
+                }
+              : diagnoseR2Miss(item.question, retriever, payload, gold),
     );
     if (hit) {
       hits += 1;
@@ -296,6 +306,15 @@ export function diagnoseR2Miss(
   const { chunks } = retriever;
   const fullRanking = firstStageForR2(question, retriever, payload);
   if (
+    (payload.minScoreRatio ?? 0) > 0 &&
+    retrieveForR2(question, retriever, { ...payload, minScoreRatio: 0 }).some(
+      (row) => holdsGold(row.chunk, gold),
+    )
+  ) {
+    // In the top k, but scored below the cutoff.
+    return { code: 'cut-by-score-ratio' };
+  }
+  if (
     filterStage(payload) === 'post' &&
     retrieveForR2(question, retriever, payload).length < payload.topK
   ) {
@@ -321,9 +340,10 @@ export function contextText(ranked: RankedChunk[]): string {
 }
 
 /**
- * What reaches the model: the retrieved chunks, then (when the exercise packs
- * the context) duplicates dropped and the rest added in rank order while
- * they fit `budget` tokens.
+ * What reaches the model: the retrieved chunks, widened to their neighbours
+ * or compressed to their best sentences when the exercise offers that, then
+ * (when the exercise packs the context) duplicates dropped and the rest added
+ * in rank order while they fit `budget` tokens.
  */
 export function contextForR2(
   question: string,
@@ -332,6 +352,8 @@ export function contextForR2(
   budget: number,
 ): {
   retrieved: RankedChunk[];
+  /** After the sentence window and compression. */
+  shaped: RankedChunk[];
   /** Dropped as a duplicate of a higher-ranked chunk. */
   duplicates: RankedChunk[];
   context: RankedChunk[];
@@ -342,12 +364,17 @@ export function contextForR2(
     payload,
     retrieveForR2(question, retriever, payload),
   );
+  const shaped = compress(
+    question,
+    withNeighbors(retriever.chunks, retrieved, payload.expandNeighbors ?? 0),
+    payload.compressSentences ?? 0,
+  );
   if (payload.dedupe === undefined) {
-    return { retrieved, duplicates: [], context: retrieved };
+    return { retrieved, shaped, duplicates: [], context: shaped };
   }
   const kept: RankedChunk[] = [];
   const duplicates: RankedChunk[] = [];
-  for (const row of retrieved) {
+  for (const row of shaped) {
     if (kept.some((other) => isDuplicate(other, row, payload))) {
       duplicates.push(row);
     } else {
@@ -360,7 +387,101 @@ export function contextForR2(
       context.push(row);
     }
   }
-  return { retrieved, duplicates, context };
+  return { retrieved, shaped, duplicates, context };
+}
+
+/**
+ * Sentence window ("small to big"): each hit grows to the `radius` chunks
+ * before and after it in its document. Windows of the same document that
+ * touch or overlap merge into one, kept at the rank of their best hit.
+ */
+export function withNeighbors(
+  chunks: Chunk[],
+  hits: RankedChunk[],
+  radius: number,
+): RankedChunk[] {
+  if (radius <= 0 || hits.length === 0) {
+    return hits;
+  }
+  const byDoc = new Map<string, Chunk[]>();
+  for (const chunk of chunks) {
+    const list = byDoc.get(chunk.docId) ?? [];
+    list.push(chunk);
+    byDoc.set(chunk.docId, list);
+  }
+  type Window = { docId: string; from: number; to: number; score: number };
+  const windows: Window[] = [];
+  for (const hit of hits) {
+    const siblings = byDoc.get(hit.chunk.docId) ?? [hit.chunk];
+    const index = siblings.findIndex((chunk) => chunk.id === hit.chunk.id);
+    const from = Math.max(0, index - radius);
+    const to = Math.min(siblings.length - 1, index + radius);
+    const open = windows.find(
+      (window) =>
+        window.docId === hit.chunk.docId &&
+        from <= window.to + 1 &&
+        to >= window.from - 1,
+    );
+    if (open) {
+      open.from = Math.min(open.from, from);
+      open.to = Math.max(open.to, to);
+    } else {
+      windows.push({ docId: hit.chunk.docId, from, to, score: hit.score });
+    }
+  }
+  return windows.map((window) => {
+    const parts = (byDoc.get(window.docId) ?? []).slice(
+      window.from,
+      window.to + 1,
+    );
+    return {
+      score: window.score,
+      chunk: {
+        ...parts[0],
+        id: `${window.docId}:${window.from}-${window.to}`,
+        text: parts.map((part) => part.text).join(' '),
+      },
+    };
+  });
+}
+
+/**
+ * Extractive compression: each chunk keeps the `keep` sentences that share
+ * the most distinct terms with the question (ties go to the earlier one), in
+ * their original order.
+ */
+export function compress(
+  question: string,
+  ranked: RankedChunk[],
+  keep: number,
+): RankedChunk[] {
+  if (keep <= 0) {
+    return ranked;
+  }
+  const terms = new Set(tokenize(question));
+  return ranked.map((row) => {
+    const sentences = sentencesOf(row.chunk.text);
+    if (sentences.length <= keep) {
+      return row;
+    }
+    const best = sentences
+      .map((sentence, index) => ({
+        index,
+        overlap: new Set(tokenize(sentence).filter((term) => terms.has(term)))
+          .size,
+      }))
+      .sort((a, b) => b.overlap - a.overlap || a.index - b.index)
+      .slice(0, keep)
+      .map((entry) => entry.index)
+      .sort((a, b) => a - b);
+    return {
+      ...row,
+      chunk: {
+        ...row.chunk,
+        text: best.map((index) => sentences[index]).join(' '),
+      },
+    };
+  });
 }
 
 function isDuplicate(
@@ -495,7 +616,21 @@ export function retrieveForR2(
     payload.topK,
   );
   // Post-filter: the top k come back first, then non-matching ones are dropped.
-  return stage === 'post'
-    ? top.filter((row) => passesStatusFilter(row.chunk, payload.statusFilter))
-    : top;
+  const kept =
+    stage === 'post'
+      ? top.filter((row) => passesStatusFilter(row.chunk, payload.statusFilter))
+      : top;
+  return scoreCutoff(kept, payload.minScoreRatio ?? 0);
+}
+
+/** Keeps the chunks scoring at least `ratio` of the best one's score. */
+export function scoreCutoff(
+  ranked: RankedChunk[],
+  ratio: number,
+): RankedChunk[] {
+  if (ratio <= 0 || ranked.length === 0) {
+    return ranked;
+  }
+  const best = ranked[0].score;
+  return ranked.filter((row) => row.score >= best * ratio);
 }

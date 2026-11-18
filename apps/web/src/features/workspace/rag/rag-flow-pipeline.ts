@@ -12,6 +12,11 @@ export const RAG_FLOW_NODE_TYPE = "ragFlow";
 export type RagExerciseMode =
   | "chunk"
   | "budget"
+  | "topk"
+  | "granularity"
+  | "cutoff"
+  | "compress"
+  | "window"
   | "hybrid"
   | "filter"
   | "packing"
@@ -79,6 +84,18 @@ export function ragModeFromKeys(keys: string[]): RagExerciseMode {
   if (keys.includes("retrievalMode")) {
     return "hybrid";
   }
+  if (keys.includes("minScoreRatio")) {
+    return "cutoff";
+  }
+  if (keys.includes("compressSentences")) {
+    return "compress";
+  }
+  if (keys.includes("expandNeighbors")) {
+    return "window";
+  }
+  if (keys.includes("topK") && !keys.includes("rerank")) {
+    return keys.includes("chunkSize") ? "granularity" : "topk";
+  }
   if (keys.includes("topK")) {
     return "budget";
   }
@@ -104,6 +121,26 @@ const QUERY: PipelineStage = {
   detail: "Each hidden-set question runs through the same pipeline.",
 };
 
+const CONTEXT_IN_FULL: PipelineStage = {
+  id: "context",
+  title: "Context",
+  subtitle: "sent in full",
+  icon: "context",
+  control: false,
+  detail:
+    "What survives is sent as context; prompt tokens are counted on exactly this text.",
+};
+
+const GRADE_RECALL_AT_K: PipelineStage = {
+  id: "grade",
+  title: "Grade",
+  subtitle: "recall@k · tokens",
+  icon: "grade",
+  control: false,
+  detail:
+    "Pass when the answer sentence is in the context often enough, within the token budget.",
+};
+
 /** Mirrors the graders in apps/api/src/modules/grading/harnesses. */
 const PIPELINES: Record<
   Exclude<RagExerciseMode, "rerankOnly">,
@@ -118,7 +155,7 @@ const PIPELINES: Record<
       icon: "vdb",
       control: true,
       detail:
-        "Your chunk size, overlap and split strategy cut every document into chunks.",
+        "Your chunk settings cut every document into chunks.",
     },
     {
       id: "search",
@@ -194,6 +231,116 @@ const PIPELINES: Record<
       detail:
         "Pass when the gold sentence is in the context often enough, within the token budget.",
     },
+  ],
+  topk: [
+    QUERY,
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "you set top-k",
+      icon: "vsearch",
+      control: true,
+      detail: "BM25 keyword search over whole pages returns your top-k pages.",
+    },
+    CONTEXT_IN_FULL,
+    GRADE_RECALL_AT_K,
+  ],
+  granularity: [
+    QUERY,
+    {
+      id: "chunker",
+      title: "Chunks",
+      subtitle: "you set size",
+      icon: "vdb",
+      control: true,
+      detail:
+        "Pages are packed into whole-sentence chunks up to your chunk size.",
+    },
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "you set top-k",
+      icon: "vsearch",
+      control: true,
+      detail: "BM25 keyword search returns your top-k chunks.",
+    },
+    CONTEXT_IN_FULL,
+    GRADE_RECALL_AT_K,
+  ],
+  cutoff: [
+    QUERY,
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "you set top-k",
+      icon: "vsearch",
+      control: true,
+      detail: "BM25 keyword search over whole pages returns your top-k pages.",
+    },
+    {
+      id: "cutoff",
+      title: "Cutoff",
+      subtitle: "you set the ratio",
+      icon: "evaluator",
+      control: true,
+      detail:
+        "Drops every page scoring below your share of the best page's score: a clear winner goes alone, a close race keeps several.",
+    },
+    CONTEXT_IN_FULL,
+    GRADE_RECALL_AT_K,
+  ],
+  compress: [
+    QUERY,
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "you set top-k",
+      icon: "vsearch",
+      control: true,
+      detail: "BM25 keyword search over whole pages returns your top-k pages.",
+    },
+    {
+      id: "compress",
+      title: "Compress",
+      subtitle: "you set sentences",
+      icon: "evaluator",
+      control: true,
+      detail:
+        "Each page keeps only your number of sentences, the ones sharing the most words with the question, in their original order.",
+    },
+    CONTEXT_IN_FULL,
+    GRADE_RECALL_AT_K,
+  ],
+  window: [
+    QUERY,
+    {
+      id: "chunker",
+      title: "Chunks",
+      subtitle: "you set size",
+      icon: "vdb",
+      control: true,
+      detail:
+        "Pages are packed into whole-sentence chunks up to your chunk size.",
+    },
+    {
+      id: "search",
+      title: "BM25",
+      subtitle: "you set top-k",
+      icon: "vsearch",
+      control: true,
+      detail: "BM25 keyword search returns your top-k chunks.",
+    },
+    {
+      id: "window",
+      title: "Window",
+      subtitle: "you set neighbours",
+      icon: "evaluator",
+      control: true,
+      detail:
+        "Each hit is sent together with your number of neighbouring chunks on each side, from the same page.",
+    },
+    CONTEXT_IN_FULL,
+    GRADE_RECALL_AT_K,
   ],
   prompt: [
     QUERY,
@@ -547,6 +694,11 @@ const PIPELINES: Record<
 const MODE_LABELS: Record<RagExerciseMode, string> = {
   chunk: "R1 · chunking",
   budget: "R2 · cost-capped retrieval",
+  topk: "R2 · top-k",
+  granularity: "R2 · chunk size and top-k",
+  cutoff: "R2 · score cutoff",
+  compress: "R2 · context compression",
+  window: "R2 · sentence window",
   hybrid: "R2 · hybrid search",
   filter: "R2 · metadata filter",
   packing: "R2 · context packing",

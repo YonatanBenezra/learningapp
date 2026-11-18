@@ -1,6 +1,6 @@
 [
-  "Tell the model to cite retrieved chunks in the form [chunk:ID] and to use only those ids.",
-  "If the retrieved context does not contain the answer, instruct a refusal such as I don't know or REFUSE.",
-  "A helpful-only prompt will skip citations and will guess on unanswerable questions.",
-  "A working prompt names the citation format and says to refuse when the answer is not in context."
+  "Generate a preview for a question the pages cannot answer: what does the model write?",
+  "Spell out the citation format exactly, with an example id from the context, and say that no other format counts.",
+  "Tell the model what to do when the context does not hold the answer, in the exact words the grader looks for.",
+  "Keep answers to what the cited page says: the gold-span check compares the answer with the sentence it came from."
 ]

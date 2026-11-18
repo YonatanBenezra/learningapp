@@ -1,10 +1,10 @@
 {
   "slug": "rag-009-python-retriever",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-sandbox",
-  "title": "Custom Retriever (Code Sandbox)",
+  "title": "Write the Paragraph Retriever",
   "difficulty": "H",
   "catalogPhase": 5,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Phase 5 · Custom Retriever (Code Sandbox)\n\nShip a **Python retriever** to production standards. Your program reads `/workspace/input.json` (same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` contains the public corpus and the questions to answer. Hidden gold answers are **not** in the sandbox.\n\nFor each question return up to 5 passages.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Concatenated or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget, so whole documents are usually too expensive: split them into smaller passages and rank those.\n\n**Gates:** recall@5 ≥ 0.80, mean context tokens ≤ 150, and every passage comes from the corpus.\n\nA keyword ranker over whole documents finds the answers but blows the budget. Returning the same short snippet for every question fails recall.\n",
+  "briefMd": "# Phase 5 · Write the Paragraph Retriever\n\nThe office services guide gives every service one paragraph. The first sentence names the service; the sentences after it only say \"it\" (\"The fee is 25 euros a month.\"), and every service has the same kinds of fact. Write the retriever in Python.\n\nYour program reads `input.json` (in the same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` holds the corpus (`id`, `title`, `text` for every document) and the questions to answer. Gold answers are not in the sandbox. Return up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Joined or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget.\n\nA fact sentence on its own looks like forty others, and whole pages (five services each) cost too much.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 160, and every passage comes from the corpus.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -33,8 +33,8 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.8,
-    "mean_context_tokens": 150
+    "recall_at_5": 0.9,
+    "mean_context_tokens": 160
   },
   "budget": {
     "max_model_calls": 0,
@@ -48,14 +48,14 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
     },
     {
       "id": "mean-context-tokens",
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 150
+      "value": 160
     },
     {
       "id": "passages-from-corpus",
@@ -72,5 +72,6 @@
   "attemptPolicy": {
     "maxSubmissions": 20,
     "cooldownHours": 1
-  }
+  },
+  "corpusFile": "office-services"
 }

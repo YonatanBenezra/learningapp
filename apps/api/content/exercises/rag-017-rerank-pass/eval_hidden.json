@@ -1,255 +1,396 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How much is the check-in deposit, and when is it released?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "Guests leave a card deposit of 100 euros at check-in, taken from the card they booked with or from another card they show at the desk. It is released three days after check-out, when the room has been checked for damage and the minibar has been counted.",
+    "goldDocId": "check-in",
+    "goldSpan": "Guests leave a card deposit of 100 euros at check-in, taken from the card they booked with or from another card they show at the desk. It is released three days after check-out, when the room has been checked for damage and the minibar has been counted.",
     "split": "holdout",
     "tags": [
       "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "question": "When is early check-in possible, and what does it cost?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
-    "split": "holdout",
+    "goldAnswer": "Early check-in before noon is offered only when housekeeping has marked the room as clean in the room system and the guest booked the flexible rate. It costs 30 euros.",
+    "goldDocId": "check-in",
+    "goldSpan": "Early check-in before noon is offered only when housekeeping has marked the room as clean in the room system and the guest booked the flexible rate. It costs 30 euros.",
+    "split": "feedback",
     "tags": [
       "numeric",
-      "paraphrase"
+      "multi-sentence",
+      "lexical"
     ]
   },
   {
     "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "Which identity document do I ask for at check-in, and what happens with it?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
+    "goldAnswer": "Ask every guest for a passport or national identity card at the desk. The number goes into the guest register.",
+    "goldDocId": "check-in",
+    "goldSpan": "Ask every guest for a passport or national identity card at the desk. The number goes into the guest register.",
     "split": "holdout",
     "tags": [
-      "paraphrase",
-      "distractor"
-    ]
-  },
-  {
-    "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
-    "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
-    "split": "holdout",
-    "tags": [
+      "multi-sentence",
       "paraphrase"
     ]
   },
   {
-    "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "id": "h04",
+    "question": "Who checks in a guest arriving after midnight, and which rooms can be offered?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents",
+    "goldAnswer": "A guest who arrives after midnight checks in with the night porter. He can only offer the rooms already blocked for late arrivals.",
+    "goldDocId": "check-in",
+    "goldSpan": "A guest who arrives after midnight checks in with the night porter. He can only offer the rooms already blocked for late arrivals.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h05",
+    "question": "Who gets free late check-out, and what does everyone else pay?",
+    "answerable": true,
+    "goldAnswer": "Late check-out until two in the afternoon is free for loyalty members, who ask for it at the desk or in the app on the evening before they leave. For everyone else it costs 15 euros an hour, charged to the room before the final invoice is printed and paid.",
+    "goldDocId": "check-out",
+    "goldSpan": "Late check-out until two in the afternoon is free for loyalty members, who ask for it at the desk or in the app on the evening before they leave. For everyone else it costs 15 euros an hour, charged to the room before the final invoice is printed and paid.",
     "split": "feedback",
     "tags": [
+      "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "How does express check-out work, and how does the guest get the invoice?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days",
-    "split": "feedback",
+    "goldAnswer": "Express check-out lets guests leave their key cards in the box at the main door without queueing at the desk on the morning they leave. The invoice follows by email.",
+    "goldDocId": "check-out",
+    "goldSpan": "Express check-out lets guests leave their key cards in the box at the main door without queueing at the desk on the morning they leave. The invoice follows by email.",
+    "split": "holdout",
     "tags": [
-      "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "What do I do with a disputed minibar charge, and when does the duty manager decide?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
+    "goldAnswer": "Disputed minibar charges below 20 euros are removed at once. Higher amounts go to the duty manager.",
+    "goldDocId": "check-out",
+    "goldSpan": "Disputed minibar charges below 20 euros are removed at once. Higher amounts go to the duty manager.",
     "split": "holdout",
     "tags": [
       "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "What does a company invoice need, and can it be changed after the guest leaves?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
+    "goldAnswer": "Invoices made out to a company need the company name, address and tax number before the guest leaves. They cannot be changed later, because the accounting system locks every invoice once it has been sent out at the end of the day.",
+    "goldDocId": "check-out",
+    "goldSpan": "Invoices made out to a company need the company name, address and tax number before the guest leaves. They cannot be changed later, because the accounting system locks every invoice once it has been sent out at the end of the day.",
     "split": "holdout",
     "tags": [
-      "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "How long are key cards coded for, and when do they stop working?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
-    "split": "holdout",
+    "goldAnswer": "Key cards are coded for the length of the stay plus four hours, using the encoder on the desk and the booking number on the guest confirmation. They stop working at four in the afternoon on the day of departure, even when late check-out was booked for the room.",
+    "goldDocId": "room-keys",
+    "goldSpan": "Key cards are coded for the length of the stay plus four hours, using the encoder on the desk and the booking number on the guest confirmation. They stop working at four in the afternoon on the day of departure, even when late check-out was booked for the room.",
+    "split": "feedback",
     "tags": [
-      "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "How do I replace a lost key card, and what happens to the old one?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days",
-    "split": "holdout",
+    "goldAnswer": "A lost key card is replaced only after the guest has shown photo identification and the name has been checked against the guest register on the screen. The old card is cancelled at once.",
+    "goldDocId": "room-keys",
+    "goldSpan": "A lost key card is replaced only after the guest has shown photo identification and the name has been checked against the guest register on the screen. The old card is cancelled at once.",
+    "split": "feedback",
     "tags": [
-      "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "How is spa access added to a key card, and who pays for it?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
+    "goldAnswer": "Spa and gym access is coded onto the key card at check-in. It is free for suites and ten euros a day for other rooms.",
+    "goldDocId": "room-keys",
+    "goldSpan": "Spa and gym access is coded onto the key card at check-in. It is free for suites and ten euros a day for other rooms.",
     "split": "holdout",
     "tags": [
-      "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "question": "Where are the master keys kept, and how long may they be signed out?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement",
-    "split": "feedback",
+    "goldAnswer": "Physical master keys are kept in the safe behind the desk and are signed out in the key book by name, time and reason. They must be back within the hour.",
+    "goldDocId": "room-keys",
+    "goldSpan": "Physical master keys are kept in the safe behind the desk and are signed out in the key book by name, time and reason. They must be back within the hour.",
+    "split": "holdout",
     "tags": [
-      "numeric",
-      "lexical",
-      "distractor"
+      "multi-sentence",
+      "lexical"
     ]
   },
   {
     "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "question": "What do I do when a key card stops working, and what usually causes it?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night",
+    "goldAnswer": "If a key card stops working, recode it at the desk encoder. Demagnetised cards are often the cause, usually from being kept next to a phone in the same pocket or bag for a while.",
+    "goldDocId": "room-keys",
+    "goldSpan": "If a key card stops working, recode it at the desk encoder. Demagnetised cards are often the cause, usually from being kept next to a phone in the same pocket or bag for a while.",
     "split": "holdout",
     "tags": [
-      "numeric",
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "question": "What happens to bags left in storage for more than a week?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours",
-    "split": "holdout",
+    "goldAnswer": "Bags left in storage for more than seven days after a guest has left the hotel are moved to the lost property room in the basement. They are kept there for three months.",
+    "goldDocId": "luggage",
+    "goldSpan": "Bags left in storage for more than seven days after a guest has left the hotel are moved to the lost property room in the basement. They are kept there for three months.",
+    "split": "feedback",
     "tags": [
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h15",
-    "question": "Where must staff store passwords?",
+    "question": "Do porters carry bags at night, and can tips go on the room bill?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password",
+    "goldAnswer": "Porters carry bags to the room on request at any hour. Tips never go on the room bill.",
+    "goldDocId": "luggage",
+    "goldSpan": "Porters carry bags to the room on request at any hour. Tips never go on the room bill.",
     "split": "feedback",
     "tags": [
-      "numeric",
-      "paraphrase"
+      "multi-sentence",
+      "lexical"
     ]
   },
   {
     "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
+    "question": "Can valuables be left in the luggage room, and where do they go instead?",
     "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default",
-    "split": "feedback",
+    "goldAnswer": "Valuables such as jewellery, laptops and cash are never taken into the luggage room, however small or well packed they are. They go into the room safe instead.",
+    "goldDocId": "luggage",
+    "goldSpan": "Valuables such as jewellery, laptops and cash are never taken into the luggage room, however small or well packed they are. They go into the room safe instead.",
+    "split": "holdout",
     "tags": [
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "question": "Where do bikes and skis go, and who opens that store?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision",
+    "goldAnswer": "Oversized items such as bikes and skis go to the garage store. The garage store is opened by the night porter, who keeps its key and logs every item that goes in or comes out.",
+    "goldDocId": "luggage",
+    "goldSpan": "Oversized items such as bikes and skis go to the garage store. The garage store is opened by the night porter, who keeps its key and logs every item that goes in or comes out.",
     "split": "holdout",
     "tags": [
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
+    "question": "When is breakfast served on weekdays, and how late at weekends?",
     "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report",
+    "goldAnswer": "Breakfast is served from half past six until ten on weekdays in the garden restaurant on the ground floor, and the hot buffet opens at seven. At weekends it runs until half past eleven, and the last guests are seated until a quarter past eleven.",
+    "goldDocId": "breakfast",
+    "goldSpan": "Breakfast is served from half past six until ten on weekdays in the garden restaurant on the ground floor, and the hot buffet opens at seven. At weekends it runs until half past eleven, and the last guests are seated until a quarter past eleven.",
     "split": "holdout",
     "tags": [
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
+    "question": "How is room service breakfast ordered, and what extra is charged?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours",
+    "goldAnswer": "Room service breakfast must be ordered on the door card by two in the morning. A tray charge of five euros is added.",
+    "goldDocId": "breakfast",
+    "goldSpan": "Room service breakfast must be ordered on the door card by two in the morning. A tray charge of five euros is added.",
     "split": "holdout",
     "tags": [
+      "multi-sentence",
       "lexical"
     ]
   },
   {
     "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
+    "question": "Where are allergies recorded, and who confirms them with the guest?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest",
+    "goldAnswer": "Allergies and special diets are entered in the guest profile when the booking is made or at check-in, so that the kitchen sees them on the morning list. The chef confirms them by phone.",
+    "goldDocId": "breakfast",
+    "goldSpan": "Allergies and special diets are entered in the guest profile when the booking is made or at check-in, so that the kitchen sees them on the morning list. The chef confirms them by phone.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "What do guests leaving very early get for breakfast, and how is it ordered?",
+    "answerable": true,
+    "goldAnswer": "Early departures before half past six get a breakfast bag. It is ordered at the desk by ten the evening before and picked up from the night porter on the way out of the hotel.",
+    "goldDocId": "breakfast",
+    "goldSpan": "Early departures before half past six get a breakfast bag. It is ordered at the desk by ten the evening before and picked up from the night porter on the way out of the hotel.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "What does the hotel garage cost, and what is its height limit?",
+    "answerable": true,
+    "goldAnswer": "The hotel garage costs 25 euros a night, paid at check-out together with the room, and guests take a ticket at the barrier when they drive in. Its height limit is two metres, so vans and cars with roof boxes are sent to the public car park across the street.",
+    "goldDocId": "parking",
+    "goldSpan": "The hotel garage costs 25 euros a night, paid at check-out together with the room, and guests take a ticket at the barrier when they drive in. Its height limit is two metres, so vans and cars with roof boxes are sent to the public car park across the street.",
     "split": "holdout",
     "tags": [
       "numeric",
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "When is valet parking available, and what does it cost?",
+    "answerable": true,
+    "goldAnswer": "Valet parking is available from seven in the morning until eleven at night, and the valet brings the car to the main door within fifteen minutes. It costs ten euros on top of the garage.",
+    "goldDocId": "parking",
+    "goldSpan": "Valet parking is available from seven in the morning until eleven at night, and the valet brings the car to the main door within fifteen minutes. It costs ten euros on top of the garage.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "Where do coaches drop guests, and where do they park?",
+    "answerable": true,
+    "goldAnswer": "Coaches and minibuses drop guests at the side entrance on the quiet street, because the main entrance is too narrow for them to turn. They park at the coach park.",
+    "goldDocId": "parking",
+    "goldSpan": "Coaches and minibuses drop guests at the side entrance on the quiet street, because the main entrance is too narrow for them to turn. They park at the coach park.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "Where are garage tickets validated, and how long does a validated ticket work?",
+    "answerable": true,
+    "goldAnswer": "Parking tickets for the garage are validated at the desk. A validated ticket opens the exit barrier for thirty minutes, which is enough time to load the car and pay nothing more.",
+    "goldDocId": "parking",
+    "goldSpan": "Parking tickets for the garage are validated at the desk. A validated ticket opens the exit barrier for thirty minutes, which is enough time to load the car and pay nothing more.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "How fast are extra towels brought, and why are they logged?",
+    "answerable": true,
+    "goldAnswer": "Extra towels and pillows are brought to the room within twenty minutes of the call, by the floor attendant on duty or by the night porter after ten. They are logged in the housekeeping tablet so that the room is not charged when the inventory is checked after departure.",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "Extra towels and pillows are brought to the room within twenty minutes of the call, by the floor attendant on duty or by the night porter after ten. They are logged in the housekeeping tablet so that the room is not charged when the inventory is checked after departure.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "How does a guest skip cleaning, and what do they receive for it?",
+    "answerable": true,
+    "goldAnswer": "Guests who want no cleaning during the stay hang the green card on the outside of the door before nine in the morning. They receive a drinks voucher for each day.",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "Guests who want no cleaning during the stay hang the green card on the outside of the door before nine in the morning. They receive a drinks voucher for each day.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "Do baby cots cost anything, and how far ahead must they be requested?",
+    "answerable": true,
+    "goldAnswer": "Baby cots are free and are set up before the guests arrive. They must be requested a day ahead.",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "Baby cots are free and are set up before the guests arrive. They must be requested a day ahead.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "What happens when damage is found after departure, and who decides about charging?",
+    "answerable": true,
+    "goldAnswer": "A stain or damage found after departure is photographed by housekeeping. The duty manager decides within two days whether the guest is charged, and the photos are attached to the invoice.",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "A stain or damage found after departure is photographed by housekeeping. The duty manager decides within two days whether the guest is charged, and the photos are attached to the invoice.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "Where do found phones and wallets go, and how are they returned?",
+    "answerable": true,
+    "goldAnswer": "Phones and wallets go straight into the desk safe. Guests collect them in person.",
+    "goldDocId": "lost-and-found",
+    "goldSpan": "Phones and wallets go straight into the desk safe. Guests collect them in person.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
       "lexical"
     ]
   },

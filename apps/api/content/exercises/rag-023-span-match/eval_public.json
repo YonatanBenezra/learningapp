@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Can staff dual-boot other operating systems on company laptops?",
+    "question": "How long does the video doorbell keep recordings?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "laptop",
-    "goldSpan": "Staff may not dual-boot unsanctioned operating systems"
+    "goldAnswer": "The video doorbell keeps recordings for thirty days in the free plan.",
+    "goldDocId": "doorbell-answer",
+    "goldSpan": "The video doorbell keeps recordings for thirty days in the free plan."
   },
   {
     "id": "p2",
-    "question": "What account do external guests in Slack need?",
+    "question": "How many floor maps does the robot vacuum save?",
     "answerable": true,
-    "goldAnswer": "A time-boxed multi-channel guest account",
-    "goldDocId": "slack",
-    "goldSpan": "External guests require a time-boxed multi-channel guest account"
+    "goldAnswer": "The robot vacuum saves up to four floor maps, one for each level of the house.",
+    "goldDocId": "robot-vacuum-answer",
+    "goldSpan": "The robot vacuum saves up to four floor maps, one for each level of the house."
   },
   {
     "id": "p3",
-    "question": "How often is point-in-time recovery tested?",
+    "question": "How many guest codes does the smart lock store?",
     "answerable": true,
-    "goldAnswer": "Quarterly",
-    "goldDocId": "backup",
-    "goldSpan": "Point-in-time recovery is tested quarterly"
+    "goldAnswer": "The smart lock stores up to twenty five guest codes, each with its own time window.",
+    "goldDocId": "smart-lock-answer",
+    "goldSpan": "The smart lock stores up to twenty five guest codes, each with its own time window."
   },
   {
     "id": "p4",
-    "question": "Where does encryption key material live?",
+    "question": "How often should I test the smoke alarm?",
     "answerable": true,
-    "goldAnswer": "In the cloud KMS, rotated annually",
-    "goldDocId": "encryption",
-    "goldSpan": "Key material lives in the cloud KMS with annual rotation"
+    "goldAnswer": "Test the smoke alarm once a month by holding the button until it sounds.",
+    "goldDocId": "smoke-alarm-answer",
+    "goldSpan": "Test the smoke alarm once a month by holding the button until it sounds."
   },
   {
     "id": "p5",
-    "question": "Who sits on every interview loop?",
+    "question": "How do I switch off the speaker microphone?",
     "answerable": true,
-    "goldAnswer": "A hiring manager, a bar-raiser and at least one skills interviewer",
-    "goldDocId": "hiring",
-    "goldSpan": "a hiring manager, a bar-raiser, and at least one skills interviewer"
+    "goldAnswer": "The speaker microphone is switched off with the button on the back, and the ring turns red.",
+    "goldDocId": "speaker-answer",
+    "goldSpan": "The speaker microphone is switched off with the button on the back, and the ring turns red."
+  },
+  {
+    "id": "p6",
+    "question": "How fast does the water sensor send a leak alert?",
+    "answerable": true,
+    "goldAnswer": "The water sensor sends a leak alert within five seconds of touching water.",
+    "goldDocId": "water-sensor-answer",
+    "goldSpan": "The water sensor sends a leak alert within five seconds of touching water."
   }
 ]

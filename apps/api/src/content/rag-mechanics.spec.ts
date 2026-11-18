@@ -10,6 +10,8 @@ import { runContentGrader } from './content-grader-runner';
 const STRATEGIES = ['fixed', 'sentence', 'recursive', 'heading-aware'] as const;
 /** 50 to 600 characters in steps of 25. */
 const CHUNK_SIZES = Array.from({ length: 23 }, (_, i) => 50 + i * 25);
+/** Every top-k an R2 schema allows. */
+const TOP_KS = Array.from({ length: 10 }, (_, i) => i + 1);
 const R3_PROMPT = (
   JSON.parse(
     readFileSync(
@@ -44,6 +46,67 @@ const MECHANICS: {
   mechanic: string;
   shortcuts: Record<string, unknown>[];
 }[] = [
+  {
+    slug: 'rag-003-retrieval-top-k',
+    mechanic: 'a top-k between too few and too many',
+    shortcuts: TOP_KS.filter((topK) => topK === 1 || topK >= 4).map((topK) => ({
+      topK,
+    })),
+  },
+  {
+    slug: 'rag-002-the-cost-ceiling',
+    mechanic: 'a score cutoff',
+    // A fixed top-k, at every k.
+    shortcuts: TOP_KS.map((topK) => ({ topK, minScoreRatio: 0 })),
+  },
+  {
+    slug: 'rag-025-adv-cost-ceiling',
+    mechanic: 'smaller chunks, more of them',
+    // Chunks of two sentences or more, at every k.
+    shortcuts: TOP_KS.flatMap((topK) =>
+      [150, 200, 300, 400, 600].map((chunkSize) => ({ topK, chunkSize })),
+    ),
+  },
+  {
+    slug: 'rag-016-citation-lock',
+    mechanic: 'compressing pages to the sentences that answer',
+    // Whole pages, at every k.
+    shortcuts: TOP_KS.map((topK) => ({ topK, compressSentences: 0 })),
+  },
+  {
+    slug: 'rag-017-rerank-pass',
+    mechanic: 'a sentence window around each hit',
+    // Chunks sent alone, at every size the schema allows and every k.
+    shortcuts: [50, 75, 100, 125, 150, 175, 200].flatMap((chunkSize) =>
+      TOP_KS.map((topK) => ({ topK, chunkSize, expandNeighbors: 0 })),
+    ),
+  },
+  {
+    slug: 'rag-004-rerank-or-rethink',
+    mechanic: 'MMR over a window that reaches past the copies',
+    shortcuts: [
+      // No rerank, or a title boost, at every window.
+      ...(['none', 'title-boost'] as const).flatMap((reranker) =>
+        [5, 6, 10, 20, 50].map((rerankTopN) => ({ reranker, rerankTopN })),
+      ),
+      // MMR that only sees the copies.
+      { reranker: 'mmr', rerankTopN: 5 },
+    ],
+  },
+  {
+    slug: 'rag-003-the-citation-contract',
+    mechanic: 'a prompt that both cites and refuses',
+    shortcuts: [
+      {
+        generationPrompt:
+          'Answer the customer helpfully and cite your sources.',
+      },
+      {
+        generationPrompt:
+          "Answer only from the context. If the answer is not in the context, say I don't know.",
+      },
+    ],
+  },
   {
     slug: 'rag-018-retriever-run',
     mechanic: 'hybrid search',
@@ -113,6 +176,63 @@ const MECHANICS: {
         hopQuery: 'passage',
       })),
     ]),
+  },
+  {
+    slug: 'rag-001-chunk-it-right',
+    mechanic: 'a chunk size between too small and too large',
+    // Every strategy, too small to keep a paragraph's subject or so large
+    // that five chunks blow the budget, with and without overlap.
+    shortcuts: STRATEGIES.flatMap((splitStrategy) =>
+      CHUNK_SIZES.filter((size) => size <= 150 || size >= 425).flatMap(
+        (chunkSize) =>
+          [0, 60].map((overlap) => ({ chunkSize, overlap, splitStrategy })),
+      ),
+    ),
+  },
+  {
+    slug: 'rag-005-sentence-split',
+    mechanic: 'splitting on sentences',
+    // Fixed windows at every size.
+    shortcuts: CHUNK_SIZES.map((chunkSize) => ({
+      chunkSize,
+      splitStrategy: 'fixed',
+    })),
+  },
+  {
+    slug: 'rag-007-chunk-balance',
+    mechanic: 'a split on paragraphs',
+    // Fixed windows and sentence packing, at every size and overlap.
+    shortcuts: (['fixed', 'sentence'] as const).flatMap((splitStrategy) =>
+      CHUNK_SIZES.flatMap((chunkSize) =>
+        [0, 100, 200, 300]
+          .filter((overlap) => overlap < chunkSize)
+          .map((overlap) => ({ chunkSize, overlap, splitStrategy })),
+      ),
+    ),
+  },
+  {
+    slug: 'rag-026-adv-chunk-balance',
+    mechanic: 'overlap as long as the answer, within an index budget',
+    shortcuts: [
+      // No overlap, at every size and strategy.
+      ...STRATEGIES.flatMap((splitStrategy) =>
+        CHUNK_SIZES.map((chunkSize) => ({
+          chunkSize,
+          overlap: 0,
+          splitStrategy,
+        })),
+      ),
+      // Windows that move forward so little that the index overflows.
+      ...(['fixed', 'recursive'] as const).flatMap((splitStrategy) =>
+        [200, 225, 250, 275, 300].flatMap((chunkSize) =>
+          [chunkSize - 110, chunkSize - 80].map((overlap) => ({
+            chunkSize,
+            overlap,
+            splitStrategy,
+          })),
+        ),
+      ),
+    ],
   },
   {
     slug: 'rag-006-overlap-tune',

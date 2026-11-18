@@ -1,10 +1,10 @@
 {
   "slug": "rag-023-span-match",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-sandbox",
-  "title": "Custom Retriever vs Keyword-Stuffed Noise",
+  "title": "Retrieval Against Keyword Spam",
   "difficulty": "H",
   "catalogPhase": 6,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Phase 6 · Custom Retriever vs Keyword-Stuffed Noise\n\nThe shared policy corpus contains eight noise documents that repeat common question words. A naive keyword counter ranks them above the real policies. Ship a **Python retriever** that keeps them out of your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Concatenated or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget, so whole documents are usually too expensive: split them into smaller passages and rank those.\n\n**Gates:** recall@5 ≥ 0.80, mean context tokens ≤ 150, and every passage comes from the corpus.\n",
+  "briefMd": "# Phase 6 · Retrieval Against Keyword Spam\n\nThe smart-home community forum has one real answer per topic, written by the support team, and three spam posts that repeat the topic's keywords again and again (\"thermostat reset thermostat battery best thermostat guide…\"). Every keyword ranker, BM25 included, puts the spam first: the spam has every word of the question, many times. Write the retriever in Python.\n\nYour program reads `input.json` (in the same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` holds the corpus (`id`, `title`, `text` for every document) and the questions to answer. Gold answers are not in the sandbox. Return up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Joined or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget.\n\nThe budget fits about two posts per question.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 120, and every passage comes from the corpus.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -33,8 +33,8 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.8,
-    "mean_context_tokens": 150
+    "recall_at_5": 0.9,
+    "mean_context_tokens": 120
   },
   "budget": {
     "max_model_calls": 0,
@@ -48,14 +48,14 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
     },
     {
       "id": "mean-context-tokens",
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 150
+      "value": 120
     },
     {
       "id": "passages-from-corpus",
@@ -73,5 +73,5 @@
     "maxSubmissions": 20,
     "cooldownHours": 1
   },
-  "corpusFile": "shared"
+  "corpusFile": "forum-posts"
 }

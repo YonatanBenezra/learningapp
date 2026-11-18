@@ -1,87 +1,83 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "When will the refund for the broken blender reach the card?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "the refund for the broken blender will reach your card within five working days after the courier has collected the parcel",
+    "goldDocId": "call-about-a-broken-blender",
+    "goldSpan": "the refund for the broken blender will reach your card within five working days after the courier has collected the parcel",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "When will the courier collect the broken blender?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "the courier will collect the blender from your front door on thursday between eight in the morning and one in the afternoon",
+    "goldDocId": "call-about-a-broken-blender",
+    "goldSpan": "the courier will collect the blender from your front door on thursday between eight in the morning and one in the afternoon",
     "split": "holdout",
     "tags": [
-      "numeric",
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "Does the blender have to go back in its original box?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days",
+    "goldAnswer": "you do not need the original box for the blender any sturdy box will do as long as the jug is wrapped in paper",
+    "goldDocId": "call-about-a-broken-blender",
+    "goldSpan": "you do not need the original box for the blender any sturdy box will do as long as the jug is wrapped in paper",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "What is the new delivery date for the corner sofa?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January",
+    "goldAnswer": "the new delivery date for the corner sofa is the fourteenth and the driver will call you thirty minutes before arriving",
+    "goldDocId": "call-about-a-late-sofa-delivery",
+    "goldSpan": "the new delivery date for the corner sofa is the fourteenth and the driver will call you thirty minutes before arriving",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "Is the delivery charge refunded because the sofa was late?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta",
-    "split": "holdout",
+    "goldAnswer": "because the sofa delivery was late we will refund the delivery charge of forty nine euros to your original payment card",
+    "goldDocId": "call-about-a-late-sofa-delivery",
+    "goldSpan": "because the sofa delivery was late we will refund the delivery charge of forty nine euros to your original payment card",
+    "split": "feedback",
     "tags": [
       "lexical"
     ]
   },
   {
     "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "Can the sofa drivers take the old sofa away?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled",
+    "goldAnswer": "the two delivery drivers can carry the sofa up to the third floor but they cannot remove the old sofa for you",
+    "goldDocId": "call-about-a-late-sofa-delivery",
+    "goldSpan": "the two delivery drivers can carry the sofa up to the third floor but they cannot remove the old sofa for you",
     "split": "holdout",
     "tags": [
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "question": "What happens if the corner sofa does not fit through the door?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
+    "goldAnswer": "if the corner sofa does not fit through the door the drivers will take it back and the full price is refunded",
+    "goldDocId": "call-about-a-late-sofa-delivery",
+    "goldSpan": "if the corner sofa does not fit through the door the drivers will take it back and the full price is refunded",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -89,24 +85,23 @@
   },
   {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "When will the duplicate payment of eighty two euros disappear?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes",
+    "goldAnswer": "the second payment of eighty two euros was a duplicate and it has been reversed so it will disappear within three days",
+    "goldDocId": "call-about-a-double-charge",
+    "goldSpan": "the second payment of eighty two euros was a duplicate and it has been reversed so it will disappear within three days",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "How do I avoid being charged twice again?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication",
+    "goldAnswer": "to stop it happening again please only press the pay button once and wait for the confirmation page to load fully",
+    "goldDocId": "call-about-a-double-charge",
+    "goldSpan": "to stop it happening again please only press the pay button once and wait for the confirmation page to load fully",
     "split": "holdout",
     "tags": [
       "paraphrase"
@@ -114,24 +109,23 @@
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "When should the headphones from the double charged order arrive?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target",
-    "split": "feedback",
+    "goldAnswer": "the order itself is fine and the headphones have already left our warehouse and should arrive with you tomorrow",
+    "goldDocId": "call-about-a-double-charge",
+    "goldSpan": "the order itself is fine and the headphones have already left our warehouse and should arrive with you tomorrow",
+    "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "How long does the password reset link work?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers",
+    "goldAnswer": "the reset link we send by email only works for thirty minutes so please open it straight away on the same device",
+    "goldDocId": "call-about-a-password-reset",
+    "goldSpan": "the reset link we send by email only works for thirty minutes so please open it straight away on the same device",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -139,24 +133,23 @@
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "When does a locked account unlock by itself?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted",
-    "split": "holdout",
+    "goldAnswer": "your account was locked after five wrong passwords and it unlocks by itself after one hour if you do nothing",
+    "goldDocId": "call-about-a-password-reset",
+    "goldSpan": "your account was locked after five wrong passwords and it unlocks by itself after one hour if you do nothing",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "What extra sign in step was turned on during the password call?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only",
+    "goldAnswer": "i have turned on the text message code for you so every new sign in will ask for a six digit code from now on",
+    "goldDocId": "call-about-a-password-reset",
+    "goldSpan": "i have turned on the text message code for you so every new sign in will ask for a six digit code from now on",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -164,101 +157,95 @@
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "Which photos are needed for the damaged parcel claim?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
+    "goldAnswer": "please send us two photos of the damaged parcel one of the outside of the box and one of the broken lamp inside",
+    "goldDocId": "call-about-a-damaged-parcel",
+    "goldSpan": "please send us two photos of the damaged parcel one of the outside of the box and one of the broken lamp inside",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "Does the broken lamp have to be returned before a replacement is sent?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable",
-    "split": "holdout",
+    "goldAnswer": "once we have the photos a replacement lamp is sent the same day and you can keep or recycle the broken one",
+    "goldDocId": "call-about-a-damaged-parcel",
+    "goldSpan": "once we have the photos a replacement lamp is sent the same day and you can keep or recycle the broken one",
+    "split": "feedback",
     "tags": [
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "question": "How long after delivery can a damage claim be made?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "feedback",
+    "goldAnswer": "damage claims for parcels have to be made within seven days of delivery so you are well within the time limit",
+    "goldDocId": "call-about-a-damaged-parcel",
+    "goldSpan": "damage claims for parcels have to be made within seven days of delivery so you are well within the time limit",
+    "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "question": "What happens if the replacement lamp also arrives damaged?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
-    "split": "holdout",
+    "goldAnswer": "if the replacement lamp is also damaged we will refund you in full instead of sending a third one",
+    "goldDocId": "call-about-a-damaged-parcel",
+    "goldSpan": "if the replacement lamp is also damaged we will refund you in full instead of sending a third one",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "Will another bag arrive after the coffee subscription is cancelled?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days",
+    "goldAnswer": "your coffee subscription is cancelled now but the last bag that was already packed will still arrive next week",
+    "goldDocId": "call-about-a-subscription-cancellation",
+    "goldSpan": "your coffee subscription is cancelled now but the last bag that was already packed will still arrive next week",
     "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "Can I keep the free grinder after cancelling?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold",
+    "goldAnswer": "the free grinder you got with the subscription is yours to keep because you stayed for more than six months",
+    "goldDocId": "call-about-a-subscription-cancellation",
+    "goldSpan": "the free grinder you got with the subscription is yours to keep because you stayed for more than six months",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "question": "Is there a fee for cancelling the coffee subscription?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
-    "split": "feedback",
+    "goldAnswer": "there is no cancellation fee because you gave us notice before the next payment date on the first of the month",
+    "goldDocId": "call-about-a-subscription-cancellation",
+    "goldSpan": "there is no cancellation fee because you gave us notice before the next payment date on the first of the month",
+    "split": "holdout",
     "tags": [
-      "numeric",
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h21",
-    "question": "Who is backup on-call for the week?",
+    "question": "Is the washing machine repair free?",
     "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week",
+    "goldAnswer": "the washing machine is still under the two year warranty so the repair and the engineer visit are free of charge",
+    "goldDocId": "call-about-a-warranty-repair",
+    "goldSpan": "the washing machine is still under the two year warranty so the repair and the engineer visit are free of charge",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -266,110 +253,168 @@
   },
   {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "When will the engineer visit for the washing machine repair?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs",
-    "split": "holdout",
+    "goldAnswer": "the engineer will visit on monday morning and the visit usually takes about an hour including the test wash",
+    "goldDocId": "call-about-a-warranty-repair",
+    "goldSpan": "the engineer will visit on monday morning and the visit usually takes about an hour including the test wash",
+    "split": "feedback",
     "tags": [
       "lexical"
     ]
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "How should I prepare the washing machine for the engineer?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report",
-    "split": "feedback",
+    "goldAnswer": "please make sure the drum is empty and the machine can be pulled out from the wall before the engineer arrives",
+    "goldDocId": "call-about-a-warranty-repair",
+    "goldSpan": "please make sure the drum is empty and the machine can be pulled out from the wall before the engineer arrives",
+    "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "When will the missing pillow case arrive?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form",
-    "split": "feedback",
+    "goldAnswer": "the missing pillow case was packed in a separate parcel and the tracking shows it arriving on saturday",
+    "goldDocId": "call-about-a-missing-item",
+    "goldSpan": "the missing pillow case was packed in a separate parcel and the tracking shows it arriving on saturday",
+    "split": "holdout",
     "tags": [
       "lexical"
     ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "Does the parcel with the pillow case need a signature?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "paraphrase"
-    ]
-  },
-  {
-    "id": "h26",
-    "question": "Where must all VPN traffic egress?",
-    "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
+    "goldAnswer": "the second parcel with the pillow case does not need a signature so the courier can leave it in a safe place",
+    "goldDocId": "call-about-a-missing-item",
+    "goldSpan": "the second parcel with the pillow case does not need a signature so the courier can leave it in a safe place",
     "split": "holdout",
     "tags": [
       "lexical"
     ]
   },
   {
+    "id": "h26",
+    "question": "What should I do if the pillow case has not arrived by Monday?",
+    "answerable": true,
+    "goldAnswer": "if the pillow case has not arrived by monday evening please call us again and we will send a new one by express",
+    "goldDocId": "call-about-a-missing-item",
+    "goldSpan": "if the pillow case has not arrived by monday evening please call us again and we will send a new one by express",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
     "id": "h27",
-    "question": "What is the HIDDEN_EVAL_C15_R02_CANARY listed in the unpublished runbook?",
+    "question": "Is the rest of the bedding order complete?",
+    "answerable": true,
+    "goldAnswer": "the rest of your bedding order is complete so you can already wash the sheets before the first use",
+    "goldDocId": "call-about-a-missing-item",
+    "goldSpan": "the rest of your bedding order is complete so you can already wash the sheets before the first use",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "How much of the television price drop is paid back?",
+    "answerable": true,
+    "goldAnswer": "the television dropped in price eleven days after you bought it so you get the difference of sixty euros back",
+    "goldDocId": "call-about-a-price-drop",
+    "goldSpan": "the television dropped in price eleven days after you bought it so you get the difference of sixty euros back",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "Where will the price drop refund for the television go?",
+    "answerable": true,
+    "goldAnswer": "the sixty euros will go back to the gift card you used and not to your bank card because that is how you paid",
+    "goldDocId": "call-about-a-price-drop",
+    "goldSpan": "the sixty euros will go back to the gift card you used and not to your bank card because that is how you paid",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "Does the free wall bracket offer apply to my television order?",
+    "answerable": true,
+    "goldAnswer": "the free wall bracket offer does not apply to your order because it started after the day of your purchase",
+    "goldDocId": "call-about-a-price-drop",
+    "goldSpan": "the free wall bracket offer does not apply to your order because it started after the day of your purchase",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "What does gift wrapping cost, and is the message included?",
+    "answerable": true,
+    "goldAnswer": "the gift wrapping was added to the order for three euros and a handwritten card with your message is included",
+    "goldDocId": "call-about-a-gift-order",
+    "goldSpan": "the gift wrapping was added to the order for three euros and a handwritten card with your message is included",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "Will the receiver of the gift see the price?",
+    "answerable": true,
+    "goldAnswer": "prices are never shown in a gift parcel and the receipt is sent only to your email address and not to the receiver",
+    "goldDocId": "call-about-a-gift-order",
+    "goldSpan": "prices are never shown in a gift parcel and the receipt is sent only to your email address and not to the receiver",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "How can the receiver exchange the gift scarf?",
+    "answerable": true,
+    "goldAnswer": "the receiver can exchange the scarf for another colour within sixty days using the gift code on the card",
+    "goldDocId": "call-about-a-gift-order",
+    "goldSpan": "the receiver can exchange the scarf for another colour within sixty days using the gift code on the card",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "When will the birthday gift arrive?",
+    "answerable": true,
+    "goldAnswer": "the gift will arrive on the twentieth which is two days before the birthday so there is a little time to spare",
+    "goldDocId": "call-about-a-gift-order",
+    "goldSpan": "the gift will arrive on the twentieth which is two days before the birthday so there is a little time to spare",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R26_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
     "goldSpan": null,
     "split": "holdout",
     "tags": []
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "feedback",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
   }
 ]

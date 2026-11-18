@@ -1,5 +1,4 @@
 {
-  "topK": 2,
-  "rerank": true,
-  "chunkSize": 200
+  "topK": 4,
+  "minScoreRatio": 0.7
 }

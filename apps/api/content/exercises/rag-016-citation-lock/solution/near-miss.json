@@ -1,5 +1,4 @@
 {
-  "topK": 20,
-  "rerank": false,
-  "chunkSize": 400
+  "topK": 3,
+  "compressSentences": 0
 }

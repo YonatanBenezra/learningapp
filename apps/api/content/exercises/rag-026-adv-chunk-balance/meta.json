@@ -1,10 +1,10 @@
 {
   "slug": "rag-026-adv-chunk-balance",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r1",
-  "title": "Recall@k SLA on Policy KB (Advanced)",
+  "title": "Transcripts Without Full Stops",
   "difficulty": "H",
   "catalogPhase": 7,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Advanced · Recall@k SLA\n\nHarder policy KB: chunk balance must clear recall@5 without oversizing context.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 130.",
+  "briefMd": "# Phase 7 · Transcripts Without Full Stops\n\nThe support calls were transcribed by speech-to-text: lowercase, no punctuation, no line breaks. Somewhere in each call the agent makes a promise (\"the refund for the broken blender will reach your card within five working days after the courier has collected the parcel\"), 90 to 145 characters long. A question counts only when the whole promise sits in one retrieved chunk.\n\nWith no sentences or paragraphs to split on, sentence splitting keeps each call in one piece, and recursive splitting falls back to word windows, like fixed. Windows cut promises in half unless they overlap. Overlap has a price here: every window is a vector in the index, and the index holds at most 120.\n\nYou control **chunk size**, **overlap** and **split strategy**. Retrieval is BM25, top 5 chunks, and all five go into the context.\n\n**Gates:** recall@5 ≥ 0.95, mean context tokens (top-5 chunks) ≤ 300, and at most 120 chunks in the index, on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -31,13 +31,13 @@
         "type": "integer",
         "minimum": 50,
         "maximum": 2000,
-        "default": 400
+        "default": 300
       },
       "overlap": {
         "type": "integer",
         "minimum": 0,
         "maximum": 400,
-        "default": 50
+        "default": 0
       },
       "splitStrategy": {
         "type": "string",
@@ -52,8 +52,9 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.9,
-    "mean_context_tokens": 130
+    "recall_at_5": 0.95,
+    "mean_context_tokens": 300,
+    "index_chunks": 120
   },
   "budget": {
     "max_model_calls": 0,
@@ -67,14 +68,21 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.9
+      "value": 0.95
     },
     {
       "id": "mean-context-tokens",
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 130
+      "value": 300
+    },
+    {
+      "id": "index-chunks",
+      "class": "A",
+      "metric": "index_chunks",
+      "op": "lte",
+      "value": 120
     }
   ],
   "feedback": {
@@ -85,5 +93,6 @@
     "maxSubmissions": 20,
     "cooldownHours": 1
   },
-  "isPublished": true
+  "isPublished": true,
+  "corpusFile": "call-transcripts"
 }

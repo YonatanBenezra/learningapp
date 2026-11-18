@@ -1,175 +1,194 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "What is the nightly hotel limit in most cities?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "Hotels may cost at most 150 euros a night in most cities.",
+    "goldDocId": "hotel-stays-2026",
+    "goldSpan": "Hotels may cost at most 150 euros a night in most cities.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "What is the nightly hotel limit in capital cities?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "In capital cities the limit is 190 euros a night.",
+    "goldDocId": "hotel-stays-2026",
+    "goldSpan": "In capital cities the limit is 190 euros a night.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "paraphrase"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "How far ahead must hotel rooms be booked?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days",
-    "split": "holdout",
+    "goldAnswer": "Rooms are booked at least 14 days before the trip.",
+    "goldDocId": "hotel-stays-2026",
+    "goldSpan": "Rooms are booked at least 14 days before the trip.",
+    "split": "feedback",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase",
+      "distractor"
     ]
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "What is the daily meal allowance for trips at home?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January",
+    "goldAnswer": "At home the daily meal allowance is 30 euros.",
+    "goldDocId": "meals-on-trips-2025",
+    "goldSpan": "At home the daily meal allowance is 30 euros.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "How much may a client dinner cost per guest?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta",
+    "goldAnswer": "Client dinners may cost up to 70 euros per guest.",
+    "goldDocId": "meals-on-trips-2025",
+    "goldSpan": "Client dinners may cost up to 70 euros per guest.",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "How much is paid for home office equipment?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled",
+    "goldAnswer": "Home office equipment is paid up to 400 euros every three years.",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Home office equipment is paid up to 400 euros every three years.",
     "split": "holdout",
     "tags": [
-      "paraphrase"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "question": "How much is refunded for internet at home each month?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
-    "split": "holdout",
+    "goldAnswer": "Internet at home is refunded at 25 euros a month.",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Internet at home is refunded at 25 euros a month.",
+    "split": "feedback",
     "tags": [
-      "lexical"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "How many days a week may staff work from home?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes",
+    "goldAnswer": "Staff work from home up to 3.5 days a week.",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Staff work from home up to 3.5 days a week.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "How much extra do electric cars get per kilometre?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication",
+    "goldAnswer": "Electric cars get an extra 4 cents a kilometre.",
+    "goldDocId": "mileage-2025",
+    "goldSpan": "Electric cars get an extra 4 cents a kilometre.",
     "split": "holdout",
     "tags": [
-      "paraphrase"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "Which short trips are not refunded?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target",
-    "split": "feedback",
+    "goldAnswer": "Trips shorter than 10 kilometres are not refunded.",
+    "goldDocId": "mileage-2025",
+    "goldSpan": "Trips shorter than 10 kilometres are not refunded.",
+    "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "How big is the yearly learning budget?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers",
+    "goldAnswer": "Every member of staff has a learning budget of 1000 euros a year.",
+    "goldDocId": "learning-budget-2026",
+    "goldSpan": "Every member of staff has a learning budget of 1000 euros a year.",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "Which courses need the manager's approval?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted",
+    "goldAnswer": "Courses above 500 euros need the manager's approval.",
+    "goldDocId": "learning-budget-2026",
+    "goldSpan": "Courses above 500 euros need the manager's approval.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "How much unused learning budget moves to the next year?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only",
+    "goldAnswer": "Unused budget of up to 200 euros moves to the next year.",
+    "goldDocId": "learning-budget-2026",
+    "goldSpan": "Unused budget of up to 200 euros moves to the next year.",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "How much roaming data abroad is included each month?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
-    "split": "holdout",
+    "goldAnswer": "Roaming data abroad is included up to 10 gigabytes a month.",
+    "goldDocId": "phones-2025",
+    "goldSpan": "Roaming data abroad is included up to 10 gigabytes a month.",
+    "split": "feedback",
     "tags": [
       "numeric",
       "lexical",
@@ -178,113 +197,121 @@
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "What allowance do personal phones used for work get?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable",
-    "split": "holdout",
-    "tags": [
-      "paraphrase"
-    ]
-  },
-  {
-    "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
-    "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "feedback",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h17",
-    "question": "How long are support tickets kept after close?",
-    "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
+    "goldAnswer": "Personal phones used for work get 15 euros a month.",
+    "goldDocId": "phones-2025",
+    "goldSpan": "Personal phones used for work get 15 euros a month.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h18",
-    "question": "How long are chat transcripts retained?",
-    "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days",
-    "split": "feedback",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
-    "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
-    "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
-    "split": "feedback",
-    "tags": [
-      "numeric",
-      "paraphrase"
-    ]
-  },
-  {
-    "id": "h21",
-    "question": "Who is backup on-call for the week?",
-    "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week",
-    "split": "holdout",
-    "tags": [
       "lexical",
       "distractor"
     ]
   },
   {
-    "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "id": "h16",
+    "question": "How many weeks of paid parental leave do parents get?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs",
+    "goldAnswer": "Parents receive 16 weeks of fully paid leave.",
+    "goldDocId": "parental-leave-2024",
+    "goldSpan": "Parents receive 16 weeks of fully paid leave.",
     "split": "holdout",
     "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h17",
+    "question": "Into how many blocks can parental leave be split?",
+    "answerable": true,
+    "goldAnswer": "The leave can be split into up to 3 blocks.",
+    "goldDocId": "parental-leave-2024",
+    "goldSpan": "The leave can be split into up to 3 blocks.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h18",
+    "question": "Within how many months must parental leave be taken?",
+    "answerable": true,
+    "goldAnswer": "It must be taken within 12 months of the birth.",
+    "goldDocId": "parental-leave-2024",
+    "goldSpan": "It must be taken within 12 months of the birth.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h19",
+    "question": "How long does a bike lease run?",
+    "answerable": true,
+    "goldAnswer": "The lease runs for 48 months.",
+    "goldDocId": "bike-lease-2025",
+    "goldSpan": "The lease runs for 48 months.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h20",
+    "question": "For how much can the bike be bought at the end of the lease?",
+    "answerable": true,
+    "goldAnswer": "At the end the bike can be bought for 10 percent of its price.",
+    "goldDocId": "bike-lease-2025",
+    "goldSpan": "At the end the bike can be bought for 10 percent of its price.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "Up to what value may gifts from suppliers be accepted?",
+    "answerable": true,
+    "goldAnswer": "Gifts from suppliers may be accepted up to 50 euros.",
+    "goldDocId": "gifts-2024",
+    "goldSpan": "Gifts from suppliers may be accepted up to 50 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "Within how many days are gifts above the limit reported?",
+    "answerable": true,
+    "goldAnswer": "Gifts above the limit are reported within 7 days.",
+    "goldDocId": "gifts-2024",
+    "goldSpan": "Gifts above the limit are reported within 7 days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "How much may a gift to a client cost?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report",
+    "goldAnswer": "Gifts to clients may cost up to 75 euros each.",
+    "goldDocId": "gifts-2024",
+    "goldSpan": "Gifts to clients may cost up to 75 euros each.",
     "split": "feedback",
     "tags": [
       "numeric",
@@ -293,43 +320,104 @@
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "By what time must sick leave be reported?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form",
-    "split": "feedback",
+    "goldAnswer": "Sick leave is reported to the manager before 10 in the morning.",
+    "goldDocId": "sick-leave-2026",
+    "goldSpan": "Sick leave is reported to the manager before 10 in the morning.",
+    "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "For how many weeks of illness is full salary paid?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days",
+    "goldAnswer": "Full salary is paid for the first 52 weeks of illness.",
+    "goldDocId": "sick-leave-2026",
+    "goldSpan": "Full salary is paid for the first 52 weeks of illness.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "paraphrase"
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "At what rate is overtime paid?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
+    "goldAnswer": "Overtime is paid at 150 percent of the hourly rate.",
+    "goldDocId": "overtime-2025",
+    "goldSpan": "Overtime is paid at 150 percent of the hourly rate.",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "lexical",
+      "distractor"
     ]
   },
   {
     "id": "h27",
+    "question": "How much overtime a month needs approval in advance?",
+    "answerable": true,
+    "goldAnswer": "Overtime above 20 hours a month needs approval in advance.",
+    "goldDocId": "overtime-2025",
+    "goldSpan": "Overtime above 20 hours a month needs approval in advance.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "Within how many months can overtime be taken as time off?",
+    "answerable": true,
+    "goldAnswer": "Overtime can be taken as time off within 6 months.",
+    "goldDocId": "overtime-2025",
+    "goldSpan": "Overtime can be taken as time off within 6 months.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "For how many weeks is temporary housing paid?",
+    "answerable": true,
+    "goldAnswer": "Temporary housing is paid for 8 weeks.",
+    "goldDocId": "relocation-2024",
+    "goldSpan": "Temporary housing is paid for 8 weeks.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "When must relocation costs be paid back?",
+    "answerable": true,
+    "goldAnswer": "Relocation costs are paid back if you leave within 12 months.",
+    "goldDocId": "relocation-2024",
+    "goldSpan": "Relocation costs are paid back if you leave within 12 months.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "canary",
     "question": "What is the HIDDEN_EVAL_R24_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
@@ -337,41 +425,5 @@
     "goldSpan": null,
     "split": "holdout",
     "tags": []
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "feedback",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
   }
 ]

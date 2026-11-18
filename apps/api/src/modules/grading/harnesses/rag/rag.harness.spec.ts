@@ -4,6 +4,7 @@ import {
   R1_NEAR_MISS_PAYLOAD,
   R1_REFERENCE_PAYLOAD,
 } from '../../../catalogue/exercises/exercises.constants';
+import { corpusPathFor } from '../../../../content/content-paths';
 import { gradeR1 } from './r1.grade';
 import type { CorpusDoc } from './chunking';
 import type { HiddenItem } from './rag.types';
@@ -18,12 +19,15 @@ function loadJson<T>(name: string): T {
 }
 
 describe('RagHarness R1', () => {
-  const docs = loadJson<CorpusDoc[]>('corpus.json');
+  const meta = loadJson<{ gates: unknown; corpusFile?: string }>('meta.json');
+  const docs = JSON.parse(
+    readFileSync(corpusPathFor(contentRoot, meta), 'utf8'),
+  ) as CorpusDoc[];
   const hidden = loadJson<HiddenItem[]>('eval_hidden.json');
   const publicItems = loadJson<HiddenItem[]>('eval_public.json');
-  const gates = loadJson<{ gates: unknown }>('meta.json').gates;
+  const gates = meta.gates;
 
-  it('passes with the reference sentence chunking', () => {
+  it('passes with one paragraph per chunk', () => {
     const result = gradeR1(
       R1_REFERENCE_PAYLOAD,
       docs,
@@ -32,14 +36,24 @@ describe('RagHarness R1', () => {
       gates,
     );
     expect(result.verdict).toBe('pass');
-    expect(result.metrics.recall_at_5.value).toBeGreaterThanOrEqual(0.8);
-    expect(JSON.stringify(result)).not.toContain(
-      'HIDDEN_EVAL_R1_CANARY_PHRASE',
-    );
+    expect(result.metrics.recall_at_5.value).toBeGreaterThanOrEqual(0.9);
+    expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL_R01_CANARY');
     expect(JSON.stringify(result.trace)).not.toContain('goldSpan');
     expect(result.trace.queries.some((row) => row.source === 'public')).toBe(
       true,
     );
+  });
+
+  it('fails with small chunks that lose the service name', () => {
+    const result = gradeR1(
+      R1_NEAR_MISS_PAYLOAD,
+      docs,
+      hidden,
+      publicItems,
+      gates,
+    );
+    expect(result.verdict).toBe('fail');
+    expect(result.metrics.recall_at_5.value).toBeLessThan(0.9);
   });
 
   it('fails with tiny fixed windows that cut sentences', () => {
@@ -51,20 +65,18 @@ describe('RagHarness R1', () => {
       gates,
     );
     expect(result.verdict).toBe('fail');
-    expect(result.metrics.recall_at_5.value).toBeLessThan(0.8);
+    expect(result.metrics.recall_at_5.value).toBeLessThan(0.9);
     expect(result.failureClasses.length).toBeGreaterThan(0);
-    expect(JSON.stringify(result)).not.toContain(
-      'HIDDEN_EVAL_R1_CANARY_PHRASE',
-    );
+    expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL_R01_CANARY');
     expect(JSON.stringify(result.trace)).not.toContain('goldSpan');
     expect(
       result.trace.queries.some((row) => row.source === 'failing_sample'),
     ).toBe(true);
   });
 
-  it('fails whole-document chunks on the context budget despite full recall', () => {
+  it('fails two-paragraph chunks on the context budget despite full recall', () => {
     const result = gradeR1(
-      R1_NEAR_MISS_PAYLOAD,
+      { chunkSize: 600, overlap: 0, splitStrategy: 'recursive' },
       docs,
       hidden,
       publicItems,

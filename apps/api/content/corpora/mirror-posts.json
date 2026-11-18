@@ -1,0 +1,337 @@
+[
+  {
+    "id": "finance-handbook-part-3",
+    "title": "Finance handbook, part 3",
+    "text": "This section covers the expense tool. Expense claims are submitted with a photo of every receipt in the expense tool. Your manager approves expense claims in the tool within three working days. Approved expense refunds are paid with the next salary."
+  },
+  {
+    "id": "expense-tool-sales",
+    "title": "New expense tool (Sales)",
+    "text": "The new expense tool is live for the Sales team and replaces the old system for everyone. Please read about the new expense tool before you use it, and ask your Sales contact if the expense tool raises questions."
+  },
+  {
+    "id": "expense-tool-finance",
+    "title": "New expense tool (Finance)",
+    "text": "The new expense tool is live for the Finance team and replaces the old system for everyone. Please read about the new expense tool before you use it, and ask your Finance contact if the expense tool raises questions."
+  },
+  {
+    "id": "expense-tool-support",
+    "title": "New expense tool (Support)",
+    "text": "The new expense tool is live for the Support team and replaces the old system for everyone. Please read about the new expense tool before you use it, and ask your Support contact if the expense tool raises questions."
+  },
+  {
+    "id": "expense-tool-design",
+    "title": "New expense tool (Design)",
+    "text": "The new expense tool is live for the Design team and replaces the old system for everyone. Please read about the new expense tool before you use it, and ask your Design contact if the expense tool raises questions."
+  },
+  {
+    "id": "expense-tool-legal",
+    "title": "New expense tool (Legal)",
+    "text": "The new expense tool is live for the Legal team and replaces the old system for everyone. Please read about the new expense tool before you use it, and ask your Legal contact if the expense tool raises questions."
+  },
+  {
+    "id": "travel-handbook-part-2",
+    "title": "Travel handbook, part 2",
+    "text": "This section covers the travel booking site. Flights and trains on the booking site are booked at least seven days before the trip. The booking site sends every booking to your manager for approval first. Changes to a booking on the site are free until one day before departure."
+  },
+  {
+    "id": "travel-booking-site-sales",
+    "title": "New travel booking site (Sales)",
+    "text": "The new travel booking site is live for the Sales team and replaces the old system for everyone. Please read about the new travel booking site before you use it, and ask your Sales contact if the travel booking site raises questions."
+  },
+  {
+    "id": "travel-booking-site-finance",
+    "title": "New travel booking site (Finance)",
+    "text": "The new travel booking site is live for the Finance team and replaces the old system for everyone. Please read about the new travel booking site before you use it, and ask your Finance contact if the travel booking site raises questions."
+  },
+  {
+    "id": "travel-booking-site-support",
+    "title": "New travel booking site (Support)",
+    "text": "The new travel booking site is live for the Support team and replaces the old system for everyone. Please read about the new travel booking site before you use it, and ask your Support contact if the travel booking site raises questions."
+  },
+  {
+    "id": "travel-booking-site-design",
+    "title": "New travel booking site (Design)",
+    "text": "The new travel booking site is live for the Design team and replaces the old system for everyone. Please read about the new travel booking site before you use it, and ask your Design contact if the travel booking site raises questions."
+  },
+  {
+    "id": "travel-booking-site-legal",
+    "title": "New travel booking site (Legal)",
+    "text": "The new travel booking site is live for the Legal team and replaces the old system for everyone. Please read about the new travel booking site before you use it, and ask your Legal contact if the travel booking site raises questions."
+  },
+  {
+    "id": "people-handbook-part-5",
+    "title": "People handbook, part 5",
+    "text": "This section covers the holiday planner. Holiday requests in the planner need two weeks notice for anything over three days. The planner shows the remaining days of the year at the top of every request. Requests in the planner are approved or refused by the team lead within five days."
+  },
+  {
+    "id": "holiday-planner-sales",
+    "title": "New holiday planner (Sales)",
+    "text": "The new holiday planner is live for the Sales team and replaces the old system for everyone. Please read about the new holiday planner before you use it, and ask your Sales contact if the holiday planner raises questions."
+  },
+  {
+    "id": "holiday-planner-finance",
+    "title": "New holiday planner (Finance)",
+    "text": "The new holiday planner is live for the Finance team and replaces the old system for everyone. Please read about the new holiday planner before you use it, and ask your Finance contact if the holiday planner raises questions."
+  },
+  {
+    "id": "holiday-planner-support",
+    "title": "New holiday planner (Support)",
+    "text": "The new holiday planner is live for the Support team and replaces the old system for everyone. Please read about the new holiday planner before you use it, and ask your Support contact if the holiday planner raises questions."
+  },
+  {
+    "id": "holiday-planner-design",
+    "title": "New holiday planner (Design)",
+    "text": "The new holiday planner is live for the Design team and replaces the old system for everyone. Please read about the new holiday planner before you use it, and ask your Design contact if the holiday planner raises questions."
+  },
+  {
+    "id": "it-handbook-part-1",
+    "title": "IT handbook, part 1",
+    "text": "This section covers the laptop refresh. Laptops are replaced every four years, or earlier when a repair costs more than half. The old laptop is returned to the service desk within a week of the new one arriving. Files are copied to the new laptop by the service desk during a one hour appointment."
+  },
+  {
+    "id": "laptop-refresh-sales",
+    "title": "New laptop refresh (Sales)",
+    "text": "The new laptop refresh is live for the Sales team and replaces the old system for everyone. Please read about the new laptop refresh before you use it, and ask your Sales contact if the laptop refresh raises questions."
+  },
+  {
+    "id": "laptop-refresh-finance",
+    "title": "New laptop refresh (Finance)",
+    "text": "The new laptop refresh is live for the Finance team and replaces the old system for everyone. Please read about the new laptop refresh before you use it, and ask your Finance contact if the laptop refresh raises questions."
+  },
+  {
+    "id": "laptop-refresh-support",
+    "title": "New laptop refresh (Support)",
+    "text": "The new laptop refresh is live for the Support team and replaces the old system for everyone. Please read about the new laptop refresh before you use it, and ask your Support contact if the laptop refresh raises questions."
+  },
+  {
+    "id": "laptop-refresh-design",
+    "title": "New laptop refresh (Design)",
+    "text": "The new laptop refresh is live for the Design team and replaces the old system for everyone. Please read about the new laptop refresh before you use it, and ask your Design contact if the laptop refresh raises questions."
+  },
+  {
+    "id": "laptop-refresh-legal",
+    "title": "New laptop refresh (Legal)",
+    "text": "The new laptop refresh is live for the Legal team and replaces the old system for everyone. Please read about the new laptop refresh before you use it, and ask your Legal contact if the laptop refresh raises questions."
+  },
+  {
+    "id": "office-handbook-part-4",
+    "title": "Office handbook, part 4",
+    "text": "This section covers the desk booking app. Desks in the app can be booked up to two weeks ahead. A desk booking in the app is released at ten if you have not checked in. Standing desks in the app are marked with a small arrow next to the desk number."
+  },
+  {
+    "id": "desk-booking-app-sales",
+    "title": "New desk booking app (Sales)",
+    "text": "The new desk booking app is live for the Sales team and replaces the old system for everyone. Please read about the new desk booking app before you use it, and ask your Sales contact if the desk booking app raises questions."
+  },
+  {
+    "id": "desk-booking-app-finance",
+    "title": "New desk booking app (Finance)",
+    "text": "The new desk booking app is live for the Finance team and replaces the old system for everyone. Please read about the new desk booking app before you use it, and ask your Finance contact if the desk booking app raises questions."
+  },
+  {
+    "id": "desk-booking-app-support",
+    "title": "New desk booking app (Support)",
+    "text": "The new desk booking app is live for the Support team and replaces the old system for everyone. Please read about the new desk booking app before you use it, and ask your Support contact if the desk booking app raises questions."
+  },
+  {
+    "id": "desk-booking-app-design",
+    "title": "New desk booking app (Design)",
+    "text": "The new desk booking app is live for the Design team and replaces the old system for everyone. Please read about the new desk booking app before you use it, and ask your Design contact if the desk booking app raises questions."
+  },
+  {
+    "id": "payroll-handbook-part-2",
+    "title": "Payroll handbook, part 2",
+    "text": "This section covers the payslip portal. Payslips appear in the portal two days before the salary is paid. The yearly tax statement is in the portal from the first week of March. Bank details are changed in the portal before the fifteenth to apply to that month."
+  },
+  {
+    "id": "payslip-portal-sales",
+    "title": "New payslip portal (Sales)",
+    "text": "The new payslip portal is live for the Sales team and replaces the old system for everyone. Please read about the new payslip portal before you use it, and ask your Sales contact if the payslip portal raises questions."
+  },
+  {
+    "id": "payslip-portal-finance",
+    "title": "New payslip portal (Finance)",
+    "text": "The new payslip portal is live for the Finance team and replaces the old system for everyone. Please read about the new payslip portal before you use it, and ask your Finance contact if the payslip portal raises questions."
+  },
+  {
+    "id": "payslip-portal-support",
+    "title": "New payslip portal (Support)",
+    "text": "The new payslip portal is live for the Support team and replaces the old system for everyone. Please read about the new payslip portal before you use it, and ask your Support contact if the payslip portal raises questions."
+  },
+  {
+    "id": "payslip-portal-design",
+    "title": "New payslip portal (Design)",
+    "text": "The new payslip portal is live for the Design team and replaces the old system for everyone. Please read about the new payslip portal before you use it, and ask your Design contact if the payslip portal raises questions."
+  },
+  {
+    "id": "payslip-portal-legal",
+    "title": "New payslip portal (Legal)",
+    "text": "The new payslip portal is live for the Legal team and replaces the old system for everyone. Please read about the new payslip portal before you use it, and ask your Legal contact if the payslip portal raises questions."
+  },
+  {
+    "id": "learning-handbook-part-1",
+    "title": "Learning handbook, part 1",
+    "text": "This section covers the training catalogue. Courses in the catalogue are booked with the learning budget and need no approval below 500 euros. A booked course in the catalogue can be cancelled for free until two weeks before it starts. Certificates from catalogue courses are saved to your profile automatically."
+  },
+  {
+    "id": "training-catalogue-sales",
+    "title": "New training catalogue (Sales)",
+    "text": "The new training catalogue is live for the Sales team and replaces the old system for everyone. Please read about the new training catalogue before you use it, and ask your Sales contact if the training catalogue raises questions."
+  },
+  {
+    "id": "training-catalogue-finance",
+    "title": "New training catalogue (Finance)",
+    "text": "The new training catalogue is live for the Finance team and replaces the old system for everyone. Please read about the new training catalogue before you use it, and ask your Finance contact if the training catalogue raises questions."
+  },
+  {
+    "id": "training-catalogue-support",
+    "title": "New training catalogue (Support)",
+    "text": "The new training catalogue is live for the Support team and replaces the old system for everyone. Please read about the new training catalogue before you use it, and ask your Support contact if the training catalogue raises questions."
+  },
+  {
+    "id": "training-catalogue-design",
+    "title": "New training catalogue (Design)",
+    "text": "The new training catalogue is live for the Design team and replaces the old system for everyone. Please read about the new training catalogue before you use it, and ask your Design contact if the training catalogue raises questions."
+  },
+  {
+    "id": "reception-handbook-part-2",
+    "title": "Reception handbook, part 2",
+    "text": "This section covers the visitor registration. Visitors are registered by their host at least one day before the visit. Registered visitors receive a QR code by email that opens the front gate. Visitor badges must be returned at reception before leaving the building."
+  },
+  {
+    "id": "visitor-registration-sales",
+    "title": "New visitor registration (Sales)",
+    "text": "The new visitor registration is live for the Sales team and replaces the old system for everyone. Please read about the new visitor registration before you use it, and ask your Sales contact if the visitor registration raises questions."
+  },
+  {
+    "id": "visitor-registration-finance",
+    "title": "New visitor registration (Finance)",
+    "text": "The new visitor registration is live for the Finance team and replaces the old system for everyone. Please read about the new visitor registration before you use it, and ask your Finance contact if the visitor registration raises questions."
+  },
+  {
+    "id": "visitor-registration-support",
+    "title": "New visitor registration (Support)",
+    "text": "The new visitor registration is live for the Support team and replaces the old system for everyone. Please read about the new visitor registration before you use it, and ask your Support contact if the visitor registration raises questions."
+  },
+  {
+    "id": "visitor-registration-design",
+    "title": "New visitor registration (Design)",
+    "text": "The new visitor registration is live for the Design team and replaces the old system for everyone. Please read about the new visitor registration before you use it, and ask your Design contact if the visitor registration raises questions."
+  },
+  {
+    "id": "visitor-registration-legal",
+    "title": "New visitor registration (Legal)",
+    "text": "The new visitor registration is live for the Legal team and replaces the old system for everyone. Please read about the new visitor registration before you use it, and ask your Legal contact if the visitor registration raises questions."
+  },
+  {
+    "id": "it-handbook-part-4",
+    "title": "IT handbook, part 4",
+    "text": "This section covers the service desk portal. Tickets in the portal are answered within four working hours. Urgent problems are reported by phone and logged in the portal afterwards. A closed ticket in the portal can be reopened for ten days."
+  },
+  {
+    "id": "service-desk-portal-sales",
+    "title": "New service desk portal (Sales)",
+    "text": "The new service desk portal is live for the Sales team and replaces the old system for everyone. Please read about the new service desk portal before you use it, and ask your Sales contact if the service desk portal raises questions."
+  },
+  {
+    "id": "service-desk-portal-finance",
+    "title": "New service desk portal (Finance)",
+    "text": "The new service desk portal is live for the Finance team and replaces the old system for everyone. Please read about the new service desk portal before you use it, and ask your Finance contact if the service desk portal raises questions."
+  },
+  {
+    "id": "service-desk-portal-support",
+    "title": "New service desk portal (Support)",
+    "text": "The new service desk portal is live for the Support team and replaces the old system for everyone. Please read about the new service desk portal before you use it, and ask your Support contact if the service desk portal raises questions."
+  },
+  {
+    "id": "service-desk-portal-design",
+    "title": "New service desk portal (Design)",
+    "text": "The new service desk portal is live for the Design team and replaces the old system for everyone. Please read about the new service desk portal before you use it, and ask your Design contact if the service desk portal raises questions."
+  },
+  {
+    "id": "it-handbook-part-6",
+    "title": "IT handbook, part 6",
+    "text": "This section covers the phone plan. The plan includes ten gigabytes of data abroad every month. Calls to premium numbers on the plan are taken from your salary. Extra data on the plan is requested in the service portal before you travel."
+  },
+  {
+    "id": "phone-plan-sales",
+    "title": "New phone plan (Sales)",
+    "text": "The new phone plan is live for the Sales team and replaces the old system for everyone. Please read about the new phone plan before you use it, and ask your Sales contact if the phone plan raises questions."
+  },
+  {
+    "id": "phone-plan-finance",
+    "title": "New phone plan (Finance)",
+    "text": "The new phone plan is live for the Finance team and replaces the old system for everyone. Please read about the new phone plan before you use it, and ask your Finance contact if the phone plan raises questions."
+  },
+  {
+    "id": "phone-plan-support",
+    "title": "New phone plan (Support)",
+    "text": "The new phone plan is live for the Support team and replaces the old system for everyone. Please read about the new phone plan before you use it, and ask your Support contact if the phone plan raises questions."
+  },
+  {
+    "id": "phone-plan-design",
+    "title": "New phone plan (Design)",
+    "text": "The new phone plan is live for the Design team and replaces the old system for everyone. Please read about the new phone plan before you use it, and ask your Design contact if the phone plan raises questions."
+  },
+  {
+    "id": "phone-plan-legal",
+    "title": "New phone plan (Legal)",
+    "text": "The new phone plan is live for the Legal team and replaces the old system for everyone. Please read about the new phone plan before you use it, and ask your Legal contact if the phone plan raises questions."
+  },
+  {
+    "id": "office-handbook-part-7",
+    "title": "Office handbook, part 7",
+    "text": "This section covers the meeting room screens. The screens outside every room show the bookings for the rest of the day. A room booked on the screens is released after fifteen minutes without check-in. Rooms can be booked on the screens for at most two hours at a time."
+  },
+  {
+    "id": "meeting-room-screens-sales",
+    "title": "New meeting room screens (Sales)",
+    "text": "The new meeting room screens is live for the Sales team and replaces the old system for everyone. Please read about the new meeting room screens before you use it, and ask your Sales contact if the meeting room screens raises questions."
+  },
+  {
+    "id": "meeting-room-screens-finance",
+    "title": "New meeting room screens (Finance)",
+    "text": "The new meeting room screens is live for the Finance team and replaces the old system for everyone. Please read about the new meeting room screens before you use it, and ask your Finance contact if the meeting room screens raises questions."
+  },
+  {
+    "id": "meeting-room-screens-support",
+    "title": "New meeting room screens (Support)",
+    "text": "The new meeting room screens is live for the Support team and replaces the old system for everyone. Please read about the new meeting room screens before you use it, and ask your Support contact if the meeting room screens raises questions."
+  },
+  {
+    "id": "meeting-room-screens-design",
+    "title": "New meeting room screens (Design)",
+    "text": "The new meeting room screens is live for the Design team and replaces the old system for everyone. Please read about the new meeting room screens before you use it, and ask your Design contact if the meeting room screens raises questions."
+  },
+  {
+    "id": "facilities-handbook-part-3",
+    "title": "Facilities handbook, part 3",
+    "text": "This section covers the parking permit system. Permits in the system are renewed every year in January. The system sends a warning when a car without a permit is parked for more than an hour. Electric cars get a permit in the system that includes the charging bays."
+  },
+  {
+    "id": "parking-permit-system-sales",
+    "title": "New parking permit system (Sales)",
+    "text": "The new parking permit system is live for the Sales team and replaces the old system for everyone. Please read about the new parking permit system before you use it, and ask your Sales contact if the parking permit system raises questions."
+  },
+  {
+    "id": "parking-permit-system-finance",
+    "title": "New parking permit system (Finance)",
+    "text": "The new parking permit system is live for the Finance team and replaces the old system for everyone. Please read about the new parking permit system before you use it, and ask your Finance contact if the parking permit system raises questions."
+  },
+  {
+    "id": "parking-permit-system-support",
+    "title": "New parking permit system (Support)",
+    "text": "The new parking permit system is live for the Support team and replaces the old system for everyone. Please read about the new parking permit system before you use it, and ask your Support contact if the parking permit system raises questions."
+  },
+  {
+    "id": "parking-permit-system-design",
+    "title": "New parking permit system (Design)",
+    "text": "The new parking permit system is live for the Design team and replaces the old system for everyone. Please read about the new parking permit system before you use it, and ask your Design contact if the parking permit system raises questions."
+  },
+  {
+    "id": "parking-permit-system-legal",
+    "title": "New parking permit system (Legal)",
+    "text": "The new parking permit system is live for the Legal team and replaces the old system for everyone. Please read about the new parking permit system before you use it, and ask your Legal contact if the parking permit system raises questions."
+  }
+]

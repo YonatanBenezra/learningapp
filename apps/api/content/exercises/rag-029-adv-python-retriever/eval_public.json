@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO, and where?",
+    "question": "Which phone extension takes requests for a public transport pass?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "Requests go to phone extension 2419.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Requests go to phone extension 2419."
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "question": "During which hours is a spare laptop available?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "It is available from 6:00 until 15:00.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "It is available from 6:00 until 15:00."
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "How late can I cancel the yoga class without being charged?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Cancel at least 20 hours before, or the slot is charged.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Cancel at least 20 hours before, or the slot is charged."
   },
   {
     "id": "p4",
-    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "question": "How much notice do I need to give for the barista bar?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "Ask at least 2 working days in advance.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Ask at least 2 working days in advance."
   },
   {
     "id": "p5",
-    "question": "What happens to a purchase order when the vendor security report is missing?",
+    "question": "How much notice do I need to give for the homework club?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "Ask at least 10 working days in advance.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Ask at least 10 working days in advance."
+  },
+  {
+    "id": "p6",
+    "question": "During which hours is a temporary apartment available?",
+    "answerable": true,
+    "goldAnswer": "It is available from 6:00 until 15:00.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "It is available from 6:00 until 15:00."
   }
 ]

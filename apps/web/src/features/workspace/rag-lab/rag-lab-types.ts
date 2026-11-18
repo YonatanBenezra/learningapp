@@ -107,6 +107,8 @@ export type RagLabEstimate = {
   meanContextTokens: number;
   answerable: number;
   answersFound: number;
+  /** R1: how many chunks the config puts in the index. */
+  indexChunks?: number;
   rows: RagLabEstimateRow[];
 };
 

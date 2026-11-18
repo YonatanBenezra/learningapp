@@ -159,7 +159,7 @@ function TrackVisual() {
           })()}
         </div>
       </div>
-      <p className="lp-home-hiw-pill-caption">rag-001 · Chunk It Right · recall@5 ≥ 0.80</p>
+      <p className="lp-home-hiw-pill-caption">rag-001 · Keep the Subject in the Chunk · recall@5 ≥ 0.90</p>
     </div>
   );
 }

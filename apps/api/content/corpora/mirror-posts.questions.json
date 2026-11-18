@@ -1,0 +1,254 @@
+[
+  {
+    "topic": "expense tool",
+    "question": "How do I submit expense claims in the new expense tool?",
+    "goldDocId": "finance-handbook-part-3",
+    "goldSpan": "Expense claims are submitted with a photo of every receipt in the expense tool.",
+    "goldAnswer": "Expense claims are submitted with a photo of every receipt in the expense tool."
+  },
+  {
+    "topic": "expense tool",
+    "question": "Who approves expense claims in the new expense tool, and how fast?",
+    "goldDocId": "finance-handbook-part-3",
+    "goldSpan": "Your manager approves expense claims in the tool within three working days.",
+    "goldAnswer": "Your manager approves expense claims in the tool within three working days."
+  },
+  {
+    "topic": "expense tool",
+    "question": "When are refunds from the new expense tool paid?",
+    "goldDocId": "finance-handbook-part-3",
+    "goldSpan": "Approved expense refunds are paid with the next salary.",
+    "goldAnswer": "Approved expense refunds are paid with the next salary."
+  },
+  {
+    "topic": "travel booking site",
+    "question": "How far ahead do I book trips on the new travel booking site?",
+    "goldDocId": "travel-handbook-part-2",
+    "goldSpan": "Flights and trains on the booking site are booked at least seven days before the trip.",
+    "goldAnswer": "Flights and trains on the booking site are booked at least seven days before the trip."
+  },
+  {
+    "topic": "travel booking site",
+    "question": "Does the new travel booking site need approval for a booking?",
+    "goldDocId": "travel-handbook-part-2",
+    "goldSpan": "The booking site sends every booking to your manager for approval first.",
+    "goldAnswer": "The booking site sends every booking to your manager for approval first."
+  },
+  {
+    "topic": "travel booking site",
+    "question": "Until when are changes free on the new travel booking site?",
+    "goldDocId": "travel-handbook-part-2",
+    "goldSpan": "Changes to a booking on the site are free until one day before departure.",
+    "goldAnswer": "Changes to a booking on the site are free until one day before departure."
+  },
+  {
+    "topic": "holiday planner",
+    "question": "How much notice does the new holiday planner need for longer holidays?",
+    "goldDocId": "people-handbook-part-5",
+    "goldSpan": "Holiday requests in the planner need two weeks notice for anything over three days.",
+    "goldAnswer": "Holiday requests in the planner need two weeks notice for anything over three days."
+  },
+  {
+    "topic": "holiday planner",
+    "question": "Where does the new holiday planner show my remaining days?",
+    "goldDocId": "people-handbook-part-5",
+    "goldSpan": "The planner shows the remaining days of the year at the top of every request.",
+    "goldAnswer": "The planner shows the remaining days of the year at the top of every request."
+  },
+  {
+    "topic": "holiday planner",
+    "question": "Who answers requests in the new holiday planner, and how fast?",
+    "goldDocId": "people-handbook-part-5",
+    "goldSpan": "Requests in the planner are approved or refused by the team lead within five days.",
+    "goldAnswer": "Requests in the planner are approved or refused by the team lead within five days."
+  },
+  {
+    "topic": "laptop refresh",
+    "question": "How often are laptops replaced in the new laptop refresh?",
+    "goldDocId": "it-handbook-part-1",
+    "goldSpan": "Laptops are replaced every four years, or earlier when a repair costs more than half.",
+    "goldAnswer": "Laptops are replaced every four years, or earlier when a repair costs more than half."
+  },
+  {
+    "topic": "laptop refresh",
+    "question": "When do I return my old laptop in the new laptop refresh?",
+    "goldDocId": "it-handbook-part-1",
+    "goldSpan": "The old laptop is returned to the service desk within a week of the new one arriving.",
+    "goldAnswer": "The old laptop is returned to the service desk within a week of the new one arriving."
+  },
+  {
+    "topic": "laptop refresh",
+    "question": "Who copies my files in the new laptop refresh?",
+    "goldDocId": "it-handbook-part-1",
+    "goldSpan": "Files are copied to the new laptop by the service desk during a one hour appointment.",
+    "goldAnswer": "Files are copied to the new laptop by the service desk during a one hour appointment."
+  },
+  {
+    "topic": "desk booking app",
+    "question": "How far ahead can I book a desk in the new desk booking app?",
+    "goldDocId": "office-handbook-part-4",
+    "goldSpan": "Desks in the app can be booked up to two weeks ahead.",
+    "goldAnswer": "Desks in the app can be booked up to two weeks ahead."
+  },
+  {
+    "topic": "desk booking app",
+    "question": "What happens to a desk booking in the new desk booking app if I do not check in?",
+    "goldDocId": "office-handbook-part-4",
+    "goldSpan": "A desk booking in the app is released at ten if you have not checked in.",
+    "goldAnswer": "A desk booking in the app is released at ten if you have not checked in."
+  },
+  {
+    "topic": "desk booking app",
+    "question": "How are standing desks shown in the new desk booking app?",
+    "goldDocId": "office-handbook-part-4",
+    "goldSpan": "Standing desks in the app are marked with a small arrow next to the desk number.",
+    "goldAnswer": "Standing desks in the app are marked with a small arrow next to the desk number."
+  },
+  {
+    "topic": "payslip portal",
+    "question": "When do payslips appear in the new payslip portal?",
+    "goldDocId": "payroll-handbook-part-2",
+    "goldSpan": "Payslips appear in the portal two days before the salary is paid.",
+    "goldAnswer": "Payslips appear in the portal two days before the salary is paid."
+  },
+  {
+    "topic": "payslip portal",
+    "question": "When is the yearly tax statement in the new payslip portal?",
+    "goldDocId": "payroll-handbook-part-2",
+    "goldSpan": "The yearly tax statement is in the portal from the first week of March.",
+    "goldAnswer": "The yearly tax statement is in the portal from the first week of March."
+  },
+  {
+    "topic": "payslip portal",
+    "question": "By when must bank details be changed in the new payslip portal?",
+    "goldDocId": "payroll-handbook-part-2",
+    "goldSpan": "Bank details are changed in the portal before the fifteenth to apply to that month.",
+    "goldAnswer": "Bank details are changed in the portal before the fifteenth to apply to that month."
+  },
+  {
+    "topic": "training catalogue",
+    "question": "Which courses in the new training catalogue need approval?",
+    "goldDocId": "learning-handbook-part-1",
+    "goldSpan": "Courses in the catalogue are booked with the learning budget and need no approval below 500 euros.",
+    "goldAnswer": "Courses in the catalogue are booked with the learning budget and need no approval below 500 euros."
+  },
+  {
+    "topic": "training catalogue",
+    "question": "Until when can a course from the new training catalogue be cancelled for free?",
+    "goldDocId": "learning-handbook-part-1",
+    "goldSpan": "A booked course in the catalogue can be cancelled for free until two weeks before it starts.",
+    "goldAnswer": "A booked course in the catalogue can be cancelled for free until two weeks before it starts."
+  },
+  {
+    "topic": "training catalogue",
+    "question": "Where are certificates from the new training catalogue saved?",
+    "goldDocId": "learning-handbook-part-1",
+    "goldSpan": "Certificates from catalogue courses are saved to your profile automatically.",
+    "goldAnswer": "Certificates from catalogue courses are saved to your profile automatically."
+  },
+  {
+    "topic": "visitor registration",
+    "question": "Who registers visitors in the new visitor registration, and when?",
+    "goldDocId": "reception-handbook-part-2",
+    "goldSpan": "Visitors are registered by their host at least one day before the visit.",
+    "goldAnswer": "Visitors are registered by their host at least one day before the visit."
+  },
+  {
+    "topic": "visitor registration",
+    "question": "How do visitors get through the gate with the new visitor registration?",
+    "goldDocId": "reception-handbook-part-2",
+    "goldSpan": "Registered visitors receive a QR code by email that opens the front gate.",
+    "goldAnswer": "Registered visitors receive a QR code by email that opens the front gate."
+  },
+  {
+    "topic": "visitor registration",
+    "question": "Where do visitor badges go after a visit with the new visitor registration?",
+    "goldDocId": "reception-handbook-part-2",
+    "goldSpan": "Visitor badges must be returned at reception before leaving the building.",
+    "goldAnswer": "Visitor badges must be returned at reception before leaving the building."
+  },
+  {
+    "topic": "service desk portal",
+    "question": "How fast are tickets answered in the new service desk portal?",
+    "goldDocId": "it-handbook-part-4",
+    "goldSpan": "Tickets in the portal are answered within four working hours.",
+    "goldAnswer": "Tickets in the portal are answered within four working hours."
+  },
+  {
+    "topic": "service desk portal",
+    "question": "How do I report an urgent problem with the new service desk portal?",
+    "goldDocId": "it-handbook-part-4",
+    "goldSpan": "Urgent problems are reported by phone and logged in the portal afterwards.",
+    "goldAnswer": "Urgent problems are reported by phone and logged in the portal afterwards."
+  },
+  {
+    "topic": "service desk portal",
+    "question": "For how long can a closed ticket be reopened in the new service desk portal?",
+    "goldDocId": "it-handbook-part-4",
+    "goldSpan": "A closed ticket in the portal can be reopened for ten days.",
+    "goldAnswer": "A closed ticket in the portal can be reopened for ten days."
+  },
+  {
+    "topic": "phone plan",
+    "question": "How much data abroad does the new phone plan include?",
+    "goldDocId": "it-handbook-part-6",
+    "goldSpan": "The plan includes ten gigabytes of data abroad every month.",
+    "goldAnswer": "The plan includes ten gigabytes of data abroad every month."
+  },
+  {
+    "topic": "phone plan",
+    "question": "Who pays for premium number calls on the new phone plan?",
+    "goldDocId": "it-handbook-part-6",
+    "goldSpan": "Calls to premium numbers on the plan are taken from your salary.",
+    "goldAnswer": "Calls to premium numbers on the plan are taken from your salary."
+  },
+  {
+    "topic": "phone plan",
+    "question": "How do I get extra data on the new phone plan?",
+    "goldDocId": "it-handbook-part-6",
+    "goldSpan": "Extra data on the plan is requested in the service portal before you travel.",
+    "goldAnswer": "Extra data on the plan is requested in the service portal before you travel."
+  },
+  {
+    "topic": "meeting room screens",
+    "question": "What do the new meeting room screens show?",
+    "goldDocId": "office-handbook-part-7",
+    "goldSpan": "The screens outside every room show the bookings for the rest of the day.",
+    "goldAnswer": "The screens outside every room show the bookings for the rest of the day."
+  },
+  {
+    "topic": "meeting room screens",
+    "question": "When is a room released on the new meeting room screens?",
+    "goldDocId": "office-handbook-part-7",
+    "goldSpan": "A room booked on the screens is released after fifteen minutes without check-in.",
+    "goldAnswer": "A room booked on the screens is released after fifteen minutes without check-in."
+  },
+  {
+    "topic": "meeting room screens",
+    "question": "How long can I book a room on the new meeting room screens?",
+    "goldDocId": "office-handbook-part-7",
+    "goldSpan": "Rooms can be booked on the screens for at most two hours at a time.",
+    "goldAnswer": "Rooms can be booked on the screens for at most two hours at a time."
+  },
+  {
+    "topic": "parking permit system",
+    "question": "When are permits renewed in the new parking permit system?",
+    "goldDocId": "facilities-handbook-part-3",
+    "goldSpan": "Permits in the system are renewed every year in January.",
+    "goldAnswer": "Permits in the system are renewed every year in January."
+  },
+  {
+    "topic": "parking permit system",
+    "question": "What happens to cars without a permit in the new parking permit system?",
+    "goldDocId": "facilities-handbook-part-3",
+    "goldSpan": "The system sends a warning when a car without a permit is parked for more than an hour.",
+    "goldAnswer": "The system sends a warning when a car without a permit is parked for more than an hour."
+  },
+  {
+    "topic": "parking permit system",
+    "question": "Do electric cars get anything extra in the new parking permit system?",
+    "goldDocId": "facilities-handbook-part-3",
+    "goldSpan": "Electric cars get a permit in the system that includes the charging bays.",
+    "goldAnswer": "Electric cars get a permit in the system that includes the charging bays."
+  }
+]

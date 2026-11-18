@@ -4,9 +4,9 @@ import { ONBOARDING_STARTER, elapsedMs } from './onboarding';
 describe('onboarding starter', () => {
   it('is a public R1 config with no hidden eval text', () => {
     expect(ONBOARDING_STARTER).toEqual({
-      chunkSize: 200,
-      overlap: 40,
-      splitStrategy: 'sentence',
+      chunkSize: 300,
+      overlap: 0,
+      splitStrategy: 'recursive',
     });
     expect(JSON.stringify(ONBOARDING_STARTER)).not.toContain('HIDDEN_EVAL');
     expect(JSON.stringify(ONBOARDING_STARTER)).not.toContain(

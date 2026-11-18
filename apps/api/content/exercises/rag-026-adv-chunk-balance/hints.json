@@ -1,0 +1,6 @@
+[
+  "Look at the Chunks tab: with sentence splitting, how many chunks does one call become?",
+  "Without overlap, a promise is whole only when it happens to fall inside one window. Bigger windows cut fewer promises but cost more tokens.",
+  "A promise is whole somewhere when the windows overlap by at least its length, about 145 characters at most.",
+  "Each window moves forward by chunk size minus overlap. If that step is small, the index fills up: keep it at about 150 characters or more, with a chunk size near 300."
+]

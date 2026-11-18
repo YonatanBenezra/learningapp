@@ -11,19 +11,16 @@ import type { HiddenItem } from '../rag/rag.types';
 import { learnerInputJson, materialiseLearnerInput } from './sandbox.input';
 import { gradeSandboxRetriever } from './sandbox.grade';
 
-const contentRoot = path.join(
-  process.cwd(),
-  'content/exercises/rag-009-python-retriever',
-);
+const fixtures = path.join(__dirname, '../__fixtures__/internal-policy');
 
 function loadJson<T>(name: string): T {
-  return JSON.parse(readFileSync(path.join(contentRoot, name), 'utf8')) as T;
+  return JSON.parse(readFileSync(path.join(fixtures, name), 'utf8')) as T;
 }
 
 describe('sandbox retriever grader', () => {
-  const docs = loadJson<CorpusDoc[]>('corpus.json');
-  const hidden = loadJson<HiddenItem[]>('eval_hidden.json');
-  const publicItems = loadJson<HiddenItem[]>('eval_public.json');
+  const docs = loadJson<CorpusDoc[]>('sandbox.corpus.json');
+  const hidden = loadJson<HiddenItem[]>('sandbox.eval_hidden.json');
+  const publicItems = loadJson<HiddenItem[]>('sandbox.eval_public.json');
 
   it('strips gold answers and canaries from the sandbox workspace', () => {
     const input = materialiseLearnerInput(docs, hidden);

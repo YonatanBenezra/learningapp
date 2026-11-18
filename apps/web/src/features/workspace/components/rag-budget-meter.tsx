@@ -93,6 +93,11 @@ export function RagBudgetMeter({ slug, payload, gates }: RagBudgetMeterProps) {
   const budgetPct = tokenGate
     ? Math.min(100, (estimate.meanContextTokens / tokenGate.value) * 100)
     : null;
+  const indexGate = gradedGates(gates).find((gate) => gate.metric === "index_chunks") ?? null;
+  const indexOk =
+    indexGate && estimate.indexChunks !== undefined
+      ? estimate.indexChunks <= indexGate.value
+      : null;
   const firstStage = meanRank(estimate.rows.map((row) => row.firstStageGoldRank));
   const reranked = meanRank(estimate.rows.map((row) => row.goldRank));
 
@@ -119,6 +124,15 @@ export function RagBudgetMeter({ slug, payload, gates }: RagBudgetMeterProps) {
             className={cn("lp-rag-meter-fill", tokensOk ? "is-pass" : "is-fail")}
             style={{ width: `${budgetPct}%` }}
           />
+        </div>
+      ) : null}
+      {indexGate && estimate.indexChunks !== undefined ? (
+        <div className="lp-rag-meter-row">
+          <span className="lp-rag-meter-label">{gateMetricLabel(indexGate.metric)}</span>
+          <span className={cn("lp-rag-meter-value", indexOk ? "is-pass" : "is-fail")}>
+            {estimate.indexChunks}
+            <small> / {formatGateThreshold(indexGate)}</small>
+          </span>
         </div>
       ) : null}
       {estimate.answerable > 0 ? (

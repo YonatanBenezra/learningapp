@@ -16,19 +16,13 @@ const docs = JSON.parse(
 ) as CorpusDoc[];
 const hidden = JSON.parse(
   readFileSync(
-    path.join(
-      process.cwd(),
-      'content/exercises/rag-004-rerank-or-rethink/eval_hidden.json',
-    ),
+    path.join(__dirname, '../__fixtures__/internal-policy/r4.eval_hidden.json'),
     'utf8',
   ),
 ) as HiddenItem[];
 const publicItems = JSON.parse(
   readFileSync(
-    path.join(
-      process.cwd(),
-      'content/exercises/rag-004-rerank-or-rethink/eval_public.json',
-    ),
+    path.join(__dirname, '../__fixtures__/internal-policy/r4.eval_public.json'),
     'utf8',
   ),
 ) as HiddenItem[];

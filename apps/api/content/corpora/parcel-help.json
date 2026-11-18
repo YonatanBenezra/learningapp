@@ -1,0 +1,357 @@
+[
+  {
+    "id": "standard-parcel",
+    "title": "Standard parcel",
+    "text": "A standard parcel costs 47 euros to send. The weight limit for a standard parcel is 3 kg. Delivery of a standard parcel takes 4 working days. The size limit for a standard parcel is 143 cm on the longest side. A standard parcel is insured for up to 511 euros."
+  },
+  {
+    "id": "express-parcel",
+    "title": "Express parcel",
+    "text": "A express parcel costs 47 euros to send. The weight limit for a express parcel is 38 kg. Delivery of a express parcel takes 5 working days. The size limit for a express parcel is 92 cm on the longest side. A express parcel is insured for up to 344 euros."
+  },
+  {
+    "id": "express-parcel-news-1",
+    "title": "Express parcel news",
+    "text": "Customers ask what a express parcel costs, the weight limit for a express parcel and how long delivery of a express parcel takes. We are reviewing the express parcel size limit and how much a express parcel is insured for."
+  },
+  {
+    "id": "express-parcel-news-2",
+    "title": "Choosing a express parcel",
+    "text": "Compare what a express parcel costs with other services, check the weight limit and size limit for a express parcel, and how long delivery of a express parcel takes and how much a express parcel is insured for."
+  },
+  {
+    "id": "same-day-parcel",
+    "title": "Same-day parcel",
+    "text": "A same-day parcel costs 17 euros to send. The weight limit for a same-day parcel is 25 kg. Delivery of a same-day parcel takes 3 working days. The size limit for a same-day parcel is 30 cm on the longest side. A same-day parcel is insured for up to 75 euros."
+  },
+  {
+    "id": "same-day-parcel-news-1",
+    "title": "Same-day parcel news",
+    "text": "Customers ask what a same-day parcel costs, the weight limit for a same-day parcel and how long delivery of a same-day parcel takes. We are reviewing the same-day parcel size limit and how much a same-day parcel is insured for."
+  },
+  {
+    "id": "large-parcel",
+    "title": "Large parcel",
+    "text": "A large parcel costs 32 euros to send. The weight limit for a large parcel is 18 kg. Delivery of a large parcel takes 4 working days. The size limit for a large parcel is 141 cm on the longest side. A large parcel is insured for up to 474 euros."
+  },
+  {
+    "id": "large-parcel-news-1",
+    "title": "Large parcel news",
+    "text": "Customers ask what a large parcel costs, the weight limit for a large parcel and how long delivery of a large parcel takes. We are reviewing the large parcel size limit and how much a large parcel is insured for."
+  },
+  {
+    "id": "large-parcel-news-2",
+    "title": "Choosing a large parcel",
+    "text": "Compare what a large parcel costs with other services, check the weight limit and size limit for a large parcel, and how long delivery of a large parcel takes and how much a large parcel is insured for."
+  },
+  {
+    "id": "international-parcel",
+    "title": "International parcel",
+    "text": "A international parcel costs 17 euros to send. The weight limit for a international parcel is 24 kg. Delivery of a international parcel takes 5 working days. The size limit for a international parcel is 77 cm on the longest side. A international parcel is insured for up to 229 euros."
+  },
+  {
+    "id": "international-express-parcel",
+    "title": "International express parcel",
+    "text": "A international express parcel costs 28 euros to send. The weight limit for a international express parcel is 23 kg. Delivery of a international express parcel takes 1 working day. The size limit for a international express parcel is 46 cm on the longest side. A international express parcel is insured for up to 94 euros."
+  },
+  {
+    "id": "international-express-parcel-news-1",
+    "title": "International express parcel news",
+    "text": "Customers ask what a international express parcel costs, the weight limit for a international express parcel and how long delivery of a international express parcel takes. We are reviewing the international express parcel size limit and how much a international express parcel is insured for."
+  },
+  {
+    "id": "economy-parcel",
+    "title": "Economy parcel",
+    "text": "A economy parcel costs 14 euros to send. The weight limit for a economy parcel is 25 kg. Delivery of a economy parcel takes 6 working days. The size limit for a economy parcel is 33 cm on the longest side. A economy parcel is insured for up to 451 euros."
+  },
+  {
+    "id": "standard-letter",
+    "title": "Standard letter",
+    "text": "A standard letter costs 83 euros to send. The weight limit for a standard letter is 7 kg. Delivery of a standard letter takes 4 working days. The size limit for a standard letter is 89 cm on the longest side. A standard letter is insured for up to 309 euros."
+  },
+  {
+    "id": "standard-letter-news-1",
+    "title": "Standard letter news",
+    "text": "Customers ask what a standard letter costs, the weight limit for a standard letter and how long delivery of a standard letter takes. We are reviewing the standard letter size limit and how much a standard letter is insured for."
+  },
+  {
+    "id": "registered-letter",
+    "title": "Registered letter",
+    "text": "A registered letter costs 23 euros to send. The weight limit for a registered letter is 5 kg. Delivery of a registered letter takes 5 working days. The size limit for a registered letter is 125 cm on the longest side. A registered letter is insured for up to 270 euros."
+  },
+  {
+    "id": "express-letter",
+    "title": "Express letter",
+    "text": "A express letter costs 29 euros to send. The weight limit for a express letter is 4 kg. Delivery of a express letter takes 3 working days. The size limit for a express letter is 87 cm on the longest side. A express letter is insured for up to 727 euros."
+  },
+  {
+    "id": "express-letter-news-1",
+    "title": "Express letter news",
+    "text": "Customers ask what a express letter costs, the weight limit for a express letter and how long delivery of a express letter takes. We are reviewing the express letter size limit and how much a express letter is insured for."
+  },
+  {
+    "id": "express-letter-news-2",
+    "title": "Choosing a express letter",
+    "text": "Compare what a express letter costs with other services, check the weight limit and size limit for a express letter, and how long delivery of a express letter takes and how much a express letter is insured for."
+  },
+  {
+    "id": "international-letter",
+    "title": "International letter",
+    "text": "A international letter costs 54 euros to send. The weight limit for a international letter is 10 kg. Delivery of a international letter takes 2 working days. The size limit for a international letter is 95 cm on the longest side. A international letter is insured for up to 502 euros."
+  },
+  {
+    "id": "large-letter",
+    "title": "Large letter",
+    "text": "A large letter costs 53 euros to send. The weight limit for a large letter is 26 kg. Delivery of a large letter takes 4 working days. The size limit for a large letter is 188 cm on the longest side. A large letter is insured for up to 696 euros."
+  },
+  {
+    "id": "large-letter-news-1",
+    "title": "Large letter news",
+    "text": "Customers ask what a large letter costs, the weight limit for a large letter and how long delivery of a large letter takes. We are reviewing the large letter size limit and how much a large letter is insured for."
+  },
+  {
+    "id": "full-pallet",
+    "title": "Full pallet",
+    "text": "A full pallet costs 10 euros to send. The weight limit for a full pallet is 36 kg. Delivery of a full pallet takes 3 working days. The size limit for a full pallet is 57 cm on the longest side. A full pallet is insured for up to 457 euros."
+  },
+  {
+    "id": "half-pallet",
+    "title": "Half pallet",
+    "text": "A half pallet costs 13 euros to send. The weight limit for a half pallet is 22 kg. Delivery of a half pallet takes 2 working days. The size limit for a half pallet is 55 cm on the longest side. A half pallet is insured for up to 740 euros."
+  },
+  {
+    "id": "half-pallet-news-1",
+    "title": "Half pallet news",
+    "text": "Customers ask what a half pallet costs, the weight limit for a half pallet and how long delivery of a half pallet takes. We are reviewing the half pallet size limit and how much a half pallet is insured for."
+  },
+  {
+    "id": "half-pallet-news-2",
+    "title": "Choosing a half pallet",
+    "text": "Compare what a half pallet costs with other services, check the weight limit and size limit for a half pallet, and how long delivery of a half pallet takes and how much a half pallet is insured for."
+  },
+  {
+    "id": "express-pallet",
+    "title": "Express pallet",
+    "text": "A express pallet costs 60 euros to send. The weight limit for a express pallet is 29 kg. Delivery of a express pallet takes 2 working days. The size limit for a express pallet is 32 cm on the longest side. A express pallet is insured for up to 436 euros."
+  },
+  {
+    "id": "international-pallet",
+    "title": "International pallet",
+    "text": "A international pallet costs 57 euros to send. The weight limit for a international pallet is 6 kg. Delivery of a international pallet takes 1 working day. The size limit for a international pallet is 174 cm on the longest side. A international pallet is insured for up to 375 euros."
+  },
+  {
+    "id": "international-pallet-news-1",
+    "title": "International pallet news",
+    "text": "Customers ask what a international pallet costs, the weight limit for a international pallet and how long delivery of a international pallet takes. We are reviewing the international pallet size limit and how much a international pallet is insured for."
+  },
+  {
+    "id": "return-parcel",
+    "title": "Return parcel",
+    "text": "A return parcel costs 69 euros to send. The weight limit for a return parcel is 11 kg. Delivery of a return parcel takes 3 working days. The size limit for a return parcel is 179 cm on the longest side. A return parcel is insured for up to 210 euros."
+  },
+  {
+    "id": "express-return",
+    "title": "Express return",
+    "text": "A express return costs 9 euros to send. The weight limit for a express return is 33 kg. Delivery of a express return takes 4 working days. The size limit for a express return is 38 cm on the longest side. A express return is insured for up to 351 euros."
+  },
+  {
+    "id": "express-return-news-1",
+    "title": "Express return news",
+    "text": "Customers ask what a express return costs, the weight limit for a express return and how long delivery of a express return takes. We are reviewing the express return size limit and how much a express return is insured for."
+  },
+  {
+    "id": "express-return-news-2",
+    "title": "Choosing a express return",
+    "text": "Compare what a express return costs with other services, check the weight limit and size limit for a express return, and how long delivery of a express return takes and how much a express return is insured for."
+  },
+  {
+    "id": "international-return",
+    "title": "International return",
+    "text": "A international return costs 38 euros to send. The weight limit for a international return is 9 kg. Delivery of a international return takes 1 working day. The size limit for a international return is 41 cm on the longest side. A international return is insured for up to 604 euros."
+  },
+  {
+    "id": "small-packet",
+    "title": "Small packet",
+    "text": "A small packet costs 60 euros to send. The weight limit for a small packet is 26 kg. Delivery of a small packet takes 2 working days. The size limit for a small packet is 50 cm on the longest side. A small packet is insured for up to 301 euros."
+  },
+  {
+    "id": "small-packet-news-1",
+    "title": "Small packet news",
+    "text": "Customers ask what a small packet costs, the weight limit for a small packet and how long delivery of a small packet takes. We are reviewing the small packet size limit and how much a small packet is insured for."
+  },
+  {
+    "id": "tracked-packet",
+    "title": "Tracked packet",
+    "text": "A tracked packet costs 39 euros to send. The weight limit for a tracked packet is 14 kg. Delivery of a tracked packet takes 4 working days. The size limit for a tracked packet is 110 cm on the longest side. A tracked packet is insured for up to 425 euros."
+  },
+  {
+    "id": "document-tube",
+    "title": "Document tube",
+    "text": "A document tube costs 23 euros to send. The weight limit for a document tube is 26 kg. Delivery of a document tube takes 2 working days. The size limit for a document tube is 164 cm on the longest side. A document tube is insured for up to 852 euros."
+  },
+  {
+    "id": "document-tube-news-1",
+    "title": "Document tube news",
+    "text": "Customers ask what a document tube costs, the weight limit for a document tube and how long delivery of a document tube takes. We are reviewing the document tube size limit and how much a document tube is insured for."
+  },
+  {
+    "id": "document-tube-news-2",
+    "title": "Choosing a document tube",
+    "text": "Compare what a document tube costs with other services, check the weight limit and size limit for a document tube, and how long delivery of a document tube takes and how much a document tube is insured for."
+  },
+  {
+    "id": "bike-box",
+    "title": "Bike box",
+    "text": "A bike box costs 95 euros to send. The weight limit for a bike box is 3 kg. Delivery of a bike box takes 6 working days. The size limit for a bike box is 111 cm on the longest side. A bike box is insured for up to 423 euros."
+  },
+  {
+    "id": "furniture-delivery",
+    "title": "Furniture delivery",
+    "text": "A furniture delivery costs 15 euros to send. The weight limit for a furniture delivery is 6 kg. Delivery of a furniture delivery takes 3 working days. The size limit for a furniture delivery is 170 cm on the longest side. A furniture delivery is insured for up to 452 euros."
+  },
+  {
+    "id": "furniture-delivery-news-1",
+    "title": "Furniture delivery news",
+    "text": "Customers ask what a furniture delivery costs, the weight limit for a furniture delivery and how long delivery of a furniture delivery takes. We are reviewing the furniture delivery size limit and how much a furniture delivery is insured for."
+  },
+  {
+    "id": "two-person-delivery",
+    "title": "Two-person delivery",
+    "text": "A two-person delivery costs 58 euros to send. The weight limit for a two-person delivery is 11 kg. Delivery of a two-person delivery takes 3 working days. The size limit for a two-person delivery is 105 cm on the longest side. A two-person delivery is insured for up to 562 euros."
+  },
+  {
+    "id": "chilled-parcel",
+    "title": "Chilled parcel",
+    "text": "A chilled parcel costs 81 euros to send. The weight limit for a chilled parcel is 8 kg. Delivery of a chilled parcel takes 5 working days. The size limit for a chilled parcel is 195 cm on the longest side. A chilled parcel is insured for up to 853 euros."
+  },
+  {
+    "id": "chilled-parcel-news-1",
+    "title": "Chilled parcel news",
+    "text": "Customers ask what a chilled parcel costs, the weight limit for a chilled parcel and how long delivery of a chilled parcel takes. We are reviewing the chilled parcel size limit and how much a chilled parcel is insured for."
+  },
+  {
+    "id": "chilled-parcel-news-2",
+    "title": "Choosing a chilled parcel",
+    "text": "Compare what a chilled parcel costs with other services, check the weight limit and size limit for a chilled parcel, and how long delivery of a chilled parcel takes and how much a chilled parcel is insured for."
+  },
+  {
+    "id": "fragile-parcel",
+    "title": "Fragile parcel",
+    "text": "A fragile parcel costs 65 euros to send. The weight limit for a fragile parcel is 17 kg. Delivery of a fragile parcel takes 6 working days. The size limit for a fragile parcel is 198 cm on the longest side. A fragile parcel is insured for up to 349 euros."
+  },
+  {
+    "id": "wine-box",
+    "title": "Wine box",
+    "text": "A wine box costs 33 euros to send. The weight limit for a wine box is 21 kg. Delivery of a wine box takes 5 working days. The size limit for a wine box is 83 cm on the longest side. A wine box is insured for up to 379 euros."
+  },
+  {
+    "id": "wine-box-news-1",
+    "title": "Wine box news",
+    "text": "Customers ask what a wine box costs, the weight limit for a wine box and how long delivery of a wine box takes. We are reviewing the wine box size limit and how much a wine box is insured for."
+  },
+  {
+    "id": "locker-drop-off",
+    "title": "Locker drop-off",
+    "text": "A locker drop-off costs 66 euros to send. The weight limit for a locker drop-off is 10 kg. Delivery of a locker drop-off takes 1 working day. The size limit for a locker drop-off is 94 cm on the longest side. A locker drop-off is insured for up to 125 euros."
+  },
+  {
+    "id": "locker-pick-up",
+    "title": "Locker pick-up",
+    "text": "A locker pick-up costs 23 euros to send. The weight limit for a locker pick-up is 31 kg. Delivery of a locker pick-up takes 5 working days. The size limit for a locker pick-up is 125 cm on the longest side. A locker pick-up is insured for up to 626 euros."
+  },
+  {
+    "id": "locker-pick-up-news-1",
+    "title": "Locker pick-up news",
+    "text": "Customers ask what a locker pick-up costs, the weight limit for a locker pick-up and how long delivery of a locker pick-up takes. We are reviewing the locker pick-up size limit and how much a locker pick-up is insured for."
+  },
+  {
+    "id": "locker-pick-up-news-2",
+    "title": "Choosing a locker pick-up",
+    "text": "Compare what a locker pick-up costs with other services, check the weight limit and size limit for a locker pick-up, and how long delivery of a locker pick-up takes and how much a locker pick-up is insured for."
+  },
+  {
+    "id": "saturday-parcel",
+    "title": "Saturday parcel",
+    "text": "A saturday parcel costs 11 euros to send. The weight limit for a saturday parcel is 4 kg. Delivery of a saturday parcel takes 5 working days. The size limit for a saturday parcel is 47 cm on the longest side. A saturday parcel is insured for up to 878 euros."
+  },
+  {
+    "id": "evening-parcel",
+    "title": "Evening parcel",
+    "text": "A evening parcel costs 93 euros to send. The weight limit for a evening parcel is 23 kg. Delivery of a evening parcel takes 4 working days. The size limit for a evening parcel is 67 cm on the longest side. A evening parcel is insured for up to 799 euros."
+  },
+  {
+    "id": "evening-parcel-news-1",
+    "title": "Evening parcel news",
+    "text": "Customers ask what a evening parcel costs, the weight limit for a evening parcel and how long delivery of a evening parcel takes. We are reviewing the evening parcel size limit and how much a evening parcel is insured for."
+  },
+  {
+    "id": "signed-for-parcel",
+    "title": "Signed-for parcel",
+    "text": "A signed-for parcel costs 91 euros to send. The weight limit for a signed-for parcel is 33 kg. Delivery of a signed-for parcel takes 5 working days. The size limit for a signed-for parcel is 48 cm on the longest side. A signed-for parcel is insured for up to 269 euros."
+  },
+  {
+    "id": "cash-on-delivery-parcel",
+    "title": "Cash-on-delivery parcel",
+    "text": "A cash-on-delivery parcel costs 19 euros to send. The weight limit for a cash-on-delivery parcel is 17 kg. Delivery of a cash-on-delivery parcel takes 2 working days. The size limit for a cash-on-delivery parcel is 111 cm on the longest side. A cash-on-delivery parcel is insured for up to 483 euros."
+  },
+  {
+    "id": "cash-on-delivery-parcel-news-1",
+    "title": "Cash-on-delivery parcel news",
+    "text": "Customers ask what a cash-on-delivery parcel costs, the weight limit for a cash-on-delivery parcel and how long delivery of a cash-on-delivery parcel takes. We are reviewing the cash-on-delivery parcel size limit and how much a cash-on-delivery parcel is insured for."
+  },
+  {
+    "id": "cash-on-delivery-parcel-news-2",
+    "title": "Choosing a cash-on-delivery parcel",
+    "text": "Compare what a cash-on-delivery parcel costs with other services, check the weight limit and size limit for a cash-on-delivery parcel, and how long delivery of a cash-on-delivery parcel takes and how much a cash-on-delivery parcel is insured for."
+  },
+  {
+    "id": "oversized-parcel",
+    "title": "Oversized parcel",
+    "text": "A oversized parcel costs 9 euros to send. The weight limit for a oversized parcel is 29 kg. Delivery of a oversized parcel takes 1 working day. The size limit for a oversized parcel is 145 cm on the longest side. A oversized parcel is insured for up to 393 euros."
+  },
+  {
+    "id": "garden-tool-box",
+    "title": "Garden tool box",
+    "text": "A garden tool box costs 92 euros to send. The weight limit for a garden tool box is 22 kg. Delivery of a garden tool box takes 5 working days. The size limit for a garden tool box is 150 cm on the longest side. A garden tool box is insured for up to 347 euros."
+  },
+  {
+    "id": "garden-tool-box-news-1",
+    "title": "Garden tool box news",
+    "text": "Customers ask what a garden tool box costs, the weight limit for a garden tool box and how long delivery of a garden tool box takes. We are reviewing the garden tool box size limit and how much a garden tool box is insured for."
+  },
+  {
+    "id": "laptop-sleeve-parcel",
+    "title": "Laptop sleeve parcel",
+    "text": "A laptop sleeve parcel costs 15 euros to send. The weight limit for a laptop sleeve parcel is 40 kg. Delivery of a laptop sleeve parcel takes 3 working days. The size limit for a laptop sleeve parcel is 182 cm on the longest side. A laptop sleeve parcel is insured for up to 665 euros."
+  },
+  {
+    "id": "medicine-pouch",
+    "title": "Medicine pouch",
+    "text": "A medicine pouch costs 45 euros to send. The weight limit for a medicine pouch is 32 kg. Delivery of a medicine pouch takes 6 working days. The size limit for a medicine pouch is 167 cm on the longest side. A medicine pouch is insured for up to 596 euros."
+  },
+  {
+    "id": "medicine-pouch-news-1",
+    "title": "Medicine pouch news",
+    "text": "Customers ask what a medicine pouch costs, the weight limit for a medicine pouch and how long delivery of a medicine pouch takes. We are reviewing the medicine pouch size limit and how much a medicine pouch is insured for."
+  },
+  {
+    "id": "medicine-pouch-news-2",
+    "title": "Choosing a medicine pouch",
+    "text": "Compare what a medicine pouch costs with other services, check the weight limit and size limit for a medicine pouch, and how long delivery of a medicine pouch takes and how much a medicine pouch is insured for."
+  },
+  {
+    "id": "camping-gear-bag",
+    "title": "Camping gear bag",
+    "text": "A camping gear bag costs 74 euros to send. The weight limit for a camping gear bag is 17 kg. Delivery of a camping gear bag takes 1 working day. The size limit for a camping gear bag is 36 cm on the longest side. A camping gear bag is insured for up to 680 euros."
+  },
+  {
+    "id": "ski-bag",
+    "title": "Ski bag",
+    "text": "A ski bag costs 82 euros to send. The weight limit for a ski bag is 29 kg. Delivery of a ski bag takes 6 working days. The size limit for a ski bag is 126 cm on the longest side. A ski bag is insured for up to 518 euros."
+  },
+  {
+    "id": "ski-bag-news-1",
+    "title": "Ski bag news",
+    "text": "Customers ask what a ski bag costs, the weight limit for a ski bag and how long delivery of a ski bag takes. We are reviewing the ski bag size limit and how much a ski bag is insured for."
+  }
+]

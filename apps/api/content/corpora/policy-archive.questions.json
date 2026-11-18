@@ -1,0 +1,254 @@
+[
+  {
+    "family": "hotel-stays",
+    "question": "What is the nightly hotel limit in most cities?",
+    "goldDocId": "hotel-stays-2026",
+    "goldSpan": "Hotels may cost at most 150 euros a night in most cities.",
+    "goldAnswer": "Hotels may cost at most 150 euros a night in most cities."
+  },
+  {
+    "family": "hotel-stays",
+    "question": "What is the nightly hotel limit in capital cities?",
+    "goldDocId": "hotel-stays-2026",
+    "goldSpan": "In capital cities the limit is 190 euros a night.",
+    "goldAnswer": "In capital cities the limit is 190 euros a night."
+  },
+  {
+    "family": "hotel-stays",
+    "question": "How far ahead must hotel rooms be booked?",
+    "goldDocId": "hotel-stays-2026",
+    "goldSpan": "Rooms are booked at least 14 days before the trip.",
+    "goldAnswer": "Rooms are booked at least 14 days before the trip."
+  },
+  {
+    "family": "meals-on-trips",
+    "question": "What is the daily meal allowance abroad?",
+    "goldDocId": "meals-on-trips-2025",
+    "goldSpan": "The daily meal allowance abroad is 50 euros.",
+    "goldAnswer": "The daily meal allowance abroad is 50 euros."
+  },
+  {
+    "family": "meals-on-trips",
+    "question": "What is the daily meal allowance for trips at home?",
+    "goldDocId": "meals-on-trips-2025",
+    "goldSpan": "At home the daily meal allowance is 30 euros.",
+    "goldAnswer": "At home the daily meal allowance is 30 euros."
+  },
+  {
+    "family": "meals-on-trips",
+    "question": "How much may a client dinner cost per guest?",
+    "goldDocId": "meals-on-trips-2025",
+    "goldSpan": "Client dinners may cost up to 70 euros per guest.",
+    "goldAnswer": "Client dinners may cost up to 70 euros per guest."
+  },
+  {
+    "family": "home-office",
+    "question": "How much is paid for home office equipment?",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Home office equipment is paid up to 400 euros every three years.",
+    "goldAnswer": "Home office equipment is paid up to 400 euros every three years."
+  },
+  {
+    "family": "home-office",
+    "question": "How much is refunded for internet at home each month?",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Internet at home is refunded at 25 euros a month.",
+    "goldAnswer": "Internet at home is refunded at 25 euros a month."
+  },
+  {
+    "family": "home-office",
+    "question": "How many days a week may staff work from home?",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Staff work from home up to 3.5 days a week.",
+    "goldAnswer": "Staff work from home up to 3.5 days a week."
+  },
+  {
+    "family": "mileage",
+    "question": "What is the mileage rate for driving your own car?",
+    "goldDocId": "mileage-2025",
+    "goldSpan": "Driving your own car on business is refunded at 30 cents a kilometre.",
+    "goldAnswer": "Driving your own car on business is refunded at 30 cents a kilometre."
+  },
+  {
+    "family": "mileage",
+    "question": "How much extra do electric cars get per kilometre?",
+    "goldDocId": "mileage-2025",
+    "goldSpan": "Electric cars get an extra 4 cents a kilometre.",
+    "goldAnswer": "Electric cars get an extra 4 cents a kilometre."
+  },
+  {
+    "family": "mileage",
+    "question": "Which short trips are not refunded?",
+    "goldDocId": "mileage-2025",
+    "goldSpan": "Trips shorter than 10 kilometres are not refunded.",
+    "goldAnswer": "Trips shorter than 10 kilometres are not refunded."
+  },
+  {
+    "family": "learning-budget",
+    "question": "How big is the yearly learning budget?",
+    "goldDocId": "learning-budget-2026",
+    "goldSpan": "Every member of staff has a learning budget of 1000 euros a year.",
+    "goldAnswer": "Every member of staff has a learning budget of 1000 euros a year."
+  },
+  {
+    "family": "learning-budget",
+    "question": "Which courses need the manager's approval?",
+    "goldDocId": "learning-budget-2026",
+    "goldSpan": "Courses above 500 euros need the manager's approval.",
+    "goldAnswer": "Courses above 500 euros need the manager's approval."
+  },
+  {
+    "family": "learning-budget",
+    "question": "How much unused learning budget moves to the next year?",
+    "goldDocId": "learning-budget-2026",
+    "goldSpan": "Unused budget of up to 200 euros moves to the next year.",
+    "goldAnswer": "Unused budget of up to 200 euros moves to the next year."
+  },
+  {
+    "family": "phones",
+    "question": "How often are company phones replaced?",
+    "goldDocId": "phones-2025",
+    "goldSpan": "Company phones are replaced every 3 years.",
+    "goldAnswer": "Company phones are replaced every 3 years."
+  },
+  {
+    "family": "phones",
+    "question": "How much roaming data abroad is included each month?",
+    "goldDocId": "phones-2025",
+    "goldSpan": "Roaming data abroad is included up to 10 gigabytes a month.",
+    "goldAnswer": "Roaming data abroad is included up to 10 gigabytes a month."
+  },
+  {
+    "family": "phones",
+    "question": "What allowance do personal phones used for work get?",
+    "goldDocId": "phones-2025",
+    "goldSpan": "Personal phones used for work get 15 euros a month.",
+    "goldAnswer": "Personal phones used for work get 15 euros a month."
+  },
+  {
+    "family": "parental-leave",
+    "question": "How many weeks of paid parental leave do parents get?",
+    "goldDocId": "parental-leave-2024",
+    "goldSpan": "Parents receive 16 weeks of fully paid leave.",
+    "goldAnswer": "Parents receive 16 weeks of fully paid leave."
+  },
+  {
+    "family": "parental-leave",
+    "question": "Into how many blocks can parental leave be split?",
+    "goldDocId": "parental-leave-2024",
+    "goldSpan": "The leave can be split into up to 3 blocks.",
+    "goldAnswer": "The leave can be split into up to 3 blocks."
+  },
+  {
+    "family": "parental-leave",
+    "question": "Within how many months must parental leave be taken?",
+    "goldDocId": "parental-leave-2024",
+    "goldSpan": "It must be taken within 12 months of the birth.",
+    "goldAnswer": "It must be taken within 12 months of the birth."
+  },
+  {
+    "family": "bike-lease",
+    "question": "Up to what value can a bike be leased?",
+    "goldDocId": "bike-lease-2025",
+    "goldSpan": "Bikes worth up to 3000 euros can be leased through the salary.",
+    "goldAnswer": "Bikes worth up to 3000 euros can be leased through the salary."
+  },
+  {
+    "family": "bike-lease",
+    "question": "How long does a bike lease run?",
+    "goldDocId": "bike-lease-2025",
+    "goldSpan": "The lease runs for 48 months.",
+    "goldAnswer": "The lease runs for 48 months."
+  },
+  {
+    "family": "bike-lease",
+    "question": "For how much can the bike be bought at the end of the lease?",
+    "goldDocId": "bike-lease-2025",
+    "goldSpan": "At the end the bike can be bought for 10 percent of its price.",
+    "goldAnswer": "At the end the bike can be bought for 10 percent of its price."
+  },
+  {
+    "family": "gifts",
+    "question": "Up to what value may gifts from suppliers be accepted?",
+    "goldDocId": "gifts-2024",
+    "goldSpan": "Gifts from suppliers may be accepted up to 50 euros.",
+    "goldAnswer": "Gifts from suppliers may be accepted up to 50 euros."
+  },
+  {
+    "family": "gifts",
+    "question": "Within how many days are gifts above the limit reported?",
+    "goldDocId": "gifts-2024",
+    "goldSpan": "Gifts above the limit are reported within 7 days.",
+    "goldAnswer": "Gifts above the limit are reported within 7 days."
+  },
+  {
+    "family": "gifts",
+    "question": "How much may a gift to a client cost?",
+    "goldDocId": "gifts-2024",
+    "goldSpan": "Gifts to clients may cost up to 75 euros each.",
+    "goldAnswer": "Gifts to clients may cost up to 75 euros each."
+  },
+  {
+    "family": "sick-leave",
+    "question": "After how many days is a doctor's note needed?",
+    "goldDocId": "sick-leave-2026",
+    "goldSpan": "A doctor's note is needed after 3 days of sick leave.",
+    "goldAnswer": "A doctor's note is needed after 3 days of sick leave."
+  },
+  {
+    "family": "sick-leave",
+    "question": "By what time must sick leave be reported?",
+    "goldDocId": "sick-leave-2026",
+    "goldSpan": "Sick leave is reported to the manager before 10 in the morning.",
+    "goldAnswer": "Sick leave is reported to the manager before 10 in the morning."
+  },
+  {
+    "family": "sick-leave",
+    "question": "For how many weeks of illness is full salary paid?",
+    "goldDocId": "sick-leave-2026",
+    "goldSpan": "Full salary is paid for the first 52 weeks of illness.",
+    "goldAnswer": "Full salary is paid for the first 52 weeks of illness."
+  },
+  {
+    "family": "overtime",
+    "question": "At what rate is overtime paid?",
+    "goldDocId": "overtime-2025",
+    "goldSpan": "Overtime is paid at 150 percent of the hourly rate.",
+    "goldAnswer": "Overtime is paid at 150 percent of the hourly rate."
+  },
+  {
+    "family": "overtime",
+    "question": "How much overtime a month needs approval in advance?",
+    "goldDocId": "overtime-2025",
+    "goldSpan": "Overtime above 20 hours a month needs approval in advance.",
+    "goldAnswer": "Overtime above 20 hours a month needs approval in advance."
+  },
+  {
+    "family": "overtime",
+    "question": "Within how many months can overtime be taken as time off?",
+    "goldDocId": "overtime-2025",
+    "goldSpan": "Overtime can be taken as time off within 6 months.",
+    "goldAnswer": "Overtime can be taken as time off within 6 months."
+  },
+  {
+    "family": "relocation",
+    "question": "Up to how much are moving costs paid?",
+    "goldDocId": "relocation-2024",
+    "goldSpan": "Moving costs are paid up to 5000 euros.",
+    "goldAnswer": "Moving costs are paid up to 5000 euros."
+  },
+  {
+    "family": "relocation",
+    "question": "For how many weeks is temporary housing paid?",
+    "goldDocId": "relocation-2024",
+    "goldSpan": "Temporary housing is paid for 8 weeks.",
+    "goldAnswer": "Temporary housing is paid for 8 weeks."
+  },
+  {
+    "family": "relocation",
+    "question": "When must relocation costs be paid back?",
+    "goldDocId": "relocation-2024",
+    "goldSpan": "Relocation costs are paid back if you leave within 12 months.",
+    "goldAnswer": "Relocation costs are paid back if you leave within 12 months."
+  }
+]

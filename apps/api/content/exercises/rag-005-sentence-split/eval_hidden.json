@@ -1,87 +1,83 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "When is business class allowed on a flight shorter than four hours?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "Flights for trips shorter than four hours must be booked in economy class through the travel portal, and business class is only allowed when the flight leaves before six in the morning.",
+    "goldDocId": "booking-travel",
+    "goldSpan": "Flights for trips shorter than four hours must be booked in economy class through the travel portal, and business class is only allowed when the flight leaves before six in the morning.",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "When may I book first class on a train?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "Train travel is the default for every trip under five hours door to door, and first class may be booked whenever the second class fare is less than twenty euros cheaper.",
+    "goldDocId": "booking-travel",
+    "goldSpan": "Train travel is the default for every trip under five hours door to door, and first class may be booked whenever the second class fare is less than twenty euros cheaper.",
     "split": "holdout",
     "tags": [
-      "numeric",
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "When am I allowed to rent a car, and which class must it be?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days",
-    "split": "holdout",
+    "goldAnswer": "Rental cars are only allowed when no train or bus reaches the destination within two hours, and the car must be from the compact class unless four or more colleagues share it.",
+    "goldDocId": "booking-travel",
+    "goldSpan": "Rental cars are only allowed when no train or bus reaches the destination within two hours, and the car must be from the compact class unless four or more colleagues share it.",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "Which taxi rides inside the city are refunded?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January",
-    "split": "holdout",
+    "goldAnswer": "Taxi rides are refunded between the station or airport and the hotel, but rides inside the same city during the day are only refunded when public transport has stopped.",
+    "goldDocId": "booking-travel",
+    "goldSpan": "Taxi rides are refunded between the station or airport and the hotel, but rides inside the same city during the day are only refunded when public transport has stopped.",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "How many days of private travel around a work trip does the travel insurance cover?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta",
-    "split": "holdout",
+    "goldAnswer": "Travel insurance is arranged automatically for every booked trip, and private extensions of the trip are covered for a maximum of three days before or after the work dates.",
+    "goldDocId": "booking-travel",
+    "goldSpan": "Travel insurance is arranged automatically for every booked trip, and private extensions of the trip are covered for a maximum of three days before or after the work dates.",
+    "split": "feedback",
     "tags": [
       "lexical"
     ]
   },
   {
     "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "What is the daily meal allowance abroad when lunch and dinner are already provided?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled",
-    "split": "holdout",
+    "goldAnswer": "The daily meal allowance on business trips abroad is fifty euros, and it drops to thirty euros on days when the hotel or the client already provides both lunch and dinner.",
+    "goldDocId": "meals-and-allowances",
+    "goldSpan": "The daily meal allowance on business trips abroad is fifty euros, and it drops to thirty euros on days when the hotel or the client already provides both lunch and dinner.",
+    "split": "feedback",
     "tags": [
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "question": "How much may a client dinner cost per guest?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
+    "goldAnswer": "Client dinners are paid by the most senior colleague at the table, and the bill may reach seventy euros per guest including drinks when the guest list is sent in advance.",
+    "goldDocId": "meals-and-allowances",
+    "goldSpan": "Client dinners are paid by the most senior colleague at the table, and the bill may reach seventy euros per guest including drinks when the guest list is sent in advance.",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -89,49 +85,47 @@
   },
   {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "When is alcohol refunded?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes",
-    "split": "holdout",
+    "goldAnswer": "Alcohol is never refunded on its own receipt, and it is only accepted as part of a client dinner where it stays below a quarter of the total bill for the evening.",
+    "goldDocId": "meals-and-allowances",
+    "goldSpan": "Alcohol is never refunded on its own receipt, and it is only accepted as part of a client dinner where it stays below a quarter of the total bill for the evening.",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "How much breakfast is refunded when the hotel rate does not include it?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication",
+    "goldAnswer": "Breakfast on a trip is refunded up to fifteen euros a day when the hotel rate does not include it, and the receipt must show the date and the name of the hotel.",
+    "goldDocId": "meals-and-allowances",
+    "goldSpan": "Breakfast on a trip is refunded up to fifteen euros a day when the hotel rate does not include it, and the receipt must show the date and the name of the hotel.",
     "split": "holdout",
     "tags": [
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "How often are team lunches at the office paid, and what is the limit per person?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target",
-    "split": "feedback",
+    "goldAnswer": "Team lunches at the office are paid from the team budget once every quarter, with a limit of twenty-five euros per person and a maximum of twelve people at each lunch.",
+    "goldDocId": "meals-and-allowances",
+    "goldSpan": "Team lunches at the office are paid from the team budget once every quarter, with a limit of twenty-five euros per person and a maximum of twelve people at each lunch.",
+    "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "What is the deadline for filing an expense claim?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers",
+    "goldAnswer": "Expense claims must be filed in the finance app within thirty days of the purchase, and claims filed later than ninety days are rejected without any further review.",
+    "goldDocId": "claiming-expenses",
+    "goldSpan": "Expense claims must be filed in the finance app within thirty days of the purchase, and claims filed later than ninety days are rejected without any further review.",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -139,24 +133,23 @@
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "How often can a lost receipt be replaced by a signed statement?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted",
-    "split": "holdout",
+    "goldAnswer": "Lost receipts can be replaced by a signed statement twice a year per person, and each statement covers a single purchase of no more than one hundred and fifty euros.",
+    "goldDocId": "claiming-expenses",
+    "goldSpan": "Lost receipts can be replaced by a signed statement twice a year per person, and each statement covers a single purchase of no more than one hundred and fifty euros.",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "Which exchange rate is used for expenses paid in a foreign currency?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only",
+    "goldAnswer": "Foreign currency expenses are converted at the exchange rate on the day of payment, and card fees charged by the bank for the conversion are refunded on the same claim.",
+    "goldDocId": "claiming-expenses",
+    "goldSpan": "Foreign currency expenses are converted at the exchange rate on the day of payment, and card fees charged by the bank for the conversion are refunded on the same claim.",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -164,101 +157,95 @@
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "When is my expense refund paid out?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
-    "split": "holdout",
+    "goldAnswer": "Refunds are paid with the next salary when the claim is approved before the twentieth of the month, and otherwise they are paid with the salary of the following month.",
+    "goldDocId": "claiming-expenses",
+    "goldSpan": "Refunds are paid with the next salary when the claim is approved before the twentieth of the month, and otherwise they are paid with the salary of the following month.",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "Who approves my expense claim when my manager has not done so within five working days?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable",
+    "goldAnswer": "Managers approve the expense claims of their own team members within five working days, and a claim that waits longer is approved by the finance controller instead.",
+    "goldDocId": "claiming-expenses",
+    "goldSpan": "Managers approve the expense claims of their own team members within five working days, and a claim that waits longer is approved by the finance controller instead.",
     "split": "holdout",
     "tags": [
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "question": "What is the monthly spending limit on a new company credit card?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "feedback",
+    "goldAnswer": "Company credit cards are issued to colleagues who travel more than six times a year, and the monthly spending limit on a new card starts at three thousand euros.",
+    "goldDocId": "company-cards",
+    "goldSpan": "Company credit cards are issued to colleagues who travel more than six times a year, and the monthly spending limit on a new card starts at three thousand euros.",
+    "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "question": "How much cash may I withdraw with the company card on a trip?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
-    "split": "holdout",
+    "goldAnswer": "Cash withdrawals with the company card are only allowed abroad, they are limited to two hundred euros per trip, and every withdrawal needs a note in the finance app.",
+    "goldDocId": "company-cards",
+    "goldSpan": "Cash withdrawals with the company card are only allowed abroad, they are limited to two hundred euros per trip, and every withdrawal needs a note in the finance app.",
+    "split": "feedback",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "How quickly must a lost company card be blocked?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days",
-    "split": "feedback",
+    "goldAnswer": "A lost or stolen company card must be blocked within one hour by calling the bank hotline, and the replacement card is sent to the office within five working days.",
+    "goldDocId": "company-cards",
+    "goldSpan": "A lost or stolen company card must be blocked within one hour by calling the bank hotline, and the replacement card is sent to the office within five working days.",
+    "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "What happens after a second private purchase on the company card?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold",
+    "goldAnswer": "Private purchases on the company card must be paid back within fourteen days, and a second private purchase in the same year means the card is taken away for six months.",
+    "goldDocId": "company-cards",
+    "goldSpan": "Private purchases on the company card must be paid back within fourteen days, and a second private purchase in the same year means the card is taken away for six months.",
     "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "question": "Can I pay a software subscription with the company card?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
-    "split": "feedback",
+    "goldAnswer": "Subscriptions such as software licences may never be paid with a company card, because the procurement team buys every recurring service through a central contract.",
+    "goldDocId": "company-cards",
+    "goldSpan": "Subscriptions such as software licences may never be paid with a company card, because the procurement team buys every recurring service through a central contract.",
+    "split": "holdout",
     "tags": [
-      "numeric",
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h21",
-    "question": "Who is backup on-call for the week?",
+    "question": "How much is paid for home office equipment, and how often?",
     "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week",
+    "goldAnswer": "Home office equipment is paid once every three years up to four hundred euros, which covers a chair, a desk or a screen bought from the approved list of suppliers.",
+    "goldDocId": "working-away-from-home",
+    "goldSpan": "Home office equipment is paid once every three years up to four hundred euros, which covers a chair, a desk or a screen bought from the approved list of suppliers.",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -266,11 +253,11 @@
   },
   {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "How much is refunded for internet costs at home?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs",
+    "goldAnswer": "Internet costs at home are refunded at twenty euros a month for colleagues who work at home at least two days a week, without needing to send in any monthly bills.",
+    "goldDocId": "working-away-from-home",
+    "goldSpan": "Internet costs at home are refunded at twenty euros a month for colleagues who work at home at least two days a week, without needing to send in any monthly bills.",
     "split": "holdout",
     "tags": [
       "lexical"
@@ -278,98 +265,180 @@
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "When may I use a coworking space, and how much does the company pay?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report",
-    "split": "feedback",
+    "goldAnswer": "Coworking spaces may be used when the nearest office is more than fifty kilometres away, and the company pays a flexible desk of up to two hundred euros a month.",
+    "goldDocId": "working-away-from-home",
+    "goldSpan": "Coworking spaces may be used when the nearest office is more than fifty kilometres away, and the company pays a flexible desk of up to two hundred euros a month.",
+    "split": "holdout",
     "tags": [
-      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "What is the mileage rate for driving my own car on business?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form",
-    "split": "feedback",
+    "goldAnswer": "Mileage for driving your own car on business is refunded at thirty cents a kilometre, and the trip must start from the office unless it starts from home before eight.",
+    "goldDocId": "working-away-from-home",
+    "goldSpan": "Mileage for driving your own car on business is refunded at thirty cents a kilometre, and the trip must start from the office unless it starts from home before eight.",
+    "split": "holdout",
     "tags": [
       "lexical"
     ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "For how long a trip is parking at the airport refunded?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days",
-    "split": "holdout",
+    "goldAnswer": "Parking at airports and stations is refunded for business trips of up to five days, and longer trips need the cheaper long-stay car park booked online in advance.",
+    "goldDocId": "working-away-from-home",
+    "goldSpan": "Parking at airports and stations is refunded for business trips of up to five days, and longer trips need the cheaper long-stay car park booked online in advance.",
+    "split": "feedback",
     "tags": [
-      "numeric",
-      "paraphrase"
+      "lexical"
     ]
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "What value of gift from a supplier may I accept?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
-    "split": "holdout",
+    "goldAnswer": "Gifts from suppliers may be accepted when they are worth less than fifty euros, and any gift above that value must be reported to the compliance team within a week.",
+    "goldDocId": "events-and-gifts",
+    "goldSpan": "Gifts from suppliers may be accepted when they are worth less than fifty euros, and any gift above that value must be reported to the compliance team within a week.",
+    "split": "feedback",
     "tags": [
       "lexical"
     ]
   },
   {
     "id": "h27",
-    "question": "What is the HIDDEN_EVAL_R5_CANARY_PHRASE listed in the unpublished runbook?",
+    "question": "How much may a gift to a client be worth?",
+    "answerable": true,
+    "goldAnswer": "Gifts to clients are bought from the approved catalogue and are limited to one gift per client contact each year with a value of no more than seventy-five euros.",
+    "goldDocId": "events-and-gifts",
+    "goldSpan": "Gifts to clients are bought from the approved catalogue and are limited to one gift per client contact each year with a value of no more than seventy-five euros.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "How far ahead must a conference be booked for the team to pay the fee?",
+    "answerable": true,
+    "goldAnswer": "Conference fees are paid from the team learning budget when the conference is booked at least six weeks ahead, which usually gives the early booking discount.",
+    "goldDocId": "events-and-gifts",
+    "goldSpan": "Conference fees are paid from the team learning budget when the conference is booked at least six weeks ahead, which usually gives the early booking discount.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "How much does the company add to a farewell gift?",
+    "answerable": true,
+    "goldAnswer": "Farewell gifts for leaving colleagues come from the team budget, and the company adds up to forty euros when the colleague has worked here for more than five years.",
+    "goldDocId": "events-and-gifts",
+    "goldSpan": "Farewell gifts for leaving colleagues come from the team budget, and the company adds up to forty euros when the colleague has worked here for more than five years.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "How much of my personal charity donations does the company match?",
+    "answerable": true,
+    "goldAnswer": "Charity donations are never paid from team budgets, but the company matches personal donations of colleagues up to two hundred and fifty euros each calendar year.",
+    "goldDocId": "events-and-gifts",
+    "goldSpan": "Charity donations are never paid from team budgets, but the company matches personal donations of colleagues up to two hundred and fifty euros each calendar year.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "How often is a company mobile phone replaced?",
+    "answerable": true,
+    "goldAnswer": "Mobile phones are provided to colleagues who are on call or travel often, and the phone is replaced every three years or earlier when the repair costs more than half.",
+    "goldDocId": "phones-and-devices",
+    "goldSpan": "Mobile phones are provided to colleagues who are on call or travel often, and the phone is replaced every three years or earlier when the repair costs more than half.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How much roaming data is included on a company phone plan?",
+    "answerable": true,
+    "goldAnswer": "Roaming data abroad is included up to ten gigabytes a month on company phone plans, and extra data must be requested from the service desk before the trip begins.",
+    "goldDocId": "phones-and-devices",
+    "goldSpan": "Roaming data abroad is included up to ten gigabytes a month on company phone plans, and extra data must be requested from the service desk before the trip begins.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "What happens with calls to premium numbers on the company phone?",
+    "answerable": true,
+    "goldAnswer": "Private use of the company phone is allowed within the monthly plan, but calls to premium numbers and in-app purchases are taken from the next salary payment.",
+    "goldDocId": "phones-and-devices",
+    "goldSpan": "Private use of the company phone is allowed within the monthly plan, but calls to premium numbers and in-app purchases are taken from the next salary payment.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "What allowance do I get for using my personal phone for work?",
+    "answerable": true,
+    "goldAnswer": "Personal phones used for work get a fixed allowance of fifteen euros a month, and the colleague then installs the work profile from the device management portal.",
+    "goldDocId": "phones-and-devices",
+    "goldSpan": "Personal phones used for work get a fixed allowance of fifteen euros a month, and the colleague then installs the work profile from the device management portal.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "What is the spending limit for laptop accessories like a mouse or a keyboard?",
+    "answerable": true,
+    "goldAnswer": "Laptop accessories such as a mouse, a keyboard or a bag are ordered from the service desk catalogue, with a limit of one hundred euros per colleague every two years.",
+    "goldDocId": "phones-and-devices",
+    "goldSpan": "Laptop accessories such as a mouse, a keyboard or a bag are ordered from the service desk catalogue, with a limit of one hundred euros per colleague every two years.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "What does a device repair cost after the first one each year?",
+    "answerable": true,
+    "goldAnswer": "Damaged devices must be reported in the service portal within three days, and the first repair each year is free while later repairs cost the team fifty euros.",
+    "goldDocId": "phones-and-devices",
+    "goldSpan": "Damaged devices must be reported in the service portal within three days, and the first repair each year is free while later repairs cost the team fifty euros.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R05_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
     "goldSpan": null,
     "split": "holdout",
     "tags": []
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "feedback",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
   }
 ]

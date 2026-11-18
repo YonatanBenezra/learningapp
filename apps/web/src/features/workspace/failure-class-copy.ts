@@ -6,6 +6,8 @@
 const COPY: Record<string, string> = {
   "context-over-budget":
     "Context over budget: the chunks sent per question cost more tokens than allowed.",
+  "index-over-budget":
+    "Index over budget: the config stores more chunks than the index allows. Overlap and small chunks multiply them.",
   "gold-split-by-chunking":
     "No single chunk holds the whole answer: your chunk boundaries cut it.",
   "gold-ranked-below-k":
@@ -51,6 +53,10 @@ const COPY: Record<string, string> = {
     "The answer page was dropped as a duplicate of a higher-ranked page: the threshold is too loose.",
   "packed-out-by-budget":
     "The answer page was retrieved, but higher-ranked pages filled the token budget first.",
+  "compressed-away":
+    "The answer page was retrieved, but compression kept other sentences: keep more sentences per page.",
+  "cut-by-score-ratio":
+    "The answer was in the top k, but scored below your cutoff: lower the ratio.",
   "post-filter-dropped-results":
     "The filter ran after top-k and threw results away, so fewer chunks than k reached the context.",
 };

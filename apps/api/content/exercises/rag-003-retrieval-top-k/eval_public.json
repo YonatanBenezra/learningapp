@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO before the leave starts?",
+    "question": "How long does delivery of a large parcel take?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "Delivery of a large parcel takes 4 working days.",
+    "goldDocId": "large-parcel",
+    "goldSpan": "Delivery of a large parcel takes 4 working days."
   },
   {
     "id": "p2",
-    "question": "Do domestic flights under three hours have to be economy?",
+    "question": "How much does a international pallet cost?",
     "answerable": true,
-    "goldAnswer": "Yes",
-    "goldDocId": "travel",
-    "goldSpan": "Domestic flights below three hours must be economy"
+    "goldAnswer": "A international pallet costs 57 euros to send.",
+    "goldDocId": "international-pallet",
+    "goldSpan": "A international pallet costs 57 euros to send."
   },
   {
     "id": "p3",
-    "question": "How long before an unacknowledged page escalates to the secondary on-call?",
+    "question": "What is the size limit for a chilled parcel?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "The size limit for a chilled parcel is 195 cm on the longest side.",
+    "goldDocId": "chilled-parcel",
+    "goldSpan": "The size limit for a chilled parcel is 195 cm on the longest side."
   },
   {
     "id": "p4",
-    "question": "What happens to a purchase order when a vendor security report is missing?",
+    "question": "What is the weight limit for a medicine pouch?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "The weight limit for a medicine pouch is 32 kg.",
+    "goldDocId": "medicine-pouch",
+    "goldSpan": "The weight limit for a medicine pouch is 32 kg."
   },
   {
     "id": "p5",
-    "question": "Where must production secrets never live?",
+    "question": "How much is a international letter insured for?",
     "answerable": true,
-    "goldAnswer": "git",
-    "goldDocId": "password",
-    "goldSpan": "Production secrets never live in git"
+    "goldAnswer": "A international letter is insured for up to 502 euros.",
+    "goldDocId": "international-letter",
+    "goldSpan": "A international letter is insured for up to 502 euros."
+  },
+  {
+    "id": "p6",
+    "question": "What is the weight limit for a locker drop-off?",
+    "answerable": true,
+    "goldAnswer": "The weight limit for a locker drop-off is 10 kg.",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "The weight limit for a locker drop-off is 10 kg."
   }
 ]

@@ -49,6 +49,14 @@ export function gradeR1(
     payload.overlap,
     payload.splitStrategy,
   );
+  // Every chunk is a vector someone stores and pays for. Overlap and tiny
+  // chunks multiply them, so an exercise can cap the index size.
+  const indexGate = declaresGate(gates, 'index_chunks');
+  const indexCeiling = gateThreshold(
+    gates,
+    'index_chunks',
+    Number.POSITIVE_INFINITY,
+  );
   const answerable = answerableHidden(hidden);
 
   const misses: RagGradeResult['failingCases'] = [];
@@ -102,7 +110,8 @@ export function gradeR1(
   const meanContextTokens = total === 0 ? 0 : contextTokenSum / total;
   const recallPass = recall >= recallThreshold;
   const contextPass = !contextGate || meanContextTokens <= contextCeiling;
-  const passed = recallPass && contextPass;
+  const indexPass = !indexGate || chunks.length <= indexCeiling;
+  const passed = recallPass && contextPass && indexPass;
   if (contextGate) {
     ledger.setCost(costEvidence(perQuery, contextCeiling));
   }
@@ -129,18 +138,31 @@ export function gradeR1(
       passed: contextPass,
     });
   }
+  if (indexGate) {
+    gateResults.push({
+      id: 'index-chunks',
+      class: 'A',
+      metric: 'index_chunks',
+      op: 'lte',
+      value: indexCeiling,
+      actual: chunks.length,
+      passed: indexPass,
+    });
+  }
 
   return {
     verdict: passed ? 'pass' : 'fail',
     metrics: {
       recall_at_5: { value: recall, hits, total },
       mean_context_tokens: { value: meanContextTokens },
+      index_chunks: { value: chunks.length },
     },
     gateResults,
     failureClasses: passed
       ? []
       : [
           ...(contextPass ? [] : ['context-over-budget']),
+          ...(indexPass ? [] : ['index-over-budget']),
           ...(recallPass ? [] : ledger.topCauses()),
         ],
     scorecard: {

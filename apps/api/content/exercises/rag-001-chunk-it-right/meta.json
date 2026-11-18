@@ -1,9 +1,9 @@
 {
   "slug": "rag-001-chunk-it-right",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Corpus Chunk Boundaries",
+  "title": "Keep the Subject in the Chunk",
   "difficulty": "E",
   "catalogPhase": 1,
   "skills": [
@@ -16,7 +16,7 @@
       "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Phase 1 · Corpus Normalization & Chunk Boundaries\n\nProduction RAG is failing on an internal policy corpus: answers exist in source docs but **never appear in retrieved chunks**. The embedding model is fine — boundaries are wrong.\n\nTune **chunk size**, **overlap**, and **split strategy** (`fixed`, `sentence`, `recursive`, `heading-aware`). The starter config keeps each policy document whole: recall is high, but five whole documents blow the context budget.\n\n**Gates:** recall@5 ≥ 0.80 (same bar used for internal KB launch reviews) and mean context tokens (top-5 chunks) ≤ 165.\n",
+  "briefMd": "# Phase 1 · Keep the Subject in the Chunk\n\nThe office services guide gives every service one paragraph. The first sentence names the service (\"Staff parking permits cover the underground garage below the Mill Street building.\"). The three sentences after it only say \"it\" (\"The fee is 25 euros a month.\"). Every service has the same kinds of fact, so a fee sentence on its own looks like forty others.\n\nYou control **chunk size** (characters), **overlap** and **split strategy**. Retrieval is BM25, top 5 chunks, and all five go into the context.\n\nA question counts when one of the five chunks holds its fact sentence. A chunk that is too small loses the service name and ranks anywhere. A chunk that is too large holds the answer, but five of them cost too many tokens. The starter config is too large.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 280 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -30,13 +30,13 @@
         "type": "integer",
         "minimum": 50,
         "maximum": 2000,
-        "default": 400
+        "default": 600
       },
       "overlap": {
         "type": "integer",
         "minimum": 0,
         "maximum": 400,
-        "default": 50
+        "default": 0
       },
       "splitStrategy": {
         "type": "string",
@@ -51,8 +51,8 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.8,
-    "mean_context_tokens": 165
+    "recall_at_5": 0.9,
+    "mean_context_tokens": 280
   },
   "budget": {
     "max_model_calls": 0,
@@ -66,14 +66,14 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
     },
     {
       "id": "mean-context-tokens",
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 165
+      "value": 280
     }
   ],
   "feedback": {
@@ -84,5 +84,6 @@
     "maxSubmissions": 20,
     "cooldownHours": 1
   },
-  "graderArchetype": "rag-r1"
+  "graderArchetype": "rag-r1",
+  "corpusFile": "office-services"
 }

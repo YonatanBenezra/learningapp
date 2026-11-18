@@ -1,0 +1,6 @@
+[
+  "Return whole paragraphs first and check recall: the ranking is the easy part.",
+  "A single sentence from inside a paragraph is still a contiguous span, so it is a valid passage.",
+  "Inside a top paragraph, the first sentence names the service. The answer is one of the other three: pick the one that shares the question's other words.",
+  "Some questions use other words than the answer (\"notice\" for \"in advance\", \"how often\" for \"times a month\"). A small table of such words fixes them."
+]

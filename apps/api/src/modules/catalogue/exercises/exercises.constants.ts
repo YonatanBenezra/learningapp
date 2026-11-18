@@ -230,18 +230,21 @@ export function isHiddenCanary(question: string): boolean {
   return question.includes('HIDDEN_EVAL');
 }
 
-/** Sentence packing small enough to fit the R1 context budget. */
+/**
+ * rag-001: one paragraph per chunk, so every fact keeps the service name and
+ * five chunks fit the context budget. Also the onboarding starter.
+ */
 export const R1_REFERENCE_PAYLOAD = {
-  chunkSize: 200,
-  overlap: 40,
-  splitStrategy: 'sentence' as const,
+  chunkSize: 300,
+  overlap: 0,
+  splitStrategy: 'recursive' as const,
 };
 
-/** Whole-document chunks: full recall, but over the R1 context budget. */
+/** rag-001: chunks so small that most facts lose their service name. */
 export const R1_NEAR_MISS_PAYLOAD = {
-  chunkSize: 400,
-  overlap: 80,
-  splitStrategy: 'heading-aware' as const,
+  chunkSize: 150,
+  overlap: 0,
+  splitStrategy: 'recursive' as const,
 };
 
 export const R2_REFERENCE_PAYLOAD = {

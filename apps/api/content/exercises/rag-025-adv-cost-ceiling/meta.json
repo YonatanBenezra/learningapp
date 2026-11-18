@@ -1,12 +1,12 @@
 {
   "slug": "rag-025-adv-cost-ceiling",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Cost-Capped Retrieval (Advanced)",
+  "title": "Smaller Chunks, More of Them",
   "difficulty": "H",
   "catalogPhase": 7,
-  "corpusFile": "shared",
+  "corpusFile": "parcel-help",
   "skills": [
     {
       "slug": "retrieval-quality",
@@ -17,37 +17,32 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Advanced · Cost-Capped Retrieval\n\nThe strictest budget in the track: the whole prompt must fit in about 60 tokens. Only very small chunks with reranking get there without losing recall.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 60 on the hidden set.\n",
+  "briefMd": "# Phase 7 · Smaller Chunks, More of Them\n\nThe parcel company's help pages give one page per service, with five facts: price, weight limit, delivery time, size limit and insurance (\"A large parcel costs 18 euros to send.\"). For half the services there are also one or two news pages that repeat the service's name and the questions people ask, without answering any of them. Those pages rank close to the real page, often above it. For the other half, the real page is a clear first.\n\nEvery answer is a single sentence, but a whole page costs about 55 tokens, and the budget is less than two pages per question. With the news pages in the way, two pages are not enough.\n\nYou control **top-k** and **chunk size** (characters; pages are split into whole sentences, packed up to that size). Retrieval is BM25.\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 100 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
       "topK",
-      "rerank",
       "chunkSize"
     ],
     "properties": {
       "topK": {
         "type": "integer",
         "minimum": 1,
-        "maximum": 40,
-        "default": 20
-      },
-      "rerank": {
-        "type": "boolean",
-        "default": false
+        "maximum": 10,
+        "default": 2
       },
       "chunkSize": {
         "type": "integer",
         "minimum": 50,
-        "maximum": 2000,
+        "maximum": 600,
         "default": 400
       }
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 60,
-    "recall_at_k": 0.95
+    "recall_at_k": 0.9,
+    "mean_prompt_tokens": 100
   },
   "budget": {
     "max_model_calls": 0,
@@ -57,18 +52,18 @@
   },
   "gates": [
     {
-      "id": "mean-prompt-tokens",
-      "class": "A",
-      "metric": "mean_prompt_tokens",
-      "op": "lte",
-      "value": 60
-    },
-    {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.95
+      "value": 0.9
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 100
     }
   ],
   "feedback": {

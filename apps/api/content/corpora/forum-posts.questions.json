@@ -1,0 +1,254 @@
+[
+  {
+    "topic": "thermostat",
+    "question": "How do I reset the thermostat?",
+    "goldDocId": "thermostat-answer",
+    "goldSpan": "To reset the thermostat, hold the dial down for ten seconds until the screen goes blank.",
+    "goldAnswer": "To reset the thermostat, hold the dial down for ten seconds until the screen goes blank."
+  },
+  {
+    "topic": "thermostat",
+    "question": "Is the heating schedule kept after a thermostat reset?",
+    "goldDocId": "thermostat-answer",
+    "goldSpan": "The heating schedule is kept after a reset and comes back within a minute.",
+    "goldAnswer": "The heating schedule is kept after a reset and comes back within a minute."
+  },
+  {
+    "topic": "thermostat",
+    "question": "How long does the thermostat battery last?",
+    "goldDocId": "thermostat-answer",
+    "goldSpan": "The thermostat battery lasts about two years, and the screen warns you a month before it runs out.",
+    "goldAnswer": "The thermostat battery lasts about two years, and the screen warns you a month before it runs out."
+  },
+  {
+    "topic": "doorbell",
+    "question": "How long does the video doorbell keep recordings?",
+    "goldDocId": "doorbell-answer",
+    "goldSpan": "The video doorbell keeps recordings for thirty days in the free plan.",
+    "goldAnswer": "The video doorbell keeps recordings for thirty days in the free plan."
+  },
+  {
+    "topic": "doorbell",
+    "question": "How do I pair the indoor chime with the doorbell?",
+    "goldDocId": "doorbell-answer",
+    "goldSpan": "The indoor chime pairs with the doorbell when you press both buttons together for five seconds.",
+    "goldAnswer": "The indoor chime pairs with the doorbell when you press both buttons together for five seconds."
+  },
+  {
+    "topic": "doorbell",
+    "question": "What wifi signal does the doorbell need?",
+    "goldDocId": "doorbell-answer",
+    "goldSpan": "The doorbell needs a wifi signal of at least two bars at the front door.",
+    "goldAnswer": "The doorbell needs a wifi signal of at least two bars at the front door."
+  },
+  {
+    "topic": "smart plug",
+    "question": "How many watts can a smart plug switch?",
+    "goldDocId": "smart-plug-answer",
+    "goldSpan": "A smart plug can switch devices up to 3,000 watts, so it is fine for kettles but not for ovens.",
+    "goldAnswer": "A smart plug can switch devices up to 3,000 watts, so it is fine for kettles but not for ovens."
+  },
+  {
+    "topic": "smart plug",
+    "question": "Do smart plug timers work when the internet is down?",
+    "goldDocId": "smart-plug-answer",
+    "goldSpan": "Timers on the smart plug keep running when the internet is down, because they are stored on the plug.",
+    "goldAnswer": "Timers on the smart plug keep running when the internet is down, because they are stored on the plug."
+  },
+  {
+    "topic": "smart plug",
+    "question": "Where can I see the energy use of a smart plug?",
+    "goldDocId": "smart-plug-answer",
+    "goldSpan": "The energy report in the app shows what each smart plug used per day for the last year.",
+    "goldAnswer": "The energy report in the app shows what each smart plug used per day for the last year."
+  },
+  {
+    "topic": "robot vacuum",
+    "question": "How many floor maps does the robot vacuum save?",
+    "goldDocId": "robot-vacuum-answer",
+    "goldSpan": "The robot vacuum saves up to four floor maps, one for each level of the house.",
+    "goldAnswer": "The robot vacuum saves up to four floor maps, one for each level of the house."
+  },
+  {
+    "topic": "robot vacuum",
+    "question": "How often should the robot vacuum side brush be replaced?",
+    "goldDocId": "robot-vacuum-answer",
+    "goldSpan": "The side brush of the robot vacuum should be replaced every six months.",
+    "goldAnswer": "The side brush of the robot vacuum should be replaced every six months."
+  },
+  {
+    "topic": "robot vacuum",
+    "question": "What do I do when the robot vacuum cannot find its dock?",
+    "goldDocId": "robot-vacuum-answer",
+    "goldSpan": "If the robot vacuum cannot find its dock, clear half a metre of space on both sides of the dock.",
+    "goldAnswer": "If the robot vacuum cannot find its dock, clear half a metre of space on both sides of the dock."
+  },
+  {
+    "topic": "security camera",
+    "question": "How far does the security camera see at night?",
+    "goldDocId": "security-camera-answer",
+    "goldSpan": "The security camera sees up to eight metres in the dark with its night vision.",
+    "goldAnswer": "The security camera sees up to eight metres in the dark with its night vision."
+  },
+  {
+    "topic": "security camera",
+    "question": "Can I limit security camera motion alerts to part of the picture?",
+    "goldDocId": "security-camera-answer",
+    "goldSpan": "Motion alerts can be limited to zones you draw on the camera picture in the app.",
+    "goldAnswer": "Motion alerts can be limited to zones you draw on the camera picture in the app."
+  },
+  {
+    "topic": "security camera",
+    "question": "In what temperatures does the outdoor security camera work?",
+    "goldDocId": "security-camera-answer",
+    "goldSpan": "The outdoor security camera works from minus twenty to plus fifty degrees.",
+    "goldAnswer": "The outdoor security camera works from minus twenty to plus fifty degrees."
+  },
+  {
+    "topic": "smart lock",
+    "question": "How many guest codes does the smart lock store?",
+    "goldDocId": "smart-lock-answer",
+    "goldSpan": "The smart lock stores up to twenty five guest codes, each with its own time window.",
+    "goldAnswer": "The smart lock stores up to twenty five guest codes, each with its own time window."
+  },
+  {
+    "topic": "smart lock",
+    "question": "What happens when the smart lock battery is empty?",
+    "goldDocId": "smart-lock-answer",
+    "goldSpan": "When the smart lock battery is empty, the door still opens with the normal key from outside.",
+    "goldAnswer": "When the smart lock battery is empty, the door still opens with the normal key from outside."
+  },
+  {
+    "topic": "smart lock",
+    "question": "When does the smart lock lock itself again?",
+    "goldDocId": "smart-lock-answer",
+    "goldSpan": "The smart lock locks itself again thirty seconds after the door closes, if auto lock is on.",
+    "goldAnswer": "The smart lock locks itself again thirty seconds after the door closes, if auto lock is on."
+  },
+  {
+    "topic": "light bulbs",
+    "question": "How many colours can the colour light bulbs show?",
+    "goldDocId": "light-bulbs-answer",
+    "goldSpan": "The colour light bulbs can show sixteen million colours and every shade of white.",
+    "goldAnswer": "The colour light bulbs can show sixteen million colours and every shade of white."
+  },
+  {
+    "topic": "light bulbs",
+    "question": "Why do the light bulbs flicker on a wall dimmer?",
+    "goldDocId": "light-bulbs-answer",
+    "goldSpan": "A wall dimmer must be removed or set to full power, or the bulbs will flicker.",
+    "goldAnswer": "A wall dimmer must be removed or set to full power, or the bulbs will flicker."
+  },
+  {
+    "topic": "light bulbs",
+    "question": "How many light bulbs can a scene switch at once?",
+    "goldDocId": "light-bulbs-answer",
+    "goldSpan": "Scenes in the app switch up to fifty bulbs at once with one tap.",
+    "goldAnswer": "Scenes in the app switch up to fifty bulbs at once with one tap."
+  },
+  {
+    "topic": "smoke alarm",
+    "question": "How often should I test the smoke alarm?",
+    "goldDocId": "smoke-alarm-answer",
+    "goldSpan": "Test the smoke alarm once a month by holding the button until it sounds.",
+    "goldAnswer": "Test the smoke alarm once a month by holding the button until it sounds."
+  },
+  {
+    "topic": "smoke alarm",
+    "question": "What does a smoke alarm chirp every minute mean?",
+    "goldDocId": "smoke-alarm-answer",
+    "goldSpan": "A single chirp every minute means the smoke alarm battery is low.",
+    "goldAnswer": "A single chirp every minute means the smoke alarm battery is low."
+  },
+  {
+    "topic": "smoke alarm",
+    "question": "Do linked smoke alarms all sound together?",
+    "goldDocId": "smoke-alarm-answer",
+    "goldSpan": "Linked smoke alarms all sound together when one of them detects smoke.",
+    "goldAnswer": "Linked smoke alarms all sound together when one of them detects smoke."
+  },
+  {
+    "topic": "hub",
+    "question": "How many zigbee devices can one hub connect?",
+    "goldDocId": "hub-answer",
+    "goldSpan": "One hub connects up to one hundred and fifty zigbee devices.",
+    "goldAnswer": "One hub connects up to one hundred and fifty zigbee devices."
+  },
+  {
+    "topic": "hub",
+    "question": "When do hub updates install?",
+    "goldDocId": "hub-answer",
+    "goldSpan": "Hub updates install overnight between two and four and take about ten minutes.",
+    "goldAnswer": "Hub updates install overnight between two and four and take about ten minutes."
+  },
+  {
+    "topic": "hub",
+    "question": "Do automations keep running when the hub is offline?",
+    "goldDocId": "hub-answer",
+    "goldSpan": "Automations stored on the hub keep running when the hub is offline from the internet.",
+    "goldAnswer": "Automations stored on the hub keep running when the hub is offline from the internet."
+  },
+  {
+    "topic": "speaker",
+    "question": "How do I switch off the speaker microphone?",
+    "goldDocId": "speaker-answer",
+    "goldSpan": "The speaker microphone is switched off with the button on the back, and the ring turns red.",
+    "goldAnswer": "The speaker microphone is switched off with the button on the back, and the ring turns red."
+  },
+  {
+    "topic": "speaker",
+    "question": "How many speakers can play music as one group?",
+    "goldDocId": "speaker-answer",
+    "goldSpan": "Up to six speakers can play music together as one group.",
+    "goldAnswer": "Up to six speakers can play music together as one group."
+  },
+  {
+    "topic": "speaker",
+    "question": "How long are speaker voice recordings kept?",
+    "goldDocId": "speaker-answer",
+    "goldSpan": "Voice recordings are deleted after three months unless you choose to keep them.",
+    "goldAnswer": "Voice recordings are deleted after three months unless you choose to keep them."
+  },
+  {
+    "topic": "blinds",
+    "question": "How long do the blinds run on one charge?",
+    "goldDocId": "blinds-answer",
+    "goldSpan": "The blinds motor runs for about six months on one charge.",
+    "goldAnswer": "The blinds motor runs for about six months on one charge."
+  },
+  {
+    "topic": "blinds",
+    "question": "Can the blinds close automatically at sunset?",
+    "goldDocId": "blinds-answer",
+    "goldSpan": "Blinds can close automatically at sunset when you turn on the sunset rule in the app.",
+    "goldAnswer": "Blinds can close automatically at sunset when you turn on the sunset rule in the app."
+  },
+  {
+    "topic": "blinds",
+    "question": "How many blinds can one remote control?",
+    "goldDocId": "blinds-answer",
+    "goldSpan": "One remote controls up to five blinds, each on its own channel.",
+    "goldAnswer": "One remote controls up to five blinds, each on its own channel."
+  },
+  {
+    "topic": "water sensor",
+    "question": "How fast does the water sensor send a leak alert?",
+    "goldDocId": "water-sensor-answer",
+    "goldSpan": "The water sensor sends a leak alert within five seconds of touching water.",
+    "goldAnswer": "The water sensor sends a leak alert within five seconds of touching water."
+  },
+  {
+    "topic": "water sensor",
+    "question": "Where should the water sensor be placed?",
+    "goldDocId": "water-sensor-answer",
+    "goldSpan": "Place the water sensor flat on the floor next to the washing machine or the boiler.",
+    "goldAnswer": "Place the water sensor flat on the floor next to the washing machine or the boiler."
+  },
+  {
+    "topic": "water sensor",
+    "question": "How long does the water sensor battery last?",
+    "goldDocId": "water-sensor-answer",
+    "goldSpan": "The water sensor battery lasts three years and is replaced without tools.",
+    "goldAnswer": "The water sensor battery lasts three years and is replaced without tools."
+  }
+]

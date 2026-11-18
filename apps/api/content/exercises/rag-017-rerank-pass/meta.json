@@ -1,12 +1,12 @@
 {
   "slug": "rag-017-rerank-pass",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Rerank to Full Recall on a Tight Budget",
+  "title": "Search Small, Read Around",
   "difficulty": "H",
   "catalogPhase": 4,
-  "corpusFile": "shared",
+  "corpusFile": "front-desk",
   "skills": [
     {
       "slug": "retrieval-quality",
@@ -17,37 +17,39 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 4 · Rerank to Full Recall on a Tight Budget\n\nEvery hidden question must find its answer, with a prompt of about one chunk. Without rerank the gold chunk sometimes sits just below your cut-off; reranking lets you keep k small and still catch it.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k = 1.00 (every question) and mean prompt tokens ≤ 90 on the hidden set.\n",
+  "briefMd": "# Phase 4 · Search Small, Read Around\n\nThe hotel front-desk handbook answers every question in two sentences in a row: the action, then what follows from it (\"Guests leave a card deposit of 100 euros at check-in. It is released three days after check-out.\"). The second sentence only says \"it\" or \"they\", so it shares almost no words with the question. A question counts only when both sentences reach the context.\n\nThe index is built from small chunks, at most 200 characters, which find the right sentence precisely but rarely hold both sentences of an answer.\n\nYou control **top-k**, **chunk size** (up to 200 characters; pages are packed into whole sentences up to that size) and a **sentence window** (`expandNeighbors`): every retrieved chunk is sent together with that many neighbouring chunks on each side, from the same page. 0 sends the chunk alone. Retrieval is BM25.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 90 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
       "topK",
-      "rerank",
-      "chunkSize"
+      "chunkSize",
+      "expandNeighbors"
     ],
     "properties": {
       "topK": {
         "type": "integer",
         "minimum": 1,
-        "maximum": 40,
-        "default": 20
-      },
-      "rerank": {
-        "type": "boolean",
-        "default": false
+        "maximum": 10,
+        "default": 2
       },
       "chunkSize": {
         "type": "integer",
         "minimum": 50,
-        "maximum": 2000,
-        "default": 400
+        "maximum": 200,
+        "default": 200
+      },
+      "expandNeighbors": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 3,
+        "default": 0
       }
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 90,
-    "recall_at_k": 1
+    "recall_at_k": 0.95,
+    "mean_prompt_tokens": 90
   },
   "budget": {
     "max_model_calls": 0,
@@ -57,18 +59,18 @@
   },
   "gates": [
     {
+      "id": "recall-at-k",
+      "class": "A",
+      "metric": "recall@k",
+      "op": "gte",
+      "value": 0.95
+    },
+    {
       "id": "mean-prompt-tokens",
       "class": "A",
       "metric": "mean_prompt_tokens",
       "op": "lte",
       "value": 90
-    },
-    {
-      "id": "recall-at-k",
-      "class": "A",
-      "metric": "recall@k",
-      "op": "gte",
-      "value": 1
     }
   ],
   "feedback": {

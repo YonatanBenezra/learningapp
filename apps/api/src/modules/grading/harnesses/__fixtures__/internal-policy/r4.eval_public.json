@@ -1,0 +1,42 @@
+[
+  {
+    "id": "p1",
+    "question": "Who sets the severity of an incident?",
+    "answerable": true,
+    "goldAnswer": "The incident commander",
+    "goldDocId": "incident",
+    "goldSpan": "Severity is set by the incident commander"
+  },
+  {
+    "id": "p2",
+    "question": "Is ride-hailing to the office reimbursable on ordinary workdays?",
+    "answerable": true,
+    "goldAnswer": "No",
+    "goldDocId": "expense",
+    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+  },
+  {
+    "id": "p3",
+    "question": "Which retention clock do backup tapes follow?",
+    "answerable": true,
+    "goldAnswer": "The same clock as the source system",
+    "goldDocId": "retention",
+    "goldSpan": "Backup tapes follow the same clock as the source system"
+  },
+  {
+    "id": "p4",
+    "question": "Are personal USB drives allowed on company laptops?",
+    "answerable": true,
+    "goldAnswer": "No, they are blocked on the endpoint",
+    "goldDocId": "laptop",
+    "goldSpan": "personal USB drives are blocked on the endpoint"
+  },
+  {
+    "id": "p5",
+    "question": "How quickly must a leaked credential be rotated?",
+    "answerable": true,
+    "goldAnswer": "Within one hour of detection",
+    "goldDocId": "password",
+    "goldSpan": "Rotate a leaked credential within one hour of detection"
+  }
+]

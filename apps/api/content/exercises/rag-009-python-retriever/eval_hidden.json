@@ -1,24 +1,24 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "During which hours is a staff parking permit available?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off",
+    "goldAnswer": "It is available from 6:00 until 15:00.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "It is available from 6:00 until 15:00.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "How much notice do I need to give for a bicycle locker?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave",
+    "goldAnswer": "Ask at least 10 working days in advance.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Ask at least 10 working days in advance.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -27,11 +27,11 @@
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "Which phone extension takes requests for the shuttle bus?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days",
+    "goldAnswer": "Requests go to phone extension 2756.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Requests go to phone extension 2756.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -40,11 +40,37 @@
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "During which hours is a public transport pass available?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January",
+    "goldAnswer": "It is available from 7:00 until 16:00.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h05",
+    "question": "How much notice do I need to give for the boardroom?",
+    "answerable": true,
+    "goldAnswer": "Ask at least 10 working days in advance.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Ask at least 10 working days in advance.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h06",
+    "question": "Which phone extension takes requests for a quiet booth?",
+    "answerable": true,
+    "goldAnswer": "Requests go to phone extension 2571.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Requests go to phone extension 2571.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -52,48 +78,25 @@
     ]
   },
   {
-    "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "id": "h07",
+    "question": "How late can I cancel the rooftop terrace without being charged?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta",
+    "goldAnswer": "Cancel at least 11 hours before, or the slot is charged.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Cancel at least 11 hours before, or the slot is charged.",
     "split": "holdout",
     "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
-    "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled",
-    "split": "holdout",
-    "tags": [
+      "numeric",
       "paraphrase"
     ]
   },
   {
-    "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
-    "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "Which phone extension takes requests for the training kitchen?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes",
+    "goldAnswer": "Requests go to phone extension 2546.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Requests go to phone extension 2546.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -102,111 +105,115 @@
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "How late can I cancel a portable projector without being charged?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication",
+    "goldAnswer": "Cancel at least 24 hours before, or the slot is charged.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Cancel at least 24 hours before, or the slot is charged.",
     "split": "holdout",
     "tags": [
+      "numeric",
       "paraphrase"
     ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "During which hours is a standing desk converter available?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target",
-    "split": "feedback",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
-    "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
-    "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted",
+    "goldAnswer": "It is available from 8:00 until 17:00.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "It is available from 8:00 until 17:00.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
-    "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only",
-    "split": "holdout",
-    "tags": [
-      "lexical"
-    ]
-  },
-  {
-    "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
-    "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax",
-    "split": "holdout",
-    "tags": [
-      "numeric",
-      "lexical"
-    ]
-  },
-  {
-    "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
-    "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable",
-    "split": "holdout",
-    "tags": [
       "paraphrase"
     ]
   },
   {
-    "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "id": "h11",
+    "question": "How much notice do I need to give for a noise-cancelling headset?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date",
-    "split": "feedback",
+    "goldAnswer": "Ask at least 4 working days in advance.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Ask at least 4 working days in advance.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h12",
+    "question": "During which hours is a camera kit available?",
+    "answerable": true,
+    "goldAnswer": "It is available from 7:00 until 16:00.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h13",
+    "question": "How late can I cancel the company gym without being charged?",
+    "answerable": true,
+    "goldAnswer": "Cancel at least 17 hours before, or the slot is charged.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Cancel at least 17 hours before, or the slot is charged.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h14",
+    "question": "How much notice do I need to give for the yoga class?",
+    "answerable": true,
+    "goldAnswer": "Ask at least 8 working days in advance.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Ask at least 8 working days in advance.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h15",
+    "question": "Which phone extension takes requests for an eye test?",
+    "answerable": true,
+    "goldAnswer": "Requests go to phone extension 2707.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Requests go to phone extension 2707.",
+    "split": "holdout",
     "tags": [
       "numeric",
       "lexical"
     ]
   },
   {
-    "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "id": "h16",
+    "question": "How late can I cancel a counselling session without being charged?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close",
+    "goldAnswer": "Cancel at least 21 hours before, or the slot is charged.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Cancel at least 21 hours before, or the slot is charged.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h17",
+    "question": "Which phone extension takes requests for lunch vouchers?",
+    "answerable": true,
+    "goldAnswer": "Requests go to phone extension 2482.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Requests go to phone extension 2482.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -215,38 +222,38 @@
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "How much notice do I need to give for a fruit box?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days",
-    "split": "feedback",
+    "goldAnswer": "Ask at least 3 working days in advance.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Ask at least 3 working days in advance.",
+    "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "During which hours is a sparkling water cooler available?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold",
+    "goldAnswer": "It is available from 11:00 until 20:00.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "It is available from 11:00 until 20:00.",
     "split": "holdout",
     "tags": [
       "numeric",
-      "lexical"
+      "paraphrase"
     ]
   },
   {
     "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "question": "How much notice do I need to give for the childcare centre?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC",
-    "split": "feedback",
+    "goldAnswer": "Ask at least 11 working days in advance.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Ask at least 11 working days in advance.",
+    "split": "holdout",
     "tags": [
       "numeric",
       "paraphrase"
@@ -254,36 +261,38 @@
   },
   {
     "id": "h21",
-    "question": "Who is backup on-call for the week?",
+    "question": "During which hours is the holiday camp available?",
     "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week",
-    "split": "holdout",
+    "goldAnswer": "It is available from 11:00 until 20:00.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "It is available from 11:00 until 20:00.",
+    "split": "feedback",
     "tags": [
-      "lexical"
+      "numeric",
+      "paraphrase"
     ]
   },
   {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "How late can I cancel the parent room without being charged?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs",
+    "goldAnswer": "Cancel at least 32 hours before, or the slot is charged.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Cancel at least 32 hours before, or the slot is charged.",
     "split": "holdout",
     "tags": [
-      "lexical"
+      "numeric",
+      "paraphrase"
     ]
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "Which phone extension takes requests for a backup carer?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report",
-    "split": "feedback",
+    "goldAnswer": "Requests go to phone extension 2383.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Requests go to phone extension 2383.",
+    "split": "holdout",
     "tags": [
       "numeric",
       "lexical"
@@ -291,23 +300,24 @@
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "Which phone extension takes requests for a language course?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form",
+    "goldAnswer": "Requests go to phone extension 2194.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Requests go to phone extension 2194.",
     "split": "feedback",
     "tags": [
+      "numeric",
       "lexical"
     ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "How late can I cancel the leadership programme without being charged?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days",
+    "goldAnswer": "Cancel at least 18 hours before, or the slot is charged.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Cancel at least 18 hours before, or the slot is charged.",
     "split": "holdout",
     "tags": [
       "numeric",
@@ -316,60 +326,90 @@
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "Which phone extension takes requests for an online learning licence?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway",
-    "split": "holdout",
+    "goldAnswer": "Requests go to phone extension 2475.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Requests go to phone extension 2475.",
+    "split": "feedback",
     "tags": [
-      "lexical"
+      "numeric",
+      "paraphrase"
     ]
   },
   {
     "id": "h27",
-    "question": "What is the HIDDEN_EVAL_R9_CANARY_PHRASE listed in the unpublished runbook?",
+    "question": "How much notice do I need to give for mentoring?",
+    "answerable": true,
+    "goldAnswer": "Ask at least 4 working days in advance.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Ask at least 4 working days in advance.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "During which hours is a conference ticket available?",
+    "answerable": true,
+    "goldAnswer": "It is available from 11:00 until 20:00.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "It is available from 11:00 until 20:00.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "Which phone extension takes requests for a temporary apartment?",
+    "answerable": true,
+    "goldAnswer": "Requests go to phone extension 2202.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Requests go to phone extension 2202.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "Which phone extension takes requests for a storage unit?",
+    "answerable": true,
+    "goldAnswer": "Requests go to phone extension 2317.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Requests go to phone extension 2317.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "How often may I use a moving van each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 6 times a month.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Each person may use it 6 times a month.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R09_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
     "goldSpan": null,
     "split": "holdout",
     "tags": []
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "feedback",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null,
-    "split": "holdout",
-    "tags": [
-      "unanswerable"
-    ]
   }
 ]

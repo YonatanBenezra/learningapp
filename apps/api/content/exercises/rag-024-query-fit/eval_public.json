@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Can staff dual-boot other operating systems on company laptops?",
+    "question": "What is the daily meal allowance abroad?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "laptop",
-    "goldSpan": "Staff may not dual-boot unsanctioned operating systems"
+    "goldAnswer": "The daily meal allowance abroad is 50 euros.",
+    "goldDocId": "meals-on-trips-2025",
+    "goldSpan": "The daily meal allowance abroad is 50 euros."
   },
   {
     "id": "p2",
-    "question": "What account do external guests in Slack need?",
+    "question": "What is the mileage rate for driving your own car?",
     "answerable": true,
-    "goldAnswer": "A time-boxed multi-channel guest account",
-    "goldDocId": "slack",
-    "goldSpan": "External guests require a time-boxed multi-channel guest account"
+    "goldAnswer": "Driving your own car on business is refunded at 30 cents a kilometre.",
+    "goldDocId": "mileage-2025",
+    "goldSpan": "Driving your own car on business is refunded at 30 cents a kilometre."
   },
   {
     "id": "p3",
-    "question": "How often is point-in-time recovery tested?",
+    "question": "How often are company phones replaced?",
     "answerable": true,
-    "goldAnswer": "Quarterly",
-    "goldDocId": "backup",
-    "goldSpan": "Point-in-time recovery is tested quarterly"
+    "goldAnswer": "Company phones are replaced every 3 years.",
+    "goldDocId": "phones-2025",
+    "goldSpan": "Company phones are replaced every 3 years."
   },
   {
     "id": "p4",
-    "question": "Where does encryption key material live?",
+    "question": "Up to what value can a bike be leased?",
     "answerable": true,
-    "goldAnswer": "In the cloud KMS, rotated annually",
-    "goldDocId": "encryption",
-    "goldSpan": "Key material lives in the cloud KMS with annual rotation"
+    "goldAnswer": "Bikes worth up to 3000 euros can be leased through the salary.",
+    "goldDocId": "bike-lease-2025",
+    "goldSpan": "Bikes worth up to 3000 euros can be leased through the salary."
   },
   {
     "id": "p5",
-    "question": "Who sits on every interview loop?",
+    "question": "After how many days is a doctor's note needed?",
     "answerable": true,
-    "goldAnswer": "A hiring manager, a bar-raiser and at least one skills interviewer",
-    "goldDocId": "hiring",
-    "goldSpan": "a hiring manager, a bar-raiser, and at least one skills interviewer"
+    "goldAnswer": "A doctor's note is needed after 3 days of sick leave.",
+    "goldDocId": "sick-leave-2026",
+    "goldSpan": "A doctor's note is needed after 3 days of sick leave."
+  },
+  {
+    "id": "p6",
+    "question": "Up to how much are moving costs paid?",
+    "answerable": true,
+    "goldAnswer": "Moving costs are paid up to 5000 euros.",
+    "goldDocId": "relocation-2024",
+    "goldSpan": "Moving costs are paid up to 5000 euros."
   }
 ]

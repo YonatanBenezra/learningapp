@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "Who approves PTO, and where?",
+    "question": "During which hours is the shuttle bus available?",
     "answerable": true,
-    "goldAnswer": "Managers, in Workday",
-    "goldDocId": "pto",
-    "goldSpan": "Managers approve PTO in Workday"
+    "goldAnswer": "It is available from 11:00 until 20:00.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "It is available from 11:00 until 20:00."
   },
   {
     "id": "p2",
-    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "question": "How late can I cancel the prayer and rest room without being charged?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+    "goldAnswer": "Cancel at least 4 hours before, or the slot is charged.",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Cancel at least 4 hours before, or the slot is charged."
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "During which hours is a massage session available?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "It is available from 7:00 until 16:00.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "It is available from 7:00 until 16:00."
   },
   {
     "id": "p4",
-    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "question": "How late can I cancel the barista bar without being charged?",
     "answerable": true,
-    "goldAnswer": "Ten minutes",
-    "goldDocId": "oncall",
-    "goldSpan": "escalate after ten minutes without an ack"
+    "goldAnswer": "Cancel at least 11 hours before, or the slot is charged.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Cancel at least 11 hours before, or the slot is charged."
   },
   {
     "id": "p5",
-    "question": "What happens to a purchase order when the vendor security report is missing?",
+    "question": "During which hours is a language course available?",
     "answerable": true,
-    "goldAnswer": "It is blocked",
-    "goldDocId": "vendor",
-    "goldSpan": "A missing report blocks the purchase order"
+    "goldAnswer": "It is available from 7:00 until 16:00.",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "It is available from 7:00 until 16:00."
+  },
+  {
+    "id": "p6",
+    "question": "How late can I cancel the tax adviser without being charged?",
+    "answerable": true,
+    "goldAnswer": "Cancel at least 24 hours before, or the slot is charged.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Cancel at least 24 hours before, or the slot is charged."
   }
 ]

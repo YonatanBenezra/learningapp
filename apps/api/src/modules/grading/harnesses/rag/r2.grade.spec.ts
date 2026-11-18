@@ -18,34 +18,23 @@ const docs = JSON.parse(
 ) as CorpusDoc[];
 const hidden = JSON.parse(
   readFileSync(
-    path.join(
-      process.cwd(),
-      'content/exercises/rag-002-the-cost-ceiling/eval_hidden.json',
-    ),
+    path.join(__dirname, '../__fixtures__/internal-policy/r2.eval_hidden.json'),
     'utf8',
   ),
 ) as HiddenItem[];
 const publicItems = JSON.parse(
   readFileSync(
-    path.join(
-      process.cwd(),
-      'content/exercises/rag-002-the-cost-ceiling/eval_public.json',
-    ),
+    path.join(__dirname, '../__fixtures__/internal-policy/r2.eval_public.json'),
     'utf8',
   ),
 ) as HiddenItem[];
 
-const gates = (
-  JSON.parse(
-    readFileSync(
-      path.join(
-        process.cwd(),
-        'content/exercises/rag-002-the-cost-ceiling/meta.json',
-      ),
-      'utf8',
-    ),
-  ) as { gates: { metric: string; value: number }[] }
-).gates;
+const gates = JSON.parse(
+  readFileSync(
+    path.join(__dirname, '../__fixtures__/internal-policy/r2.gates.json'),
+    'utf8',
+  ),
+) as { metric: string; value: number }[];
 const tokenCeiling = gates.find(
   (gate) => gate.metric === 'mean_prompt_tokens',
 )!.value;

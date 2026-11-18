@@ -275,8 +275,13 @@ export function expandGoldSpan(
   const sentence = sentencesOf(docBody(doc)).find((part) =>
     part.includes(goldSpan),
   );
-  return sentence ?? goldSpan;
+  // Text with no punctuation (a call transcript) reads as one endless
+  // "sentence"; there the gold is the span itself.
+  return sentence && sentence.length <= MAX_GOLD_SENTENCE ? sentence : goldSpan;
 }
+
+/** Longer than any real sentence in the corpora (the longest is ~430). */
+const MAX_GOLD_SENTENCE = 600;
 
 export function goldSpanOverlap(chunkText: string, goldSpan: string): number {
   const chunk = normalize(chunkText);

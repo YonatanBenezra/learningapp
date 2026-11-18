@@ -1,0 +1,42 @@
+[
+  {
+    "id": "p1",
+    "question": "Who approves PTO, and where?",
+    "answerable": true,
+    "goldAnswer": "Managers, in Workday",
+    "goldDocId": "pto",
+    "goldSpan": "Managers approve PTO in Workday"
+  },
+  {
+    "id": "p2",
+    "question": "Is ride-hailing to the office reimbursable on a normal workday?",
+    "answerable": true,
+    "goldAnswer": "No",
+    "goldDocId": "expense",
+    "goldSpan": "Ride-hailing to the office is not reimbursable on ordinary workdays"
+  },
+  {
+    "id": "p3",
+    "question": "Which Slack channel is used for incident timelines?",
+    "answerable": true,
+    "goldAnswer": "#incidents",
+    "goldDocId": "incident",
+    "goldSpan": "post a timeline in Slack channel #incidents"
+  },
+  {
+    "id": "p4",
+    "question": "How long before an unacknowledged page escalates to the secondary?",
+    "answerable": true,
+    "goldAnswer": "Ten minutes",
+    "goldDocId": "oncall",
+    "goldSpan": "escalate after ten minutes without an ack"
+  },
+  {
+    "id": "p5",
+    "question": "What happens to a purchase order when the vendor security report is missing?",
+    "answerable": true,
+    "goldAnswer": "It is blocked",
+    "goldDocId": "vendor",
+    "goldSpan": "A missing report blocks the purchase order"
+  }
+]

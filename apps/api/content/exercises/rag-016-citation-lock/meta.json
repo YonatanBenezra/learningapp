@@ -1,12 +1,12 @@
 {
   "slug": "rag-016-citation-lock",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Context Packing Under Token Budget",
+  "title": "Send the Sentence, Not the Page",
   "difficulty": "H",
   "catalogPhase": 5,
-  "corpusFile": "shared",
+  "corpusFile": "parcel-help",
   "skills": [
     {
       "slug": "retrieval-quality",
@@ -17,37 +17,32 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 5 · Context Packing Under Token Budget\n\nPack the **maximum signal** into a small context window: tune top-k, rerank and chunk size so the gold sentence is in the context while the prompt stays tiny.\n\nThe split is fixed (sentence packing, no overlap); every retrieved chunk is sent to the model in full.\n\n**Gates:** recall@k ≥ 0.95 and mean prompt tokens ≤ 90 on the hidden set.\n",
+  "briefMd": "# Phase 5 · Send the Sentence, Not the Page\n\nThe parcel company's help pages give one page per service, with five facts: price, weight limit, delivery time, size limit and insurance (\"A large parcel costs 18 euros to send.\"). For half the services there are also one or two news pages that repeat the service's name and the questions people ask, without answering any of them. Those pages rank close to the real page, often above it. For the other half, the real page is a clear first.\n\nRetrieval ranks whole pages, and ranking them whole is what finds the right one. But a question needs one fact and a page holds five, so a few whole pages cost more than the budget.\n\nYou control **top-k** and **compression** (`compressSentences`): after retrieval, each page keeps only that many sentences, the ones that share the most words with the question, in their original order. 0 sends pages whole. Retrieval is BM25, and every page is one chunk.\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 120 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
       "topK",
-      "rerank",
-      "chunkSize"
+      "compressSentences"
     ],
     "properties": {
       "topK": {
         "type": "integer",
         "minimum": 1,
-        "maximum": 40,
-        "default": 20
+        "maximum": 10,
+        "default": 3
       },
-      "rerank": {
-        "type": "boolean",
-        "default": false
-      },
-      "chunkSize": {
+      "compressSentences": {
         "type": "integer",
-        "minimum": 50,
-        "maximum": 2000,
-        "default": 400
+        "minimum": 0,
+        "maximum": 5,
+        "default": 0
       }
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 90,
-    "recall_at_k": 0.95
+    "recall_at_k": 0.9,
+    "mean_prompt_tokens": 120
   },
   "budget": {
     "max_model_calls": 0,
@@ -57,18 +52,18 @@
   },
   "gates": [
     {
-      "id": "mean-prompt-tokens",
-      "class": "A",
-      "metric": "mean_prompt_tokens",
-      "op": "lte",
-      "value": 90
-    },
-    {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.95
+      "value": 0.9
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 120
     }
   ],
   "feedback": {

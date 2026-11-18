@@ -1,5 +1,3 @@
 {
-  "topK": 2,
-  "rerank": true,
-  "chunkSize": 200
+  "topK": 3
 }

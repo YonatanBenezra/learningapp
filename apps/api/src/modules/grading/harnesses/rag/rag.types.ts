@@ -63,6 +63,24 @@ export type R2Payload = {
    * (`entities`: "Porto", "Iris", "Quill Batteries").
    */
   hopQuery?: HopQuery;
+  /**
+   * Score cutoff: after top-k, drop every chunk that scores below this share
+   * of the best chunk's score, so a question with one clear answer sends one
+   * chunk and a close race sends several. Absent or 0: keep all k.
+   */
+  minScoreRatio?: number;
+  /**
+   * Extractive compression: keep only this many sentences of each retrieved
+   * chunk, the ones that share the most terms with the question, in their
+   * original order. Absent or 0: send chunks whole.
+   */
+  compressSentences?: number;
+  /**
+   * Sentence window: send each retrieved chunk together with this many
+   * neighbouring chunks of the same document on each side. Absent or 0: the
+   * chunk alone.
+   */
+  expandNeighbors?: number;
 };
 
 export type HopQuery = 'passage' | 'entities';

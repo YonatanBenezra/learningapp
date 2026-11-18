@@ -1,6 +1,6 @@
 [
-  "Tiny windows split evidence mid-sentence. Keep each chunk big enough for a full sentence.",
-  "A fixed character window ignores sentence boundaries. Prefer sentence packing.",
-  "Whole-document chunks pass recall but blow the budget: five of them cost about 370 tokens of context.",
-  "A working point on this corpus is sentence packing with chunk size around 200 and a little overlap."
+  "Look at a missed question in the Chunks tab: is the fact sentence in a chunk without the name of its service?",
+  "A fee sentence with no service name matches every other fee sentence equally well. The chunk needs the first sentence of its paragraph too.",
+  "Paragraphs here are about 180 to 225 characters. A chunk that holds one whole paragraph keeps the name and the facts together.",
+  "Recursive splitting cuts on paragraphs first, so a chunk size a little above the longest paragraph gives one paragraph per chunk. Two paragraphs per chunk is over budget."
 ]

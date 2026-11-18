@@ -44,7 +44,8 @@ export function parseR1Payload(payload: unknown): RagPayload {
   }
   const record = payload as Record<string, unknown>;
   const chunkSize = record.chunkSize;
-  const overlap = record.overlap;
+  // Exercises that do not offer overlap as a knob leave it out: no overlap.
+  const overlap = record.overlap ?? 0;
   const splitStrategy = record.splitStrategy;
   if (typeof chunkSize !== 'number' || typeof overlap !== 'number') {
     throw new Error('RAG payload is missing chunkSize or overlap');
@@ -103,7 +104,32 @@ export function parseR2Payload(payload: unknown): R2Payload {
     ...optionalEnum(record, 'dedupe', DEDUPE_MODES),
     ...unitInterval(record, 'dedupeThreshold'),
     ...hopFields(record),
+    ...unitInterval(record, 'minScoreRatio'),
+    ...integerIn(record, 'compressSentences', 0, 5),
+    ...integerIn(record, 'expandNeighbors', 0, 3),
   };
+}
+
+/** `{ [key]: value }` for a whole number in range, `{}` when absent. */
+function integerIn(
+  record: Record<string, unknown>,
+  key: string,
+  min: number,
+  max: number,
+): Record<string, number> {
+  const value = record[key];
+  if (value === undefined) {
+    return {};
+  }
+  if (
+    typeof value !== 'number' ||
+    !Number.isInteger(value) ||
+    value < min ||
+    value > max
+  ) {
+    throw new Error(`R2 ${key} must be a whole number from ${min} to ${max}`);
+  }
+  return { [key]: value };
 }
 
 function hopFields(

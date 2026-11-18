@@ -1,5 +1,4 @@
 {
-  "topK": 20,
-  "rerank": false,
+  "topK": 2,
   "chunkSize": 400
 }

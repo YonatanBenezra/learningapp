@@ -1,10 +1,10 @@
 {
   "slug": "rag-029-adv-python-retriever",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-sandbox",
-  "title": "Custom Retriever — Advanced Sandbox",
+  "title": "Rank the Paragraph, Return the Sentence",
   "difficulty": "H",
   "catalogPhase": 7,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Advanced · Python Retriever\n\nThe sandbox task with a stricter bar: almost every hidden question must land its answer in your top 5.\n\nYour program reads `/workspace/input.json` and prints `{ \"results\": [ { \"id\": \"...\", \"passages\": [\"...\"] } ] }` with up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Concatenated or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget, so whole documents are usually too expensive: split them into smaller passages and rank those.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 75, and every passage comes from the corpus.\n",
+  "briefMd": "# Phase 7 · Rank the Paragraph, Return the Sentence\n\nThe office services guide gives every service one paragraph. The first sentence names the service; the three after it only say \"it\" and give one fact each (a monthly fee, how much notice to give, opening hours, how often you may use it, a phone extension, a cancellation deadline). Write the retriever in Python.\n\nYour program reads `input.json` (in the same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` holds the corpus (`id`, `title`, `text` for every document) and the questions to answer. Gold answers are not in the sandbox. Return up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Joined or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget.\n\nThe budget here fits about three sentences per question. Finding the right paragraph needs the service name in its first sentence, but the answer is one fact sentence, and the question rarely uses the fact's exact words (\"How much notice…\" is answered by \"Ask at least 5 working days in advance.\").\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 45, and every passage comes from the corpus.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -34,7 +34,7 @@
   },
   "thresholds": {
     "recall_at_5": 0.9,
-    "mean_context_tokens": 75
+    "mean_context_tokens": 45
   },
   "budget": {
     "max_model_calls": 0,
@@ -55,7 +55,7 @@
       "class": "A",
       "metric": "mean_context_tokens",
       "op": "lte",
-      "value": 75
+      "value": 45
     },
     {
       "id": "passages-from-corpus",
@@ -73,5 +73,6 @@
     "maxSubmissions": 20,
     "cooldownHours": 1
   },
-  "isPublished": true
+  "isPublished": true,
+  "corpusFile": "office-services"
 }

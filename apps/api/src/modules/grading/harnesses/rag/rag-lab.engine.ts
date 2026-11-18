@@ -327,6 +327,8 @@ export type RagLabEstimate = {
   meanContextTokens: number;
   answerable: number;
   answersFound: number;
+  /** R1: how many chunks the config puts in the index. */
+  indexChunks?: number;
   rows: RagLabEstimateRow[];
 };
 
@@ -384,8 +386,19 @@ export async function estimateRagLabWithCorpus(
     });
   }
   const graded = rows.filter((row) => row.answerFound !== null);
+  const archetype = ragLabArchetype(slug);
+  let indexChunks: number | undefined;
+  if (archetype === 'r1') {
+    const parsed = parseR1Payload(payload);
+    indexChunks = chunkCorpus(
+      docs,
+      parsed.chunkSize,
+      parsed.overlap,
+      parsed.splitStrategy,
+    ).length;
+  }
   return {
-    archetype: ragLabArchetype(slug),
+    archetype,
     rewriteSkipped,
     questions: rows.length,
     meanContextTokens:
@@ -394,6 +407,7 @@ export async function estimateRagLabWithCorpus(
         : rows.reduce((sum, row) => sum + row.contextTokens, 0) / rows.length,
     answerable: graded.length,
     answersFound: graded.filter((row) => row.answerFound === true).length,
+    ...(indexChunks !== undefined ? { indexChunks } : {}),
     rows,
   };
 }

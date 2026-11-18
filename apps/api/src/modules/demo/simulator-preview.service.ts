@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { loadExerciseBundle } from '../../content/content-loader';
-import { exercisesRoot } from '../../content/content-paths';
+import { corpusPathFor, exercisesRoot } from '../../content/content-paths';
 import { gradeE1 } from '../grading/harnesses/evaluation/e1.grade';
 import type { EvalItem } from '../grading/harnesses/evaluation/eval.types';
 import { gradeF1 } from '../grading/harnesses/fine-tuning/f1.grade';
@@ -137,19 +137,24 @@ export class SimulatorPreviewService {
           if (!payload) {
             return null;
           }
+          const meta = JSON.parse(
+            await readFile(path.join(dir, 'meta.json'), 'utf8'),
+          ) as { gates?: unknown; corpusFile?: string };
           const docs = JSON.parse(
-            await readFile(path.join(dir, 'corpus.json'), 'utf8'),
+            await readFile(corpusPathFor(dir, meta), 'utf8'),
           ) as CorpusDoc[];
           const result = gradeR1(
             parseR1Payload(payload),
             docs,
             hiddenRaw as HiddenItem[],
             publicItems(publicRaw),
+            meta.gates,
           );
           const recall = result.metrics.recall_at_5.value;
+          const tokens = result.metrics.mean_context_tokens.value;
           const passed = result.verdict === 'pass';
           return {
-            output: `recall@5 = ${recall.toFixed(2)}  ${passed ? '✓ pass' : '✗ fail'} (threshold 0.80)`,
+            output: `recall@5 = ${recall.toFixed(2)} · ${Math.round(tokens)} context tokens  ${passed ? '✓ pass' : '✗ fail'}`,
             verdict: passed ? 'pass' : 'fail',
             source: 'harness',
           };

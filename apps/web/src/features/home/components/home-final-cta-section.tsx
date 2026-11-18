@@ -127,7 +127,7 @@ export function HomeFinalCtaSection() {
                     }
               }
             >
-              Start with RAG: chunk a help-center corpus until recall@5 clears 0.80 on the hidden
+              Start with RAG: chunk an office services guide until recall@5 clears 0.90 on the hidden
               set.
             </motion.p>
 
