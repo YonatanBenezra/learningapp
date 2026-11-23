@@ -3,6 +3,8 @@ export type GuardrailsItem = {
   kind: 'attack' | 'benign';
   category?: string;
   adversarial?: boolean;
+  /** Forces the feedback/holdout split, e.g. a family kept only in holdout. */
+  split?: 'feedback' | 'holdout';
   text: string;
 };
 

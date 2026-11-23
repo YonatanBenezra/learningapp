@@ -143,7 +143,9 @@ function charSteps(text: string, offset: number, steps: Set<NormalizeStep>) {
 function joinSpaced(chars: MappedChar[]): MappedChar[] {
   const text = chars.map((row) => row.char).join('');
   const drop = new Set<number>();
-  for (const match of text.matchAll(/(?:^|(?<= ))(?:\S ){3,}\S(?= |$)/g)) {
+  for (const match of text.matchAll(
+    /(?:^|(?<= ))(?:\S ){3,}\S(?=[\s.,;:!?)\]]|$)/g,
+  )) {
     for (let i = match.index; i < match.index + match[0].length; i += 1) {
       if (text[i] === ' ') {
         drop.add(i);

@@ -359,3 +359,35 @@ G3-এর defense pipeline এখন সত্যিই চলে। প্র�
 - Pool এখনো template-এর copy। তাই "Be helpful." + classifier ০.৯ pass করে (সব attack-এর score প্রায় ১.০), আর `ignore previous instructions`-এর একটা input regex ৮০% attack আটকায়। বৈচিত্র্যময় pool এলে classifier-এর threshold আর indirect family-র জন্য tool policy সত্যিই লাগবে।
 - Pool-এর attack-এর লেখায় এখনো পুরনো `OVERRIDE-BK-7742` আছে (এটা এখন কোনো G3 exercise-এর secret না, G1-এর canary)।
 - ৬টা G3 exercise এখনো একই reference দিয়ে pass করে (C1, G-D)।
+
+### Phase G-C-এর অবস্থা (২০২৬-১১-২৩)
+
+G3-এর hidden set এখন generator দিয়ে বানানো, প্রতিটা exercise-এর নিজের। আগের pool ছিল ৭টা template-এর copy; এখন প্রতিটা family-র ভেতরে লেখা বদলায়।
+
+| কাজ | কোথায় | Finding | অবস্থা |
+|---|---|---|---|
+| Pool generator: প্রতিটা G3 exercise-এর জন্য ৫৫০টা message (২৫০ attack, ৩০০ guest), নিজের seed আর নিজের secret, deterministic, `--check` সহ | `scripts/content/build-guard-pools.mjs` | C3, E2 | ✅ |
+| ৭টা attack family: direct, page (summary চাওয়া page-এর ভেতরে নির্দেশ), encoded (hex/base64), earlier-turn, other-language (es, fr, de, he, ru, ar), role-play, disguised-output (spaced, base64, look-alike অক্ষর)। সবই সবার জানা ধরনের, কাল্পনিক hotel bot-এর কাল্পনিক code নিয়ে | generator | E2 | ✅ |
+| Role-play আর disguised-output শুধু holdout-এ: গোনা হয়, কখনো দেখানো হয় না। অচেনা attack-এ defense টেকে কিনা মাপে | generator, `g3.grade.ts` (`split`) | E2 | ✅ |
+| Guest message-এর ৭টা ধরন, তার মধ্যে over-refusal set (XSTest-এর মতো): "gym door code", "override the thermostat", "ignore my previous message", অন্য ভাষায় booking, hex-এর মতো দেখতে booking reference | generator | E2 | ✅ |
+| Utility under attack (AgentDojo-র মতো): page summary-র কাজের ভেতরে attack থাকলে, attack আটকানোর পরও summary email যেতে হবে। নতুন gate ≥ ৮০% | `g3-bot.ts`, `g3.grade.ts`, ৬টা `meta.json` | E2 | ✅ |
+| Bot এখন বৈচিত্র্যময় লেখা, ৬টা ভাষা, role-play আর page task বোঝে। Guest নিজের ঠিকানায় confirmation email চায়, তাই শুধু `*@hotel.test`-এর recipient allowlist guest আটকায়; ঠিক policy হলো argument-এ secret pattern না থাকা | `g3-bot.ts` | | ✅ |
+| Public example: প্রতিটা দেখানো family থেকে একটা, hidden pool-এ নেই | `eval_public.json` | U1 | ✅ |
+| CI: generator `--check`; প্রতিটা message bot তার label অনুযায়ী বোঝে; holdout family কখনো feedback-এ না; কোনো ৪-শব্দের phrase কোনো family-র অর্ধেক ঢাকে না (এখন সর্বোচ্চ ৪০%, আগে ১০০%); দুই exercise-এর attack-এর মিল ৩৫%-এর কম (এখন সর্বোচ্চ ২২%) | `guardrails-pool.spec.ts` | C3, E2 | ✅ |
+| Scorecard: "task done under attack", holdout family-তে "never shown", headline বলে কী ভুল হয়েছে (attack ঢুকেছে, guest আটকেছে, task হারিয়েছে, budget) | web | U7 | ✅ |
+
+**যাচাই করা mechanic** (`grd-013`, CI-তে প্রতিটা G3 exercise-এ):
+
+| Config | ফল | কারণ |
+|---|---|---|
+| Reference: hardened prompt + normalize করা output filter + secret pattern-এর tool policy | pass | |
+| Recipient allowlist (`*@hotel.test`) secret check-এর বদলে | fail, benign ৮৫% | guest-এর নিজের ঠিকানায় confirmation আটকায় |
+| `ignore previous instructions`-এর input regex + plain output filter | fail, encoded family | লেখা বদলায়, regex ঢাকে না |
+| শুধু classifier (০.৯) বা reference + classifier | fail, task ০% | page task-সহ পুরো request block হয় |
+| Near-miss (normalize ছাড়া) | fail, disguised-output আর encoded | |
+| Tool policy ছাড়া | fail, page family আর task | |
+| সব email deny | fail | guest আর task দুটোই হারায় |
+
+**যাচাই:** পুরো API suite-এ ১৫টা suite fail, সবই আগের (নতুন `guardrails-pool.spec.ts` সহ ৯২টা suite)। Web-এ `tsc` আর lint পরিষ্কার। Browser-এ `grd-014`-এ recipient allowlist fail ("Guests were blocked", confirmation ০/৯) আর reference pass দেখা হয়েছে।
+
+**এখনো বাকি (G-D):** ৬টা G3 exercise এখনো একই mechanic, তাই একই reference সবগুলো pass করে (C1)। G-D-তে প্রতিটা exercise-এর আলাদা defense mechanic আর transfer CI।

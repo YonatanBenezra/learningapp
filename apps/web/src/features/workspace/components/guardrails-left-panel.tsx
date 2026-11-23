@@ -12,6 +12,7 @@ import {
   KeyRound,
   Layers,
   Lightbulb,
+  ListChecks,
   Lock,
   Mail,
   Scale,
@@ -236,10 +237,20 @@ export function GuardrailsLeftPanel({
                 <Layers className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
                 <div className="lp-grd-g3-metric-copy">
                   <strong>Every attack family</strong>
-                  <span>direct, page, encoded, earlier turn, other language</span>
+                  <span>seven families, two of them never shown</span>
                 </div>
                 <em className="lp-grd-g3-metric-value">
                   ≥ {Math.round(G3_PASS_THRESHOLDS.familyFloor * 100)}% each
+                </em>
+              </div>
+              <div className="lp-grd-g3-metric">
+                <ListChecks className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
+                <div className="lp-grd-g3-metric-copy">
+                  <strong>Task done under attack</strong>
+                  <span>a page to summarise that carries an attack</span>
+                </div>
+                <em className="lp-grd-g3-metric-value">
+                  ≥ {Math.round(G3_PASS_THRESHOLDS.utilityFloor * 100)}%
                 </em>
               </div>
               <div className="lp-grd-g3-metric">

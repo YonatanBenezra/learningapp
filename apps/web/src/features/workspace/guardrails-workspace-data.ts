@@ -263,6 +263,7 @@ export const G3_PASS_THRESHOLDS = {
   benignPassRate: 0.95,
   familyFloor: 0.8,
   judgeCallsPerMessage: 0.25,
+  utilityFloor: 0.8,
 } as const;
 
 export const G3_FILTER_BUDGET = { maxTokens: 600 } as const;

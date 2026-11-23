@@ -6,6 +6,8 @@ import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
 
 const FILTER_TOKEN_BUDGET = 600;
+/** G3 attack families kept only in the holdout split: counted, never shown. */
+const HOLDOUT_FAMILIES = new Set(["role-play", "disguised-output"]);
 
 /** What a G1/G2 level that held tells the learner, by the grader's note. */
 const HELD_REASON: Record<string, string> = {
@@ -56,6 +58,28 @@ function breakdown(grade: Grade): string[] {
     }
   }
   return lines;
+}
+
+/** What went wrong in a failed G3 run, from the grader's failure classes. */
+function g3FailHeadline(classes: string[]): string {
+  const leaked = classes.some(
+    (c) =>
+      c.startsWith("family-gap") ||
+      ["tool-exfiltration", "encoding-bypass", "plain-leak"].includes(c),
+  );
+  if (leaked) {
+    return "Attacks slipped through";
+  }
+  if (classes.includes("task-lost-under-attack")) {
+    return "Attacks stopped, but tasks were lost";
+  }
+  if (classes.includes("over-blocking")) {
+    return "Guests were blocked";
+  }
+  if (classes.some((c) => c.endsWith("budget-blown") || c === "filter-cost-blown")) {
+    return "Over budget";
+  }
+  return "Defences did not pass";
 }
 
 function metricValue(grade: Grade, key: string): number | null {
@@ -165,6 +189,7 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
     typeof grade.metrics?.judge_calls_per_request?.max === "number"
       ? grade.metrics.judge_calls_per_request.max
       : 0.25;
+  const utility = grade.metrics?.utility_under_attack;
   const addedLatency = metricValue(grade, "added_latency_ms");
   const addedCost = metricValue(grade, "added_cost_eur");
   const brokeDown = breakdown(grade);
@@ -183,7 +208,7 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
           : `Keep trying · ${g2Levels?.won ?? levelsWonMetric ?? 0}/${levelsWonTotal} levels cleared`
         : passed
           ? "Defences held"
-          : "Attacks slipped through";
+          : g3FailHeadline(grade.failureClasses ?? []);
   const failureClass = grade.failureClasses?.[0];
   const counts = g3Counts(grade);
   const totalRequests = counts ? counts.attackN + counts.benignN : null;
@@ -273,6 +298,16 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
           />
         ) : null}
 
+        {utility && typeof utility.total === "number" && utility.total > 0 ? (
+          <ScoreMetricRow
+            label="Task done under attack"
+            tone={utility.value >= (utility.min ?? 0.8) ? "pass" : "fail"}
+            stats={`${utility.hits ?? 0}/${utility.total} · ${Math.round(utility.value * 100)}%`}
+            needLabel={`need ≥ ${Math.round((utility.min ?? 0.8) * 100)}%`}
+            barPct={Math.min(100, Math.round(utility.value * 100))}
+          />
+        ) : null}
+
         {judgeRate != null ? (
           <ScoreMetricRow
             label="Judge calls"
@@ -351,7 +386,12 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
               .sort(([a], [b]) => Number(a.startsWith("benign")) - Number(b.startsWith("benign")))
               .map(([family, row]) => (
               <li key={family}>
-                <span>{family}</span>
+                <span>
+                  {family}
+                  {HOLDOUT_FAMILIES.has(family) ? (
+                    <em className="lp-grd-family-holdout"> · never shown</em>
+                  ) : null}
+                </span>
                 <span>
                   {family.startsWith("benign")
                     ? `${row.total - row.stopped}/${row.total} allowed`

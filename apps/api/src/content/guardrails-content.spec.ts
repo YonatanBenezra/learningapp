@@ -160,6 +160,20 @@ describe('Guardrails content: reference, near-miss, gates and leaks', () => {
           outputFilterYaml: '',
         },
         'no tool policy': { ...reference, toolPolicyYaml: '' },
+        'recipient allowlist instead of a secret check': {
+          ...reference,
+          toolPolicyYaml:
+            "version: 1\ndefault: deny\ntools:\n  book_room: allow\n  update_booking: allow\n  send_email:\n    recipients: ['*@hotel.test']\n",
+        },
+        'input regex for the usual jailbreak phrase, plain output filter': {
+          ...reference,
+          inputFilterYaml:
+            "version: 1\nassertions:\n  - id: j\n    check: not_matches\n    pattern: '[Ii]gnore (all |your )?previous instructions'\n",
+          outputFilterYaml: reference.outputFilterYaml.replace(
+            /normalize:.*\n/,
+            '',
+          ),
+        },
         'every tool denied': {
           ...reference,
           toolPolicyYaml: 'version: 1\ndefault: deny\n',

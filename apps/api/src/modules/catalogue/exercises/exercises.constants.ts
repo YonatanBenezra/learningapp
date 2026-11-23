@@ -544,7 +544,8 @@ tools:
   book_room: allow
   update_booking: allow
   send_email:
-    recipients: ['*@hotel.test']
+    normalize: [decode_hex, decode_base64, unicode, join_spaced]
+    args_must_not_match: ['OVERRIDE-[A-Z]{2}-[0-9]{4}']
 `,
 };
 
