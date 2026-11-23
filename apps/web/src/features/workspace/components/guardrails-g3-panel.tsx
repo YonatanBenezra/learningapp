@@ -6,10 +6,13 @@ import {
   ArrowRight,
   FileCode2,
   FileText,
+  FlaskConical,
   RotateCcw,
   Shield,
 } from "lucide-react";
 import { GuardrailsG3CodeField } from "./guardrails-g3-code-field";
+import { G3HistoryPanel, G3ProbePanel } from "./guardrails-g3-tools";
+import type { SubmissionHistoryItem } from "@/types/submission";
 import type { Exercise } from "@/types/exercise";
 import {
   G3_FIELD_META,
@@ -25,6 +28,8 @@ type GuardrailsG3PanelProps = {
   initialValues?: Record<string, unknown>;
   draftVersion: number;
   historyCount?: number;
+  /** Graded runs, newest first; null when they could not be loaded. */
+  history?: SubmissionHistoryItem[] | null;
   onSubmit: (payload: Record<string, unknown>) => void;
   onValidityChange: (valid: boolean) => void;
 };
@@ -103,6 +108,7 @@ function G3CodeBox({
         language={lang}
         disabled={disabled}
         minLines={minLines}
+        label={file}
         onChange={onChange}
       />
     </div>
@@ -117,6 +123,7 @@ export function GuardrailsG3Panel({
   initialValues,
   draftVersion,
   historyCount = 0,
+  history = null,
   onSubmit,
   onValidityChange,
 }: GuardrailsG3PanelProps) {
@@ -129,7 +136,7 @@ export function GuardrailsG3Panel({
     g3StarterDefaults(initialValues),
   );
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [workspaceTab, setWorkspaceTab] = useState<"stack" | "history">("stack");
+  const [workspaceTab, setWorkspaceTab] = useState<"stack" | "probe" | "history">("stack");
 
   useEffect(() => {
     setValues(defaults);
@@ -176,12 +183,22 @@ export function GuardrailsG3Panel({
         <button
           type="button"
           role="tab"
+          aria-selected={workspaceTab === "probe"}
+          className={`lp-grd-g3-tab${workspaceTab === "probe" ? " is-active" : ""}`}
+          onClick={() => setWorkspaceTab("probe")}
+        >
+          <FlaskConical className="size-3.5" aria-hidden />
+          Probe
+        </button>
+        <button
+          type="button"
+          role="tab"
           aria-selected={workspaceTab === "history"}
           className={`lp-grd-g3-tab lp-grd-g3-tab--history${workspaceTab === "history" ? " is-active" : ""}`}
           onClick={() => setWorkspaceTab("history")}
         >
           <Activity className="size-3.5" aria-hidden />
-          History · {historyCount}
+          History · {history ? history.filter((item) => item.grade).length : historyCount}
         </button>
         <span className={`lp-grd-g3-draft${dirty ? " is-unsaved" : ""}`}>
           {dirty ? <span className="lp-grd-g3-draft-dot" aria-hidden /> : null}
@@ -192,7 +209,17 @@ export function GuardrailsG3Panel({
 
       {workspaceTab === "history" ? (
         <div className="lp-grd-g3-history">
-          <p>Prior graded submissions appear in Dashboard and Run trace after you submit.</p>
+          <G3HistoryPanel
+            history={history}
+            onRestore={(payload) => {
+              setValues(g3StarterDefaults(payload));
+              setWorkspaceTab("stack");
+            }}
+          />
+        </div>
+      ) : workspaceTab === "probe" ? (
+        <div className="lp-grd-g3-history">
+          <G3ProbePanel exerciseSlug={exercise.slug} values={values} disabled={editorDisabled} />
         </div>
       ) : (
         <form className="lp-grd-g3-form lp-grd-g3-form--stack" onSubmit={handleSubmit}>

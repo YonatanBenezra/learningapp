@@ -295,7 +295,13 @@ export function GuardrailsG1ChatPanel({
         </div>
       </div>
 
-      <div className="lp-grd-chat-log" ref={logRef}>
+      <div
+        className="lp-grd-chat-log"
+        ref={logRef}
+        role="log"
+        aria-live="polite"
+        aria-label="Conversation with the concierge"
+      >
         {lines.map((line, index) => {
           if (line.kind === "user") {
             return (
@@ -365,6 +371,7 @@ export function GuardrailsG1ChatPanel({
             }}
             disabled={disabled || pending}
             rows={2}
+            aria-label="Message to the concierge"
             placeholder={placeholder}
             className="lp-grd-chat-input"
           />

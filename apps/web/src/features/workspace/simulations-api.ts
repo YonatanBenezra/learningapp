@@ -18,6 +18,36 @@ export type G2Run = {
   won: boolean;
 };
 
+/** One message through a G3 stack, layer by layer (secret masked). */
+export type G3Probe = {
+  note: string;
+  message: string;
+  input: { blocked: boolean; failed: string[] };
+  reply: string | null;
+  tools: {
+    tool: string;
+    args: Record<string, unknown>;
+    allowed: boolean;
+    reason: string;
+    stripped: string[];
+  }[];
+  output: { blocked: boolean; redacted: boolean; failed: string[] };
+  shown: string;
+  attack: boolean;
+  harmsLeft: string[];
+  taskDone: boolean | null;
+  judgeCalls: number;
+  classifierCalls: number;
+  addedLatencyMs: number;
+};
+
+export type G3Stack = {
+  systemPrompt: string;
+  inputFilterYaml: string;
+  outputFilterYaml: string;
+  toolPolicyYaml?: string;
+};
+
 export const simulationsApi = {
   g1Turn: (exerciseSlug: string, level: number, message: string) =>
     apiClient<G1Turn>("/simulations/g1/turns", {
@@ -29,5 +59,11 @@ export const simulationsApi = {
     apiClient<G2Run>("/simulations/g2/page", {
       method: "POST",
       body: JSON.stringify({ level, pageContent, exerciseSlug }),
+    }),
+
+  g3Probe: (exerciseSlug: string, message: string, stack: G3Stack) =>
+    apiClient<G3Probe>("/simulations/g3/probe", {
+      method: "POST",
+      body: JSON.stringify({ exerciseSlug, message, ...stack }),
     }),
 };

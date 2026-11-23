@@ -45,6 +45,7 @@ export function GuardrailsG2PageEditor({
           }}
         />
         <textarea
+          aria-label={`Page content (${filename})`}
           className="lp-grd-g2-editor"
           value={value}
           onChange={(event) => onChange(event.target.value)}

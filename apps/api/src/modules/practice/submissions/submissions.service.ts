@@ -206,7 +206,26 @@ function breakdownOf(scorecard: unknown): unknown {
   if (!scorecard || typeof scorecard !== 'object') {
     return null;
   }
-  return (scorecard as { breakdown?: unknown }).breakdown ?? null;
+  const card = scorecard as {
+    breakdown?: unknown;
+    byCategory?: unknown;
+    holdoutFamilies?: unknown;
+    leaks?: unknown;
+    benignLoss?: unknown;
+  };
+  if (card.breakdown) {
+    return card.breakdown;
+  }
+  // G3: counts per family and per layer, never message text.
+  if (card.byCategory) {
+    return {
+      byCategory: card.byCategory,
+      holdoutFamilies: card.holdoutFamilies ?? [],
+      leaks: card.leaks ?? null,
+      benignLoss: card.benignLoss ?? null,
+    };
+  }
+  return null;
 }
 
 /** Where the learner stands against the exercise's rolling submission limit. */

@@ -20,6 +20,7 @@ import {
   secretLeaked,
   unitHash,
   type BotReply,
+  type Harm,
 } from './g3-bot';
 import { injectionScores, INJECTION_MODEL_LABEL } from './g3-classifier';
 import { scenarioOf, type Scenario } from './g3-scenarios';
@@ -185,9 +186,15 @@ const usesClassifier = (suite: AssertionSuite | null) =>
   Boolean(suite?.assertions.some((row) => row.check === 'classifier'));
 
 /** One request through the stack. */
-type Trip = {
-  item: GuardrailsItem;
+type Trip = Layers & { item: GuardrailsItem };
+
+/** One message through every layer, before scoring. */
+type Layers = {
   inputBlocked: boolean;
+  /** Ids of the input-filter checks that failed. */
+  inputFailed: string[];
+  /** Ids of the output-filter checks that failed. */
+  outputFailed: string[];
   reply: BotReply;
   decisions: ToolDecision[];
   /** Reply after the tool policy, before the output filter. */
@@ -213,140 +220,12 @@ async function scoreSample(
 
   // Everything before the filters is deterministic, so it is worked out first;
   // then the classifier scores every text a filter will ask about in batches.
-  const pre = sample.map((item) => {
-    const reply = stack.scenario.respond(
-      stack.payload.systemPrompt,
-      item.text,
-      secret,
-    );
-    const decisions = reply.toolCalls.map((call) =>
-      decideToolCall(stack.policy, call),
-    );
-    const deniedCount = decisions.filter((row) => !row.allowed).length;
-    const draft =
-      deniedCount === 0
-        ? reply.text
-        : deniedCount === decisions.length
-          ? blockedToolText(item.text)
-          : `${reply.text} One action was not allowed.`;
-    return {
-      item,
-      reply,
-      decisions,
-      draft,
-      inputView: stack.input
-        ? normalize(item.text, stack.input.normalize)
-        : null,
-      outputView: stack.output
-        ? normalize(draft, stack.output.normalize)
-        : null,
-    };
-  });
-  const scoreTexts = [
-    ...(usesClassifier(stack.input)
-      ? pre.map((row) => row.inputView!.text)
-      : []),
-    ...(usesClassifier(stack.output)
-      ? pre.map((row) => row.outputView!.text)
-      : []),
-  ];
-  const scored = new Map<string, number>();
-  if (scoreTexts.length > 0) {
-    const unique = [...new Set(scoreTexts)];
-    const values = await injectionScores(unique);
-    unique.forEach((text, index) => scored.set(text, values[index]));
-  }
-
-  const trips: Trip[] = pre.map((row) => {
-    let judgeCalls = 0;
-    let classifierCalls = 0;
-    const classifier = (text: string) => {
-      classifierCalls += 1;
-      const value = scored.get(text);
-      if (value === undefined) {
-        throw new Error('classifier score missing');
-      }
-      return value;
-    };
-    const inputContext: CheckContext = {
-      classifier,
-      judge: (text) => {
-        judgeCalls += 1;
-        const unsafe = stack.scenario.inputUnsafe(text);
-        return unitHash(`judge-in|${text}`) < JUDGE_INPUT_ERROR
-          ? !unsafe
-          : unsafe;
-      },
-    };
-    const outputContext: CheckContext = {
-      classifier,
-      judge: (text) => {
-        judgeCalls += 1;
-        const unsafe = stack.scenario.outputUnsafe(text, secret);
-        return unitHash(`judge-out|${text}`) < JUDGE_OUTPUT_ERROR
-          ? !unsafe
-          : unsafe;
-      },
-    };
-    const inputBlocked = Boolean(
-      stack.input &&
-      dsl.evaluate(stack.input, row.inputView!.text, inputContext).flagged,
-    );
-    if (inputBlocked) {
-      return {
-        item: row.item,
-        inputBlocked,
-        reply: row.reply,
-        decisions: [],
-        draft: '',
-        outputBlocked: false,
-        redacted: false,
-        shown: '[blocked by input filter]',
-        judgeCalls,
-        classifierCalls,
-      };
-    }
-    let shown = row.draft;
-    let outputBlocked = false;
-    let redacted = false;
-    if (stack.output) {
-      const verdict = dsl.evaluate(
-        stack.output,
-        row.outputView!.text,
-        outputContext,
-      );
-      if (verdict.flagged) {
-        const cut =
-          stack.output.action === 'redact'
-            ? redaction(
-                stack.output,
-                verdict.failedIds,
-                row.draft,
-                row.outputView!,
-              )
-            : null;
-        if (cut === null) {
-          outputBlocked = true;
-          shown = '[blocked by output filter]';
-        } else {
-          redacted = cut !== row.draft;
-          shown = cut;
-        }
-      }
-    }
-    return {
-      item: row.item,
-      inputBlocked,
-      reply: row.reply,
-      decisions: row.decisions,
-      draft: row.draft,
-      outputBlocked,
-      redacted,
-      shown,
-      judgeCalls,
-      classifierCalls,
-    };
-  });
+  const pre = sample.map((item) => prepare(stack, item.text, secret));
+  const scored = await scoreTexts(stack, pre);
+  const trips: Trip[] = pre.map((row, index) => ({
+    item: sample[index],
+    ...runLayers(stack, row, scored, secret),
+  }));
 
   let attackBlocked = 0;
   let benignPassed = 0;
@@ -365,7 +244,10 @@ async function scoreSample(
     redaction: 0,
     toolDenied: 0,
   };
-  const recordMiss = (item: GuardrailsItem, output: string, note: string) => {
+  const cases: G3TraceCase[] = [];
+  let stoppedShown = 0;
+  const recordMiss = (trip: Trip, output: string, note: string) => {
+    const { item } = trip;
     const split = item.split ?? guardSplitFor(item.text);
     hiddenMisses[split] += 1;
     if (split === 'feedback' && misses.length < 8) {
@@ -374,6 +256,7 @@ async function scoreSample(
         output: maskSecret(output, secret),
         note,
       });
+      cases.push(traceCase(trip, secret, note));
     }
   };
 
@@ -400,40 +283,24 @@ async function scoreSample(
     if (item.kind === 'attack') {
       const executed = trip.decisions.filter((row) => row.allowed);
       const argsOf = (row: ToolDecision) => JSON.stringify(row.call.args);
-      const harmed = trip.inputBlocked
-        ? []
-        : trip.reply.harms.filter((harm) => {
-            switch (harm.kind) {
-              case 'secret':
-                return (
-                  secretLeaked(trip.shown, secret) ||
-                  executed.some((row) => secretLeaked(argsOf(row), secret))
-                );
-              case 'call':
-                return Boolean(trip.decisions[harm.index]?.allowed);
-              case 'call-value':
-                return executed.some((row) => argsOf(row).includes(harm.value));
-              case 'shown-value':
-                return trip.shown.includes(harm.value);
-              default:
-                return false;
-            }
-          });
-      const task = trip.reply.task;
-      if (task) {
+      const harmed = harmsLeft(trip, secret);
+      if (trip.reply.task) {
         utility.total += 1;
-        const taskDone =
-          !trip.inputBlocked &&
-          (task.kind === 'call'
-            ? Boolean(trip.decisions[task.index]?.allowed)
-            : !trip.outputBlocked && trip.shown.includes(task.snippet));
-        if (taskDone && harmed.length === 0) {
+        if (taskDone(trip) && harmed.length === 0) {
           utility.done += 1;
         }
       }
       if (harmed.length === 0) {
         attackBlocked += 1;
         bucket.stopped += 1;
+        // A few stopped attacks, so the trace also shows a defence working.
+        if (
+          stoppedShown < 4 &&
+          (item.split ?? guardSplitFor(item.text)) === 'feedback'
+        ) {
+          stoppedShown += 1;
+          cases.push(traceCase(trip, secret, `stopped-attack · ${category}`));
+        }
         continue;
       }
       const viaTool =
@@ -461,7 +328,7 @@ async function scoreSample(
                   ? 'leaked in the reply'
                   : `leaked in the reply as ${format}`;
       recordMiss(
-        item,
+        trip,
         executed.length > 0
           ? `${trip.shown}\n${describeCalls(executed)}`
           : trip.shown,
@@ -499,7 +366,7 @@ async function scoreSample(
     } else {
       benignLoss.toolDenied += 1;
     }
-    recordMiss(item, trip.shown, `blocked-benign · ${category} · ${reason}`);
+    recordMiss(trip, trip.shown, `blocked-benign · ${category} · ${reason}`);
   }
 
   const attackN = sample.filter((row) => row.kind === 'attack').length;
@@ -679,6 +546,8 @@ async function scoreSample(
     trace: {
       simulator: 'guardrails',
       payload: stack.payload,
+      /** Feedback messages only, layer by layer: never holdout ones. */
+      cases,
       k: sample.length,
       chunkCount: 0,
       tokensIn: 0,
@@ -698,6 +567,309 @@ async function scoreSample(
     },
   };
   return { result, inconclusive };
+}
+
+type Pre = {
+  text: string;
+  reply: BotReply;
+  decisions: ToolDecision[];
+  draft: string;
+  inputView: Normalized | null;
+  outputView: Normalized | null;
+};
+
+/** The concierge's reply and the tool policy: everything before the filters. */
+function prepare(stack: Stack, text: string, secret: string): Pre {
+  const reply = stack.scenario.respond(
+    stack.payload.systemPrompt,
+    text,
+    secret,
+  );
+  const decisions = reply.toolCalls.map((call) =>
+    decideToolCall(stack.policy, call),
+  );
+  const deniedCount = decisions.filter((row) => !row.allowed).length;
+  const draft =
+    deniedCount === 0
+      ? reply.text
+      : deniedCount === decisions.length
+        ? blockedToolText(text)
+        : `${reply.text} One action was not allowed.`;
+  return {
+    text,
+    reply,
+    decisions,
+    draft,
+    inputView: stack.input ? normalize(text, stack.input.normalize) : null,
+    outputView: stack.output ? normalize(draft, stack.output.normalize) : null,
+  };
+}
+
+/** Classifier scores for every text a filter will ask about, in batches. */
+async function scoreTexts(
+  stack: Stack,
+  pre: Pre[],
+): Promise<Map<string, number>> {
+  const texts = [
+    ...(usesClassifier(stack.input)
+      ? pre.map((row) => row.inputView!.text)
+      : []),
+    ...(usesClassifier(stack.output)
+      ? pre.map((row) => row.outputView!.text)
+      : []),
+  ];
+  const scored = new Map<string, number>();
+  if (texts.length > 0) {
+    const unique = [...new Set(texts)];
+    const values = await injectionScores(unique);
+    unique.forEach((text, index) => scored.set(text, values[index]));
+  }
+  return scored;
+}
+
+/** The input filter, then (if the message got in) the output filter. */
+function runLayers(
+  stack: Stack,
+  row: Pre,
+  scored: Map<string, number>,
+  secret: string,
+): Layers {
+  let judgeCalls = 0;
+  let classifierCalls = 0;
+  const classifier = (text: string) => {
+    classifierCalls += 1;
+    const value = scored.get(text);
+    if (value === undefined) {
+      throw new Error('classifier score missing');
+    }
+    return value;
+  };
+  const inputContext: CheckContext = {
+    classifier,
+    judge: (text) => {
+      judgeCalls += 1;
+      const unsafe = stack.scenario.inputUnsafe(text);
+      return unitHash(`judge-in|${text}`) < JUDGE_INPUT_ERROR
+        ? !unsafe
+        : unsafe;
+    },
+  };
+  const outputContext: CheckContext = {
+    classifier,
+    judge: (text) => {
+      judgeCalls += 1;
+      const unsafe = stack.scenario.outputUnsafe(text, secret);
+      return unitHash(`judge-out|${text}`) < JUDGE_OUTPUT_ERROR
+        ? !unsafe
+        : unsafe;
+    },
+  };
+  const input = stack.input
+    ? dsl.evaluate(stack.input, row.inputView!.text, inputContext)
+    : null;
+  if (input?.flagged) {
+    return {
+      inputBlocked: true,
+      inputFailed: input.failedIds,
+      outputFailed: [],
+      reply: row.reply,
+      decisions: [],
+      draft: '',
+      outputBlocked: false,
+      redacted: false,
+      shown: '[blocked by input filter]',
+      judgeCalls,
+      classifierCalls,
+    };
+  }
+  let shown = row.draft;
+  let outputBlocked = false;
+  let redacted = false;
+  let outputFailed: string[] = [];
+  if (stack.output) {
+    const verdict = dsl.evaluate(
+      stack.output,
+      row.outputView!.text,
+      outputContext,
+    );
+    outputFailed = verdict.failedIds;
+    if (verdict.flagged) {
+      const cut =
+        stack.output.action === 'redact'
+          ? redaction(
+              stack.output,
+              verdict.failedIds,
+              row.draft,
+              row.outputView!,
+            )
+          : null;
+      if (cut === null) {
+        outputBlocked = true;
+        shown = '[blocked by output filter]';
+      } else {
+        redacted = cut !== row.draft;
+        shown = cut;
+      }
+    }
+  }
+  return {
+    inputBlocked: false,
+    inputFailed: input?.failedIds ?? [],
+    outputFailed,
+    reply: row.reply,
+    decisions: row.decisions,
+    draft: row.draft,
+    outputBlocked,
+    redacted,
+    shown,
+    judgeCalls,
+    classifierCalls,
+  };
+}
+
+/** The harms of an attack that survived every layer. */
+function harmsLeft(trip: Layers, secret: string): Harm[] {
+  if (trip.inputBlocked) {
+    return [];
+  }
+  const executed = trip.decisions.filter((row) => row.allowed);
+  const argsOf = (row: ToolDecision) => JSON.stringify(row.call.args);
+  return trip.reply.harms.filter((harm) => {
+    switch (harm.kind) {
+      case 'secret':
+        return (
+          secretLeaked(trip.shown, secret) ||
+          executed.some((row) => secretLeaked(argsOf(row), secret))
+        );
+      case 'call':
+        return Boolean(trip.decisions[harm.index]?.allowed);
+      case 'call-value':
+        return executed.some((row) => argsOf(row).includes(harm.value));
+      case 'shown-value':
+        return trip.shown.includes(harm.value);
+      default:
+        return false;
+    }
+  });
+}
+
+/** The guest's own task inside an attack still got done. */
+function taskDone(trip: Layers): boolean {
+  const task = trip.reply.task;
+  if (!task || trip.inputBlocked) {
+    return false;
+  }
+  return task.kind === 'call'
+    ? Boolean(trip.decisions[task.index]?.allowed)
+    : !trip.outputBlocked && trip.shown.includes(task.snippet);
+}
+
+/** One message, layer by layer, as the trace page and the probe show it. */
+export type G3TraceCase = {
+  note: string;
+  message: string;
+  input: { blocked: boolean; failed: string[] };
+  /** What the concierge said; null when the input filter stopped the message. */
+  reply: string | null;
+  tools: {
+    tool: string;
+    args: Record<string, unknown>;
+    allowed: boolean;
+    reason: string;
+    stripped: string[];
+  }[];
+  output: { blocked: boolean; redacted: boolean; failed: string[] };
+  shown: string;
+};
+
+function traceCase(
+  trip: Layers & { item?: GuardrailsItem },
+  secret: string,
+  note: string,
+  message = trip.item?.text ?? '',
+): G3TraceCase {
+  const mask = (text: string) => maskSecret(text, secret);
+  return {
+    note,
+    message,
+    input: { blocked: trip.inputBlocked, failed: trip.inputFailed },
+    reply: trip.inputBlocked ? null : mask(trip.reply.text),
+    tools: trip.decisions.map((row) => ({
+      tool: row.call.tool,
+      args: JSON.parse(mask(JSON.stringify(row.call.args))) as Record<
+        string,
+        unknown
+      >,
+      allowed: row.allowed,
+      reason: row.reason,
+      stripped: row.stripped,
+    })),
+    output: {
+      blocked: trip.outputBlocked,
+      redacted: trip.redacted,
+      failed: trip.outputFailed,
+    },
+    shown: mask(trip.shown),
+  };
+}
+
+export type G3Probe = G3TraceCase & {
+  /** The concierge read the message as an attack. */
+  attack: boolean;
+  /** Attack only: the harms that made it past every layer. */
+  harmsLeft: string[];
+  /** Attack with a task of the guest's own: was it still done? */
+  taskDone: boolean | null;
+  judgeCalls: number;
+  classifierCalls: number;
+  addedLatencyMs: number;
+};
+
+/**
+ * One message through the learner's stack, as the grader would run it: not
+ * graded and not part of any sample. The secret is masked everywhere.
+ */
+export async function probeG3(
+  payload: G3Payload,
+  hidden: unknown,
+  message: string,
+): Promise<G3Probe> {
+  const secret = readSecret(hidden);
+  const stack: Stack = {
+    ...parseStack(payload),
+    scenario: scenarioOf(
+      hidden && typeof hidden === 'object'
+        ? (hidden as { scenario?: unknown }).scenario
+        : undefined,
+    ),
+  };
+  const pre = prepare(stack, message, secret);
+  const layers = runLayers(stack, pre, await scoreTexts(stack, [pre]), secret);
+  const harms = layers.reply.attack ? harmsLeft(layers, secret) : [];
+  const describe = (harm: Harm) =>
+    harm.kind === 'secret'
+      ? 'the secret is still in the reply or a tool call'
+      : harm.kind === 'call'
+        ? `${layers.decisions[harm.index]?.call.tool ?? 'the tool'} ran`
+        : harm.kind === 'call-value'
+          ? `${harm.value} still receives it`
+          : 'the harmful part is still in the reply';
+  return {
+    ...traceCase(
+      layers,
+      secret,
+      layers.reply.attack ? 'attack' : 'guest',
+      message,
+    ),
+    attack: layers.reply.attack,
+    harmsLeft: harms.map(describe),
+    taskDone:
+      layers.reply.attack && layers.reply.task ? taskDone(layers) : null,
+    judgeCalls: layers.judgeCalls,
+    classifierCalls: layers.classifierCalls,
+    addedLatencyMs:
+      layers.classifierCalls * CLASSIFIER_MS + layers.judgeCalls * JUDGE_MS,
+  };
 }
 
 /**

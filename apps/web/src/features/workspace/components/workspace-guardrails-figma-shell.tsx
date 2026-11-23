@@ -20,6 +20,8 @@ import { GuardrailsG1ChatPanel } from "./guardrails-g1-chat-panel";
 import { GuardrailsLeftPanel } from "./guardrails-left-panel";
 import { GuardrailsG2Panel } from "./guardrails-g2-panel";
 import { GuardrailsG3Panel } from "./guardrails-g3-panel";
+import { workspaceApi } from "../workspace-api";
+import type { SubmissionHistoryItem } from "@/types/submission";
 import { GuardrailsWorkspaceChrome } from "./guardrails-workspace-chrome";
 import { RunPanel } from "./run-panel";
 import { WorkspaceSplit } from "./workspace-split";
@@ -80,6 +82,30 @@ export function WorkspaceGuardrailsFigmaShell({
   const [pageContent, setPageContent] = useState(() => g2SamplePage(exercise));
   const [g1WinsByLevel, setG1WinsByLevel] = useState<Record<number, G1LevelWin>>({});
   const [g1ShowDebrief, setG1ShowDebrief] = useState(false);
+  const [g3History, setG3History] = useState<SubmissionHistoryItem[] | null>(null);
+  // Reload the G3 run history on open and whenever a graded run lands.
+  const historyKey = `${run?.id ?? ""}:${grade ? "graded" : ""}`;
+  useEffect(() => {
+    if (variant !== "g3") {
+      return;
+    }
+    let cancelled = false;
+    workspaceApi
+      .listSubmissions(exercise.slug)
+      .then((rows) => {
+        if (!cancelled) {
+          setG3History(rows);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setG3History(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [variant, exercise.slug, historyKey]);
 
   const figmaBrief = useMemo(
     () =>
@@ -232,6 +258,7 @@ export function WorkspaceGuardrailsFigmaShell({
           initialValues={formDefaults}
           draftVersion={gradeAttempts + 1}
           historyCount={gradeAttempts}
+          history={g3History}
           onSubmit={handleGradeSubmit}
           onValidityChange={onValidityChange}
         />

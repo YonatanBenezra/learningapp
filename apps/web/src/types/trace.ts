@@ -71,5 +71,9 @@ export type RunTrace = {
   sandbox?: { durationMs?: number };
   gated?: boolean;
   message?: string;
+  /** Guardrails G1/G2: each level as it ran. */
+  levels?: unknown[];
+  /** Guardrails G3: some feedback messages, layer by layer. */
+  cases?: unknown[];
 };
 

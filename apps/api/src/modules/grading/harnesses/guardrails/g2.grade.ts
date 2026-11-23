@@ -58,6 +58,13 @@ export function gradeG2(
       tokensOut: 0,
       costEurMicros: 0,
       toolCalls: levels.flatMap((row) => row.tools),
+      levels: levels.map((row) => ({
+        level: row.level,
+        won: row.won,
+        denied: row.denied,
+        summary: row.summary,
+        tools: row.tools,
+      })),
       queries: publicItems
         .filter((item) => !isGuardCanary(item))
         .slice(0, 5)

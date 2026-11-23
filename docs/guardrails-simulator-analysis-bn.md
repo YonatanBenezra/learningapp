@@ -419,3 +419,18 @@ G3-এর hidden set এখন generator দিয়ে বানানো, প
 - Classifier page-এর ভেতরের injection প্রায় দেখে না (score ~০.০১), model card-এর BIPIA ফলের সাথে মেলে। `grd-014`-এ এটাই শেখানোর বিষয়।
 - `grd-015`, `022`, `023`, `024`-এর title বদলেছে (core-15 manifest-ও)। এগুলো `weekly-advanced-2`, `beta-ctf-0` আর `core-15-championship`-এ আছে, তাই contest চলার সময় deploy করলে ওই problem-গুলোর নাম আর grading বদলাবে।
 - নতুন defense exercise (topical rail ছাড়া বাকি OWASP বিষয়: moderation, unbounded consumption) এখনো যোগ হয়নি; সেটা catalog-এ নতুন exercise publish করার সিদ্ধান্ত।
+
+### Phase G-E-এর অবস্থা (২০২৬-১১-২৩)
+
+| কাজ | কোথায় | Finding | অবস্থা |
+|---|---|---|---|
+| G3 live probe: editor-এর stack (save না করলেও) দিয়ে একটা message চালানো, প্রতিটা স্তর কী করল দেখায় (input filter, concierge-এর উত্তর, প্রতিটা tool call: চলল/deny/কোন argument কাটা গেল, output filter, যা দেখানো হলো, attack টিকল কিনা)। Grade হয় না, প্রতি মিনিটে ৩০টা। Secret সব জায়গায় mask করা, pool কখনো বের হয় না | `POST /simulations/g3/probe`, Probe tab | U8 | ✅ |
+| Run history আর diff: আগের graded run-গুলো, যেকোনোটা বেছে আগেরটার সাথে তুলনা: কোন স্তর বদলেছে, প্রতিটা gate, প্রতিটা family। "Load this stack" দিয়ে পুরনো config editor-এ ফেরানো যায় | History tab, `submissions.service` | U8 | ✅ |
+| Guardrails trace page: আগে RAG-এর "Retrieval/Queries" দেখাত, সব ০। এখন G1-এ প্রতিটা level-এর উত্তর (code কখনো দেখায় না), G2-তে প্রতিটা level-এর tool call (to/cc/bcc) আর policy, G3-তে sample-এর কয়েকটা message স্তর ধরে ধরে (শুধু feedback অংশের; got through, guest আটকানো আর কয়েকটা আটকানো attack) | `trace.levels`, `trace.cases`, `guardrails-trace-view.tsx` | U8 | ✅ |
+| Grader-এর ভেতরের কাজ ভাগ করা (`prepare`, `runLayers`, `harmsLeft`, `taskDone`), যাতে probe আর trace grader-এর হুবহু একই পথে চলে | `g3.grade.ts` | | ✅ |
+| Accessibility: chat log `role="log"` আর `aria-live`, chat textarea, G2 page editor আর G3-এর প্রতিটা code editor-এর label, probe-এর ফল `aria-live` | web | Low | ✅ |
+| Phone width: ৬৪০px-এর নিচে tab, footer, metric আর step-গুলো ভাঁজ হয়; ৩৯০px-এ G1, G2, G3 কোনো page-এ horizontal scroll নেই | CSS | Low | ✅ |
+
+**যাচাই:** নতুন test: probe এক message স্তর ধরে চালায় আর secret দেখায় না; G3 trace-এর case-এ secret নেই আর কোনো holdout message নেই (content CI)। পুরো API suite-এ ১৫টা suite fail, সবই আগের। Web `tsc` পরিষ্কার, নতুন lint error নেই। Worker দিয়ে browser-এ: probe ("Attack got through", secret `[secret]`), দুটো submit-এর পর History diff ("Edited: output filter", encoded ৪/১৩ → ১২/১২), G3 trace (৭টা message), G1 আর G2 trace (level ধরে), আর ৩৯০px-এ তিনটা page।
+
+**আগে থেকেই আছে, এই phase-এ ধরিনি:** run/trace আর workspace page-এ React hydration warning (server আর client-এর HTML মেলে না), আর G3 editor-এ submit করার পরও "unsaved" দেখানো।

@@ -118,6 +118,12 @@ describe('Guardrails content: reference, near-miss, gates and leaks', () => {
             .map((row) => (row as { question?: string }).question ?? '')
             .filter((text) => guardSplitFor(text) === 'holdout');
           expect({ slug, holdoutShown }).toEqual({ slug, holdoutShown: [] });
+          // The per-case trace follows the same rule.
+          const traced = (
+            ((result as { trace?: { cases?: { message: string }[] } }).trace
+              ?.cases ?? []) as { message: string }[]
+          ).filter((row) => guardSplitFor(row.message) === 'holdout');
+          expect({ slug, traced }).toEqual({ slug, traced: [] });
         }
       }
     }

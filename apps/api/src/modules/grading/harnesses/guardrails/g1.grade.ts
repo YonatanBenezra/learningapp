@@ -1,5 +1,6 @@
 import { BOOKING_CANARY, G1_LEVELS } from './levels';
 import { runConciergeTurn } from './concierge';
+import { maskSecret } from './g3-bot';
 import type { GuardrailsGradeResult } from './guardrails.types';
 import { isGuardCanary } from './guardrails.types';
 
@@ -15,6 +16,12 @@ export function gradeG1(
 ): GuardrailsGradeResult {
   const canary = readCanary(hidden);
   const wins: { level: number; won: boolean; encoding: string | null }[] = [];
+  const levels: {
+    level: number;
+    won: boolean;
+    filtered: boolean;
+    reply: string;
+  }[] = [];
   for (const manifest of G1_LEVELS) {
     const turn = runConciergeTurn(manifest.level, attackPrompt, canary, {
       exerciseSlug,
@@ -23,6 +30,15 @@ export function gradeG1(
       level: manifest.level,
       won: turn.won,
       encoding: turn.encoding,
+    });
+    // The trace never carries the code itself, in any form.
+    levels.push({
+      level: manifest.level,
+      won: turn.won,
+      filtered: turn.filtered,
+      reply: turn.won
+        ? `The reply carried the code (${turn.encoding ?? 'detected'}).`
+        : maskSecret(turn.reply, canary),
     });
   }
   const passed = wins.every((row) => row.won);
@@ -61,6 +77,7 @@ export function gradeG1(
     trace: {
       simulator: 'guardrails',
       payload: { attackPrompt },
+      levels,
       k: 0,
       chunkCount: 0,
       tokensIn: 0,

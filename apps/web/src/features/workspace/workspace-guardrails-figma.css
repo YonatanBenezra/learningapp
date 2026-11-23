@@ -3001,3 +3001,43 @@
   font-style: normal;
   color: var(--lp-muted);
 }
+
+/* —— Phase G-E: phone widths —— */
+@media (max-width: 640px) {
+  .lp-ws--grd-figma {
+    height: auto;
+    max-height: none;
+  }
+
+  .lp-grd-g3-workspace-tabs,
+  .lp-grd-g2-tabs,
+  .lp-grd-g2-url-row,
+  .lp-grd-g3-foot,
+  .lp-grd-g2-foot,
+  .lp-grd-chat-foot,
+  .lp-grd-all-levels,
+  .lp-grd-all-levels-result {
+    flex-wrap: wrap;
+  }
+
+  .lp-grd-g2-url-bar span {
+    overflow-wrap: anywhere;
+  }
+
+  .lp-grd-mode,
+  .lp-grd-g3-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-grd-step {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-grd-step code {
+    grid-column: 1;
+  }
+
+  .lp-grd-history-head {
+    flex-direction: column;
+  }
+}
