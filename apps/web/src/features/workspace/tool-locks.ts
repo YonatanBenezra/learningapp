@@ -1,21 +1,32 @@
-import type { ExerciseTool, ExerciseTools } from "@/types/tools";
+import type { ExerciseTool, ExerciseTools, ToolStage } from "@/types/tools";
 
 /** What a practice workspace needs to grey out tools the learner lacks. */
 export type ToolLocks = {
   cost: number;
   tools: ExerciseTool[];
+  /** Staged levels inside this exercise; empty for most. */
+  stages: ToolStage[];
   /** Unlock a tool early for rating points. */
   onUnlock?: (toolId: string) => Promise<void>;
+  /** Read the tools again, e.g. after a staged level was won. */
+  onRefresh?: () => void;
 };
 
 export function toolLocksFrom(
   data: ExerciseTools | null,
   onUnlock?: (toolId: string) => Promise<void>,
+  onRefresh?: () => void,
 ): ToolLocks | null {
   if (!data || !data.track || data.tools.length === 0) {
     return null;
   }
-  return { cost: data.cost, tools: data.tools, onUnlock };
+  return {
+    cost: data.cost,
+    tools: data.tools,
+    stages: data.stages ?? [],
+    onUnlock,
+    onRefresh,
+  };
 }
 
 /** The tool that sets a field, if any. */

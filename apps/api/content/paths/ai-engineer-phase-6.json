@@ -1,13 +1,12 @@
 {
   "slug": "ai-engineer-phase-6",
   "title": "Phase 6 — Production capstones",
-  "intent": "Multi-hop retrieval, poisoned corpora, eval regression gates, spend abuse, and control mapping.",
+  "intent": "Your own retriever in Python, and an injection classifier calibrated at scale.",
   "sortOrder": 6,
   "steps": [
+    "rag-009-python-retriever",
     "rag-024-query-fit",
     "rag-023-span-match",
-    "rag-008-spend-cap",
-    "rag-022-score-gate",
-    "grd-015-benign-pass"
+    "grd-014-wilson-gate"
   ]
 }

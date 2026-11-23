@@ -8,6 +8,7 @@ import type { AuthenticatedUser } from '../../../common/types/authenticated-user
 import { G1TurnDto } from './dto/g1-turn.dto';
 import { G2PageDto } from './dto/g2-page.dto';
 import { G3ProbeDto } from './dto/g3-probe.dto';
+import { G3StageCheckDto } from './dto/g3-stage-check.dto';
 import { SimulationsService } from './simulations.service';
 
 const MINUTE = 60_000;
@@ -38,6 +39,16 @@ export class SimulationsController {
   @RateLimit({ bucket: 'guard-sim-g3', max: 30, windowMs: MINUTE })
   g3Probe(@CurrentUser() _user: AuthenticatedUser, @Body() dto: G3ProbeDto) {
     return this.simulationsService.g3Probe(dto);
+  }
+
+  /** A staged G3 level: every message through the stack; a win opens the next layer. */
+  @Post('g3/stage-check')
+  @RateLimit({ bucket: 'guard-sim-g3-stage', max: 20, windowMs: MINUTE })
+  g3StageCheck(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: G3StageCheckDto,
+  ) {
+    return this.simulationsService.g3StageCheck(user.id, dto);
   }
 
   /** The exercise's three levels and what defends each, as the workspace shows them. */

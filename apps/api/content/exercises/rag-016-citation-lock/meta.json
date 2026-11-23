@@ -5,7 +5,7 @@
   "simulator": "rag",
   "title": "Send the Sentence, Not the Page",
   "difficulty": "H",
-  "catalogPhase": 5,
+  "catalogPhase": 4,
   "corpusFile": "parcel-help",
   "skills": [
     {
@@ -17,7 +17,7 @@
       "name": "Cost engineering"
     }
   ],
-  "briefMd": "# Phase 5 · Send the Sentence, Not the Page\n\nThe parcel company's help pages give one page per service, with five facts: price, weight limit, delivery time, size limit and insurance (\"A large parcel costs 18 euros to send.\"). For half the services there are also one or two news pages that repeat the service's name and the questions people ask, without answering any of them. Those pages rank close to the real page, often above it. For the other half, the real page is a clear first.\n\nRetrieval ranks whole pages, and ranking them whole is what finds the right one. But a question needs one fact and a page holds five, so a few whole pages cost more than the budget.\n\nYou control **top-k** and **compression** (`compressSentences`): after retrieval, each page keeps only that many sentences, the ones that share the most words with the question, in their original order. 0 sends pages whole. Retrieval is BM25, and every page is one chunk.\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 120 on the hidden set.\n",
+  "briefMd": "# Phase 4 · Send the Sentence, Not the Page\n\nThe parcel company's help pages give one page per service, with five facts: price, weight limit, delivery time, size limit and insurance (\"A large parcel costs 18 euros to send.\"). For half the services there are also one or two news pages that repeat the service's name and the questions people ask, without answering any of them. Those pages rank close to the real page, often above it. For the other half, the real page is a clear first.\n\nRetrieval ranks whole pages, and ranking them whole is what finds the right one. But a question needs one fact and a page holds five, so a few whole pages cost more than the budget.\n\nYou control **top-k** and **compression** (`compressSentences`): after retrieval, each page keeps only that many sentences, the ones that share the most words with the question, in their original order. 0 sends pages whole. Retrieval is BM25, and every page is one chunk.\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 120 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

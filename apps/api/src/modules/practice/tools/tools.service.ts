@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import { g3StagesFor } from '../../grading/harnesses/guardrails/g3-stages';
 import {
   ALL_TOOLS,
   lockedToolsIn,
@@ -37,6 +38,8 @@ export type ToolView = {
   features: string[];
   /** The exercise that teaches it. */
   teachesIn: ExerciseRef;
+  /** The staged level of that exercise that opens it, if any. */
+  level: number | null;
 };
 
 export type LadderTool = ToolView & {
@@ -75,12 +78,29 @@ const ATTACK_TRACKS: { id: 'g1' | 'g2'; title: string; field: string }[] = [
 
 const ATTACK_LEVELS = 3;
 
-export type ExerciseTool = ToolView & { state: ToolState };
+export type ExerciseTool = ToolView & {
+  state: ToolState;
+  /** How a locked tool opens here, when it is not "solve another exercise". */
+  lockNote: string | null;
+};
+
+export type StageView = {
+  level: number;
+  title: string;
+  goal: string;
+  teaches: string;
+  unlocks: string | null;
+  cases: { id: string; kind: 'attack' | 'guest'; text: string }[];
+  /** done once the tool it unlocks is held; the first open one is current. */
+  state: 'done' | 'current' | 'locked';
+};
 
 export type ExerciseTools = {
   track: ToolTrack | null;
   cost: number;
   tools: ExerciseTool[];
+  /** Staged levels inside this exercise (G3 grd-013); empty elsewhere. */
+  stages: StageView[];
 };
 
 @Injectable()
@@ -169,7 +189,7 @@ export class ToolsService {
     const exercise = await this.published(slug);
     const track = trackOf(exercise);
     if (!track) {
-      return { track: null, cost: TOOL_UNLOCK_POINTS, tools: [] };
+      return { track: null, cost: TOOL_UNLOCK_POINTS, tools: [], stages: [] };
     }
     const [held, titles] = await Promise.all([
       this.unlocked(userId),
@@ -179,11 +199,60 @@ export class ToolsService {
     return {
       track,
       cost: TOOL_UNLOCK_POINTS,
-      tools: toolsShownIn(exercise).map((tool) => ({
-        ...view(tool, titles),
-        state: toolStateIn(tool, slug, ids),
-      })),
+      tools: toolsShownIn(exercise).map((tool) => {
+        const state = toolStateIn(tool, slug, ids);
+        return {
+          ...view(tool, titles),
+          state,
+          lockNote:
+            state === 'locked' && tool.teachesIn === slug && tool.level
+              ? `Win level ${tool.level - 1} above to unlock it.`
+              : null,
+        };
+      }),
+      stages: stageViews(slug, ids),
     };
+  }
+
+  /**
+   * A staged level was won: open the tool it unlocks. Returns the tool's id
+   * when it was not held before, otherwise null.
+   */
+  async grantLevel(userId: string, toolId: string): Promise<string | null> {
+    if (!toolById(toolId)) {
+      return null;
+    }
+    const held = await this.unlocked(userId);
+    if (held.has(toolId)) {
+      return null;
+    }
+    try {
+      await this.prisma.toolUnlock.create({
+        data: { userId, toolId, source: 'level', points: 0 },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        return null;
+      }
+      throw error;
+    }
+    return toolId;
+  }
+
+  /** assertPracticePayload for a published exercise named by its slug. */
+  async assertPracticePayloadFor(
+    userId: string,
+    slug: string,
+    payload: Record<string, unknown>,
+  ): Promise<void> {
+    await this.assertPracticePayload(
+      userId,
+      await this.published(slug),
+      payload,
+    );
   }
 
   /** Unlock a tool early for rating points. Holding it already is a no-op. */
@@ -354,6 +423,27 @@ function levelsWon(metrics: unknown): number {
     : 0;
 }
 
+/** The exercise's staged levels and how far this learner got. */
+function stageViews(slug: string, held: ReadonlySet<string>): StageView[] {
+  let open = true;
+  return g3StagesFor(slug).map((stage) => {
+    const done = stage.unlocks !== null && held.has(stage.unlocks);
+    const state = done ? 'done' : open ? 'current' : 'locked';
+    if (!done) {
+      open = false;
+    }
+    return {
+      level: stage.level,
+      title: stage.title,
+      goal: stage.goal,
+      teaches: stage.teaches,
+      unlocks: stage.unlocks,
+      cases: stage.cases.map(({ id, kind, text }) => ({ id, kind, text })),
+      state,
+    };
+  });
+}
+
 function view(tool: ToolDef, titles: Map<string, string>): ToolView {
   return {
     id: tool.id,
@@ -366,6 +456,7 @@ function view(tool: ToolDef, titles: Map<string, string>): ToolView {
       slug: tool.teachesIn,
       title: titles.get(tool.teachesIn) ?? tool.teachesIn,
     },
+    level: tool.level ?? null,
   };
 }
 

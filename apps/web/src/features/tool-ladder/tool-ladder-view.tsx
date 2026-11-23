@@ -53,6 +53,7 @@ function LadderStep({
           <Link href={routes.exercise(tool.teachesIn.slug)} className="lp-link">
             {tool.teachesIn.title}
           </Link>
+          {tool.level ? `, level ${tool.level}` : ""}
         </p>
         {isNext ? (
           // Only the next tool offers its actions here; a later one can be

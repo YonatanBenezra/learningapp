@@ -13,10 +13,16 @@ import "./tool-unlock-card.css";
  * with what each does and the next tool on the ladder.
  */
 export function ToolUnlockCard({
+  currentSlug,
+  stage = null,
   tools,
   tracks,
   onClose,
 }: {
+  /** The exercise open now: a next tool taught here is a level, not a trip. */
+  currentSlug?: string;
+  /** A staged level of this exercise still to play: that comes next. */
+  stage?: { level: number; title: string } | null;
   tools: LadderTool[];
   tracks: ToolTrack[];
   onClose: () => void;
@@ -36,6 +42,7 @@ export function ToolUnlockCard({
   const track = tracks.find((row) => row.tools.some((tool) => tool.id === tools[0]?.id));
   const next = track?.tools.find((tool) => !tool.unlocked) ?? null;
   const held = track ? track.tools.filter((tool) => tool.unlocked).length : 0;
+  const nextHere = stage !== null || (next !== null && next.teachesIn.slug === currentSlug);
 
   return createPortal(
     <div className="lp-unlock-backdrop" onClick={onClose}>
@@ -71,7 +78,16 @@ export function ToolUnlockCard({
             {track.title}: <strong>{held}</strong> of {track.tools.length} tools
           </p>
         ) : null}
-        {next ? (
+        {stage ? (
+          <p className="lp-unlock-next">
+            Next: <strong>level {stage.level}, {stage.title}</strong>, in this exercise.
+          </p>
+        ) : next && nextHere ? (
+          <p className="lp-unlock-next">
+            Next on the ladder: <strong>{next.title}</strong>
+            {next.level ? `, level ${next.level} of this exercise` : ", in this exercise"}.
+          </p>
+        ) : next ? (
           <p className="lp-unlock-next">
             Next on the ladder: <strong>{next.title}</strong>, taught in {next.teachesIn.title}.
           </p>
@@ -79,7 +95,7 @@ export function ToolUnlockCard({
           <p className="lp-unlock-next">You hold every tool on this ladder.</p>
         ) : null}
         <div className="lp-unlock-actions">
-          {next ? (
+          {next && !nextHere ? (
             <Link
               ref={(node) => {
                 primaryRef.current = node;
@@ -104,7 +120,7 @@ export function ToolUnlockCard({
           <Link href={routes.dashboardTools} className="lp-unlock-secondary">
             See all your tools
           </Link>
-          {next ? (
+          {next && !nextHere ? (
             <button type="button" className="lp-unlock-secondary" onClick={onClose}>
               Keep working
             </button>

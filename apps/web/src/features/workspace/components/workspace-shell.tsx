@@ -98,6 +98,8 @@ export function WorkspaceShell({
   const [unlockMoment, setUnlockMoment] = useState<{
     tools: LadderTool[];
     tracks: ToolTrack[];
+    /** A staged level of this exercise still open after the win. */
+    stage: { level: number; title: string } | null;
   } | null>(null);
   const closeUnlockMoment = useCallback(() => setUnlockMoment(null), []);
   // Bumped after an early unlock so the tools are read again.
@@ -106,9 +108,11 @@ export function WorkspaceShell({
     await toolsApi.unlock(toolId);
     setToolsVersion((version) => version + 1);
   }, []);
+  const refreshTools = useCallback(() => setToolsVersion((version) => version + 1), []);
   const toolLocks = useMemo(
-    () => toolLocksFrom(tools?.slug === slug ? tools.data : null, unlockTool),
-    [tools, slug, unlockTool],
+    () =>
+      toolLocksFrom(tools?.slug === slug ? tools.data : null, unlockTool, refreshTools),
+    [tools, slug, unlockTool, refreshTools],
   );
   const [authAllowed, setAuthAllowed] = useState<boolean | null>(() =>
     getAuthSnapshot().status === "authenticated" ? true : null,
@@ -243,7 +247,12 @@ export function WorkspaceShell({
             (tool) => tool.unlocked && tool.via !== "bought" && !before.has(tool.id),
           );
         if (earned.length > 0) {
-          setUnlockMoment({ tools: earned, tracks: ladders.tracks });
+          const open = data.stages.find((stage) => stage.state === "current");
+          setUnlockMoment({
+            tools: earned,
+            tracks: ladders.tracks,
+            stage: open ? { level: open.level, title: open.title } : null,
+          });
         }
       })
       .catch(() => undefined);
@@ -254,6 +263,8 @@ export function WorkspaceShell({
 
   const unlockCard = unlockMoment ? (
     <ToolUnlockCard
+      currentSlug={slug}
+      stage={unlockMoment.stage}
       tools={unlockMoment.tools}
       tracks={unlockMoment.tracks}
       onClose={closeUnlockMoment}

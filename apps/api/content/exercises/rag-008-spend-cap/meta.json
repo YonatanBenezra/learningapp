@@ -5,7 +5,7 @@
   "simulator": "rag",
   "title": "Current Policies Only",
   "difficulty": "M",
-  "catalogPhase": 6,
+  "catalogPhase": 5,
   "corpusFile": "policy-history",
   "skills": [
     {
@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 6 · Current Policies Only\n\nThe policy wiki never deletes anything. Every policy keeps its old versions, and some have an unapproved draft for next year. They read almost the same: only the number that changed differs. Staff get answers from 2024, or from a draft that was never approved.\n\nEvery document carries metadata: `family` (which policy), `version`, `status` (`current`, `superseded` or `draft`) and `effective` date. The Corpus tab shows it.\n\nYou control a **status filter** (`none`, `exclude-superseded`, `current-only`), **where it runs** (`pre`: filter the index, then take the top k; `post`: take the top k, then drop what fails the filter) and **topK**. Retrieval is BM25 over whole documents, and every chunk that survives the filter is sent to the model.\n\nA question counts as stale when its context also holds another version of the same policy: two numbers that disagree.\n\n**Gates:** recall@k ≥ 0.90, stale context rate ≤ 0.05, and mean prompt tokens ≤ 120 on the hidden set.\n",
+  "briefMd": "# Phase 5 · Current Policies Only\n\nThe policy wiki never deletes anything. Every policy keeps its old versions, and some have an unapproved draft for next year. They read almost the same: only the number that changed differs. Staff get answers from 2024, or from a draft that was never approved.\n\nEvery document carries metadata: `family` (which policy), `version`, `status` (`current`, `superseded` or `draft`) and `effective` date. The Corpus tab shows it.\n\nYou control a **status filter** (`none`, `exclude-superseded`, `current-only`), **where it runs** (`pre`: filter the index, then take the top k; `post`: take the top k, then drop what fails the filter) and **topK**. Retrieval is BM25 over whole documents, and every chunk that survives the filter is sent to the model.\n\nA question counts as stale when its context also holds another version of the same policy: two numbers that disagree.\n\n**Gates:** recall@k ≥ 0.90, stale context rate ≤ 0.05, and mean prompt tokens ≤ 120 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

@@ -109,7 +109,12 @@ describe('tool ladders', () => {
       if (!payload) {
         continue;
       }
-      const taught = new Set(toolsTaughtBy(meta.slug).map((tool) => tool.id));
+      // Tools taught on a staged level above 1 are won on the way there.
+      const taught = new Set(
+        toolsTaughtBy(meta.slug)
+          .filter((tool) => (tool.level ?? 1) <= 1)
+          .map((tool) => tool.id),
+      );
       const held = new Set(
         toolsUsedBy(meta)
           .map((tool) => tool.id)
@@ -126,6 +131,26 @@ describe('tool ladders', () => {
     for (const meta of onLadder) {
       expect(lockedToolsIn(meta, defaults(meta), new Set())).toEqual([]);
     }
+  });
+
+  it('opens a staged tool in its own exercise only once its level is won', () => {
+    const filter = TOOL_LADDERS.g3.find(
+      (tool) => tool.id === 'g3-output-filter',
+    )!;
+    const prompt = TOOL_LADDERS.g3.find(
+      (tool) => tool.id === 'g3-system-prompt',
+    )!;
+    expect(toolStateIn(prompt, 'grd-013-filter-stack', new Set())).toBe('new');
+    expect(toolStateIn(filter, 'grd-013-filter-stack', new Set())).toBe(
+      'locked',
+    );
+    expect(
+      toolStateIn(
+        filter,
+        'grd-013-filter-stack',
+        new Set(['g3-output-filter']),
+      ),
+    ).toBe('new');
   });
 
   it('rejects a locked RAG control changed from its default', () => {

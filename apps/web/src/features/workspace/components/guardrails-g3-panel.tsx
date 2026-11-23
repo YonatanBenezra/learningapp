@@ -27,6 +27,7 @@ import {
   type ToolLocks,
 } from "../tool-locks";
 import { ToolGroupHead } from "./tool-lock";
+import { GuardrailsG3Stages } from "./guardrails-g3-stages";
 import { cn } from "@/lib/utils";
 import type { ExerciseTool } from "@/types/tools";
 
@@ -172,10 +173,13 @@ export function GuardrailsG3Panel({
     () => lockedDefaults(toolLocks, exercise.submissionSchema),
     [toolLocks, exercise.submissionSchema],
   );
-  const defaults = useMemo(
-    () => ({ ...g3StarterDefaults(initialValues), ...held }),
-    [exercise.slug, exercise.submissionSchema, initialValues, held],
+  // The starter resets the editor only when the exercise or its starter
+  // changes, never when a tool opens (that would wipe the learner's stack).
+  const starter = useMemo(
+    () => g3StarterDefaults(initialValues),
+    [exercise.slug, exercise.submissionSchema, initialValues],
   );
+  const defaults = useMemo(() => ({ ...starter, ...held }), [starter, held]);
   const [rawValues, setValues] = useState<Record<string, unknown>>(() =>
     g3StarterDefaults(initialValues),
   );
@@ -193,8 +197,8 @@ export function GuardrailsG3Panel({
   const [workspaceTab, setWorkspaceTab] = useState<"stack" | "probe" | "history">("stack");
 
   useEffect(() => {
-    setValues(defaults);
-  }, [defaults]);
+    setValues(starter);
+  }, [starter]);
 
   const validation = useMemo(
     () => validateSubmission(schemaWithoutLocked(parsed, held), values),
@@ -284,6 +288,20 @@ export function GuardrailsG3Panel({
       ) : (
         <form className="lp-grd-g3-form lp-grd-g3-form--stack" onSubmit={handleSubmit}>
           <div className="lp-grd-g3-stack-scroll">
+            {toolLocks && toolLocks.stages.length > 0 ? (
+              <GuardrailsG3Stages
+                exerciseSlug={exercise.slug}
+                stages={toolLocks.stages}
+                stack={{
+                  systemPrompt: String(values.systemPrompt ?? ""),
+                  inputFilterYaml: String(values.inputFilterYaml ?? ""),
+                  outputFilterYaml: String(values.outputFilterYaml ?? ""),
+                  toolPolicyYaml: String(values.toolPolicyYaml ?? ""),
+                }}
+                disabled={editorDisabled || lockedInUse.length > 0}
+                onWon={toolLocks.onRefresh}
+              />
+            ) : null}
             {STACK_FIELDS.map((key) => {
               const meta = G3_FIELD_META[key];
               const raw = typeof values[key] === "string" ? (values[key] as string) : "";
@@ -346,7 +364,7 @@ export function GuardrailsG3Panel({
               type="button"
               className="lp-grd-g3-reset-link"
               disabled={disabled}
-              onClick={() => setValues(defaults)}
+              onClick={() => setValues(starter)}
             >
               <RotateCcw className="size-3.5" aria-hidden />
               Reset to starter

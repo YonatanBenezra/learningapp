@@ -97,7 +97,9 @@ export function ToolGroupHead({
         {locked ? <em className="lp-tool-badge is-locked">Locked</em> : null}
       </span>
       <span className="lp-tool-blurb">
-        {locked ? (
+        {locked && tool.lockNote ? (
+          tool.lockNote
+        ) : locked ? (
           <>
             Unlocks after{" "}
             <Link href={routes.exercise(tool.teachesIn.slug)} className="lp-link">

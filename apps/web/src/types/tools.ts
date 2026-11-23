@@ -12,9 +12,28 @@ export type ToolSummary = {
   features: string[];
   /** The exercise that teaches it. */
   teachesIn: { slug: string; title: string };
+  /** The staged level of that exercise that opens it, if any. */
+  level: number | null;
 };
 
-export type ExerciseTool = ToolSummary & { state: ToolState };
+export type ExerciseTool = ToolSummary & {
+  state: ToolState;
+  /** How a locked tool opens here, when it is not "solve another exercise". */
+  lockNote: string | null;
+};
+
+/** A staged level inside an exercise (G3 grd-013). */
+export type ToolStage = {
+  level: number;
+  title: string;
+  goal: string;
+  /** The tool this level teaches. */
+  teaches: string;
+  /** The tool winning it unlocks; null on the last level. */
+  unlocks: string | null;
+  cases: { id: string; kind: "attack" | "guest"; text: string }[];
+  state: "done" | "current" | "locked";
+};
 
 /** The tools an exercise's practice workspace shows. */
 export type ExerciseTools = {
@@ -22,6 +41,8 @@ export type ExerciseTools = {
   /** Rating points to unlock a tool early. */
   cost: number;
   tools: ExerciseTool[];
+  /** Staged levels inside this exercise; empty for most exercises. */
+  stages: ToolStage[];
 };
 
 export type LadderTool = ToolSummary & {

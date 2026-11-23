@@ -5,7 +5,7 @@
   "simulator": "rag",
   "title": "Pack the Context",
   "difficulty": "M",
-  "catalogPhase": 6,
+  "catalogPhase": 5,
   "corpusFile": "team-wiki",
   "skills": [
     {
@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 6 · Pack the Context\n\nEvery team copied the engineering handbooks into its own wiki space and changed a word or two. A search now returns five near-identical copies of a handbook before the one page that actually answers, and the copies fill the context budget before the answer gets in.\n\nRetrieval is BM25 over whole pages. The context is then **packed**: duplicates are dropped, and the remaining pages are added in rank order while they fit the token budget. You control **topK** (how many pages the search returns), **dedupe** (`none`, `exact`: identical text only, or `near`: pages whose words overlap enough) and **dedupeThreshold** (for `near`: the share of distinct words two pages must have in common to count as copies).\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 130 on the hidden set. The budget is also the packing limit: pages that do not fit are left out.\n",
+  "briefMd": "# Phase 5 · Pack the Context\n\nEvery team copied the engineering handbooks into its own wiki space and changed a word or two. A search now returns five near-identical copies of a handbook before the one page that actually answers, and the copies fill the context budget before the answer gets in.\n\nRetrieval is BM25 over whole pages. The context is then **packed**: duplicates are dropped, and the remaining pages are added in rank order while they fit the token budget. You control **topK** (how many pages the search returns), **dedupe** (`none`, `exact`: identical text only, or `near`: pages whose words overlap enough) and **dedupeThreshold** (for `near`: the share of distinct words two pages must have in common to count as copies).\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 130 on the hidden set. The budget is also the packing limit: pages that do not fit are left out.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,

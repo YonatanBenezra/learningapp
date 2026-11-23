@@ -1,6 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ToolsService } from '../tools/tools.service';
+import {
+  checkG3Stage,
+  g3StagesFor,
+} from '../../grading/harnesses/guardrails/g3-stages';
 import { graderArchetypeOf } from '../../../content/archetype-registry';
 import { exercisesRoot } from '../../../content/content-paths';
 import { g1Profile } from '../../grading/harnesses/guardrails/g1-profiles';
@@ -12,6 +17,8 @@ import { runIndirectAgent } from '../../grading/harnesses/guardrails/indirect-ag
 
 @Injectable()
 export class SimulationsService {
+  constructor(private readonly tools: ToolsService) {}
+
   g1Turn(dto: { level: number; message: string; exerciseSlug?: string }) {
     const level = Math.min(3, Math.max(1, dto.level));
     return runConciergeTurn(level, dto.message, undefined, {
@@ -38,6 +45,10 @@ export class SimulationsService {
       sim.userRequest,
       payload.exerciseSlug,
     );
+  }
+
+  g3StageCheck(userId: string, dto: Parameters<typeof runG3StageCheck>[2]) {
+    return runG3StageCheck(this.tools, userId, dto);
   }
 
   /** G1/G2: the exercise's levels; empty for anything else. */
@@ -86,6 +97,57 @@ export class SimulationsService {
       );
     }
   }
+}
+
+/**
+ * A staged G3 level: its messages through the learner's stack. Winning it
+ * opens the next layer in practice; it never touches the grade.
+ */
+export async function runG3StageCheck(
+  tools: ToolsService,
+  userId: string,
+  dto: {
+    exerciseSlug: string;
+    level: number;
+    systemPrompt: string;
+    inputFilterYaml: string;
+    outputFilterYaml: string;
+    toolPolicyYaml?: string;
+  },
+) {
+  const stage = g3StagesFor(dto.exerciseSlug).find(
+    (row) => row.level === dto.level,
+  );
+  if (!stage) {
+    throw new BadRequestException('This exercise has no such level');
+  }
+  const payload = {
+    systemPrompt: dto.systemPrompt,
+    inputFilterYaml: dto.inputFilterYaml,
+    outputFilterYaml: dto.outputFilterYaml,
+    toolPolicyYaml: dto.toolPolicyYaml ?? '',
+  };
+  await tools.assertPracticePayloadFor(userId, dto.exerciseSlug, payload);
+  const hidden = await scenarioOf(dto.exerciseSlug);
+  let check;
+  try {
+    check = await checkG3Stage(payload, hidden, stage);
+  } catch (error) {
+    throw new BadRequestException(
+      error instanceof Error ? error.message : 'Could not run the level',
+    );
+  }
+  // A win means the learner holds this level's layer and opens the next.
+  const unlocked: string[] = [];
+  if (check.passed) {
+    for (const toolId of [stage.teaches, stage.unlocks]) {
+      const granted = toolId ? await tools.grantLevel(userId, toolId) : null;
+      if (granted) {
+        unlocked.push(granted);
+      }
+    }
+  }
+  return { ...check, unlocked };
 }
 
 const scenarios = new Map<string, { scenario?: unknown; secret?: unknown }>();

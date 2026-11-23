@@ -36,6 +36,11 @@ export type ToolDef = {
   features: DslFeature[];
   /** The exercise that teaches it. */
   teachesIn: string;
+  /**
+   * The staged level of that exercise that opens it (see g3-stages). A
+   * level above 1 is locked there until the level before it is won.
+   */
+  level?: number;
 };
 
 /** Rating points a tool costs when it is unlocked before it is earned. */
@@ -169,6 +174,7 @@ const G3: Omit<ToolDef, 'track' | 'step'>[] = [
     fields: ['systemPrompt'],
     features: [],
     teachesIn: G3_FIRST,
+    level: 1,
   },
   {
     id: 'g3-output-filter',
@@ -177,6 +183,7 @@ const G3: Omit<ToolDef, 'track' | 'step'>[] = [
     fields: ['outputFilterYaml'],
     features: [],
     teachesIn: G3_FIRST,
+    level: 2,
   },
   {
     id: 'g3-normalize',
@@ -186,6 +193,7 @@ const G3: Omit<ToolDef, 'track' | 'step'>[] = [
     fields: [],
     features: ['normalize'],
     teachesIn: G3_FIRST,
+    level: 3,
   },
   {
     id: 'g3-tool-policy',
@@ -194,6 +202,7 @@ const G3: Omit<ToolDef, 'track' | 'step'>[] = [
     fields: ['toolPolicyYaml'],
     features: [],
     teachesIn: G3_FIRST,
+    level: 4,
   },
   {
     id: 'g3-input-judge',
@@ -375,14 +384,17 @@ export function toolsUsedBy(exercise: LadderExercise): ToolDef[] {
 
 export type ToolState = 'new' | 'unlocked' | 'locked';
 
-/** One tool as an exercise's workspace sees it. */
+/**
+ * One tool as an exercise's workspace sees it: new where it is taught (once
+ * its staged level is open), otherwise held or locked.
+ */
 export function toolStateIn(
   tool: ToolDef,
   slug: string,
   unlocked: ReadonlySet<string>,
 ): ToolState {
   if (tool.teachesIn === slug) {
-    return 'new';
+    return (tool.level ?? 1) <= 1 || unlocked.has(tool.id) ? 'new' : 'locked';
   }
   return unlocked.has(tool.id) ? 'unlocked' : 'locked';
 }

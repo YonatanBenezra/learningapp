@@ -48,6 +48,21 @@ export type G3Stack = {
   toolPolicyYaml?: string;
 };
 
+export type G3StageCheck = {
+  level: number;
+  passed: boolean;
+  results: {
+    id: string;
+    kind: "attack" | "guest";
+    message: string;
+    ok: boolean;
+    why: string | null;
+    shown: string;
+  }[];
+  /** Tools this win opened that were not held before. */
+  unlocked: string[];
+};
+
 export const simulationsApi = {
   g1Turn: (exerciseSlug: string, level: number, message: string) =>
     apiClient<G1Turn>("/simulations/g1/turns", {
@@ -65,6 +80,13 @@ export const simulationsApi = {
     apiClient<G3Probe>("/simulations/g3/probe", {
       method: "POST",
       body: JSON.stringify({ exerciseSlug, message, ...stack }),
+    }),
+
+  /** A staged G3 level: its messages through the stack; a win opens the next layer. */
+  g3StageCheck: (exerciseSlug: string, level: number, stack: G3Stack) =>
+    apiClient<G3StageCheck>("/simulations/g3/stage-check", {
+      method: "POST",
+      body: JSON.stringify({ exerciseSlug, level, ...stack }),
     }),
 
   /** The exercise's three levels and what defends each (G1/G2). */

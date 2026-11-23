@@ -6,7 +6,7 @@
   "graderArchetype": "rag-sandbox",
   "title": "Write the Paragraph Retriever",
   "difficulty": "H",
-  "catalogPhase": 5,
+  "catalogPhase": 6,
   "skills": [
     {
       "slug": "retrieval-quality",
@@ -17,7 +17,7 @@
       "name": "Sandbox execution"
     }
   ],
-  "briefMd": "# Phase 5 · Write the Paragraph Retriever\n\nThe office services guide gives every service one paragraph. The first sentence names the service; the sentences after it only say \"it\" (\"The fee is 25 euros a month.\"), and every service has the same kinds of fact. Write the retriever in Python.\n\nYour program reads `input.json` (in the same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` holds the corpus (`id`, `title`, `text` for every document) and the questions to answer. Gold answers are not in the sandbox. Return up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Joined or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget.\n\nA fact sentence on its own looks like forty others, and whole pages (five services each) cost too much.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 160, and every passage comes from the corpus.\n",
+  "briefMd": "# Phase 6 · Write the Paragraph Retriever\n\nThe office services guide gives every service one paragraph. The first sentence names the service; the sentences after it only say \"it\" (\"The fee is 25 euros a month.\"), and every service has the same kinds of fact. Write the retriever in Python.\n\nYour program reads `input.json` (in the same directory as `main.py`) and prints JSON:\n\n```json\n{ \"results\": [ { \"id\": \"h01\", \"passages\": [\"...\"] } ] }\n```\n\n`input.json` holds the corpus (`id`, `title`, `text` for every document) and the questions to answer. Gold answers are not in the sandbox. Return up to 5 passages per question.\n\n**Passage rules.** Each passage must be a contiguous span of **one** corpus document (case and punctuation are ignored when matching). Joined or invented text does not count and fails the `passages_from_corpus` gate. Everything you return is billed to the context budget.\n\nA fact sentence on its own looks like forty others, and whole pages (five services each) cost too much.\n\n**Gates:** recall@5 ≥ 0.90, mean context tokens ≤ 160, and every passage comes from the corpus.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
