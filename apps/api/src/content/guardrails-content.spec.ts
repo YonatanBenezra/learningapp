@@ -101,11 +101,16 @@ describe('Guardrails content: reference, near-miss, gates and leaks', () => {
               (row) => row.output ?? '',
             ),
           );
-          const secret = (hidden as { secret?: string }).secret ?? '';
-          expect({ slug, secretShown: secretLeaked(outputs, secret) }).toEqual({
-            slug,
-            secretShown: false,
-          });
+          const secret = (hidden as { secret?: string }).secret;
+          if (secret) {
+            expect({
+              slug,
+              secretShown: secretLeaked(outputs, secret),
+            }).toEqual({
+              slug,
+              secretShown: false,
+            });
+          }
           const rows: unknown[] = Array.isArray(shownResult.failingCases)
             ? shownResult.failingCases
             : [];
@@ -118,7 +123,7 @@ describe('Guardrails content: reference, near-miss, gates and leaks', () => {
     }
   }, 300_000);
 
-  it('G3: no single layer is enough', async () => {
+  it('G3 secret scenario: no single layer is enough', async () => {
     const published = new Set(loadPublishedSlugs());
     const bundles = (await loadAllExerciseBundles()).filter(
       (bundle) =>
@@ -130,7 +135,10 @@ describe('Guardrails content: reference, near-miss, gates and leaks', () => {
       const slug = bundle.meta.slug;
       const hidden = JSON.parse(
         await readFile(path.join(bundle.dir, 'eval_hidden.json'), 'utf8'),
-      ) as { secret?: string };
+      ) as { secret?: string; scenario?: string };
+      if (hidden.scenario !== 'secret') {
+        continue;
+      }
       // Each exercise has its own secret, kept in the hidden file only.
       expect({
         slug,
@@ -197,4 +205,112 @@ describe('Guardrails content: reference, near-miss, gates and leaks', () => {
       }
     }
   }, 300_000);
+
+  it('G3: each exercise needs its own defence', async () => {
+    const published = new Set(loadPublishedSlugs());
+    const bundles = (await loadAllExerciseBundles()).filter(
+      (bundle) =>
+        published.has(bundle.meta.slug) &&
+        bundle.meta.graderArchetype === 'guard-g3',
+    );
+    const hiddenOf = new Map<string, { scenario?: string }>();
+    for (const bundle of bundles) {
+      hiddenOf.set(
+        bundle.meta.slug,
+        JSON.parse(
+          await readFile(path.join(bundle.dir, 'eval_hidden.json'), 'utf8'),
+        ) as { scenario?: string },
+      );
+    }
+    const payloadOf = (raw: unknown) => {
+      const row = raw as Record<string, string>;
+      return {
+        systemPrompt: row.systemPrompt ?? '',
+        inputFilterYaml: row.inputFilterYaml ?? '',
+        outputFilterYaml: row.outputFilterYaml ?? '',
+        toolPolicyYaml: row.toolPolicyYaml,
+      };
+    };
+    // Shortcuts that look reasonable for a scenario but miss its point.
+    const shortcuts: Record<
+      string,
+      (
+        ref: ReturnType<typeof payloadOf>,
+      ) => Record<string, ReturnType<typeof payloadOf>>
+    > = {
+      'fee-waiver': (ref) => ({
+        'classifier alone at 0.5, no judge band': {
+          ...ref,
+          inputFilterYaml: ref.inputFilterYaml.replace(
+            '    judge_from: 0.05\n',
+            '',
+          ),
+        },
+        'no exception for known guest phrasing': {
+          ...ref,
+          inputFilterYaml: ref.inputFilterYaml.replace(
+            /\n {4}when: not_matches\n {4}when_pattern: 'I meant[^\n]*/,
+            '',
+          ),
+        },
+        'deny the waiver tool': {
+          ...ref,
+          toolPolicyYaml: 'version: 1\ntools:\n  waive_fee: deny\n',
+        },
+      }),
+      'off-topic': (ref) => ({
+        'judge every message': {
+          ...ref,
+          inputFilterYaml:
+            'version: 1\nassertions:\n  - id: j\n    check: judge\n',
+        },
+      }),
+      'email-args': (ref) => ({
+        'recipient allowlist': {
+          ...ref,
+          toolPolicyYaml:
+            "version: 1\ndefault: deny\ntools:\n  book_room: allow\n  update_booking: allow\n  send_email:\n    recipients: ['*@hotel.test']\n",
+        },
+        'no tool policy': { ...ref, toolPolicyYaml: '' },
+      }),
+      links: (ref) => ({
+        'no output filter': { ...ref, outputFilterYaml: '' },
+      }),
+      pii: (ref) => ({
+        'redact every email and phone': {
+          ...ref,
+          outputFilterYaml:
+            "version: 1\naction: redact\nassertions:\n  - id: e\n    check: not_matches\n    pattern: '[a-z.]+@[a-z.]+'\n  - id: p\n    check: not_matches\n    pattern: '\\+[0-9 ]{9,}'\n",
+        },
+      }),
+    };
+    for (const bundle of bundles) {
+      const slug = bundle.meta.slug;
+      const hidden = hiddenOf.get(slug)!;
+      const ref = payloadOf(bundle.reference);
+      for (const [name, payload] of Object.entries(
+        shortcuts[hidden.scenario ?? '']?.(ref) ?? {},
+      )) {
+        const result = await gradeG3(payload, hidden);
+        expect({ slug, name, verdict: result.verdict }).toEqual({
+          slug,
+          name,
+          verdict: 'fail',
+        });
+      }
+      // No other exercise's reference passes this one.
+      for (const other of bundles.filter((b) => b.meta.slug !== slug)) {
+        const result = await gradeG3(payloadOf(other.reference), hidden);
+        expect({
+          slug,
+          reference: other.meta.slug,
+          verdict: result.verdict,
+        }).not.toEqual({
+          slug,
+          reference: other.meta.slug,
+          verdict: 'pass',
+        });
+      }
+    }
+  }, 600_000);
 });

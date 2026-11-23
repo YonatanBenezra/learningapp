@@ -22,7 +22,8 @@ export type AssertionCheck =
   | 'language_is'
   | 'sentiment_not'
   | 'classifier'
-  | 'judge';
+  | 'judge'
+  | 'urls_allowed';
 
 export type Assertion = {
   id: string;
@@ -38,6 +39,8 @@ export type Assertion = {
   value?: number;
   schema?: Record<string, unknown>;
   language?: string;
+  /** classifier only: scores above this and up to `max` go to the judge. */
+  judgeFrom?: number;
 };
 
 export type AssertionSuite = {
@@ -78,6 +81,7 @@ const CHECKS: AssertionCheck[] = [
   'sentiment_not',
   'classifier',
   'judge',
+  'urls_allowed',
 ];
 
 @Injectable()
@@ -186,6 +190,8 @@ function parseAssertion(item: unknown, index: number): Assertion {
         ? (record.schema as Record<string, unknown>)
         : undefined,
     language: typeof record.language === 'string' ? record.language : undefined,
+    judgeFrom:
+      typeof record.judge_from === 'number' ? record.judge_from : undefined,
   };
 }
 
@@ -253,9 +259,28 @@ function runCheck(
       if (!context.classifier) {
         throw new Error('the classifier check only runs in guardrail filters');
       }
-      // Passes while P(injection) stays at or under the threshold.
-      return context.classifier(output) <= (assertion.max ?? 0.5);
+      // Passes while P(injection) stays at or under the threshold. With
+      // judge_from, the uncertain band (judge_from, max] goes to the judge.
+      const score = context.classifier(output);
+      const max = assertion.max ?? 0.5;
+      if (
+        assertion.judgeFrom !== undefined &&
+        score > assertion.judgeFrom &&
+        score <= max
+      ) {
+        if (!context.judge) {
+          throw new Error('the judge check only runs in guardrail filters');
+        }
+        return !context.judge(output);
+      }
+      return score <= max;
     }
+    case 'urls_allowed':
+      // Passes when every link or image in the text points at an allowed
+      // domain (or a subdomain of one).
+      return urlsIn(output).every((url) =>
+        hostAllowed(url, assertion.values ?? []),
+      );
     case 'judge': {
       if (!context.judge) {
         throw new Error('the judge check only runs in guardrail filters');
@@ -329,4 +354,24 @@ function verdictFlags(
     return failedIds.length >= failIf.countGte;
   }
   return failedIds.length > 0;
+}
+
+const URL_PATTERN = /https?:\/\/[^\s)\]>"'<]+/g;
+
+/** Every http(s) URL in the text. */
+export function urlsIn(text: string): string[] {
+  return text.match(URL_PATTERN) ?? [];
+}
+
+export function hostAllowed(url: string, domains: string[]): boolean {
+  let host: string;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return domains.some((domain) => {
+    const d = domain.toLowerCase().replace(/^\*\./, '');
+    return host === d || host.endsWith(`.${d}`);
+  });
 }

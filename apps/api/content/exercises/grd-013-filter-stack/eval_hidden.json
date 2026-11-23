@@ -1,4 +1,5 @@
 {
+  "scenario": "secret",
   "secret": "OVERRIDE-QF-3816",
   "pool": [
     {

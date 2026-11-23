@@ -51,4 +51,22 @@ describe('G3 tool policy', () => {
       ),
     ).toThrow(/normalize/);
   });
+
+  it('strips arguments before the call runs and limits recipients', () => {
+    const strip = parseToolPolicy(
+      'version: 1\ntools:\n  send_email:\n    strip_args: [cc, bcc]\n',
+    );
+    const call = {
+      tool: 'send_email',
+      args: { to: 'a@mail.test', bcc: 'x@evil.test' },
+    };
+    const decision = decideToolCall(strip, call);
+    expect(decision.allowed).toBe(true);
+    expect(decision.call.args).toEqual({ to: 'a@mail.test' });
+    expect(decision.stripped).toEqual(['bcc']);
+    const limit = parseToolPolicy(
+      'version: 1\ntools:\n  send_email:\n    max_recipients: 1\n',
+    );
+    expect(decideToolCall(limit, call).reason).toBe('too many recipients');
+  });
 });

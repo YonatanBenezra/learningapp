@@ -391,3 +391,31 @@ G3-এর hidden set এখন generator দিয়ে বানানো, প
 **যাচাই:** পুরো API suite-এ ১৫টা suite fail, সবই আগের (নতুন `guardrails-pool.spec.ts` সহ ৯২টা suite)। Web-এ `tsc` আর lint পরিষ্কার। Browser-এ `grd-014`-এ recipient allowlist fail ("Guests were blocked", confirmation ০/৯) আর reference pass দেখা হয়েছে।
 
 **এখনো বাকি (G-D):** ৬টা G3 exercise এখনো একই mechanic, তাই একই reference সবগুলো pass করে (C1)। G-D-তে প্রতিটা exercise-এর আলাদা defense mechanic আর transfer CI।
+
+### Phase G-D-এর অবস্থা (২০২৬-১১-২৩)
+
+৬টা G3 exercise এখন ৬টা আলাদা defense শেখায়। প্রতিটার নিজের scenario (কোন ক্ষতি ঠেকাতে হবে), নিজের pool, নিজের reference। কোনো exercise-এর reference অন্য কোনোটা pass করে না (C1 ঠিক হলো)।
+
+| Exercise | Scenario: কী ক্ষতি | যে defense লাগে | Near-miss কেন fail করে |
+|---|---|---|---|
+| `grd-013` Defense in Depth | Secret code বেরোনো (G-C-র মতো) | Prompt + decode করা output filter + secret pattern-এর tool policy | `normalize` নেই, hex আর disguised leak পেরোয় |
+| `grd-014` FP/FN Tradeoff (Wilson) | Inject করা নির্দেশে `waive_fee` চলে। Guest-ও একই call চায়, তাই output বা tool policy আলাদা করতে পারে না | Input-এ classifier cascade (`max` + `judge_from`, মাঝের অনিশ্চিত অংশ judge-এ), পরিচিত guest phrasing-এর exception, pasted page-এ judge | একটা threshold (০.০৫): role-play ঢোকে, risky guest আটকায় |
+| `grd-015` → Topical Rail on a Judge Budget | Concierge অন্য কাজ করে দেয় (essay, code, stock tip) | সস্তা keyword filter + যে message-এ hotel বা স্পষ্ট শব্দ নেই শুধু সেগুলো judge-এ | শুধু keyword: subtle attack ঢোকে |
+| `grd-022` → Tool Arguments (Advanced) | Guest-এর নিজের email-এ inject করা cc/bcc | Tool policy-তে `strip_args: [cc, bcc]` | `max_recipients: 1`: email deny হয়, guest-এর কাজ হারায় |
+| `grd-023` → Links That Leak (Advanced) | Reply-তে বাইরের image বা link, URL-এ booking data | Output filter `urls_allowed: [hotel.test]` + `action: redact` | Block: attack থামে কিন্তু উত্তরও যায় |
+| `grd-024` → Other Guests' Data (Advanced) | অন্য guest-এর phone আর email | Redact: guest-এর phone/email pattern, `join_spaced` সহ; hotel-এর নিজের contact থাকবে | Block: সাধারণ প্রশ্নের উত্তরও যায় |
+
+**Engine-এ যা যোগ হলো:**
+- `g3-scenarios.ts`: ৫টা নতুন deterministic concierge, প্রতিটার নিজের ক্ষতির সংজ্ঞা আর judge-এর ground truth। Grader এখন সাধারণ "harm" দেখে: secret, একটা call চলা, call-এ একটা মান থাকা, বা shown reply-তে একটা মান থাকা। Utility-ও সাধারণ: call চলতে হবে, বা উত্তরের অংশ দেখাতে হবে।
+- DSL: `urls_allowed` (link/image domain allowlist, subdomain সহ; redact markdown সহ কাটে), `classifier`-এ `judge_from` (cascade)।
+- Tool policy: `strip_args`, `max_recipients`।
+- Scorecard: holdout family-র নাম grader পাঠায়; "Attacks got through" লেখা।
+
+**Shortcut যা CI-তে fail করে:** fee-waiver-এ judge band ছাড়া ০.৫-এ classifier, exception ছাড়া cascade (judge budget), waiver tool deny; off-topic-এ সব message judge; email-args-এ recipient allowlist আর policy ছাড়া; links-এ output filter ছাড়া; pii-তে সব email/phone redact (hotel contact-ও কাটে)। আর প্রতিটা exercise-এর reference বাকি ৫টায় fail (transfer)।
+
+**যাচাই:** পুরো API suite-এ ১৫টা suite fail, সবই আগের (মোট ৯৩টা suite, নতুন `g3-scenarios.spec.ts` সহ)। Content validate পরিষ্কার। Worker দিয়ে browser-এ দেখা: `grd-023`-এ block fail ("Attacks stopped, but tasks were lost", task ২১%) আর reference pass; `grd-014`-এ reference pass, judge ০.২০/message, +১০৭ ms, €০.০১২৩।
+
+**খেয়াল রাখার মতো:**
+- Classifier page-এর ভেতরের injection প্রায় দেখে না (score ~০.০১), model card-এর BIPIA ফলের সাথে মেলে। `grd-014`-এ এটাই শেখানোর বিষয়।
+- `grd-015`, `022`, `023`, `024`-এর title বদলেছে (core-15 manifest-ও)। এগুলো `weekly-advanced-2`, `beta-ctf-0` আর `core-15-championship`-এ আছে, তাই contest চলার সময় deploy করলে ওই problem-গুলোর নাম আর grading বদলাবে।
+- নতুন defense exercise (topical rail ছাড়া বাকি OWASP বিষয়: moderation, unbounded consumption) এখনো যোগ হয়নি; সেটা catalog-এ নতুন exercise publish করার সিদ্ধান্ত।

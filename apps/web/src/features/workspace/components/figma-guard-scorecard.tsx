@@ -6,8 +6,6 @@ import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
 
 const FILTER_TOKEN_BUDGET = 600;
-/** G3 attack families kept only in the holdout split: counted, never shown. */
-const HOLDOUT_FAMILIES = new Set(["role-play", "disguised-output"]);
 
 /** What a G1/G2 level that held tells the learner, by the grader's note. */
 const HELD_REASON: Record<string, string> = {
@@ -43,7 +41,7 @@ function breakdown(grade: Grade): string[] {
       leaks.reply ? `${leaks.reply} in the reply` : null,
       leaks.tool ? `${leaks.tool} by a tool call that ran` : null,
     ].filter(Boolean);
-    lines.push(`Secret got out: ${parts.join(", ")}`);
+    lines.push(`Attacks got through: ${parts.join(", ")}`);
   }
   const loss = grade.scorecard?.benignLoss as G3BenignLoss | undefined;
   if (loss) {
@@ -193,6 +191,11 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
   const addedLatency = metricValue(grade, "added_latency_ms");
   const addedCost = metricValue(grade, "added_cost_eur");
   const brokeDown = breakdown(grade);
+  const holdoutFamilies = new Set(
+    Array.isArray(grade.scorecard?.holdoutFamilies)
+      ? (grade.scorecard.holdoutFamilies as string[])
+      : [],
+  );
   const g2Levels = g2LevelSummary(grade);
   const levelsWonMetric = metricValue(grade, "levels_won");
   const levelsWonTotal =
@@ -388,7 +391,7 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
               <li key={family}>
                 <span>
                   {family}
-                  {HOLDOUT_FAMILIES.has(family) ? (
+                  {holdoutFamilies.has(family) ? (
                     <em className="lp-grd-family-holdout"> · never shown</em>
                   ) : null}
                 </span>

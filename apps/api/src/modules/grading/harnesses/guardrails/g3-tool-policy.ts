@@ -19,6 +19,8 @@ import {
  *       recipients: ['*@hotel.test']      # every to/cc/bcc must match one
  *       normalize: [decode_hex]
  *       args_must_not_match: ['OVERRIDE']
+ *       strip_args: [cc, bcc]     # removed before the call runs
+ *       max_recipients: 1         # to + cc + bcc after stripping
  *
  * An empty policy runs every tool call, like an agent with no policy.
  */
@@ -33,6 +35,8 @@ type ToolRule =
       recipients: string[] | null;
       normalize: NormalizeStep[];
       mustNotMatch: string[];
+      strip: string[];
+      maxRecipients: number | null;
     };
 
 export type ToolPolicy = {
@@ -41,9 +45,12 @@ export type ToolPolicy = {
 };
 
 export type ToolDecision = {
+  /** The call as it runs (after strip_args), or as it was asked for if denied. */
   call: ToolCall;
   allowed: boolean;
   reason: string;
+  /** Arguments that had a value and were removed by strip_args. */
+  stripped: string[];
 };
 
 const OPEN: ToolPolicy = { default: 'allow', tools: {} };
@@ -100,12 +107,21 @@ function parseRule(name: string, rule: unknown): ToolRule {
   if (bad) {
     throw new Error(`tool ${name}: unknown normalize step ${bad}`);
   }
+  const max = record.max_recipients;
+  if (
+    max != null &&
+    (typeof max !== 'number' || max < 1 || !Number.isInteger(max))
+  ) {
+    throw new Error(`tool ${name}: max_recipients must be a whole number ≥ 1`);
+  }
   return {
     kind: 'check',
     recipients:
       record.recipients == null ? null : list(record.recipients, 'recipients'),
     normalize: steps as NormalizeStep[],
     mustNotMatch,
+    strip: list(record.strip_args, 'strip_args'),
+    maxRecipients: typeof max === 'number' ? max : null,
   };
 }
 
@@ -138,21 +154,47 @@ export function decideToolCall(
     kind: policy.default,
   };
   if (rule.kind === 'allow') {
-    return { call, allowed: true, reason: 'allowed' };
+    return { call, allowed: true, reason: 'allowed', stripped: [] };
   }
   if (rule.kind === 'deny') {
     return {
       call,
       allowed: false,
       reason: policy.tools[call.tool] ? 'tool denied' : 'tool not listed',
+      stripped: [],
     };
+  }
+  const stripped = rule.strip.filter((key) => {
+    const value = call.args[key];
+    return (
+      value != null &&
+      value !== '' &&
+      !(Array.isArray(value) && value.length === 0)
+    );
+  });
+  if (rule.strip.length > 0) {
+    const args = { ...call.args };
+    rule.strip.forEach((key) => delete args[key]);
+    call = { ...call, args };
+  }
+  const deny = (reason: string): ToolDecision => ({
+    call,
+    allowed: false,
+    reason,
+    stripped,
+  });
+  if (
+    rule.maxRecipients !== null &&
+    recipientsOf(call.args).length > rule.maxRecipients
+  ) {
+    return deny('too many recipients');
   }
   if (rule.recipients) {
     const outside = recipientsOf(call.args).find(
       (address) => !rule.recipients!.some((glob) => globMatch(glob, address)),
     );
     if (outside) {
-      return { call, allowed: false, reason: `recipient not allowed` };
+      return deny('recipient not allowed');
     }
   }
   if (rule.mustNotMatch.length > 0) {
@@ -165,12 +207,8 @@ export function decideToolCall(
       rule.normalize,
     ).text;
     if (rule.mustNotMatch.some((pattern) => compileRe2(pattern).test(text))) {
-      return {
-        call,
-        allowed: false,
-        reason: 'arguments matched a blocked pattern',
-      };
+      return deny('arguments matched a blocked pattern');
     }
   }
-  return { call, allowed: true, reason: 'passed checks' };
+  return { call, allowed: true, reason: 'passed checks', stripped };
 }

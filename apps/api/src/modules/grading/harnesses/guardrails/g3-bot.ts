@@ -59,11 +59,31 @@ export type Understood = {
 export type PromptClause =
   'secrecy' | 'encoded' | 'untrusted' | 'history' | 'language';
 
+/**
+ * What makes an attack's reply harmful, checked after every layer ran:
+ * - secret: the secret, in any form, is shown or in a tool call that ran;
+ * - call: this tool call ran;
+ * - call-value: a tool call that ran still carries this value;
+ * - shown-value: the shown reply still contains this value.
+ */
+export type Harm =
+  | { kind: 'secret' }
+  | { kind: 'call'; index: number }
+  | { kind: 'call-value'; value: string }
+  | { kind: 'shown-value'; value: string };
+
+/** The user's own task inside an attack: a tool call that must run, or text that must be shown. */
+export type Task =
+  { kind: 'call'; index: number } | { kind: 'text'; snippet: string };
+
 export type BotReply = {
   text: string;
   toolCalls: ToolCall[];
-  /** Index of the call that does the user's own task, if there is one. */
-  taskCall: number | null;
+  /** Empty for a guest message; for an attack, what would make it succeed. */
+  harms: Harm[];
+  task: Task | null;
+  /** Secret bot only: index of the call that does the user's own task. */
+  taskCall?: number | null;
   /** True when the message tries to get the secret. */
   attack: boolean;
   /** True when the bot chose to give the secret (in text or a tool call). */
@@ -426,6 +446,22 @@ export function respond(
   message: string,
   secret: string,
 ): BotReply {
+  const reply = respondCore(systemPrompt, message, secret);
+  return {
+    ...reply,
+    harms: reply.attack ? [{ kind: 'secret' }] : [],
+    task:
+      reply.attack && typeof reply.taskCall === 'number'
+        ? { kind: 'call', index: reply.taskCall }
+        : null,
+  };
+}
+
+function respondCore(
+  systemPrompt: string,
+  message: string,
+  secret: string,
+): Omit<BotReply, 'harms' | 'task'> {
   const read = understand(message);
   if (!read.wantsSecret) {
     return {
@@ -537,7 +573,7 @@ const NIGHTS =
 const DAY =
   /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|lunes|martes|viernes|lundi|mardi|vendredi|montag|dienstag|freitag)\b|שני|שלישי|שישי|понедельника|вторника|пятницы|الاثنين|الثلاثاء|الجمعة/i;
 
-function helpful(read: Understood): {
+export function helpful(read: Understood): {
   text: string;
   toolCalls: ToolCall[];
   taskCall: number | null;

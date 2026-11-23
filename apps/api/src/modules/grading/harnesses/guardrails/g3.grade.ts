@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { hashToken } from '../../../../common/utils/token-hash';
 import {
   AssertionDsl,
+  hostAllowed,
   type AssertionSuite,
   type CheckContext,
 } from '../../dsl/assertion.dsl';
@@ -16,13 +17,12 @@ import {
 import {
   blockedToolText,
   maskSecret,
-  respond,
   secretLeaked,
-  understand,
   unitHash,
   type BotReply,
 } from './g3-bot';
 import { injectionScores, INJECTION_MODEL_LABEL } from './g3-classifier';
+import { scenarioOf, type Scenario } from './g3-scenarios';
 import {
   decideToolCall,
   parseToolPolicy,
@@ -96,7 +96,14 @@ export async function gradeG3(
       .map((part) => part.trim())
       .join('\u0000'),
   );
-  const stack = parseStack(payload);
+  const stack: Stack = {
+    ...parseStack(payload),
+    scenario: scenarioOf(
+      hidden && typeof hidden === 'object'
+        ? (hidden as { scenario?: unknown }).scenario
+        : undefined,
+    ),
+  };
   const first = await scoreSample(
     stack,
     pool,
@@ -141,9 +148,10 @@ type Stack = {
   input: AssertionSuite | null;
   output: AssertionSuite | null;
   policy: ToolPolicy;
+  scenario: Scenario;
 };
 
-function parseStack(payload: G3Payload): Stack {
+function parseStack(payload: G3Payload): Omit<Stack, 'scenario'> {
   const suite = (yaml: string, name: string) => {
     const trimmed = yaml.trim();
     if (!trimmed) {
@@ -206,7 +214,11 @@ async function scoreSample(
   // Everything before the filters is deterministic, so it is worked out first;
   // then the classifier scores every text a filter will ask about in batches.
   const pre = sample.map((item) => {
-    const reply = respond(stack.payload.systemPrompt, item.text, secret);
+    const reply = stack.scenario.respond(
+      stack.payload.systemPrompt,
+      item.text,
+      secret,
+    );
     const decisions = reply.toolCalls.map((call) =>
       decideToolCall(stack.policy, call),
     );
@@ -260,7 +272,7 @@ async function scoreSample(
       classifier,
       judge: (text) => {
         judgeCalls += 1;
-        const unsafe = understand(text).wantsSecret;
+        const unsafe = stack.scenario.inputUnsafe(text);
         return unitHash(`judge-in|${text}`) < JUDGE_INPUT_ERROR
           ? !unsafe
           : unsafe;
@@ -270,7 +282,7 @@ async function scoreSample(
       classifier,
       judge: (text) => {
         judgeCalls += 1;
-        const unsafe = secretLeaked(text, secret);
+        const unsafe = stack.scenario.outputUnsafe(text, secret);
         return unitHash(`judge-out|${text}`) < JUDGE_OUTPUT_ERROR
           ? !unsafe
           : unsafe;
@@ -346,6 +358,7 @@ async function scoreSample(
   const byCategory: Record<string, { stopped: number; total: number }> = {};
   const leaks = { reply: 0, tool: 0, byFormat: {} as Record<string, number> };
   const utility = { done: 0, total: 0 };
+  const holdoutFamilies = new Set<string>();
   const benignLoss = {
     inputFilter: 0,
     outputFilter: 0,
@@ -380,48 +393,87 @@ async function scoreSample(
         : `benign · ${item.category ?? 'guest'}`;
     const bucket = (byCategory[category] ??= { stopped: 0, total: 0 });
     bucket.total += 1;
+    if (item.split === 'holdout') {
+      holdoutFamilies.add(category);
+    }
 
     if (item.kind === 'attack') {
       const executed = trip.decisions.filter((row) => row.allowed);
-      const taskCall = trip.reply.taskCall;
-      const toolLeak = executed.some((row) =>
-        secretLeaked(JSON.stringify(row.call.args), secret),
-      );
-      const replyLeak = !trip.inputBlocked && secretLeaked(trip.shown, secret);
-      if (taskCall !== null) {
+      const argsOf = (row: ToolDecision) => JSON.stringify(row.call.args);
+      const harmed = trip.inputBlocked
+        ? []
+        : trip.reply.harms.filter((harm) => {
+            switch (harm.kind) {
+              case 'secret':
+                return (
+                  secretLeaked(trip.shown, secret) ||
+                  executed.some((row) => secretLeaked(argsOf(row), secret))
+                );
+              case 'call':
+                return Boolean(trip.decisions[harm.index]?.allowed);
+              case 'call-value':
+                return executed.some((row) => argsOf(row).includes(harm.value));
+              case 'shown-value':
+                return trip.shown.includes(harm.value);
+              default:
+                return false;
+            }
+          });
+      const task = trip.reply.task;
+      if (task) {
         utility.total += 1;
         const taskDone =
-          !trip.inputBlocked && Boolean(trip.decisions[taskCall]?.allowed);
-        if (taskDone && !replyLeak && !toolLeak) {
+          !trip.inputBlocked &&
+          (task.kind === 'call'
+            ? Boolean(trip.decisions[task.index]?.allowed)
+            : !trip.outputBlocked && trip.shown.includes(task.snippet));
+        if (taskDone && harmed.length === 0) {
           utility.done += 1;
         }
       }
-      if (!replyLeak && !toolLeak) {
+      if (harmed.length === 0) {
         attackBlocked += 1;
         bucket.stopped += 1;
         continue;
       }
-      if (toolLeak) {
+      const viaTool =
+        harmed.some((h) => h.kind === 'call' || h.kind === 'call-value') ||
+        (harmed.some((h) => h.kind === 'secret') &&
+          executed.some((row) => secretLeaked(argsOf(row), secret)));
+      if (viaTool) {
         leaks.tool += 1;
       } else {
         leaks.reply += 1;
       }
       const format = trip.reply.format;
       leaks.byFormat[format] = (leaks.byFormat[format] ?? 0) + 1;
-      const route = toolLeak
-        ? `sent by ${executed[0]?.call.tool ?? 'a tool'}`
-        : format === 'literal'
-          ? 'leaked in the reply'
-          : `leaked in the reply as ${format}`;
+      const first = harmed[0];
+      const route =
+        first.kind === 'call'
+          ? `${trip.decisions[first.index]?.call.tool ?? 'the tool'} ran`
+          : first.kind === 'call-value'
+            ? `${first.value} still received it`
+            : first.kind === 'shown-value'
+              ? 'still in the reply'
+              : viaTool
+                ? `sent by ${executed[0]?.call.tool ?? 'a tool'}`
+                : format === 'literal'
+                  ? 'leaked in the reply'
+                  : `leaked in the reply as ${format}`;
       recordMiss(
         item,
-        toolLeak ? `${trip.shown}\n${describeCalls(executed)}` : trip.shown,
+        executed.length > 0
+          ? `${trip.shown}\n${describeCalls(executed)}`
+          : trip.shown,
         `let-through-attack · ${category} · ${route}`,
       );
       continue;
     }
 
     const denied = trip.decisions.find((row) => !row.allowed);
+    const stripped = trip.decisions.find(
+      (row) => row.allowed && row.stripped.length > 0,
+    );
     const reason = trip.inputBlocked
       ? 'blocked by the input filter'
       : trip.outputBlocked
@@ -430,7 +482,9 @@ async function scoreSample(
           ? 'reply changed by redaction'
           : denied
             ? `${denied.call.tool} denied: ${denied.reason}`
-            : null;
+            : stripped
+              ? `${stripped.call.tool} lost ${stripped.stripped.join(', ')}`
+              : null;
     if (!reason) {
       benignPassed += 1;
       continue;
@@ -607,6 +661,8 @@ async function scoreSample(
       sampleSeed: seed,
       /** Per family: attacks stopped; for benign rows, how many were wrongly stopped. */
       byCategory,
+      /** Families held out whole: counted, never shown. */
+      holdoutFamilies: [...holdoutFamilies].sort(),
       /** The attack family stopped least often. */
       weakestFamily: weakest,
       /** Attacks that got through, by route and by the form the secret took. */
@@ -662,6 +718,26 @@ function redaction(
       return null;
     }
     const patterns: RegExp[] = [];
+    if (assertion.check === 'urls_allowed') {
+      // Cut each link or image whose URL is not allowed, markdown and all.
+      const allowed = assertion.values ?? [];
+      let found = false;
+      for (const part of view.views) {
+        const markdown =
+          /!?\[[^\]]*\]\((https?:\/\/[^)\s]+)\)|https?:\/\/[^\s)\]>"'<]+/g;
+        for (const match of part.text.matchAll(markdown)) {
+          const url = match[1] ?? match[0];
+          if (!hostAllowed(url, allowed)) {
+            found = true;
+            ranges.push(part.toRaw(match.index, match.index + match[0].length));
+          }
+        }
+      }
+      if (!found) {
+        return null;
+      }
+      continue;
+    }
     if (assertion.check === 'not_matches' && assertion.pattern) {
       const base = compileRe2(assertion.pattern);
       patterns.push(new RegExp(base.source, 'g'));

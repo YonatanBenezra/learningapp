@@ -85,21 +85,21 @@
     {
       "position": 12,
       "slug": "grd-022-adv-filter-stack",
-      "title": "Defense in Depth (Advanced)",
+      "title": "Tool Arguments (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },
     {
       "position": 13,
       "slug": "grd-023-adv-wilson-gate",
-      "title": "FP/FN Tradeoff at Scale (Advanced)",
+      "title": "Links That Leak (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },
     {
       "position": 14,
       "slug": "grd-024-adv-benign-pass",
-      "title": "Control Mapping & Benign Pass (Advanced)",
+      "title": "Other Guests' Data (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },

@@ -67,4 +67,32 @@ verdict:
     );
     expect(() => dsl.parse('version: 1\naction: shout\n')).toThrow(/action/);
   });
+
+  it('checks links against allowed domains and sends a classifier band to the judge', () => {
+    const links = dsl.parse(
+      'version: 1\nassertions:\n  - id: l\n    check: urls_allowed\n    values: [hotel.test]\n',
+    );
+    expect(
+      dsl.evaluate(links, 'See https://maps.hotel.test/a.png').flagged,
+    ).toBe(false);
+    expect(
+      dsl.evaluate(links, '![](https://hotel-images.test/p.png)').flagged,
+    ).toBe(true);
+    const band = dsl.parse(
+      'version: 1\nassertions:\n  - id: c\n    check: classifier\n    max: 0.5\n    judge_from: 0.1\n',
+    );
+    let judged = 0;
+    const context = (score: number, unsafe: boolean) => ({
+      classifier: () => score,
+      judge: () => {
+        judged += 1;
+        return unsafe;
+      },
+    });
+    expect(dsl.evaluate(band, 'x', context(0.05, true)).flagged).toBe(false);
+    expect(dsl.evaluate(band, 'x', context(0.9, false)).flagged).toBe(true);
+    expect(dsl.evaluate(band, 'x', context(0.3, true)).flagged).toBe(true);
+    expect(dsl.evaluate(band, 'x', context(0.3, false)).flagged).toBe(false);
+    expect(judged).toBe(2);
+  });
 });

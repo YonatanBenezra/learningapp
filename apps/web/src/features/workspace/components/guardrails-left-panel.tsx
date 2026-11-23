@@ -237,7 +237,7 @@ export function GuardrailsLeftPanel({
                 <Layers className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
                 <div className="lp-grd-g3-metric-copy">
                   <strong>Every attack family</strong>
-                  <span>seven families, two of them never shown</span>
+                  <span>including two families never shown</span>
                 </div>
                 <em className="lp-grd-g3-metric-value">
                   ≥ {Math.round(G3_PASS_THRESHOLDS.familyFloor * 100)}% each
@@ -247,7 +247,7 @@ export function GuardrailsLeftPanel({
                 <ListChecks className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
                 <div className="lp-grd-g3-metric-copy">
                   <strong>Task done under attack</strong>
-                  <span>a page to summarise that carries an attack</span>
+                  <span>a guest&apos;s own task that carries an attack</span>
                 </div>
                 <em className="lp-grd-g3-metric-value">
                   ≥ {Math.round(G3_PASS_THRESHOLDS.utilityFloor * 100)}%
