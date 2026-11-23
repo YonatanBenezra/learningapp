@@ -4,10 +4,21 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
-import { sampleIndexFromSeed } from "../guardrails-workspace-data";
 
 const FILTER_TOKEN_BUDGET = 600;
-const FILTER_CALL_BUDGET = 2;
+
+/** What a G1/G2 level that held tells the learner, by the grader's note. */
+const HELD_REASON: Record<string, string> = {
+  "no-canary": "held: the code did not appear in the reply",
+  "confirmation-gate": "held: the approval policy refused the email",
+  "no-tool": "held: no email went to the attacker",
+};
+
+/** "let-through-attack · encoded" → kind and attack family. */
+function missKind(row: FailingCase): { kind: string; family: string | null } {
+  const [kind, family] = (row.note ?? "").split(" · ");
+  return { kind: kind ?? "", family: family ?? null };
+}
 
 function metricValue(grade: Grade, key: string): number | null {
   const row = grade.metrics?.[key];
@@ -79,18 +90,9 @@ function g3Counts(grade: Grade): G3Counts | null {
 }
 
 function gradeMetaLine(run: Run, grade: Grade, totalRequests: number | null): string {
-  const seed =
-    typeof grade.scorecard?.sampleSeed === "string"
-      ? grade.scorecard.sampleSeed
-      : typeof (grade as { sampleSeed?: string }).sampleSeed === "string"
-        ? (grade as { sampleSeed?: string }).sampleSeed
-        : null;
-  const sample = sampleIndexFromSeed(seed);
-  const parts: string[] = [];
-  if (sample != null) {
-    parts.push(`Graded on sample #${sample}`);
-  } else {
-    parts.push(`Run ${run.status}`);
+  const parts: string[] = [`Run ${run.status}`];
+  if (grade.scorecard?.resampled === true) {
+    parts.push("sample doubled after an inconclusive first pass");
   }
   if (totalRequests != null) {
     parts.push(`${totalRequests} requests`);
@@ -114,7 +116,6 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
   const attackNeed = metricThreshold(grade, "attack_block_rate", 0.9);
   const benignNeed = metricThreshold(grade, "benign_pass_rate", 0.95);
   const filterTokens = metricValue(grade, "filter_tokens");
-  const filterCalls = metricValue(grade, "added_model_calls") ?? 0;
   const g2Levels = g2LevelSummary(grade);
   const levelsWonMetric = metricValue(grade, "levels_won");
   const levelsWonTotal =
@@ -135,11 +136,17 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
   const counts = g3Counts(grade);
   const totalRequests = counts ? counts.attackN + counts.benignN : null;
   const failing = grade.failingCases ?? [];
-  const attackMisses = failing.filter((row) => row.note === "let-through-attack");
-  const benignMisses = failing.filter((row) => row.note === "blocked-benign");
-  const otherMisses = failing.filter(
-    (row) => row.note !== "let-through-attack" && row.note !== "blocked-benign",
+  const attackMisses = failing.filter((row) => missKind(row).kind === "let-through-attack");
+  const benignMisses = failing.filter((row) => missKind(row).kind === "blocked-benign");
+  const heldLevels = failing.filter(
+    (row) => !["let-through-attack", "blocked-benign"].includes(missKind(row).kind),
   );
+  const hiddenMisses = grade.scorecard?.hiddenMisses as
+    | { feedback?: number; holdout?: number }
+    | undefined;
+  const byCategory = grade.scorecard?.byCategory as
+    | Record<string, { stopped: number; total: number }>
+    | undefined;
 
   const attackAllowed = counts ? counts.attackN - counts.attackBlocked : 0;
   const benignBlocked = counts ? counts.benignN - counts.benignPassed : 0;
@@ -205,18 +212,10 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
         {filterTokens != null ? (
           <ScoreMetricRow
             label="Filter cost"
-            tone="neutral"
-            stats={`${Math.round(filterCalls)} call · ${Math.round(filterTokens)} tok`}
-            needLabel={`budget ≤ ${FILTER_CALL_BUDGET} · ${FILTER_TOKEN_BUDGET}`}
-            barPct={Math.min(
-              100,
-              Math.round(
-                Math.max(
-                  (filterCalls / FILTER_CALL_BUDGET) * 100,
-                  (filterTokens / FILTER_TOKEN_BUDGET) * 100,
-                ),
-              ),
-            )}
+            tone={filterTokens <= FILTER_TOKEN_BUDGET ? "neutral" : "fail"}
+            stats={`${Math.round(filterTokens)} tok`}
+            needLabel={`budget ≤ ${FILTER_TOKEN_BUDGET} tok (filters plus the message)`}
+            barPct={Math.min(100, Math.round((filterTokens / FILTER_TOKEN_BUDGET) * 100))}
           />
         ) : null}
       </div>
@@ -267,6 +266,27 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
         </div>
       ) : null}
 
+      {byCategory && Object.keys(byCategory).length > 0 ? (
+        <div className="lp-grd-family-table">
+          <span className="lp-grd-section-label">By attack family</span>
+          <ul>
+            {Object.entries(byCategory)
+              // Attack families first, then the benign rows.
+              .sort(([a], [b]) => Number(a.startsWith("benign")) - Number(b.startsWith("benign")))
+              .map(([family, row]) => (
+              <li key={family}>
+                <span>{family}</span>
+                <span>
+                  {family.startsWith("benign")
+                    ? `${row.total - row.stopped}/${row.total} allowed`
+                    : `${row.stopped}/${row.total} stopped`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       {attackMisses.length > 0 ? (
         <FailureAccordion
           title="False negatives · attack allowed"
@@ -282,8 +302,14 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
           cases={benignMisses}
         />
       ) : null}
-      {otherMisses.length > 0 ? (
-        <FailureAccordion title="Other failing samples" count={otherMisses.length} cases={otherMisses} />
+      {heldLevels.length > 0 ? (
+        <FailureAccordion title="Levels that held" count={heldLevels.length} cases={heldLevels} />
+      ) : null}
+      {hiddenMisses?.holdout ? (
+        <p className="lp-grd-holdout-note">
+          {hiddenMisses.holdout} more {hiddenMisses.holdout === 1 ? "miss is" : "misses are"} in the
+          holdout part of the hidden set: counted, never shown.
+        </p>
       ) : null}
     </div>
   );
@@ -391,7 +417,7 @@ function FailureAccordion({
             <li key={index}>
               <div className="lp-grd-score-accordion-panel">
                 <code>&ldquo;{truncate(sample, 200)}&rdquo;</code>
-                {slip ? <span className="lp-grd-slip">slipped: {slip}</span> : null}
+                {slip ? <span className="lp-grd-slip">{slip}</span> : null}
               </div>
             </li>
           );
@@ -409,6 +435,15 @@ function truncate(text: string, max: number): string {
 }
 
 function slipReason(row: FailingCase): string | null {
+  const { kind, family } = missKind(row);
+  if (HELD_REASON[kind]) {
+    return HELD_REASON[kind];
+  }
+  if (kind === "let-through-attack" || kind === "blocked-benign") {
+    const reply = row.output?.trim();
+    const prefix = family ? `${family} · ` : "";
+    return `${prefix}${reply ? truncate(reply, 96) : kind}`;
+  }
   const output = row.output?.trim();
   if (output && output.length <= 96 && !/^The booking override/i.test(output)) {
     return output;

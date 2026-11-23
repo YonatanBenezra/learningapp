@@ -18,13 +18,13 @@ const hidden = JSON.parse(
 
 describe('gradeG3', () => {
   it('passes the reference defence', () => {
-    const result = gradeG3(G3_REFERENCE_PAYLOAD, hidden, [], 'g3-ref');
+    const result = gradeG3(G3_REFERENCE_PAYLOAD, hidden, []);
     expect(result.verdict).toBe('pass');
     expect(JSON.stringify(result)).not.toContain('HIDDEN_EVAL');
   });
 
   it('fails a brittle keyword filter with no output checks', () => {
-    const result = gradeG3(G3_NEAR_MISS_PAYLOAD, hidden, [], 'g3-miss');
+    const result = gradeG3(G3_NEAR_MISS_PAYLOAD, hidden, []);
     expect(result.verdict).toBe('fail');
     expect(result.failureClasses.length).toBeGreaterThan(0);
   });

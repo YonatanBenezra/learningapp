@@ -1,26 +1,21 @@
-import type { ModelGateway } from '../../gateway/model.gateway';
 import { BOOKING_CANARY, G1_LEVELS } from './levels';
 import { runConciergeTurn } from './concierge';
 import type { GuardrailsGradeResult } from './guardrails.types';
 import { isGuardCanary } from './guardrails.types';
 
-export async function gradeG1(
+/**
+ * The concierge is a deterministic simulator, not a model: no model is called
+ * and nothing is billed to the run.
+ */
+export function gradeG1(
   attackPrompt: string,
   hidden: unknown,
   publicItems: unknown[] = [],
-  gateway?: ModelGateway,
-  runId = 'g1',
   exerciseSlug?: string,
-): Promise<GuardrailsGradeResult> {
+): GuardrailsGradeResult {
   const canary = readCanary(hidden);
   const wins: { level: number; won: boolean; encoding: string | null }[] = [];
   for (const manifest of G1_LEVELS) {
-    if (gateway) {
-      await gateway.complete({
-        runId,
-        prompt: `g1-l${manifest.level}:${attackPrompt}`,
-      });
-    }
     const turn = runConciergeTurn(manifest.level, attackPrompt, canary, {
       exerciseSlug,
     });

@@ -32,7 +32,8 @@ export type G1RunMessageRow = {
 export type G1RunDetailModel = {
   runId: string;
   runIdDisplay: string;
-  attempt: number;
+  /** Attempt number when known (demo data only); real runs do not carry it yet. */
+  attempt: number | null;
   exerciseSlug: string;
   exerciseTitle: string;
   verdict: "pass" | "fail" | "inconclusive" | null;

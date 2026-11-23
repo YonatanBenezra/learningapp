@@ -33,15 +33,11 @@ const G1_EXERCISE_SIM: Record<string, G1ExerciseSimProfile> = {
   'grd-016-policy-window': {
     benignReply:
       'I’m here for booking help. Tell me what you need for your stay.',
-    blockedReply:
-      'I still can’t share override or internal booking codes.',
+    blockedReply: 'I still can’t share override or internal booking codes.',
   },
 };
 
-export function g1BenignReply(
-  message: string,
-  exerciseSlug?: string,
-): string {
+export function g1BenignReply(message: string, exerciseSlug?: string): string {
   const profile = g1ExerciseSimProfile(exerciseSlug);
   if (exerciseSlug === 'grd-004-polite-boundary') {
     return grd004BenignReply(message, profile.benignReply);
@@ -130,7 +126,10 @@ function parseGuestCount(text: string): number | null {
   if (/\bone guest\b|\b1 guest\b|\bjust me\b|\bsolo\b/.test(text)) {
     return 1;
   }
-  if (/\bneed one room\b|\bone room\b|\ba room\b/.test(text) && !/\d+\s*guest/.test(text)) {
+  if (
+    /\bneed one room\b|\bone room\b|\ba room\b/.test(text) &&
+    !/\d+\s*guest/.test(text)
+  ) {
     return 1;
   }
   return null;
@@ -141,10 +140,18 @@ function parseGuestName(message: string): string | null {
   if (trimmed.length < 2 || trimmed.length > 64) {
     return null;
   }
-  if (/^(yes|no|ok|okay|sure|confirm|thanks|thank you|hi|hello|hey)\b/i.test(trimmed)) {
+  if (
+    /^(yes|no|ok|okay|sure|confirm|thanks|thank you|hi|hello|hey)\b/i.test(
+      trimmed,
+    )
+  ) {
     return null;
   }
-  if (/override|booking code|secret|canary|ignore previous|system prompt/i.test(trimmed)) {
+  if (
+    /override|booking code|secret|canary|ignore previous|system prompt/i.test(
+      trimmed,
+    )
+  ) {
     return null;
   }
   if (!/^[a-zA-Z][a-zA-Z'\-]*(\s+[a-zA-Z][a-zA-Z'\-]*){0,3}$/.test(trimmed)) {
@@ -157,12 +164,19 @@ function parseGuestName(message: string): string | null {
 }
 
 function isBookingAffirmative(text: string): boolean {
-  return /^(yes|yeah|yep|yup|ok|okay|sure|confirm(ed)?|please do|do complete|go ahead|book it|complete (it|the booking)|that'?s? (fine|correct|right)|sounds good)\b/.test(
-    text,
-  ) || /\b(yes,?\s*)?(do complete|complete (it|the booking)|please confirm)\b/.test(text);
+  return (
+    /^(yes|yeah|yep|yup|ok|okay|sure|confirm(ed)?|please do|do complete|go ahead|book it|complete (it|the booking)|that'?s? (fine|correct|right)|sounds good)\b/.test(
+      text,
+    ) ||
+    /\b(yes,?\s*)?(do complete|complete (it|the booking)|please confirm)\b/.test(
+      text,
+    )
+  );
 }
 
-export function g1ExerciseSimProfile(exerciseSlug?: string): G1ExerciseSimProfile {
+export function g1ExerciseSimProfile(
+  exerciseSlug?: string,
+): G1ExerciseSimProfile {
   if (!exerciseSlug) {
     return DEFAULT_PROFILE;
   }
@@ -179,20 +193,28 @@ export function wantsLeak(message: string, level: number): boolean {
   return jailbreak && asks;
 }
 
-/** Live simulator only — grading keeps default {@link wantsLeak}. */
+/**
+ * Per-exercise intent rules. Grading and the live simulator both use these
+ * (gradeG1 passes the exercise slug), so practice and grade always agree.
+ */
 export function wantsLeakForExercise(
   message: string,
   level: number,
   exerciseSlug?: string,
 ): boolean {
   const text = message.toLowerCase();
-  const asks = /override|booking code|secret code|system prompt|canary/.test(text);
+  const asks = /override|booking code|secret code|system prompt|canary/.test(
+    text,
+  );
   const jailbreak = /ignore (all )?(previous|prior) instruction/.test(text);
   const encodingCue = /\b(hex|base64|rot13|encode|encoding|homoglyph)\b/.test(
     text,
   );
 
-  if (exerciseSlug === 'grd-005-encoding-trick' || exerciseSlug === 'grd-007-hex-extract') {
+  if (
+    exerciseSlug === 'grd-005-encoding-trick' ||
+    exerciseSlug === 'grd-007-hex-extract'
+  ) {
     if (level <= 1 && asks && (encodingCue || jailbreak)) {
       return true;
     }

@@ -8,42 +8,42 @@
     {
       "position": 1,
       "slug": "rag-025-adv-cost-ceiling",
-      "title": "Cost-Capped Retrieval (Advanced)",
+      "title": "Smaller Chunks, More of Them",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 2,
       "slug": "rag-026-adv-chunk-balance",
-      "title": "Recall@k SLA on Policy KB (Advanced)",
+      "title": "Transcripts Without Full Stops",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 3,
       "slug": "rag-027-adv-citation-contract",
-      "title": "Citation-Grounded Answers (Advanced)",
+      "title": "Refuse Before You Spend",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 4,
       "slug": "rag-028-adv-rerank-rethink",
-      "title": "Two-Stage Retrieve + Rerank (Advanced)",
+      "title": "Speak the Handbook's Language",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 5,
       "slug": "rag-029-adv-python-retriever",
-      "title": "Custom Retriever — Advanced Sandbox",
+      "title": "Rank the Paragraph, Return the Sentence",
       "track": "rag",
       "difficulty": "H"
     },
     {
       "position": 6,
       "slug": "rag-030-adv-score-gate",
-      "title": "Rerank Without Extra Model Calls (Advanced)",
+      "title": "Two Hops to the Answer",
       "track": "rag",
       "difficulty": "H"
     },
@@ -64,7 +64,7 @@
     {
       "position": 9,
       "slug": "grd-019-adv-hex-extract",
-      "title": "PII & Secret Canary Detection (Advanced)",
+      "title": "Hex Extraction (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },
@@ -85,7 +85,7 @@
     {
       "position": 12,
       "slug": "grd-022-adv-filter-stack",
-      "title": "Defense in Depth — Advanced Stack",
+      "title": "Defense in Depth (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     },
@@ -106,7 +106,7 @@
     {
       "position": 15,
       "slug": "grd-025-adv-policy-window",
-      "title": "Multi-Turn Jailbreak Escalation (Advanced)",
+      "title": "Policy Window (Advanced)",
       "track": "guardrails",
       "difficulty": "H"
     }

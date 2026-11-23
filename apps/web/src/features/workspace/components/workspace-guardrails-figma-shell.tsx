@@ -14,7 +14,6 @@ import {
   g2SamplePage,
   g1SimulatorProfile,
   guardrailsVariantForExercise,
-  sampleIndexFromSeed,
 } from "../guardrails-workspace-data";
 import { defaultsFromSubmissionSchema } from "../figma-brief-from-exercise";
 import { GuardrailsG1ChatPanel } from "./guardrails-g1-chat-panel";
@@ -33,6 +32,8 @@ type WorkspaceGuardrailsFigmaShellProps = {
   pathSlug?: string;
   backHref?: string;
   hints?: HintList | null;
+  /** Unlocks the next hint via the hints API; absent where hints are disabled. */
+  onUnlockHint?: () => Promise<void>;
   run: Run | null;
   grade: Grade | null;
   pending: boolean;
@@ -51,6 +52,7 @@ export function WorkspaceGuardrailsFigmaShell({
   pathSlug,
   backHref,
   hints = null,
+  onUnlockHint,
   run,
   grade,
   pending,
@@ -126,13 +128,7 @@ export function WorkspaceGuardrailsFigmaShell({
   const levelRows = variant === "g2" ? G2_LEVELS : G1_LEVELS;
   const levelMeta = levelRows.find((row) => row.level === activeLevel) ?? levelRows[0];
   const attempts = variant === "g1" ? chatAttempts : gradeAttempts + chatAttempts;
-  const g3SampleIndex = sampleIndexFromSeed(grade?.scorecard?.sampleSeed);
-  const g3ChromeMeta =
-    variant === "g3"
-      ? g3SampleIndex
-        ? `Attempt ${gradeAttempts + 1} · sample #${g3SampleIndex}`
-        : `Attempt ${gradeAttempts + 1}`
-      : undefined;
+  const g3ChromeMeta = variant === "g3" ? `Attempt ${gradeAttempts + 1}` : undefined;
 
   const handleGradeSubmit = (payload: Record<string, unknown>) => {
     setGradeAttempts((n) => n + 1);
@@ -257,6 +253,8 @@ export function WorkspaceGuardrailsFigmaShell({
         liveMode={liveMode}
         onLiveModeChange={setLiveMode}
         hints={figmaBrief.hints}
+        hintPointsSpent={figmaBrief.hintPointsSpent}
+        onUnlockHint={backHref ? undefined : onUnlockHint}
         debrief={g1Debrief}
         onDismissDebrief={() => setG1ShowDebrief(false)}
         collapsed={briefCollapsed}

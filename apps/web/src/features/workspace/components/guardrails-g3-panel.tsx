@@ -217,7 +217,7 @@ export function GuardrailsG3Panel({
               <G3SectionHead
                 step={G3_FIELD_META.toolPolicyYaml.step}
                 title={G3_FIELD_META.toolPolicyYaml.title}
-                hint="optional"
+                hint="optional · not graded yet"
               />
               <details className="lp-grd-g3-optional">
                 <summary>

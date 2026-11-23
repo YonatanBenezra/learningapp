@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { hashToken } from '../../../../common/utils/token-hash';
 import { AssertionDsl } from '../../dsl/assertion.dsl';
 import { estimateTokens } from '../../gateway/pricing';
@@ -22,11 +23,33 @@ export function gradeG3(
   },
   hidden: unknown,
   publicItems: unknown[] = [],
-  runId = 'g3',
 ): GuardrailsGradeResult {
   const pool = readPool(hidden);
-  const seed = hashToken(`${runId}:${payload.systemPrompt.length}`);
+  // The same config always draws the same sample, so resubmitting it gives
+  // the same verdict.
+  const seed = hashToken(
+    [payload.systemPrompt, payload.inputFilterYaml, payload.outputFilterYaml]
+      .map((part) => part.trim())
+      .join('\u0000'),
+  );
   return scoreSample(payload, pool, seed, 40, 60, publicItems, false);
+}
+
+/**
+ * Which hidden items a failing run may show. Same rule as the RAG eval split
+ * (scripts/content/tag-rag-eval.mjs): about a third, chosen by the text, are
+ * feedback; the rest are holdout and only ever counted.
+ */
+export function guardSplitFor(text: string): 'feedback' | 'holdout' {
+  const normalized = text.trim().toLowerCase().replace(/\s+/g, ' ');
+  return createHash('sha256').update(normalized).digest()[0] % 3 === 0
+    ? 'feedback'
+    : 'holdout';
+}
+
+/** Bot output as the learner sees it: the canary never leaves the grader. */
+function maskCanary(output: string): string {
+  return output.split(BOOKING_CANARY).join('[canary]');
 }
 
 function scoreSample(
@@ -49,6 +72,19 @@ function scoreSample(
   let benignPassed = 0;
   let maxFilterTokens = 0;
   const misses: GuardrailsGradeResult['failingCases'] = [];
+  const hiddenMisses = { feedback: 0, holdout: 0 };
+  const byCategory: Record<string, { stopped: number; total: number }> = {};
+  const recordMiss = (item: GuardrailsItem, output: string, note: string) => {
+    const split = guardSplitFor(item.text);
+    hiddenMisses[split] += 1;
+    if (split === 'feedback' && misses.length < 8) {
+      misses.push({
+        question: item.text,
+        output: maskCanary(output),
+        note: `${note} · ${item.category ?? item.kind}`,
+      });
+    }
+  };
 
   for (const item of sample) {
     const result = defend(payload.systemPrompt, inputSuite, outputSuite, item);
@@ -57,24 +93,26 @@ function scoreSample(
       estimateTokens(payload.outputFilterYaml) +
       estimateTokens(item.text);
     maxFilterTokens = Math.max(maxFilterTokens, tokens);
+    const category =
+      item.kind === 'attack'
+        ? (item.category ?? 'direct')
+        : item.adversarial
+          ? 'benign (looks risky)'
+          : 'benign';
+    const bucket = (byCategory[category] ??= { stopped: 0, total: 0 });
+    bucket.total += 1;
     if (item.kind === 'attack') {
       if (result.blocked) {
         attackBlocked += 1;
-      } else if (misses.length < 8) {
-        misses.push({
-          question: item.text,
-          output: result.output,
-          note: 'let-through-attack',
-        });
+        bucket.stopped += 1;
+      } else {
+        recordMiss(item, result.output, 'let-through-attack');
       }
     } else if (!result.blocked) {
       benignPassed += 1;
-    } else if (misses.length < 8) {
-      misses.push({
-        question: item.text,
-        output: result.output,
-        note: 'blocked-benign',
-      });
+    } else {
+      bucket.stopped += 1;
+      recordMiss(item, result.output, 'blocked-benign');
     }
   }
 
@@ -182,6 +220,10 @@ function scoreSample(
       resampled,
       addedModelCalls: 0,
       sampleSeed: seed,
+      /** Per attack family: how many were stopped; for benign rows, how many were wrongly blocked. */
+      byCategory,
+      /** Misses shown (feedback) and only counted (holdout). */
+      hiddenMisses,
     },
     failingCases: misses,
     trace: {

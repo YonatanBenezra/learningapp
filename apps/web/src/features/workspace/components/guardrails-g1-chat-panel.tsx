@@ -8,6 +8,7 @@ import {
   type G1SimulatorProfile,
 } from "../guardrails-workspace-data";
 import { simulationsApi, type G1Turn } from "../simulations-api";
+import { AllLevelsCheck, type LevelCheckState } from "./guardrails-all-levels";
 
 type ChatLine =
   | { kind: "user"; text: string; time: string }
@@ -92,6 +93,7 @@ export function GuardrailsG1ChatPanel({
   const [levelWin, setLevelWin] = useState<G1Turn | null>(null);
   const [sendAttempts, setSendAttempts] = useState(0);
   const [winTime, setWinTime] = useState<string | null>(null);
+  const [levelCheck, setLevelCheck] = useState<LevelCheckState>({ status: "idle" });
   const logRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -112,6 +114,7 @@ export function GuardrailsG1ChatPanel({
     setSendAttempts(0);
     setWinTime(null);
     setMessage("");
+    setLevelCheck({ status: "idle" });
   }, [simulator.appTitle, simulator.openingGreeting, simulator.statusLine]);
   const levelCleared = clearedLevels.has(level) || Boolean(levelWin);
 
@@ -122,6 +125,37 @@ export function GuardrailsG1ChatPanel({
     : failNotice
       ? "Try another angle…"
       : "Try to break the level…";
+
+  /** The composer text, or the last message sent when the composer is empty. */
+  const lastSent = [...lines].reverse().find((line) => line.kind === "user");
+  const checkText = message.trim() || (lastSent?.kind === "user" ? lastSent.text : "");
+
+  async function checkAllLevels() {
+    const text = checkText;
+    if (!text || disabled) {
+      return;
+    }
+    setLevelCheck({ status: "pending" });
+    try {
+      const turns = await Promise.all(
+        G1_LEVELS.map((row) => simulationsApi.g1Turn(exerciseSlug, row.level, text)),
+      );
+      setLevelCheck({
+        status: "done",
+        results: turns.map((turn, index) => ({
+          level: G1_LEVELS[index].level,
+          title: G1_LEVELS[index].title,
+          won: turn.won,
+          note: turn.won ? "leaked" : turn.filtered ? "filtered" : "held",
+        })),
+      });
+    } catch (caught: unknown) {
+      setLevelCheck({
+        status: "error",
+        message: caught instanceof Error ? caught.message : "Check failed",
+      });
+    }
+  }
 
   function resetLevel() {
     setLines([openingLine(simulator)]);
@@ -181,7 +215,7 @@ export function GuardrailsG1ChatPanel({
         setFailNotice(
           turn.filtered
             ? "Not yet — canary not detected. Partial leak was filtered. Rephrase and try again."
-            : "Not yet — canary not detected. The concierge refused. Rephrase and try again; focus on their role and wording.",
+            : "Not yet — canary not detected. The concierge refused. Rephrase and try again.",
         );
       }
     } catch (caught: unknown) {
@@ -319,6 +353,9 @@ export function GuardrailsG1ChatPanel({
             onChange={(event) => {
               setMessage(event.target.value);
               onDraftChange(event.target.value);
+              if (levelCheck.status === "done" || levelCheck.status === "error") {
+                setLevelCheck({ status: "idle" });
+              }
             }}
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
@@ -340,6 +377,12 @@ export function GuardrailsG1ChatPanel({
             Send
           </button>
         </div>
+        <AllLevelsCheck
+          state={levelCheck}
+          disabled={disabled || pending || !checkText}
+          onCheck={() => void checkAllLevels()}
+          label={message.trim() ? "Check this message on all 3 levels" : "Check last message on all 3 levels"}
+        />
         <footer className="lp-grd-chat-foot">
           <p>
             {gradePending

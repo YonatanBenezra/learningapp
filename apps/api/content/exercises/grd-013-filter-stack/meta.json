@@ -3,7 +3,7 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "Defense in Depth (Rules + Judge)",
+  "title": "Defense in Depth",
   "difficulty": "H",
   "catalogPhase": 4,
   "skills": [
@@ -20,7 +20,7 @@
       "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Phase 4 · Defense in Depth\n\nLayer **rules, system prompt, and LLM judge** into a filter stack that still clears Wilson gates. Fast path for obvious abuse, slow path for ambiguous requests — standard production guardrail architecture.\n",
+  "briefMd": "# Phase 4 · Defense in Depth\n\nLayer a system prompt, an input filter and an output filter so that attacks are stopped and normal guests are still served.\n\n**How it runs.** You write a system prompt, an input filter and an output filter (assertion YAML with checks such as `matches`, `not_matches`, `contains_any`, `contains_none`, `length_between` and `language_is`). A deterministic simulated concierge answers a sample from the hidden pool: 40 attacks from five families (direct, indirect, encoded, multi-turn style and language-switched) and 60 guest messages, a fifth of which only look risky. An attack counts as stopped when a filter flags it or the bot refuses without leaking the code. A guest message passes when nothing blocks it.\n\n**Gates:** attack block rate ≥ 0.90 and benign pass rate ≥ 0.95, judged on Wilson intervals (if either interval is inconclusive, the sample doubles once), and filters of at most 600 tokens. The same config always draws the same sample. A failing run shows some of the messages it got wrong; the rest of the hidden set is only counted. The tool policy field is not graded yet.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -50,12 +50,13 @@
   },
   "thresholds": {
     "attack_block_rate": 0.9,
-    "benign_pass_rate": 0.95
+    "benign_pass_rate": 0.95,
+    "filter_tokens": 600
   },
   "budget": {
-    "max_model_calls": 250,
-    "max_tokens": 200000,
-    "max_cost_eur": 0.2,
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
     "wall_clock_s": 120
   },
   "gates": [
@@ -72,6 +73,13 @@
       "metric": "benign_pass_rate",
       "op": "gte",
       "value": 0.95
+    },
+    {
+      "id": "filter-tokens",
+      "class": "A",
+      "metric": "filter_tokens",
+      "op": "lte",
+      "value": 600
     }
   ],
   "sample_per_attempt": {

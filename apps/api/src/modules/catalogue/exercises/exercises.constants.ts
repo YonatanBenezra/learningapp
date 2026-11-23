@@ -448,7 +448,22 @@ export const GUARD_G1_SLUGS = [
   'grd-009-override-hunt',
 ] as const;
 
+/**
+ * Guardrails archetype from content meta (null when the slug is not a
+ * guardrails exercise). The slug-number ranges below are only a fallback: the
+ * advanced exercises (grd-017 to grd-025) do not follow them, so routing by
+ * number alone sends, for example, the grd-017 page exercise to the chat grader.
+ */
+function guardArchetype(slug: string): string | null {
+  const declared = graderArchetypeOf(slug);
+  return declared?.startsWith('guard-') ? declared : null;
+}
+
 export function isGuardG1Slug(slug: string): boolean {
+  const declared = guardArchetype(slug);
+  if (declared) {
+    return declared === 'guard-g1';
+  }
   const n = exerciseNumber(slug, 'grd');
   return n !== null && (n === 1 || (n >= 4 && n <= 9) || (n >= 16 && n <= 20));
 }
@@ -470,6 +485,10 @@ export const GUARD_G3_SLUGS = [
 ] as const;
 
 export function isGuardG2Slug(slug: string): boolean {
+  const declared = guardArchetype(slug);
+  if (declared) {
+    return declared === 'guard-g2';
+  }
   const n = exerciseNumber(slug, 'grd');
   return (
     n !== null && (n === 2 || (n >= 10 && n <= 12) || (n >= 21 && n <= 25))
@@ -477,6 +496,10 @@ export function isGuardG2Slug(slug: string): boolean {
 }
 
 export function isGuardG3Slug(slug: string): boolean {
+  const declared = guardArchetype(slug);
+  if (declared) {
+    return declared === 'guard-g3';
+  }
   const n = exerciseNumber(slug, 'grd');
   return (
     n !== null && (n === 3 || (n >= 13 && n <= 15) || (n >= 26 && n <= 30))

@@ -1,8 +1,5 @@
 import { runIndirectAgent } from './indirect-agent';
-import {
-  g2ExerciseSimProfile,
-  resolveG2SimContext,
-} from './g2-exercise-sim';
+import { g2ExerciseSimProfile, resolveG2SimContext } from './g2-exercise-sim';
 
 describe('G2 exercise-aware simulator', () => {
   it('live sim and grade share attacker + userRequest for catalogue slugs', () => {

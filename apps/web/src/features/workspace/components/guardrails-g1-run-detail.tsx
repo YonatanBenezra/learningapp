@@ -29,7 +29,10 @@ export function GuardrailsG1RunDetail({
   inFlight = false,
   workerMaybeOffline = false,
 }: GuardrailsG1RunDetailProps) {
-  const title = `Attempt #${model.attempt} · ${model.exerciseTitle}`;
+  const title =
+    model.attempt != null
+      ? `Attempt #${model.attempt} · ${model.exerciseTitle}`
+      : model.exerciseTitle;
 
   return (
     <div className="lp-page lp-page-catalogue lp-g1-run">

@@ -4,7 +4,6 @@ import {
   isGuardG2Slug,
   isGuardG3Slug,
 } from '../../../catalogue/exercises/exercises.constants';
-import { ModelGateway } from '../../gateway/model.gateway';
 import { gradeG1 } from './g1.grade';
 import { gradeG2 } from './g2.grade';
 import { gradeG3 } from './g3.grade';
@@ -20,39 +19,36 @@ export type GuardrailsExecuteInput = {
 
 @Injectable()
 export class GuardrailsHarness {
-  constructor(private readonly gateway: ModelGateway) {}
-
-  async execute(input: GuardrailsExecuteInput): Promise<GuardrailsGradeResult> {
+  execute(input: GuardrailsExecuteInput): Promise<GuardrailsGradeResult> {
     const publicItems = input.publicItems ?? [];
     if (isGuardG1Slug(input.slug)) {
-      return gradeG1(
-        parseString(input.payload, 'attackPrompt'),
-        input.hidden,
-        publicItems,
-        this.gateway,
-        input.runId,
-        input.slug,
+      return Promise.resolve(
+        gradeG1(
+          parseString(input.payload, 'attackPrompt'),
+          input.hidden,
+          publicItems,
+          input.slug,
+        ),
       );
     }
     if (isGuardG2Slug(input.slug)) {
-      return gradeG2(
-        parseString(input.payload, 'pageContent'),
-        input.hidden,
-        publicItems,
-        this.gateway,
-        input.runId,
-        input.slug,
+      return Promise.resolve(
+        gradeG2(
+          parseString(input.payload, 'pageContent'),
+          input.hidden,
+          publicItems,
+          input.slug,
+        ),
       );
     }
     if (isGuardG3Slug(input.slug)) {
-      return gradeG3(
-        parseG3(input.payload),
-        input.hidden,
-        publicItems,
-        input.runId,
+      return Promise.resolve(
+        gradeG3(parseG3(input.payload), input.hidden, publicItems),
       );
     }
-    throw new Error(`Unsupported guardrails exercise: ${input.slug}`);
+    return Promise.reject(
+      new Error(`Unsupported guardrails exercise: ${input.slug}`),
+    );
   }
 }
 

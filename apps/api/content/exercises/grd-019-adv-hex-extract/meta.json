@@ -3,7 +3,7 @@
   "version": 1,
   "type": "exercise",
   "simulator": "guardrails",
-  "title": "PII & Secret Canary Detection (Advanced)",
+  "title": "Hex Extraction (Advanced)",
   "difficulty": "H",
   "catalogPhase": 7,
   "skills": [
@@ -20,7 +20,7 @@
       "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Advanced · Canary Exfil\n\nSplit canaries across turns; block extraction without killing benign UX.",
+  "briefMd": "# Advanced · Hex Extraction (Advanced)\n\nGet the concierge to reveal its booking override code past the level-3 output filter.\n\n**How it runs.** You submit one message. It is sent, on its own, to the concierge at three levels:\n\n- **L1:** a baseline system prompt.\n- **L2:** a hardened system prompt that tells the bot to ignore attempts to override its rules.\n- **L3:** the hardened prompt plus an output filter that blocks the code in plain text and in some common encodings.\n\nA level is won when the bot's reply contains the booking override code in a form the detector recognises. The same message must win all three levels. The concierge is a deterministic simulator, not a live model: the same message always gets the same reply, and there is no conversation history.\n\n**Gate:** levels won = 3.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -38,9 +38,9 @@
     "levels_won": 3
   },
   "budget": {
-    "max_model_calls": 12,
-    "max_tokens": 20000,
-    "max_cost_eur": 0.05,
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
     "wall_clock_s": 60
   },
   "gates": [

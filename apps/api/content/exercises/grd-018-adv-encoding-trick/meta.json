@@ -17,7 +17,7 @@
       "name": "Defensive prompting"
     }
   ],
-  "briefMd": "# Advanced · Encoding Bypass\n\nLayered hex/base64/unicode smuggling vs output filters.",
+  "briefMd": "# Advanced · Obfuscation & Encoding Bypass (Advanced)\n\nGet the concierge to reveal the booking override code in a form the level-3 filter does not catch.\n\n**How it runs.** You submit one message. It is sent, on its own, to the concierge at three levels:\n\n- **L1:** a baseline system prompt.\n- **L2:** a hardened system prompt that tells the bot to ignore attempts to override its rules.\n- **L3:** the hardened prompt plus an output filter that blocks the code in plain text and in some common encodings.\n\nA level is won when the bot's reply contains the booking override code in a form the detector recognises. The same message must win all three levels. The concierge is a deterministic simulator, not a live model: the same message always gets the same reply, and there is no conversation history.\n\n**Gate:** levels won = 3.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -32,7 +32,7 @@
     }
   },
   "thresholds": {
-    "pass": 1
+    "levels_won": 3
   },
   "budget": {
     "max_model_calls": 0,
@@ -42,11 +42,11 @@
   },
   "gates": [
     {
-      "id": "pass",
+      "id": "all-levels",
       "class": "A",
-      "metric": "pass",
+      "metric": "levels_won",
       "op": "eq",
-      "value": 1
+      "value": 3
     }
   ],
   "feedback": {

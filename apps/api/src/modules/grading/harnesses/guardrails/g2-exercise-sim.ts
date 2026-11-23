@@ -1,7 +1,4 @@
-import {
-  ATTACKER_EMAIL,
-  G2_USER_REQUEST,
-} from './indirect-agent';
+import { ATTACKER_EMAIL, G2_USER_REQUEST } from './indirect-agent';
 
 export type G2ExerciseSimProfile = {
   attacker: string;
@@ -53,7 +50,8 @@ function hasG2HiddenOverrides(hidden: unknown): boolean {
   }
   const record = hidden as { attacker?: unknown; userRequest?: unknown };
   return (
-    typeof record.attacker === 'string' || typeof record.userRequest === 'string'
+    typeof record.attacker === 'string' ||
+    typeof record.userRequest === 'string'
   );
 }
 

@@ -324,6 +324,7 @@ export function WorkspaceShell({
         exercise={exercise}
         pathSlug={pathSlug}
         hints={hints}
+        onUnlockHint={unlockHint}
         run={run}
         grade={grade}
         pending={pending}

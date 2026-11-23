@@ -594,6 +594,21 @@ Phase D-র মতোই কাজ হবে: slug একই থাকবে, `v
 - ~~Citation exercise আসল model দিয়ে যাচাই~~ ✅ (২০২৬-১১-১৯): reference prompt pass করেছে। Citation format ১.০০, gold overlap ১.০০, উত্তর-নেই এমন ১০টা প্রশ্নের ১০টাতেই refusal, আর উত্তরযোগ্য প্রশ্নে কোনো refusal নেই।
 - পুরনো `internal-policy` corpus এখন শুধু engine test fixture আর red team ব্যবহার করে।
 
+### RAG-এর বাকি কাজ (২০২৬-১১-১৯)
+
+Phase A–F আর workspace UI v2 শেষ, সব `dev`-এ push হয়েছে (`9605d34`, `ecf4926`)। যা বাকি:
+
+**ছোট কাজ (টিমের সিদ্ধান্ত ছাড়াই করা যায়):**
+- [ ] Run আর trace page-এ Next-এর hydration error ("Encountered a script tag")। এটা আগে থেকেই ছিল, navbar-এর পরিবর্তনে আসেনি। User-এর চোখে পড়ে, তাই আগে ঠিক করা উচিত।
+- [ ] Trace waterfall R3 (generation), R5 (router) আর sandbox-এ। এখন শুধু R1, R2 আর R4-এ আছে।
+- [ ] Run-এর খরচ provider-এর আসল invoice থেকে। এখনো budget price table থেকে হিসাব হয়।
+- [ ] পরিষ্কার: rebuild করা exercise folder-এর পুরনো `corpus.json` আর এখন কাজে লাগে না, কারণ `corpusFile` আছে। পুরনো generator (`generate-step3/11/core-15`) এগুলো আবার copy করে।
+
+**টিমের সিদ্ধান্ত লাগবে:**
+- [ ] Red team v2 আর blue team। নতুন attack scenario আর payload এই workflow-তে বানানো হবে না।
+- [ ] Hint-এর point খরচ পুরনো unlock-এর ক্ষেত্রেও খাটে। একাধিক hint খোলা pro user-দের rating কমেছে, টিমকে জানাতে হবে।
+- [ ] Grading-এ আসল model-এর খরচ (R3, R4 rewrite), প্রতিটা user-এর জন্য আলাদা hidden subset, আর red team Tier 2-এর quota (নিচে §৯)।
+
 ## ৯. যেসব সিদ্ধান্ত টিমকে নিতে হবে
 
 1. **Grading-এ আসল model:** প্রতিটা R3 attempt-এ ~৩০টা প্রশ্ন, মোটামুটি ২০–২৫ হাজার token। Cache থাকায় একই submission আবার দিলে খরচ শূন্য। এই খরচ মেনে নেওয়া যাবে, নাকি R3 simulated থাকবে আর UI-তে স্পষ্ট লেবেল দেওয়া হবে?
