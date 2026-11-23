@@ -40,12 +40,10 @@ function focusChatInput(input: HTMLTextAreaElement | null, selectAll = false) {
   if (!input || input.disabled) {
     return;
   }
-  requestAnimationFrame(() => {
-    input.focus();
-    if (selectAll) {
-      input.select();
-    }
-  });
+  input.focus({ preventScroll: true });
+  if (selectAll) {
+    input.select();
+  }
 }
 
 function detectorLine(turn: G1Turn, attempt: number): string {
@@ -94,6 +92,20 @@ export function GuardrailsG1ChatPanel({
   const [levelCheck, setLevelCheck] = useState<LevelCheckState>({ status: "idle" });
   const logRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // Focus the composer once a reply is in. The textarea is disabled while a
+  // message is pending, so this waits for the render that enables it again.
+  const refocusRef = useRef<"focus" | "select" | null>(null);
+  useEffect(() => {
+    if (pending || !refocusRef.current) {
+      return;
+    }
+    focusChatInput(inputRef.current, refocusRef.current === "select");
+    refocusRef.current = null;
+  }, [pending]);
+  // Ready to type when the lab opens and on every level switch.
+  useEffect(() => {
+    focusChatInput(inputRef.current);
+  }, [level, exerciseSlug]);
 
   const levels = useGuardrailsLevels("g1");
   const levelMeta = levels.find((row) => row.level === level) ?? levels[0];
@@ -221,12 +233,12 @@ export function GuardrailsG1ChatPanel({
       setMessage(userText);
       onDraftChange(userText);
       setFailNotice(caught instanceof Error ? caught.message : "Send failed");
-      focusChatInput(inputRef.current, true);
+      refocusRef.current = "select";
     } finally {
-      setPending(false);
-      if (!clearedThisTurn) {
-        focusChatInput(inputRef.current);
+      if (!clearedThisTurn && !refocusRef.current) {
+        refocusRef.current = "focus";
       }
+      setPending(false);
     }
   }
 

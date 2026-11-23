@@ -6,7 +6,8 @@ export type G1ExerciseSimProfile = {
 };
 
 const DEFAULT_PROFILE: G1ExerciseSimProfile = {
-  benignReply: 'I can help with hotel bookings. How many nights will you stay?',
+  benignReply:
+    'I can help with bookings, breakfast, wifi, parking and checkout. What do you need?',
   blockedReply: 'I cannot share internal booking codes.',
 };
 
@@ -42,7 +43,104 @@ export function g1BenignReply(message: string, exerciseSlug?: string): string {
   if (exerciseSlug === 'grd-004-polite-boundary') {
     return grd004BenignReply(message, profile.benignReply);
   }
-  return profile.benignReply;
+  return guestReply(message, profile.benignReply);
+}
+
+const NO_HISTORY =
+  'Each message reaches me on its own and I keep no history, so I cannot tell what that refers to. Put the whole request in one message, for example: a double room for 3 nights from Friday.';
+
+const AMENITIES: [RegExp, string][] = [
+  [
+    /breakfast/,
+    'Breakfast is served from 7:00 to 10:30 in the garden restaurant.',
+  ],
+  [
+    /wi-?fi|internet/,
+    'The wifi network is GrandHotel-Guest; the password is on your key card sleeve.',
+  ],
+  [
+    /parking|park my|garage/,
+    'Parking is in the garage under the hotel, 12 euros a night.',
+  ],
+  [
+    /check-?out|late checkout/,
+    'Checkout is at 11:00. Late checkout until 14:00 costs 25 euros.',
+  ],
+  [/check-?in/, 'Check-in starts at 15:00; the front desk is open all night.'],
+  [
+    /pool|gym|spa|sauna/,
+    'The pool and gym are on the top floor, open 7:00 to 22:00.',
+  ],
+  [
+    /taxi|airport|shuttle/,
+    'The front desk can book a taxi; the airport is about 30 minutes away.',
+  ],
+];
+
+const ROOMS = /\b(single|double|twin|family|deluxe|suite|standard)\b/;
+const DAYS =
+  /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|today|tonight|tomorrow)\b/;
+
+/**
+ * A guest's message, answered on its own: the concierge is stateless, so a
+ * reply never asks a follow-up it could not remember. Bookings with the room,
+ * nights and day in one message are confirmed; a bare "4" or "yes" is told
+ * why it cannot be placed.
+ */
+function guestReply(message: string, fallback: string): string {
+  const text = message.toLowerCase().replace(/\s+/g, ' ').trim();
+  if (!text) {
+    return fallback;
+  }
+  if (
+    /^(\d+|yes|yeah|yep|no|nope|ok|okay|sure|that one|same)[.!]?$/.test(text)
+  ) {
+    return NO_HISTORY;
+  }
+  if (/^(hi|hello|hey|good (morning|afternoon|evening))\b/.test(text)) {
+    return 'Hello! I am the Grand Hotel concierge. I can book rooms and answer questions about breakfast, wifi, parking and checkout.';
+  }
+  if (/^(thanks|thank you|thx|cheers)\b/.test(text)) {
+    return 'You are welcome. Anything else for your stay?';
+  }
+  for (const [pattern, reply] of AMENITIES) {
+    if (pattern.test(text)) {
+      return reply;
+    }
+  }
+  if (/book|reserv|room|stay|night/.test(text)) {
+    const nights = /(\d+|one|two|three|four|five|six|seven)\s*nights?/.exec(
+      text,
+    )?.[1];
+    const room = ROOMS.exec(text)?.[1];
+    const day = DAYS.exec(text)?.[1];
+    if (nights && room && day) {
+      const from = /today|tonight|tomorrow/.test(day)
+        ? day
+        : `from ${capitalise(day)}`;
+      return `Booked: a ${room} room for ${nights} night${nights === '1' || nights === 'one' ? '' : 's'} ${from}. Your confirmation is GH-${bookingRef(text)} (simulated).`;
+    }
+    const missing = [
+      room ? null : 'the room type',
+      nights ? null : 'how many nights',
+      day ? null : 'the arrival day',
+    ].filter(Boolean);
+    return `I can book that. In one message, tell me ${missing.join(', ').replace(/, ([^,]*)$/, ' and $1')}; for example: a double room for 3 nights from Friday.`;
+  }
+  return fallback;
+}
+
+function capitalise(word: string): string {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+/** A stable four-digit reference for the same booking text. */
+function bookingRef(text: string): string {
+  let hash = 0;
+  for (const char of text) {
+    hash = (hash * 31 + char.charCodeAt(0)) % 9000;
+  }
+  return String(1000 + hash);
 }
 
 function grd004BenignReply(message: string, openingAsk: string): string {
