@@ -3,6 +3,8 @@ import path from 'node:path';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { graderArchetypeOf } from '../../../content/archetype-registry';
 import { exercisesRoot } from '../../../content/content-paths';
+import { g1Profile } from '../../grading/harnesses/guardrails/g1-profiles';
+import { g2Profile } from '../../grading/harnesses/guardrails/g2-profiles';
 import { probeG3 } from '../../grading/harnesses/guardrails/g3.grade';
 import { runConciergeTurn } from '../../grading/harnesses/guardrails/concierge';
 import { g2ExerciseSimProfile } from '../../grading/harnesses/guardrails/g2-exercise-sim';
@@ -29,7 +31,25 @@ export class SimulationsService {
         ? Math.min(3, Math.max(1, payload.level))
         : 1;
     const sim = g2ExerciseSimProfile(payload.exerciseSlug);
-    return runIndirectAgent(level, page, sim.attacker, sim.userRequest);
+    return runIndirectAgent(
+      level,
+      page,
+      sim.attacker,
+      sim.userRequest,
+      payload.exerciseSlug,
+    );
+  }
+
+  /** G1/G2: the exercise's levels; empty for anything else. */
+  levels(exerciseSlug: string) {
+    const archetype = graderArchetypeOf(exerciseSlug);
+    const rows =
+      archetype === 'guard-g1'
+        ? g1Profile(exerciseSlug)
+        : archetype === 'guard-g2'
+          ? g2Profile(exerciseSlug)
+          : [];
+    return rows.map(({ level, title, defense }) => ({ level, title, defense }));
   }
 
   /**

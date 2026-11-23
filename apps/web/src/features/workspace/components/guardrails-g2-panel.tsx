@@ -3,7 +3,6 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Globe } from "lucide-react";
 import {
-  G2_LEVELS,
   type G2PageChrome,
   g2WinHeadline,
   pageContentHasHtmlComment,
@@ -11,6 +10,7 @@ import {
 import { simulationsApi, type G2Run } from "../simulations-api";
 import { AllLevelsCheck, type LevelCheckState } from "./guardrails-all-levels";
 import { GuardrailsG2PageEditor } from "./guardrails-g2-page-editor";
+import { useGuardrailsLevels } from "../guardrails-levels";
 
 type GuardrailsG2PanelProps = {
   exerciseSlug: string;
@@ -73,7 +73,8 @@ export function GuardrailsG2Panel({
     return pageContent.replace(/<!--[\s\S]*?-->/g, "").trim();
   }, [pageContent]);
 
-  const levelMeta = G2_LEVELS.find((row) => row.level === level) ?? G2_LEVELS[0];
+  const levels = useGuardrailsLevels("g2");
+  const levelMeta = levels.find((row) => row.level === level) ?? levels[0];
   const levelCleared = clearedLevels.has(level) || levelWin;
   const hasComment = pageContentHasHtmlComment(pageContent);
   const recipient = lastRun ? recipientFromRun(lastRun) : null;
@@ -93,13 +94,13 @@ export function GuardrailsG2Panel({
     setLevelCheck({ status: "pending" });
     try {
       const runs = await Promise.all(
-        G2_LEVELS.map((row) => simulationsApi.g2Page(exerciseSlug, row.level, page)),
+        levels.map((row) => simulationsApi.g2Page(exerciseSlug, row.level, page)),
       );
       setLevelCheck({
         status: "done",
         results: runs.map((run, index) => ({
-          level: G2_LEVELS[index].level,
-          title: G2_LEVELS[index].title,
+          level: levels[index].level,
+          title: levels[index].title,
           won: run.won,
           note: run.won
             ? "emailed you"

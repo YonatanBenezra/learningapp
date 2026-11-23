@@ -1,6 +1,7 @@
 import { BOOKING_CANARY, G1_LEVELS } from './levels';
 import { runConciergeTurn } from './concierge';
 import { maskSecret } from './g3-bot';
+import { g1Profile } from './g1-profiles';
 import type { GuardrailsGradeResult } from './guardrails.types';
 import { isGuardCanary } from './guardrails.types';
 
@@ -18,6 +19,8 @@ export function gradeG1(
   const wins: { level: number; won: boolean; encoding: string | null }[] = [];
   const levels: {
     level: number;
+    title: string;
+    defense: string;
     won: boolean;
     filtered: boolean;
     reply: string;
@@ -32,8 +35,13 @@ export function gradeG1(
       encoding: turn.encoding,
     });
     // The trace never carries the code itself, in any form.
+    const spec = g1Profile(exerciseSlug).find(
+      (row) => row.level === manifest.level,
+    );
     levels.push({
       level: manifest.level,
+      title: spec?.title ?? '',
+      defense: spec?.defense ?? '',
       won: turn.won,
       filtered: turn.filtered,
       reply: turn.won

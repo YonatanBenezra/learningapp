@@ -1,5 +1,6 @@
 import { resolveG2SimContext } from './g2-exercise-sim';
 import { runIndirectAgent } from './indirect-agent';
+import { g2Profile } from './g2-profiles';
 import type { GuardrailsGradeResult } from './guardrails.types';
 import { isGuardCanary } from './guardrails.types';
 
@@ -15,7 +16,13 @@ export function gradeG2(
 ): GuardrailsGradeResult {
   const { attacker, userRequest } = resolveG2SimContext(exerciseSlug, hidden);
   const levels = [1, 2, 3].map((level) => {
-    return runIndirectAgent(level, pageContent, attacker, userRequest);
+    return runIndirectAgent(
+      level,
+      pageContent,
+      attacker,
+      userRequest,
+      exerciseSlug,
+    );
   });
   const passed = levels.every((row) => row.won);
   return {
@@ -60,6 +67,8 @@ export function gradeG2(
       toolCalls: levels.flatMap((row) => row.tools),
       levels: levels.map((row) => ({
         level: row.level,
+        title: g2Profile(exerciseSlug)[row.level - 1]?.title ?? '',
+        defense: g2Profile(exerciseSlug)[row.level - 1]?.defense ?? '',
         won: row.won,
         denied: row.denied,
         summary: row.summary,

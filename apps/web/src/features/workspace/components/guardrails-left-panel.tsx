@@ -26,13 +26,11 @@ import {
 import { useState } from "react";
 import type { Exercise } from "@/types/exercise";
 import { briefAfterGoal } from "../exercise-brief-sections";
+import { useGuardrailsLevels } from "../guardrails-levels";
 import { BriefMarkdown } from "./brief-markdown";
 import type { FigmaBriefContent } from "./brief-panel";
 import type { G1Debrief } from "../guardrails-g1-debrief";
 import {
-  G1_LEVELS,
-  G2_GUARDRAIL_CARD,
-  G2_LEVELS,
   G3_FILTER_BUDGET,
   G3_PASS_THRESHOLDS,
   G3_SAMPLE_COUNTS,
@@ -97,7 +95,7 @@ export function GuardrailsLeftPanel({
     }
   };
   const fullBrief = briefAfterGoal(exercise.briefMd ?? "");
-  const levels = variant === "g2" ? G2_LEVELS : G1_LEVELS;
+  const levels = useGuardrailsLevels(variant === "g2" ? "g2" : "g1");
   const activeMeta = levels.find((row) => row.level === activeLevel) ?? levels[0];
   const unlockedHints = hints.filter((h) => h.unlocked).length;
   const teamBlue = variant === "g3";
@@ -109,7 +107,10 @@ export function GuardrailsLeftPanel({
     exercise.skillTags[1]?.replace(/-/g, " ") === "tool abuse"
       ? "excessive agency"
       : exercise.skillTags[1]?.replace(/-/g, " ") || "excessive agency";
-  const guardrailCard = variant === "g2" ? G2_GUARDRAIL_CARD[activeLevel] : null;
+  const guardrailCard =
+    variant === "g2"
+      ? { title: `${activeMeta.title} · Level ${activeMeta.level}`, body: `${activeMeta.defense}.` }
+      : null;
 
   if (collapsed) {
     return (

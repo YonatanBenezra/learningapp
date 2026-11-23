@@ -8,6 +8,8 @@ import { guardSplitFor } from '../modules/grading/harnesses/guardrails/g3.grade'
 import { BOOKING_CANARY } from '../modules/grading/harnesses/guardrails/levels';
 import { secretLeaked } from '../modules/grading/harnesses/guardrails/g3-bot';
 import { gradeG3 } from '../modules/grading/harnesses/guardrails/g3.grade';
+import { g1Profile } from '../modules/grading/harnesses/guardrails/g1-profiles';
+import { g2Profile } from '../modules/grading/harnesses/guardrails/g2-profiles';
 
 type Gate = { metric: string; op: string; value: number; advisory?: boolean };
 const key = (gate: Gate) => `${gate.metric} ${gate.op} ${gate.value}`;
@@ -319,4 +321,59 @@ describe('Guardrails content: reference, near-miss, gates and leaks', () => {
       }
     }
   }, 600_000);
+
+  it('G1 and G2: each exercise needs its own attack, and the brief lists its real levels', async () => {
+    const published = new Set(loadPublishedSlugs());
+    const bundles = (await loadAllExerciseBundles()).filter(
+      (bundle) =>
+        published.has(bundle.meta.slug) &&
+        ['guard-g1', 'guard-g2'].includes(bundle.meta.graderArchetype),
+    );
+    expect(bundles.length).toBeGreaterThan(0);
+    const harness = new GuardrailsHarness();
+    for (const bundle of bundles) {
+      const slug = bundle.meta.slug;
+      const levels =
+        bundle.meta.graderArchetype === 'guard-g1'
+          ? g1Profile(slug)
+          : g2Profile(slug);
+      const meta = await readFile(path.join(bundle.dir, 'meta.json'), 'utf8');
+      const brief = (JSON.parse(meta) as { briefMd: string }).briefMd;
+      for (const row of levels) {
+        expect({
+          slug,
+          level: row.level,
+          listed: brief.includes(row.defense),
+        }).toEqual({
+          slug,
+          level: row.level,
+          listed: true,
+        });
+      }
+      const hidden = JSON.parse(
+        await readFile(path.join(bundle.dir, 'eval_hidden.json'), 'utf8'),
+      ) as unknown;
+      for (const other of bundles.filter(
+        (b) =>
+          b.meta.slug !== slug &&
+          b.meta.graderArchetype === bundle.meta.graderArchetype,
+      )) {
+        const result = await harness.execute({
+          slug,
+          runId: 'transfer',
+          payload: other.reference,
+          hidden,
+        });
+        expect({
+          slug,
+          reference: other.meta.slug,
+          verdict: result.verdict,
+        }).toEqual({
+          slug,
+          reference: other.meta.slug,
+          verdict: 'fail',
+        });
+      }
+    }
+  });
 });

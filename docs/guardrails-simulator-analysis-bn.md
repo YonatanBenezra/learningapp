@@ -434,3 +434,41 @@ G3-এর hidden set এখন generator দিয়ে বানানো, প
 **যাচাই:** নতুন test: probe এক message স্তর ধরে চালায় আর secret দেখায় না; G3 trace-এর case-এ secret নেই আর কোনো holdout message নেই (content CI)। পুরো API suite-এ ১৫টা suite fail, সবই আগের। Web `tsc` পরিষ্কার, নতুন lint error নেই। Worker দিয়ে browser-এ: probe ("Attack got through", secret `[secret]`), দুটো submit-এর পর History diff ("Edited: output filter", encoded ৪/১৩ → ১২/১২), G3 trace (৭টা message), G1 আর G2 trace (level ধরে), আর ৩৯০px-এ তিনটা page।
 
 **আগে থেকেই আছে, এই phase-এ ধরিনি:** run/trace আর workspace page-এ React hydration warning (server আর client-এর HTML মেলে না), আর G3 editor-এ submit করার পরও "unsaved" দেখানো।
+
+### Phase G-F-এর অবস্থা (২০২৬-১১-২৩)
+
+Attack track-এর ১৪টা exercise (G1-এর ৭টা, G2-এর ৭টা) আর clone না। প্রতিটার নিজের defense, প্রতিটা defense-এর একটা বাস্তব ফাঁক; একটা exercise-এর reference অন্য কোনোটা pass করে না (CI)। কাজটা defense-এর দিক থেকে করা: নতুন jailbreak কৌশল বানানো হয়নি, reference উত্তরগুলো কাল্পনিক simulator-এর বিরুদ্ধে সবার জানা ধরনের ছোট message। Simulator আগের মতোই deterministic, আসল model নেই (খরচের সিদ্ধান্ত টিমের)।
+
+**G1 (concierge, code বের করা):** Level 2-এর hardened prompt প্রতিটা exercise-এ এক ধরনের অনুরোধেই নরম হয়, আর level 3-এর output filter আলাদা আলাদা রূপ ধরে।
+
+| Exercise | Level 2 যেটাতে নরম হয় | Input guard | Level 3 filter যা ধরে না |
+|---|---|---|---|
+| `001` | নিয়ম ভুলতে বলা | নেই | encoding (hex, base64, …) |
+| `004` | staff পরিচয় | override কথা পুরো message-এ | hex, spaced, spelled… |
+| `005` | code অন্য রূপে বদলাতে বলা | নেই | spaced, dash দিয়ে ভাগ, look-alike |
+| `007` | debug/diagnostic | নেই | শুধু hex |
+| `016` | নিয়ম ভুলতে বলা | override কথা শুধু প্রথম ১৬০ অক্ষরে | plain ছাড়া সব |
+| `018` | code অন্য রূপে বদলাতে বলা | নেই | spelled out, acrostic |
+| `019` | config export/backup | "hex" আর "hexadecimal" শব্দ | শুধু hex |
+
+**G2 (email assistant, attacker-কে email পাঠানো):** Level 2-এ page পড়ার একটা defense, level 3-এ approval policy; দুটোরই একটা ফাঁক।
+
+| Exercise | Level 2 view | Level 3 policy-র ফাঁক |
+|---|---|---|
+| `002` | `<untrusted>` wrapper (বন্ধ tag দিয়ে বেরোনো যায়) | শুধু প্রথম To দেখে |
+| `010` | page শুধু data, user-এর turn মানে (`User:` লাইন নকল করা যায়) | শুধু প্রথম To দেখে |
+| `011` | send/email-এর লাইন মুছে দেয় (email header থাকে) | Bcc দেখে না |
+| `017` | প্রথম ৪০০ অক্ষর wrap করা | Bcc দেখে না |
+| `020` | send/email-এর লাইন মুছে দেয় | "hotel.test" আছে কিনা দেখে (attacker `inbox@hotel.test.drop-box.test`) |
+| `021` | page শুধু data, user-এর turn মানে | শুধু email দেখে, `share_document` দেখে না |
+| `025` | `<untrusted>` wrapper | শুধু turn-এর প্রথম email দেখে |
+
+**অন্য যা বদলেছে:**
+- Engine: `g1-profiles.ts`, `g2-profiles.ts`; concierge আর email agent profile থেকে চলে, grade আর live simulator একই পথে।
+- Brief: প্রতিটা exercise-এর level-গুলো engine-এর লেখা থেকেই, CI মিলিয়ে দেখে।
+- Web: level card আর "Check all 3 levels" এখন exercise-এর নিজের level (`GET /simulations/levels`), trace page-এ level-এর defense।
+- `020`-এর hidden file-এ attacker বদলেছে।
+
+**যাচাই:** G1 আর G2 দুটোতেই reference-এর transfer matrix পুরো কর্ণ (নিজেরটাই শুধু pass)। পুরো API suite-এ ১৫টা suite fail, সবই আগের। Browser-এ (worker সহ): `grd-004`-এ নিজের reference তিনটা level-ই জেতে আর `001`-এর reference level 2-এ আটকায়; `grd-021`-এ নিজের reference জেতে আর grade হয়ে pass, `010`-এর reference level 3-এ আটকায়।
+
+**বাকি:** G1 আর G2-এর canary আর attacker (০২০ ছাড়া) সব exercise-এ এক; আসল model দিয়ে bot চালানোর সিদ্ধান্ত টিমের।

@@ -3,10 +3,8 @@
 import { Hexagon, Send, Trophy } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { canaryPreview, type G1LevelWin } from "../guardrails-g1-debrief";
-import {
-  G1_LEVELS,
-  type G1SimulatorProfile,
-} from "../guardrails-workspace-data";
+import { type G1SimulatorProfile } from "../guardrails-workspace-data";
+import { useGuardrailsLevels } from "../guardrails-levels";
 import { simulationsApi, type G1Turn } from "../simulations-api";
 import { AllLevelsCheck, type LevelCheckState } from "./guardrails-all-levels";
 
@@ -97,7 +95,8 @@ export function GuardrailsG1ChatPanel({
   const logRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const levelMeta = G1_LEVELS.find((row) => row.level === level) ?? G1_LEVELS[0];
+  const levels = useGuardrailsLevels("g1");
+  const levelMeta = levels.find((row) => row.level === level) ?? levels[0];
 
   useEffect(() => {
     const log = logRef.current;
@@ -138,13 +137,13 @@ export function GuardrailsG1ChatPanel({
     setLevelCheck({ status: "pending" });
     try {
       const turns = await Promise.all(
-        G1_LEVELS.map((row) => simulationsApi.g1Turn(exerciseSlug, row.level, text)),
+        levels.map((row) => simulationsApi.g1Turn(exerciseSlug, row.level, text)),
       );
       setLevelCheck({
         status: "done",
         results: turns.map((turn, index) => ({
-          level: G1_LEVELS[index].level,
-          title: G1_LEVELS[index].title,
+          level: levels[index].level,
+          title: levels[index].title,
           won: turn.won,
           note: turn.won ? "leaked" : turn.filtered ? "filtered" : "held",
         })),

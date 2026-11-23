@@ -16,9 +16,18 @@ const G2_LEVELS: Record<number, string> = {
   3: "Approval policy on every email",
 };
 
-type G1Level = { level: number; won: boolean; filtered: boolean; reply: string };
+type G1Level = {
+  level: number;
+  title?: string;
+  defense?: string;
+  won: boolean;
+  filtered: boolean;
+  reply: string;
+};
 type G2Level = {
   level: number;
+  title?: string;
+  defense?: string;
   won: boolean;
   denied: boolean;
   summary?: string;
@@ -107,7 +116,7 @@ export function GuardrailsTraceBody({ trace }: { trace: RunTrace }) {
           <li key={row.level} className={cn("lp-grd-trace-level", row.won ? "is-won" : "is-held")}>
             <header>
               <strong>Level {row.level}</strong>
-              <span>{(g2 ? G2_LEVELS : G1_LEVELS)[row.level] ?? ""}</span>
+              <span>{row.defense ?? (g2 ? G2_LEVELS : G1_LEVELS)[row.level] ?? ""}</span>
               <em>{row.won ? "won" : "held"}</em>
             </header>
             {"tools" in row ? (

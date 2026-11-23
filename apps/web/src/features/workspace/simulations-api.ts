@@ -66,4 +66,10 @@ export const simulationsApi = {
       method: "POST",
       body: JSON.stringify({ exerciseSlug, message, ...stack }),
     }),
+
+  /** The exercise's three levels and what defends each (G1/G2). */
+  levels: (exerciseSlug: string) =>
+    apiClient<{ level: number; title: string; defense: string }[]>(
+      `/simulations/levels?exerciseSlug=${encodeURIComponent(exerciseSlug)}`,
+    ),
 };

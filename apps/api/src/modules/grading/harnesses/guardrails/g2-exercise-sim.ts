@@ -15,6 +15,11 @@ const G2_EXERCISE_SIM: Record<string, G2ExerciseSimProfile> = {
   'grd-002-the-indirect-payload': DEFAULT_PROFILE,
   'grd-010-page-inject': DEFAULT_PROFILE,
   'grd-011-bcc-smuggle': DEFAULT_PROFILE,
+  // Same as its hidden file: this exercise's attacker sits on a look-alike domain.
+  'grd-020-adv-bcc-smuggle': {
+    ...DEFAULT_PROFILE,
+    attacker: 'inbox@hotel.test.drop-box.test',
+  },
 };
 
 export function g2ExerciseSimProfile(

@@ -8,8 +8,6 @@ import type { HintList } from "@/types/hint";
 import { buildG1Debrief, type G1LevelWin } from "../guardrails-g1-debrief";
 import { buildGuardrailsFigmaBrief } from "../guardrails-brief-from-exercise";
 import {
-  G1_LEVELS,
-  G2_LEVELS,
   g2PageChrome,
   g2SamplePage,
   g1SimulatorProfile,
@@ -21,6 +19,7 @@ import { GuardrailsLeftPanel } from "./guardrails-left-panel";
 import { GuardrailsG2Panel } from "./guardrails-g2-panel";
 import { GuardrailsG3Panel } from "./guardrails-g3-panel";
 import { workspaceApi } from "../workspace-api";
+import { GuardrailsLevelsProvider, useExerciseLevels } from "../guardrails-levels";
 import type { SubmissionHistoryItem } from "@/types/submission";
 import { GuardrailsWorkspaceChrome } from "./guardrails-workspace-chrome";
 import { RunPanel } from "./run-panel";
@@ -83,6 +82,7 @@ export function WorkspaceGuardrailsFigmaShell({
   const [g1WinsByLevel, setG1WinsByLevel] = useState<Record<number, G1LevelWin>>({});
   const [g1ShowDebrief, setG1ShowDebrief] = useState(false);
   const [g3History, setG3History] = useState<SubmissionHistoryItem[] | null>(null);
+  const exerciseLevels = useExerciseLevels(exercise.slug, variant);
   // Reload the G3 run history on open and whenever a graded run lands.
   const historyKey = `${run?.id ?? ""}:${grade ? "graded" : ""}`;
   useEffect(() => {
@@ -151,7 +151,7 @@ export function WorkspaceGuardrailsFigmaShell({
     }
   }, [onValidityChange, pageContent, submitAttackPrompt, variant]);
 
-  const levelRows = variant === "g2" ? G2_LEVELS : G1_LEVELS;
+  const levelRows = exerciseLevels;
   const levelMeta = levelRows.find((row) => row.level === activeLevel) ?? levelRows[0];
   const attempts = variant === "g1" ? chatAttempts : gradeAttempts + chatAttempts;
   const g3ChromeMeta = variant === "g3" ? `Attempt ${gradeAttempts + 1}` : undefined;
@@ -171,7 +171,7 @@ export function WorkspaceGuardrailsFigmaShell({
   const activeLevelCleared = clearedLevels.has(activeLevel);
   const g1Debrief =
     variant === "g1" && g1ShowDebrief && g1WinsByLevel[activeLevel]
-      ? buildG1Debrief(g1WinsByLevel[activeLevel])
+      ? buildG1Debrief(g1WinsByLevel[activeLevel], exerciseLevels)
       : null;
 
   const levelChrome = (
@@ -290,6 +290,7 @@ export function WorkspaceGuardrailsFigmaShell({
     );
 
   return (
+    <GuardrailsLevelsProvider levels={exerciseLevels}>
     <div className="lp-ws lp-ws--guardrails lp-ws--grd-figma">
       {variant === "g1" || variant === "g2" ? levelChrome : null}
       {variant === "g3" ? (
@@ -347,5 +348,6 @@ export function WorkspaceGuardrailsFigmaShell({
         }
       />
     </div>
+    </GuardrailsLevelsProvider>
   );
 }

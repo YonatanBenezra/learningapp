@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import {
   RateLimit,
@@ -38,5 +38,11 @@ export class SimulationsController {
   @RateLimit({ bucket: 'guard-sim-g3', max: 30, windowMs: MINUTE })
   g3Probe(@CurrentUser() _user: AuthenticatedUser, @Body() dto: G3ProbeDto) {
     return this.simulationsService.g3Probe(dto);
+  }
+
+  /** The exercise's three levels and what defends each, as the workspace shows them. */
+  @Get('levels')
+  levels(@Query('exerciseSlug') exerciseSlug: string) {
+    return this.simulationsService.levels(exerciseSlug);
   }
 }
