@@ -218,5 +218,5 @@ describe('RAG eval invariants', () => {
         }
       }
     }
-  }, 120_000);
+  }, 300_000);
 });

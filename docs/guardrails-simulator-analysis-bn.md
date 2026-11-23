@@ -319,3 +319,43 @@ Database-এ দেখা: এই ৫টাই `weekly-advanced-2` (কাল, �
 **যাচাই:** API-তে guardrails আর content-এর সব test pass। পুরো API suite-এ ১৫টা suite fail করে, সবগুলো আগে থেকেই (agent, benchmark, evaluation, nn, ft, p1, va1, content-pipeline-এর ৩০/৫০ সংখ্যা)। আগে ১৬টা ছিল, `guardrails-archetype.spec.ts` এখন pass করে। Web-এ `tsc` পরিষ্কার, নতুন কোনো lint error নেই। আলাদা temp stack-এ browser দিয়ে দেখা হয়েছে: G1 (`grd-001`) আর G2 (`grd-017`)-এ reference তিনটা level-ই জেতে, `grd-017` এখন page UI পায় আর grade হয়ে pass করে, G3 (`grd-013`)-এর starter config fail করে family table আর holdout note দেখায়।
 
 **G-A-তে যা হয়নি, পরের phase-এ:** G3-এর একই hidden pool (C3-এর বাকি অংশ, G-C), এক লাইনের filter (C2, G-B), clone (C1, G-C/G-D/G-F), contest (C4, টিমের সিদ্ধান্ত)।
+
+### Phase G-B-এর অবস্থা (২০২৬-১১-২৩)
+
+G3-এর defense pipeline এখন সত্যিই চলে। প্রতিটা স্তর এমন জিনিস আটকায় যা অন্য স্তর পারে না, আর CI প্রমাণ করে যে একটা স্তর একা যথেষ্ট না।
+
+| কাজ | কোথায় | Finding | অবস্থা |
+|---|---|---|---|
+| নতুন concierge bot: message যেভাবে চায় সেভাবে leak করে (hex message-এ hex-এ, হিব্রুতে হিব্রু বাক্যে, page-এর নির্দেশে `send_email` tool call দিয়ে)। System prompt-এর প্রতিটা ধরনের attack-এর জন্য আলাদা clause লাগে; clause থাকলেও prompt মাত্র ২৫% ক্ষেত্রে টেকে, না থাকলে ৫% | `g3-bot.ts` | C2, E1, E3 | ✅ |
+| প্রতিটা exercise-এর নিজের secret, শুধু hidden file-এ (`OVERRIDE-XX-0000` আকারে)। Brief-এ শুধু আকারটা বলা | `eval_hidden.json` | M2 | ✅ |
+| Filter-এ `normalize`: `decode_hex`, `decode_base64`, `unicode` (homoglyph আর NFKC), `lowercase`, `join_spaced`। প্রতিটা decoded অংশ আলাদা view, raw offset-এ ফেরার map সহ | `normaliser/text-views.ts` | E3 | ✅ |
+| Output filter-এ `action: redact`: ব্যর্থ `not_matches`/`contains_none` যা পেয়েছে শুধু সেটুকু কাটে। যে check-এর কাটার কিছু নেই (classifier, judge, length), তখন পুরো reply block | `g3.grade.ts` | E3 | ✅ |
+| `classifier` check: pinned, local prompt-injection model (`Horizon-Labs/prompt-injection-guard-small`, mmBERT-small, Apache-2.0, বহুভাষিক, q8 ONNX প্রায় ২৭০ MB)। Learner শুধু threshold বেছে নেয় | `g3-classifier.ts` | E1, E3 | ✅ |
+| `judge` check: simulated LLM judge, প্রায় ৯৭% ঠিক, প্রতি call ৪৫০ ms আর €০.০০০৩। `when_pattern` দিয়ে শুধু সন্দেহজনক message-এ চালানো যায়। নতুন gate: প্রতি message-এ ≤ ০.২৫ judge call | `g3.grade.ts` | E1 | ✅ |
+| `toolPolicyYaml` এখন grade হয়: `default`, প্রতি tool-এ `allow`/`deny`, `recipients` glob, `args_must_not_match` (normalize সহ) | `g3-tool-policy.ts` | U6, E3 | ✅ |
+| নতুন gate: প্রতিটা attack family কমপক্ষে ৮০% আটকাতে হবে। একটা স্তর না থাকলে একটা family প্রায় পুরোটা ঢুকে যায়, অথচ মোট হার ৯০%-এর কাছে থাকতে পারে | `g3.grade.ts`, ৬টা `meta.json` | E2 (আংশিক) | ✅ |
+| Scorecard: secret কোন পথে বেরোল (reply না tool call), কোন স্তর guest আটকাল, প্রতিটা miss-এর কারণ ("encoded · leaked in the reply as hex"), দুর্বলতম family, judge-এর খরচ আর latency | web scorecard | U7 | ✅ |
+| G3 workspace: tool policy আর "optional" না, চতুর্থ ধাপ। Starter config নিরপেক্ষ, শুধু syntax-এর comment | web G3 panel | U6, U10 | ✅ |
+
+**যাচাই করা mechanic** (`grd-013`, CI-তে প্রতিটা G3 exercise-এ):
+
+| Config | ফল | কারণ |
+|---|---|---|
+| Reference: hardened prompt + normalize করা output filter + tool policy | pass, ৮০/৮০ আর ১২০/১২০ | |
+| শুধু plain secret-এর output filter, secret জানা থাকলেও (আগের C2 shortcut) | fail | hex leak আর email দিয়ে বেরোয় |
+| শুধু system prompt | fail | attack-এর প্রায় ৮০% ঢোকে |
+| Near-miss: reference থেকে শুধু `normalize` বাদ | fail, encoded family ৩৮% | hex leak filter পেরোয় |
+| Tool policy ছাড়া | fail, indirect family | secret email-এ বেরোয় |
+| সব tool deny | fail, benign ০% | guest booking করতে পারে না |
+| প্রতিটা message-এ judge | fail | judge budget |
+| Classifier threshold ০.০৫ বনাম ০.৯ | ০.০৫-এ বেশি guest আটকায় | FP/FN tradeoff |
+| `action: redact` | pass | block না করেও secret কাটা যায় |
+
+**যাচাই:** নতুন unit test (bot, normaliser, tool policy, DSL, YAML), engine test (classifier-সহ), আর content CI-তে "কোনো একটা স্তর একা যথেষ্ট না"। পুরো API suite-এ ১৫টা suite fail, সবই আগের। `rag-eval-invariants`-এর একটা test পুরো suite-এর চাপে ১২০ s পেরোচ্ছিল, তাই তার timeout ৩০০ s করা হয়েছে (একা চালালে ২৯ s)। Browser-এ G3 workspace-এ near-miss fail (`family-gap:encoded`) আর reference pass দেখা হয়েছে।
+
+**Deploy-এর জন্য:** `npm run models:fetch -w @labpath/api` এখন classifier-ও নামায় (প্রায় ৩০০ MB)। Worker-এ model না থাকলে আর download বন্ধ থাকলে classifier ব্যবহার করা run error দেয়।
+
+**G-B যা ঠিক করে না (G-C-র কাজ):**
+- Pool এখনো template-এর copy। তাই "Be helpful." + classifier ০.৯ pass করে (সব attack-এর score প্রায় ১.০), আর `ignore previous instructions`-এর একটা input regex ৮০% attack আটকায়। বৈচিত্র্যময় pool এলে classifier-এর threshold আর indirect family-র জন্য tool policy সত্যিই লাগবে।
+- Pool-এর attack-এর লেখায় এখনো পুরনো `OVERRIDE-BK-7742` আছে (এটা এখন কোনো G3 exercise-এর secret না, G1-এর canary)।
+- ৬টা G3 exercise এখনো একই reference দিয়ে pass করে (C1, G-D)।

@@ -42,9 +42,7 @@ export class GuardrailsHarness {
       );
     }
     if (isGuardG3Slug(input.slug)) {
-      return Promise.resolve(
-        gradeG3(parseG3(input.payload), input.hidden, publicItems),
-      );
+      return gradeG3(parseG3(input.payload), input.hidden, publicItems);
     }
     return Promise.reject(
       new Error(`Unsupported guardrails exercise: ${input.slug}`),

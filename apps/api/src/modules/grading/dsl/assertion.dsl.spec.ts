@@ -49,4 +49,22 @@ verdict:
 `),
     ).toThrow(/backreferences|lookaround/);
   });
+
+  it('reads normalize and action, and needs a context for classifier and judge', () => {
+    const guard = dsl.parse(
+      'version: 1\nnormalize: [decode_hex]\naction: redact\nassertions:\n  - id: c\n    check: classifier\n    max: 0.7\n  - id: j\n    check: judge\n',
+    );
+    expect(guard.normalize).toEqual(['decode_hex']);
+    expect(guard.action).toBe('redact');
+    expect(() => dsl.evaluate(guard, 'x')).toThrow(/guardrail filters/);
+    const result = dsl.evaluate(guard, 'x', {
+      classifier: () => 0.8,
+      judge: () => false,
+    });
+    expect(result.failedIds).toEqual(['c']);
+    expect(() => dsl.parse('version: 1\nnormalize: [rot13]\n')).toThrow(
+      /normalize/,
+    );
+    expect(() => dsl.parse('version: 1\naction: shout\n')).toThrow(/action/);
+  });
 });

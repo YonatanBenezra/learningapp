@@ -55,6 +55,17 @@ export const RERANK_MODEL = {
   dtype: 'q8',
 } as const satisfies PinnedModel;
 
+/**
+ * Guardrails (G3) input classifier: a multilingual prompt-injection detector
+ * (mmBERT-small, labels SAFE / INJECTION, Apache-2.0). Learners set the
+ * threshold; the score itself never changes for a given text.
+ */
+export const INJECTION_MODEL = {
+  id: 'Horizon-Labs/prompt-injection-guard-small',
+  revision: '2efc2ed5abecd21eb45c2506d231a65d6e392b85',
+  dtype: 'q8',
+} as const satisfies PinnedModel;
+
 /** What transformers.js reads for a q8 encoder: config, tokenizer, weights. */
 export const MODEL_FILES = [
   'config.json',

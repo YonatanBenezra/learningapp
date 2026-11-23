@@ -10,9 +10,11 @@ import {
   Flag,
   Globe,
   KeyRound,
+  Layers,
   Lightbulb,
   Lock,
   Mail,
+  Scale,
   Shield,
   ShieldCheck,
   SlidersHorizontal,
@@ -228,6 +230,26 @@ export function GuardrailsLeftPanel({
                 </div>
                 <em className="lp-grd-g3-metric-value">
                   ≥ {Math.round(G3_PASS_THRESHOLDS.benignPassRate * 100)}%
+                </em>
+              </div>
+              <div className="lp-grd-g3-metric">
+                <Layers className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
+                <div className="lp-grd-g3-metric-copy">
+                  <strong>Every attack family</strong>
+                  <span>direct, page, encoded, earlier turn, other language</span>
+                </div>
+                <em className="lp-grd-g3-metric-value">
+                  ≥ {Math.round(G3_PASS_THRESHOLDS.familyFloor * 100)}% each
+                </em>
+              </div>
+              <div className="lp-grd-g3-metric">
+                <Scale className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
+                <div className="lp-grd-g3-metric-copy">
+                  <strong>Judge budget</strong>
+                  <span>simulated judge, 450 ms and €0.0003 a call</span>
+                </div>
+                <em className="lp-grd-g3-metric-value">
+                  ≤ {G3_PASS_THRESHOLDS.judgeCallsPerMessage} / message
                 </em>
               </div>
               <div className="lp-grd-g3-metric">

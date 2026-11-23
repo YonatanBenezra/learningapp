@@ -14,6 +14,11 @@ export type MetricValue = {
   value: number;
   hits?: number;
   total?: number;
+  /** Interval bounds or a gate's limit, when the grader reports them. */
+  low?: number;
+  high?: number;
+  min?: number;
+  max?: number;
 };
 
 export type GateOp = "gte" | "lte" | "gt" | "lt" | "eq";

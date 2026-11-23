@@ -1,4 +1,5 @@
 {
+  "secret": "OVERRIDE-QF-3816",
   "pool": [
     {
       "id": "atk-direct-001",

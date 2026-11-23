@@ -4,12 +4,10 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   Activity,
   ArrowRight,
-  ChevronRight,
   FileCode2,
   FileText,
   RotateCcw,
   Shield,
-  SlidersHorizontal,
 } from "lucide-react";
 import { GuardrailsG3CodeField } from "./guardrails-g3-code-field";
 import type { Exercise } from "@/types/exercise";
@@ -33,17 +31,23 @@ type GuardrailsG3PanelProps = {
 
 type StackField = keyof typeof G3_FIELD_META;
 
-const STACK_FIELDS: StackField[] = ["systemPrompt", "inputFilterYaml", "outputFilterYaml"];
+const STACK_FIELDS: StackField[] = [
+  "systemPrompt",
+  "inputFilterYaml",
+  "outputFilterYaml",
+  "toolPolicyYaml",
+];
 
-function estimateBudget(values: Record<string, unknown>): { tokens: number; calls: number } {
-  let chars = 0;
-  for (const key of [...STACK_FIELDS, "toolPolicyYaml"] as StackField[]) {
+/** Filter tokens as the grader counts them (chars / 4), before the message itself. */
+function estimateFilterTokens(values: Record<string, unknown>): number {
+  let tokens = 0;
+  for (const key of ["inputFilterYaml", "outputFilterYaml"] as const) {
     const raw = values[key];
-    if (typeof raw === "string") {
-      chars += raw.length;
+    if (typeof raw === "string" && raw.length > 0) {
+      tokens += Math.ceil(raw.length / 4);
     }
   }
-  return { tokens: Math.max(120, Math.round(chars / 3.2)), calls: 1 };
+  return tokens;
 }
 
 function G3SectionHead({
@@ -133,7 +137,7 @@ export function GuardrailsG3Panel({
 
   const validation = useMemo(() => validateSubmission(parsed, values), [parsed, values]);
   const dirty = useMemo(() => JSON.stringify(values) !== JSON.stringify(defaults), [defaults, values]);
-  const budget = useMemo(() => estimateBudget(values), [values]);
+  const filterTokens = useMemo(() => estimateFilterTokens(values), [values]);
 
   useEffect(() => {
     onValidityChange(validation.ok);
@@ -197,7 +201,7 @@ export function GuardrailsG3Panel({
               const meta = G3_FIELD_META[key];
               const raw = typeof values[key] === "string" ? (values[key] as string) : "";
               const minLines =
-                key === "systemPrompt" ? 3 : key === "outputFilterYaml" ? 4 : 7;
+                key === "systemPrompt" ? 3 : key === "toolPolicyYaml" ? 5 : key === "outputFilterYaml" ? 4 : 7;
               return (
                 <div key={key} className="lp-grd-g3-block">
                   <G3SectionHead step={meta.step} title={meta.title} hint={meta.hint} />
@@ -213,29 +217,6 @@ export function GuardrailsG3Panel({
               );
             })}
 
-            <div className="lp-grd-g3-block lp-grd-g3-block--tool">
-              <G3SectionHead
-                step={G3_FIELD_META.toolPolicyYaml.step}
-                title={G3_FIELD_META.toolPolicyYaml.title}
-                hint="optional · not graded yet"
-              />
-              <details className="lp-grd-g3-optional">
-                <summary>
-                  <SlidersHorizontal className="size-3.5" aria-hidden />
-                  <ChevronRight className="size-4 lp-grd-g3-optional-chevron" aria-hidden />
-                </summary>
-                <G3CodeBox
-                  file={G3_FIELD_META.toolPolicyYaml.file}
-                  lang="yaml"
-                  value={
-                    typeof values.toolPolicyYaml === "string" ? values.toolPolicyYaml : ""
-                  }
-                  disabled={editorDisabled}
-                  minLines={4}
-                  onChange={(next) => setField("toolPolicyYaml", next)}
-                />
-              </details>
-            </div>
           </div>
 
           {(validationError || error) && (
@@ -254,8 +235,11 @@ export function GuardrailsG3Panel({
               <RotateCcw className="size-3.5" aria-hidden />
               Reset to starter
             </button>
-            <span className="lp-grd-g3-budget">
-              ~{budget.tokens} tok · {budget.calls} call
+            <span
+              className="lp-grd-g3-budget"
+              title="Input and output filter tokens; the grader adds each message on top, and the limit is 600."
+            >
+              ~{filterTokens} filter tok
             </span>
             <button
               type="submit"

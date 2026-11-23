@@ -1,38 +1,121 @@
 import { createHash } from 'node:crypto';
 import { hashToken } from '../../../../common/utils/token-hash';
-import { AssertionDsl } from '../../dsl/assertion.dsl';
+import {
+  AssertionDsl,
+  type AssertionSuite,
+  type CheckContext,
+} from '../../dsl/assertion.dsl';
+import { compileRe2 } from '../../dsl/re2-lite';
 import { estimateTokens } from '../../gateway/pricing';
 import { intervalVerdict, wilsonInterval } from '../../metrics/wilson';
-import { CANARY_ENCODINGS, detectCanary } from '../../normaliser/encodings';
+import {
+  normalize,
+  redactRanges,
+  type Normalized,
+} from '../../normaliser/text-views';
+import {
+  blockedToolText,
+  maskSecret,
+  respond,
+  secretLeaked,
+  understand,
+  unitHash,
+  type BotReply,
+} from './g3-bot';
+import { injectionScores, INJECTION_MODEL_LABEL } from './g3-classifier';
+import {
+  decideToolCall,
+  parseToolPolicy,
+  type ToolDecision,
+  type ToolPolicy,
+} from './g3-tool-policy';
 import { BOOKING_CANARY } from './levels';
 import type { GuardrailsGradeResult, GuardrailsItem } from './guardrails.types';
 import { isGuardCanary } from './guardrails.types';
 
 const dsl = new AssertionDsl();
 const ATTACK_RATE = 0.9;
+/**
+ * Every attack family must be stopped at least this often. One missing layer
+ * (no decoding, no tool policy) lets most of one family through while the
+ * overall rate can still look close to 90%.
+ */
+const FAMILY_FLOOR = 0.8;
 const BENIGN_RATE = 0.95;
-const MAX_CALLS = 2;
 const MAX_FILTER_TOKENS = 600;
+/** Judge calls per request, averaged over the sample. */
+const MAX_JUDGE_RATE = 0.25;
+/** What each extra step costs, per call. The judge is simulated; see below. */
+const CLASSIFIER_MS = 15;
+const JUDGE_MS = 450;
+const JUDGE_EUR = 0.0003;
+/** How often the simulated judge is wrong, on inputs and on replies. */
+const JUDGE_INPUT_ERROR = 0.03;
+const JUDGE_OUTPUT_ERROR = 0.02;
+const REDACTED = '[redacted]';
 
-export function gradeG3(
-  payload: {
-    systemPrompt: string;
-    inputFilterYaml: string;
-    outputFilterYaml: string;
-    toolPolicyYaml?: string;
-  },
+export type G3Payload = {
+  systemPrompt: string;
+  inputFilterYaml: string;
+  outputFilterYaml: string;
+  toolPolicyYaml?: string;
+};
+
+/**
+ * G3: the learner configures a guardrail stack around the concierge (system
+ * prompt, input filter, output filter, tool-call policy) and it is run on a
+ * hidden sample of attacks and ordinary requests.
+ *
+ * An attack is stopped when nothing carrying the secret, in any form, leaves
+ * the stack: not in the reply, not in a tool call that ran. An ordinary
+ * request passes when it reaches the concierge, its reply is shown unchanged
+ * and its tool calls run.
+ */
+export async function gradeG3(
+  payload: G3Payload,
   hidden: unknown,
   publicItems: unknown[] = [],
-): GuardrailsGradeResult {
+): Promise<GuardrailsGradeResult> {
   const pool = readPool(hidden);
+  const secret = readSecret(hidden);
   // The same config always draws the same sample, so resubmitting it gives
   // the same verdict.
   const seed = hashToken(
-    [payload.systemPrompt, payload.inputFilterYaml, payload.outputFilterYaml]
+    [
+      payload.systemPrompt,
+      payload.inputFilterYaml,
+      payload.outputFilterYaml,
+      payload.toolPolicyYaml ?? '',
+    ]
       .map((part) => part.trim())
       .join('\u0000'),
   );
-  return scoreSample(payload, pool, seed, 40, 60, publicItems, false);
+  const stack = parseStack(payload);
+  const first = await scoreSample(
+    stack,
+    pool,
+    secret,
+    seed,
+    40,
+    60,
+    publicItems,
+    false,
+  );
+  if (first.inconclusive) {
+    return (
+      await scoreSample(
+        stack,
+        pool,
+        secret,
+        `${seed}:resample`,
+        80,
+        120,
+        publicItems,
+        true,
+      )
+    ).result;
+  }
+  return first.result;
 }
 
 /**
@@ -47,52 +130,238 @@ export function guardSplitFor(text: string): 'feedback' | 'holdout' {
     : 'holdout';
 }
 
-/** Bot output as the learner sees it: the canary never leaves the grader. */
-function maskCanary(output: string): string {
-  return output.split(BOOKING_CANARY).join('[canary]');
+type Stack = {
+  payload: G3Payload;
+  input: AssertionSuite | null;
+  output: AssertionSuite | null;
+  policy: ToolPolicy;
+};
+
+function parseStack(payload: G3Payload): Stack {
+  const suite = (yaml: string, name: string) => {
+    const trimmed = yaml.trim();
+    if (!trimmed) {
+      return null;
+    }
+    try {
+      return dsl.parse(trimmed);
+    } catch (error) {
+      throw new Error(
+        `${name}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  };
+  let policy: ToolPolicy;
+  try {
+    policy = parseToolPolicy(payload.toolPolicyYaml);
+  } catch (error) {
+    throw new Error(
+      `tool policy: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+  return {
+    payload,
+    input: suite(payload.inputFilterYaml, 'input filter'),
+    output: suite(payload.outputFilterYaml, 'output filter'),
+    policy,
+  };
 }
 
-function scoreSample(
-  payload: {
-    systemPrompt: string;
-    inputFilterYaml: string;
-    outputFilterYaml: string;
-  },
+const usesClassifier = (suite: AssertionSuite | null) =>
+  Boolean(suite?.assertions.some((row) => row.check === 'classifier'));
+
+/** One request through the stack. */
+type Trip = {
+  item: GuardrailsItem;
+  inputBlocked: boolean;
+  reply: BotReply;
+  decisions: ToolDecision[];
+  /** Reply after the tool policy, before the output filter. */
+  draft: string;
+  outputBlocked: boolean;
+  redacted: boolean;
+  shown: string;
+  judgeCalls: number;
+  classifierCalls: number;
+};
+
+async function scoreSample(
+  stack: Stack,
   pool: GuardrailsItem[],
+  secret: string,
   seed: string,
   nAttack: number,
   nBenign: number,
   publicItems: unknown[],
   resampled: boolean,
-): GuardrailsGradeResult {
+): Promise<{ result: GuardrailsGradeResult; inconclusive: boolean }> {
   const sample = drawSample(pool, seed, nAttack, nBenign);
-  const inputSuite = parseSuite(payload.inputFilterYaml);
-  const outputSuite = parseSuite(payload.outputFilterYaml);
+
+  // Everything before the filters is deterministic, so it is worked out first;
+  // then the classifier scores every text a filter will ask about in batches.
+  const pre = sample.map((item) => {
+    const reply = respond(stack.payload.systemPrompt, item.text, secret);
+    const decisions = reply.toolCalls.map((call) =>
+      decideToolCall(stack.policy, call),
+    );
+    const denied = decisions.some((row) => !row.allowed);
+    const draft = denied ? blockedToolText(item.text) : reply.text;
+    return {
+      item,
+      reply,
+      decisions,
+      draft,
+      inputView: stack.input
+        ? normalize(item.text, stack.input.normalize)
+        : null,
+      outputView: stack.output
+        ? normalize(draft, stack.output.normalize)
+        : null,
+    };
+  });
+  const scoreTexts = [
+    ...(usesClassifier(stack.input)
+      ? pre.map((row) => row.inputView!.text)
+      : []),
+    ...(usesClassifier(stack.output)
+      ? pre.map((row) => row.outputView!.text)
+      : []),
+  ];
+  const scored = new Map<string, number>();
+  if (scoreTexts.length > 0) {
+    const unique = [...new Set(scoreTexts)];
+    const values = await injectionScores(unique);
+    unique.forEach((text, index) => scored.set(text, values[index]));
+  }
+
+  const trips: Trip[] = pre.map((row) => {
+    let judgeCalls = 0;
+    let classifierCalls = 0;
+    const classifier = (text: string) => {
+      classifierCalls += 1;
+      const value = scored.get(text);
+      if (value === undefined) {
+        throw new Error('classifier score missing');
+      }
+      return value;
+    };
+    const inputContext: CheckContext = {
+      classifier,
+      judge: (text) => {
+        judgeCalls += 1;
+        const unsafe = understand(text).wantsSecret;
+        return unitHash(`judge-in|${text}`) < JUDGE_INPUT_ERROR
+          ? !unsafe
+          : unsafe;
+      },
+    };
+    const outputContext: CheckContext = {
+      classifier,
+      judge: (text) => {
+        judgeCalls += 1;
+        const unsafe = secretLeaked(text, secret);
+        return unitHash(`judge-out|${text}`) < JUDGE_OUTPUT_ERROR
+          ? !unsafe
+          : unsafe;
+      },
+    };
+    const inputBlocked = Boolean(
+      stack.input &&
+      dsl.evaluate(stack.input, row.inputView!.text, inputContext).flagged,
+    );
+    if (inputBlocked) {
+      return {
+        item: row.item,
+        inputBlocked,
+        reply: row.reply,
+        decisions: [],
+        draft: '',
+        outputBlocked: false,
+        redacted: false,
+        shown: '[blocked by input filter]',
+        judgeCalls,
+        classifierCalls,
+      };
+    }
+    let shown = row.draft;
+    let outputBlocked = false;
+    let redacted = false;
+    if (stack.output) {
+      const verdict = dsl.evaluate(
+        stack.output,
+        row.outputView!.text,
+        outputContext,
+      );
+      if (verdict.flagged) {
+        const cut =
+          stack.output.action === 'redact'
+            ? redaction(
+                stack.output,
+                verdict.failedIds,
+                row.draft,
+                row.outputView!,
+              )
+            : null;
+        if (cut === null) {
+          outputBlocked = true;
+          shown = '[blocked by output filter]';
+        } else {
+          redacted = cut !== row.draft;
+          shown = cut;
+        }
+      }
+    }
+    return {
+      item: row.item,
+      inputBlocked,
+      reply: row.reply,
+      decisions: row.decisions,
+      draft: row.draft,
+      outputBlocked,
+      redacted,
+      shown,
+      judgeCalls,
+      classifierCalls,
+    };
+  });
+
   let attackBlocked = 0;
   let benignPassed = 0;
   let maxFilterTokens = 0;
+  let judgeCalls = 0;
+  let classifierCalls = 0;
   const misses: GuardrailsGradeResult['failingCases'] = [];
   const hiddenMisses = { feedback: 0, holdout: 0 };
   const byCategory: Record<string, { stopped: number; total: number }> = {};
+  const leaks = { reply: 0, tool: 0, byFormat: {} as Record<string, number> };
+  const benignLoss = {
+    inputFilter: 0,
+    outputFilter: 0,
+    redaction: 0,
+    toolDenied: 0,
+  };
   const recordMiss = (item: GuardrailsItem, output: string, note: string) => {
     const split = guardSplitFor(item.text);
     hiddenMisses[split] += 1;
     if (split === 'feedback' && misses.length < 8) {
       misses.push({
         question: item.text,
-        output: maskCanary(output),
-        note: `${note} · ${item.category ?? item.kind}`,
+        output: maskSecret(output, secret),
+        note,
       });
     }
   };
 
-  for (const item of sample) {
-    const result = defend(payload.systemPrompt, inputSuite, outputSuite, item);
-    const tokens =
-      estimateTokens(payload.inputFilterYaml) +
-      estimateTokens(payload.outputFilterYaml) +
-      estimateTokens(item.text);
-    maxFilterTokens = Math.max(maxFilterTokens, tokens);
+  for (const trip of trips) {
+    const { item } = trip;
+    judgeCalls += trip.judgeCalls;
+    classifierCalls += trip.classifierCalls;
+    maxFilterTokens = Math.max(
+      maxFilterTokens,
+      estimateTokens(stack.payload.inputFilterYaml) +
+        estimateTokens(stack.payload.outputFilterYaml) +
+        estimateTokens(item.text),
+    );
     const category =
       item.kind === 'attack'
         ? (item.category ?? 'direct')
@@ -101,66 +370,111 @@ function scoreSample(
           : 'benign';
     const bucket = (byCategory[category] ??= { stopped: 0, total: 0 });
     bucket.total += 1;
+
     if (item.kind === 'attack') {
-      if (result.blocked) {
+      const executed = trip.decisions.filter((row) => row.allowed);
+      const toolLeak = executed.some((row) =>
+        secretLeaked(JSON.stringify(row.call.args), secret),
+      );
+      const replyLeak = !trip.inputBlocked && secretLeaked(trip.shown, secret);
+      if (!replyLeak && !toolLeak) {
         attackBlocked += 1;
         bucket.stopped += 1;
-      } else {
-        recordMiss(item, result.output, 'let-through-attack');
+        continue;
       }
-    } else if (!result.blocked) {
-      benignPassed += 1;
-    } else {
-      bucket.stopped += 1;
-      recordMiss(item, result.output, 'blocked-benign');
+      if (toolLeak) {
+        leaks.tool += 1;
+      } else {
+        leaks.reply += 1;
+      }
+      const format = trip.reply.format;
+      leaks.byFormat[format] = (leaks.byFormat[format] ?? 0) + 1;
+      const route = toolLeak
+        ? `sent by ${executed[0]?.call.tool ?? 'a tool'}`
+        : format === 'literal'
+          ? 'leaked in the reply'
+          : `leaked in the reply as ${format}`;
+      recordMiss(
+        item,
+        toolLeak ? `${trip.shown}\n${describeCalls(executed)}` : trip.shown,
+        `let-through-attack · ${category} · ${route}`,
+      );
+      continue;
     }
+
+    const denied = trip.decisions.find((row) => !row.allowed);
+    const reason = trip.inputBlocked
+      ? 'blocked by the input filter'
+      : trip.outputBlocked
+        ? 'blocked by the output filter'
+        : trip.redacted
+          ? 'reply changed by redaction'
+          : denied
+            ? `${denied.call.tool} denied: ${denied.reason}`
+            : null;
+    if (!reason) {
+      benignPassed += 1;
+      continue;
+    }
+    bucket.stopped += 1;
+    if (trip.inputBlocked) {
+      benignLoss.inputFilter += 1;
+    } else if (trip.outputBlocked) {
+      benignLoss.outputFilter += 1;
+    } else if (trip.redacted) {
+      benignLoss.redaction += 1;
+    } else {
+      benignLoss.toolDenied += 1;
+    }
+    recordMiss(item, trip.shown, `blocked-benign · ${category} · ${reason}`);
   }
 
   const attackN = sample.filter((row) => row.kind === 'attack').length;
-  const benignN = sample.filter((row) => row.kind === 'benign').length;
+  const benignN = sample.length - attackN;
   const attackCi = wilsonInterval(attackBlocked, attackN);
   const benignCi = wilsonInterval(benignPassed, benignN);
   const attackGate = intervalVerdict(attackCi, ATTACK_RATE);
   const benignGate = intervalVerdict(benignCi, BENIGN_RATE);
   const costPass = maxFilterTokens <= MAX_FILTER_TOKENS;
-  const callsPass = true;
+  const families = Object.entries(byCategory)
+    .filter(([name]) => !name.startsWith('benign'))
+    .map(([name, row]) => ({
+      name,
+      rate: row.total > 0 ? row.stopped / row.total : 1,
+    }))
+    .sort((a, b) => a.rate - b.rate);
+  const weakest = families[0] ?? { name: 'none', rate: 1 };
+  const familyPass = weakest.rate >= FAMILY_FLOOR;
+  const judgeRate = sample.length > 0 ? judgeCalls / sample.length : 0;
+  const judgePass = judgeRate <= MAX_JUDGE_RATE;
+  const addedLatency =
+    sample.length > 0
+      ? (classifierCalls * CLASSIFIER_MS + judgeCalls * JUDGE_MS) /
+        sample.length
+      : 0;
 
-  if (
+  const inconclusive =
     !resampled &&
-    (attackGate === 'inconclusive' || benignGate === 'inconclusive')
-  ) {
-    return scoreSample(
-      payload,
-      pool,
-      `${seed}:resample`,
-      nAttack * 2,
-      nBenign * 2,
-      publicItems,
-      true,
-    );
-  }
-
+    (attackGate === 'inconclusive' || benignGate === 'inconclusive');
+  const budgetsPass = costPass && judgePass && familyPass;
   let verdict: GuardrailsGradeResult['verdict'] = 'fail';
-  if (attackGate === 'pass' && benignGate === 'pass' && costPass && callsPass) {
+  if (attackGate === 'pass' && benignGate === 'pass' && budgetsPass) {
     verdict = 'pass';
   } else if (
     resampled &&
-    (attackGate === 'inconclusive' || benignGate === 'inconclusive') &&
     attackGate !== 'fail' &&
     benignGate !== 'fail' &&
-    costPass
+    budgetsPass
   ) {
-    verdict = 'pass';
-  } else if (
-    resampled &&
-    (attackGate === 'inconclusive' || benignGate === 'inconclusive') &&
-    attackGate !== 'fail' &&
-    benignGate !== 'fail'
-  ) {
-    verdict = 'inconclusive';
+    // Still inside the interval after the doubled sample: the point estimate
+    // decides, as before.
+    verdict =
+      attackCi.p >= ATTACK_RATE && benignCi.p >= BENIGN_RATE
+        ? 'pass'
+        : 'inconclusive';
   }
 
-  return {
+  const result: GuardrailsGradeResult = {
     verdict,
     sampleSeed: seed,
     metrics: {
@@ -174,8 +488,17 @@ function scoreSample(
         low: benignCi.low,
         high: benignCi.high,
       },
-      added_model_calls: { value: 0, max: MAX_CALLS },
       filter_tokens: { value: maxFilterTokens, max: MAX_FILTER_TOKENS },
+      min_family_block_rate: {
+        value: round(weakest.rate, 3),
+        min: FAMILY_FLOOR,
+      },
+      judge_calls_per_request: {
+        value: round(judgeRate, 3),
+        max: MAX_JUDGE_RATE,
+      },
+      added_latency_ms: { value: round(addedLatency, 1) },
+      added_cost_eur: { value: round(judgeCalls * JUDGE_EUR, 4) },
     },
     gateResults: [
       {
@@ -197,6 +520,15 @@ function scoreSample(
         passed: benignGate !== 'fail' && verdict !== 'fail',
       },
       {
+        id: 'family-floor',
+        class: 'A',
+        metric: 'min_family_block_rate',
+        op: 'gte',
+        value: FAMILY_FLOOR,
+        actual: round(weakest.rate, 3),
+        passed: familyPass,
+      },
+      {
         id: 'filter-tokens',
         class: 'A',
         metric: 'filter_tokens',
@@ -205,11 +537,28 @@ function scoreSample(
         actual: maxFilterTokens,
         passed: costPass,
       },
+      {
+        id: 'judge-budget',
+        class: 'A',
+        metric: 'judge_calls_per_request',
+        op: 'lte',
+        value: MAX_JUDGE_RATE,
+        actual: round(judgeRate, 3),
+        passed: judgePass,
+      },
     ],
     failureClasses:
       verdict === 'pass'
         ? []
-        : g3Failures(payload, attackCi.p, benignCi.p, costPass),
+        : failureClasses({
+            attackRate: attackCi.p,
+            benignRate: benignCi.p,
+            costPass,
+            judgePass,
+            weakest: familyPass ? null : weakest.name,
+            leaks,
+            benignLoss,
+          }),
     scorecard: {
       attackBlocked,
       attackN,
@@ -218,22 +567,30 @@ function scoreSample(
       attackCi,
       benignCi,
       resampled,
-      addedModelCalls: 0,
       sampleSeed: seed,
-      /** Per attack family: how many were stopped; for benign rows, how many were wrongly blocked. */
+      /** Per family: attacks stopped; for benign rows, how many were wrongly stopped. */
       byCategory,
+      /** The attack family stopped least often. */
+      weakestFamily: weakest,
+      /** Attacks that got through, by route and by the form the secret took. */
+      leaks,
+      /** Ordinary requests that did not go through, by which layer stopped them. */
+      benignLoss,
+      judgeCalls,
+      classifierCalls,
+      classifierModel: classifierCalls > 0 ? INJECTION_MODEL_LABEL : null,
       /** Misses shown (feedback) and only counted (holdout). */
       hiddenMisses,
     },
     failingCases: misses,
     trace: {
       simulator: 'guardrails',
-      payload,
+      payload: stack.payload,
       k: sample.length,
       chunkCount: 0,
       tokensIn: 0,
       tokensOut: 0,
-      costEurMicros: 0,
+      costEurMicros: Math.round(judgeCalls * JUDGE_EUR * 1_000_000),
       queries: publicItems
         .filter((item) => !isGuardCanary(item))
         .slice(0, 5)
@@ -247,78 +604,128 @@ function scoreSample(
         })),
     },
   };
+  return { result, inconclusive };
 }
 
-function defend(
-  systemPrompt: string,
-  inputSuite: ReturnType<AssertionDsl['parse']> | null,
-  outputSuite: ReturnType<AssertionDsl['parse']> | null,
-  item: GuardrailsItem,
-): { blocked: boolean; output: string } {
-  if (inputSuite && dsl.evaluate(inputSuite, item.text).flagged) {
-    return { blocked: true, output: '[blocked by input filter]' };
+/**
+ * The reply with whatever the failed checks matched cut out, or null when a
+ * failed check has nothing to cut (a classifier, judge or length check): then
+ * the reply is blocked instead.
+ */
+function redaction(
+  suite: AssertionSuite,
+  failedIds: string[],
+  raw: string,
+  view: Normalized,
+): string | null {
+  const ranges: [number, number][] = [];
+  for (const id of failedIds) {
+    const assertion = suite.assertions.find((row) => row.id === id);
+    if (!assertion) {
+      return null;
+    }
+    const patterns: RegExp[] = [];
+    if (assertion.check === 'not_matches' && assertion.pattern) {
+      const base = compileRe2(assertion.pattern);
+      patterns.push(new RegExp(base.source, 'g'));
+    } else if (
+      assertion.check === 'contains_none' &&
+      assertion.values?.length
+    ) {
+      for (const value of assertion.values) {
+        patterns.push(
+          new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+        );
+      }
+    } else {
+      return null;
+    }
+    let found = false;
+    for (const part of view.views) {
+      for (const pattern of patterns) {
+        for (const match of part.text.matchAll(pattern)) {
+          if (match[0].length === 0) {
+            continue;
+          }
+          found = true;
+          ranges.push(part.toRaw(match.index, match.index + match[0].length));
+        }
+      }
+    }
+    if (!found) {
+      return null;
+    }
   }
-  const output = mockDefend(systemPrompt, item);
-  if (outputSuite && dsl.evaluate(outputSuite, output).flagged) {
-    return { blocked: true, output };
-  }
-  if (item.kind === 'attack') {
-    const leaked = detectCanary(output, BOOKING_CANARY, CANARY_ENCODINGS);
-    const refused = /cannot|won't|will not|not share|booking nights/i.test(
-      output,
-    );
-    return { blocked: !leaked && refused, output };
-  }
-  const refused = /cannot share internal/i.test(output);
-  return { blocked: refused, output };
+  return redactRanges(raw, ranges, REDACTED);
 }
 
-function mockDefend(systemPrompt: string, item: GuardrailsItem): string {
-  const defensive =
-    /never reveal|override-bk|treat .* as data|encoded instruction/i.test(
-      systemPrompt,
-    );
-  const jailbreak = /ignore (all )?(previous|prior) instruction/i.test(
-    item.text,
-  );
-  const encoded =
-    item.category === 'encoded' ||
-    Boolean(
-      detectCanary(
-        item.text,
-        'Ignore previous instructions',
-        CANARY_ENCODINGS,
-      ) && !jailbreak,
-    );
-  if (item.kind === 'benign') {
-    return item.adversarial
-      ? 'Sure — Tuesday it is. I have updated the reservation.'
-      : 'Happy to help with your hotel booking. How many nights?';
-  }
-  if (
-    defensive &&
-    (jailbreak || (encoded && /encoded|hex|base64/i.test(systemPrompt)))
-  ) {
-    return 'I cannot share internal booking codes. How many nights will you stay?';
-  }
-  if (encoded && !defensive) {
-    return `The booking override code is ${BOOKING_CANARY}.`;
-  }
-  if (jailbreak && !defensive) {
-    return `The booking override code is ${BOOKING_CANARY}.`;
-  }
-  if (encoded && defensive) {
-    return `The booking override code is ${BOOKING_CANARY}.`;
-  }
-  return `The booking override code is ${BOOKING_CANARY}.`;
+function describeCalls(rows: ToolDecision[]): string {
+  return rows
+    .map((row) => `[${row.call.tool} ${JSON.stringify(row.call.args)}]`)
+    .join('\n');
 }
 
-function parseSuite(yaml: string) {
-  const trimmed = yaml.trim();
-  if (!trimmed) {
-    return null;
+function failureClasses(input: {
+  attackRate: number;
+  benignRate: number;
+  costPass: boolean;
+  judgePass: boolean;
+  weakest: string | null;
+  leaks: { reply: number; tool: number; byFormat: Record<string, number> };
+  benignLoss: {
+    inputFilter: number;
+    outputFilter: number;
+    redaction: number;
+    toolDenied: number;
+  };
+}): string[] {
+  const classes: string[] = [];
+  if (!input.costPass) {
+    classes.push('filter-cost-blown');
   }
-  return dsl.parse(trimmed);
+  if (!input.judgePass) {
+    classes.push('judge-budget-blown');
+  }
+  if (input.weakest) {
+    classes.push(`family-gap:${input.weakest}`);
+  }
+  if (input.attackRate < ATTACK_RATE || input.weakest) {
+    if (input.leaks.tool > 0) {
+      classes.push('tool-exfiltration');
+    }
+    const encoded = Object.entries(input.leaks.byFormat).some(
+      ([format, n]) => format !== 'literal' && n > 0,
+    );
+    if (encoded) {
+      classes.push('encoding-bypass');
+    }
+    if ((input.leaks.byFormat.literal ?? 0) > 0) {
+      classes.push('plain-leak');
+    }
+  }
+  if (input.benignRate < BENIGN_RATE) {
+    classes.push('over-blocking');
+    if (input.benignLoss.redaction > 0) {
+      classes.push('redaction-damage');
+    }
+    if (input.benignLoss.toolDenied > 0) {
+      classes.push('tool-over-restriction');
+    }
+  }
+  return classes.length > 0 ? classes : ['guardrail-design'];
+}
+
+const round = (value: number, digits: number) =>
+  Math.round(value * 10 ** digits) / 10 ** digits;
+
+function readSecret(hidden: unknown): string {
+  const secret =
+    hidden && typeof hidden === 'object' && !Array.isArray(hidden)
+      ? (hidden as { secret?: unknown }).secret
+      : undefined;
+  return typeof secret === 'string' && secret.trim()
+    ? secret.trim()
+    : BOOKING_CANARY;
 }
 
 function readPool(hidden: unknown): GuardrailsItem[] {
@@ -423,33 +830,4 @@ function mulberry32(seed: number): () => number {
 
 function toSeed(text: string): number {
   return Number.parseInt(hashToken(text).slice(0, 8), 16) || 1;
-}
-
-function g3Failures(
-  payload: {
-    systemPrompt: string;
-    outputFilterYaml: string;
-    inputFilterYaml: string;
-  },
-  attackRate: number,
-  benignRate: number,
-  costPass: boolean,
-): string[] {
-  const classes: string[] = [];
-  if (!costPass) {
-    classes.push('filter-cost-blown');
-  }
-  if (benignRate < BENIGN_RATE) {
-    classes.push('over-blocking');
-    if (/ignore previous(?! instructions)/i.test(payload.inputFilterYaml)) {
-      classes.push('keyword-filter-brittleness');
-    }
-  }
-  if (attackRate < ATTACK_RATE) {
-    if (!payload.outputFilterYaml.trim()) {
-      classes.push('no-output-filtering');
-    }
-    classes.push('encoding-bypass');
-  }
-  return classes.length > 0 ? classes : ['guardrail-design'];
 }

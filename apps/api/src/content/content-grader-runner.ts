@@ -242,6 +242,10 @@ export async function runContentGrader(
           systemPrompt: payloadText(payload, 'systemPrompt'),
           inputFilterYaml: payloadText(payload, 'inputFilterYaml'),
           outputFilterYaml: payloadText(payload, 'outputFilterYaml'),
+          toolPolicyYaml:
+            typeof payload.toolPolicyYaml === 'string'
+              ? payload.toolPolicyYaml
+              : undefined,
         },
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],

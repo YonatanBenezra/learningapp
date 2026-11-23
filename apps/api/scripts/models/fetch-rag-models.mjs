@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Downloads the pinned RAG engine models (embedding + cross-encoder reranker)
+ * Downloads the pinned engine models (RAG embedding + cross-encoder reranker,
+ * guardrails prompt-injection classifier)
  * into RAG_MODEL_CACHE_DIR (default apps/api/.cache/models), by commit, and
  * runs each once. A deploy can then set RAG_MODELS_ALLOW_DOWNLOAD=false.
  *
@@ -81,6 +82,8 @@ for (const model of embedders) {
   embedStates.push(await fetchPinned(model));
 }
 const rerankState = await fetchPinned(rerank);
+const injection = pinned('INJECTION_MODEL');
+const injectionState = await fetchPinned(injection);
 
 // Load every model exactly as the engine does: local files only.
 const tx = require('@huggingface/transformers');
@@ -114,5 +117,14 @@ const { logits } = await rerankModel(
 );
 console.log(
   `${rerank.id}@${rerank.revision.slice(0, 8)} (${rerankState}): score ${logits.data[0].toFixed(2)}`,
+);
+const injectionTokenizer = await tx.AutoTokenizer.from_pretrained(injection.id);
+const injectionModel = await tx.AutoModelForSequenceClassification.from_pretrained(
+  injection.id,
+  { dtype: injection.dtype },
+);
+const injectionOut = await injectionModel(injectionTokenizer(['warm-up']));
+console.log(
+  `${injection.id}@${injection.revision.slice(0, 8)} (${injectionState}): ${injectionOut.logits.dims[1]} labels`,
 );
 console.log(`models in ${cacheDir} (${Date.now() - started} ms)`);
