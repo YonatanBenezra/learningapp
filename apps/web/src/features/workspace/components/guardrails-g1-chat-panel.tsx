@@ -190,9 +190,12 @@ export function GuardrailsG1ChatPanel({
     let clearedThisTurn = false;
     try {
       const turn = await simulationsApi.g1Turn(exerciseSlug, level, userText);
-      const attempt = sendAttempts + 1;
-      setSendAttempts(attempt);
-      onAttempt();
+      // Only attacks count as attempts; a guest question is not a try.
+      const attempt = turn.attackAttempt ? sendAttempts + 1 : sendAttempts;
+      if (turn.attackAttempt) {
+        setSendAttempts(attempt);
+        onAttempt();
+      }
       const detector = detectorLine(turn, attempt);
       setLines((current) => [
         ...current,
