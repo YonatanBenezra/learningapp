@@ -12,6 +12,13 @@ import type { Grade } from "@/types/grade";
 import { cn } from "@/lib/utils";
 import { InfoTip } from "./info-tip";
 import { IconCode } from "./workspace-icons";
+import { ToolGroupHead } from "./tool-lock";
+import {
+  groupFieldsByTool,
+  lockedDefaults,
+  schemaWithoutLocked,
+  type ToolLocks,
+} from "../tool-locks";
 
 type SchemaProperty = {
   type?: string;
@@ -60,7 +67,15 @@ type SubmissionSurfaceProps = {
    * with their trade-off; the others stay editable but step back.
    */
   inspect?: { id: string; title: string; detail: string; fields: string[] } | null;
+  /**
+   * Practice only: the tool ladder. Controls are grouped by tool, the
+   * exercise's new tool first; locked tools stay greyed at their defaults.
+   */
+  toolLocks?: ToolLocks | null;
 };
+
+/** Known tools fold away when an exercise shows more controls than this. */
+const KNOWN_FIELDS_UNFOLDED = 3;
 
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
 
@@ -209,13 +224,19 @@ export function SubmissionSurface({
   figmaAttempt = 1,
   figmaBudget = null,
   inspect = null,
+  toolLocks = null,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
-  const [values, setValues] = useState<Record<string, unknown>>(() => ({
+  const [rawValues, setValues] = useState<Record<string, unknown>>(() => ({
     ...defaultsFrom(parsed),
     ...initialValues,
     ...restoreValues,
   }));
+  // Locked tools are held at their defaults; what the learner typed before
+  // comes back once the tool is unlocked.
+  const held = useMemo(() => lockedDefaults(toolLocks, parsed), [toolLocks, parsed]);
+  const values = useMemo(() => ({ ...rawValues, ...held }), [rawValues, held]);
+  const [showKnown, setShowKnown] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const isRag = simulator === "rag";
   const isGuard = simulator === "guardrails";
@@ -242,8 +263,8 @@ export function SubmissionSurface({
     !(guardMode?.id === "defend");
 
   const validation = useMemo(
-    () => validateSubmission(parsed, values),
-    [parsed, values],
+    () => validateSubmission(schemaWithoutLocked(parsed, held), values),
+    [parsed, held, values],
   );
   const isValid = validation.ok;
 
@@ -266,7 +287,7 @@ export function SubmissionSurface({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const result = validateSubmission(parsed, values);
+    const result = validateSubmission(schemaWithoutLocked(parsed, held), values);
     if (!result.ok) {
       setValidationError(result.message);
       return;
@@ -291,6 +312,31 @@ export function SubmissionSurface({
       ? Math.round((values.overlap / chunkSize) * 100)
       : null;
 
+  const renderField = (key: string, property: SchemaProperty) => (
+    <Field
+      key={key}
+      name={key}
+      property={property}
+      value={values[key]}
+      required={parsed.required ? parsed.required.includes(key) : true}
+      rag={isRag}
+      figmaLayout
+      emphasis={
+        inspect && inspect.fields.length > 0
+          ? inspect.fields.includes(key)
+            ? "focus"
+            : "dim"
+          : undefined
+      }
+      tradeoff={inspect?.fields.includes(key) ? RAG_FIELD_TRADEOFF[key] : undefined}
+      overlapPct={overlapPct}
+      onChange={(next) => {
+        setValidationError(null);
+        setValues((current) => ({ ...current, [key]: next }));
+      }}
+    />
+  );
+
   if (figmaLayout && isRag) {
     return (
       <div className="lp-ws-rag-figma-editor flex min-h-0 flex-1 flex-col">
@@ -312,34 +358,76 @@ export function SubmissionSurface({
                   </span>
                 </div>
               ) : null}
-              {inspectedFirst(fields, inspect?.fields ?? []).map(([key, property]) => (
-                <Field
-                  key={key}
-                  name={key}
-                  property={property}
-                  value={values[key]}
-                  required={
-                    parsed.required ? parsed.required.includes(key) : true
-                  }
-                  rag={isRag}
-                  figmaLayout
-                  emphasis={
-                    inspect && inspect.fields.length > 0
-                      ? inspect.fields.includes(key)
-                        ? "focus"
-                        : "dim"
-                      : undefined
-                  }
-                  tradeoff={
-                    inspect?.fields.includes(key) ? RAG_FIELD_TRADEOFF[key] : undefined
-                  }
-                  overlapPct={overlapPct}
-                  onChange={(next) => {
-                    setValidationError(null);
-                    setValues((current) => ({ ...current, [key]: next }));
-                  }}
-                />
-              ))}
+              {toolLocks
+                ? (() => {
+                    const groups = groupFieldsByTool(fields, toolLocks);
+                    const known = groups.filter(
+                      (group) => group.tool?.state === "unlocked",
+                    );
+                    const knownCount = known.reduce(
+                      (sum, group) => sum + group.fields.length,
+                      0,
+                    );
+                    const foldKnown =
+                      knownCount > KNOWN_FIELDS_UNFOLDED &&
+                      groups.some((group) => group.tool?.state === "new");
+                    let foldShown = false;
+                    return groups.map((group) => {
+                      const tool = group.tool;
+                      const folded =
+                        foldKnown && tool?.state === "unlocked" && !showKnown;
+                      const toggle =
+                        foldKnown && tool?.state === "unlocked" && !foldShown ? (
+                          <div className="lp-tool-known" key="known-fold">
+                            <span>
+                              <strong>
+                                {known.length === 1
+                                  ? "1 tool you already have"
+                                  : `${known.length} tools you already have`}
+                              </strong>{" "}
+                              ({known.map((row) => row.tool?.title).join(", ")}), pre-filled.
+                            </span>
+                            <button
+                              type="button"
+                              className="lp-tool-unlock"
+                              aria-expanded={showKnown}
+                              onClick={() => setShowKnown((open) => !open)}
+                            >
+                              {showKnown ? "Hide" : `Show ${knownCount} controls`}
+                            </button>
+                          </div>
+                        ) : null;
+                      if (toggle) {
+                        foldShown = true;
+                      }
+                      const body = folded ? null : (
+                        <section
+                          key={tool?.id ?? "other"}
+                          className={cn("lp-tool-group", tool && `is-${tool.state}`)}
+                        >
+                          {tool ? (
+                            <ToolGroupHead
+                              tool={tool}
+                              cost={toolLocks.cost}
+                              onUnlock={toolLocks.onUnlock}
+                            />
+                          ) : null}
+                          <fieldset
+                            className="lp-tool-fields"
+                            disabled={tool?.state === "locked"}
+                          >
+                            {inspectedFirst(group.fields, inspect?.fields ?? []).map(
+                              ([key, property]) => renderField(key, property),
+                            )}
+                          </fieldset>
+                        </section>
+                      );
+                      return toggle ? [toggle, body] : body;
+                    });
+                  })()
+                : inspectedFirst(fields, inspect?.fields ?? []).map(([key, property]) =>
+                    renderField(key, property),
+                  )}
               {validationError ? (
                 <p className="text-[0.8125rem] text-red-400 sm:col-span-3">{validationError}</p>
               ) : null}

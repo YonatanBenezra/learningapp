@@ -37,6 +37,7 @@ import {
   type WorkspaceMobileStep,
 } from "./workspace-demo-mobile";
 import { attemptBudgetLabel, ragEditorTitle } from "./workspace-rag-utils";
+import { lockedDefaults, type ToolLocks } from "../tool-locks";
 import "../workspace.css";
 import "../workspace-figma.css";
 import "../workspace-rag-figma.css";
@@ -67,6 +68,8 @@ type WorkspaceRagFigmaShellProps = {
   labPlaceholder?: React.ReactNode;
   figmaBrief?: FigmaBriefContent;
   onUnlockHint?: () => Promise<void>;
+  /** Practice only: tools the learner has not earned are greyed. */
+  toolLocks?: ToolLocks | null;
 };
 
 /** Server history (newest first) -> brief rows numbered from the oldest. */
@@ -119,6 +122,7 @@ export function WorkspaceRagFigmaShell({
   labPlaceholder = null,
   figmaBrief: figmaBriefOverride,
   onUnlockHint,
+  toolLocks = null,
 }: WorkspaceRagFigmaShellProps) {
   const [briefTab, setBriefTab] = useState<BriefTab>("description");
   const [workTab, setWorkTab] = useState<"configure" | "lab">("configure");
@@ -223,7 +227,14 @@ export function WorkspaceRagFigmaShell({
   const editorTitle = ragEditorTitle(exercise.submissionSchema);
   // The learner's live config for the lab and budget meter. Before the form has
   // mounted (mobile Lab step first) use the starter config, never `{}`.
-  const labConfig = formValues ?? formDefaults;
+  const held = useMemo(
+    () => lockedDefaults(toolLocks, exercise.submissionSchema),
+    [toolLocks, exercise.submissionSchema],
+  );
+  const labConfig = useMemo(
+    () => ({ ...(formValues ?? formDefaults), ...held }),
+    [formValues, formDefaults, held],
+  );
   // Stage inspector: the pipeline stage in focus, and the fields that set it.
   const [stageFocus, setStageFocus] = useState<string | null>(null);
   const inspect = useMemo(() => {
@@ -428,6 +439,7 @@ export function WorkspaceRagFigmaShell({
                           }
                           figmaBudget={budget}
                           inspect={inspect}
+                          toolLocks={toolLocks}
                         />
                       </div>
                     }

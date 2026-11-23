@@ -81,6 +81,11 @@ describe('RAG R2–R4 grade (e2e)', () => {
   beforeAll(async () => {
     app = await createApiApp();
     cookies = await signInPro(app, `rag-grade-${Date.now()}@labpath.test`);
+    // R2 also sets top-k, which a new learner earns in another exercise.
+    await request(app.getHttpServer())
+      .post('/api/tools/rag-top-k/unlock')
+      .set('Cookie', cookies)
+      .expect(200);
   });
 
   afterAll(async () => {

@@ -1,0 +1,243 @@
+/* Tool ladder: grouped controls, new / held / locked tools, early unlock. */
+
+.lp-tool-group {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.lp-tool-group.is-new {
+  border-color: color-mix(in srgb, var(--color-brand) 55%, var(--lp-border));
+  background: color-mix(in srgb, var(--color-brand) 7%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-brand) 18%, transparent);
+}
+
+.lp-tool-group.is-locked {
+  border-style: dashed;
+  background: transparent;
+}
+
+.lp-tool-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+@media (max-width: 639px) {
+  .lp-tool-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.lp-tool-fields:disabled {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+
+.lp-tool-fields:disabled * {
+  cursor: not-allowed;
+}
+
+.lp-tool-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.25rem 0.625rem;
+  min-width: 0;
+}
+
+.lp-tool-step {
+  grid-row: span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: var(--lp-muted);
+  background: color-mix(in srgb, var(--color-ink) 10%, transparent);
+}
+
+.lp-tool-head.is-new .lp-tool-step {
+  color: var(--color-brand-on, #04211d);
+  background: var(--color-brand);
+}
+
+.lp-tool-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+  color: var(--lp-ink);
+}
+
+.lp-tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.0625rem 0.4375rem;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
+}
+
+.lp-tool-badge.is-known {
+  color: var(--lp-muted);
+  background: color-mix(in srgb, var(--color-ink) 9%, transparent);
+}
+
+.lp-tool-badge.is-locked {
+  color: var(--color-lp-status-warn, #d68910);
+  background: color-mix(in srgb, var(--color-lp-status-warn, #d68910) 14%, transparent);
+}
+
+.lp-tool-blurb {
+  grid-column: 2 / -1;
+  min-width: 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--lp-muted);
+}
+
+.lp-tool-head > .lp-tool-unlock,
+.lp-tool-head > .lp-tool-confirm {
+  grid-column: 2 / -1;
+  justify-self: start;
+}
+
+.lp-tool-unlock {
+  padding: 0.3125rem 0.625rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--lp-ink);
+  background: color-mix(in srgb, var(--color-ink) 6%, var(--color-card));
+  cursor: pointer;
+}
+
+.lp-tool-unlock:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--color-brand) 60%, var(--lp-border));
+}
+
+.lp-tool-unlock.is-primary {
+  border-color: transparent;
+  color: var(--color-brand-on, #04211d);
+  background: var(--color-brand);
+}
+
+.lp-tool-unlock:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.lp-tool-confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--lp-ink);
+}
+
+.lp-tool-error {
+  flex-basis: 100%;
+  color: var(--color-lp-status-fail);
+}
+
+/* Known tools folded away when an exercise has many controls (rag-031). */
+.lp-tool-known {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-tool-known strong {
+  color: var(--lp-ink);
+}
+
+/* G3: the defence-language toolbox and a locked layer's note. */
+.lp-tool-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.lp-tool-box-title {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-tool-box-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-tool-box-list > li {
+  min-width: 0;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.4375rem;
+}
+
+.lp-tool-box-list > li.is-new {
+  border-color: color-mix(in srgb, var(--color-brand) 55%, var(--lp-border));
+  background: color-mix(in srgb, var(--color-brand) 7%, transparent);
+}
+
+.lp-tool-box-list > li.is-locked {
+  border-style: dashed;
+}
+
+.lp-tool-box-list code {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-tool-warn {
+  margin: 0;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--lp-ink);
+  background: color-mix(in srgb, var(--color-lp-status-warn, #d68910) 14%, transparent);
+}

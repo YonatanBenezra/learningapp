@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loginPath, routes } from "@/config/routes";
 import {
   ensureAuthSession,
@@ -16,6 +16,18 @@ import { waitForGrade, waitForRun, workspaceApi } from "../workspace-api";
 import { WORKER_OFFLINE_MESSAGE } from "../worker-offline-message";
 import type { HintList } from "@/types/hint";
 import { hintsApi } from "../hints-api";
+import { toolsApi } from "../tools-api";
+import { toolLocksFrom } from "../tool-locks";
+import type { ExerciseTools, LadderTool, ToolLadders, ToolTrack } from "@/types/tools";
+import { ToolUnlockCard } from "./tool-unlock-card";
+
+function heldIds(ladders: ToolLadders): Set<string> {
+  return new Set(
+    ladders.tracks.flatMap((track) =>
+      track.tools.filter((tool) => tool.unlocked).map((tool) => tool.id),
+    ),
+  );
+}
 import { GlobalLoader } from "@/components/ui/global-loader";
 import { WorkspacePracticeFrame } from "@/components/layout/workspace-practice-frame";
 import { BriefPanel, type BriefTab } from "./brief-panel";
@@ -78,6 +90,26 @@ export function WorkspaceShell({
   const unlockHint = useCallback(async () => {
     setHints(await hintsApi.unlockNext(slug));
   }, [slug]);
+  // The tool ladder: tools this learner has not earned are greyed out.
+  const [tools, setTools] = useState<{ slug: string; data: ExerciseTools } | null>(null);
+  // The tools held when the ladder was last read; a pass that adds to it
+  // shows the unlock moment.
+  const heldRef = useRef<Set<string> | null>(null);
+  const [unlockMoment, setUnlockMoment] = useState<{
+    tools: LadderTool[];
+    tracks: ToolTrack[];
+  } | null>(null);
+  const closeUnlockMoment = useCallback(() => setUnlockMoment(null), []);
+  // Bumped after an early unlock so the tools are read again.
+  const [toolsVersion, setToolsVersion] = useState(0);
+  const unlockTool = useCallback(async (toolId: string) => {
+    await toolsApi.unlock(toolId);
+    setToolsVersion((version) => version + 1);
+  }, []);
+  const toolLocks = useMemo(
+    () => toolLocksFrom(tools?.slug === slug ? tools.data : null, unlockTool),
+    [tools, slug, unlockTool],
+  );
   const [authAllowed, setAuthAllowed] = useState<boolean | null>(() =>
     getAuthSnapshot().status === "authenticated" ? true : null,
   );
@@ -171,6 +203,62 @@ export function WorkspaceShell({
       cancelled = true;
     };
   }, [slug, exercise, onboarding]);
+
+  // Tools are fetched on open and again after a pass, which may earn some.
+  const passedRunId = grade?.verdict === "pass" ? (run?.id ?? null) : null;
+  useEffect(() => {
+    const onLadder =
+      exercise &&
+      !onboarding &&
+      authAllowed === true &&
+      (exercise.simulator === "rag" || exercise.simulator === "guardrails");
+    if (!onLadder) {
+      return;
+    }
+    let cancelled = false;
+    toolsApi
+      .forExercise(slug)
+      .then(async (data) => {
+        if (cancelled) {
+          return;
+        }
+        setTools({ slug, data });
+        if (!data.track) {
+          return;
+        }
+        const ladders = await toolsApi.ladders();
+        if (cancelled) {
+          return;
+        }
+        const before = heldRef.current;
+        heldRef.current = heldIds(ladders);
+        if (!before) {
+          return;
+        }
+        // Tools bought early already showed up as unlocked; only a pass
+        // (or a won level) earns the moment.
+        const earned = ladders.tracks
+          .flatMap((track) => track.tools)
+          .filter(
+            (tool) => tool.unlocked && tool.via !== "bought" && !before.has(tool.id),
+          );
+        if (earned.length > 0) {
+          setUnlockMoment({ tools: earned, tracks: ladders.tracks });
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, exercise, onboarding, authAllowed, passedRunId, toolsVersion]);
+
+  const unlockCard = unlockMoment ? (
+    <ToolUnlockCard
+      tools={unlockMoment.tools}
+      tracks={unlockMoment.tracks}
+      onClose={closeUnlockMoment}
+    />
+  ) : null;
 
   useEffect(() => {
     return () => {
@@ -336,7 +424,9 @@ export function WorkspaceShell({
         onToggleBriefCollapsed={toggleBriefCollapsed}
         resultsCollapsed={resultsCollapsed}
         onToggleResultsCollapsed={toggleResultsCollapsed}
+        toolLocks={toolLocks}
       />
+      {unlockCard}
       </WorkspacePracticeFrame>
     );
   }
@@ -364,7 +454,9 @@ export function WorkspaceShell({
         resultsCollapsed={resultsCollapsed}
         onToggleResultsCollapsed={toggleResultsCollapsed}
         showSimulationLab={ragShowsSimulationLab(exercise.submissionSchema)}
+        toolLocks={toolLocks}
       />
+      {unlockCard}
       </WorkspacePracticeFrame>
     );
   }

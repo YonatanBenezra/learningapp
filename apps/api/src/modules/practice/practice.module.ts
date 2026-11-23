@@ -6,6 +6,7 @@ import { GradesModule } from './grades/grades.module';
 import { TracesModule } from './traces/traces.module';
 import { HintsModule } from './hints/hints.module';
 import { SimulationsModule } from './simulations/simulations.module';
+import { ToolsModule } from './tools/tools.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { SimulationsModule } from './simulations/simulations.module';
     TracesModule,
     HintsModule,
     SimulationsModule,
+    ToolsModule,
   ],
 })
 export class PracticeModule {}

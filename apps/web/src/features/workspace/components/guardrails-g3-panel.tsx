@@ -19,6 +19,16 @@ import {
   g3StarterDefaults,
 } from "../guardrails-workspace-data";
 import { asSubmissionSchema, validateSubmission } from "../submission-validation";
+import {
+  lockedDefaults,
+  schemaWithoutLocked,
+  lockedFeaturesUsed,
+  toolForField,
+  type ToolLocks,
+} from "../tool-locks";
+import { ToolGroupHead } from "./tool-lock";
+import { cn } from "@/lib/utils";
+import type { ExerciseTool } from "@/types/tools";
 
 type GuardrailsG3PanelProps = {
   exercise: Exercise;
@@ -32,6 +42,8 @@ type GuardrailsG3PanelProps = {
   history?: SubmissionHistoryItem[] | null;
   onSubmit: (payload: Record<string, unknown>) => void;
   onValidityChange: (valid: boolean) => void;
+  /** Practice only: layers and features the learner has not earned. */
+  toolLocks?: ToolLocks | null;
 };
 
 type StackField = keyof typeof G3_FIELD_META;
@@ -59,10 +71,13 @@ function G3SectionHead({
   step,
   title,
   hint,
+  isNew = false,
 }: {
   step: number;
   title: string;
   hint: string;
+  /** The exercise teaches this layer. */
+  isNew?: boolean;
 }) {
   return (
     <div className="lp-grd-g3-block-head">
@@ -72,9 +87,31 @@ function G3SectionHead({
           ·
         </span>
         <span className="lp-grd-g3-block-title">{title}</span>
+        {isNew ? <em className="lp-tool-badge">New tool</em> : null}
         <span className="lp-grd-g3-block-hint">{hint}</span>
       </h3>
     </div>
+  );
+}
+
+/** Defence-language features, each a tool on the G3 ladder. */
+function G3Toolbox({ locks }: { locks: ToolLocks }) {
+  const tools = locks.tools.filter((tool) => tool.features.length > 0);
+  if (tools.length === 0) {
+    return null;
+  }
+  return (
+    <section className="lp-tool-box" aria-label="Defence-language toolbox">
+      <p className="lp-tool-box-title">Defence-language toolbox</p>
+      <ul className="lp-tool-box-list">
+        {tools.map((tool) => (
+          <li key={tool.id} className={cn(`is-${tool.state}`)}>
+            <ToolGroupHead tool={tool} cost={locks.cost} onUnlock={locks.onUnlock} />
+            <code>{tool.features.join(" · ")}</code>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -126,14 +163,31 @@ export function GuardrailsG3Panel({
   history = null,
   onSubmit,
   onValidityChange,
+  toolLocks = null,
 }: GuardrailsG3PanelProps) {
   const parsed = useMemo(() => asSubmissionSchema(exercise.submissionSchema), [exercise.submissionSchema]);
-  const defaults = useMemo(
-    () => g3StarterDefaults(initialValues),
-    [exercise.slug, exercise.submissionSchema, initialValues],
+  // Locked layers are held at the exercise's defaults (an empty prompt, an
+  // empty filter); what the learner wrote comes back once they unlock it.
+  const held = useMemo(
+    () => lockedDefaults(toolLocks, exercise.submissionSchema),
+    [toolLocks, exercise.submissionSchema],
   );
-  const [values, setValues] = useState<Record<string, unknown>>(() =>
+  const defaults = useMemo(
+    () => ({ ...g3StarterDefaults(initialValues), ...held }),
+    [exercise.slug, exercise.submissionSchema, initialValues, held],
+  );
+  const [rawValues, setValues] = useState<Record<string, unknown>>(() =>
     g3StarterDefaults(initialValues),
+  );
+  const values = useMemo(() => ({ ...rawValues, ...held }), [rawValues, held]);
+  const lockedInUse: ExerciseTool[] = useMemo(
+    () =>
+      lockedFeaturesUsed(toolLocks, [
+        String(values.inputFilterYaml ?? ""),
+        String(values.outputFilterYaml ?? ""),
+        String(values.toolPolicyYaml ?? ""),
+      ]),
+    [toolLocks, values],
   );
   const [validationError, setValidationError] = useState<string | null>(null);
   const [workspaceTab, setWorkspaceTab] = useState<"stack" | "probe" | "history">("stack");
@@ -142,7 +196,10 @@ export function GuardrailsG3Panel({
     setValues(defaults);
   }, [defaults]);
 
-  const validation = useMemo(() => validateSubmission(parsed, values), [parsed, values]);
+  const validation = useMemo(
+    () => validateSubmission(schemaWithoutLocked(parsed, held), values),
+    [parsed, held, values],
+  );
   const dirty = useMemo(() => JSON.stringify(values) !== JSON.stringify(defaults), [defaults, values]);
   const filterTokens = useMemo(() => estimateFilterTokens(values), [values]);
 
@@ -154,6 +211,9 @@ export function GuardrailsG3Panel({
     event.preventDefault();
     if (!validation.ok) {
       setValidationError(validation.message);
+      return;
+    }
+    if (lockedInUse.length > 0) {
       return;
     }
     setValidationError(null);
@@ -229,9 +289,26 @@ export function GuardrailsG3Panel({
               const raw = typeof values[key] === "string" ? (values[key] as string) : "";
               const minLines =
                 key === "systemPrompt" ? 3 : key === "toolPolicyYaml" ? 5 : key === "outputFilterYaml" ? 4 : 7;
+              const tool = toolForField(toolLocks, key);
+              if (tool && toolLocks && tool.state === "locked") {
+                return (
+                  <div key={key} className="lp-grd-g3-block lp-tool-group is-locked">
+                    <ToolGroupHead
+                      tool={{ ...tool, step: meta.step }}
+                      cost={toolLocks.cost}
+                      onUnlock={toolLocks.onUnlock}
+                    />
+                  </div>
+                );
+              }
               return (
                 <div key={key} className="lp-grd-g3-block">
-                  <G3SectionHead step={meta.step} title={meta.title} hint={meta.hint} />
+                  <G3SectionHead
+                    step={meta.step}
+                    title={meta.title}
+                    hint={meta.hint}
+                    isNew={tool?.state === "new"}
+                  />
                   <G3CodeBox
                     file={meta.file}
                     lang={meta.lang}
@@ -243,8 +320,20 @@ export function GuardrailsG3Panel({
                 </div>
               );
             })}
-
+            {toolLocks ? <G3Toolbox locks={toolLocks} /> : null}
           </div>
+
+          {lockedInUse.length > 0 ? (
+            <p className="lp-tool-warn" role="alert">
+              {lockedInUse
+                .map(
+                  (tool) =>
+                    `${tool.title} (${tool.features.join(", ")}) is locked: it unlocks after ${tool.teachesIn.title}.`,
+                )
+                .join(" ")}{" "}
+              Remove it or unlock it in the toolbox to submit.
+            </p>
+          ) : null}
 
           {(validationError || error) && (
             <p className="lp-grd-g3-error" role="alert">
@@ -271,7 +360,7 @@ export function GuardrailsG3Panel({
             <button
               type="submit"
               className="lp-grd-g3-submit"
-              disabled={disabled || pending || !validation.ok}
+              disabled={disabled || pending || !validation.ok || lockedInUse.length > 0}
             >
               {pending ? "Submitting…" : "Submit defence"}
               {!pending ? <ArrowRight className="size-4" aria-hidden /> : null}

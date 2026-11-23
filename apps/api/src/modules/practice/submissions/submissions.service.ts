@@ -23,6 +23,7 @@ import {
 } from '../../grading/processors/grade-job';
 import { AccountService } from '../../accounts/account.service';
 import { ContestsService } from '../../contests/contests.service';
+import { ToolsService } from '../tools/tools.service';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
 
 const UNASSIGNED_WORKER = 'unassigned';
@@ -57,6 +58,7 @@ export class SubmissionsService {
     private readonly prisma: PrismaService,
     private readonly accounts: AccountService,
     private readonly contests: ContestsService,
+    private readonly tools: ToolsService,
     @InjectQueue(QUEUE_GRADE) private readonly gradeQueue: Queue<GradeJobData>,
   ) {}
 
@@ -85,6 +87,13 @@ export class SubmissionsService {
     }
 
     await this.contests.assertContestSubmission(attemptId, user.id);
+    if (attempt.contestEntryId === null) {
+      await this.tools.assertPracticePayload(
+        user.id,
+        attempt.exercise,
+        dto.payload,
+      );
+    }
     await assertAttemptPolicy(this.prisma, user.id, attempt.exercise);
 
     const payloadHash = hashToken(canonicalJson(dto.payload));

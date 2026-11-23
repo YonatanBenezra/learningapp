@@ -1,5 +1,5 @@
 export const LEADERBOARD_RULE =
-  'Rating = solves × 100 − hint points + passes in the last 30 days. On a problem you solve, hints cost 0, 5, 10… points (at most 50).';
+  'Rating = solves × 100 − hint points + passes in the last 30 days. On a problem you solve, hints cost 0, 5, 10… points (at most 50). A tool unlocked before you earn it costs 25.';
 
 /** Points a hint costs on a problem you solve: the first is free. */
 export function hintCost(hintIndex: number): number {
@@ -44,12 +44,13 @@ export type LeaderboardSortRow = {
   hintPoints?: number;
 };
 
+/** Never below zero: tools bought before any solve do not go negative. */
 export function leaderboardRating(
   solves: number,
   recentPasses: number,
   hintPoints = 0,
 ): number {
-  return solves * 100 - hintPoints + recentPasses;
+  return Math.max(0, solves * 100 - hintPoints + recentPasses);
 }
 
 export function sortLeaderboardRows<T extends LeaderboardSortRow>(

@@ -15,6 +15,7 @@ import {
   strongestTracksFromCounts,
   type LeaderboardTrackKey,
 } from './leaderboard-tracks';
+import { toolPointsByUser } from '../practice/tools/tools.service';
 
 export type LeaderboardEntry = {
   rank: number;
@@ -105,6 +106,10 @@ export class LeaderboardService {
         exercise: { select: { slug: true } },
       },
     });
+    const toolPoints = await toolPointsByUser(
+      this.prisma,
+      candidates.map((row) => row.id),
+    );
     const unlocksByUser = new Map<
       string,
       { slug: string; hintIndex: number }[]
@@ -177,10 +182,11 @@ export class LeaderboardService {
             trackPasses[key] = stats.trackSlugs[key].size;
           }
           const strongestTracks = strongestTracksFromCounts(trackPasses);
-          const hintPoints = hintPointsSpent(
-            unlocksByUser.get(candidate.id) ?? [],
-            stats.slugs,
-          );
+          const hintPoints =
+            hintPointsSpent(
+              unlocksByUser.get(candidate.id) ?? [],
+              stats.slugs,
+            ) + (toolPoints.get(candidate.id) ?? 0);
           return {
             slug: candidate.profileSlug as string,
             displayName: publicDisplayName(candidate.displayName),

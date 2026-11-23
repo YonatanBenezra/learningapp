@@ -48,6 +48,8 @@ export const routes = {
   dashboard: "/dashboard",
   dashboardProfile: "/dashboard/profile",
   dashboardSettings: "/dashboard/settings",
+  /** The tool ladders: what each simulator has handed the learner so far. */
+  dashboardTools: "/dashboard/tools",
   /** HTB-style contests workspace (dashboard shell, not under /dashboard/*). */
   /** CTF contests workspace — label: "Contests" ({@link workspaceContests}). */
   contestHub: "/contest",

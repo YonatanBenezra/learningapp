@@ -32,6 +32,7 @@ import {
   RECENT_SOLVE_LIMIT,
 } from './profile-slug';
 import { toPublicVerifiedResult } from '../assessments/public-verified-result';
+import { toolPointsByUser } from '../practice/tools/tools.service';
 
 @Injectable()
 export class ProfilesService {
@@ -40,7 +41,7 @@ export class ProfilesService {
     private readonly accounts: AccountService,
   ) {}
 
-  /** Points spent on hints for problems this user has solved. */
+  /** Points spent on hints for solved problems and on tools unlocked early. */
   private async hintPoints(
     userId: string,
     solvedSlugs: Set<string>,
@@ -49,12 +50,15 @@ export class ProfilesService {
       where: { userId },
       select: { hintIndex: true, exercise: { select: { slug: true } } },
     });
-    return hintPointsSpent(
-      unlocks.map((unlock) => ({
-        slug: unlock.exercise.slug,
-        hintIndex: unlock.hintIndex,
-      })),
-      solvedSlugs,
+    const tools = await toolPointsByUser(this.prisma, [userId]);
+    return (
+      hintPointsSpent(
+        unlocks.map((unlock) => ({
+          slug: unlock.exercise.slug,
+          hintIndex: unlock.hintIndex,
+        })),
+        solvedSlugs,
+      ) + (tools.get(userId) ?? 0)
     );
   }
 

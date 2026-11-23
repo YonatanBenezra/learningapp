@@ -18,6 +18,7 @@ import { GuardrailsG1ChatPanel } from "./guardrails-g1-chat-panel";
 import { GuardrailsLeftPanel } from "./guardrails-left-panel";
 import { GuardrailsG2Panel } from "./guardrails-g2-panel";
 import { GuardrailsG3Panel } from "./guardrails-g3-panel";
+import type { ToolLocks } from "../tool-locks";
 import { workspaceApi } from "../workspace-api";
 import { GuardrailsLevelsProvider, useExerciseLevels } from "../guardrails-levels";
 import type { SubmissionHistoryItem } from "@/types/submission";
@@ -46,6 +47,8 @@ type WorkspaceGuardrailsFigmaShellProps = {
   onToggleBriefCollapsed: () => void;
   resultsCollapsed: boolean;
   onToggleResultsCollapsed: () => void;
+  /** Practice only: G3 layers and features the learner has not earned. */
+  toolLocks?: ToolLocks | null;
 };
 
 export function WorkspaceGuardrailsFigmaShell({
@@ -65,6 +68,7 @@ export function WorkspaceGuardrailsFigmaShell({
   onToggleBriefCollapsed,
   resultsCollapsed,
   onToggleResultsCollapsed,
+  toolLocks = null,
 }: WorkspaceGuardrailsFigmaShellProps) {
   const variant = guardrailsVariantForExercise(exercise)!;
   const g1Simulator = useMemo(
@@ -261,6 +265,7 @@ export function WorkspaceGuardrailsFigmaShell({
           history={g3History}
           onSubmit={handleGradeSubmit}
           onValidityChange={onValidityChange}
+          toolLocks={toolLocks}
         />
       </div>
     );
