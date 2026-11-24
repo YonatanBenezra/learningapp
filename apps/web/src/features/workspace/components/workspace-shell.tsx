@@ -3,10 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loginPath, routes } from "@/config/routes";
-import {
-  ensureAuthSession,
-  getAuthSnapshot,
-} from "@/features/auth/auth-session";
+import { ensureAuthSession } from "@/features/auth/auth-session";
+import { useCachedAuthStatus } from "@/features/auth/use-auth-session";
 import { problemsApi } from "@/features/problems/problems-api";
 import { ApiError } from "@/lib/api-client";
 import type { Exercise } from "@/types/exercise";
@@ -114,9 +112,10 @@ export function WorkspaceShell({
       toolLocksFrom(tools?.slug === slug ? tools.data : null, unlockTool, refreshTools),
     [tools, slug, unlockTool, refreshTools],
   );
-  const [authAllowed, setAuthAllowed] = useState<boolean | null>(() =>
-    getAuthSnapshot().status === "authenticated" ? true : null,
-  );
+  // The session check's answer, or the cached session until it arrives.
+  const cachedAuth = useCachedAuthStatus();
+  const [authChecked, setAuthAllowed] = useState<boolean | null>(null);
+  const authAllowed = authChecked ?? (cachedAuth === "authenticated" ? true : null);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {

@@ -56,6 +56,11 @@ const STACK_FIELDS: StackField[] = [
   "toolPolicyYaml",
 ];
 
+/** The four layers as one string, to tell an edited stack from a saved one. */
+function stackSnapshot(values: Record<string, unknown>): string {
+  return JSON.stringify(STACK_FIELDS.map((key) => String(values[key] ?? "")));
+}
+
 /** Filter tokens as the grader counts them (chars / 4), before the message itself. */
 function estimateFilterTokens(values: Record<string, unknown>): number {
   let tokens = 0;
@@ -204,7 +209,13 @@ export function GuardrailsG3Panel({
     () => validateSubmission(schemaWithoutLocked(parsed, held), values),
     [parsed, held, values],
   );
-  const dirty = useMemo(() => JSON.stringify(values) !== JSON.stringify(defaults), [defaults, values]);
+  // "Unsaved" compares with the stack last submitted (or restored from the
+  // history) in this session, and with the starter before that.
+  const [savedSnapshot, setSavedSnapshot] = useState<string | null>(null);
+  const dirty = useMemo(
+    () => stackSnapshot(values) !== (savedSnapshot ?? stackSnapshot(defaults)),
+    [defaults, savedSnapshot, values],
+  );
   const filterTokens = useMemo(() => estimateFilterTokens(values), [values]);
 
   useEffect(() => {
@@ -221,6 +232,7 @@ export function GuardrailsG3Panel({
       return;
     }
     setValidationError(null);
+    setSavedSnapshot(stackSnapshot(values));
     onSubmit(values);
   }
 
@@ -276,7 +288,9 @@ export function GuardrailsG3Panel({
           <G3HistoryPanel
             history={history}
             onRestore={(payload) => {
-              setValues(g3StarterDefaults(payload));
+              const restored = g3StarterDefaults(payload);
+              setValues(restored);
+              setSavedSnapshot(stackSnapshot({ ...restored, ...held }));
               setWorkspaceTab("stack");
             }}
           />

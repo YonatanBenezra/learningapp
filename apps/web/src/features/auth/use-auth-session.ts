@@ -59,6 +59,20 @@ function toView(): AuthSessionView {
   return cachedView;
 }
 
+/**
+ * The cached session status, safe to render: "unknown" on the server and
+ * while hydrating, then the browser's cached status. Reading the snapshot
+ * in a state initializer instead makes the first client render differ from
+ * the server HTML.
+ */
+export function useCachedAuthStatus(): AuthSessionView["status"] {
+  return useSyncExternalStore(
+    subscribeAuthSession,
+    () => getAuthSnapshot().status,
+    () => "unknown" as const,
+  );
+}
+
 export function useAuthSession(options?: { verify?: boolean }) {
   const verify = options?.verify ?? true;
 

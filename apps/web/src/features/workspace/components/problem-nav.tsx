@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { brand } from "@/config/brand";
 import { loginPath, routes } from "@/config/routes";
-import {
-  ensureAuthSession,
-  getAuthSnapshot,
-} from "@/features/auth/auth-session";
+import { ensureAuthSession } from "@/features/auth/auth-session";
+import { useCachedAuthStatus } from "@/features/auth/use-auth-session";
 import { problemsApi } from "@/features/problems/problems-api";
 import type { Exercise } from "@/types/exercise";
 import {
@@ -47,9 +45,9 @@ export function ProblemNav({ slug, onboarding = false }: ProblemNavProps) {
     pending: false,
     disabled: true,
   });
-  const [signedIn, setSignedIn] = useState(
-    isSignedInStatus(getAuthSnapshot().status),
-  );
+  const cachedAuth = useCachedAuthStatus();
+  const [signedInChecked, setSignedIn] = useState<boolean | null>(null);
+  const signedIn = signedInChecked ?? isSignedInStatus(cachedAuth);
 
   useEffect(() => {
     document.documentElement.dataset.workspace = "problem";
