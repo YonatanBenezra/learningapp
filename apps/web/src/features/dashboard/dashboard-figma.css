@@ -25,11 +25,11 @@
   --red: #f87171;
   --red-soft: #2c1518;
   --blue: #88c9f7;
-  --ember-ring: rgb(159 239 0 / 28%);
-  --heatmap-l1: rgb(159 239 0 / 45%);
-  --heatmap-l2: rgb(159 239 0 / 70%);
-  --heatmap-l3: rgb(159 239 0 / 100%);
-  --heatmap-pulse: rgb(159 239 0 / 22%);
+  --ember-ring: rgb(255 77 77 / 28%);
+  --heatmap-l1: rgb(255 77 77 / 45%);
+  --heatmap-l2: rgb(255 77 77 / 70%);
+  --heatmap-l3: rgb(255 77 77 / 100%);
+  --heatmap-pulse: rgb(255 77 77 / 22%);
   --segment-active-bg: var(--surface);
   --segment-active-fg: var(--text);
   --lp-font-sans: neue-haas-unica, "Neue Haas Unica", var(--font-dm-sans), "DM Sans", sans-serif;
@@ -1287,13 +1287,13 @@ html:not([data-theme="dark"]) .lp-dash-figma.lp-dash-figma--htb {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --ember: #FF4D4D;
-  --on-ember: #121c2b;
-  --ember-soft: rgb(159 239 0 / 12%);
-  --ember-ring: rgb(159 239 0 / 28%);
-  --heatmap-l1: rgb(159 239 0 / 45%);
-  --heatmap-l2: rgb(159 239 0 / 70%);
-  --heatmap-l3: rgb(159 239 0 / 100%);
-  --heatmap-pulse: rgb(159 239 0 / 22%);
+  --on-ember: #0b0b0e;
+  --ember-soft: rgb(255 77 77 / 12%);
+  --ember-ring: rgb(255 77 77 / 28%);
+  --heatmap-l1: rgb(255 77 77 / 45%);
+  --heatmap-l2: rgb(255 77 77 / 70%);
+  --heatmap-l3: rgb(255 77 77 / 100%);
+  --heatmap-pulse: rgb(255 77 77 / 22%);
   --segment-active-bg: var(--surface);
   --segment-active-fg: var(--text);
 }
@@ -1343,11 +1343,11 @@ html[data-workspace="profile"] {
   isolation: isolate;
   background-color: #0a0f18;
   background-image:
-    radial-gradient(ellipse 120% 70% at 50% -8%, rgb(159 239 0 / 9%) 0%, transparent 48%),
+    radial-gradient(ellipse 120% 70% at 50% -8%, rgb(255 77 77 / 9%) 0%, transparent 48%),
     radial-gradient(ellipse 80% 45% at 100% 0%, rgb(56 189 248 / 6%) 0%, transparent 42%),
     radial-gradient(ellipse 65% 50% at 0% 100%, rgb(168 85 247 / 6%) 0%, transparent 45%),
     linear-gradient(180deg, #111923 0%, #0d141f 38%, #0a0f18 100%),
-    linear-gradient(rgb(159 239 0 / 3.5%) 1px, transparent 1px),
+    linear-gradient(rgb(255 77 77 / 3.5%) 1px, transparent 1px),
     linear-gradient(90deg, rgb(135 153 181 / 6%) 1px, transparent 1px);
   background-size:
     auto,
@@ -1391,9 +1391,9 @@ html[data-workspace="profile"] {
 }
 
 .lp-dash-htb-workspace .lp-dash-figma-card:hover {
-  border-color: rgb(159 239 0 / 22%);
+  border-color: rgb(255 77 77 / 22%);
   box-shadow:
-    0 0 0 1px rgb(159 239 0 / 12%),
+    0 0 0 1px rgb(255 77 77 / 12%),
     0 18px 44px rgb(0 0 0 / 32%);
 }
 
@@ -1404,7 +1404,7 @@ html[data-workspace="profile"] {
 }
 
 .lp-dash-htb-workspace .lp-dash-figma-btn--ghost:hover {
-  border-color: rgb(159 239 0 / 35%);
+  border-color: rgb(255 77 77 / 35%);
   background: rgb(30 41 57 / 88%);
   color: #f4f4f4;
 }
@@ -1413,7 +1413,7 @@ html[data-workspace="profile"] {
   box-shadow:
     0 1px 0 rgb(255 255 255 / 14%) inset,
     0 0 0 1px rgb(0 0 0 / 35%),
-    0 10px 28px rgb(159 239 0 / 22%);
+    0 10px 28px rgb(255 77 77 / 22%);
 }
 
 .lp-dash-htb-workspace .lp-dash-figma-btn--ember:hover {
@@ -1421,10 +1421,10 @@ html[data-workspace="profile"] {
 }
 
 .lp-dash-htb-workspace .lp-dash-figma-drill-box {
-  border: 1px solid rgb(159 239 0 / 18%);
+  border: 1px solid rgb(255 77 77 / 18%);
   background:
     linear-gradient(160deg, rgb(21 31 46 / 92%) 0%, rgb(14 22 35 / 96%) 100%),
-    radial-gradient(ellipse 90% 80% at 100% 0%, rgb(159 239 0 / 12%) 0%, transparent 60%);
+    radial-gradient(ellipse 90% 80% at 100% 0%, rgb(255 77 77 / 12%) 0%, transparent 60%);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%);
 }
 
@@ -1441,7 +1441,7 @@ html[data-workspace="profile"] {
 
 .lp-dash-htb-welcome-role-accent {
   color: var(--ember);
-  text-shadow: 0 0 24px rgb(159 239 0 / 28%);
+  text-shadow: 0 0 24px rgb(255 77 77 / 28%);
 }
 
 .lp-dash-htb-workspace .lp-dash-htb-section-title {
@@ -1456,7 +1456,7 @@ html[data-workspace="profile"] {
 }
 
 .lp-dash-htb-workspace .lp-dash-htb-rec-scroll-btn:hover:not(:disabled) {
-  border-color: rgb(159 239 0 / 35%);
+  border-color: rgb(255 77 77 / 35%);
   background: rgb(30 41 57 / 90%);
   color: #f4f4f4;
 }
@@ -1583,7 +1583,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 }
 
 .lp-dash-htb-nav-link:focus-visible {
-  outline: 2px solid rgb(159 239 0 / 45%);
+  outline: 2px solid rgb(255 77 77 / 45%);
   outline-offset: 2px;
 }
 
@@ -1626,7 +1626,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 
 .lp-dash-htb-nav-icon-btn.is-active {
   color: var(--ember);
-  background: rgb(159 239 0 / 10%);
+  background: rgb(255 77 77 / 10%);
 }
 
 .lp-dash-htb-nav-notify-btn {
@@ -1642,7 +1642,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
   border-radius: 999px;
   border: 1.5px solid #101927;
   background: #FF4D4D;
-  box-shadow: 0 0 8px rgb(159 239 0 / 55%);
+  box-shadow: 0 0 8px rgb(255 77 77 / 55%);
 }
 
 .lp-dash-htb-nav-notify-wrap {
@@ -1940,7 +1940,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: 2px solid rgb(159 239 0 / 88%);
+  border: 2px solid color-mix(in srgb, var(--ember) 88%, transparent);
   background: linear-gradient(180deg, #1a2638 0%, #151f2e 100%);
   font-size: 0.625rem;
   font-weight: 700;
@@ -1948,7 +1948,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
   color: var(--ember);
   box-shadow:
     0 0 0 1px rgb(0 0 0 / 35%),
-    0 0 0 2px rgb(159 239 0 / 10%);
+    0 0 0 2px color-mix(in srgb, var(--ember) 10%, transparent);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -1956,11 +1956,11 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 }
 
 .lp-dash-htb-nav-avatar.is-active {
-  border-color: #FF6B6B;
+  border-color: var(--ember-hover, #ff6b6b);
   box-shadow:
-    0 0 0 1px rgb(159 239 0 / 40%),
-    0 0 0 3px rgb(159 239 0 / 14%),
-    0 0 16px rgb(159 239 0 / 26%);
+    0 0 0 1px color-mix(in srgb, var(--ember) 40%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--ember) 14%, transparent),
+    0 0 16px color-mix(in srgb, var(--ember) 26%, transparent);
 }
 
 .lp-dash-htb-nav-avatar--menu {
@@ -1995,7 +1995,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
   gap: 12px;
   padding: 14px 14px 12px;
   border-bottom: 1px solid var(--dash-border);
-  background: linear-gradient(180deg, rgb(159 239 0 / 6%) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgb(255 77 77 / 6%) 0%, transparent 100%);
 }
 
 .lp-dash-htb-nav-user-menu-meta {
@@ -2232,7 +2232,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 }
 
 .lp-dash-htb-rec-card--0 {
-  background: linear-gradient(145deg, #151f2e 40%, rgb(159 239 0 / 18%) 100%);
+  background: linear-gradient(145deg, #151f2e 40%, rgb(255 77 77 / 18%) 100%);
 }
 
 .lp-dash-htb-rec-card--1 {
@@ -2272,7 +2272,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
   border-radius: 10px;
   border: 1px solid rgb(135 153 181 / 28%);
   background: rgb(0 0 0 / 28%);
-  color: rgb(159 239 0 / 88%);
+  color: rgb(255 77 77 / 88%);
 }
 
 .lp-dash-htb-rec-card--1 .lp-dash-htb-rec-icon {
@@ -2474,7 +2474,7 @@ html[data-workspace="profile"] :is(.lp-dash-htb-nav-link, .hub-nav-link) {
 
 .lp-dash-htb-product--academy {
   background:
-    radial-gradient(ellipse 80% 65% at 100% 100%, rgb(159 239 0 / 22%) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 65% at 100% 100%, rgb(255 77 77 / 22%) 0%, transparent 55%),
     linear-gradient(155deg, #131b29 0%, #161f30 55%, #141c28 100%);
 }
 

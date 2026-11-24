@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/brand/favicon.ico", sizes: "48x48" },
-      { url: "/brand/ai-warss-favicon.svg", type: "image/svg+xml" },
+      { url: "/brand/ai-warss-icon-white-on-red.svg", type: "image/svg+xml" },
       { url: "/brand/ai-warss-favicon.png", type: "image/png", sizes: "128x128" },
     ],
     apple: "/brand/apple-touch-icon.png",

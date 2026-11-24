@@ -7,7 +7,7 @@ type LabpathLogoProps = {
   /** Kept for API compatibility — wordmark is baked into the logo asset. */
   showWordmark?: boolean;
   wordmarkClassName?: string;
-  /** Full lockup with tagline (footer / marketing). */
+  /** Stacked lockup (footer / marketing). */
   withTagline?: boolean;
 };
 
@@ -16,27 +16,27 @@ type LabpathLogoMarkProps = {
 };
 
 const sizes = {
-  sm: { className: "h-9 w-auto max-w-[min(100%,16rem)]" },
-  md: { className: "h-11 w-auto max-w-[min(100%,18rem)]" },
-  foot: { className: "h-[1.35rem] w-auto max-w-[12rem]" },
+  sm: { className: "h-9 w-auto max-w-[min(100%,15rem)]" },
+  md: { className: "h-10 w-auto max-w-[min(100%,17rem)]" },
+  foot: { className: "h-7 w-auto max-w-[12rem]" },
 } as const;
 
-const taglineSizes = {
-  sm: { className: "h-10 w-auto max-w-[min(100%,14rem)]" },
-  md: { className: "h-12 w-auto max-w-[min(100%,16rem)]" },
-  foot: { className: "h-9 w-auto max-w-[13rem]" },
+const stackedSizes = {
+  sm: { className: "h-10 w-auto max-w-[min(100%,8.5rem)]" },
+  md: { className: "h-11 w-auto max-w-[min(100%,9.5rem)]" },
+  foot: { className: "h-9 w-auto max-w-[8rem]" },
 } as const;
 
-/** Coral “S” mark — auth panels / compact lockups. */
+/** Compact mark — red glyph on transparent (auth / lockups). */
 export function LabpathLogoMark({ className }: LabpathLogoMarkProps) {
   return (
     <span className={cn("lp-brand-mark inline-flex", className)} aria-hidden>
       {/* eslint-disable-next-line @next/next/no-img-element -- SVG brand mark */}
       <img
-        src="/brand/ai-warss-favicon.svg"
+        src="/brand/ai-warss-icon-red-on-dark.svg"
         alt=""
-        width={64}
-        height={64}
+        width={480}
+        height={480}
         className="lp-brand-mark-glyph h-7 w-7 object-contain"
       />
     </span>
@@ -44,10 +44,10 @@ export function LabpathLogoMark({ className }: LabpathLogoMarkProps) {
 }
 
 /**
- * AI Warss logo.
- * - Navbar: `-header` (no tagline)
- * - Marketing: transparent full lockup with tagline
- * Theme swaps via CSS (`data-theme`) so SSR stays correct.
+ * AI Warss logo from `ai-warss-svg-transparent`.
+ * - Navbar: horizontal wordmark
+ * - Marketing: stacked lockup (`withTagline`)
+ * Theme swaps via CSS (`data-theme`).
  */
 export function LabpathLogo({
   size = "md",
@@ -56,16 +56,18 @@ export function LabpathLogo({
   wordmarkClassName: _wordmarkClassName,
   withTagline = false,
 }: LabpathLogoProps) {
-  const dim = withTagline ? taglineSizes[size] : sizes[size];
+  const dim = withTagline ? stackedSizes[size] : sizes[size];
 
+  // Dark UI: white + coral. Light UI: red on white.
   const darkSrc = withTagline
-    ? "/brand/ai-warss-dark-transparent.svg"
-    : "/brand/ai-warss-dark-header.svg";
+    ? "/brand/ai-warss-stacked-white-on-dark.svg"
+    : "/brand/ai-warss-horizontal-white-on-dark.svg";
   const lightSrc = withTagline
-    ? "/brand/ai-warss-light-transparent.svg"
-    : "/brand/ai-warss-light-header.svg";
-  const width = withTagline ? 606 : 416;
-  const height = withTagline ? 196 : 80;
+    ? "/brand/ai-warss-stacked-red-on-white.svg"
+    : "/brand/ai-warss-horizontal-red-on-white.svg";
+  // Intrinsic sizes after viewBox crop (approx).
+  const width = withTagline ? 400 : 870;
+  const height = withTagline ? 400 : 220;
 
   return (
     <span
