@@ -71,8 +71,10 @@ async function main() {
     for (const row of meta.problems) {
       const dir = path.join(exercisesRoot, row.slug);
       const upserted = await upsertExercise(prisma, dir);
-      const inDb = await prisma.exercise.findFirst({
-        where: { slug: row.slug },
+      // The version just upserted: older versions of the slug stay in the
+      // table unpublished, and a slug-only lookup may return one of them.
+      const inDb = await prisma.exercise.findUnique({
+        where: { slug_version: { slug: upserted.slug, version: upserted.version } },
         select: { id: true, slug: true, title: true, difficulty: true, isPublished: true },
       });
       if (!inDb?.isPublished) {
