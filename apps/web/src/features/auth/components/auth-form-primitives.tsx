@@ -62,7 +62,7 @@ export function AuthModeSwitch({
       {prompt}{" "}
       <Link
         href={href}
-        className="group inline-flex items-center gap-1 font-semibold text-[#B2F233] underline-offset-2 hover:text-[#FF4D4D] hover:underline"
+        className="group inline-flex items-center gap-1 font-semibold text-[#FF4D4D] underline-offset-2 hover:text-[#FF6B6B] hover:underline"
       >
         {label}
         <ArrowRight
@@ -242,7 +242,7 @@ export function AuthCheckbox({
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
-      <label className="text-sm leading-snug text-[#8799B5] [&_a]:font-medium [&_a]:text-[#B2F233] [&_a]:hover:underline" htmlFor={id}>
+      <label className="text-sm leading-snug text-[#8799B5] [&_a]:font-medium [&_a]:text-[#FF4D4D] [&_a]:hover:underline" htmlFor={id}>
         {label}
       </label>
     </div>

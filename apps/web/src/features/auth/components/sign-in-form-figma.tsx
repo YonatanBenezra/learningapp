@@ -111,7 +111,7 @@ function SignInFormInner() {
           labelRight={
             <Link
               href="/magic-link"
-              className="text-xs font-semibold text-[#B2F233] hover:underline"
+              className="text-xs font-semibold text-[#FF4D4D] hover:underline"
             >
               Forgot password?
             </Link>
