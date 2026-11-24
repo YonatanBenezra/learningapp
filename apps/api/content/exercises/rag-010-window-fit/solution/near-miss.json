@@ -1,5 +1,5 @@
 {
-  "chunkSize": 50,
+  "chunkSize": 100,
   "overlap": 0,
-  "splitStrategy": "fixed"
+  "splitStrategy": "recursive"
 }

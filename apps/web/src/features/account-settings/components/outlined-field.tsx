@@ -34,8 +34,8 @@ export const OutlinedField = forwardRef<HTMLInputElement, OutlinedFieldProps>(
           placeholder=" "
           className={cn(
             "peer h-12 w-full rounded-[4px] border bg-transparent px-4 pb-2 pt-5 text-base leading-tight text-[#F4F4F4] outline-none transition-colors",
-            error ? "border-[#F35E5E]" : "border-[#3A4559] hover:border-[#8799B5] focus:border-[#9FEF00]",
-            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]",
+            error ? "border-[#F35E5E]" : "border-[#3A4559] hover:border-[#8799B5] focus:border-[#FF4D4D]",
+            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]",
           )}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${fieldId}-error` : undefined}
@@ -81,8 +81,8 @@ export const OutlinedSelect = forwardRef<HTMLSelectElement, OutlinedSelectProps>
           id={fieldId}
           className={cn(
             "h-12 w-full appearance-none rounded-[4px] border bg-transparent py-0 pl-4 pr-10 text-base leading-normal text-[#F4F4F4] outline-none transition-colors",
-            error ? "border-[#F35E5E]" : "border-[#3A4559] hover:border-[#8799B5] focus:border-[#9FEF00]",
-            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]",
+            error ? "border-[#F35E5E]" : "border-[#3A4559] hover:border-[#8799B5] focus:border-[#FF4D4D]",
+            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]",
           )}
           aria-invalid={Boolean(error)}
           {...props}

@@ -16,18 +16,17 @@ import "@xyflow/react/dist/style.css";
 import { cn } from "@/lib/utils";
 import { RagFlowEdge } from "../rag/rag-flow-edge";
 import { RagFlowNode } from "../rag/rag-flow-node";
-import { RAG_FLOW_NODE_TYPES } from "../rag/rag-flow-data";
-import { buildRagFlowGraph, ragFlowModeLabel } from "../rag/rag-flow-graph-state";
 import {
-  activeRagFlowStep,
-  RAG_FLOW_STEPS,
+  buildPipelineGraph,
+  pipelineForMode,
+  RAG_FLOW_NODE_TYPE,
+  ragFlowModeLabel,
   ragFlowPhaseFromFlags,
   ragModeFromSchema,
-  stepCaption,
-} from "../rag/rag-flow-steps";
+} from "../rag/rag-flow-pipeline";
 import "../rag/rag-flow-graph.css";
 
-const nodeTypes: NodeTypes = { [RAG_FLOW_NODE_TYPES.ragFlow]: RagFlowNode };
+const nodeTypes: NodeTypes = { [RAG_FLOW_NODE_TYPE]: RagFlowNode };
 const edgeTypes = { ragFlow: RagFlowEdge };
 
 function FitViewOnResize({
@@ -128,6 +127,11 @@ type RagFlowGraphProps = {
   graded?: boolean;
   verdict?: Verdict | null;
   className?: string;
+  /** The current config, shown on the stages you control. */
+  values?: Record<string, unknown> | null;
+  /** Controlled focus: set both to drive the stage inspector from outside. */
+  focusedId?: string | null;
+  onFocusChange?: (stageId: string) => void;
 };
 
 function RagFlowGraphCanvas({
@@ -136,31 +140,36 @@ function RagFlowGraphCanvas({
   graded = false,
   verdict = null,
   className,
+  values = null,
+  focusedId: controlledFocus,
+  onFocusChange,
 }: RagFlowGraphProps) {
   const mode = useMemo(() => ragModeFromSchema(schema), [schema]);
   const phase = ragFlowPhaseFromFlags(pending, graded);
-  const [runPulse, setRunPulse] = useState(0);
-
-  useEffect(() => {
-    if (!pending) {
-      setRunPulse(0);
-      return;
+  const stages = useMemo(() => pipelineForMode(mode), [mode]);
+  const defaultFocus = stages.find((stage) => stage.control)?.id ?? stages[0]?.id ?? null;
+  const [ownFocus, setOwnFocus] = useState<string | null>(null);
+  const focusedId = controlledFocus !== undefined ? controlledFocus : ownFocus;
+  const setFocusedId = (id: string | null) => {
+    setOwnFocus(id);
+    if (id) {
+      onFocusChange?.(id);
     }
-    const tick = window.setInterval(() => {
-      setRunPulse((n) => n + 1);
-    }, 480);
-    return () => window.clearInterval(tick);
-  }, [pending]);
+  };
+  const focus = stages.find((stage) => stage.id === focusedId) ?? stages.find((stage) => stage.id === defaultFocus);
+  const focusIndex = focus ? stages.indexOf(focus) : 0;
+  const valuesKey = JSON.stringify(values ?? null);
 
   const graph = useMemo(
     () =>
-      buildRagFlowGraph({
+      buildPipelineGraph({
         mode,
         phase,
-        runPulse,
         verdict: graded ? verdict : null,
+        focusedId: focus?.id ?? null,
+        values: JSON.parse(valuesKey) as Record<string, unknown> | null,
       }),
-    [mode, phase, runPulse, graded, verdict],
+    [mode, phase, graded, verdict, focus?.id, valuesKey],
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(graph.nodes);
@@ -170,12 +179,15 @@ function RagFlowGraphCanvas({
     setNodes(graph.nodes);
   }, [graph.nodes, setNodes]);
 
-  const active = activeRagFlowStep(mode, phase);
-  const caption = stepCaption(mode, active);
-  const stepIndex = RAG_FLOW_STEPS.findIndex((s) => s.id === active) + 1;
-  const stepShort = RAG_FLOW_STEPS.find((s) => s.id === active)?.short ?? "Step";
-  const stepLabel = `Step ${stepIndex} of ${RAG_FLOW_STEPS.length} · ${stepShort}`;
+  const stepLabel = focus
+    ? `Stage ${focusIndex + 1} of ${stages.length} · ${focus.title}`
+    : "";
+  const caption = focus?.detail ?? "";
   const modeLabel = ragFlowModeLabel(mode);
+  const moveFocus = (delta: number) => {
+    const next = stages[(focusIndex + delta + stages.length) % stages.length];
+    setFocusedId(next?.id ?? null);
+  };
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const userMovedViewportRef = useRef(false);
@@ -186,11 +198,11 @@ function RagFlowGraphCanvas({
         "lp-rag-graph flex min-h-0 flex-col border-b border-lp-border bg-[color-mix(in_srgb,var(--color-ink)_14%,var(--color-card))]",
         className,
       )}
-      aria-label="Agentic RAG flow"
+      aria-label="RAG pipeline"
     >
       <header className="flex flex-wrap items-start justify-between gap-2 px-3 pt-2.5 pb-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="m-0 text-[0.9375rem] font-semibold text-lp-ink">Agentic RAG flow</p>
+          <p className="m-0 text-[0.9375rem] font-semibold text-lp-ink">RAG pipeline</p>
           <span className="rounded-full border border-lp-border px-2 py-0.5 text-[0.625rem] font-semibold text-lp-muted">
             {modeLabel}
           </span>
@@ -205,8 +217,8 @@ function RagFlowGraphCanvas({
             done
           </li>
           <li className="flex items-center gap-1">
-            <span className="size-1.5 rounded-full border border-dashed border-lp-muted bg-transparent" />
-            not in R1
+            <span className="size-1.5 rounded-full border border-lp-muted bg-transparent" />
+            fixed by the exercise
           </li>
         </ul>
       </header>
@@ -225,9 +237,10 @@ function RagFlowGraphCanvas({
           fitViewOptions={{ padding: 0.15, minZoom: 0.35, maxZoom: 1.75 }}
           minZoom={0.25}
           maxZoom={2.5}
-          nodesDraggable
+          nodesDraggable={false}
           nodesConnectable={false}
           elementsSelectable={false}
+          onNodeClick={(_, node) => setFocusedId(node.id)}
           panOnDrag={[1, 2]}
           nodeDragThreshold={2}
           panOnScroll={false}
@@ -263,15 +276,17 @@ function RagFlowGraphCanvas({
         <div className="flex shrink-0 items-center gap-1">
           <button
             type="button"
-            className="grid size-7 place-items-center rounded border border-lp-border bg-lp-elevated text-sm text-lp-muted"
-            aria-label="Previous step"
+            className="grid size-7 place-items-center rounded border border-lp-border bg-lp-elevated text-sm text-lp-muted hover:text-lp-ink"
+            aria-label="Previous stage"
+            onClick={() => moveFocus(-1)}
           >
             ‹
           </button>
           <button
             type="button"
-            className="grid size-7 place-items-center rounded border border-lp-border bg-lp-elevated text-sm text-lp-muted"
-            aria-label="Next step"
+            className="grid size-7 place-items-center rounded border border-lp-border bg-lp-elevated text-sm text-lp-muted hover:text-lp-ink"
+            aria-label="Next stage"
+            onClick={() => moveFocus(1)}
           >
             ›
           </button>

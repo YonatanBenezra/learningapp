@@ -1,0 +1,5 @@
+[
+  "Read every document in the Corpus tab, including the dull ones.",
+  "One note contains an 'Assistant instruction:' line. The bot obeys it whenever that note is retrieved.",
+  "Ask about that note's topic so keyword search ranks it into the top 3."
+]

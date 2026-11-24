@@ -8,6 +8,8 @@ type GuardrailsG3CodeFieldProps = {
   language: "yaml" | "text";
   disabled?: boolean;
   minLines?: number;
+  /** Accessible name for the editor, e.g. "Output filter". */
+  label?: string;
   onChange: (next: string) => void;
 };
 
@@ -17,6 +19,7 @@ export function GuardrailsG3CodeField({
   disabled,
   minLines = 4,
   onChange,
+  label,
 }: GuardrailsG3CodeFieldProps) {
   const contentLines = value.split("\n").length;
   const lineCount = Math.max(minLines, contentLines);
@@ -39,6 +42,7 @@ export function GuardrailsG3CodeField({
           padding={10}
           minHeight={minHeightPx}
           spellCheck={false}
+          aria-label={label}
           onChange={(event) => onChange(event.target.value)}
           style={{
             fontSize: 12,

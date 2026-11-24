@@ -1,0 +1,162 @@
+{
+  "slug": "rag-031-query-routing",
+  "version": 2,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Build the Router",
+  "difficulty": "H",
+  "catalogPhase": 4,
+  "skills": [
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "cost-engineering",
+      "name": "Cost engineering"
+    }
+  ],
+  "briefMd": "# Phase 4 · Build the Router\n\nThe support bot gets three kinds of questions, and each needs a different retrieval profile:\n\n- **FAQ**: answered by one short line in the IT help desk FAQ.\n- **Policy**: answered by a policy document, but keyword-stuffed operations logs compete for the top spots.\n- **Procedural**: the answer is a three-step procedure spread over consecutive sentences, so the whole procedure has to sit in one chunk.\n\nNobody labels the questions any more: you build the router. Set a **top-k / rerank / chunk size** profile per type, then choose how a question picks its profile:\n\n- `none`: every question uses the **defaultRoute** profile.\n- `rules`: your **routingRules**, one per line as `phrase | phrase => faq` (or `policy`, `procedural`). The first line with a phrase the question contains wins; `*` matches anything. Questions no rule matches use defaultRoute.\n- `top-document`: a quick search over whole documents, and the question takes the type of the best match (the FAQ page, a policy, or a procedure). Operations logs have no type, so a question whose best match is a log uses defaultRoute.\n\nA misrouted question runs through the wrong profile; the scorecard says which type went where.\n\n**Gates:** FAQ and procedural recall ≥ 0.85, every policy question answered (recall = 1.00), and mean prompt tokens ≤ 75 on the hidden set.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "router",
+      "defaultRoute",
+      "faqTopK",
+      "faqChunkSize",
+      "faqRerank",
+      "policyTopK",
+      "policyChunkSize",
+      "policyRerank",
+      "proceduralTopK",
+      "proceduralChunkSize",
+      "proceduralRerank"
+    ],
+    "properties": {
+      "router": {
+        "type": "string",
+        "enum": [
+          "none",
+          "rules",
+          "top-document"
+        ],
+        "default": "none",
+        "description": "How a question picks its profile."
+      },
+      "defaultRoute": {
+        "type": "string",
+        "enum": [
+          "faq",
+          "policy",
+          "procedural"
+        ],
+        "default": "policy",
+        "description": "Profile for questions no rule matches, and for every question when the router is none."
+      },
+      "routingRules": {
+        "type": "string",
+        "default": "# phrase | phrase => faq, policy or procedural\n* => policy"
+      },
+      "faqTopK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 20
+      },
+      "faqChunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      },
+      "faqRerank": {
+        "type": "boolean",
+        "default": false
+      },
+      "policyTopK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 20
+      },
+      "policyChunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      },
+      "policyRerank": {
+        "type": "boolean",
+        "default": false
+      },
+      "proceduralTopK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 40,
+        "default": 20
+      },
+      "proceduralChunkSize": {
+        "type": "integer",
+        "minimum": 50,
+        "maximum": 2000,
+        "default": 400
+      },
+      "proceduralRerank": {
+        "type": "boolean",
+        "default": false
+      }
+    }
+  },
+  "thresholds": {
+    "recall_faq": 0.85,
+    "recall_policy": 1,
+    "recall_procedural": 0.85,
+    "mean_prompt_tokens": 75
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0,
+    "wall_clock_s": 60
+  },
+  "gates": [
+    {
+      "id": "recall-faq",
+      "class": "A",
+      "metric": "recall_faq",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "recall-policy",
+      "class": "A",
+      "metric": "recall_policy",
+      "op": "gte",
+      "value": 1
+    },
+    {
+      "id": "recall-procedural",
+      "class": "A",
+      "metric": "recall_procedural",
+      "op": "gte",
+      "value": 0.85
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 75
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": false
+  },
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-r5"
+}

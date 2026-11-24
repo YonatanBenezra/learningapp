@@ -54,7 +54,7 @@ type CodeLine = CodeToken[];
 const PYTHON_LINES: CodeLine[] = [
   [
     { text: "from", kind: "kw" },
-    { text: " labpath " },
+    { text: " aiwarss " },
     { text: "import", kind: "kw" },
     { text: " Corpus, Retriever" },
   ],
@@ -407,8 +407,8 @@ export function HomeLivePracticeSection() {
         <div className="lp-home-live-row">
           <div className="lp-home-live-copy">
             <FadeUp show={inView} delay={0.1} y={14}>
-              <p className="flex items-center gap-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9fef00]">
-                <span className="h-[1.05em] w-[3px] shrink-0 rounded-sm bg-[#9fef00]" aria-hidden />
+              <p className="flex items-center gap-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#FF4D4D]">
+                <span className="h-[1.05em] w-[3px] shrink-0 rounded-sm bg-[#FF4D4D]" aria-hidden />
                 LIVE PRACTICE
               </p>
             </FadeUp>
@@ -569,7 +569,7 @@ export function HomeLivePracticeSection() {
             <div className="lp-home-live-run-strip">
               <motion.button
                 type="button"
-                className="inline-flex h-8 items-center justify-center gap-1.5 rounded-md border-0 bg-[#9fef00] px-3 text-[13px] font-medium text-[#121c2b] transition-colors hover:bg-[#aced2c] disabled:cursor-default"
+                className="inline-flex h-8 items-center justify-center gap-1.5 rounded-md border-0 bg-[#FF4D4D] px-3 text-[13px] font-medium text-[#121c2b] transition-colors hover:bg-[#ff6b6b] disabled:cursor-default"
                 aria-label="Run code"
                 disabled={isRunning}
                 animate={{ scale: runScale }}

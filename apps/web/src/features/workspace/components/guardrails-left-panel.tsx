@@ -10,9 +10,12 @@ import {
   Flag,
   Globe,
   KeyRound,
+  Layers,
   Lightbulb,
+  ListChecks,
   Lock,
   Mail,
+  Scale,
   Shield,
   ShieldCheck,
   SlidersHorizontal,
@@ -20,13 +23,14 @@ import {
   UserRound,
   Zap,
 } from "lucide-react";
+import { useState } from "react";
 import type { Exercise } from "@/types/exercise";
+import { briefAfterGoal } from "../exercise-brief-sections";
+import { useGuardrailsLevels } from "../guardrails-levels";
+import { BriefMarkdown } from "./brief-markdown";
 import type { FigmaBriefContent } from "./brief-panel";
 import type { G1Debrief } from "../guardrails-g1-debrief";
 import {
-  G1_LEVELS,
-  G2_GUARDRAIL_CARD,
-  G2_LEVELS,
   G3_FILTER_BUDGET,
   G3_PASS_THRESHOLDS,
   G3_SAMPLE_COUNTS,
@@ -48,6 +52,10 @@ type GuardrailsLeftPanelProps = {
   liveMode: boolean;
   onLiveModeChange: (live: boolean) => void;
   hints: FigmaBriefContent["hints"];
+  /** Points the unlocked hints cost once the problem is solved. */
+  hintPointsSpent?: number;
+  /** Unlocks the next hint via the hints API; absent where hints are disabled. */
+  onUnlockHint?: () => Promise<void>;
   debrief?: G1Debrief | null;
   onDismissDebrief?: () => void;
   collapsed?: boolean;
@@ -62,12 +70,32 @@ export function GuardrailsLeftPanel({
   liveMode,
   onLiveModeChange,
   hints,
+  hintPointsSpent = 0,
+  onUnlockHint,
   debrief = null,
   onDismissDebrief,
   collapsed = false,
   onToggleCollapse,
 }: GuardrailsLeftPanelProps) {
-  const levels = variant === "g2" ? G2_LEVELS : G1_LEVELS;
+  const [hintPending, setHintPending] = useState(false);
+  const [hintError, setHintError] = useState<string | null>(null);
+  const firstLocked = hints.find((hint) => !hint.unlocked)?.n;
+  const unlockHint = async () => {
+    if (!onUnlockHint) {
+      return;
+    }
+    setHintPending(true);
+    setHintError(null);
+    try {
+      await onUnlockHint();
+    } catch (caught) {
+      setHintError(caught instanceof Error ? caught.message : "Could not unlock the hint.");
+    } finally {
+      setHintPending(false);
+    }
+  };
+  const fullBrief = briefAfterGoal(exercise.briefMd ?? "");
+  const levels = useGuardrailsLevels(variant === "g2" ? "g2" : "g1");
   const activeMeta = levels.find((row) => row.level === activeLevel) ?? levels[0];
   const unlockedHints = hints.filter((h) => h.unlocked).length;
   const teamBlue = variant === "g3";
@@ -79,10 +107,10 @@ export function GuardrailsLeftPanel({
     exercise.skillTags[1]?.replace(/-/g, " ") === "tool abuse"
       ? "excessive agency"
       : exercise.skillTags[1]?.replace(/-/g, " ") || "excessive agency";
-  const guardrailCard = variant === "g2" ? G2_GUARDRAIL_CARD[activeLevel] : null;
-  const g2Tip =
-    hints.find((hint) => hint.unlocked)?.text ??
-    "Agents often obey text that looks like it came from the user. Where could that text hide on a page?";
+  const guardrailCard =
+    variant === "g2"
+      ? { title: `${activeMeta.title} · Level ${activeMeta.level}`, body: `${activeMeta.defense}.` }
+      : null;
 
   if (collapsed) {
     return (
@@ -104,7 +132,12 @@ export function GuardrailsLeftPanel({
       <div className="lp-grd-brief-toolbar">
         <span className="lp-grd-brief-toolbar-label">Brief</span>
         {onToggleCollapse ? (
-          <button type="button" className="lp-grd-brief-collapse" onClick={onToggleCollapse}>
+          <button
+            type="button"
+            className="lp-grd-brief-collapse"
+            aria-label="Collapse brief"
+            onClick={onToggleCollapse}
+          >
             <ChevronDown className="size-4 rotate-90" aria-hidden />
           </button>
         ) : null}
@@ -168,6 +201,12 @@ export function GuardrailsLeftPanel({
           </div>
         </div>
 
+        {fullBrief ? (
+          <section className="lp-grd-full-brief" aria-label="How it is graded">
+            <BriefMarkdown text={fullBrief} compact />
+          </section>
+        ) : null}
+
         {variant === "g3" ? (
           <>
             <div className="lp-grd-g3-metrics" aria-label="Pass gates">
@@ -175,7 +214,9 @@ export function GuardrailsLeftPanel({
                 <Swords className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
                 <div className="lp-grd-g3-metric-copy">
                   <strong>Attack block rate</strong>
-                  <span>of {G3_SAMPLE_COUNTS.attacks} sampled attacks</span>
+                  <span>
+                    {G3_SAMPLE_COUNTS.attacks} sampled attacks, Wilson interval
+                  </span>
                 </div>
                 <em className="lp-grd-g3-metric-value">
                   ≥ {Math.round(G3_PASS_THRESHOLDS.attackBlockRate * 100)}%
@@ -185,26 +226,61 @@ export function GuardrailsLeftPanel({
                 <UserRound className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
                 <div className="lp-grd-g3-metric-copy">
                   <strong>Benign pass rate</strong>
-                  <span>of {G3_SAMPLE_COUNTS.benign} real requests</span>
+                  <span>
+                    {G3_SAMPLE_COUNTS.benign} sampled guest messages, Wilson interval
+                  </span>
                 </div>
                 <em className="lp-grd-g3-metric-value">
                   ≥ {Math.round(G3_PASS_THRESHOLDS.benignPassRate * 100)}%
                 </em>
               </div>
               <div className="lp-grd-g3-metric">
+                <Layers className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
+                <div className="lp-grd-g3-metric-copy">
+                  <strong>Every attack family</strong>
+                  <span>including two families never shown</span>
+                </div>
+                <em className="lp-grd-g3-metric-value">
+                  ≥ {Math.round(G3_PASS_THRESHOLDS.familyFloor * 100)}% each
+                </em>
+              </div>
+              <div className="lp-grd-g3-metric">
+                <ListChecks className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
+                <div className="lp-grd-g3-metric-copy">
+                  <strong>Task done under attack</strong>
+                  <span>a guest&apos;s own task that carries an attack</span>
+                </div>
+                <em className="lp-grd-g3-metric-value">
+                  ≥ {Math.round(G3_PASS_THRESHOLDS.utilityFloor * 100)}%
+                </em>
+              </div>
+              <div className="lp-grd-g3-metric">
+                <Scale className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
+                <div className="lp-grd-g3-metric-copy">
+                  <strong>Judge budget</strong>
+                  <span>simulated judge, 450 ms and €0.0003 a call</span>
+                </div>
+                <em className="lp-grd-g3-metric-value">
+                  ≤ {G3_PASS_THRESHOLDS.judgeCallsPerMessage} / message
+                </em>
+              </div>
+              <div className="lp-grd-g3-metric">
                 <SlidersHorizontal className="size-4 shrink-0 lp-grd-g3-metric-icon" aria-hidden />
                 <div className="lp-grd-g3-metric-copy">
                   <strong>Filter budget</strong>
-                  <span>≤ {G3_FILTER_BUDGET.maxTokens} tokens / request</span>
+                  <span>both filters plus the message</span>
                 </div>
-                <em className="lp-grd-g3-metric-value">≤ {G3_FILTER_BUDGET.maxCalls} calls</em>
+                <em className="lp-grd-g3-metric-value">
+                  ≤ {G3_FILTER_BUDGET.maxTokens} tokens
+                </em>
               </div>
             </div>
             <div className="lp-grd-g3-sample-note">
               <Zap className="size-4 shrink-0 lp-grd-g3-sample-note-icon" aria-hidden />
               <p>
-                Each attempt uses a fresh random sample from hidden pools. You only see failures from
-                your own sample.
+                Your config decides the sample: the same config always draws the same messages,
+                and an inconclusive result doubles the sample once. A failing run shows some of
+                the messages it got wrong; the rest of the hidden set is only counted.
               </p>
             </div>
             <div className="lp-grd-brief-tags lp-grd-g3-llm-tags">
@@ -300,7 +376,6 @@ export function GuardrailsLeftPanel({
                 <div className="lp-grd-defence-head">
                   <Shield className="size-4 text-[var(--lp-grd-teal)]" aria-hidden />
                   <span>Defences this level</span>
-                  <ChevronDown className="size-4 ml-auto opacity-60" aria-hidden />
                 </div>
                 <p>{activeMeta.defense}</p>
               </div>
@@ -319,17 +394,11 @@ export function GuardrailsLeftPanel({
           </div>
         ) : null}
 
-        {!debrief && variant === "g2" ? (
-          <div className="lp-grd-g2-tip">
-            <Lightbulb className="size-4 shrink-0 text-[#fde68a]" aria-hidden />
-            <p>{g2Tip}</p>
-          </div>
-        ) : null}
-
-        {!debrief && variant !== "g2" && hints.length > 0 ? (
+        {!debrief && hints.length > 0 ? (
           <div className="lp-grd-hints-block">
             <p className="lp-grd-hints-head">
               Hints · {unlockedHints} of {hints.length} unlocked
+              {hintPointsSpent ? ` · −${hintPointsSpent} points when solved` : ""}
             </p>
             <ul>
               {hints.map((hint) =>
@@ -342,12 +411,35 @@ export function GuardrailsLeftPanel({
                   <li key={hint.n} className="lp-grd-hint lp-grd-hint--locked">
                     <Lock className="size-3 shrink-0" aria-hidden />
                     <span>
-                      Hint {hint.n} unlocks after {hint.unlockAfter} attempts.
+                      Hint {hint.n}
+                      {hint.cost !== undefined
+                        ? hint.cost === 0
+                          ? " · free"
+                          : ` · costs ${hint.cost} points when solved`
+                        : ""}
+                      {hint.n === firstLocked && onUnlockHint ? (
+                        <>
+                          {" · "}
+                          <button
+                            type="button"
+                            className="lp-grd-hint-unlock"
+                            onClick={() => void unlockHint()}
+                            disabled={hintPending}
+                          >
+                            {hintPending ? "Unlocking…" : "Unlock"}
+                          </button>
+                        </>
+                      ) : null}
                     </span>
                   </li>
                 ),
               )}
             </ul>
+            {hintError ? (
+              <p className="lp-grd-hint-error" role="alert">
+                {hintError}
+              </p>
+            ) : null}
           </div>
         ) : null}
 
@@ -355,19 +447,21 @@ export function GuardrailsLeftPanel({
           <div className="lp-grd-mode" role="group" aria-label="Workspace mode">
             <button
               type="button"
+              aria-pressed={liveMode}
               className={`lp-grd-mode-card${liveMode ? " is-active" : ""}`}
               onClick={() => onLiveModeChange(true)}
             >
-              <strong>Live</strong>
-              <span>Every send is graded</span>
+              <strong>Chat</strong>
+              <span>Try messages · not graded</span>
             </button>
             <button
               type="button"
+              aria-pressed={!liveMode}
               className={`lp-grd-mode-card${!liveMode ? " is-active" : ""}`}
               onClick={() => onLiveModeChange(false)}
             >
-              <strong>Practice</strong>
-              <span>Submit when ready</span>
+              <strong>Submit</strong>
+              <span>One message, graded on all three levels</span>
             </button>
           </div>
         ) : null}

@@ -50,6 +50,20 @@ describe('validateJsonSchema', () => {
     ).toContain('unexpected property: extra');
   });
 
+  it('checks fractional number fields against their bounds', () => {
+    const alpha = {
+      type: 'object',
+      properties: { hybridAlpha: { type: 'number', minimum: 0, maximum: 1 } },
+    };
+    expect(validateJsonSchema(alpha, { hybridAlpha: 0.65 })).toEqual([]);
+    expect(validateJsonSchema(alpha, { hybridAlpha: 1.5 })).toContain(
+      'hybridAlpha must be <= 1',
+    );
+    expect(validateJsonSchema(alpha, { hybridAlpha: '0.5' })).toContain(
+      'hybridAlpha must be a number',
+    );
+  });
+
   it('canonicalJson is key-order stable', () => {
     expect(canonicalJson({ b: 1, a: 2 })).toBe(canonicalJson({ a: 2, b: 1 }));
   });

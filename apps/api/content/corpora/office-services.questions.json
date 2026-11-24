@@ -1,0 +1,962 @@
+[
+  {
+    "topic": "a staff parking permit",
+    "kind": "fee",
+    "question": "What is the monthly fee for a staff parking permit?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "The fee is 52 euros a month.",
+    "goldAnswer": "The fee is 52 euros a month."
+  },
+  {
+    "topic": "a staff parking permit",
+    "kind": "hours",
+    "question": "During which hours is a staff parking permit available?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "It is available from 6:00 until 15:00.",
+    "goldAnswer": "It is available from 6:00 until 15:00."
+  },
+  {
+    "topic": "a staff parking permit",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a staff parking permit?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Requests go to phone extension 2584.",
+    "goldAnswer": "Requests go to phone extension 2584."
+  },
+  {
+    "topic": "a bicycle locker",
+    "kind": "notice",
+    "question": "How much notice do I need to give for a bicycle locker?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Ask at least 10 working days in advance.",
+    "goldAnswer": "Ask at least 10 working days in advance."
+  },
+  {
+    "topic": "a bicycle locker",
+    "kind": "limit",
+    "question": "How often may I use a bicycle locker each month?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Each person may use it 7 times a month.",
+    "goldAnswer": "Each person may use it 7 times a month."
+  },
+  {
+    "topic": "a bicycle locker",
+    "kind": "cancel",
+    "question": "How late can I cancel a bicycle locker without being charged?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Cancel at least 24 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 24 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the shuttle bus",
+    "kind": "hours",
+    "question": "During which hours is the shuttle bus available?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "It is available from 11:00 until 20:00.",
+    "goldAnswer": "It is available from 11:00 until 20:00."
+  },
+  {
+    "topic": "the shuttle bus",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for the shuttle bus?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Requests go to phone extension 2756.",
+    "goldAnswer": "Requests go to phone extension 2756."
+  },
+  {
+    "topic": "the shuttle bus",
+    "kind": "fee",
+    "question": "What is the monthly fee for the shuttle bus?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "The fee is 42 euros a month.",
+    "goldAnswer": "The fee is 42 euros a month."
+  },
+  {
+    "topic": "an electric car charger",
+    "kind": "limit",
+    "question": "How often may I use an electric car charger each month?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Each person may use it 5 times a month.",
+    "goldAnswer": "Each person may use it 5 times a month."
+  },
+  {
+    "topic": "an electric car charger",
+    "kind": "cancel",
+    "question": "How late can I cancel an electric car charger without being charged?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Cancel at least 9 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 9 hours before, or the slot is charged."
+  },
+  {
+    "topic": "an electric car charger",
+    "kind": "notice",
+    "question": "How much notice do I need to give for an electric car charger?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Ask at least 9 working days in advance.",
+    "goldAnswer": "Ask at least 9 working days in advance."
+  },
+  {
+    "topic": "a public transport pass",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a public transport pass?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Requests go to phone extension 2419.",
+    "goldAnswer": "Requests go to phone extension 2419."
+  },
+  {
+    "topic": "a public transport pass",
+    "kind": "fee",
+    "question": "What is the monthly fee for a public transport pass?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "The fee is 12 euros a month.",
+    "goldAnswer": "The fee is 12 euros a month."
+  },
+  {
+    "topic": "a public transport pass",
+    "kind": "hours",
+    "question": "During which hours is a public transport pass available?",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "goldAnswer": "It is available from 7:00 until 16:00."
+  },
+  {
+    "topic": "the boardroom",
+    "kind": "cancel",
+    "question": "How late can I cancel the boardroom without being charged?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Cancel at least 22 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 22 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the boardroom",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the boardroom?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Ask at least 10 working days in advance.",
+    "goldAnswer": "Ask at least 10 working days in advance."
+  },
+  {
+    "topic": "the boardroom",
+    "kind": "limit",
+    "question": "How often may I use the boardroom each month?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Each person may use it 9 times a month.",
+    "goldAnswer": "Each person may use it 9 times a month."
+  },
+  {
+    "topic": "a quiet booth",
+    "kind": "fee",
+    "question": "What is the monthly fee for a quiet booth?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "The fee is 53 euros a month.",
+    "goldAnswer": "The fee is 53 euros a month."
+  },
+  {
+    "topic": "a quiet booth",
+    "kind": "hours",
+    "question": "During which hours is a quiet booth available?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "It is available from 6:00 until 15:00.",
+    "goldAnswer": "It is available from 6:00 until 15:00."
+  },
+  {
+    "topic": "a quiet booth",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a quiet booth?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Requests go to phone extension 2571.",
+    "goldAnswer": "Requests go to phone extension 2571."
+  },
+  {
+    "topic": "the rooftop terrace",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the rooftop terrace?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Ask at least 11 working days in advance.",
+    "goldAnswer": "Ask at least 11 working days in advance."
+  },
+  {
+    "topic": "the rooftop terrace",
+    "kind": "limit",
+    "question": "How often may I use the rooftop terrace each month?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Each person may use it 5 times a month.",
+    "goldAnswer": "Each person may use it 5 times a month."
+  },
+  {
+    "topic": "the rooftop terrace",
+    "kind": "cancel",
+    "question": "How late can I cancel the rooftop terrace without being charged?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Cancel at least 11 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 11 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the training kitchen",
+    "kind": "hours",
+    "question": "During which hours is the training kitchen available?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "goldAnswer": "It is available from 7:00 until 16:00."
+  },
+  {
+    "topic": "the training kitchen",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for the training kitchen?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Requests go to phone extension 2546.",
+    "goldAnswer": "Requests go to phone extension 2546."
+  },
+  {
+    "topic": "the training kitchen",
+    "kind": "fee",
+    "question": "What is the monthly fee for the training kitchen?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "The fee is 17 euros a month.",
+    "goldAnswer": "The fee is 17 euros a month."
+  },
+  {
+    "topic": "the prayer and rest room",
+    "kind": "limit",
+    "question": "How often may I use the prayer and rest room each month?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Each person may use it 3 times a month.",
+    "goldAnswer": "Each person may use it 3 times a month."
+  },
+  {
+    "topic": "the prayer and rest room",
+    "kind": "cancel",
+    "question": "How late can I cancel the prayer and rest room without being charged?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Cancel at least 4 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 4 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the prayer and rest room",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the prayer and rest room?",
+    "goldDocId": "rooms-and-spaces",
+    "goldSpan": "Ask at least 3 working days in advance.",
+    "goldAnswer": "Ask at least 3 working days in advance."
+  },
+  {
+    "topic": "a spare laptop",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a spare laptop?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Requests go to phone extension 2586.",
+    "goldAnswer": "Requests go to phone extension 2586."
+  },
+  {
+    "topic": "a spare laptop",
+    "kind": "fee",
+    "question": "What is the monthly fee for a spare laptop?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "The fee is 92 euros a month.",
+    "goldAnswer": "The fee is 92 euros a month."
+  },
+  {
+    "topic": "a spare laptop",
+    "kind": "hours",
+    "question": "During which hours is a spare laptop available?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "It is available from 6:00 until 15:00.",
+    "goldAnswer": "It is available from 6:00 until 15:00."
+  },
+  {
+    "topic": "a portable projector",
+    "kind": "cancel",
+    "question": "How late can I cancel a portable projector without being charged?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Cancel at least 24 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 24 hours before, or the slot is charged."
+  },
+  {
+    "topic": "a portable projector",
+    "kind": "notice",
+    "question": "How much notice do I need to give for a portable projector?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Ask at least 13 working days in advance.",
+    "goldAnswer": "Ask at least 13 working days in advance."
+  },
+  {
+    "topic": "a portable projector",
+    "kind": "limit",
+    "question": "How often may I use a portable projector each month?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Each person may use it 3 times a month.",
+    "goldAnswer": "Each person may use it 3 times a month."
+  },
+  {
+    "topic": "a standing desk converter",
+    "kind": "fee",
+    "question": "What is the monthly fee for a standing desk converter?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "The fee is 60 euros a month.",
+    "goldAnswer": "The fee is 60 euros a month."
+  },
+  {
+    "topic": "a standing desk converter",
+    "kind": "hours",
+    "question": "During which hours is a standing desk converter available?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "It is available from 8:00 until 17:00.",
+    "goldAnswer": "It is available from 8:00 until 17:00."
+  },
+  {
+    "topic": "a standing desk converter",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a standing desk converter?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Requests go to phone extension 2343.",
+    "goldAnswer": "Requests go to phone extension 2343."
+  },
+  {
+    "topic": "a noise-cancelling headset",
+    "kind": "notice",
+    "question": "How much notice do I need to give for a noise-cancelling headset?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Ask at least 4 working days in advance.",
+    "goldAnswer": "Ask at least 4 working days in advance."
+  },
+  {
+    "topic": "a noise-cancelling headset",
+    "kind": "limit",
+    "question": "How often may I use a noise-cancelling headset each month?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Each person may use it 10 times a month.",
+    "goldAnswer": "Each person may use it 10 times a month."
+  },
+  {
+    "topic": "a noise-cancelling headset",
+    "kind": "cancel",
+    "question": "How late can I cancel a noise-cancelling headset without being charged?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Cancel at least 28 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 28 hours before, or the slot is charged."
+  },
+  {
+    "topic": "a camera kit",
+    "kind": "hours",
+    "question": "During which hours is a camera kit available?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "goldAnswer": "It is available from 7:00 until 16:00."
+  },
+  {
+    "topic": "a camera kit",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a camera kit?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Requests go to phone extension 2327.",
+    "goldAnswer": "Requests go to phone extension 2327."
+  },
+  {
+    "topic": "a camera kit",
+    "kind": "fee",
+    "question": "What is the monthly fee for a camera kit?",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "The fee is 19 euros a month.",
+    "goldAnswer": "The fee is 19 euros a month."
+  },
+  {
+    "topic": "the company gym",
+    "kind": "limit",
+    "question": "How often may I use the company gym each month?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Each person may use it 7 times a month.",
+    "goldAnswer": "Each person may use it 7 times a month."
+  },
+  {
+    "topic": "the company gym",
+    "kind": "cancel",
+    "question": "How late can I cancel the company gym without being charged?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Cancel at least 17 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 17 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the company gym",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the company gym?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Ask at least 12 working days in advance.",
+    "goldAnswer": "Ask at least 12 working days in advance."
+  },
+  {
+    "topic": "a massage session",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a massage session?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Requests go to phone extension 2545.",
+    "goldAnswer": "Requests go to phone extension 2545."
+  },
+  {
+    "topic": "a massage session",
+    "kind": "fee",
+    "question": "What is the monthly fee for a massage session?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "The fee is 31 euros a month.",
+    "goldAnswer": "The fee is 31 euros a month."
+  },
+  {
+    "topic": "a massage session",
+    "kind": "hours",
+    "question": "During which hours is a massage session available?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "goldAnswer": "It is available from 7:00 until 16:00."
+  },
+  {
+    "topic": "the yoga class",
+    "kind": "cancel",
+    "question": "How late can I cancel the yoga class without being charged?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Cancel at least 20 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 20 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the yoga class",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the yoga class?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Ask at least 8 working days in advance.",
+    "goldAnswer": "Ask at least 8 working days in advance."
+  },
+  {
+    "topic": "the yoga class",
+    "kind": "limit",
+    "question": "How often may I use the yoga class each month?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Each person may use it 8 times a month.",
+    "goldAnswer": "Each person may use it 8 times a month."
+  },
+  {
+    "topic": "an eye test",
+    "kind": "fee",
+    "question": "What is the monthly fee for an eye test?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "The fee is 64 euros a month.",
+    "goldAnswer": "The fee is 64 euros a month."
+  },
+  {
+    "topic": "an eye test",
+    "kind": "hours",
+    "question": "During which hours is an eye test available?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "It is available from 11:00 until 20:00.",
+    "goldAnswer": "It is available from 11:00 until 20:00."
+  },
+  {
+    "topic": "an eye test",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for an eye test?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Requests go to phone extension 2707.",
+    "goldAnswer": "Requests go to phone extension 2707."
+  },
+  {
+    "topic": "a counselling session",
+    "kind": "notice",
+    "question": "How much notice do I need to give for a counselling session?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Ask at least 3 working days in advance.",
+    "goldAnswer": "Ask at least 3 working days in advance."
+  },
+  {
+    "topic": "a counselling session",
+    "kind": "limit",
+    "question": "How often may I use a counselling session each month?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Each person may use it 11 times a month.",
+    "goldAnswer": "Each person may use it 11 times a month."
+  },
+  {
+    "topic": "a counselling session",
+    "kind": "cancel",
+    "question": "How late can I cancel a counselling session without being charged?",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Cancel at least 21 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 21 hours before, or the slot is charged."
+  },
+  {
+    "topic": "lunch vouchers",
+    "kind": "hours",
+    "question": "During which hours is lunch vouchers available?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "It is available from 6:00 until 15:00.",
+    "goldAnswer": "It is available from 6:00 until 15:00."
+  },
+  {
+    "topic": "lunch vouchers",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for lunch vouchers?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Requests go to phone extension 2482.",
+    "goldAnswer": "Requests go to phone extension 2482."
+  },
+  {
+    "topic": "lunch vouchers",
+    "kind": "fee",
+    "question": "What is the monthly fee for lunch vouchers?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "The fee is 21 euros a month.",
+    "goldAnswer": "The fee is 21 euros a month."
+  },
+  {
+    "topic": "a fruit box",
+    "kind": "limit",
+    "question": "How often may I use a fruit box each month?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Each person may use it 7 times a month.",
+    "goldAnswer": "Each person may use it 7 times a month."
+  },
+  {
+    "topic": "a fruit box",
+    "kind": "cancel",
+    "question": "How late can I cancel a fruit box without being charged?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Cancel at least 14 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 14 hours before, or the slot is charged."
+  },
+  {
+    "topic": "a fruit box",
+    "kind": "notice",
+    "question": "How much notice do I need to give for a fruit box?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Ask at least 3 working days in advance.",
+    "goldAnswer": "Ask at least 3 working days in advance."
+  },
+  {
+    "topic": "meeting catering",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for meeting catering?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Requests go to phone extension 2749.",
+    "goldAnswer": "Requests go to phone extension 2749."
+  },
+  {
+    "topic": "meeting catering",
+    "kind": "fee",
+    "question": "What is the monthly fee for meeting catering?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "The fee is 63 euros a month.",
+    "goldAnswer": "The fee is 63 euros a month."
+  },
+  {
+    "topic": "meeting catering",
+    "kind": "hours",
+    "question": "During which hours is meeting catering available?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "It is available from 10:00 until 19:00.",
+    "goldAnswer": "It is available from 10:00 until 19:00."
+  },
+  {
+    "topic": "the barista bar",
+    "kind": "cancel",
+    "question": "How late can I cancel the barista bar without being charged?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Cancel at least 11 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 11 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the barista bar",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the barista bar?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Ask at least 2 working days in advance.",
+    "goldAnswer": "Ask at least 2 working days in advance."
+  },
+  {
+    "topic": "the barista bar",
+    "kind": "limit",
+    "question": "How often may I use the barista bar each month?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Each person may use it 6 times a month.",
+    "goldAnswer": "Each person may use it 6 times a month."
+  },
+  {
+    "topic": "a sparkling water cooler",
+    "kind": "fee",
+    "question": "What is the monthly fee for a sparkling water cooler?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "The fee is 60 euros a month.",
+    "goldAnswer": "The fee is 60 euros a month."
+  },
+  {
+    "topic": "a sparkling water cooler",
+    "kind": "hours",
+    "question": "During which hours is a sparkling water cooler available?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "It is available from 11:00 until 20:00.",
+    "goldAnswer": "It is available from 11:00 until 20:00."
+  },
+  {
+    "topic": "a sparkling water cooler",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a sparkling water cooler?",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Requests go to phone extension 2405.",
+    "goldAnswer": "Requests go to phone extension 2405."
+  },
+  {
+    "topic": "the childcare centre",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the childcare centre?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Ask at least 11 working days in advance.",
+    "goldAnswer": "Ask at least 11 working days in advance."
+  },
+  {
+    "topic": "the childcare centre",
+    "kind": "limit",
+    "question": "How often may I use the childcare centre each month?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Each person may use it 4 times a month.",
+    "goldAnswer": "Each person may use it 4 times a month."
+  },
+  {
+    "topic": "the childcare centre",
+    "kind": "cancel",
+    "question": "How late can I cancel the childcare centre without being charged?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Cancel at least 22 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 22 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the holiday camp",
+    "kind": "hours",
+    "question": "During which hours is the holiday camp available?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "It is available from 11:00 until 20:00.",
+    "goldAnswer": "It is available from 11:00 until 20:00."
+  },
+  {
+    "topic": "the holiday camp",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for the holiday camp?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Requests go to phone extension 2250.",
+    "goldAnswer": "Requests go to phone extension 2250."
+  },
+  {
+    "topic": "the holiday camp",
+    "kind": "fee",
+    "question": "What is the monthly fee for the holiday camp?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "The fee is 17 euros a month.",
+    "goldAnswer": "The fee is 17 euros a month."
+  },
+  {
+    "topic": "the parent room",
+    "kind": "limit",
+    "question": "How often may I use the parent room each month?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Each person may use it 11 times a month.",
+    "goldAnswer": "Each person may use it 11 times a month."
+  },
+  {
+    "topic": "the parent room",
+    "kind": "cancel",
+    "question": "How late can I cancel the parent room without being charged?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Cancel at least 32 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 32 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the parent room",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the parent room?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Ask at least 2 working days in advance.",
+    "goldAnswer": "Ask at least 2 working days in advance."
+  },
+  {
+    "topic": "a backup carer",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a backup carer?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Requests go to phone extension 2383.",
+    "goldAnswer": "Requests go to phone extension 2383."
+  },
+  {
+    "topic": "a backup carer",
+    "kind": "fee",
+    "question": "What is the monthly fee for a backup carer?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "The fee is 43 euros a month.",
+    "goldAnswer": "The fee is 43 euros a month."
+  },
+  {
+    "topic": "a backup carer",
+    "kind": "hours",
+    "question": "During which hours is a backup carer available?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "goldAnswer": "It is available from 7:00 until 16:00."
+  },
+  {
+    "topic": "the homework club",
+    "kind": "cancel",
+    "question": "How late can I cancel the homework club without being charged?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Cancel at least 8 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 8 hours before, or the slot is charged."
+  },
+  {
+    "topic": "the homework club",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the homework club?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Ask at least 10 working days in advance.",
+    "goldAnswer": "Ask at least 10 working days in advance."
+  },
+  {
+    "topic": "the homework club",
+    "kind": "limit",
+    "question": "How often may I use the homework club each month?",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Each person may use it 8 times a month.",
+    "goldAnswer": "Each person may use it 8 times a month."
+  },
+  {
+    "topic": "a language course",
+    "kind": "fee",
+    "question": "What is the monthly fee for a language course?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "The fee is 65 euros a month.",
+    "goldAnswer": "The fee is 65 euros a month."
+  },
+  {
+    "topic": "a language course",
+    "kind": "hours",
+    "question": "During which hours is a language course available?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "It is available from 7:00 until 16:00.",
+    "goldAnswer": "It is available from 7:00 until 16:00."
+  },
+  {
+    "topic": "a language course",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a language course?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Requests go to phone extension 2194.",
+    "goldAnswer": "Requests go to phone extension 2194."
+  },
+  {
+    "topic": "the leadership programme",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the leadership programme?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Ask at least 5 working days in advance.",
+    "goldAnswer": "Ask at least 5 working days in advance."
+  },
+  {
+    "topic": "the leadership programme",
+    "kind": "limit",
+    "question": "How often may I use the leadership programme each month?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Each person may use it 6 times a month.",
+    "goldAnswer": "Each person may use it 6 times a month."
+  },
+  {
+    "topic": "the leadership programme",
+    "kind": "cancel",
+    "question": "How late can I cancel the leadership programme without being charged?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Cancel at least 18 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 18 hours before, or the slot is charged."
+  },
+  {
+    "topic": "an online learning licence",
+    "kind": "hours",
+    "question": "During which hours is an online learning licence available?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "It is available from 9:00 until 18:00.",
+    "goldAnswer": "It is available from 9:00 until 18:00."
+  },
+  {
+    "topic": "an online learning licence",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for an online learning licence?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Requests go to phone extension 2475.",
+    "goldAnswer": "Requests go to phone extension 2475."
+  },
+  {
+    "topic": "an online learning licence",
+    "kind": "fee",
+    "question": "What is the monthly fee for an online learning licence?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "The fee is 49 euros a month.",
+    "goldAnswer": "The fee is 49 euros a month."
+  },
+  {
+    "topic": "mentoring",
+    "kind": "limit",
+    "question": "How often may I use mentoring each month?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Each person may use it 4 times a month.",
+    "goldAnswer": "Each person may use it 4 times a month."
+  },
+  {
+    "topic": "mentoring",
+    "kind": "cancel",
+    "question": "How late can I cancel mentoring without being charged?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Cancel at least 31 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 31 hours before, or the slot is charged."
+  },
+  {
+    "topic": "mentoring",
+    "kind": "notice",
+    "question": "How much notice do I need to give for mentoring?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Ask at least 4 working days in advance.",
+    "goldAnswer": "Ask at least 4 working days in advance."
+  },
+  {
+    "topic": "a conference ticket",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a conference ticket?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "Requests go to phone extension 2728.",
+    "goldAnswer": "Requests go to phone extension 2728."
+  },
+  {
+    "topic": "a conference ticket",
+    "kind": "fee",
+    "question": "What is the monthly fee for a conference ticket?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "The fee is 91 euros a month.",
+    "goldAnswer": "The fee is 91 euros a month."
+  },
+  {
+    "topic": "a conference ticket",
+    "kind": "hours",
+    "question": "During which hours is a conference ticket available?",
+    "goldDocId": "learning-and-growth",
+    "goldSpan": "It is available from 11:00 until 20:00.",
+    "goldAnswer": "It is available from 11:00 until 20:00."
+  },
+  {
+    "topic": "relocation support",
+    "kind": "cancel",
+    "question": "How late can I cancel relocation support without being charged?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Cancel at least 4 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 4 hours before, or the slot is charged."
+  },
+  {
+    "topic": "relocation support",
+    "kind": "notice",
+    "question": "How much notice do I need to give for relocation support?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Ask at least 13 working days in advance.",
+    "goldAnswer": "Ask at least 13 working days in advance."
+  },
+  {
+    "topic": "relocation support",
+    "kind": "limit",
+    "question": "How often may I use relocation support each month?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Each person may use it 7 times a month.",
+    "goldAnswer": "Each person may use it 7 times a month."
+  },
+  {
+    "topic": "a temporary apartment",
+    "kind": "fee",
+    "question": "What is the monthly fee for a temporary apartment?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "The fee is 48 euros a month.",
+    "goldAnswer": "The fee is 48 euros a month."
+  },
+  {
+    "topic": "a temporary apartment",
+    "kind": "hours",
+    "question": "During which hours is a temporary apartment available?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "It is available from 6:00 until 15:00.",
+    "goldAnswer": "It is available from 6:00 until 15:00."
+  },
+  {
+    "topic": "a temporary apartment",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a temporary apartment?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Requests go to phone extension 2202.",
+    "goldAnswer": "Requests go to phone extension 2202."
+  },
+  {
+    "topic": "the tax adviser",
+    "kind": "notice",
+    "question": "How much notice do I need to give for the tax adviser?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Ask at least 6 working days in advance.",
+    "goldAnswer": "Ask at least 6 working days in advance."
+  },
+  {
+    "topic": "the tax adviser",
+    "kind": "limit",
+    "question": "How often may I use the tax adviser each month?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Each person may use it 11 times a month.",
+    "goldAnswer": "Each person may use it 11 times a month."
+  },
+  {
+    "topic": "the tax adviser",
+    "kind": "cancel",
+    "question": "How late can I cancel the tax adviser without being charged?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Cancel at least 24 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 24 hours before, or the slot is charged."
+  },
+  {
+    "topic": "a storage unit",
+    "kind": "hours",
+    "question": "During which hours is a storage unit available?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "It is available from 9:00 until 18:00.",
+    "goldAnswer": "It is available from 9:00 until 18:00."
+  },
+  {
+    "topic": "a storage unit",
+    "kind": "extension",
+    "question": "Which phone extension takes requests for a storage unit?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Requests go to phone extension 2317.",
+    "goldAnswer": "Requests go to phone extension 2317."
+  },
+  {
+    "topic": "a storage unit",
+    "kind": "fee",
+    "question": "What is the monthly fee for a storage unit?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "The fee is 43 euros a month.",
+    "goldAnswer": "The fee is 43 euros a month."
+  },
+  {
+    "topic": "a moving van",
+    "kind": "limit",
+    "question": "How often may I use a moving van each month?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Each person may use it 6 times a month.",
+    "goldAnswer": "Each person may use it 6 times a month."
+  },
+  {
+    "topic": "a moving van",
+    "kind": "cancel",
+    "question": "How late can I cancel a moving van without being charged?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Cancel at least 30 hours before, or the slot is charged.",
+    "goldAnswer": "Cancel at least 30 hours before, or the slot is charged."
+  },
+  {
+    "topic": "a moving van",
+    "kind": "notice",
+    "question": "How much notice do I need to give for a moving van?",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Ask at least 12 working days in advance.",
+    "goldAnswer": "Ask at least 12 working days in advance."
+  }
+]

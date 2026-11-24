@@ -1,6 +1,6 @@
 [
-  "Tiny windows split evidence mid-sentence. Raise chunk size so a full sentence can fit in one chunk.",
-  "A fixed character window ignores document structure. Prefer sentence packing or heading-aware splits.",
-  "Overlap of 0 drops text that sits on a chunk boundary. Add overlap, around 20% of chunk size.",
-  "On this corpus, heading-aware keeps each policy document as one chunk and is enough to pass recall@5."
+  "Look at a missed question in the Chunks tab: is the fact sentence in a chunk without the name of its service?",
+  "A fee sentence with no service name matches every other fee sentence equally well. The chunk needs the first sentence of its paragraph too.",
+  "Paragraphs here are about 180 to 225 characters. A chunk that holds one whole paragraph keeps the name and the facts together.",
+  "Recursive splitting cuts on paragraphs first, so a chunk size a little above the longest paragraph gives one paragraph per chunk. Two paragraphs per chunk is over budget."
 ]

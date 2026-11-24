@@ -30,15 +30,36 @@ import {
   parseR3Payload,
   parseR4Payload,
 } from '../modules/grading/harnesses/rag/rag.payloads';
-import type { HiddenItem } from '../modules/grading/harnesses/rag/rag.types';
+import type {
+  HiddenItem,
+  PublicItem,
+} from '../modules/grading/harnesses/rag/rag.types';
 import { gradeR1 } from '../modules/grading/harnesses/rag/r1.grade';
 import { gradeR2 } from '../modules/grading/harnesses/rag/r2.grade';
 import { gradeR3 } from '../modules/grading/harnesses/rag/r3.grade';
+import { groundedGenerate } from '../modules/grading/harnesses/rag/grounded-generate';
 import { gradeR4 } from '../modules/grading/harnesses/rag/r4.grade';
+import {
+  gradeR5,
+  parseR5Payload,
+  type RoutedItem,
+} from '../modules/grading/harnesses/rag/r5.grade';
+import {
+  FLAG_PLACEHOLDER,
+  gradeRedTeam,
+  parseRedTeamPayload,
+  redTeamScenarioFor,
+} from '../modules/grading/harnesses/rag/redteam';
 import { gradeSandboxRetriever } from '../modules/grading/harnesses/sandbox/sandbox.grade';
 import { parseSandboxPayload } from '../modules/grading/harnesses/sandbox/sandbox.payloads';
 import { runLocalPython } from '../modules/sandbox/local-python';
 import type { ExerciseContentBundle } from './content-loader';
+import { corpusPathFor } from './content-paths';
+import { simulatedRewriter } from './simulated-rewriter';
+
+/** Identity the offline content checks grade red team levels as. */
+export const CONTENT_CHECK_USER = 'content-check';
+export const CONTENT_CHECK_FLAG_SECRET = 'content-check-flag-secret';
 
 export type GraderRunResult = {
   verdict: 'pass' | 'fail' | 'inconclusive';
@@ -63,6 +84,7 @@ export async function runContentGrader(
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
+        bundle.meta.gates,
       );
     }
     case 'rag-r2': {
@@ -72,28 +94,59 @@ export async function runContentGrader(
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
+        bundle.meta.gates,
       );
     }
     case 'rag-r3': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
+      // Offline content checks have no model access, so they run the keyword
+      // simulator. Graded runs use the live model (see RagHarness).
       return gradeR3(
         parseR3Payload(payload),
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
-        contentPipelineGateway(),
-        contentRunId(bundle),
+        ({ system, ranked }) =>
+          Promise.resolve(groundedGenerate(system, ranked)),
+        bundle.meta.gates,
       );
     }
     case 'rag-r4': {
       const docs = await loadCorpus(bundle.dir, bundle.meta);
+      // No model offline: a rewrite prompt runs a simulated rewrite that
+      // expands the corpus's abbreviations and fixes typos (graded runs call
+      // the live model).
       return gradeR4(
         parseR4Payload(payload),
         docs,
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
-        undefined,
-        contentRunId(bundle),
+        simulatedRewriter(docs),
+        bundle.meta.gates,
+      );
+    }
+    case 'rag-r5': {
+      const docs = await loadCorpus(bundle.dir, bundle.meta);
+      return gradeR5(
+        parseR5Payload(payload),
+        docs,
+        hiddenRaw as RoutedItem[],
+        publicQuestions(publicRaw),
+        bundle.meta.gates,
+      );
+    }
+    case 'rag-redteam': {
+      // Flags are per learner, so content checks grade as a fixed test learner;
+      // reference solutions write the flag as the {{FLAG}} placeholder.
+      const scenario = redTeamScenarioFor(hiddenRaw, {
+        secret: CONTENT_CHECK_FLAG_SECRET,
+        userId: CONTENT_CHECK_USER,
+        slug: bundle.meta.slug,
+      });
+      const submitted = parseRedTeamPayload(payload);
+      return gradeRedTeam(
+        { flag: submitted.flag.split(FLAG_PLACEHOLDER).join(scenario.flag) },
+        scenario,
       );
     }
     case 'rag-sandbox': {
@@ -104,6 +157,8 @@ export async function runContentGrader(
         hiddenRaw as HiddenItem[],
         publicQuestions(publicRaw),
         runLocalPython,
+        undefined,
+        bundle.meta.gates,
       );
     }
     case 'pe-p1':
@@ -172,8 +227,6 @@ export async function runContentGrader(
         payloadText(payload, 'attackPrompt'),
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
-        undefined,
-        contentRunId(bundle),
         bundle.meta.slug,
       );
     case 'guard-g2':
@@ -181,8 +234,6 @@ export async function runContentGrader(
         payloadText(payload, 'pageContent'),
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
-        undefined,
-        contentRunId(bundle),
         bundle.meta.slug,
       );
     case 'guard-g3':
@@ -191,6 +242,10 @@ export async function runContentGrader(
           systemPrompt: payloadText(payload, 'systemPrompt'),
           inputFilterYaml: payloadText(payload, 'inputFilterYaml'),
           outputFilterYaml: payloadText(payload, 'outputFilterYaml'),
+          toolPolicyYaml:
+            typeof payload.toolPolicyYaml === 'string'
+              ? payload.toolPolicyYaml
+              : undefined,
         },
         hiddenRaw,
         Array.isArray(publicRaw) ? publicRaw : [],
@@ -206,11 +261,9 @@ async function loadCorpus(
   dir: string,
   meta: { corpusFile?: string },
 ): Promise<CorpusDoc[]> {
-  const corpusPath =
-    meta.corpusFile === 'shared'
-      ? path.join(process.cwd(), 'content/corpora/internal-policy.json')
-      : path.join(dir, 'corpus.json');
-  return JSON.parse(await readFile(corpusPath, 'utf8')) as CorpusDoc[];
+  return JSON.parse(
+    await readFile(corpusPathFor(dir, meta), 'utf8'),
+  ) as CorpusDoc[];
 }
 
 function contentRunId(bundle: ExerciseContentBundle): string {
@@ -254,11 +307,11 @@ function payloadText(payload: Record<string, unknown>, key: string): string {
   return '';
 }
 
-function publicQuestions(value: unknown): { question: string }[] {
+function publicQuestions(value: unknown): PublicItem[] {
   if (!Array.isArray(value)) {
     return [];
   }
-  const questions: { question: string }[] = [];
+  const questions: PublicItem[] = [];
   for (const item of value) {
     if (!item || typeof item !== 'object') {
       continue;
@@ -271,7 +324,12 @@ function publicQuestions(value: unknown): { question: string }[] {
           ? row.input
           : null;
     if (question) {
-      questions.push({ question });
+      questions.push({
+        question,
+        goldDocId: typeof row.goldDocId === 'string' ? row.goldDocId : null,
+        goldSpan: typeof row.goldSpan === 'string' ? row.goldSpan : null,
+        class: typeof row.class === 'string' ? row.class : null,
+      });
     }
   }
   return questions;

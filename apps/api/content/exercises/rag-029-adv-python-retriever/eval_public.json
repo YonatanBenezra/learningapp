@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "How many PTO days do full-time staff get each year?",
+    "question": "Which phone extension takes requests for a public transport pass?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "Requests go to phone extension 2419.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Requests go to phone extension 2419."
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "During which hours is a spare laptop available?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldAnswer": "It is available from 6:00 until 15:00.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "It is available from 6:00 until 15:00."
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "How late can I cancel the yoga class without being charged?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Cancel at least 20 hours before, or the slot is charged.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Cancel at least 20 hours before, or the slot is charged."
   },
   {
     "id": "p4",
-    "question": "How long are prompt and completion logs kept?",
+    "question": "How much notice do I need to give for the barista bar?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "Ask at least 2 working days in advance.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "Ask at least 2 working days in advance."
   },
   {
     "id": "p5",
-    "question": "When does primary on-call rotate?",
+    "question": "How much notice do I need to give for the homework club?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "Ask at least 10 working days in advance.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Ask at least 10 working days in advance."
+  },
+  {
+    "id": "p6",
+    "question": "During which hours is a temporary apartment available?",
+    "answerable": true,
+    "goldAnswer": "It is available from 6:00 until 15:00.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "It is available from 6:00 until 15:00."
   }
 ]

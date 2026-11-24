@@ -27,7 +27,7 @@ export function ConnectedAccountRow({
   return (
     <div className="flex flex-col gap-3 border-b border-[#2A3547] py-4 last:border-0 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
-        <span className="flex size-10 items-center justify-center rounded-[4px] bg-[#1E2939] text-xs font-bold text-[#9FEF00]">
+        <span className="flex size-10 items-center justify-center rounded-[4px] bg-[#1E2939] text-xs font-bold text-[#FF4D4D]">
           {PROVIDER_LABEL[account.provider]}
         </span>
         <div>

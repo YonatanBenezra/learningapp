@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { estimateTokens } from '../gateway/pricing';
+import { isNormalizeStep, type NormalizeStep } from '../normaliser/text-views';
 import { compileRe2, re2Test } from './re2-lite';
 import { parseSimpleYaml } from './yaml-lite';
 
@@ -19,7 +20,10 @@ export type AssertionCheck =
   | 'numeric_extract_compare'
   | 'token_count_lte'
   | 'language_is'
-  | 'sentiment_not';
+  | 'sentiment_not'
+  | 'classifier'
+  | 'judge'
+  | 'urls_allowed';
 
 export type Assertion = {
   id: string;
@@ -35,12 +39,28 @@ export type Assertion = {
   value?: number;
   schema?: Record<string, unknown>;
   language?: string;
+  /** classifier only: scores above this and up to `max` go to the judge. */
+  judgeFrom?: number;
 };
 
 export type AssertionSuite = {
   version: number;
   assertions: Assertion[];
   failIf: FailIf;
+  /** Guardrail filters: steps applied to the text before any check runs. */
+  normalize: NormalizeStep[];
+  /** Guardrail output filters: block the reply, or cut out what matched. */
+  action: 'block' | 'redact';
+};
+
+/**
+ * Checks that need more than the text. `classifier` returns P(injection) for
+ * a text; `judge` returns true when the (simulated) judge calls it unsafe.
+ * Only guardrail filters provide them.
+ */
+export type CheckContext = {
+  classifier?: (text: string) => number;
+  judge?: (text: string) => boolean;
 };
 
 export type AssertionEval = {
@@ -59,6 +79,9 @@ const CHECKS: AssertionCheck[] = [
   'token_count_lte',
   'language_is',
   'sentiment_not',
+  'classifier',
+  'judge',
+  'urls_allowed',
 ];
 
 @Injectable()
@@ -88,10 +111,16 @@ export class AssertionDsl {
       version: Number(record.version ?? 1),
       assertions,
       failIf: parseFailIf(record.verdict),
+      normalize: parseNormalize(record.normalize),
+      action: parseAction(record.action),
     };
   }
 
-  evaluate(suite: AssertionSuite, output: string): AssertionEval {
+  evaluate(
+    suite: AssertionSuite,
+    output: string,
+    context: CheckContext = {},
+  ): AssertionEval {
     const started = Date.now();
     const failedIds: string[] = [];
     for (const assertion of suite.assertions) {
@@ -102,7 +131,7 @@ export class AssertionDsl {
         continue;
       }
       const t0 = Date.now();
-      const ok = runCheck(assertion, output);
+      const ok = runCheck(assertion, output, context);
       if (Date.now() - t0 > ASSERTION_TIMEOUT_MS) {
         throw new Error(`assertion ${assertion.id} exceeded 50ms`);
       }
@@ -161,7 +190,36 @@ function parseAssertion(item: unknown, index: number): Assertion {
         ? (record.schema as Record<string, unknown>)
         : undefined,
     language: typeof record.language === 'string' ? record.language : undefined,
+    judgeFrom:
+      typeof record.judge_from === 'number' ? record.judge_from : undefined,
   };
+}
+
+function parseNormalize(value: unknown): NormalizeStep[] {
+  if (value == null) {
+    return [];
+  }
+  const list = Array.isArray(value) ? value : [value];
+  return list.map((step) => {
+    if (!isNormalizeStep(step)) {
+      throw new Error(
+        `unknown normalize step ${JSON.stringify(step)} (decode_hex, decode_base64, unicode, lowercase, join_spaced)`,
+      );
+    }
+    return step;
+  });
+}
+
+function parseAction(value: unknown): 'block' | 'redact' {
+  if (value == null || value === 'block') {
+    return 'block';
+  }
+  if (value === 'redact') {
+    return 'redact';
+  }
+  throw new Error(
+    `action must be block or redact, not ${JSON.stringify(value)}`,
+  );
 }
 
 function parseFailIf(verdict: unknown): FailIf {
@@ -191,8 +249,44 @@ function whenApplies(assertion: Assertion, output: string): boolean {
   return assertion.when === 'matches' ? hit : !hit;
 }
 
-function runCheck(assertion: Assertion, output: string): boolean {
+function runCheck(
+  assertion: Assertion,
+  output: string,
+  context: CheckContext,
+): boolean {
   switch (assertion.check) {
+    case 'classifier': {
+      if (!context.classifier) {
+        throw new Error('the classifier check only runs in guardrail filters');
+      }
+      // Passes while P(injection) stays at or under the threshold. With
+      // judge_from, the uncertain band (judge_from, max] goes to the judge.
+      const score = context.classifier(output);
+      const max = assertion.max ?? 0.5;
+      if (
+        assertion.judgeFrom !== undefined &&
+        score > assertion.judgeFrom &&
+        score <= max
+      ) {
+        if (!context.judge) {
+          throw new Error('the judge check only runs in guardrail filters');
+        }
+        return !context.judge(output);
+      }
+      return score <= max;
+    }
+    case 'urls_allowed':
+      // Passes when every link or image in the text points at an allowed
+      // domain (or a subdomain of one).
+      return urlsIn(output).every((url) =>
+        hostAllowed(url, assertion.values ?? []),
+      );
+    case 'judge': {
+      if (!context.judge) {
+        throw new Error('the judge check only runs in guardrail filters');
+      }
+      return !context.judge(output);
+    }
     case 'matches':
       return Boolean(assertion.pattern && re2Test(assertion.pattern, output));
     case 'not_matches':
@@ -260,4 +354,24 @@ function verdictFlags(
     return failedIds.length >= failIf.countGte;
   }
   return failedIds.length > 0;
+}
+
+const URL_PATTERN = /https?:\/\/[^\s)\]>"'<]+/g;
+
+/** Every http(s) URL in the text. */
+export function urlsIn(text: string): string[] {
+  return text.match(URL_PATTERN) ?? [];
+}
+
+export function hostAllowed(url: string, domains: string[]): boolean {
+  let host: string;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return domains.some((domain) => {
+    const d = domain.toLowerCase().replace(/^\*\./, '');
+    return host === d || host.endsWith(`.${d}`);
+  });
 }

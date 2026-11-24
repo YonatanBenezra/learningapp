@@ -118,7 +118,7 @@ function BillingFields() {
         <section className="lp-bill-grid" aria-label="Plans">
           <article className={`lp-bill-card${!pro ? " is-current" : ""}`}>
             <div className="lp-bill-card-top">
-              <h2 className="lp-bill-plan">LabPath Free</h2>
+              <h2 className="lp-bill-plan">AI Warss Free</h2>
               {!pro ? <span className="lp-bill-badge">Current</span> : null}
             </div>
             <div>
@@ -147,7 +147,7 @@ function BillingFields() {
 
           <article className={`lp-bill-card lp-bill-card--pro${pro ? " is-current" : ""}`}>
             <div className="lp-bill-card-top">
-              <h2 className="lp-bill-plan">LabPath Pro</h2>
+              <h2 className="lp-bill-plan">AI Warss Pro</h2>
               {pro ? <span className="lp-bill-badge">Current</span> : null}
             </div>
             <div>

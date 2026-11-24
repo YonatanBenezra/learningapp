@@ -43,7 +43,7 @@ export function SessionsList({ sessions, onSignOut, onSignOutAll, pending }: Ses
             </div>
             <div className="flex items-center gap-3">
               {session.current ? (
-                <span className="rounded-[4px] bg-[#9FEF00]/15 px-2 py-0.5 text-xs font-semibold text-[#9FEF00]">
+                <span className="rounded-[4px] bg-[#FF4D4D]/15 px-2 py-0.5 text-xs font-semibold text-[#FF4D4D]">
                   Current
                 </span>
               ) : (

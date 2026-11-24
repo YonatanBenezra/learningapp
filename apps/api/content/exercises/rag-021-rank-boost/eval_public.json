@@ -1,42 +1,34 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "If I cancel right after being charged, do I get my money back?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "If you downgrade or cancel within 14 days of a charge, the unused part is returned to the original card",
+    "goldDocId": "refunds-answer",
+    "goldSpan": "If you downgrade or cancel within 14 days of a charge, the unused part is returned to the original card"
   },
   {
     "id": "p2",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "What is the biggest file I can attach on the free plan?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway; split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "On the free plan the limit is 10 MB per file",
+    "goldDocId": "attachments-answer",
+    "goldSpan": "On the free plan the limit is 10 MB per file"
   },
   {
     "id": "p3",
-    "question": "How long are support tickets kept after close?",
+    "question": "Our accountant needs the tax ID on the bill, how do we add it?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "Add your VAT number in Billing settings and it appears on every future invoice",
+    "goldDocId": "vat-answer",
+    "goldSpan": "Add your VAT number in Billing settings and it appears on every future invoice"
   },
   {
     "id": "p4",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "Can my deadlines show up in Outlook?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
-  },
-  {
-    "id": "p5",
-    "question": "What report must vendors present before procurement?",
-    "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "Subscribe to your personal calendar feed link to see due dates in Google or Outlook",
+    "goldDocId": "calendar-answer",
+    "goldSpan": "Subscribe to your personal calendar feed link to see due dates in Google or Outlook"
   }
 ]

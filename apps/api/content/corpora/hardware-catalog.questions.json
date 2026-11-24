@@ -1,0 +1,514 @@
+[
+  {
+    "topic": "laptops/0",
+    "question": "How much memory does the Air laptop in the office range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Air | 32 GB | 430 euros |",
+    "goldAnswer": "32 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "laptops/0",
+    "question": "How much memory does the Pro laptop in the office range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Pro | 16 GB | 929 euros |",
+    "goldAnswer": "16 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "laptops/0",
+    "question": "How much memory does the Max laptop in the office range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Max | 8 GB | 554 euros |",
+    "goldAnswer": "8 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "laptops/0",
+    "question": "How much memory does the Mini laptop in the office range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Mini | 64 GB | 733 euros |",
+    "goldAnswer": "64 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "laptops/1",
+    "question": "How much memory does the Air laptop in the studio range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Air | 32 GB | 255 euros |",
+    "goldAnswer": "32 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "laptops/1",
+    "question": "How much memory does the Pro laptop in the studio range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Pro | 64 GB | 506 euros |",
+    "goldAnswer": "64 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "laptops/1",
+    "question": "How much memory does the Max laptop in the studio range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Max | 16 GB | 482 euros |",
+    "goldAnswer": "16 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "laptops/1",
+    "question": "How much memory does the Mini laptop in the studio range have?",
+    "goldDocId": "laptops",
+    "goldSpan": "| Mini | 64 GB | 1056 euros |",
+    "goldAnswer": "64 GB",
+    "noun": "laptop"
+  },
+  {
+    "topic": "monitors/0",
+    "question": "What screen size is the Air monitor in the office range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Air | 24 inch | 843 euros |",
+    "goldAnswer": "24 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "monitors/0",
+    "question": "What screen size is the Pro monitor in the office range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Pro | 24 inch | 218 euros |",
+    "goldAnswer": "24 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "monitors/0",
+    "question": "What screen size is the Max monitor in the office range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Max | 32 inch | 558 euros |",
+    "goldAnswer": "32 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "monitors/0",
+    "question": "What screen size is the Mini monitor in the office range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Mini | 34 inch | 299 euros |",
+    "goldAnswer": "34 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "monitors/1",
+    "question": "What screen size is the Air monitor in the studio range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Air | 24 inch | 493 euros |",
+    "goldAnswer": "24 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "monitors/1",
+    "question": "What screen size is the Pro monitor in the studio range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Pro | 34 inch | 736 euros |",
+    "goldAnswer": "34 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "monitors/1",
+    "question": "What screen size is the Max monitor in the studio range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Max | 32 inch | 421 euros |",
+    "goldAnswer": "32 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "monitors/1",
+    "question": "What screen size is the Mini monitor in the studio range?",
+    "goldDocId": "monitors",
+    "goldSpan": "| Mini | 34 inch | 275 euros |",
+    "goldAnswer": "34 inch",
+    "noun": "monitor"
+  },
+  {
+    "topic": "keyboards/0",
+    "question": "What layout does the Air keyboard in the office range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Air | split | 366 euros |",
+    "goldAnswer": "split",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "keyboards/0",
+    "question": "What layout does the Pro keyboard in the office range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Pro | split | 210 euros |",
+    "goldAnswer": "split",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "keyboards/0",
+    "question": "What layout does the Max keyboard in the office range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Max | full size | 598 euros |",
+    "goldAnswer": "full size",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "keyboards/0",
+    "question": "What layout does the Mini keyboard in the office range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Mini | tenkeyless | 103 euros |",
+    "goldAnswer": "tenkeyless",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "keyboards/1",
+    "question": "What layout does the Air keyboard in the studio range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Air | full size | 874 euros |",
+    "goldAnswer": "full size",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "keyboards/1",
+    "question": "What layout does the Pro keyboard in the studio range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Pro | full size | 842 euros |",
+    "goldAnswer": "full size",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "keyboards/1",
+    "question": "What layout does the Max keyboard in the studio range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Max | compact | 609 euros |",
+    "goldAnswer": "compact",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "keyboards/1",
+    "question": "What layout does the Mini keyboard in the studio range use?",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Mini | full size | 452 euros |",
+    "goldAnswer": "full size",
+    "noun": "keyboard"
+  },
+  {
+    "topic": "headsets/0",
+    "question": "How long does the battery of the Air headset in the office range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Air | 40 hours | 196 euros |",
+    "goldAnswer": "40 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "headsets/0",
+    "question": "How long does the battery of the Pro headset in the office range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Pro | 40 hours | 886 euros |",
+    "goldAnswer": "40 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "headsets/0",
+    "question": "How long does the battery of the Max headset in the office range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Max | 50 hours | 158 euros |",
+    "goldAnswer": "50 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "headsets/0",
+    "question": "How long does the battery of the Mini headset in the office range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Mini | 50 hours | 313 euros |",
+    "goldAnswer": "50 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "headsets/1",
+    "question": "How long does the battery of the Air headset in the studio range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Air | 50 hours | 1080 euros |",
+    "goldAnswer": "50 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "headsets/1",
+    "question": "How long does the battery of the Pro headset in the studio range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Pro | 20 hours | 789 euros |",
+    "goldAnswer": "20 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "headsets/1",
+    "question": "How long does the battery of the Max headset in the studio range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Max | 30 hours | 866 euros |",
+    "goldAnswer": "30 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "headsets/1",
+    "question": "How long does the battery of the Mini headset in the studio range last?",
+    "goldDocId": "headsets",
+    "goldSpan": "| Mini | 20 hours | 269 euros |",
+    "goldAnswer": "20 hours",
+    "noun": "headset"
+  },
+  {
+    "topic": "docks/0",
+    "question": "How many ports does the Air dock in the office range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Air | 11 ports | 134 euros |",
+    "goldAnswer": "11 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "docks/0",
+    "question": "How many ports does the Pro dock in the office range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Pro | 6 ports | 635 euros |",
+    "goldAnswer": "6 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "docks/0",
+    "question": "How many ports does the Max dock in the office range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Max | 11 ports | 859 euros |",
+    "goldAnswer": "11 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "docks/0",
+    "question": "How many ports does the Mini dock in the office range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Mini | 4 ports | 764 euros |",
+    "goldAnswer": "4 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "docks/1",
+    "question": "How many ports does the Air dock in the studio range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Air | 11 ports | 782 euros |",
+    "goldAnswer": "11 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "docks/1",
+    "question": "How many ports does the Pro dock in the studio range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Pro | 4 ports | 229 euros |",
+    "goldAnswer": "4 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "docks/1",
+    "question": "How many ports does the Max dock in the studio range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Max | 6 ports | 665 euros |",
+    "goldAnswer": "6 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "docks/1",
+    "question": "How many ports does the Mini dock in the studio range have?",
+    "goldDocId": "docks",
+    "goldSpan": "| Mini | 4 ports | 826 euros |",
+    "goldAnswer": "4 ports",
+    "noun": "dock"
+  },
+  {
+    "topic": "webcams/0",
+    "question": "What resolution does the Air webcam in the office range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Air | 4K | 953 euros |",
+    "goldAnswer": "4K",
+    "noun": "webcam"
+  },
+  {
+    "topic": "webcams/0",
+    "question": "What resolution does the Pro webcam in the office range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Pro | 1080p | 228 euros |",
+    "goldAnswer": "1080p",
+    "noun": "webcam"
+  },
+  {
+    "topic": "webcams/0",
+    "question": "What resolution does the Max webcam in the office range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Max | 720p | 125 euros |",
+    "goldAnswer": "720p",
+    "noun": "webcam"
+  },
+  {
+    "topic": "webcams/0",
+    "question": "What resolution does the Mini webcam in the office range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Mini | 1080p | 658 euros |",
+    "goldAnswer": "1080p",
+    "noun": "webcam"
+  },
+  {
+    "topic": "webcams/1",
+    "question": "What resolution does the Air webcam in the studio range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Air | 1440p | 560 euros |",
+    "goldAnswer": "1440p",
+    "noun": "webcam"
+  },
+  {
+    "topic": "webcams/1",
+    "question": "What resolution does the Pro webcam in the studio range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Pro | 1440p | 339 euros |",
+    "goldAnswer": "1440p",
+    "noun": "webcam"
+  },
+  {
+    "topic": "webcams/1",
+    "question": "What resolution does the Max webcam in the studio range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Max | 720p | 792 euros |",
+    "goldAnswer": "720p",
+    "noun": "webcam"
+  },
+  {
+    "topic": "webcams/1",
+    "question": "What resolution does the Mini webcam in the studio range record?",
+    "goldDocId": "webcams",
+    "goldSpan": "| Mini | 1440p | 1071 euros |",
+    "goldAnswer": "1440p",
+    "noun": "webcam"
+  },
+  {
+    "topic": "desk-chairs/0",
+    "question": "How long is the warranty on the Air chair in the office range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Air | 2 years | 593 euros |",
+    "goldAnswer": "2 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "desk-chairs/0",
+    "question": "How long is the warranty on the Pro chair in the office range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Pro | 2 years | 419 euros |",
+    "goldAnswer": "2 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "desk-chairs/0",
+    "question": "How long is the warranty on the Max chair in the office range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Max | 7 years | 437 euros |",
+    "goldAnswer": "7 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "desk-chairs/0",
+    "question": "How long is the warranty on the Mini chair in the office range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Mini | 2 years | 146 euros |",
+    "goldAnswer": "2 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "desk-chairs/1",
+    "question": "How long is the warranty on the Air chair in the studio range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Air | 5 years | 490 euros |",
+    "goldAnswer": "5 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "desk-chairs/1",
+    "question": "How long is the warranty on the Pro chair in the studio range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Pro | 2 years | 320 euros |",
+    "goldAnswer": "2 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "desk-chairs/1",
+    "question": "How long is the warranty on the Max chair in the studio range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Max | 5 years | 1033 euros |",
+    "goldAnswer": "5 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "desk-chairs/1",
+    "question": "How long is the warranty on the Mini chair in the studio range?",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Mini | 5 years | 1078 euros |",
+    "goldAnswer": "5 years",
+    "noun": "chair"
+  },
+  {
+    "topic": "phones/0",
+    "question": "How much storage does the Air phone in the office range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Air | 128 GB | 813 euros |",
+    "goldAnswer": "128 GB",
+    "noun": "phone"
+  },
+  {
+    "topic": "phones/0",
+    "question": "How much storage does the Pro phone in the office range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Pro | 128 GB | 229 euros |",
+    "goldAnswer": "128 GB",
+    "noun": "phone"
+  },
+  {
+    "topic": "phones/0",
+    "question": "How much storage does the Max phone in the office range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Max | 128 GB | 206 euros |",
+    "goldAnswer": "128 GB",
+    "noun": "phone"
+  },
+  {
+    "topic": "phones/0",
+    "question": "How much storage does the Mini phone in the office range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Mini | 1 TB | 781 euros |",
+    "goldAnswer": "1 TB",
+    "noun": "phone"
+  },
+  {
+    "topic": "phones/1",
+    "question": "How much storage does the Air phone in the studio range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Air | 256 GB | 597 euros |",
+    "goldAnswer": "256 GB",
+    "noun": "phone"
+  },
+  {
+    "topic": "phones/1",
+    "question": "How much storage does the Pro phone in the studio range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Pro | 128 GB | 1097 euros |",
+    "goldAnswer": "128 GB",
+    "noun": "phone"
+  },
+  {
+    "topic": "phones/1",
+    "question": "How much storage does the Max phone in the studio range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Max | 512 GB | 259 euros |",
+    "goldAnswer": "512 GB",
+    "noun": "phone"
+  },
+  {
+    "topic": "phones/1",
+    "question": "How much storage does the Mini phone in the studio range have?",
+    "goldDocId": "phones",
+    "goldSpan": "| Mini | 128 GB | 429 euros |",
+    "goldAnswer": "128 GB",
+    "noun": "phone"
+  }
+]

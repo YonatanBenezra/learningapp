@@ -1,242 +1,364 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "How do I reset the thermostat?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "To reset the thermostat, hold the dial down for ten seconds until the screen goes blank.",
+    "goldDocId": "thermostat-answer",
+    "goldSpan": "To reset the thermostat, hold the dial down for ten seconds until the screen goes blank.",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "Is the heating schedule kept after a thermostat reset?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "The heating schedule is kept after a reset and comes back within a minute.",
+    "goldDocId": "thermostat-answer",
+    "goldSpan": "The heating schedule is kept after a reset and comes back within a minute.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "How long does the thermostat battery last?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days"
+    "goldAnswer": "The thermostat battery lasts about two years, and the screen warns you a month before it runs out.",
+    "goldDocId": "thermostat-answer",
+    "goldSpan": "The thermostat battery lasts about two years, and the screen warns you a month before it runs out.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "How do I pair the indoor chime with the doorbell?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January"
+    "goldAnswer": "The indoor chime pairs with the doorbell when you press both buttons together for five seconds.",
+    "goldDocId": "doorbell-answer",
+    "goldSpan": "The indoor chime pairs with the doorbell when you press both buttons together for five seconds.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "What wifi signal does the doorbell need?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta"
+    "goldAnswer": "The doorbell needs a wifi signal of at least two bars at the front door.",
+    "goldDocId": "doorbell-answer",
+    "goldSpan": "The doorbell needs a wifi signal of at least two bars at the front door.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "How many watts can a smart plug switch?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled"
+    "goldAnswer": "A smart plug can switch devices up to 3,000 watts, so it is fine for kettles but not for ovens.",
+    "goldDocId": "smart-plug-answer",
+    "goldSpan": "A smart plug can switch devices up to 3,000 watts, so it is fine for kettles but not for ovens.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "question": "Do smart plug timers work when the internet is down?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "Timers on the smart plug keep running when the internet is down, because they are stored on the plug.",
+    "goldDocId": "smart-plug-answer",
+    "goldSpan": "Timers on the smart plug keep running when the internet is down, because they are stored on the plug.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "Where can I see the energy use of a smart plug?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes"
+    "goldAnswer": "The energy report in the app shows what each smart plug used per day for the last year.",
+    "goldDocId": "smart-plug-answer",
+    "goldSpan": "The energy report in the app shows what each smart plug used per day for the last year.",
+    "split": "feedback",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "How often should the robot vacuum side brush be replaced?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication"
+    "goldAnswer": "The side brush of the robot vacuum should be replaced every six months.",
+    "goldDocId": "robot-vacuum-answer",
+    "goldSpan": "The side brush of the robot vacuum should be replaced every six months.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "What do I do when the robot vacuum cannot find its dock?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target"
+    "goldAnswer": "If the robot vacuum cannot find its dock, clear half a metre of space on both sides of the dock.",
+    "goldDocId": "robot-vacuum-answer",
+    "goldSpan": "If the robot vacuum cannot find its dock, clear half a metre of space on both sides of the dock.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "How far does the security camera see at night?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers"
+    "goldAnswer": "The security camera sees up to eight metres in the dark with its night vision.",
+    "goldDocId": "security-camera-answer",
+    "goldSpan": "The security camera sees up to eight metres in the dark with its night vision.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "Can I limit security camera motion alerts to part of the picture?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted"
+    "goldAnswer": "Motion alerts can be limited to zones you draw on the camera picture in the app.",
+    "goldDocId": "security-camera-answer",
+    "goldSpan": "Motion alerts can be limited to zones you draw on the camera picture in the app.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "In what temperatures does the outdoor security camera work?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only"
+    "goldAnswer": "The outdoor security camera works from minus twenty to plus fifty degrees.",
+    "goldDocId": "security-camera-answer",
+    "goldSpan": "The outdoor security camera works from minus twenty to plus fifty degrees.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "What happens when the smart lock battery is empty?",
     "answerable": true,
-    "goldAnswer": "\u20ac45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (\u20ac45) per person excluding tax"
+    "goldAnswer": "When the smart lock battery is empty, the door still opens with the normal key from outside.",
+    "goldDocId": "smart-lock-answer",
+    "goldSpan": "When the smart lock battery is empty, the door still opens with the normal key from outside.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "When does the smart lock lock itself again?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable"
+    "goldAnswer": "The smart lock locks itself again thirty seconds after the door closes, if auto lock is on.",
+    "goldDocId": "smart-lock-answer",
+    "goldSpan": "The smart lock locks itself again thirty seconds after the door closes, if auto lock is on.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "question": "How many colours can the colour light bulbs show?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "The colour light bulbs can show sixteen million colours and every shade of white.",
+    "goldDocId": "light-bulbs-answer",
+    "goldSpan": "The colour light bulbs can show sixteen million colours and every shade of white.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "question": "Why do the light bulbs flicker on a wall dimmer?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "A wall dimmer must be removed or set to full power, or the bulbs will flicker.",
+    "goldDocId": "light-bulbs-answer",
+    "goldSpan": "A wall dimmer must be removed or set to full power, or the bulbs will flicker.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "How many light bulbs can a scene switch at once?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days"
+    "goldAnswer": "Scenes in the app switch up to fifty bulbs at once with one tap.",
+    "goldDocId": "light-bulbs-answer",
+    "goldSpan": "Scenes in the app switch up to fifty bulbs at once with one tap.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "What does a smoke alarm chirp every minute mean?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold"
+    "goldAnswer": "A single chirp every minute means the smoke alarm battery is low.",
+    "goldDocId": "smoke-alarm-answer",
+    "goldSpan": "A single chirp every minute means the smoke alarm battery is low.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "question": "Do linked smoke alarms all sound together?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "Linked smoke alarms all sound together when one of them detects smoke.",
+    "goldDocId": "smoke-alarm-answer",
+    "goldSpan": "Linked smoke alarms all sound together when one of them detects smoke.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h21",
-    "question": "Who is backup on-call for the week?",
+    "question": "How many zigbee devices can one hub connect?",
     "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week"
+    "goldAnswer": "One hub connects up to one hundred and fifty zigbee devices.",
+    "goldDocId": "hub-answer",
+    "goldSpan": "One hub connects up to one hundred and fifty zigbee devices.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "When do hub updates install?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs"
+    "goldAnswer": "Hub updates install overnight between two and four and take about ten minutes.",
+    "goldDocId": "hub-answer",
+    "goldSpan": "Hub updates install overnight between two and four and take about ten minutes.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "Do automations keep running when the hub is offline?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report"
+    "goldAnswer": "Automations stored on the hub keep running when the hub is offline from the internet.",
+    "goldDocId": "hub-answer",
+    "goldSpan": "Automations stored on the hub keep running when the hub is offline from the internet.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "How many speakers can play music as one group?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form"
+    "goldAnswer": "Up to six speakers can play music together as one group.",
+    "goldDocId": "speaker-answer",
+    "goldSpan": "Up to six speakers can play music together as one group.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "How long are speaker voice recordings kept?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days"
+    "goldAnswer": "Voice recordings are deleted after three months unless you choose to keep them.",
+    "goldDocId": "speaker-answer",
+    "goldSpan": "Voice recordings are deleted after three months unless you choose to keep them.",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "How long do the blinds run on one charge?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "The blinds motor runs for about six months on one charge.",
+    "goldDocId": "blinds-answer",
+    "goldSpan": "The blinds motor runs for about six months on one charge.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h27",
+    "question": "Can the blinds close automatically at sunset?",
+    "answerable": true,
+    "goldAnswer": "Blinds can close automatically at sunset when you turn on the sunset rule in the app.",
+    "goldDocId": "blinds-answer",
+    "goldSpan": "Blinds can close automatically at sunset when you turn on the sunset rule in the app.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "How many blinds can one remote control?",
+    "answerable": true,
+    "goldAnswer": "One remote controls up to five blinds, each on its own channel.",
+    "goldDocId": "blinds-answer",
+    "goldSpan": "One remote controls up to five blinds, each on its own channel.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "Where should the water sensor be placed?",
+    "answerable": true,
+    "goldAnswer": "Place the water sensor flat on the floor next to the washing machine or the boiler.",
+    "goldDocId": "water-sensor-answer",
+    "goldSpan": "Place the water sensor flat on the floor next to the washing machine or the boiler.",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "canary",
     "question": "What is the HIDDEN_EVAL_R23_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

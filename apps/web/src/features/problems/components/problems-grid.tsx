@@ -8,10 +8,8 @@ import {
   isActiveSimulator,
   type SimulatorSlug,
 } from "@/config/simulators";
-import {
-  ensureAuthSession,
-  getAuthSnapshot,
-} from "@/features/auth/auth-session";
+import { ensureAuthSession } from "@/features/auth/auth-session";
+import { useCachedAuthStatus } from "@/features/auth/use-auth-session";
 import {
   problemsApi,
   type UserExerciseSolveStat,
@@ -144,11 +142,10 @@ export function ProblemsGrid() {
   const [difficulty, setDifficulty] = useState<Difficulty | "all">("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [signedIn, setSignedIn] = useState(
-    () =>
-      getAuthSnapshot().status === "authenticated" ||
-      getAuthSnapshot().status === "soft",
-  );
+  const cachedAuth = useCachedAuthStatus();
+  const [signedInChecked, setSignedIn] = useState<boolean | null>(null);
+  const signedIn =
+    signedInChecked ?? (cachedAuth === "authenticated" || cachedAuth === "soft");
   const [userStatsBySlug, setUserStatsBySlug] = useState<
     Record<string, UserExerciseSolveStat>
   >({});

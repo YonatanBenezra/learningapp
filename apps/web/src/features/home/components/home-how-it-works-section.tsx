@@ -61,7 +61,7 @@ const TRACK_PILLS = [
   { label: "Prompt", icon: ImageIcon },
 ] as const;
 
-const TERMINAL_CMD = "$ labpath run rag-001";
+const TERMINAL_CMD = "$ aiwarss run rag-001";
 
 const TERMINAL_LINES = [
   { text: "chunk  400 · overlap 80 · heading-aware", tone: "muted" as const },
@@ -159,7 +159,7 @@ function TrackVisual() {
           })()}
         </div>
       </div>
-      <p className="lp-home-hiw-pill-caption">rag-001 · Chunk It Right · recall@5 ≥ 0.80</p>
+      <p className="lp-home-hiw-pill-caption">rag-001 · Keep the Subject in the Chunk · recall@5 ≥ 0.90</p>
     </div>
   );
 }

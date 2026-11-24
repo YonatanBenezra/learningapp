@@ -1,7 +1,7 @@
 /* Contest problem HUD + flag captured modal (CTF-05b) */
 
 .lp-ct-problem-hud {
-  --lp-ctf-success: #9fef00;
+  --lp-ctf-success: #FF4D4D;
   flex-shrink: 0;
   box-sizing: border-box;
   padding: 0.5rem 8px 0.35rem;
@@ -274,7 +274,7 @@
   color: var(--arena-red, #ff4d6d);
 }
 
-/* Flag captured modal — LabPath ember brand (not arena lime) */
+/* Flag captured modal — AI Warss ember brand (not arena lime) */
 
 .lp-flag-cap-overlay {
   position: fixed;

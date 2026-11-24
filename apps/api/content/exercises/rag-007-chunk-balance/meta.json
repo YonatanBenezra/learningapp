@@ -1,10 +1,10 @@
 {
   "slug": "rag-007-chunk-balance",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r1",
-  "title": "Recall@k SLA on Policy KB",
+  "title": "Split on Paragraphs, Not Overlap",
   "difficulty": "M",
   "catalogPhase": 2,
   "skills": [
@@ -17,7 +17,7 @@
       "name": "Retrieval quality"
     }
   ],
-  "briefMd": "# Phase 2 · Recall@k SLA on Policy KB\n\nYour internal bot has a **launch SLA**: recall@5 ≥ 0.80 on ticket-style questions drawn from HR/policy docs. Chunk sizes that work on demos are failing on long-form articles.\n\nBalance **chunk size**, **overlap**, and **split strategy** to hit the SLA without hand-tuning per document.\n",
+  "briefMd": "# Phase 2 · Split on Paragraphs, Not Overlap\n\nThe benefits FAQ answers every question in one paragraph of two sentences: the rule, then its condition (\"The bike lease lets you lease a bike of up to three thousand euros through your salary. The lease runs for three years, and you can buy the bike for ten percent at the end.\"). A question counts only when both sentences sit in one retrieved chunk.\n\nThe paragraphs are 120 to 390 characters long, so whatever size you pick, a chunk boundary lands inside some answer. Overlap repairs that by repeating text, and every repeated sentence is paid for again in the context.\n\nYou control **chunk size**, **overlap** and **split strategy**. Retrieval is BM25, top 5 chunks, and all five go into the context.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 340 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -31,13 +31,13 @@
         "type": "integer",
         "minimum": 50,
         "maximum": 2000,
-        "default": 400
+        "default": 300
       },
       "overlap": {
         "type": "integer",
         "minimum": 0,
         "maximum": 400,
-        "default": 50
+        "default": 100
       },
       "splitStrategy": {
         "type": "string",
@@ -52,7 +52,8 @@
     }
   },
   "thresholds": {
-    "pass": 1
+    "recall_at_5": 0.9,
+    "mean_context_tokens": 340
   },
   "budget": {
     "max_model_calls": 0,
@@ -62,16 +63,27 @@
   },
   "gates": [
     {
-      "id": "pass",
+      "id": "recall-at-5",
       "class": "A",
-      "metric": "pass",
-      "op": "eq",
-      "value": 1
+      "metric": "recall@5",
+      "op": "gte",
+      "value": 0.9
+    },
+    {
+      "id": "mean-context-tokens",
+      "class": "A",
+      "metric": "mean_context_tokens",
+      "op": "lte",
+      "value": 340
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "corpusFile": "benefits-faq"
 }

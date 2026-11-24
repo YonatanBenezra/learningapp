@@ -59,7 +59,7 @@ export function XpActivityCard({ brand, weeks, className }: XpActivityCardProps)
       )}
     >
       <h2 className="mb-6 text-base font-semibold leading-snug text-[#F4F4F4]">
-        <span className="text-[#9FEF00]" style={{ fontFamily: "var(--font-roboto-mono, monospace)" }}>
+        <span className="text-[#FF4D4D]" style={{ fontFamily: "var(--font-roboto-mono, monospace)" }}>
           {totalYearXp.toLocaleString()} XP
         </span>{" "}
         gained on {brand} in the last year
@@ -91,7 +91,7 @@ export function XpActivityCard({ brand, weeks, className }: XpActivityCardProps)
                           barRefs.current[idx] = el;
                         }}
                         type="button"
-                        className="h-[11px] w-full rounded-[3px] transition-opacity duration-150 hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9FEF00]/50"
+                        className="h-[11px] w-full rounded-[3px] transition-opacity duration-150 hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4D4D]/50"
                         style={{ backgroundColor: xpBarColor(week.xp) }}
                         aria-label={label}
                         onFocus={() => setFocusIndex(idx)}

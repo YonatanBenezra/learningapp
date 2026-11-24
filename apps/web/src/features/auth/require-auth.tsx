@@ -21,7 +21,9 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const publicPath = isPublicAppPath(pathname);
-  const [ready, setReady] = useState(() => publicPath || hasCachedSession());
+  // Same on the server and in the first client render; a cached session
+  // opens the gate in the layout effect below, before anything is painted.
+  const [ready, setReady] = useState(() => publicPath);
   const [gateLabel, setGateLabel] = useState("Checking your session…");
 
   useLayoutEffect(() => {

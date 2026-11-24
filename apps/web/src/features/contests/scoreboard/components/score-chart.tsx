@@ -158,9 +158,9 @@ export function ScoreChart({
                 <button
                   key={r.id}
                   type="button"
-                  className={`rounded px-3 py-1.5 text-[13px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00] ${
+                  className={`rounded px-3 py-1.5 text-[13px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D] ${
                     range === r.id
-                      ? "bg-[#232C3D] text-[#9FEF00]"
+                      ? "bg-[#232C3D] text-[#FF4D4D]"
                       : "text-[#A4B1CD] hover:text-white"
                   }`}
                   onClick={() => setRange(r.id)}
@@ -174,7 +174,7 @@ export function ScoreChart({
               <button
                 type="button"
                 disabled={!canPrev}
-                className="inline-flex size-8 items-center justify-center rounded-full border border-[#2A3446] text-[#A4B1CD] transition-colors hover:border-[#9FEF00] hover:text-white disabled:opacity-40"
+                className="inline-flex size-8 items-center justify-center rounded-full border border-[#2A3446] text-[#A4B1CD] transition-colors hover:border-[#FF4D4D] hover:text-white disabled:opacity-40"
                 aria-label="Previous operators"
                 onClick={() => setWindowStart((s) => Math.max(1, s - 10))}
               >
@@ -183,7 +183,7 @@ export function ScoreChart({
               <button
                 type="button"
                 disabled={!canNext}
-                className="inline-flex size-8 items-center justify-center rounded-full border border-[#2A3446] text-[#A4B1CD] transition-colors hover:border-[#9FEF00] hover:text-white disabled:opacity-40"
+                className="inline-flex size-8 items-center justify-center rounded-full border border-[#2A3446] text-[#A4B1CD] transition-colors hover:border-[#FF4D4D] hover:text-white disabled:opacity-40"
                 aria-label="Next operators"
                 onClick={() => setWindowStart((s) => s + 10)}
               >

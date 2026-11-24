@@ -321,7 +321,6 @@ export function RunDetail({ runId }: RunDetailProps) {
                     <tr>
                       <th>Question</th>
                       <th>Note</th>
-                      <th>Gold span</th>
                       <th>Retrieved</th>
                     </tr>
                   </thead>
@@ -455,7 +454,6 @@ function FailingRow({ item }: { item: FailingCase }) {
     <tr>
       <td className="lp-run-fail-q">{item.question}</td>
       <td className="lp-run-fail-note">{item.note ?? "—"}</td>
-      <td className="lp-run-fail-note">{item.goldSpan ?? "—"}</td>
       <td className="lp-run-fail-note">
         {item.retrieved?.[0]?.slice(0, 180) ?? "—"}
       </td>

@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { Env } from '../../../../core/config/env.schema';
 import {
+  isRagR5Slug,
+  isRagRedTeamSlug,
   isRagR1Slug,
   isRagR2Slug,
   isRagR3Slug,
@@ -16,30 +20,64 @@ import {
 import { gradeR1 } from './r1.grade';
 import { gradeR2 } from './r2.grade';
 import { gradeR3 } from './r3.grade';
-import { gradeR4 } from './r4.grade';
-import type { HiddenItem, RagGradeResult } from './rag.types';
+import { gradeR4, REWRITE_MAX_TOKENS } from './r4.grade';
+import { gradeR5, parseR5Payload } from './r5.grade';
+import {
+  gradeRedTeam,
+  parseRedTeamPayload,
+  redTeamScenarioFor,
+} from './redteam';
+import type { HiddenItem, PublicItem, RagGradeResult } from './rag.types';
 
 export type RagExecuteInput = {
   slug: string;
   runId: string;
+  /** Learner who submitted; red team flags are derived per learner. */
+  userId: string;
   payload: unknown;
   docs: CorpusDoc[];
   hidden: HiddenItem[];
-  publicItems?: { question: string }[];
+  publicItems?: PublicItem[];
+  /** Exercise gates (meta.json -> DB); graders read their thresholds from these. */
+  gates?: unknown;
 };
 
 @Injectable()
 export class RagHarness {
-  constructor(private readonly gateway: ModelGateway) {}
+  constructor(
+    private readonly gateway: ModelGateway,
+    private readonly config: ConfigService<Env, true>,
+  ) {}
 
   async execute(input: RagExecuteInput): Promise<RagGradeResult> {
     const publicItems = input.publicItems ?? [];
+    if (isRagRedTeamSlug(input.slug)) {
+      // The hidden asset is the scenario object (flag, secrets), not a Q/A list.
+      return gradeRedTeam(
+        parseRedTeamPayload(input.payload),
+        redTeamScenarioFor(input.hidden, {
+          secret: this.config.get('REDTEAM_FLAG_SECRET', { infer: true }),
+          userId: input.userId,
+          slug: input.slug,
+        }),
+      );
+    }
+    if (isRagR5Slug(input.slug)) {
+      return gradeR5(
+        parseR5Payload(input.payload),
+        input.docs,
+        input.hidden,
+        publicItems,
+        input.gates,
+      );
+    }
     if (isRagR1Slug(input.slug)) {
       return gradeR1(
         parseR1Payload(input.payload),
         input.docs,
         input.hidden,
         publicItems,
+        input.gates,
       );
     }
     if (isRagR2Slug(input.slug)) {
@@ -48,6 +86,7 @@ export class RagHarness {
         input.docs,
         input.hidden,
         publicItems,
+        input.gates,
       );
     }
     if (isRagR3Slug(input.slug)) {
@@ -56,8 +95,17 @@ export class RagHarness {
         input.docs,
         input.hidden,
         publicItems,
-        this.gateway,
-        input.runId,
+        // Real model, billed to this run; a missing provider fails the run
+        // instead of silently grading against a keyword simulator.
+        async ({ system, user }) =>
+          (
+            await this.gateway.generate({
+              runId: input.runId,
+              system,
+              user,
+            })
+          ).text,
+        input.gates,
       );
     }
     if (isRagR4Slug(input.slug)) {
@@ -66,8 +114,18 @@ export class RagHarness {
         input.docs,
         input.hidden,
         publicItems,
-        this.gateway,
-        input.runId,
+        // The rewrite prompt runs on the live model, billed to this run; the
+        // rewritten query is what the first stage searches with.
+        async (instruction, question) =>
+          (
+            await this.gateway.generate({
+              runId: input.runId,
+              system: instruction,
+              user: question,
+              maxTokens: REWRITE_MAX_TOKENS,
+            })
+          ).text,
+        input.gates,
       );
     }
     throw new Error(`Unsupported RAG exercise: ${input.slug}`);

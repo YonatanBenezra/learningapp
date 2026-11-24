@@ -1,0 +1,282 @@
+[
+  {
+    "topic": "en-laptop-returns",
+    "question": "শেষ কর্মদিবসে ল্যাপটপ কোথায় ফেরত দিতে হবে?",
+    "goldDocId": "en-laptop-returns",
+    "goldSpan": "Return your laptop to the IT desk on your last working day",
+    "goldAnswer": "Return your laptop to the IT desk on your last working day"
+  },
+  {
+    "topic": "en-meal-allowance",
+    "question": "রাত নয়টার পরে কাজ করলে রাতের খাবারের জন্য কত ভাতা পাওয়া যায়?",
+    "goldDocId": "en-meal-allowance",
+    "goldSpan": "Staff working past 9 pm can claim a dinner allowance of 15 pounds",
+    "goldAnswer": "Staff working past 9 pm can claim a dinner allowance of 15 pounds"
+  },
+  {
+    "topic": "en-parking",
+    "question": "লন্ডন অফিসে পার্কিং পারমিটের খরচ মাসে কত?",
+    "goldDocId": "en-parking",
+    "goldSpan": "Parking permits for the London office cost 40 pounds a month",
+    "goldAnswer": "Parking permits for the London office cost 40 pounds a month"
+  },
+  {
+    "topic": "en-training-days",
+    "question": "বছরে কত দিন বেতনসহ প্রশিক্ষণ নেওয়া যায়?",
+    "goldDocId": "en-training-days",
+    "goldSpan": "Each employee gets five paid training days per year",
+    "goldAnswer": "Each employee gets five paid training days per year"
+  },
+  {
+    "topic": "en-visitor-wifi",
+    "question": "অতিথিদের ওয়াই-ফাই ভাউচার কত ঘণ্টা চলে?",
+    "goldDocId": "en-visitor-wifi",
+    "goldSpan": "Visitors get a Wi-Fi voucher from reception that lasts eight hours",
+    "goldAnswer": "Visitors get a Wi-Fi voucher from reception that lasts eight hours"
+  },
+  {
+    "topic": "en-expense-deadline",
+    "question": "কেনাকাটার কত দিনের মধ্যে খরচের দাবি জমা দিতে হয়?",
+    "goldDocId": "en-expense-deadline",
+    "goldSpan": "Submit expense claims within 30 days of the purchase",
+    "goldAnswer": "Submit expense claims within 30 days of the purchase"
+  },
+  {
+    "topic": "en-sick-notes",
+    "question": "টানা কত দিন অসুস্থ থাকলে ডাক্তারের সনদ লাগে?",
+    "goldDocId": "en-sick-notes",
+    "goldSpan": "A doctor's note is required after three consecutive sick days",
+    "goldAnswer": "A doctor's note is required after three consecutive sick days"
+  },
+  {
+    "topic": "en-mentoring",
+    "question": "নতুন ইঞ্জিনিয়াররা কত মাস একজন মেন্টর পান?",
+    "goldDocId": "en-mentoring",
+    "goldSpan": "New engineers are paired with a mentor for their first six months",
+    "goldAnswer": "New engineers are paired with a mentor for their first six months"
+  },
+  {
+    "topic": "en-cycle-scheme",
+    "question": "সাইকেল স্কিমে সর্বোচ্চ কত দামের সাইকেল কেনা যায়?",
+    "goldDocId": "en-cycle-scheme",
+    "goldSpan": "The cycle to work scheme covers bikes up to 1,000 pounds",
+    "goldAnswer": "The cycle to work scheme covers bikes up to 1,000 pounds"
+  },
+  {
+    "topic": "en-desk-booking",
+    "question": "লন্ডন অফিসে ডেস্ক কত দিন আগে বুক করা যায়?",
+    "goldDocId": "en-desk-booking",
+    "goldSpan": "Bookings open seven days ahead",
+    "goldAnswer": "Bookings open seven days ahead"
+  },
+  {
+    "topic": "en-referrals",
+    "question": "কাউকে রেফার করে চাকরি হলে কত বোনাস পাওয়া যায়?",
+    "goldDocId": "en-referrals",
+    "goldSpan": "Referring a candidate who is hired earns a bonus of 1,500 pounds",
+    "goldAnswer": "Referring a candidate who is hired earns a bonus of 1,500 pounds"
+  },
+  {
+    "topic": "en-phone-allowance",
+    "question": "মাঠকর্মীরা মোবাইল বিলের জন্য মাসে কত পান?",
+    "goldDocId": "en-phone-allowance",
+    "goldSpan": "Field staff receive 20 pounds a month toward their mobile phone bill",
+    "goldAnswer": "Field staff receive 20 pounds a month toward their mobile phone bill"
+  },
+  {
+    "topic": "en-pension",
+    "question": "কোম্পানি পেনশনে বেতনের কত শতাংশ পর্যন্ত মিলিয়ে দেয়?",
+    "goldDocId": "en-pension",
+    "goldSpan": "The company matches pension contributions up to 5 percent of salary",
+    "goldAnswer": "The company matches pension contributions up to 5 percent of salary"
+  },
+  {
+    "topic": "en-holiday-carry-over",
+    "question": "অব্যবহৃত কত দিনের ছুটি পরের বছরে নেওয়া যায়?",
+    "goldDocId": "en-holiday-carry-over",
+    "goldSpan": "Up to five unused holiday days can be carried into the next year",
+    "goldAnswer": "Up to five unused holiday days can be carried into the next year"
+  },
+  {
+    "topic": "en-fire-drills",
+    "question": "অগ্নি মহড়া কখন হয়?",
+    "goldDocId": "en-fire-drills",
+    "goldSpan": "Fire drills take place on the first Thursday of every quarter",
+    "goldAnswer": "Fire drills take place on the first Thursday of every quarter"
+  },
+  {
+    "topic": "en-screen-lock",
+    "question": "কতক্ষণ কিছু না করলে ল্যাপটপ নিজে থেকে লক হতে হবে?",
+    "goldDocId": "en-screen-lock",
+    "goldSpan": "Laptops must lock automatically after five minutes of inactivity",
+    "goldAnswer": "Laptops must lock automatically after five minutes of inactivity"
+  },
+  {
+    "topic": "bn-eid-bonus",
+    "question": "How many Eid bonuses do employees get each year?",
+    "goldDocId": "bn-eid-bonus",
+    "goldSpan": "প্রত্যেক কর্মী বছরে দুটি ঈদ বোনাস পান, প্রতিটি মূল বেতনের সমান",
+    "goldAnswer": "প্রত্যেক কর্মী বছরে দুটি ঈদ বোনাস পান, প্রতিটি মূল বেতনের সমান"
+  },
+  {
+    "topic": "bn-office-hours",
+    "question": "What days and hours is the Dhaka office open?",
+    "goldDocId": "bn-office-hours",
+    "goldSpan": "ঢাকা অফিস রবিবার থেকে বৃহস্পতিবার সকাল নয়টা থেকে বিকেল ছয়টা পর্যন্ত খোলা থাকে",
+    "goldAnswer": "ঢাকা অফিস রবিবার থেকে বৃহস্পতিবার সকাল নয়টা থেকে বিকেল ছয়টা পর্যন্ত খোলা থাকে"
+  },
+  {
+    "topic": "bn-transport",
+    "question": "How much transport allowance do Dhaka staff receive per month?",
+    "goldDocId": "bn-transport",
+    "goldSpan": "ঢাকা অফিসের কর্মীরা মাসে তিন হাজার টাকা যাতায়াত ভাতা পান",
+    "goldAnswer": "ঢাকা অফিসের কর্মীরা মাসে তিন হাজার টাকা যাতায়াত ভাতা পান"
+  },
+  {
+    "topic": "bn-lunch",
+    "question": "Is lunch in the office canteen free?",
+    "goldDocId": "bn-lunch",
+    "goldSpan": "অফিসের ক্যান্টিনে কর্মীদের দুপুরের খাবার বিনামূল্যে দেওয়া হয়",
+    "goldAnswer": "অফিসের ক্যান্টিনে কর্মীদের দুপুরের খাবার বিনামূল্যে দেওয়া হয়"
+  },
+  {
+    "topic": "bn-maternity",
+    "question": "How long is maternity leave, and is it paid?",
+    "goldDocId": "bn-maternity",
+    "goldSpan": "নারী কর্মীরা পূর্ণ বেতনে ছয় মাসের মাতৃত্বকালীন ছুটি পান",
+    "goldAnswer": "নারী কর্মীরা পূর্ণ বেতনে ছয় মাসের মাতৃত্বকালীন ছুটি পান"
+  },
+  {
+    "topic": "bn-generator",
+    "question": "How quickly does the office generator start during a power cut?",
+    "goldDocId": "bn-generator",
+    "goldSpan": "বিদ্যুৎ চলে গেলে অফিসের জেনারেটর দুই মিনিটের মধ্যে চালু হয়",
+    "goldAnswer": "বিদ্যুৎ চলে গেলে অফিসের জেনারেটর দুই মিনিটের মধ্যে চালু হয়"
+  },
+  {
+    "topic": "bn-home-internet",
+    "question": "How much internet allowance do people working from home get?",
+    "goldDocId": "bn-home-internet",
+    "goldSpan": "বাসা থেকে কাজ করা কর্মীরা মাসে এক হাজার পাঁচশো টাকা ইন্টারনেট ভাতা পান",
+    "goldAnswer": "বাসা থেকে কাজ করা কর্মীরা মাসে এক হাজার পাঁচশো টাকা ইন্টারনেট ভাতা পান"
+  },
+  {
+    "topic": "bn-prayer-rooms",
+    "question": "Which floor has the prayer rooms?",
+    "goldDocId": "bn-prayer-rooms",
+    "goldSpan": "অফিসের পাঁচ তলায় নারী ও পুরুষদের জন্য আলাদা নামাজের ঘর আছে",
+    "goldAnswer": "অফিসের পাঁচ তলায় নারী ও পুরুষদের জন্য আলাদা নামাজের ঘর আছে"
+  },
+  {
+    "topic": "bn-medical",
+    "question": "How much of my medical costs can I claim back each year?",
+    "goldDocId": "bn-medical",
+    "goldSpan": "প্রত্যেক কর্মী বছরে বিশ হাজার টাকা পর্যন্ত চিকিৎসা খরচ ফেরত পেতে পারেন",
+    "goldAnswer": "প্রত্যেক কর্মী বছরে বিশ হাজার টাকা পর্যন্ত চিকিৎসা খরচ ফেরত পেতে পারেন"
+  },
+  {
+    "topic": "bn-id-card",
+    "question": "What is the fee for replacing a lost ID card?",
+    "goldDocId": "bn-id-card",
+    "goldSpan": "হারানো পরিচয়পত্র নতুন করে পেতে পাঁচশো টাকা ফি দিতে হয়",
+    "goldAnswer": "হারানো পরিচয়পত্র নতুন করে পেতে পাঁচশো টাকা ফি দিতে হয়"
+  },
+  {
+    "topic": "bn-overtime",
+    "question": "At what rate is overtime paid?",
+    "goldDocId": "bn-overtime",
+    "goldSpan": "সপ্তাহে চল্লিশ ঘণ্টার বেশি কাজ করলে ঘণ্টাপ্রতি দেড় গুণ হারে ওভারটাইম দেওয়া হয়",
+    "goldAnswer": "সপ্তাহে চল্লিশ ঘণ্টার বেশি কাজ করলে ঘণ্টাপ্রতি দেড় গুণ হারে ওভারটাইম দেওয়া হয়"
+  },
+  {
+    "topic": "bn-festival-leave",
+    "question": "How many extra days off are given for Puja and Christmas?",
+    "goldDocId": "bn-festival-leave",
+    "goldSpan": "পূজা ও বড়দিনে কর্মীরা দুই দিনের অতিরিক্ত ছুটি নিতে পারেন",
+    "goldAnswer": "পূজা ও বড়দিনে কর্মীরা দুই দিনের অতিরিক্ত ছুটি নিতে পারেন"
+  },
+  {
+    "topic": "bn-provident-fund",
+    "question": "What share of basic salary goes into the provident fund?",
+    "goldDocId": "bn-provident-fund",
+    "goldSpan": "প্রভিডেন্ট ফান্ডে কর্মী মূল বেতনের দশ শতাংশ জমা দেন, আর কোম্পানিও সমপরিমাণ জমা দেয়",
+    "goldAnswer": "প্রভিডেন্ট ফান্ডে কর্মী মূল বেতনের দশ শতাংশ জমা দেন, আর কোম্পানিও সমপরিমাণ জমা দেয়"
+  },
+  {
+    "topic": "bn-fire-safety",
+    "question": "Should I use the lift if there is a fire?",
+    "goldDocId": "bn-fire-safety",
+    "goldSpan": "আগুন লাগলে লিফট ব্যবহার না করে সিঁড়ি দিয়ে নামতে হবে",
+    "goldAnswer": "আগুন লাগলে লিফট ব্যবহার না করে সিঁড়ি দিয়ে নামতে হবে"
+  },
+  {
+    "topic": "bn-laptop-repair",
+    "question": "How soon do I get a replacement when my laptop breaks?",
+    "goldDocId": "bn-laptop-repair",
+    "goldSpan": "নষ্ট ল্যাপটপ আইটি ডেস্কে জমা দিলে দুই কর্মদিবসের মধ্যে বদলি ল্যাপটপ দেওয়া হয়",
+    "goldAnswer": "নষ্ট ল্যাপটপ আইটি ডেস্কে জমা দিলে দুই কর্মদিবসের মধ্যে বদলি ল্যাপটপ দেওয়া হয়"
+  },
+  {
+    "topic": "bn-dress-code",
+    "question": "On which days is formal dress required?",
+    "goldDocId": "bn-dress-code",
+    "goldSpan": "সোমবার থেকে বৃহস্পতিবার অফিসে ফরমাল পোশাক পরতে হয়",
+    "goldAnswer": "সোমবার থেকে বৃহস্পতিবার অফিসে ফরমাল পোশাক পরতে হয়"
+  },
+  {
+    "topic": "en-holiday-carry-over",
+    "question": "When must carried-over holiday days be used?",
+    "goldDocId": "en-holiday-carry-over",
+    "goldSpan": "Carried days must be used by the end of March",
+    "goldAnswer": "Carried days must be used by the end of March"
+  },
+  {
+    "topic": "en-mentoring",
+    "question": "How often do mentors meet their mentee?",
+    "goldDocId": "en-mentoring",
+    "goldSpan": "Mentors meet their mentee every two weeks",
+    "goldAnswer": "Mentors meet their mentee every two weeks"
+  },
+  {
+    "topic": "en-parking",
+    "question": "Who issues parking permits for the London office?",
+    "goldDocId": "en-parking",
+    "goldSpan": "Permits are issued by the facilities team on the first Monday of each month",
+    "goldAnswer": "Permits are issued by the facilities team on the first Monday of each month"
+  },
+  {
+    "topic": "en-visitor-wifi",
+    "question": "Can visitor Wi-Fi vouchers be extended?",
+    "goldDocId": "en-visitor-wifi",
+    "goldSpan": "Vouchers cannot be extended",
+    "goldAnswer": "Vouchers cannot be extended"
+  },
+  {
+    "topic": "bn-id-card",
+    "question": "নতুন পরিচয়পত্র তৈরি হতে কত দিন লাগে?",
+    "goldDocId": "bn-id-card",
+    "goldSpan": "নতুন কার্ড তিন কর্মদিবসের মধ্যে তৈরি হয়",
+    "goldAnswer": "নতুন কার্ড তিন কর্মদিবসের মধ্যে তৈরি হয়"
+  },
+  {
+    "topic": "bn-generator",
+    "question": "জেনারেটর টানা কত ঘণ্টা চলতে পারে?",
+    "goldDocId": "bn-generator",
+    "goldSpan": "জেনারেটর টানা আট ঘণ্টা চলতে পারে",
+    "goldAnswer": "জেনারেটর টানা আট ঘণ্টা চলতে পারে"
+  },
+  {
+    "topic": "bn-maternity",
+    "question": "মাতৃত্বকালীন ছুটির কত আগে মানবসম্পদ বিভাগকে জানাতে হয়?",
+    "goldDocId": "bn-maternity",
+    "goldSpan": "ছুটি শুরুর অন্তত এক মাস আগে মানবসম্পদ বিভাগকে জানাতে হয়",
+    "goldAnswer": "ছুটি শুরুর অন্তত এক মাস আগে মানবসম্পদ বিভাগকে জানাতে হয়"
+  },
+  {
+    "topic": "bn-medical",
+    "question": "চিকিৎসা খরচের দাবির সঙ্গে কী জমা দিতে হয়?",
+    "goldDocId": "bn-medical",
+    "goldSpan": "দাবির সঙ্গে ডাক্তারের প্রেসক্রিপশন জমা দিতে হয়",
+    "goldAnswer": "দাবির সঙ্গে ডাক্তারের প্রেসক্রিপশন জমা দিতে হয়"
+  }
+]

@@ -227,7 +227,7 @@
     filter: drop-shadow(0 0 0 transparent);
   }
   50% {
-    stroke: #9fef00;
+    stroke: #FF4D4D;
     filter: drop-shadow(0 0 8px rgb(159 239 0 / 45%));
   }
 }
@@ -264,7 +264,7 @@
 
   .lp-loader--platform .lp-loader-mag-ring {
     animation: none;
-    stroke: #9fef00;
+    stroke: #FF4D4D;
   }
 }
 

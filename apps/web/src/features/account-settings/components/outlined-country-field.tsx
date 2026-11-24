@@ -35,7 +35,7 @@ export function OutlinedCountryField({
           "[&_.lp-country-select-btn]:h-12 [&_.lp-country-select-btn]:rounded-[4px]",
           "[&_.lp-country-select-btn]:border-[#3A4559] [&_.lp-country-select-btn]:bg-transparent",
           "[&_.lp-country-select-btn]:pt-4 [&_.lp-country-select-btn]:text-base [&_.lp-country-select-btn]:text-[#F4F4F4]",
-          "[&_.lp-country-select-btn]:hover:border-[#8799B5] [&_.lp-country-select-btn]:focus:border-[#9FEF00]",
+          "[&_.lp-country-select-btn]:hover:border-[#8799B5] [&_.lp-country-select-btn]:focus:border-[#FF4D4D]",
           error && "[&_.lp-country-select-btn]:border-[#F35E5E]",
         )}
       />

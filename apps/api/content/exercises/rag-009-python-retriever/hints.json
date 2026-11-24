@@ -1,0 +1,6 @@
+[
+  "Print a few documents from input.json: how are the services separated inside a page?",
+  "Paragraphs are separated by a blank line (\"\\n\\n\"). A paragraph is a contiguous span, so it is a valid passage.",
+  "Rank paragraphs, not sentences: the paragraph holds the service name the question asks about.",
+  "BM25 over paragraphs, top 3, finds nearly every answer and stays under budget."
+]

@@ -3,13 +3,14 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Globe } from "lucide-react";
 import {
-  G2_LEVELS,
   type G2PageChrome,
   g2WinHeadline,
   pageContentHasHtmlComment,
 } from "../guardrails-workspace-data";
 import { simulationsApi, type G2Run } from "../simulations-api";
+import { AllLevelsCheck, type LevelCheckState } from "./guardrails-all-levels";
 import { GuardrailsG2PageEditor } from "./guardrails-g2-page-editor";
+import { useGuardrailsLevels } from "../guardrails-levels";
 
 type GuardrailsG2PanelProps = {
   exerciseSlug: string;
@@ -63,12 +64,17 @@ export function GuardrailsG2Panel({
   const [lastRun, setLastRun] = useState<G2Run | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
   const [levelWin, setLevelWin] = useState(false);
+  // A check describes one version of the page; once the page is edited it no longer applies.
+  const [check, setCheck] = useState<{ page: string; state: LevelCheckState } | null>(null);
+  const levelCheck: LevelCheckState =
+    check && check.page === pageContent ? check.state : { status: "idle" };
 
   const preview = useMemo(() => {
     return pageContent.replace(/<!--[\s\S]*?-->/g, "").trim();
   }, [pageContent]);
 
-  const levelMeta = G2_LEVELS.find((row) => row.level === level) ?? G2_LEVELS[0];
+  const levels = useGuardrailsLevels("g2");
+  const levelMeta = levels.find((row) => row.level === level) ?? levels[0];
   const levelCleared = clearedLevels.has(level) || levelWin;
   const hasComment = pageContentHasHtmlComment(pageContent);
   const recipient = lastRun ? recipientFromRun(lastRun) : null;
@@ -78,6 +84,40 @@ export function GuardrailsG2Panel({
     setRunError(null);
     setLevelWin(false);
   }, [level]);
+
+  async function checkAllLevels() {
+    const page = pageContent;
+    if (disabled || !page.trim()) {
+      return;
+    }
+    const setLevelCheck = (state: LevelCheckState) => setCheck({ page, state });
+    setLevelCheck({ status: "pending" });
+    try {
+      const runs = await Promise.all(
+        levels.map((row) => simulationsApi.g2Page(exerciseSlug, row.level, page)),
+      );
+      setLevelCheck({
+        status: "done",
+        results: runs.map((run, index) => ({
+          level: levels[index].level,
+          title: levels[index].title,
+          won: run.won,
+          note: run.won
+            ? "emailed you"
+            : run.denied
+              ? "policy blocked"
+              : run.tools.length === 0
+                ? "no email"
+                : "blocked",
+        })),
+      });
+    } catch (caught: unknown) {
+      setLevelCheck({
+        status: "error",
+        message: caught instanceof Error ? caught.message : "Check failed",
+      });
+    }
+  }
 
   const runSim = useCallback(
     async (event?: FormEvent) => {
@@ -136,8 +176,8 @@ export function GuardrailsG2Panel({
   const failNotice =
     liveMode && lastRun && !lastRun.won
       ? lastRun.denied
-        ? "Not yet — policy gate blocked the exfil. Change the page copy or hidden comment and run again."
-        : "Not yet — the agent did not send mail. Adjust indirect instructions in the page body or HTML comments."
+        ? "Not yet — the approval policy blocked the email. Change the page and run again."
+        : "Not yet — the agent did not send any email. Change the page and run again."
       : null;
 
   const showSuccess = levelWin || (lastRun?.won && levelCleared);
@@ -276,6 +316,15 @@ export function GuardrailsG2Panel({
 
       {runError ? <p className="lp-grd-g2-error lp-grd-g2-error--inline">{runError}</p> : null}
       {submitError ? <p className="lp-grd-g2-error lp-grd-g2-error--inline">{submitError}</p> : null}
+
+      <div className="lp-grd-g2-all-levels">
+        <AllLevelsCheck
+          state={levelCheck}
+          disabled={disabled || pending || !pageContent.trim()}
+          onCheck={() => void checkAllLevels()}
+          label="Check this page on all 3 levels"
+        />
+      </div>
 
       <footer className="lp-grd-g2-foot">
         <button type="button" className="lp-grd-g2-reset-link" onClick={resetPage} disabled={disabled}>

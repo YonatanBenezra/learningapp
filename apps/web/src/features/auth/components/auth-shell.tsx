@@ -13,7 +13,7 @@ export function AuthShell({ children }: AuthShellProps) {
   return (
     <div className="lc-auth-page">
       <div className="lc-auth-split">
-        <aside className="lc-auth-hero" aria-label="About LabPath">
+        <aside className="lc-auth-hero" aria-label="About AI Warss">
           <AuthHeroBeams />
           <Link href={routes.home} className="lc-auth-hero-brand" aria-label={brand.name}>
             <LabpathLogo size="md" showWordmark />

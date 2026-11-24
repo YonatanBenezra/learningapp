@@ -12,7 +12,7 @@ export function AuthMobileHero() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <header className="lp-auth-figma-mobile-hero" aria-label="LabPath">
+    <header className="lp-auth-figma-mobile-hero" aria-label="AI Warss">
       <div className="lp-auth-figma-mobile-hero-bg" aria-hidden>
         <div className="lp-auth-figma-brand-grid" />
         <div className="lp-auth-figma-brand-wash lp-auth-figma-mobile-hero-wash" />
@@ -27,7 +27,7 @@ export function AuthMobileHero() {
       >
         <Link href={routes.home} className="lp-auth-figma-logo-row">
           <LabpathLogoMark />
-          <span className="lp-auth-figma-wordmark">LabPath</span>
+          <span className="lp-auth-figma-wordmark">AI Warss</span>
         </Link>
 
         <h1 className="lp-auth-figma-headline lp-auth-figma-headline--mobile">

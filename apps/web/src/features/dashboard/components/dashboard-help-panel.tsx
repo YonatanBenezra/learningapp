@@ -25,7 +25,7 @@ const HELP_LINKS: HelpLink[] = [
   {
     id: "feedback",
     label: "Give us feedback",
-    href: "mailto:hello@labpath.dev?subject=LabPath%20Feedback",
+    href: "mailto:hello@aiwarss.com?subject=AI%20Warss%20Feedback",
     icon: ThumbsUp,
   },
 ];

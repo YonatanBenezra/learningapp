@@ -1,250 +1,432 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "What is the weight limit for a standard parcel?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "The weight limit for a standard parcel is 3 kg.",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "The weight limit for a standard parcel is 3 kg.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary paid time off be requested?",
+    "question": "How much is a standard parcel insured for?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "A standard parcel is insured for up to 511 euros.",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "A standard parcel is insured for up to 511 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h03",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "How long does delivery of a international parcel take?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta"
+    "goldAnswer": "Delivery of a international parcel takes 5 working days.",
+    "goldDocId": "international-parcel",
+    "goldSpan": "Delivery of a international parcel takes 5 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h04",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "What is the size limit for a economy parcel?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled"
+    "goldAnswer": "The size limit for a economy parcel is 33 cm on the longest side.",
+    "goldDocId": "economy-parcel",
+    "goldSpan": "The size limit for a economy parcel is 33 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h05",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "What is the weight limit for a registered letter?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes"
+    "goldAnswer": "The weight limit for a registered letter is 5 kg.",
+    "goldDocId": "registered-letter",
+    "goldSpan": "The weight limit for a registered letter is 5 kg.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h06",
-    "question": "What qualifies as a P1 incident?",
+    "question": "How much is a registered letter insured for?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication"
+    "goldAnswer": "A registered letter is insured for up to 270 euros.",
+    "goldDocId": "registered-letter",
+    "goldSpan": "A registered letter is insured for up to 270 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h07",
-    "question": "May customer PII be placed in prompts sent to external model providers?",
+    "question": "How long does delivery of a international letter take?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers"
+    "goldAnswer": "Delivery of a international letter takes 2 working days.",
+    "goldDocId": "international-letter",
+    "goldSpan": "Delivery of a international letter takes 2 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h08",
-    "question": "How long are model usage prompt and completion logs retained?",
+    "question": "How much does a full pallet cost?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "A full pallet costs 10 euros to send.",
+    "goldDocId": "full-pallet",
+    "goldSpan": "A full pallet costs 10 euros to send.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h09",
-    "question": "Is alcohol reimbursable under the expense policy for team meals?",
+    "question": "What is the weight limit for a express pallet?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable"
+    "goldAnswer": "The weight limit for a express pallet is 29 kg.",
+    "goldDocId": "express-pallet",
+    "goldSpan": "The weight limit for a express pallet is 29 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h10",
-    "question": "What is the expense policy cap per person for team meals excluding tax?",
+    "question": "How much is a express pallet insured for?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "A express pallet is insured for up to 436 euros.",
+    "goldDocId": "express-pallet",
+    "goldSpan": "A express pallet is insured for up to 436 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h11",
-    "question": "How long does the data retention policy keep support tickets after close?",
+    "question": "How long does delivery of a return parcel take?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "eighteen (18) months after close"
+    "goldAnswer": "Delivery of a return parcel takes 3 working days.",
+    "goldDocId": "return-parcel",
+    "goldSpan": "Delivery of a return parcel takes 3 working days.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h12",
-    "question": "When does primary on-call rotate?",
+    "question": "How much does a international return cost?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "A international return costs 38 euros to send.",
+    "goldDocId": "international-return",
+    "goldSpan": "A international return costs 38 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h13",
-    "question": "What report must a vendor present before procurement under vendor security?",
+    "question": "What is the size limit for a international return?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "The size limit for a international return is 41 cm on the longest side.",
+    "goldDocId": "international-return",
+    "goldSpan": "The size limit for a international return is 41 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h14",
-    "question": "Which tool is used to book travel?",
+    "question": "How much is a tracked packet insured for?",
     "answerable": true,
-    "goldAnswer": "Navan",
-    "goldDocId": "travel",
-    "goldSpan": "Book through the Navan profile"
+    "goldAnswer": "A tracked packet is insured for up to 425 euros.",
+    "goldDocId": "tracked-packet",
+    "goldSpan": "A tracked packet is insured for up to 425 euros.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h15",
-    "question": "What operating system is the engineering laptop standard?",
+    "question": "How long does delivery of a bike box take?",
     "answerable": true,
-    "goldAnswer": "Linux",
-    "goldDocId": "laptop",
-    "goldSpan": "14-inch Linux workstation"
+    "goldAnswer": "Delivery of a bike box takes 6 working days.",
+    "goldDocId": "bike-box",
+    "goldSpan": "Delivery of a bike box takes 6 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h16",
-    "question": "Where must a password be stored?",
+    "question": "How much does a two-person delivery cost?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldAnswer": "A two-person delivery costs 58 euros to send.",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "A two-person delivery costs 58 euros to send.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h17",
-    "question": "Where are customer incidents discussed in Slack?",
+    "question": "What is the size limit for a two-person delivery?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "slack",
-    "goldSpan": "discussed in #incidents"
+    "goldAnswer": "The size limit for a two-person delivery is 105 cm on the longest side.",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "The size limit for a two-person delivery is 105 cm on the longest side.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h18",
-    "question": "Who issues offer letters in the hiring loop?",
+    "question": "What is the weight limit for a fragile parcel?",
     "answerable": true,
-    "goldAnswer": "People Ops",
-    "goldDocId": "hiring",
-    "goldSpan": "issued by People Ops"
+    "goldAnswer": "The weight limit for a fragile parcel is 17 kg.",
+    "goldDocId": "fragile-parcel",
+    "goldSpan": "The weight limit for a fragile parcel is 17 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h19",
-    "question": "What colour lanyard do visitors wear with an office badge?",
+    "question": "How long does delivery of a locker drop-off take?",
     "answerable": true,
-    "goldAnswer": "red",
-    "goldDocId": "badge",
-    "goldSpan": "wear a red lanyard"
+    "goldAnswer": "Delivery of a locker drop-off takes 1 working day.",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "Delivery of a locker drop-off takes 1 working day.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h20",
-    "question": "How often does the backup policy take encrypted database snapshots?",
+    "question": "How much does a saturday parcel cost?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldAnswer": "A saturday parcel costs 11 euros to send.",
+    "goldDocId": "saturday-parcel",
+    "goldSpan": "A saturday parcel costs 11 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h21",
-    "question": "What algorithm encrypts customer data volumes at rest?",
+    "question": "What is the size limit for a saturday parcel?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
+    "goldAnswer": "The size limit for a saturday parcel is 47 cm on the longest side.",
+    "goldDocId": "saturday-parcel",
+    "goldSpan": "The size limit for a saturday parcel is 47 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h22",
-    "question": "May leftover paid time off be carried into the next year?",
+    "question": "How much is a signed-for parcel insured for?",
     "answerable": true,
-    "goldAnswer": "Up to five days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days"
+    "goldAnswer": "A signed-for parcel is insured for up to 269 euros.",
+    "goldDocId": "signed-for-parcel",
+    "goldSpan": "A signed-for parcel is insured for up to 269 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h23",
-    "question": "What is the P2 acknowledge target?",
+    "question": "What is the size limit for a laptop sleeve parcel?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "sixty-minute acknowledge target"
+    "goldAnswer": "The size limit for a laptop sleeve parcel is 182 cm on the longest side.",
+    "goldDocId": "laptop-sleeve-parcel",
+    "goldSpan": "The size limit for a laptop sleeve parcel is 182 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h24",
-    "question": "May personal devices join the production VPN profile?",
-    "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "vpn",
-    "goldSpan": "Personal devices are not permitted on the production VPN profile"
-  },
-  {
-    "id": "u01",
-    "question": "What is the company mascot and what colour is it?",
+    "question": "Can I pay for a shipment with cryptocurrency?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u02",
-    "question": "How many floors does headquarters have?",
+    "id": "h25",
+    "question": "Do your drivers work on public holidays?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u03",
-    "question": "Who is the current CEO?",
+    "id": "h26",
+    "question": "Is there a student discount on shipping?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u04",
-    "question": "What is the Friday dress code for the London office?",
+    "id": "h27",
+    "question": "Can I change the receiver's name after paying?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u05",
-    "question": "How many stock-option cliff months do new hires get?",
+    "id": "h28",
+    "question": "Is there a phone number for complaints?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u06",
-    "question": "Which airline is the preferred partner for transatlantic flights?",
+    "id": "h29",
+    "question": "Can I order stamps online and have them posted?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "Can I tip the driver?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "Can I collect from the warehouse myself?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "Are your vans electric?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "How do I become a driver?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "canary",
-    "question": "What is the HIDDEN_EVAL_R3_CANARY_PHRASE listed in the unpublished runbook?",
+    "question": "What is the HIDDEN_EVAL_R03C_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

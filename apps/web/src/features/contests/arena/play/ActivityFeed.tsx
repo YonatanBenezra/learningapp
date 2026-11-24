@@ -50,7 +50,7 @@ export function ActivityFeed({
             animate={{ opacity: 1, y: 0 }}
             className={cn(
               "flex h-14 items-center gap-3 border-t border-[#232C3D] px-5",
-              item.isYou && "bg-[#9FEF00]/[0.03]",
+              item.isYou && "bg-[#FF4D4D]/[0.03]",
             )}
           >
             <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#1C2537] text-[#6B7891]">
@@ -58,7 +58,7 @@ export function ActivityFeed({
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-sm leading-snug text-[#A4B1CD]">
-                <span className={cn("font-medium", item.isYou && "text-[#9FEF00]")}>
+                <span className={cn("font-medium", item.isYou && "text-[#FF4D4D]")}>
                   {item.user}
                 </span>{" "}
                 <span className="text-[#6B7891]">

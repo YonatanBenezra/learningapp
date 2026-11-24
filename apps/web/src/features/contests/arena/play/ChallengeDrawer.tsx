@@ -163,12 +163,12 @@ export function ChallengeDrawer({
               </h2>
               <p className="mt-1 text-xs text-[#6B7891]">
                 Author{" "}
-                <span className="text-[#A4B1CD]">LabPath · {challenge.code}</span>
+                <span className="text-[#A4B1CD]">AI Warss · {challenge.code}</span>
               </p>
             </div>
             <button
               type="button"
-              className="flex size-8 shrink-0 items-center justify-center rounded-sm border border-[#2A3446] text-[#A4B1CD] transition-colors hover:border-[#9FEF00]/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9FEF00]/40"
+              className="flex size-8 shrink-0 items-center justify-center rounded-sm border border-[#2A3446] text-[#A4B1CD] transition-colors hover:border-[#FF4D4D]/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4D4D]/40"
               onClick={onClose}
               aria-label="Close"
             >
@@ -204,7 +204,7 @@ export function ChallengeDrawer({
                     label: "Points",
                     value: (
                       <>
-                        <span className={solved ? "text-[#9FEF00]" : "text-white"}>
+                        <span className={solved ? "text-[#FF4D4D]" : "text-white"}>
                           {challenge.currentPoints}
                         </span>
                         <span className="text-xs text-[#6B7891]"> / {challenge.base}</span>
@@ -264,7 +264,7 @@ export function ChallengeDrawer({
                 {challenge.passCriteria ? (
                   <div className="mt-3 rounded-sm border border-[#232C3D] bg-[#0F1520] p-4">
                     <p className="font-mono text-xs text-[#6B7891]">Pass criteria</p>
-                    <p className="mt-1 font-mono text-base font-semibold text-[#9FEF00]">
+                    <p className="mt-1 font-mono text-base font-semibold text-[#FF4D4D]">
                       {challenge.passCriteria.threshold}
                     </p>
                     <p className="mt-1 font-mono text-xs text-[#A4B1CD]">
@@ -325,14 +325,14 @@ export function ChallengeDrawer({
             {solved ? (
               <Link
                 href={launchHref}
-                className="flex h-10 flex-1 items-center justify-center rounded-sm border border-[#2A3446] text-sm font-semibold text-white transition-colors hover:border-[#9FEF00]/50"
+                className="flex h-10 flex-1 items-center justify-center rounded-sm border border-[#2A3446] text-sm font-semibold text-white transition-colors hover:border-[#FF4D4D]/50"
               >
                 Review lab
               </Link>
             ) : (
               <Link
                 href={launchHref}
-                className="flex h-10 flex-1 items-center justify-center gap-2 rounded-sm bg-[#9FEF00] text-sm font-semibold text-[#0F1520] transition-opacity hover:opacity-95"
+                className="flex h-10 flex-1 items-center justify-center gap-2 rounded-sm bg-[#FF4D4D] text-sm font-semibold text-[#0F1520] transition-opacity hover:opacity-95"
               >
                 <Terminal className="size-4" aria-hidden />
                 {hasDocker ? "Start instance" : "Open lab"}
@@ -341,7 +341,7 @@ export function ChallengeDrawer({
             {scoringClosed && contest.virtualPracticeAvailable ? (
               <Link
                 href={routes.contestPracticeProblem(contestSlug, problemSlug)}
-                className="flex h-10 flex-1 items-center justify-center rounded-sm border border-[#2A3446] text-sm font-semibold text-[#A4B1CD] transition-colors hover:border-[#9FEF00]/50 hover:text-white"
+                className="flex h-10 flex-1 items-center justify-center rounded-sm border border-[#2A3446] text-sm font-semibold text-[#A4B1CD] transition-colors hover:border-[#FF4D4D]/50 hover:text-white"
               >
                 Virtual practice
               </Link>

@@ -108,7 +108,8 @@ function parseList(
     }
     const rest = trimmed.slice(2);
     i += 1;
-    if (rest.includes(':') && !rest.startsWith('{')) {
+    const quoted = rest.startsWith("'") || rest.startsWith('"');
+    if (rest.includes(':') && !rest.startsWith('{') && !quoted) {
       const sep = rest.indexOf(':');
       const key = rest.slice(0, sep).trim();
       const value = rest.slice(sep + 1).trim();
@@ -150,7 +151,19 @@ function parseScalar(raw: string): YamlValue {
     return raw.slice(1, -1);
   }
   if (raw.startsWith('[') || raw.startsWith('{')) {
-    return JSON.parse(raw) as YamlValue;
+    try {
+      return JSON.parse(raw) as YamlValue;
+    } catch (error) {
+      // Flow list of plain or quoted scalars, e.g. [decode_hex, 'a,b'].
+      const items =
+        raw.startsWith('[') && raw.endsWith(']')
+          ? splitFlow(raw.slice(1, -1))
+          : null;
+      if (items) {
+        return items.map((part) => parseScalar(part));
+      }
+      throw error;
+    }
   }
   if (raw === 'true') {
     return true;
@@ -165,6 +178,40 @@ function parseScalar(raw: string): YamlValue {
     return Number(raw);
   }
   return raw;
+}
+
+/** Splits a flow list body on top-level commas; null if it nests. */
+function splitFlow(inner: string): string[] | null {
+  const parts: string[] = [];
+  let current = '';
+  let quote: string | null = null;
+  for (const char of inner) {
+    if (quote) {
+      current += char;
+      if (char === quote) {
+        quote = null;
+      }
+      continue;
+    }
+    if (char === "'" || char === '"') {
+      quote = char;
+      current += char;
+    } else if (char === '[' || char === ']' || char === '{' || char === '}') {
+      return null;
+    } else if (char === ',') {
+      parts.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  if (quote) {
+    return null;
+  }
+  if (current.trim() || parts.length > 0) {
+    parts.push(current.trim());
+  }
+  return parts.filter((part) => part.length > 0);
 }
 
 function leading(line: string): number {

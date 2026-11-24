@@ -225,7 +225,7 @@ export function DashboardFigmaView() {
               ) : (
                 <Link
                   href={`${routes.dashboardSettings}#career`}
-                  className="lp-dash-htb-welcome-role-accent font-medium underline decoration-[#9fef00]/35 underline-offset-2 hover:decoration-[#9fef00]/70"
+                  className="lp-dash-htb-welcome-role-accent font-medium underline decoration-[#FF4D4D]/35 underline-offset-2 hover:decoration-[#FF4D4D]/70"
                 >
                   Add in settings
                 </Link>
@@ -305,7 +305,7 @@ export function DashboardFigmaView() {
             >
               <div className="lp-dash-htb-product-promo-body">
                 <p className="lp-dash-htb-product-kicker">
-                  LabPath <strong>Practice</strong>
+                  AI Warss <strong>Practice</strong>
                 </p>
                 <h3 className="lp-dash-htb-product-promo-title">Start a lab</h3>
                 <p className="lp-dash-htb-product-promo-copy">
@@ -329,7 +329,7 @@ export function DashboardFigmaView() {
             >
               <div className="lp-dash-htb-product-promo-body">
                 <p className="lp-dash-htb-product-kicker">
-                  LabPath <strong>Practice</strong>
+                  AI Warss <strong>Practice</strong>
                 </p>
                 <h3 className="lp-dash-htb-product-promo-title">Your lab workspace</h3>
                 <p className="lp-dash-htb-product-promo-copy">
@@ -362,7 +362,7 @@ export function DashboardFigmaView() {
               />
               <div className="lp-dash-htb-product-leaderboard-body">
                 <p className="lp-dash-htb-product-kicker">
-                  LabPath <strong>Ranking</strong>
+                  AI Warss <strong>Ranking</strong>
                 </p>
                 <h3 className="lp-dash-htb-product-leaderboard-title">Ranking</h3>
                 <p className="lp-dash-htb-product-leaderboard-copy">
@@ -378,7 +378,7 @@ export function DashboardFigmaView() {
             >
               <div className="lp-dash-htb-product-promo-body">
                 <p className="lp-dash-htb-product-kicker">
-                  LabPath{" "}
+                  AI Warss{" "}
                   <strong className="lp-dash-htb-product-kicker-mark">Contests</strong>
                 </p>
                 <h3 className="lp-dash-htb-product-promo-title">CTF hub</h3>

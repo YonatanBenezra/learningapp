@@ -30,15 +30,15 @@ export function PlayChallengeCard({
       aria-pressed={active}
       className={cn(
         "group relative flex h-[172px] w-full flex-col rounded-sm border border-[#232C3D] bg-[#18202F] p-5 text-left transition-colors duration-150",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9FEF00]/40",
-        solved && "border-[#9FEF00]/25 bg-[#9FEF00]/[0.02]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4D4D]/40",
+        solved && "border-[#FF4D4D]/25 bg-[#FF4D4D]/[0.02]",
         "hover:border-[#2F3A50] hover:bg-[#1C2537]",
         active && "border-[#2F3A50]",
       )}
     >
       {solved ? (
         <span
-          className="absolute right-4 top-4 flex size-5 items-center justify-center rounded-full border border-[#9FEF00]/50 text-[#9FEF00]"
+          className="absolute right-4 top-4 flex size-5 items-center justify-center rounded-full border border-[#FF4D4D]/50 text-[#FF4D4D]"
           aria-label="Solved"
         >
           <Check className="size-3" strokeWidth={3} />
@@ -81,9 +81,9 @@ export function PlayChallengeCard({
         <p className="text-xs text-[#6B7891]">
           {solved ? (
             challenge.solveTime ? (
-              <span className="text-[#9FEF00]">Solved in {challenge.solveTime}</span>
+              <span className="text-[#FF4D4D]">Solved in {challenge.solveTime}</span>
             ) : (
-              <span className="text-[#9FEF00]">Solved</span>
+              <span className="text-[#FF4D4D]">Solved</span>
             )
           ) : challenge.attemptTries != null ? (
             `${challenge.attemptTries} tries`
@@ -95,7 +95,7 @@ export function PlayChallengeCard({
           <span
             className={cn(
               "font-mono text-base tabular-nums",
-              solved ? "text-[#9FEF00]" : "text-[#A4B1CD]",
+              solved ? "text-[#FF4D4D]" : "text-[#A4B1CD]",
             )}
           >
             {challenge.currentPoints}
@@ -127,7 +127,7 @@ export function PlayChallengeListRow({
       title={challenge.title}
       className={cn(
         "grid h-12 w-full grid-cols-[auto_1fr_auto_auto_auto_auto] items-center gap-3 border-b border-[#232C3D] px-2 text-left text-sm transition-colors",
-        "hover:bg-[#1C2537] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9FEF00]/40 focus-visible:ring-inset",
+        "hover:bg-[#1C2537] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4D4D]/40 focus-visible:ring-inset",
         active && "bg-[#18202F]",
       )}
     >
@@ -140,7 +140,7 @@ export function PlayChallengeListRow({
         {challenge.difficulty}
       </span>
       <span className="hidden font-mono text-xs tabular-nums text-[#6B7891] md:inline">{challenge.solves}</span>
-      <span className={cn("font-mono text-sm tabular-nums", solved ? "text-[#9FEF00]" : "text-[#A4B1CD]")}>
+      <span className={cn("font-mono text-sm tabular-nums", solved ? "text-[#FF4D4D]" : "text-[#A4B1CD]")}>
         {challenge.currentPoints}
       </span>
     </button>

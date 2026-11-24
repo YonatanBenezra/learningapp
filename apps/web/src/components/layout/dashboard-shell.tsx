@@ -36,11 +36,13 @@ export function DashboardShell({ children }: DashboardShellProps) {
     };
   }, [menuOpen]);
 
+  // These bring their own app navbar (DashboardHtbShell) in their layout.
   if (
     pathname.startsWith("/dashboard") ||
     pathname === routes.contestHub ||
     pathname === routes.practiceHub ||
-    pathname.startsWith("/events/")
+    pathname.startsWith("/events/") ||
+    pathname.startsWith("/runs/")
   ) {
     return <main className="lp-dash-content lp-dash-content--dashboard">{children}</main>;
   }

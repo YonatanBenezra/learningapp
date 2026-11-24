@@ -1,0 +1,6 @@
+{
+  "retrievalMode": "dense",
+  "embeddingModel": "multilingual",
+  "hybridAlpha": 0.5,
+  "topK": 2
+}

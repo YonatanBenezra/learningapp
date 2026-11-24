@@ -12,12 +12,20 @@ import { PrismaService } from '../../../core/prisma/prisma.service';
 import { product } from '../../../config/product.constants';
 import { AccountService } from '../../accounts/account.service';
 import { HINT_UPGRADE_MESSAGE } from '../../accounts/account.quota';
+import {
+  hintCost,
+  MAX_HINT_POINTS_PER_PROBLEM,
+} from '../../leaderboard/leaderboard-rank';
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export type HintList = {
   unlocked: { index: number; text: string }[];
   remaining: number;
+  /** Points each hint costs once the problem is solved, in order. */
+  costs: number[];
+  /** Points the unlocked hints cost, capped per problem. */
+  spent: number;
 };
 
 @Injectable()
@@ -84,9 +92,15 @@ export class HintsService {
 }
 
 function toList(hints: string[], count: number): HintList {
+  const costs = hints.map((_, index) => hintCost(index));
   return {
     unlocked: hints.slice(0, count).map((text, index) => ({ index, text })),
     remaining: Math.max(0, hints.length - count),
+    costs,
+    spent: Math.min(
+      costs.slice(0, count).reduce((sum, cost) => sum + cost, 0),
+      MAX_HINT_POINTS_PER_PROBLEM,
+    ),
   };
 }
 

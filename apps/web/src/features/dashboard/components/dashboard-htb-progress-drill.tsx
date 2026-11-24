@@ -28,8 +28,8 @@ const C = {
   text: "#F2F5FA",
   muted: "#8597B3",
   dim: "#5B6C88",
-  lime: "#A3F00A",
-  limeInk: "#0D1A00",
+  coral: "#FF4D4D",
+  coralInk: "#0B0B0E",
   easy: "#5BC0F8",
   medium: "#F7C531",
   hard: "#F2667A",
@@ -38,7 +38,7 @@ const C = {
 
 /** Same stack as `.lp-dash-htb-product--academy` (Products row) */
 const ACADEMY_PRODUCT_PANEL_BG =
-  "radial-gradient(ellipse 80% 65% at 100% 100%, rgb(159 239 0 / 22%) 0%, transparent 55%), linear-gradient(155deg, #131b29 0%, #161f30 55%, #141c28 100%)";
+  "radial-gradient(ellipse 80% 65% at 100% 100%, rgb(255 77 77 / 22%) 0%, transparent 55%), linear-gradient(155deg, #131b29 0%, #161f30 55%, #141c28 100%)";
 
 const DONUT = { size: 200, r: 84, stroke: 14, cx: 100, cy: 100 } as const;
 
@@ -157,7 +157,7 @@ export function DonutChart({ totalProblems, solvedCount, breakdown }: DonutChart
         >
           solved
         </p>
-        <p className={cn("mt-2 text-xs font-medium text-[#A3F00A]", monoClass())}>{pct}% complete</p>
+        <p className={cn("mt-2 text-xs font-medium text-[#FF4D4D]", monoClass())}>{pct}% complete</p>
       </div>
     </div>
   );
@@ -271,7 +271,7 @@ export function ProgressCard({
               href={routes.practiceHub}
               className={cn(
                 "inline-flex h-8 items-center gap-1 rounded-lg border border-[#2A3A55] bg-transparent px-2.5 text-[12px] font-semibold text-[#F2F5FA] transition-colors",
-                "hover:border-[#A3F00A]/35 hover:bg-[#A3F00A]/8",
+                "hover:border-[#FF4D4D]/35 hover:bg-[#FF4D4D]/8",
                 monoClass(),
               )}
             >
@@ -355,7 +355,7 @@ export function DailyDrillCard({
         <div className="flex flex-wrap gap-2">
           <span
             className={cn(
-              "rounded-md border border-[#A3F00A]/35 bg-[#A3F00A]/10 px-2 py-0.5 text-[11px] font-semibold text-[#A3F00A]",
+              "rounded-md border border-[#FF4D4D]/35 bg-[#FF4D4D]/10 px-2 py-0.5 text-[11px] font-semibold text-[#FF4D4D]",
               monoClass(),
             )}
           >
@@ -386,7 +386,7 @@ export function DailyDrillCard({
           href={drillHref}
           className={cn(
             "flex h-[46px] w-full items-center justify-center gap-2 rounded-xl text-[15px] font-semibold transition-[filter,transform] duration-200",
-            "bg-[#A3F00A] text-[#0D1A00] shadow-[0_10px_28px_rgba(163,240,10,0.22)] hover:brightness-105 active:scale-[0.99]",
+            "bg-[#FF4D4D] text-[#0B0B0E] shadow-[0_10px_28px_rgba(255,77,77,0.22)] hover:brightness-105 active:scale-[0.99]",
             monoClass(),
           )}
         >
@@ -415,10 +415,10 @@ export function BadgeGrid({ earned, total, streakForMilestone, milestoneDays }: 
       <div className="grid grid-cols-6 gap-2">
         <div
           className={cn(
-            "relative flex aspect-square items-center justify-center rounded-xl border-2 border-[#A3F00A] bg-[#0E1626]",
+            "relative flex aspect-square items-center justify-center rounded-xl border-2 border-[#FF4D4D] bg-[#0E1626]",
           )}
         >
-          <Loader2 className="h-5 w-5 animate-spin text-[#A3F00A]" aria-hidden />
+          <Loader2 className="h-5 w-5 animate-spin text-[#FF4D4D]" aria-hidden />
           <span className="sr-only">Next badge</span>
         </div>
         {lockedIcons.map((Ic, i) => (
@@ -445,7 +445,7 @@ export function BadgeGrid({ earned, total, streakForMilestone, milestoneDays }: 
                 key={i}
                 className={cn(
                   "h-2 flex-1 rounded-sm",
-                  i < filled ? "bg-[#A3F00A]" : "bg-[#1F2C42]",
+                  i < filled ? "bg-[#FF4D4D]" : "bg-[#1F2C42]",
                 )}
               />
             ))}

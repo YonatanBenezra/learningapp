@@ -60,7 +60,7 @@ export function ConfirmModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[4px] p-1 text-[#8799B5] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]"
+            className="rounded-[4px] p-1 text-[#8799B5] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]"
             aria-label="Close"
           >
             <X className="size-5" />

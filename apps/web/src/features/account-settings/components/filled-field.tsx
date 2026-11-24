@@ -34,7 +34,7 @@ export const FilledField = forwardRef<HTMLInputElement, FilledFieldProps>(functi
             "h-10 w-full rounded-[4px] bg-[#1E2939] text-sm text-[#F4F4F4] outline-none transition-colors",
             "placeholder:text-[#526177]",
             leftIcon ? "pl-10 pr-4" : "px-4",
-            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]",
+            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]",
             error && "ring-1 ring-[#F35E5E]",
           )}
           {...props}

@@ -27,13 +27,16 @@ const TECHNIQUE_BY_ENCODING: Record<string, string> = {
   reversed: "Reversed canary string",
 };
 
-export function buildG1Debrief(win: G1LevelWin): G1Debrief {
-  const meta = G1_LEVELS.find((row) => row.level === win.level) ?? G1_LEVELS[0];
+export function buildG1Debrief(
+  win: G1LevelWin,
+  levels: readonly { level: number; title: string; defense: string }[] = G1_LEVELS,
+): G1Debrief {
+  const meta = levels.find((row) => row.level === win.level) ?? levels[0];
   const technique =
     (win.encoding && TECHNIQUE_BY_ENCODING[win.encoding]) ||
     "Social engineering against system prompt";
 
-  const next = G1_LEVELS.find((row) => row.level === win.level + 1);
+  const next = levels.find((row) => row.level === win.level + 1);
 
   return {
     level: win.level,
@@ -42,7 +45,7 @@ export function buildG1Debrief(win: G1LevelWin): G1Debrief {
       win.level === 1
         ? "Your prompt coaxed the concierge into leaking the canary on an undefended front desk."
         : win.level === 2
-          ? "Your prompt bypassed the hardened system prompt via staff-role framing and encoding."
+          ? "Your prompt found the hardened system prompt's weakness."
           : "You cleared the output-filter level — the canary appeared in the assistant reply.",
     defence: meta.defense,
     technique,

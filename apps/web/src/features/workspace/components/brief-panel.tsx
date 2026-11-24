@@ -8,6 +8,7 @@ import type { Exercise, PublicSampleItem } from "@/types/exercise";
 import type { HintList } from "@/types/hint";
 import { hintsApi } from "../hints-api";
 import { buildExerciseGuide } from "../exercise-brief-sections";
+import { BriefMarkdown } from "./brief-markdown";
 import {
   FigmaBriefBody,
   FigmaBriefCollapsedRail,
@@ -71,22 +72,48 @@ export const BRIEF_TABS = [
 
 export type BriefTab = (typeof BRIEF_TABS)[number]["id"];
 
+export type FigmaBriefSubmission = {
+  id: string;
+  runId: string | null;
+  /** 1 = oldest submission in the list. */
+  n: number;
+  status: string;
+  verdict: string | null;
+  summary: string;
+  createdAt: string;
+  payload: Record<string, unknown>;
+  gateResults: unknown;
+  contest: boolean;
+};
+
 export type FigmaBriefContent = {
   submissionCount: number;
-  meta: { id: string; duration: string; solved: string };
+  /** The learner's submissions (server history); when absent only the count is shown. */
+  submissions?: ReadonlyArray<FigmaBriefSubmission>;
+  /** True when the list was cut at the server's history limit. */
+  submissionsTruncated?: boolean;
+  meta: { id: string; duration?: string; solved: string };
   goal: string;
+  /** briefMd below the title and goal paragraph, rendered as "Full brief". */
+  fullBriefMd?: string;
   constraint: {
     metric: string;
     threshold: string;
     footnote: string;
     fields: string;
+    /** Every graded gate; when set it replaces the single metric/threshold line. */
+    gates?: ReadonlyArray<{ metric: string; threshold: string }>;
   };
   publicSampleNote: string;
   publicRows: ReadonlyArray<{ question: string; file: string; tag: string }>;
   hints: ReadonlyArray<
-    | { n: number; unlocked: true; text: string }
-    | { n: number; unlocked: false; unlockAfter: number }
+    | { n: number; unlocked: true; text: string; cost?: number }
+    | { n: number; unlocked: false; unlockAfter?: number; cost?: number }
   >;
+  /** Points the unlocked hints cost once the problem is solved. */
+  hintPointsSpent?: number;
+  /** Unlocks the next hint via the hints API; omitted where hints are disabled. */
+  onUnlockHint?: () => Promise<void>;
 };
 
 type BriefPanelProps = {
@@ -201,7 +228,11 @@ export function BriefPanel({
         />
         <div className="min-h-0 flex-1 overflow-y-auto">
           {figmaPane === "submissions" ? (
-            <FigmaBriefSubmissions count={figmaBrief.submissionCount} />
+            <FigmaBriefSubmissions
+              count={figmaBrief.submissionCount}
+              items={figmaBrief.submissions}
+              truncated={figmaBrief.submissionsTruncated}
+            />
           ) : exercise ? (
             <>
               <FigmaBriefHeader exercise={exercise} content={figmaBrief} />
@@ -507,67 +538,6 @@ function asSample(item: unknown): PublicSampleItem | null {
     question,
     goldAnswer,
   };
-}
-
-function BriefMarkdown({ text }: { text: string }) {
-  if (!text.trim()) {
-    return null;
-  }
-  const blocks = text.trim().split(/\n\n+/);
-  return (
-    <div className="lp-ws-brief">
-      {blocks.map((block, index) => {
-        const heading = block.match(/^(#{1,3})\s+(.*)$/);
-        if (heading) {
-          const level = heading[1]?.length ?? 2;
-          const content = heading[2] ?? "";
-          if (level <= 2) {
-            return <h3 key={index}>{inline(content)}</h3>;
-          }
-          return <h4 key={index}>{inline(content)}</h4>;
-        }
-        if (block.startsWith(">")) {
-          return (
-            <blockquote key={index} className="lp-ws-quote">
-              {inline(block.replace(/^>\s?/gm, ""))}
-            </blockquote>
-          );
-        }
-        if (/^[-*]\s/m.test(block)) {
-          const items = block.split(/\n/).filter((line) => /^[-*]\s/.test(line));
-          return (
-            <ul key={index} className="lp-ws-steps">
-              {items.map((line, itemIndex) => (
-                <li key={itemIndex}>{inline(line.replace(/^[-*]\s+/, ""))}</li>
-              ))}
-            </ul>
-          );
-        }
-        return (
-          <p key={index} className="whitespace-pre-wrap">
-            {inline(block)}
-          </p>
-        );
-      })}
-    </div>
-  );
-}
-
-function inline(text: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
-  return parts.map((part, index) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={index}>{part.slice(2, -2)}</strong>;
-    }
-    if (part.startsWith("`") && part.endsWith("`")) {
-      return (
-        <code key={index} className="lp-ws-inline-code">
-          {part.slice(1, -1)}
-        </code>
-      );
-    }
-    return <span key={index}>{part}</span>;
-  });
 }
 
 function HintsBlock({ slug }: { slug: string }) {

@@ -1,0 +1,196 @@
+/* G3 probe, run history and the layer-by-layer steps (also used on the trace page). */
+.lp-grd-probe {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.lp-grd-probe-label {
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-grd-probe-input {
+  width: 100%;
+  min-height: 4.5rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+  background: var(--color-card);
+  color: var(--lp-ink);
+  font: inherit;
+  font-size: 0.8125rem;
+  resize: vertical;
+}
+
+.lp-grd-probe-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.lp-grd-probe-hint {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-grd-steps {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-grd-step {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, auto) 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.2rem;
+  align-items: baseline;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--lp-border);
+  border-left-width: 3px;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.lp-grd-step strong {
+  font-weight: 650;
+}
+
+.lp-grd-step code {
+  grid-column: 2;
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+  word-break: break-word;
+}
+
+.lp-grd-step-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.lp-grd-step.is-pass {
+  border-left-color: var(--color-status-pass);
+}
+
+.lp-grd-step.is-stop {
+  border-left-color: var(--color-status-fail);
+}
+
+.lp-grd-step.is-warn {
+  border-left-color: var(--color-status-warn);
+}
+
+.lp-grd-step--verdict {
+  grid-template-columns: 1fr;
+}
+
+.lp-grd-step--verdict span {
+  color: var(--lp-muted);
+}
+
+.lp-grd-history {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
+.lp-grd-g3-history-note {
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-grd-history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-grd-history-row {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--lp-ink);
+  font-size: 0.6875rem;
+  cursor: pointer;
+}
+
+.lp-grd-history-row.is-active {
+  border-color: var(--lp-ink);
+}
+
+.lp-grd-history-row .is-pass,
+.lp-grd-history-table .is-pass {
+  color: var(--color-status-pass);
+}
+
+.lp-grd-history-row .is-fail,
+.lp-grd-history-table .is-fail {
+  color: var(--color-status-fail);
+}
+
+.lp-grd-history-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.lp-grd-history-head span {
+  display: inline-flex;
+  gap: 0.75rem;
+}
+
+.lp-grd-history-edited {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-grd-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.lp-grd-history-table th,
+.lp-grd-history-table td {
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid var(--lp-border);
+  text-align: left;
+  font-weight: 500;
+}
+
+.lp-grd-history-table td {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-align: right;
+}
+
+.lp-grd-history-table .is-changed {
+  font-weight: 700;
+}
+
+.lp-grd-history-family th {
+  color: var(--lp-muted);
+}
+
+.lp-grd-history-table thead th {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lp-grd-history-table thead th + th {
+  text-align: right;
+}

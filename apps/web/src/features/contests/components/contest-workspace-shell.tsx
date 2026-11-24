@@ -40,6 +40,7 @@ import {
   workspaceApi,
 } from "@/features/workspace/workspace-api";
 import { WORKER_OFFLINE_MESSAGE } from "@/features/workspace/worker-offline-message";
+import { useExerciseToolLocks } from "@/features/workspace/use-exercise-tool-locks";
 import { ApiError } from "@/lib/api-client";
 import { contestsApi } from "@/features/contests/contests-api";
 import type { ContestExercise } from "@/types/contest";
@@ -122,6 +123,10 @@ export function ContestWorkspaceShell({
   const { api, detailHref, labels } = sittingConfig(variant);
   const isVirtual = workspaceMode === "virtual" && variant === "contest";
   const showContestChrome = variant === "contest" && !isVirtual;
+  // A live sitting opens every tool its problems need. Virtual practice of a
+  // closed contest is practice: the learner's own tool ladder applies, as the
+  // server checks for any attempt outside a sitting.
+  const toolLocks = useExerciseToolLocks(exerciseSlug, isVirtual);
   const contestBackHref = showContestChrome
     ? routes.contestPlay(contestSlug)
     : detailHref(contestSlug);
@@ -356,6 +361,7 @@ export function ContestWorkspaceShell({
             onToggleBriefCollapsed={() => setBriefCollapsed((c) => !c)}
             resultsCollapsed={resultsCollapsed}
             onToggleResultsCollapsed={() => setResultsCollapsed((c) => !c)}
+            toolLocks={toolLocks}
           />
         </WorkspacePracticeFrame>
       </>
@@ -386,6 +392,7 @@ export function ContestWorkspaceShell({
             resultsCollapsed={resultsCollapsed}
             onToggleResultsCollapsed={() => setResultsCollapsed((c) => !c)}
             showSimulationLab={ragShowsSimulationLab(panelExercise.submissionSchema)}
+            toolLocks={toolLocks}
           />
         </WorkspacePracticeFrame>
       </>

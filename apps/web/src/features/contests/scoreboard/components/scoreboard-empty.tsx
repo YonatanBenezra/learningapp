@@ -10,7 +10,7 @@ export function ScoreboardEmpty({ slug }: { slug: string }) {
       </p>
       <Link
         href={routes.contestPlay(slug)}
-        className="mt-2 rounded-md bg-[#9FEF00] px-4 py-2 text-[14px] font-semibold text-[#0F1520] transition-[filter] hover:brightness-105"
+        className="mt-2 rounded-md bg-[#FF4D4D] px-4 py-2 text-[14px] font-semibold text-[#0F1520] transition-[filter] hover:brightness-105"
       >
         Enter contest
       </Link>

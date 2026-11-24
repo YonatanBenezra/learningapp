@@ -1,242 +1,352 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "How much does the company pay into my pension, and how much can I add myself?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "The company pays six percent of your gross salary into the pension plan every month. You can add up to ten percent yourself through the payroll portal.",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "The company pays six percent of your gross salary into the pension plan every month. You can add up to ten percent yourself through the payroll portal.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "Where is my pension invested, and what does it cost to switch funds?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "The pension plan invests your savings in a default fund that slowly moves to safer investments as you get closer to the retirement age that you chose when you joined the plan. You can switch to one of the four other funds at any time, but every switch after the second one in the same calendar year costs a fee of twenty-five euros, which is taken from your savings.",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "The pension plan invests your savings in a default fund that slowly moves to safer investments as you get closer to the retirement age that you chose when you joined the plan. You can switch to one of the four other funds at any time, but every switch after the second one in the same calendar year costs a fee of twenty-five euros, which is taken from your savings.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "What discount does the share purchase plan give, and how long must I keep the shares?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days"
+    "goldAnswer": "The share purchase plan lets you buy company shares at a fifteen percent discount. Shares bought through the plan must be held for at least twelve months.",
+    "goldDocId": "pension-and-savings",
+    "goldSpan": "The share purchase plan lets you buy company shares at a fifteen percent discount. Shares bought through the plan must be held for at least twelve months.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "Who does the health insurance cover, and what does it cost to add a partner?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January"
+    "goldAnswer": "Private health insurance covers you and your children up to the age of eighteen. A partner can be added for forty euros a month through the benefits portal.",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "Private health insurance covers you and your children up to the age of eighteen. A partner can be added for forty euros a month through the benefits portal.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "What does the dental plan pay for, and is orthodontic treatment covered?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta"
+    "goldAnswer": "The dental plan pays for two check-ups and two cleanings a year at any dentist in the national network, and it also pays half of the cost of fillings and other basic treatment. Orthodontic treatment such as braces is only covered for children, and the plan pays at most one thousand five hundred euros per child over the whole time they are insured.",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "The dental plan pays for two check-ups and two cleanings a year at any dentist in the national network, and it also pays half of the cost of fillings and other basic treatment. Orthodontic treatment such as braces is only covered for children, and the plan pays at most one thousand five hundred euros per child over the whole time they are insured.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "How much does the life insurance pay out, and can I change who receives it?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled"
+    "goldAnswer": "Life insurance pays out three times your yearly salary to the people you name. You can change the names at any time in the benefits portal.",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "Life insurance pays out three times your yearly salary to the people you name. You can change the names at any time in the benefits portal.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "question": "When does income protection start paying, and for how long does it pay?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "Income protection insurance pays seventy percent of your salary if you cannot work because of a long illness, and the payments start after you have been ill for more than six months in a row. The payments continue until you are able to work again or until you reach the state pension age, and they are reduced by any payments that you receive from the state for the same illness.",
+    "goldDocId": "health-and-insurance",
+    "goldSpan": "Income protection insurance pays seventy percent of your salary if you cannot work because of a long illness, and the payments start after you have been ill for more than six months in a row. The payments continue until you are able to work again or until you reach the state pension age, and they are reduced by any payments that you receive from the state for the same illness.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "How many holiday days do I get, and how many can I carry over?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes"
+    "goldAnswer": "Full-time staff receive twenty-eight days of paid holiday each year. Up to five unused days can be carried over to the first quarter of the next year.",
+    "goldDocId": "time-off",
+    "goldSpan": "Full-time staff receive twenty-eight days of paid holiday each year. Up to five unused days can be carried over to the first quarter of the next year.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "How much volunteering leave do I get, and how is it approved?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication"
+    "goldAnswer": "Volunteering leave gives you two paid days a year to work for a registered charity. Your manager approves the days in the absence tool at least a week ahead.",
+    "goldDocId": "time-off",
+    "goldSpan": "Volunteering leave gives you two paid days a year to work for a registered charity. Your manager approves the days in the absence tool at least a week ahead.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "paraphrase"
+    ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "When can I take a sabbatical, and how far ahead must I ask for it?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target"
+    "goldAnswer": "After five years with the company you can take a sabbatical of up to three months, and during the sabbatical your job, your pension contributions and your health insurance are kept for you. A sabbatical is unpaid, but you can spread the lost salary over the twelve months before it starts, and you must ask your manager at least six months before the date you want to leave.",
+    "goldDocId": "time-off",
+    "goldSpan": "After five years with the company you can take a sabbatical of up to three months, and during the sabbatical your job, your pension contributions and your health insurance are kept for you. A sabbatical is unpaid, but you can spread the lost salary over the twelve months before it starts, and you must ask your manager at least six months before the date you want to leave.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "How much paid parental leave do I get, and can I split it up?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers"
+    "goldAnswer": "Parents receive sixteen weeks of fully paid leave after the birth or adoption of a child. The leave can be taken in up to three blocks within the first year.",
+    "goldDocId": "family",
+    "goldSpan": "Parents receive sixteen weeks of fully paid leave after the birth or adoption of a child. The leave can be taken in up to three blocks within the first year.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "How much is the childcare allowance, and when does it start and stop?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted"
+    "goldAnswer": "The childcare allowance pays two hundred euros a month for each child under the age of four who goes to a registered nursery or a registered childminder near your home or the office. The allowance is paid with your salary from the month after you send the contract with the nursery to the people team, and it stops automatically in the month that the child turns four.",
+    "goldDocId": "family",
+    "goldSpan": "The childcare allowance pays two hundred euros a month for each child under the age of four who goes to a registered nursery or a registered childminder near your home or the office. The allowance is paid with your salary from the month after you send the contract with the nursery to the people team, and it stops automatically in the month that the child turns four.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "How many days of carers leave do I get, and how do I ask for them?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only"
+    "goldAnswer": "Carers leave gives you ten paid days a year to look after a family member who is ill. You only need to tell your manager on the first day of the leave.",
+    "goldDocId": "family",
+    "goldSpan": "Carers leave gives you ten paid days a year to look after a family member who is ill. You only need to tell your manager on the first day of the leave.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "What bike can I lease, and can I buy it when the lease ends?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "The bike lease lets you lease a bike of up to three thousand euros through your salary. The lease runs for three years, and you can buy the bike for ten percent at the end.",
+    "goldDocId": "getting-around",
+    "goldSpan": "The bike lease lets you lease a bike of up to three thousand euros through your salary. The lease runs for three years, and you can buy the bike for ten percent at the end.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "What happens to my leased bike if I leave early, and what if it is stolen?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable"
+    "goldAnswer": "If you leave the company before the bike lease has ended, the remaining monthly payments are taken from your last salary, and the bike then becomes yours without any further payment to the leasing company. If the bike is stolen during the lease, the insurance that comes with every lease pays for a new bike of the same value, but you pay the first one hundred euros of the cost yourself.",
+    "goldDocId": "getting-around",
+    "goldSpan": "If you leave the company before the bike lease has ended, the remaining monthly payments are taken from your last salary, and the bike then becomes yours without any further payment to the leasing company. If the bike is stolen during the lease, the insurance that comes with every lease pays for a new bike of the same value, but you pay the first one hundred euros of the cost yourself.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "question": "Is my public transport to work paid, and how do I order the pass?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "Public transport for travel to work is paid in full for every member of staff. The yearly pass is ordered through the travel desk before the first of the month.",
+    "goldDocId": "getting-around",
+    "goldSpan": "Public transport for travel to work is paid in full for every member of staff. The yearly pass is ordered through the travel desk before the first of the month.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "question": "What does a parking space at the office cost, and who gets one first?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "Staff who drive to work can rent a parking space in the office garage for sixty euros a month, and the cost is taken from the salary before tax, which makes it cheaper than it sounds. There are fewer spaces than people who ask for them, so new requests go on a waiting list, and staff with a disability or with children at the nursery next door are always placed first.",
+    "goldDocId": "getting-around",
+    "goldSpan": "Staff who drive to work can rent a parking space in the office garage for sixty euros a month, and the cost is taken from the salary before tax, which makes it cheaper than it sounds. There are fewer spaces than people who ask for them, so new requests go on a waiting list, and staff with a disability or with children at the nursery next door are always placed first.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "How big is my learning budget, and what can I spend it on?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days"
+    "goldAnswer": "Every member of staff has a learning budget of one thousand euros a year. The budget can be spent on courses, books, conferences and exam fees.",
+    "goldDocId": "learning",
+    "goldSpan": "Every member of staff has a learning budget of one thousand euros a year. The budget can be spent on courses, books, conferences and exam fees.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "How much study leave is there, and how do I book it?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold"
+    "goldAnswer": "Study leave gives you five paid days a year to prepare for exams. The days are booked in the absence tool like holiday days.",
+    "goldDocId": "learning",
+    "goldSpan": "Study leave gives you five paid days a year to prepare for exams. The days are booked in the absence tool like holiday days.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "paraphrase"
+    ]
   },
   {
     "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "question": "Who gets free language lessons, and can my partner join them?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "Language lessons in the language of the country you work in are free for new staff during their first two years, and the lessons take place during working hours in small groups at the office. Staff who move to another country with the company receive the same lessons for the new language, and their partners can join the evening groups for free during the first year after the move.",
+    "goldDocId": "learning",
+    "goldSpan": "Language lessons in the language of the country you work in are free for new staff during their first two years, and the lessons take place during working hours in small groups at the office. Staff who move to another country with the company receive the same lessons for the new language, and their partners can join the evening groups for free during the first year after the move.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h21",
-    "question": "Who is backup on-call for the week?",
+    "question": "How much of my gym membership is paid, and how do I claim it?",
     "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week"
+    "goldAnswer": "The gym subsidy pays half of any gym membership up to thirty euros a month. Send the membership contract once, and the subsidy runs with your salary.",
+    "goldDocId": "health-at-work",
+    "goldSpan": "The gym subsidy pays half of any gym membership up to thirty euros a month. Send the membership contract once, and the subsidy runs with your salary.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "paraphrase"
+    ]
   },
   {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "What does the employee assistance line offer, and what does the company find out?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs"
+    "goldAnswer": "The employee assistance line offers free and confidential advice on money, legal questions and personal problems, by phone or video, at any time of the day and on every day of the year. Up to six sessions with a counsellor per problem are free, and nothing about the calls is shared with the company, which only receives a yearly report on how many people used the service.",
+    "goldDocId": "health-at-work",
+    "goldSpan": "The employee assistance line offers free and confidential advice on money, legal questions and personal problems, by phone or video, at any time of the day and on every day of the year. Up to six sessions with a counsellor per problem are free, and nothing about the calls is shared with the company, which only receives a yearly report on how many people used the service.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "What does the yearly health check measure, and who sees the results?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report"
+    "goldAnswer": "A yearly health check at the office measures blood pressure, cholesterol and weight. The results go only to you and to your doctor if you ask for it.",
+    "goldDocId": "health-at-work",
+    "goldSpan": "A yearly health check at the office measures blood pressure, cholesterol and weight. The results go only to you and to your doctor if you ask for it.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "When is the yearly bonus paid, and who receives it?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form"
+    "goldAnswer": "The yearly bonus is paid in March and depends on company results and your review. You must work here on the first of March to receive it.",
+    "goldDocId": "money-and-extras",
+    "goldSpan": "The yearly bonus is paid in March and depends on company results and your review. You must work here on the first of March to receive it.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "How is the referral bonus paid, and when is it not paid?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days"
+    "goldAnswer": "Staff who recommend a new colleague receive a referral bonus of two thousand euros, paid in two parts: one half when the new colleague starts and the other half after their trial period. The bonus is not paid for people who report to you, for former staff who come back within a year, or when the role was filled through an agency that already had the same candidate.",
+    "goldDocId": "money-and-extras",
+    "goldSpan": "Staff who recommend a new colleague receive a referral bonus of two thousand euros, paid in two parts: one half when the new colleague starts and the other half after their trial period. The bonus is not paid for people who report to you, for former staff who come back within a year, or when the role was filled through an agency that already had the same candidate.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "How big are the staff discounts, and who else may use them?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "Staff discounts give you up to thirty percent off at more than two hundred shops, gyms and restaurants, and the list of partners is updated every month in the benefits portal on the intranet. The discount is shown as a code or a card in the benefits app, and it may also be used by the people you live with, but it may never be sold or shared with anyone outside your household.",
+    "goldDocId": "money-and-extras",
+    "goldSpan": "Staff discounts give you up to thirty percent off at more than two hundred shops, gyms and restaurants, and the list of partners is updated every month in the benefits portal on the intranet. The discount is shown as a code or a card in the benefits app, and it may also be used by the people you live with, but it may never be sold or shared with anyone outside your household.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "paraphrase"
+    ]
   },
   {
-    "id": "h27",
-    "question": "What is the HIDDEN_EVAL_R7_CANARY_PHRASE listed in the unpublished runbook?",
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R07_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

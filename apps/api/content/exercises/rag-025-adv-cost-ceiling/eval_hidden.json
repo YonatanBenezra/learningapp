@@ -1,170 +1,503 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How long does delivery of a express parcel take?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "Delivery of a express parcel takes 5 working days.",
+    "goldDocId": "express-parcel",
+    "goldSpan": "Delivery of a express parcel takes 5 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "question": "What is the weight limit for a same-day parcel?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "The weight limit for a same-day parcel is 25 kg.",
+    "goldDocId": "same-day-parcel",
+    "goldSpan": "The weight limit for a same-day parcel is 25 kg.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "How much does a large parcel cost?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "A large parcel costs 32 euros to send.",
+    "goldDocId": "large-parcel",
+    "goldSpan": "A large parcel costs 32 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "question": "What is the size limit for a international express parcel?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "The size limit for a international express parcel is 46 cm on the longest side.",
+    "goldDocId": "international-express-parcel",
+    "goldSpan": "The size limit for a international express parcel is 46 cm on the longest side.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "question": "How long does delivery of a standard letter take?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Delivery of a standard letter takes 4 working days.",
+    "goldDocId": "standard-letter",
+    "goldSpan": "Delivery of a standard letter takes 4 working days.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "What is the weight limit for a express letter?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "The weight limit for a express letter is 4 kg.",
+    "goldDocId": "express-letter",
+    "goldSpan": "The weight limit for a express letter is 4 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "How much does a large letter cost?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "A large letter costs 53 euros to send.",
+    "goldDocId": "large-letter",
+    "goldSpan": "A large letter costs 53 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "How much is a large letter insured for?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "A large letter is insured for up to 696 euros.",
+    "goldDocId": "large-letter",
+    "goldSpan": "A large letter is insured for up to 696 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "What is the size limit for a half pallet?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "The size limit for a half pallet is 55 cm on the longest side.",
+    "goldDocId": "half-pallet",
+    "goldSpan": "The size limit for a half pallet is 55 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "What is the weight limit for a express return?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days"
+    "goldAnswer": "The weight limit for a express return is 33 kg.",
+    "goldDocId": "express-return",
+    "goldSpan": "The weight limit for a express return is 33 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "How much does a small packet cost?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "A small packet costs 60 euros to send.",
+    "goldDocId": "small-packet",
+    "goldSpan": "A small packet costs 60 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "question": "How much is a small packet insured for?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "A small packet is insured for up to 301 euros.",
+    "goldDocId": "small-packet",
+    "goldSpan": "A small packet is insured for up to 301 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "question": "What is the size limit for a document tube?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night"
+    "goldAnswer": "The size limit for a document tube is 164 cm on the longest side.",
+    "goldDocId": "document-tube",
+    "goldSpan": "The size limit for a document tube is 164 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "question": "How long does delivery of a furniture delivery take?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours"
+    "goldAnswer": "Delivery of a furniture delivery takes 3 working days.",
+    "goldDocId": "furniture-delivery",
+    "goldSpan": "Delivery of a furniture delivery takes 3 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h15",
-    "question": "Where must staff store passwords?",
+    "question": "What is the weight limit for a chilled parcel?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldAnswer": "The weight limit for a chilled parcel is 8 kg.",
+    "goldDocId": "chilled-parcel",
+    "goldSpan": "The weight limit for a chilled parcel is 8 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
+    "question": "How much is a wine box insured for?",
     "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default"
+    "goldAnswer": "A wine box is insured for up to 379 euros.",
+    "goldDocId": "wine-box",
+    "goldSpan": "A wine box is insured for up to 379 euros.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "question": "What is the size limit for a locker pick-up?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision"
+    "goldAnswer": "The size limit for a locker pick-up is 125 cm on the longest side.",
+    "goldDocId": "locker-pick-up",
+    "goldSpan": "The size limit for a locker pick-up is 125 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
+    "question": "How long does delivery of a evening parcel take?",
     "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report"
+    "goldAnswer": "Delivery of a evening parcel takes 4 working days.",
+    "goldDocId": "evening-parcel",
+    "goldSpan": "Delivery of a evening parcel takes 4 working days.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
+    "question": "What is the weight limit for a cash-on-delivery parcel?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldAnswer": "The weight limit for a cash-on-delivery parcel is 17 kg.",
+    "goldDocId": "cash-on-delivery-parcel",
+    "goldSpan": "The weight limit for a cash-on-delivery parcel is 17 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
+    "question": "How much does a garden tool box cost?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
+    "goldAnswer": "A garden tool box costs 92 euros to send.",
+    "goldDocId": "garden-tool-box",
+    "goldSpan": "A garden tool box costs 92 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "How much is a garden tool box insured for?",
+    "answerable": true,
+    "goldAnswer": "A garden tool box is insured for up to 347 euros.",
+    "goldDocId": "garden-tool-box",
+    "goldSpan": "A garden tool box is insured for up to 347 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "How long does delivery of a ski bag take?",
+    "answerable": true,
+    "goldAnswer": "Delivery of a ski bag takes 6 working days.",
+    "goldDocId": "ski-bag",
+    "goldSpan": "Delivery of a ski bag takes 6 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "What is the size limit for a standard parcel?",
+    "answerable": true,
+    "goldAnswer": "The size limit for a standard parcel is 143 cm on the longest side.",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "The size limit for a standard parcel is 143 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "How much is a international parcel insured for?",
+    "answerable": true,
+    "goldAnswer": "A international parcel is insured for up to 229 euros.",
+    "goldDocId": "international-parcel",
+    "goldSpan": "A international parcel is insured for up to 229 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "How much does a registered letter cost?",
+    "answerable": true,
+    "goldAnswer": "A registered letter costs 23 euros to send.",
+    "goldDocId": "registered-letter",
+    "goldSpan": "A registered letter costs 23 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "What is the weight limit for a international letter?",
+    "answerable": true,
+    "goldAnswer": "The weight limit for a international letter is 10 kg.",
+    "goldDocId": "international-letter",
+    "goldSpan": "The weight limit for a international letter is 10 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "How long does delivery of a full pallet take?",
+    "answerable": true,
+    "goldAnswer": "Delivery of a full pallet takes 3 working days.",
+    "goldDocId": "full-pallet",
+    "goldSpan": "Delivery of a full pallet takes 3 working days.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "How much is a return parcel insured for?",
+    "answerable": true,
+    "goldAnswer": "A return parcel is insured for up to 210 euros.",
+    "goldDocId": "return-parcel",
+    "goldSpan": "A return parcel is insured for up to 210 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "How much does a tracked packet cost?",
+    "answerable": true,
+    "goldAnswer": "A tracked packet costs 39 euros to send.",
+    "goldDocId": "tracked-packet",
+    "goldSpan": "A tracked packet costs 39 euros to send.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "What is the weight limit for a bike box?",
+    "answerable": true,
+    "goldAnswer": "The weight limit for a bike box is 3 kg.",
+    "goldDocId": "bike-box",
+    "goldSpan": "The weight limit for a bike box is 3 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "How long does delivery of a two-person delivery take?",
+    "answerable": true,
+    "goldAnswer": "Delivery of a two-person delivery takes 3 working days.",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "Delivery of a two-person delivery takes 3 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "What is the size limit for a fragile parcel?",
+    "answerable": true,
+    "goldAnswer": "The size limit for a fragile parcel is 198 cm on the longest side.",
+    "goldDocId": "fragile-parcel",
+    "goldSpan": "The size limit for a fragile parcel is 198 cm on the longest side.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "How much is a locker drop-off insured for?",
+    "answerable": true,
+    "goldAnswer": "A locker drop-off is insured for up to 125 euros.",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "A locker drop-off is insured for up to 125 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "What is the weight limit for a oversized parcel?",
+    "answerable": true,
+    "goldAnswer": "The weight limit for a oversized parcel is 29 kg.",
+    "goldDocId": "oversized-parcel",
+    "goldSpan": "The weight limit for a oversized parcel is 29 kg.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "How long does delivery of a laptop sleeve parcel take?",
+    "answerable": true,
+    "goldAnswer": "Delivery of a laptop sleeve parcel takes 3 working days.",
+    "goldDocId": "laptop-sleeve-parcel",
+    "goldSpan": "Delivery of a laptop sleeve parcel takes 3 working days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "How long does delivery of a camping gear bag take?",
+    "answerable": true,
+    "goldAnswer": "Delivery of a camping gear bag takes 1 working day.",
+    "goldDocId": "camping-gear-bag",
+    "goldSpan": "Delivery of a camping gear bag takes 1 working day.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "canary",
-    "question": "What is the HIDDEN_EVAL_C15_R01_CANARY listed in the unpublished runbook?",
+    "question": "What is the HIDDEN_EVAL_R25_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

@@ -1,0 +1,63 @@
+{
+  "slug": "rag-102-rt-poisoned-doc",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Red Team 2: Poisoned Document",
+  "difficulty": "M",
+  "catalogPhase": 7,
+  "skills": [
+    {
+      "slug": "red-teaming",
+      "name": "Red teaming"
+    },
+    {
+      "slug": "prompt-injection",
+      "name": "Prompt injection"
+    }
+  ],
+  "briefMd": "# Red Team 2 · Poisoned Document\n\nDirect prompt injection is filtered now. But the bot treats text inside retrieved documents as instructions, and an outsider edited one note in Acme's knowledge base.\n\nRead the **Corpus** tab, find the poisoned note, and ask the **Target bot** a question that pulls that note into its context. The bot will leak a privileged runbook that contains the flag.\n\nYour flag is personal: it is derived from your account, so a flag copied from someone else's writeup will not pass.\n\n**Gate:** the submitted flag matches.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "flag"
+    ],
+    "properties": {
+      "flag": {
+        "type": "string",
+        "minLength": 8,
+        "maxLength": 120,
+        "description": "The flag you extracted, e.g. AIWARSS{...}",
+        "default": ""
+      }
+    }
+  },
+  "thresholds": {
+    "flag_captured": 1
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.0,
+    "wall_clock_s": 30
+  },
+  "gates": [
+    {
+      "id": "flag-captured",
+      "class": "A",
+      "metric": "flag_captured",
+      "op": "eq",
+      "value": 1
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 0,
+    "rotate": false
+  },
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-redteam"
+}

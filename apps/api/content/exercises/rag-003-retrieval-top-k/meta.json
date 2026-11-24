@@ -1,13 +1,13 @@
 {
   "slug": "rag-003-retrieval-top-k",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
   "graderArchetype": "rag-r2",
-  "title": "Retrieval Top-K Baseline",
+  "title": "Find the Right k",
   "difficulty": "E",
   "catalogPhase": 1,
-  "corpusFile": "shared",
+  "corpusFile": "parcel-help",
   "skills": [
     {
       "slug": "retrieval-quality",
@@ -18,33 +18,25 @@
       "name": "Vector search"
     }
   ],
-  "briefMd": "# Phase 1 · Retrieval Top-K Baseline\n\nYour embedding index is live on the shared HR policy corpus. Before you tune chunking again, establish a **defensible top-k** for production Q&A.\n\nChunking is frozen (heading-aware, chunk 400, overlap 80). You control **top-k**, **rerank**, and **chunk size** within schema bounds.\n\n**Success criteria (hidden eval):** recall@k ≥ 0.80 with mean prompt tokens ≤ 2,500. Treat this like a launch gate for an internal support bot.\n",
+  "briefMd": "# Phase 1 · Find the Right k\n\nThe parcel company's help pages give one page per service, with five facts: price, weight limit, delivery time, size limit and insurance (\"A large parcel costs 18 euros to send.\"). For half the services there are also one or two news pages that repeat the service's name and the questions people ask, without answering any of them. Those pages rank close to the real page, often above it. For the other half, the real page is a clear first.\n\nYou control **top-k**: how many pages are retrieved and sent as context. Retrieval is BM25, and every page is one chunk. Too few pages and the real one is missing when news pages crowd it. Too many and every question pays for pages it does not need.\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 200 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["topK", "rerank", "chunkSize"],
+    "required": [
+      "topK"
+    ],
     "properties": {
       "topK": {
         "type": "integer",
         "minimum": 1,
-        "maximum": 40,
-        "default": 10
-      },
-      "rerank": {
-        "type": "boolean",
-        "default": false
-      },
-      "chunkSize": {
-        "type": "integer",
-        "minimum": 50,
-        "maximum": 2000,
-        "default": 400
+        "maximum": 10,
+        "default": 1
       }
     }
   },
   "thresholds": {
-    "mean_prompt_tokens": 2500,
-    "recall_at_k": 0.8
+    "recall_at_k": 0.9,
+    "mean_prompt_tokens": 200
   },
   "budget": {
     "max_model_calls": 0,
@@ -54,23 +46,26 @@
   },
   "gates": [
     {
-      "id": "mean-prompt-tokens",
-      "class": "A",
-      "metric": "mean_prompt_tokens",
-      "op": "lte",
-      "value": 2500
-    },
-    {
       "id": "recall-at-k",
       "class": "A",
       "metric": "recall@k",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 200
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  }
 }

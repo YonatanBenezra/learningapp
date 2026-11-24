@@ -1,5 +1,5 @@
 {
-  "reranker": "title-boost",
-  "rerankTopN": 20,
-  "queryRewritePrompt": ""
+  "topK": 8,
+  "dedupe": "near",
+  "dedupeThreshold": 0.6
 }

@@ -1,0 +1,767 @@
+[
+  {
+    "id": "hotels-2024",
+    "title": "Hotel bookings",
+    "text": "Effective 2024-03. Hotels may cost at most 140 euros a night in most cities. Questions go to People Operations.",
+    "meta": {
+      "family": "hotels",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "hotels-2026",
+    "title": "Hotel bookings",
+    "text": "Effective 2026-02. Hotels may cost at most 160 euros a night in most cities. Managers approve exceptions in writing. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "hotels",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "hotels-2027",
+    "title": "Hotel bookings",
+    "text": "Draft hotel bookings policy for 2027, not yet approved. Hotels may cost at most 185 euros a night in most cities. It applies to all offices and to remote staff. The finance team reviews the amount every year.",
+    "meta": {
+      "family": "hotels",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "meals-2023",
+    "title": "Meals while travelling",
+    "text": "Effective 2023-01. On business trips you can claim up to 35 euros a day for food. Managers approve exceptions in writing.",
+    "meta": {
+      "family": "meals",
+      "version": "2023",
+      "status": "superseded",
+      "effective": "2023-01-01"
+    }
+  },
+  {
+    "id": "meals-2024",
+    "title": "Meals while travelling",
+    "text": "Effective 2024-03. On business trips you can claim up to 40 euros a day for food. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "meals",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "meals-2026",
+    "title": "Meals while travelling",
+    "text": "Effective 2026-02. On business trips you can claim up to 45 euros a day for food. Keep receipts for the yearly audit. Contractors are not covered.",
+    "meta": {
+      "family": "meals",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "mileage-2024",
+    "title": "Mileage",
+    "text": "Effective 2024-03. Business trips in your own car are reimbursed at 0.25 euros per kilometre. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "mileage",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "mileage-2026",
+    "title": "Mileage",
+    "text": "Effective 2026-02. Business trips in your own car are reimbursed at 0.30 euros per kilometre. Keep receipts for the yearly audit. Contractors are not covered.",
+    "meta": {
+      "family": "mileage",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "mileage-2027",
+    "title": "Mileage",
+    "text": "Draft mileage policy for 2027, not yet approved. Business trips in your own car are reimbursed at 0.32 euros per kilometre. Part-time staff receive a pro-rated amount. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "mileage",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "learning-2023",
+    "title": "Learning budget",
+    "text": "Effective 2023-01. Every employee has 1,000 euros a year for courses, books and conference tickets. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "learning",
+      "version": "2023",
+      "status": "superseded",
+      "effective": "2023-01-01"
+    }
+  },
+  {
+    "id": "learning-2024",
+    "title": "Learning budget",
+    "text": "Effective 2024-03. Every employee has 1,200 euros a year for courses, books and conference tickets. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "learning",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "learning-2026",
+    "title": "Learning budget",
+    "text": "Effective 2026-02. Every employee has 1,500 euros a year for courses, books and conference tickets. The finance team reviews the amount every year. Questions go to People Operations.",
+    "meta": {
+      "family": "learning",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "parental-2024",
+    "title": "Parental leave",
+    "text": "Effective 2024-03. New parents may take sixteen weeks away from work at full salary. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "parental",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "parental-2026",
+    "title": "Parental leave",
+    "text": "Effective 2026-02. New parents may take twenty weeks away from work at full salary. The finance team reviews the amount every year. Questions go to People Operations.",
+    "meta": {
+      "family": "parental",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "abroad-2024",
+    "title": "Working from another country",
+    "text": "Effective 2024-03. You may work from a country other than your contract country for up to twenty days a year. The finance team reviews the amount every year.",
+    "meta": {
+      "family": "abroad",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "abroad-2026",
+    "title": "Working from another country",
+    "text": "Effective 2026-02. You may work from a country other than your contract country for up to thirty days a year. Contractors are not covered. Managers approve exceptions in writing.",
+    "meta": {
+      "family": "abroad",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "abroad-2027",
+    "title": "Working from another country",
+    "text": "Draft working from another country policy for 2027, not yet approved. You may work from a country other than your contract country for up to forty-five days a year. Exceptions are logged by the policy owner. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "abroad",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "on-call-2023",
+    "title": "On-call pay",
+    "text": "Effective 2023-01. Engineers receive 150 euros for each week on the on-call rota. Contractors are not covered.",
+    "meta": {
+      "family": "on-call",
+      "version": "2023",
+      "status": "superseded",
+      "effective": "2023-01-01"
+    }
+  },
+  {
+    "id": "on-call-2024",
+    "title": "On-call pay",
+    "text": "Effective 2024-03. Engineers receive 175 euros for each week on the on-call rota. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "on-call",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "on-call-2026",
+    "title": "On-call pay",
+    "text": "Effective 2026-02. Engineers receive 200 euros for each week on the on-call rota. Questions go to People Operations. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "on-call",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "referrals-2024",
+    "title": "Employee referrals",
+    "text": "Effective 2024-03. A successful referral earns a 1,500 euro bonus once the new hire has stayed six months. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "referrals",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "referrals-2026",
+    "title": "Employee referrals",
+    "text": "Effective 2026-02. A successful referral earns a 2,000 euro bonus once the new hire has stayed six months. Questions go to People Operations. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "referrals",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "referrals-2027",
+    "title": "Employee referrals",
+    "text": "Draft employee referrals policy for 2027, not yet approved. A successful referral earns a 2,500 euro bonus once the new hire has stayed six months. Managers approve exceptions in writing. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "referrals",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "gifts-2024",
+    "title": "Gifts and hospitality",
+    "text": "Effective 2024-03. You may accept gifts from suppliers worth up to 30 euros. Questions go to People Operations.",
+    "meta": {
+      "family": "gifts",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "gifts-2026",
+    "title": "Gifts and hospitality",
+    "text": "Effective 2026-02. You may accept gifts from suppliers worth up to 50 euros. Managers approve exceptions in writing. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "gifts",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "passwords-2023",
+    "title": "Password rules",
+    "text": "Effective 2023-01. Work passwords must be at least 10 characters long. Managers approve exceptions in writing.",
+    "meta": {
+      "family": "passwords",
+      "version": "2023",
+      "status": "superseded",
+      "effective": "2023-01-01"
+    }
+  },
+  {
+    "id": "passwords-2024",
+    "title": "Password rules",
+    "text": "Effective 2024-03. Work passwords must be at least 12 characters long. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "passwords",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "passwords-2026",
+    "title": "Password rules",
+    "text": "Effective 2026-02. Work passwords must be at least 16 characters long. Keep receipts for the yearly audit. Contractors are not covered.",
+    "meta": {
+      "family": "passwords",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "passwords-2027",
+    "title": "Password rules",
+    "text": "Draft password rules policy for 2027, not yet approved. Work passwords must be at least 20 characters long. Part-time staff receive a pro-rated amount. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "passwords",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "laptops-2024",
+    "title": "Laptop refresh",
+    "text": "Effective 2024-03. Laptops are replaced every three years. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "laptops",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "laptops-2026",
+    "title": "Laptop refresh",
+    "text": "Effective 2026-02. Laptops are replaced every four years. Keep receipts for the yearly audit. Contractors are not covered.",
+    "meta": {
+      "family": "laptops",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "probation-2024",
+    "title": "Probation",
+    "text": "Effective 2024-03. New hires have a probation period of three months. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "probation",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "probation-2026",
+    "title": "Probation",
+    "text": "Effective 2026-02. New hires have a probation period of six months. Part-time staff receive a pro-rated amount. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "probation",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "notice-2024",
+    "title": "Notice period",
+    "text": "Effective 2024-03. After probation, the notice period is one months. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "notice",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "notice-2026",
+    "title": "Notice period",
+    "text": "Effective 2026-02. After probation, the notice period is two months. The finance team reviews the amount every year. Questions go to People Operations.",
+    "meta": {
+      "family": "notice",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "notice-2027",
+    "title": "Notice period",
+    "text": "Draft notice period policy for 2027, not yet approved. After probation, the notice period is three months. Contractors are not covered. Managers approve exceptions in writing.",
+    "meta": {
+      "family": "notice",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "tickets-2023",
+    "title": "Customer data retention",
+    "text": "Effective 2023-01. Support tickets are deleted five years after they are closed. The finance team reviews the amount every year.",
+    "meta": {
+      "family": "tickets",
+      "version": "2023",
+      "status": "superseded",
+      "effective": "2023-01-01"
+    }
+  },
+  {
+    "id": "tickets-2024",
+    "title": "Customer data retention",
+    "text": "Effective 2024-03. Support tickets are deleted four years after they are closed. Contractors are not covered.",
+    "meta": {
+      "family": "tickets",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "tickets-2026",
+    "title": "Customer data retention",
+    "text": "Effective 2026-02. Support tickets are deleted three years after they are closed. Exceptions are logged by the policy owner. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "tickets",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "sabbatical-2024",
+    "title": "Sabbatical",
+    "text": "Effective 2024-03. After ten years of continuous service you can take an unpaid sabbatical of up to three months. Contractors are not covered.",
+    "meta": {
+      "family": "sabbatical",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "sabbatical-2026",
+    "title": "Sabbatical",
+    "text": "Effective 2026-02. After seven years of continuous service you can take an unpaid sabbatical of up to three months. Exceptions are logged by the policy owner. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "sabbatical",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "home-office-2024",
+    "title": "Home office allowance",
+    "text": "Effective 2024-03. Remote staff can claim 300 euros a year for home office equipment. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "home-office",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "home-office-2026",
+    "title": "Home office allowance",
+    "text": "Effective 2026-02. Remote staff can claim 450 euros a year for home office equipment. Questions go to People Operations. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "home-office",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "home-office-2027",
+    "title": "Home office allowance",
+    "text": "Draft home office allowance policy for 2027, not yet approved. Remote staff can claim 500 euros a year for home office equipment. Managers approve exceptions in writing. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "home-office",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "phones-2024",
+    "title": "Mobile phones",
+    "text": "Effective 2024-03. The company pays up to 25 euros a month toward a work phone plan. Questions go to People Operations.",
+    "meta": {
+      "family": "phones",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "phones-2026",
+    "title": "Mobile phones",
+    "text": "Effective 2026-02. The company pays up to 35 euros a month toward a work phone plan. Managers approve exceptions in writing. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "phones",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "overtime-2023",
+    "title": "Overtime",
+    "text": "Effective 2023-01. Hours beyond forty a week are paid at 1.25 times the normal rate. Managers approve exceptions in writing.",
+    "meta": {
+      "family": "overtime",
+      "version": "2023",
+      "status": "superseded",
+      "effective": "2023-01-01"
+    }
+  },
+  {
+    "id": "overtime-2024",
+    "title": "Overtime",
+    "text": "Effective 2024-03. Hours beyond forty a week are paid at 1.4 times the normal rate. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "overtime",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "overtime-2026",
+    "title": "Overtime",
+    "text": "Effective 2026-02. Hours beyond forty a week are paid at 1.5 times the normal rate. Keep receipts for the yearly audit. Contractors are not covered.",
+    "meta": {
+      "family": "overtime",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "sick-notes-2024",
+    "title": "Sick leave",
+    "text": "Effective 2024-03. A doctor's note is needed after two days of sick leave. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "sick-notes",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "sick-notes-2026",
+    "title": "Sick leave",
+    "text": "Effective 2026-02. A doctor's note is needed after three days of sick leave. Keep receipts for the yearly audit. Contractors are not covered.",
+    "meta": {
+      "family": "sick-notes",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "sick-notes-2027",
+    "title": "Sick leave",
+    "text": "Draft sick leave policy for 2027, not yet approved. A doctor's note is needed after five days of sick leave. Part-time staff receive a pro-rated amount. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "sick-notes",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "bikes-2024",
+    "title": "Bike leasing",
+    "text": "Effective 2024-03. Staff can lease a bike worth up to 2,000 euros through payroll. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "bikes",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "bikes-2026",
+    "title": "Bike leasing",
+    "text": "Effective 2026-02. Staff can lease a bike worth up to 3,500 euros through payroll. Part-time staff receive a pro-rated amount. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "bikes",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "visitors-2024",
+    "title": "Visitors",
+    "text": "Effective 2024-03. Guests must be registered at reception at least 12 hours before they arrive. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "visitors",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "visitors-2026",
+    "title": "Visitors",
+    "text": "Effective 2026-02. Guests must be registered at reception at least 24 hours before they arrive. The finance team reviews the amount every year. Questions go to People Operations.",
+    "meta": {
+      "family": "visitors",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "expenses-2023",
+    "title": "Expense claims",
+    "text": "Effective 2023-01. Expense claims must be filed within 90 days of the purchase. The finance team reviews the amount every year.",
+    "meta": {
+      "family": "expenses",
+      "version": "2023",
+      "status": "superseded",
+      "effective": "2023-01-01"
+    }
+  },
+  {
+    "id": "expenses-2024",
+    "title": "Expense claims",
+    "text": "Effective 2024-03. Expense claims must be filed within 60 days of the purchase. Contractors are not covered.",
+    "meta": {
+      "family": "expenses",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "expenses-2026",
+    "title": "Expense claims",
+    "text": "Effective 2026-02. Expense claims must be filed within 30 days of the purchase. Exceptions are logged by the policy owner. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "expenses",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "expenses-2027",
+    "title": "Expense claims",
+    "text": "Draft expense claims policy for 2027, not yet approved. Expense claims must be filed within 45 days of the purchase. Questions go to People Operations. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "expenses",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "conferences-2024",
+    "title": "Conference travel",
+    "text": "Effective 2024-03. Each employee may attend up to one paid conferences a year. Contractors are not covered.",
+    "meta": {
+      "family": "conferences",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "conferences-2026",
+    "title": "Conference travel",
+    "text": "Effective 2026-02. Each employee may attend up to two paid conferences a year. Exceptions are logged by the policy owner. It applies to all offices and to remote staff.",
+    "meta": {
+      "family": "conferences",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "wellbeing-2024",
+    "title": "Wellbeing allowance",
+    "text": "Effective 2024-03. Staff receive 20 euros a month toward a gym or sports club. Exceptions are logged by the policy owner.",
+    "meta": {
+      "family": "wellbeing",
+      "version": "2024",
+      "status": "superseded",
+      "effective": "2024-03-01"
+    }
+  },
+  {
+    "id": "wellbeing-2026",
+    "title": "Wellbeing allowance",
+    "text": "Effective 2026-02. Staff receive 30 euros a month toward a gym or sports club. Questions go to People Operations. Keep receipts for the yearly audit.",
+    "meta": {
+      "family": "wellbeing",
+      "version": "2026",
+      "status": "current",
+      "effective": "2026-02-01"
+    }
+  },
+  {
+    "id": "wellbeing-2027",
+    "title": "Wellbeing allowance",
+    "text": "Draft wellbeing allowance policy for 2027, not yet approved. Staff receive 40 euros a month toward a gym or sports club. Managers approve exceptions in writing. Part-time staff receive a pro-rated amount.",
+    "meta": {
+      "family": "wellbeing",
+      "version": "2027",
+      "status": "draft",
+      "effective": "2027-01-01"
+    }
+  },
+  {
+    "id": "notice-kitchen",
+    "title": "Kitchen rota",
+    "text": "The kitchen on each floor is cleaned on Friday afternoons. Please empty the fridge by noon."
+  },
+  {
+    "id": "notice-lifts",
+    "title": "Lift maintenance",
+    "text": "Lift B is serviced on the first Monday of each month. Use the stairs or lift A."
+  },
+  {
+    "id": "notice-printers",
+    "title": "Printers",
+    "text": "Printers release jobs only after you badge in at the device. Unclaimed jobs are deleted overnight."
+  },
+  {
+    "id": "notice-plants",
+    "title": "Office plants",
+    "text": "Facilities waters the office plants on Tuesdays. Do not move large pots yourself."
+  },
+  {
+    "id": "notice-lockers",
+    "title": "Lockers",
+    "text": "Day lockers are emptied every evening at 20:00. Long-term lockers are assigned by Facilities."
+  },
+  {
+    "id": "notice-parking",
+    "title": "Parking",
+    "text": "Parking permits are issued for one year at a time. Visitor spaces are on level -1."
+  },
+  {
+    "id": "notice-mail",
+    "title": "Post room",
+    "text": "Parcels for staff are held in the post room for five working days."
+  },
+  {
+    "id": "notice-quiet",
+    "title": "Quiet room",
+    "text": "The quiet room on floor 3 is for focused work and can be booked for one hour at a time."
+  },
+  {
+    "id": "notice-showers",
+    "title": "Showers",
+    "text": "Showers on the ground floor are open from 06:30 to 21:00."
+  },
+  {
+    "id": "notice-coffee",
+    "title": "Coffee machines",
+    "text": "Report a broken coffee machine to Facilities through the service portal."
+  }
+]

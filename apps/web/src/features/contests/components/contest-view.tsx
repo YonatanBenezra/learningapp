@@ -75,7 +75,7 @@ function SignedCredentialBlock({ signed }: { signed: SignedCredential }) {
     <div className="lp-ctd-credential">
       <div className="lp-ctd-credential-head">
         <div>
-          <h3 className="lp-ctd-credential-title">LabPath-signed result</h3>
+          <h3 className="lp-ctd-credential-title">AI Warss-signed result</h3>
           <p className="lp-ctd-credential-note">
             Issued {issuedLabel} · key {signed.keyId}
             {signed.revokedAt ? " · revoked" : ""}

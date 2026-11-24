@@ -1,17 +1,33 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { AttemptBudget } from "@/types/attempt";
 import type { Exercise } from "@/types/exercise";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
+import type { SubmissionHistoryItem } from "@/types/submission";
 import type { HintList } from "@/types/hint";
 import {
   buildFigmaBriefFromExercise,
   defaultsFromSubmissionSchema,
 } from "../figma-brief-from-exercise";
-import { BriefPanel, type BriefTab, type FigmaBriefContent } from "./brief-panel";
+import { gateSummary } from "../submission-diff";
+import { workspaceApi } from "../workspace-api";
+import {
+  BriefPanel,
+  type BriefTab,
+  type FigmaBriefContent,
+  type FigmaBriefSubmission,
+} from "./brief-panel";
+import { RagBudgetMeter } from "./rag-budget-meter";
 import { RagFlowGraph } from "./rag-flow-graph";
+import {
+  fieldsForStage,
+  pipelineForMode,
+  ragModeFromSchema,
+} from "../rag/rag-flow-pipeline";
 import { RagLabPanel } from "./rag-lab-panel";
+import type { RagRunSnapshot } from "./rag-run-diff";
 import { RunPanel } from "./run-panel";
 import { SubmissionSurface } from "./submission-surface";
 import { WorkspaceSplit } from "./workspace-split";
@@ -20,7 +36,8 @@ import {
   WorkspaceDemoMobile,
   type WorkspaceMobileStep,
 } from "./workspace-demo-mobile";
-import { ragEditorTitle } from "./workspace-rag-utils";
+import { attemptBudgetLabel, ragEditorTitle } from "./workspace-rag-utils";
+import { lockedDefaults, type ToolLocks } from "../tool-locks";
 import "../workspace.css";
 import "../workspace-figma.css";
 import "../workspace-rag-figma.css";
@@ -40,6 +57,7 @@ type WorkspaceRagFigmaShellProps = {
   onSubmit: (payload: Record<string, unknown>) => void;
   onValidityChange: (valid: boolean) => void;
   onValuesChange: (payload: Record<string, unknown>) => void;
+  /** Unused: the lab reads the shell's live form values (see `labConfig`). */
   labPayload?: Record<string, unknown>;
   briefCollapsed: boolean;
   onToggleBriefCollapsed: () => void;
@@ -49,7 +67,37 @@ type WorkspaceRagFigmaShellProps = {
   demoMode?: boolean;
   labPlaceholder?: React.ReactNode;
   figmaBrief?: FigmaBriefContent;
+  onUnlockHint?: () => Promise<void>;
+  /** Practice only: tools the learner has not earned are greyed. */
+  toolLocks?: ToolLocks | null;
 };
+
+/** Server history (newest first) -> brief rows numbered from the oldest. */
+function historyRows(history: SubmissionHistoryItem[]): FigmaBriefSubmission[] {
+  const total = history.length;
+  return history.map((item, index) => ({
+    id: item.submissionId,
+    runId: item.run?.id ?? null,
+    n: total - index,
+    status: item.run?.status ?? "queued",
+    verdict: item.grade?.verdict ?? null,
+    summary: item.grade ? gateSummary(item.grade.gateResults) : "",
+    createdAt: item.createdAt,
+    payload: item.payload ?? {},
+    gateResults: item.grade?.gateResults ?? null,
+    contest: item.contest,
+  }));
+}
+
+function schemaProperties(schema: unknown): Record<string, unknown> {
+  return ((schema as { properties?: Record<string, unknown> })?.properties ?? {}) as Record<
+    string,
+    unknown
+  >;
+}
+
+/** Matches the API's history page size. */
+const HISTORY_LIMIT = 20;
 
 export function WorkspaceRagFigmaShell({
   slug,
@@ -65,7 +113,6 @@ export function WorkspaceRagFigmaShell({
   onSubmit,
   onValidityChange,
   onValuesChange,
-  labPayload,
   briefCollapsed,
   onToggleBriefCollapsed,
   resultsCollapsed,
@@ -74,6 +121,8 @@ export function WorkspaceRagFigmaShell({
   demoMode = false,
   labPlaceholder = null,
   figmaBrief: figmaBriefOverride,
+  onUnlockHint,
+  toolLocks = null,
 }: WorkspaceRagFigmaShellProps) {
   const [briefTab, setBriefTab] = useState<BriefTab>("description");
   const [workTab, setWorkTab] = useState<"configure" | "lab">("configure");
@@ -83,19 +132,88 @@ export function WorkspaceRagFigmaShell({
       ? window.matchMedia("(max-width: 899px)").matches
       : false,
   );
-  const [attempt, setAttempt] = useState(1);
+  /** Submissions sent from this workspace session (resets on reload). */
+  const [submitCount, setSubmitCount] = useState(0);
+  const [history, setHistory] = useState<SubmissionHistoryItem[] | null>(null);
   const [formValues, setFormValues] = useState<Record<string, unknown> | null>(null);
+  const [attemptBudget, setAttemptBudget] = useState<AttemptBudget | null>(null);
   const lastGradedPayloadRef = useRef<string | null>(null);
+
+  // Reload the learner's history on open and whenever a run settles.
+  const settledRunKey = run && !pending ? `${run.id}:${run.status}:${grade ? 1 : 0}` : null;
+  useEffect(() => {
+    if (demoMode) {
+      return;
+    }
+    let cancelled = false;
+    workspaceApi
+      .listSubmissions(slug)
+      .then((rows) => {
+        if (!cancelled) {
+          setHistory(rows);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setHistory(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, settledRunKey, demoMode]);
+
+  // Submissions left under the attempt policy: on open and whenever a submit
+  // settles (graded, failed or rejected with 429). Hidden if the call fails.
+  useEffect(() => {
+    if (demoMode || pending) {
+      return;
+    }
+    let cancelled = false;
+    workspaceApi
+      .attemptBudget(slug)
+      .then((result) => {
+        if (!cancelled) {
+          setAttemptBudget(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAttemptBudget(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, pending, demoMode]);
+  const budget = attemptBudgetLabel(attemptBudget);
+
+  const submissions = useMemo(() => (history ? historyRows(history) : undefined), [history]);
+  // The graded run on screen next to the learner's previous graded submission.
+  const ragDiff = useMemo(() => runDiffFrom(history, run?.id ?? null), [history, run?.id]);
+  const submittedTotal = history ? history.length : submitCount;
+  const historyTruncated = (history?.length ?? 0) >= HISTORY_LIMIT;
 
   const figmaBrief = useMemo(
     () =>
       figmaBriefOverride ??
       buildFigmaBriefFromExercise(exercise, {
         hints,
-        submissionCount: Math.max(0, attempt - 1),
+        onUnlockHint,
+        submissionCount: submittedTotal,
+        submissions,
+        submissionsTruncated: historyTruncated,
         thresholdFootnote: "on the hidden set · graded on submit",
       }),
-    [exercise, hints, figmaBriefOverride, attempt],
+    [
+      exercise,
+      hints,
+      onUnlockHint,
+      figmaBriefOverride,
+      submittedTotal,
+      submissions,
+      historyTruncated,
+    ],
   );
 
   const initialValuesKey = JSON.stringify(initialValues ?? {});
@@ -107,6 +225,38 @@ export function WorkspaceRagFigmaShell({
   );
 
   const editorTitle = ragEditorTitle(exercise.submissionSchema);
+  // The learner's live config for the lab and budget meter. Before the form has
+  // mounted (mobile Lab step first) use the starter config, never `{}`.
+  const held = useMemo(
+    () => lockedDefaults(toolLocks, exercise.submissionSchema),
+    [toolLocks, exercise.submissionSchema],
+  );
+  const labConfig = useMemo(
+    () => ({ ...(formValues ?? formDefaults), ...held }),
+    [formValues, formDefaults, held],
+  );
+  // Stage inspector: the pipeline stage in focus, and the fields that set it.
+  const [stageFocus, setStageFocus] = useState<string | null>(null);
+  const inspect = useMemo(() => {
+    const stages = pipelineForMode(ragModeFromSchema(exercise.submissionSchema));
+    const stage =
+      stages.find((item) => item.id === stageFocus) ??
+      stages.find((item) => item.control) ??
+      null;
+    if (!stage) {
+      return null;
+    }
+    const keys = Object.keys(
+      (exercise.submissionSchema as { properties?: Record<string, unknown> } | null)
+        ?.properties ?? {},
+    );
+    return {
+      id: stage.id,
+      title: stage.title,
+      detail: stage.detail,
+      fields: fieldsForStage(stage.id, keys),
+    };
+  }, [exercise.submissionSchema, stageFocus]);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 899px)");
@@ -133,11 +283,13 @@ export function WorkspaceRagFigmaShell({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [workTab, isMobileLayout, mobileStep]);
 
+  // Jump to Results only when a new grade arrives: a later submit that fails
+  // (e.g. 429) keeps the old grade and must leave the learner on Submit.
   useEffect(() => {
-    if (!pending && grade) {
+    if (grade) {
       setMobileStep((step) => (step === "submit" ? "results" : step));
     }
-  }, [pending, grade]);
+  }, [grade]);
 
   useEffect(() => {
     if (!pending && grade && formValues) {
@@ -152,7 +304,7 @@ export function WorkspaceRagFigmaShell({
     JSON.stringify(formValues) !== lastGradedPayloadRef.current;
 
   const handleSubmit = (payload: Record<string, unknown>) => {
-    setAttempt((n) => n + 1);
+    setSubmitCount((n) => n + 1);
     setFormValues(payload);
     onSubmit(payload);
   };
@@ -177,7 +329,16 @@ export function WorkspaceRagFigmaShell({
           pending={pending}
           submitError={submitError}
           initialValues={formDefaults}
+          restoreValues={formValues}
           onSubmit={handleSubmit}
+          onValidityChange={onValidityChange}
+          onValuesChange={handleValuesChange}
+          editorTitle={editorTitle}
+          budget={budget}
+          nextAttempt={history ? history.length + 1 : pending ? submitCount : submitCount + 1}
+          submittedAttempts={submittedTotal}
+          showLab={showSimulationLab}
+          labPayload={labConfig}
         />
       </div>
     );
@@ -240,6 +401,9 @@ export function WorkspaceRagFigmaShell({
                     className="lp-ws-split--flow"
                     primary={
                       <RagFlowGraph
+                        values={labConfig}
+                        focusedId={inspect?.id ?? null}
+                        onFocusChange={setStageFocus}
                         className="lp-rag-graph--fill"
                         schema={exercise.submissionSchema}
                         pending={pending}
@@ -248,21 +412,36 @@ export function WorkspaceRagFigmaShell({
                       />
                     }
                     secondary={
-                      <SubmissionSurface
-                        schema={exercise.submissionSchema}
-                        simulator={exercise.simulator}
-                        disabled={pending}
-                        pending={pending}
-                        error={submitError}
-                        initialValues={formDefaults}
-                        title={editorTitle}
-                        onSubmit={handleSubmit}
-                        onValidityChange={onValidityChange}
-                        onValuesChange={handleValuesChange}
-                        figmaLayout
-                        figmaGrade={grade}
-                        figmaAttempt={attempt}
-                      />
+                      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+                        {showSimulationLab && !("flag" in schemaProperties(exercise.submissionSchema)) ? (
+                          <RagBudgetMeter
+                            slug={slug}
+                            payload={labConfig}
+                            gates={exercise.gates}
+                          />
+                        ) : null}
+                        <SubmissionSurface
+                          schema={exercise.submissionSchema}
+                          simulator={exercise.simulator}
+                          disabled={pending}
+                          pending={pending}
+                          error={submitError}
+                          initialValues={formDefaults}
+                          restoreValues={formValues}
+                          title={editorTitle}
+                          onSubmit={handleSubmit}
+                          onValidityChange={onValidityChange}
+                          onValuesChange={handleValuesChange}
+                          figmaLayout
+                          figmaGrade={grade}
+                          figmaAttempt={
+                            history ? history.length + 1 : pending ? submitCount : submitCount + 1
+                          }
+                          figmaBudget={budget}
+                          inspect={inspect}
+                          toolLocks={toolLocks}
+                        />
+                      </div>
                     }
                   />
                 </div>
@@ -270,8 +449,8 @@ export function WorkspaceRagFigmaShell({
                   showSimulationLab ? (
                     <RagLabPanel
                       slug={slug}
-                      payload={labPayload ?? formDefaults}
-                      figmaWireframe
+                      payload={labConfig}
+                      gates={exercise.gates}
                     />
                   ) : (
                     labPlaceholder
@@ -290,10 +469,11 @@ export function WorkspaceRagFigmaShell({
                 pending={pending}
                 attempt={
                   demoMode
-                    ? Math.max(attempt, (figmaBrief?.submissionCount ?? 0) + 1)
-                    : attempt
+                    ? Math.max(submitCount, figmaBrief?.submissionCount ?? 0)
+                    : submittedTotal
                 }
                 exerciseSlug={slug}
+                ragDiff={ragDiff}
               />
             }
           />
@@ -301,4 +481,30 @@ export function WorkspaceRagFigmaShell({
       />
     </div>
   );
+}
+
+function runDiffFrom(
+  history: SubmissionHistoryItem[] | null,
+  runId: string | null,
+): { previous: RagRunSnapshot; current: RagRunSnapshot } | null {
+  if (!history || !runId) {
+    return null;
+  }
+  const total = history.length;
+  const index = history.findIndex((item) => item.run?.id === runId);
+  if (index < 0 || !history[index].grade) {
+    return null;
+  }
+  // History is newest first: the previous graded submission comes after.
+  const previousIndex = history.findIndex((item, i) => i > index && item.grade !== null);
+  if (previousIndex < 0) {
+    return null;
+  }
+  const snapshot = (i: number): RagRunSnapshot => ({
+    n: total - i,
+    payload: history[i].payload ?? {},
+    gateResults: history[i].grade?.gateResults ?? null,
+    breakdown: history[i].grade?.breakdown ?? null,
+  });
+  return { previous: snapshot(previousIndex), current: snapshot(index) };
 }

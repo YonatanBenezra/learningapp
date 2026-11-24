@@ -1,5 +1,5 @@
 {
-  "chunkSize": 400,
-  "overlap": 80,
-  "splitStrategy": "heading-aware"
+  "chunkSize": 300,
+  "overlap": 0,
+  "splitStrategy": "recursive"
 }

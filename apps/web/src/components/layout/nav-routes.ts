@@ -1,12 +1,12 @@
 import { routes } from "@/config/routes";
 
-/** Simulator practice: exercise workspace, runs, demos. */
+/**
+ * Simulator practice: exercise workspace and demos, which bring their own
+ * chrome. Run and trace pages are not practice pages: they show the app
+ * navbar (see app/(dashboard)/runs/layout.tsx).
+ */
 export function isPracticePath(pathname: string): boolean {
-  return (
-    pathname.startsWith("/exercises/") ||
-    pathname.startsWith("/runs/") ||
-    pathname.startsWith("/demo/")
-  );
+  return pathname.startsWith("/exercises/") || pathname.startsWith("/demo/");
 }
 
 /** Contest/assessment lab workspace — in-shell chrome only, no global navbar. */

@@ -163,6 +163,17 @@
   opacity: 0.72;
 }
 
+.lp-rf-node--fail {
+  border-color: color-mix(in srgb, var(--color-status-fail) 70%, var(--lp-border));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-status-fail) 25%, transparent);
+}
+
+.lp-rf-node--focused {
+  opacity: 1;
+  outline: 2px solid color-mix(in srgb, var(--color-brand) 70%, transparent);
+  outline-offset: 2px;
+}
+
 .lp-rf-node-icon {
   display: grid;
   place-items: center;
@@ -177,13 +188,9 @@
   opacity: 0.55;
 }
 
+/* Stages are fixed; clicking one shows what the grader does there. */
 .lp-rag-graph-canvas .react-flow__node {
-  cursor: grab;
-}
-
-.lp-rag-graph-canvas .react-flow__node:active,
-.lp-rag-graph-canvas .react-flow__node.dragging {
-  cursor: grabbing;
+  cursor: pointer;
 }
 
 .lp-rf-node-title {

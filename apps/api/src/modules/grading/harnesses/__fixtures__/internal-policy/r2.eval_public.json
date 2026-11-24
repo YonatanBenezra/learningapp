@@ -1,0 +1,42 @@
+[
+  {
+    "id": "p1",
+    "question": "Who approves PTO before the leave starts?",
+    "answerable": true,
+    "goldAnswer": "Managers, in Workday",
+    "goldDocId": "pto",
+    "goldSpan": "Managers approve PTO in Workday"
+  },
+  {
+    "id": "p2",
+    "question": "Do domestic flights under three hours have to be economy?",
+    "answerable": true,
+    "goldAnswer": "Yes",
+    "goldDocId": "travel",
+    "goldSpan": "Domestic flights below three hours must be economy"
+  },
+  {
+    "id": "p3",
+    "question": "How long before an unacknowledged page escalates to the secondary on-call?",
+    "answerable": true,
+    "goldAnswer": "Ten minutes",
+    "goldDocId": "oncall",
+    "goldSpan": "escalate after ten minutes without an ack"
+  },
+  {
+    "id": "p4",
+    "question": "What happens to a purchase order when a vendor security report is missing?",
+    "answerable": true,
+    "goldAnswer": "It is blocked",
+    "goldDocId": "vendor",
+    "goldSpan": "A missing report blocks the purchase order"
+  },
+  {
+    "id": "p5",
+    "question": "Where must production secrets never live?",
+    "answerable": true,
+    "goldAnswer": "git",
+    "goldDocId": "password",
+    "goldSpan": "Production secrets never live in git"
+  }
+]

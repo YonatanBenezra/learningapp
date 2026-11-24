@@ -71,7 +71,7 @@ export function EventDetailsView({ slug }: { slug: string }) {
       <main className="flex min-h-dvh items-center justify-center bg-[#0F1520] px-4 py-24 text-[#A4B1CD]">
         <p>
           Sign in to view this event.{" "}
-          <Link href={routes.signIn} className="text-[#9FEF00] underline">
+          <Link href={routes.signIn} className="text-[#FF4D4D] underline">
             Sign in
           </Link>
         </p>

@@ -239,7 +239,7 @@ export function UserSettingsTab({ initial, onPatch, onReload }: UserSettingsTabP
               disabled={!canSaveBasic}
               className={
                 canSaveBasic
-                  ? "!bg-[#9FEF00] !text-[#121C2B] hover:!bg-[#b2f233]"
+                  ? "!bg-[#FF4D4D] !text-[#121C2B] hover:!bg-[#FF6B6B]"
                   : "!bg-[#242F40] !text-[#526177]"
               }
             >
@@ -292,7 +292,7 @@ export function UserSettingsTab({ initial, onPatch, onReload }: UserSettingsTabP
         </div>
       </SectionCard>
 
-      <SectionCard title="Social Profiles" description="Link public profiles to your LabPath identity.">
+      <SectionCard title="Social Profiles" description="Link public profiles to your AI Warss identity.">
         <form className="space-y-12" onSubmit={socialForm.handleSubmit(saveSocial)} noValidate>
           <div className="space-y-12">
             <FilledField
@@ -389,7 +389,7 @@ export function UserSettingsTab({ initial, onPatch, onReload }: UserSettingsTabP
               </label>
               <select
                 id="years-exp"
-                className="h-10 w-full rounded-[4px] bg-[#1E2939] px-4 text-sm text-[#F4F4F4] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]"
+                className="h-10 w-full rounded-[4px] bg-[#1E2939] px-4 text-sm text-[#F4F4F4] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]"
                 {...careerForm.register("yearsExperience")}
               >
                 {YEARS_EXPERIENCE_OPTIONS.map((opt) => (

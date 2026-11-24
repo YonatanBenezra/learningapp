@@ -1,0 +1,258 @@
+[
+  {
+    "id": "en-laptop-returns",
+    "title": "Laptop returns",
+    "text": "Return your laptop to the IT desk on your last working day. A courier label is emailed to remote staff who cannot visit the office.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-meal-allowance",
+    "title": "Late-work meals",
+    "text": "Staff working past 9 pm can claim a dinner allowance of 15 pounds. Claims must include a photo of the receipt.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-parking",
+    "title": "Parking permits",
+    "text": "Parking permits for the London office cost 40 pounds a month. Permits are issued by the facilities team on the first Monday of each month.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-training-days",
+    "title": "Training days",
+    "text": "Each employee gets five paid training days per year. Unused training days do not carry over.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-visitor-wifi",
+    "title": "Visitor Wi-Fi",
+    "text": "Visitors get a Wi-Fi voucher from reception that lasts eight hours. Vouchers cannot be extended.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-expense-deadline",
+    "title": "Expense deadline",
+    "text": "Submit expense claims within 30 days of the purchase. Late claims need approval from the finance director.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-sick-notes",
+    "title": "Sick notes",
+    "text": "A doctor's note is required after three consecutive sick days. Upload the note in the HR portal.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-mentoring",
+    "title": "Mentoring",
+    "text": "New engineers are paired with a mentor for their first six months. Mentors meet their mentee every two weeks.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-cycle-scheme",
+    "title": "Cycle to work",
+    "text": "The cycle to work scheme covers bikes up to 1,000 pounds. Repayments are taken from salary over twelve months.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-desk-booking",
+    "title": "Desk booking",
+    "text": "Desks in the London office are booked through the workplace app. Bookings open seven days ahead.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-referrals",
+    "title": "Referral bonus",
+    "text": "Referring a candidate who is hired earns a bonus of 1,500 pounds. The bonus is paid after the new hire completes three months.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-phone-allowance",
+    "title": "Phone allowance",
+    "text": "Field staff receive 20 pounds a month toward their mobile phone bill. The allowance is added to the monthly payslip.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-pension",
+    "title": "Pension",
+    "text": "The company matches pension contributions up to 5 percent of salary. You can change your contribution once a quarter.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-holiday-carry-over",
+    "title": "Holiday carry-over",
+    "text": "Up to five unused holiday days can be carried into the next year. Carried days must be used by the end of March.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-fire-drills",
+    "title": "Fire drills",
+    "text": "Fire drills take place on the first Thursday of every quarter. Everyone gathers at the car park assembly point.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "en-screen-lock",
+    "title": "Screen lock",
+    "text": "Laptops must lock automatically after five minutes of inactivity. Never share your login with a colleague.",
+    "meta": {
+      "language": "en"
+    }
+  },
+  {
+    "id": "bn-eid-bonus",
+    "title": "ঈদ বোনাস",
+    "text": "প্রত্যেক কর্মী বছরে দুটি ঈদ বোনাস পান, প্রতিটি মূল বেতনের সমান। বোনাস ঈদের অন্তত সাত দিন আগে দেওয়া হয়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-office-hours",
+    "title": "অফিসের সময়",
+    "text": "ঢাকা অফিস রবিবার থেকে বৃহস্পতিবার সকাল নয়টা থেকে বিকেল ছয়টা পর্যন্ত খোলা থাকে। শুক্রবার ও শনিবার অফিস বন্ধ থাকে।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-transport",
+    "title": "যাতায়াত ভাতা",
+    "text": "ঢাকা অফিসের কর্মীরা মাসে তিন হাজার টাকা যাতায়াত ভাতা পান। ভাতাটি মাসিক বেতনের সঙ্গে যোগ হয়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-lunch",
+    "title": "দুপুরের খাবার",
+    "text": "অফিসের ক্যান্টিনে কর্মীদের দুপুরের খাবার বিনামূল্যে দেওয়া হয়। খাবার দুপুর একটা থেকে আড়াইটা পর্যন্ত পাওয়া যায়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-maternity",
+    "title": "মাতৃত্বকালীন ছুটি",
+    "text": "নারী কর্মীরা পূর্ণ বেতনে ছয় মাসের মাতৃত্বকালীন ছুটি পান। ছুটি শুরুর অন্তত এক মাস আগে মানবসম্পদ বিভাগকে জানাতে হয়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-generator",
+    "title": "বিদ্যুৎ বিভ্রাট",
+    "text": "বিদ্যুৎ চলে গেলে অফিসের জেনারেটর দুই মিনিটের মধ্যে চালু হয়। জেনারেটর টানা আট ঘণ্টা চলতে পারে।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-home-internet",
+    "title": "বাসার ইন্টারনেট",
+    "text": "বাসা থেকে কাজ করা কর্মীরা মাসে এক হাজার পাঁচশো টাকা ইন্টারনেট ভাতা পান। ভাতা পেতে বিলের ছবি জমা দিতে হয়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-prayer-rooms",
+    "title": "নামাজের ঘর",
+    "text": "অফিসের পাঁচ তলায় নারী ও পুরুষদের জন্য আলাদা নামাজের ঘর আছে। শুক্রবার জুমার নামাজের জন্য দুপুরে এক ঘণ্টার বিরতি দেওয়া হয়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-medical",
+    "title": "চিকিৎসা ভাতা",
+    "text": "প্রত্যেক কর্মী বছরে বিশ হাজার টাকা পর্যন্ত চিকিৎসা খরচ ফেরত পেতে পারেন। দাবির সঙ্গে ডাক্তারের প্রেসক্রিপশন জমা দিতে হয়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-id-card",
+    "title": "পরিচয়পত্র",
+    "text": "হারানো পরিচয়পত্র নতুন করে পেতে পাঁচশো টাকা ফি দিতে হয়। নতুন কার্ড তিন কর্মদিবসের মধ্যে তৈরি হয়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-overtime",
+    "title": "ওভারটাইম",
+    "text": "সপ্তাহে চল্লিশ ঘণ্টার বেশি কাজ করলে ঘণ্টাপ্রতি দেড় গুণ হারে ওভারটাইম দেওয়া হয়। ওভারটাইমের জন্য ম্যানেজারের আগাম অনুমোদন লাগে।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-festival-leave",
+    "title": "উৎসবের ছুটি",
+    "text": "পূজা ও বড়দিনে কর্মীরা দুই দিনের অতিরিক্ত ছুটি নিতে পারেন। এই ছুটি বার্ষিক ছুটি থেকে কাটা হয় না।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-provident-fund",
+    "title": "প্রভিডেন্ট ফান্ড",
+    "text": "প্রভিডেন্ট ফান্ডে কর্মী মূল বেতনের দশ শতাংশ জমা দেন, আর কোম্পানিও সমপরিমাণ জমা দেয়। তিন বছর চাকরি পূর্ণ হলে কোম্পানির অংশ পুরোপুরি পাওয়া যায়।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-fire-safety",
+    "title": "অগ্নি নিরাপত্তা",
+    "text": "প্রতিটি তলায় দুটি অগ্নিনির্বাপক যন্ত্র রাখা আছে। আগুন লাগলে লিফট ব্যবহার না করে সিঁড়ি দিয়ে নামতে হবে।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-laptop-repair",
+    "title": "ল্যাপটপ মেরামত",
+    "text": "নষ্ট ল্যাপটপ আইটি ডেস্কে জমা দিলে দুই কর্মদিবসের মধ্যে বদলি ল্যাপটপ দেওয়া হয়। ব্যক্তিগত ফাইলের ব্যাকআপ আগে থেকে রাখতে হবে।",
+    "meta": {
+      "language": "bn"
+    }
+  },
+  {
+    "id": "bn-dress-code",
+    "title": "পোশাক",
+    "text": "সোমবার থেকে বৃহস্পতিবার অফিসে ফরমাল পোশাক পরতে হয়। রবিবার ক্যাজুয়াল পোশাক পরা যায়।",
+    "meta": {
+      "language": "bn"
+    }
+  }
+]

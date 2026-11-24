@@ -32,7 +32,7 @@ export function EventCountdown({ endsAt, ended }: { endsAt: string; ended: boole
         : `${minutes}m ${pad2(seconds)}s`;
 
   return (
-    <p className="font-[family-name:var(--font-jetbrains-mono)] text-base font-semibold text-[#9FEF00]">
+    <p className="font-[family-name:var(--font-jetbrains-mono)] text-base font-semibold text-[#FF4D4D]">
       {label}
     </p>
   );

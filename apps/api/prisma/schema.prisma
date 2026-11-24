@@ -139,6 +139,7 @@ model User {
   refreshTokens RefreshToken[]
   attempts      Attempt[]
   hintUnlocks   HintUnlock[]
+  toolUnlocks   ToolUnlock[]
   skillScores   UserSkillScore[]
   account       Account?
   contestEntries         ContestEntry[]
@@ -426,6 +427,22 @@ model HintUnlock {
 
   @@unique([userId, exerciseId, hintIndex])
   @@map("hint_unlocks")
+  @@schema("public")
+}
+
+/// A tool unlocked before it was earned: bought with rating points, or won
+/// on a staged level. Tools earned by passing an exercise are not stored.
+model ToolUnlock {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @db.Uuid
+  toolId     String
+  source     String   @default("bought")
+  points     Int      @default(0)
+  unlockedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+  @@map("tool_unlocks")
   @@schema("public")
 }
 

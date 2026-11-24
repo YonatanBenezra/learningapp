@@ -12,8 +12,8 @@ export function FlagSubmit({
 }) {
   if (solved) {
     return (
-      <div className="rounded-sm border border-[#9FEF00]/30 bg-[#9FEF00]/5 px-4 py-3">
-        <p className="font-mono text-sm text-[#9FEF00]">Challenge solved</p>
+      <div className="rounded-sm border border-[#FF4D4D]/30 bg-[#FF4D4D]/5 px-4 py-3">
+        <p className="font-mono text-sm text-[#FF4D4D]">Challenge solved</p>
         <p className="mt-1 text-xs text-[#6B7891]">
           Score captured from the hidden grader — no manual flag required.
         </p>

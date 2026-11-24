@@ -1,0 +1,6 @@
+[
+  "Open a missed question in the Query tab: which of the two sentences made it into the context?",
+  "The second sentence of an answer never matches the question on its own. It has to arrive next to the first one.",
+  "A chunk of 200 characters sometimes holds both sentences and often cuts them apart. A window does not depend on where the boundaries fall.",
+  "With one sentence per chunk, a window of one neighbour on each side sends the sentence before and after every hit. One hit is usually enough."
+]

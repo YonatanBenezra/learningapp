@@ -1,12 +1,12 @@
 {
   "slug": "rag-003-the-citation-contract",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Citation-Grounded Answers",
+  "title": "The Citation Contract",
   "difficulty": "M",
   "catalogPhase": 3,
-  "corpusFile": "shared",
+  "corpusFile": "parcel-help",
   "skills": [
     {
       "slug": "grounding",
@@ -21,7 +21,7 @@
       "name": "Refusal behaviour"
     }
   ],
-  "briefMd": "# Phase 3 · Citation-Grounded Answers\n\nLegal/compliance blocked launch: answers must cite sources and refuse when context is insufficient.\n\nYou author **only the generation prompt**. Retrieval is frozen (heading-aware, chunk 400, overlap 80, k=5).\n\nRequired citation format: `[chunk:<id>]` using ids from the retrieved set. Refuse when the answer is not in context. Pass on class A citation, grounding, and refusal gates. Class B semantic support is advisory.\n",
+  "briefMd": "# Phase 3 · The Citation Contract\n\nThe parcel company's support bot answers from its help pages: one page per service with the price, weight limit, delivery time, size limit and insurance. Legal will only sign off when every answer cites the page it came from, and when the bot says it does not know instead of guessing. Customers also ask about things the help pages never mention (cryptocurrency, live animals, a student discount).\n\nYou write **only the generation prompt**. Retrieval is fixed: whole pages ranked by BM25 with a title boost, top 5.\n\n**How it runs.** Your prompt is sent verbatim as the system message to a real model (pinned, temperature 0). The user message is the question followed by the retrieved context, one page per block as `(id: <id>) <text>`. Citations must use exactly `[chunk:<id>]` with an id from that context. An answer counts as a refusal when it says \"I don't know\" (or \"cannot answer\"). Use the Simulation Lab's Generate preview to see what the model actually writes before you submit.\n\n**Gates:** citation format ≥ 0.90 of answers, gold-span overlap ≥ 0.85, at least 8 refusals on the questions the pages cannot answer, and at most 2 refusals on the ones they can, on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -37,7 +37,7 @@
   },
   "thresholds": {
     "gold_span_overlap": 0.85,
-    "unanswerable_refusal": 5,
+    "unanswerable_refusal": 8,
     "answerable_refusal_max": 2
   },
   "budget": {
@@ -51,8 +51,8 @@
       "id": "citation-format",
       "class": "A",
       "metric": "citation_format",
-      "op": "eq",
-      "value": 1
+      "op": "gte",
+      "value": 0.9
     },
     {
       "id": "citation-grounded",
@@ -66,7 +66,7 @@
       "class": "A",
       "metric": "unanswerable_refusals",
       "op": "gte",
-      "value": 5
+      "value": 8
     },
     {
       "id": "refusal-answerable",
@@ -80,6 +80,9 @@
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r3"
 }

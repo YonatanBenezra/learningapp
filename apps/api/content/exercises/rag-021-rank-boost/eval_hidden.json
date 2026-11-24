@@ -1,163 +1,528 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "If I invite a new teammate halfway through the month, do I pay for the whole month?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "When you add a member partway through a billing month, you pay only for the remaining days",
+    "goldDocId": "proration-answer",
+    "goldSpan": "When you add a member partway through a billing month, you pay only for the remaining days",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "question": "Where does the charge for a member added mid-month show up?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "That partial amount appears as a separate line on the next invoice",
+    "goldDocId": "proration-answer",
+    "goldSpan": "That partial amount appears as a separate line on the next invoice",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "How can I get all my projects out of the app?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "Workspace owners can download every project as a ZIP of CSV files from Settings, then Data",
+    "goldDocId": "export-answer",
+    "goldSpan": "Workspace owners can download every project as a ZIP of CSV files from Settings, then Data",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "question": "How long does the download link for a large export keep working?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "Exports over 2 GB are emailed as a link that stays valid for 72 hours",
+    "goldDocId": "export-answer",
+    "goldSpan": "Exports over 2 GB are emailed as a link that stays valid for 72 hours",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "question": "I removed a task by mistake, can I bring it back?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "goldDocId": "trash-answer",
+    "goldSpan": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "How long do deleted tasks stay recoverable?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "goldDocId": "trash-answer",
+    "goldSpan": "Deleted tasks stay in the trash for 30 days, and any project member can restore them",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "I lost my phone and cannot log in with the code, what now?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "goldDocId": "backup-codes-answer",
+    "goldSpan": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "How many backup codes do I get for two-step sign-in?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "goldDocId": "backup-codes-answer",
+    "goldSpan": "If you lose your phone, use one of the ten backup codes shown when you set it up",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "Do external collaborators cost a seat?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "Guests are free and do not count as paid seats",
+    "goldDocId": "guests-answer",
+    "goldSpan": "Guests are free and do not count as paid seats",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "What can a client I invite actually see?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days"
+    "goldAnswer": "Guests can see only the projects they are invited to and cannot create new projects",
+    "goldDocId": "guests-answer",
+    "goldSpan": "Guests can see only the projects they are invited to and cannot create new projects",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "Can a task come back every week automatically?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "Set a task to repeat daily, weekly or monthly from its due date menu",
+    "goldDocId": "repeating-answer",
+    "goldSpan": "Set a task to repeat daily, weekly or monthly from its due date menu",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "question": "When is the next copy of a repeating task created?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "The next copy is created when the current one is marked complete, not on a fixed date",
+    "goldDocId": "repeating-answer",
+    "goldSpan": "The next copy is created when the current one is marked complete, not on a fixed date",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "question": "My colleague abroad sees a different deadline time, why?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night"
+    "goldAnswer": "Due times are stored in the time zone of the person who set them",
+    "goldDocId": "time-zones-answer",
+    "goldSpan": "Due times are stored in the time zone of the person who set them",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "question": "Whose time zone decides a due time?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours"
+    "goldAnswer": "Due times are stored in the time zone of the person who set them",
+    "goldDocId": "time-zones-answer",
+    "goldSpan": "Due times are stored in the time zone of the person who set them",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h15",
-    "question": "Where must staff store passwords?",
+    "question": "I get too many emails, can I get one summary per day?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldAnswer": "Choose a daily digest to receive one email at 8:00 local time instead of an email for every change",
+    "goldDocId": "digest-answer",
+    "goldSpan": "Choose a daily digest to receive one email at 8:00 local time instead of an email for every change",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
+    "question": "Are mentions delayed when I switch to the daily summary?",
     "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default"
+    "goldAnswer": "Mentions and assignments are still sent right away",
+    "goldDocId": "digest-answer",
+    "goldSpan": "Mentions and assignments are still sent right away",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "question": "How many calls per minute can my integration make?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision"
+    "goldAnswer": "Each API token may make 100 requests per minute",
+    "goldDocId": "rate-limits-answer",
+    "goldSpan": "Each API token may make 100 requests per minute",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
+    "question": "What happens when my script sends too many requests?",
     "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report"
+    "goldAnswer": "Extra requests receive status 429 and should be retried after the time in the Retry-After header",
+    "goldDocId": "rate-limits-answer",
+    "goldSpan": "Extra requests receive status 429 and should be retried after the time in the Retry-After header",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
+    "question": "Which plan lets us log in with our corporate identity provider?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldAnswer": "Single sign-on with SAML is available on the Enterprise plan",
+    "goldDocId": "sso-answer",
+    "goldSpan": "Single sign-on with SAML is available on the Enterprise plan",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
+    "question": "Do passwords still work after we enforce single sign-on?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
+    "goldAnswer": "Once single sign-on is enforced, passwords stop working for members",
+    "goldDocId": "sso-answer",
+    "goldSpan": "Once single sign-on is enforced, passwords stop working for members",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "Who is allowed to shut down our whole account?",
+    "answerable": true,
+    "goldAnswer": "Only the owner can close a workspace",
+    "goldDocId": "closing-answer",
+    "goldSpan": "Only the owner can close a workspace",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "Can a closed workspace be reopened, and for how long?",
+    "answerable": true,
+    "goldAnswer": "Everything is kept for 14 days in case you change your mind, then permanently removed",
+    "goldDocId": "closing-answer",
+    "goldSpan": "Everything is kept for 14 days in case you change your mind, then permanently removed",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "Can I see my tasks on a plane without internet?",
+    "answerable": true,
+    "goldAnswer": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "goldDocId": "offline-answer",
+    "goldSpan": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "How much of my work is available offline on the phone?",
+    "answerable": true,
+    "goldAnswer": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "goldDocId": "offline-answer",
+    "goldSpan": "The phone app keeps the last 7 days of your tasks available without a connection",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "How do I move my to-do list from Excel into the app?",
+    "answerable": true,
+    "goldAnswer": "Upload a CSV with one row per task; the first row must hold the column names",
+    "goldDocId": "csv-import-answer",
+    "goldSpan": "Upload a CSV with one row per task; the first row must hold the column names",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "How many rows can one CSV import have?",
+    "answerable": true,
+    "goldAnswer": "Up to 5,000 rows are imported at once",
+    "goldDocId": "csv-import-answer",
+    "goldSpan": "Up to 5,000 rows are imported at once",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "Can someone with read-only rights leave comments?",
+    "answerable": true,
+    "goldAnswer": "Viewers can only read and comment",
+    "goldDocId": "roles-answer",
+    "goldSpan": "Viewers can only read and comment",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "Which role can change the payment details?",
+    "answerable": true,
+    "goldAnswer": "Admins manage billing and members, and editors can change any task",
+    "goldDocId": "roles-answer",
+    "goldSpan": "Admins manage billing and members, and editors can change any task",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "How much room for files do we get per person on a paid plan?",
+    "answerable": true,
+    "goldAnswer": "Each paid seat adds 10 GB of shared storage",
+    "goldDocId": "storage-answer",
+    "goldSpan": "Each paid seat adds 10 GB of shared storage",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "What is the storage limit on the free plan?",
+    "answerable": true,
+    "goldAnswer": "The free plan has 2 GB for the whole workspace",
+    "goldDocId": "storage-answer",
+    "goldSpan": "The free plan has 2 GB for the whole workspace",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "How many projects can I make without paying?",
+    "answerable": true,
+    "goldAnswer": "The free plan allows up to 3 projects and 5 members",
+    "goldDocId": "free-plan-answer",
+    "goldSpan": "The free plan allows up to 3 projects and 5 members",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How far back can I see history on the free plan?",
+    "answerable": true,
+    "goldAnswer": "History older than 90 days is hidden until you upgrade",
+    "goldDocId": "free-plan-answer",
+    "goldSpan": "History older than 90 days is hidden until you upgrade",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "I have a new work address, how do I switch my login to it?",
+    "answerable": true,
+    "goldAnswer": "Change the address you sign in with under Profile, and we send a confirmation link to the new address",
+    "goldDocId": "login-email-answer",
+    "goldSpan": "Change the address you sign in with under Profile, and we send a confirmation link to the new address",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "Does my old sign-in address stop working right away?",
+    "answerable": true,
+    "goldAnswer": "The old address keeps working until the link is clicked",
+    "goldDocId": "login-email-answer",
+    "goldSpan": "The old address keeps working until the link is clicked",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "Can tasks be assigned automatically when they reach a column?",
+    "answerable": true,
+    "goldAnswer": "Rules can move, assign or tag tasks when a status changes",
+    "goldDocId": "automation-answer",
+    "goldSpan": "Rules can move, assign or tag tasks when a status changes",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "How many automations can be switched on at once?",
+    "answerable": true,
+    "goldAnswer": "Each workspace can have 50 active rules on the Business plan",
+    "goldDocId": "automation-answer",
+    "goldSpan": "Each workspace can have 50 active rules on the Business plan",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h37",
+    "question": "Can I find out which colleague deleted a project last month?",
+    "answerable": true,
+    "goldAnswer": "Enterprise workspaces keep a log of member actions for 12 months",
+    "goldDocId": "audit-log-answer",
+    "goldSpan": "Enterprise workspaces keep a log of member actions for 12 months",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h38",
+    "question": "How long is the record of member actions kept?",
+    "answerable": true,
+    "goldAnswer": "Enterprise workspaces keep a log of member actions for 12 months",
+    "goldDocId": "audit-log-answer",
+    "goldSpan": "Enterprise workspaces keep a log of member actions for 12 months",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h39",
+    "question": "Is our information kept inside the EU?",
+    "answerable": true,
+    "goldAnswer": "Workspaces created in Europe are stored in Frankfurt and copied to Dublin for backup",
+    "goldDocId": "data-region-answer",
+    "goldSpan": "Workspaces created in Europe are stored in Frankfurt and copied to Dublin for backup",
+    "split": "holdout",
+    "tags": [
+      "abbreviation",
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h40",
+    "question": "Can we move our workspace to another country after creating it?",
+    "answerable": true,
+    "goldAnswer": "A workspace cannot be moved between regions after it is created",
+    "goldDocId": "data-region-answer",
+    "goldSpan": "A workspace cannot be moved between regions after it is created",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
   },
   {
     "id": "canary",
@@ -165,6 +530,8 @@
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

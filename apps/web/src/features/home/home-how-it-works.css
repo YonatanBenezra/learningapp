@@ -10,14 +10,14 @@
   --hiw-text: #f4f4f4;
   --hiw-text-2: #8799b5;
   --hiw-text-3: #6a7a94;
-  --hiw-ember: #9fef00;
-  --hiw-ember-soft: color-mix(in srgb, #9fef00 14%, #1a2433);
+  --hiw-ember: #FF4D4D;
+  --hiw-ember-soft: color-mix(in srgb, #FF4D4D 14%, #1a2433);
   --hiw-teal: #88c9f7;
   --hiw-code-bg: #0b121f;
   --hiw-code-border: rgba(244, 244, 244, 0.12);
   --hiw-code-text: #d6dce6;
   --hiw-code-muted: #6b7689;
-  --hiw-code-key: #9fef00;
+  --hiw-code-key: #FF4D4D;
   --hiw-ember-on: #121c2b;
   --hiw-pill-inactive-bg: #242f40;
   --hiw-bar-muted: rgba(244, 244, 244, 0.08);

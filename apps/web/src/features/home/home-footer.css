@@ -5,17 +5,16 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--color-brand);
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
 }
 
 .lp-brand-mark-glyph {
   width: auto;
-  height: 18px;
-  filter: brightness(0) saturate(100%) invert(7%) sepia(28%) saturate(1200%) hue-rotate(346deg)
-    brightness(95%) contrast(95%);
+  height: 1.75rem;
+  filter: none;
 }
 
 .lp-home-foot {
@@ -88,7 +87,7 @@
   min-height: 2.75rem;
   padding: 0 1.35rem;
   border-radius: 999px;
-  background: #9fef00;
+  background: #ff4d4d;
   font-family: var(--lp-font-sans);
   font-size: 0.9375rem;
   font-weight: 600;
@@ -100,8 +99,8 @@
 }
 
 .lp-home-foot-cta:hover {
-  background: #aced2c;
-  box-shadow: 0 0 20px rgba(159, 239, 0, 0.25);
+  background: #ff6b6b;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.25);
 }
 
 .lp-home-foot-trust {

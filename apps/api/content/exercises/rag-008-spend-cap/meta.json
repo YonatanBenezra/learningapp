@@ -1,48 +1,67 @@
 {
   "slug": "rag-008-spend-cap",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "graderArchetype": "rag-r2",
-  "title": "Rate & Spend Abuse Under Load",
+  "title": "Current Policies Only",
   "difficulty": "M",
-  "catalogPhase": 6,
+  "catalogPhase": 5,
+  "corpusFile": "policy-history",
   "skills": [
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
     {
       "slug": "content-pipeline",
       "name": "Content pipeline"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 6 · Rate & Spend Abuse Under Load\n\nTraffic spikes invite **rerank spam** and oversized chunks that blow the EUR cap. Tune **topK**, **rerank**, and **chunkSize** so recall stays within SLO while **class A cost + recall gates** pass — the same knobs ops uses when a tenant hammers the retrieval API.\n",
+  "briefMd": "# Phase 5 · Current Policies Only\n\nThe policy wiki never deletes anything. Every policy keeps its old versions, and some have an unapproved draft for next year. They read almost the same: only the number that changed differs. Staff get answers from 2024, or from a draft that was never approved.\n\nEvery document carries metadata: `family` (which policy), `version`, `status` (`current`, `superseded` or `draft`) and `effective` date. The Corpus tab shows it.\n\nYou control a **status filter** (`none`, `exclude-superseded`, `current-only`), **where it runs** (`pre`: filter the index, then take the top k; `post`: take the top k, then drop what fails the filter) and **topK**. Retrieval is BM25 over whole documents, and every chunk that survives the filter is sent to the model.\n\nA question counts as stale when its context also holds another version of the same policy: two numbers that disagree.\n\n**Gates:** recall@k ≥ 0.90, stale context rate ≤ 0.05, and mean prompt tokens ≤ 120 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
-      "topK",
-      "rerank",
-      "chunkSize"
+      "statusFilter",
+      "filterStage",
+      "topK"
     ],
     "properties": {
+      "statusFilter": {
+        "type": "string",
+        "enum": [
+          "none",
+          "exclude-superseded",
+          "current-only"
+        ],
+        "default": "none",
+        "description": "Which documents may reach the context, by their status metadata."
+      },
+      "filterStage": {
+        "type": "string",
+        "enum": [
+          "post",
+          "pre"
+        ],
+        "default": "post",
+        "description": "pre filters the index before top-k; post drops failing chunks after top-k."
+      },
       "topK": {
         "type": "integer",
         "minimum": 1,
-        "maximum": 20,
-        "default": 5
-      },
-      "rerank": {
-        "type": "boolean",
-        "default": true
-      },
-      "chunkSize": {
-        "type": "integer",
-        "minimum": 100,
-        "maximum": 800,
-        "default": 400
+        "maximum": 10,
+        "default": 3
       }
     }
   },
   "thresholds": {
-    "pass": 1
+    "recall_at_k": 0.9,
+    "stale_context_rate": 0.05,
+    "mean_prompt_tokens": 120
   },
   "budget": {
     "max_model_calls": 0,
@@ -52,17 +71,35 @@
   },
   "gates": [
     {
-      "id": "pass",
+      "id": "recall-at-k",
       "class": "A",
-      "metric": "pass",
-      "op": "eq",
-      "value": 1
+      "metric": "recall@k",
+      "op": "gte",
+      "value": 0.9
+    },
+    {
+      "id": "stale-context-rate",
+      "class": "A",
+      "metric": "stale_context_rate",
+      "op": "lte",
+      "value": 0.05
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 120
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
-  "corpusFile": "shared"
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-r2",
+  "isPublished": true
 }

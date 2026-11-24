@@ -1,0 +1,105 @@
+{
+  "slug": "rag-032-two-languages",
+  "version": 1,
+  "type": "exercise",
+  "simulator": "rag",
+  "title": "Two Offices, Two Languages",
+  "difficulty": "H",
+  "catalogPhase": 4,
+  "corpusFile": "bilingual-kb",
+  "skills": [
+    {
+      "slug": "vector-search",
+      "name": "Vector search"
+    },
+    {
+      "slug": "retrieval-quality",
+      "name": "Retrieval quality"
+    },
+    {
+      "slug": "evaluation-reading",
+      "name": "Evaluation reading"
+    }
+  ],
+  "briefMd": "# Phase 4 · Two Offices, Two Languages\n\nThe company has a London office and a Dhaka office, and each wrote its own handbook pages: London in English, Dhaka in Bangla. Staff ask in whichever language they think in, so \"অগ্নি মহড়া কখন হয়?\" has to find the English fire-drill page, and \"How long is maternity leave?\" has to find a Bangla page.\n\nYou control the **retrieval mode** (`bm25`, `dense` or `hybrid`), the **embedding model** for dense and hybrid search (`english`: bge-small, trained on English; `multilingual`: e5-small, trained on about 100 languages including Bangla), **hybridAlpha** and **topK**. Pages are short enough to be one chunk each, and every retrieved chunk is sent to the model in full. Bangla pages cost noticeably more tokens than English ones under the tokenizer the budget counts with.\n\nThe hidden-set breakdown counts cross-language questions separately.\n\n**Gates:** recall@k ≥ 0.90 and mean prompt tokens ≤ 300 on the hidden set.\n",
+  "submissionSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "retrievalMode",
+      "embeddingModel",
+      "topK"
+    ],
+    "properties": {
+      "retrievalMode": {
+        "type": "string",
+        "enum": [
+          "bm25",
+          "dense",
+          "hybrid"
+        ],
+        "default": "bm25",
+        "description": "bm25 matches keywords, dense matches meaning with embeddings, hybrid mixes both by hybridAlpha."
+      },
+      "embeddingModel": {
+        "type": "string",
+        "enum": [
+          "english",
+          "multilingual"
+        ],
+        "default": "english",
+        "description": "Dense and hybrid only: the embedding model."
+      },
+      "hybridAlpha": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "multipleOf": 0.05,
+        "default": 0.5,
+        "description": "Hybrid only: weight on the dense score (0 = BM25, 1 = dense)."
+      },
+      "topK": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10,
+        "default": 3
+      }
+    }
+  },
+  "thresholds": {
+    "recall_at_k": 0.9,
+    "mean_prompt_tokens": 300
+  },
+  "budget": {
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
+  },
+  "gates": [
+    {
+      "id": "recall-at-k",
+      "class": "A",
+      "metric": "recall@k",
+      "op": "gte",
+      "value": 0.9
+    },
+    {
+      "id": "mean-prompt-tokens",
+      "class": "A",
+      "metric": "mean_prompt_tokens",
+      "op": "lte",
+      "value": 300
+    }
+  ],
+  "feedback": {
+    "show_failing_cases": 3,
+    "rotate": true
+  },
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-r2",
+  "isPublished": true
+}

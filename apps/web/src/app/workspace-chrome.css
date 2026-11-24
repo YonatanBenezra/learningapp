@@ -90,3 +90,21 @@ html:has(.lp-ws) .lp-app > .lp-main.lp-app-main {
   overflow: hidden;
   background: transparent;
 }
+
+/* Reserve the back tab's width so it never covers the brief pane.
+   Kept after the .lp-app padding shorthand above so it wins. */
+html:has(.lp-ws-back-tab) .lp-app {
+  padding-left: calc(3.35rem + 8px);
+}
+
+@media (max-width: 899px) {
+  .lp-ws-back-tab {
+    width: 1.75rem;
+    height: 3rem;
+  }
+
+  html:has(.lp-ws-back-tab) .lp-app,
+  html:has(.lp-ws--mobile):has(.lp-ws-back-tab) .lp-app {
+    padding-left: calc(1.75rem + 6px);
+  }
+}

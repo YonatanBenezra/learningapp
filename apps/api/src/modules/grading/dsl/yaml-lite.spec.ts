@@ -31,4 +31,15 @@ verdict:
     const doc = parseSimpleYaml('version: 1\nassertions: []\n');
     expect(doc).toEqual({ version: 1, assertions: [] });
   });
+
+  it('reads flow lists of plain words and quoted list items with colons', () => {
+    expect(
+      parseSimpleYaml(
+        "normalize: [decode_hex, unicode]\nrecipients:\n  - '*@hotel.test'\n  - 'https://x'\n",
+      ),
+    ).toEqual({
+      normalize: ['decode_hex', 'unicode'],
+      recipients: ['*@hotel.test', 'https://x'],
+    });
+  });
 });

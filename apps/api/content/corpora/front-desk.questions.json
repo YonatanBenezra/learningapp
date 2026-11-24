@@ -1,0 +1,242 @@
+[
+  {
+    "question": "How much is the check-in deposit, and when is it released?",
+    "goldDocId": "check-in",
+    "goldSpan": "Guests leave a card deposit of 100 euros at check-in, taken from the card they booked with or from another card they show at the desk. It is released three days after check-out, when the room has been checked for damage and the minibar has been counted.",
+    "goldAnswer": "Guests leave a card deposit of 100 euros at check-in, taken from the card they booked with or from another card they show at the desk. It is released three days after check-out, when the room has been checked for damage and the minibar has been counted."
+  },
+  {
+    "question": "When is early check-in possible, and what does it cost?",
+    "goldDocId": "check-in",
+    "goldSpan": "Early check-in before noon is offered only when housekeeping has marked the room as clean in the room system and the guest booked the flexible rate. It costs 30 euros.",
+    "goldAnswer": "Early check-in before noon is offered only when housekeeping has marked the room as clean in the room system and the guest booked the flexible rate. It costs 30 euros."
+  },
+  {
+    "question": "Which identity document do I ask for at check-in, and what happens with it?",
+    "goldDocId": "check-in",
+    "goldSpan": "Ask every guest for a passport or national identity card at the desk. The number goes into the guest register.",
+    "goldAnswer": "Ask every guest for a passport or national identity card at the desk. The number goes into the guest register."
+  },
+  {
+    "question": "How are group check-ins prepared, and where are they handed out?",
+    "goldDocId": "check-in",
+    "goldSpan": "Group check-ins of ten guests or more are prepared the evening before by the night manager, who prints every key card and welcome letter in advance. They are handed out at the side desk.",
+    "goldAnswer": "Group check-ins of ten guests or more are prepared the evening before by the night manager, who prints every key card and welcome letter in advance. They are handed out at the side desk."
+  },
+  {
+    "question": "Who checks in a guest arriving after midnight, and which rooms can be offered?",
+    "goldDocId": "check-in",
+    "goldSpan": "A guest who arrives after midnight checks in with the night porter. He can only offer the rooms already blocked for late arrivals.",
+    "goldAnswer": "A guest who arrives after midnight checks in with the night porter. He can only offer the rooms already blocked for late arrivals."
+  },
+  {
+    "question": "Who gets free late check-out, and what does everyone else pay?",
+    "goldDocId": "check-out",
+    "goldSpan": "Late check-out until two in the afternoon is free for loyalty members, who ask for it at the desk or in the app on the evening before they leave. For everyone else it costs 15 euros an hour, charged to the room before the final invoice is printed and paid.",
+    "goldAnswer": "Late check-out until two in the afternoon is free for loyalty members, who ask for it at the desk or in the app on the evening before they leave. For everyone else it costs 15 euros an hour, charged to the room before the final invoice is printed and paid."
+  },
+  {
+    "question": "How does express check-out work, and how does the guest get the invoice?",
+    "goldDocId": "check-out",
+    "goldSpan": "Express check-out lets guests leave their key cards in the box at the main door without queueing at the desk on the morning they leave. The invoice follows by email.",
+    "goldAnswer": "Express check-out lets guests leave their key cards in the box at the main door without queueing at the desk on the morning they leave. The invoice follows by email."
+  },
+  {
+    "question": "What do I do with a disputed minibar charge, and when does the duty manager decide?",
+    "goldDocId": "check-out",
+    "goldSpan": "Disputed minibar charges below 20 euros are removed at once. Higher amounts go to the duty manager.",
+    "goldAnswer": "Disputed minibar charges below 20 euros are removed at once. Higher amounts go to the duty manager."
+  },
+  {
+    "question": "What does a company invoice need, and can it be changed after the guest leaves?",
+    "goldDocId": "check-out",
+    "goldSpan": "Invoices made out to a company need the company name, address and tax number before the guest leaves. They cannot be changed later, because the accounting system locks every invoice once it has been sent out at the end of the day.",
+    "goldAnswer": "Invoices made out to a company need the company name, address and tax number before the guest leaves. They cannot be changed later, because the accounting system locks every invoice once it has been sent out at the end of the day."
+  },
+  {
+    "question": "What happens when guests leave without checking out, and can the charge be reversed?",
+    "goldDocId": "check-out",
+    "goldSpan": "Guests who leave without checking out are charged for one extra night. The charge is reversed if they call within a day.",
+    "goldAnswer": "Guests who leave without checking out are charged for one extra night. The charge is reversed if they call within a day."
+  },
+  {
+    "question": "How long are key cards coded for, and when do they stop working?",
+    "goldDocId": "room-keys",
+    "goldSpan": "Key cards are coded for the length of the stay plus four hours, using the encoder on the desk and the booking number on the guest confirmation. They stop working at four in the afternoon on the day of departure, even when late check-out was booked for the room.",
+    "goldAnswer": "Key cards are coded for the length of the stay plus four hours, using the encoder on the desk and the booking number on the guest confirmation. They stop working at four in the afternoon on the day of departure, even when late check-out was booked for the room."
+  },
+  {
+    "question": "How do I replace a lost key card, and what happens to the old one?",
+    "goldDocId": "room-keys",
+    "goldSpan": "A lost key card is replaced only after the guest has shown photo identification and the name has been checked against the guest register on the screen. The old card is cancelled at once.",
+    "goldAnswer": "A lost key card is replaced only after the guest has shown photo identification and the name has been checked against the guest register on the screen. The old card is cancelled at once."
+  },
+  {
+    "question": "How is spa access added to a key card, and who pays for it?",
+    "goldDocId": "room-keys",
+    "goldSpan": "Spa and gym access is coded onto the key card at check-in. It is free for suites and ten euros a day for other rooms.",
+    "goldAnswer": "Spa and gym access is coded onto the key card at check-in. It is free for suites and ten euros a day for other rooms."
+  },
+  {
+    "question": "Where are the master keys kept, and how long may they be signed out?",
+    "goldDocId": "room-keys",
+    "goldSpan": "Physical master keys are kept in the safe behind the desk and are signed out in the key book by name, time and reason. They must be back within the hour.",
+    "goldAnswer": "Physical master keys are kept in the safe behind the desk and are signed out in the key book by name, time and reason. They must be back within the hour."
+  },
+  {
+    "question": "What do I do when a key card stops working, and what usually causes it?",
+    "goldDocId": "room-keys",
+    "goldSpan": "If a key card stops working, recode it at the desk encoder. Demagnetised cards are often the cause, usually from being kept next to a phone in the same pocket or bag for a while.",
+    "goldAnswer": "If a key card stops working, recode it at the desk encoder. Demagnetised cards are often the cause, usually from being kept next to a phone in the same pocket or bag for a while."
+  },
+  {
+    "question": "When is luggage stored for free, and how are the bags tagged?",
+    "goldDocId": "luggage",
+    "goldSpan": "Luggage is stored for free on the day of arrival and the day of departure, in the locked luggage room behind the concierge desk on the ground floor. Each bag gets a numbered tag, and the guest keeps the matching half of the tag until the bag is picked up again.",
+    "goldAnswer": "Luggage is stored for free on the day of arrival and the day of departure, in the locked luggage room behind the concierge desk on the ground floor. Each bag gets a numbered tag, and the guest keeps the matching half of the tag until the bag is picked up again."
+  },
+  {
+    "question": "What happens to bags left in storage for more than a week?",
+    "goldDocId": "luggage",
+    "goldSpan": "Bags left in storage for more than seven days after a guest has left the hotel are moved to the lost property room in the basement. They are kept there for three months.",
+    "goldAnswer": "Bags left in storage for more than seven days after a guest has left the hotel are moved to the lost property room in the basement. They are kept there for three months."
+  },
+  {
+    "question": "Do porters carry bags at night, and can tips go on the room bill?",
+    "goldDocId": "luggage",
+    "goldSpan": "Porters carry bags to the room on request at any hour. Tips never go on the room bill.",
+    "goldAnswer": "Porters carry bags to the room on request at any hour. Tips never go on the room bill."
+  },
+  {
+    "question": "Can valuables be left in the luggage room, and where do they go instead?",
+    "goldDocId": "luggage",
+    "goldSpan": "Valuables such as jewellery, laptops and cash are never taken into the luggage room, however small or well packed they are. They go into the room safe instead.",
+    "goldAnswer": "Valuables such as jewellery, laptops and cash are never taken into the luggage room, however small or well packed they are. They go into the room safe instead."
+  },
+  {
+    "question": "Where do bikes and skis go, and who opens that store?",
+    "goldDocId": "luggage",
+    "goldSpan": "Oversized items such as bikes and skis go to the garage store. The garage store is opened by the night porter, who keeps its key and logs every item that goes in or comes out.",
+    "goldAnswer": "Oversized items such as bikes and skis go to the garage store. The garage store is opened by the night porter, who keeps its key and logs every item that goes in or comes out."
+  },
+  {
+    "question": "When is breakfast served on weekdays, and how late at weekends?",
+    "goldDocId": "breakfast",
+    "goldSpan": "Breakfast is served from half past six until ten on weekdays in the garden restaurant on the ground floor, and the hot buffet opens at seven. At weekends it runs until half past eleven, and the last guests are seated until a quarter past eleven.",
+    "goldAnswer": "Breakfast is served from half past six until ten on weekdays in the garden restaurant on the ground floor, and the hot buffet opens at seven. At weekends it runs until half past eleven, and the last guests are seated until a quarter past eleven."
+  },
+  {
+    "question": "How much does breakfast cost if it was not booked, and do young children pay?",
+    "goldDocId": "breakfast",
+    "goldSpan": "Guests who did not book breakfast can add it at the desk the evening before for 22 euros per person, or at the restaurant door on the morning itself. Children under six eat for free.",
+    "goldAnswer": "Guests who did not book breakfast can add it at the desk the evening before for 22 euros per person, or at the restaurant door on the morning itself. Children under six eat for free."
+  },
+  {
+    "question": "How is room service breakfast ordered, and what extra is charged?",
+    "goldDocId": "breakfast",
+    "goldSpan": "Room service breakfast must be ordered on the door card by two in the morning. A tray charge of five euros is added.",
+    "goldAnswer": "Room service breakfast must be ordered on the door card by two in the morning. A tray charge of five euros is added."
+  },
+  {
+    "question": "Where are allergies recorded, and who confirms them with the guest?",
+    "goldDocId": "breakfast",
+    "goldSpan": "Allergies and special diets are entered in the guest profile when the booking is made or at check-in, so that the kitchen sees them on the morning list. The chef confirms them by phone.",
+    "goldAnswer": "Allergies and special diets are entered in the guest profile when the booking is made or at check-in, so that the kitchen sees them on the morning list. The chef confirms them by phone."
+  },
+  {
+    "question": "What do guests leaving very early get for breakfast, and how is it ordered?",
+    "goldDocId": "breakfast",
+    "goldSpan": "Early departures before half past six get a breakfast bag. It is ordered at the desk by ten the evening before and picked up from the night porter on the way out of the hotel.",
+    "goldAnswer": "Early departures before half past six get a breakfast bag. It is ordered at the desk by ten the evening before and picked up from the night porter on the way out of the hotel."
+  },
+  {
+    "question": "What does the hotel garage cost, and what is its height limit?",
+    "goldDocId": "parking",
+    "goldSpan": "The hotel garage costs 25 euros a night, paid at check-out together with the room, and guests take a ticket at the barrier when they drive in. Its height limit is two metres, so vans and cars with roof boxes are sent to the public car park across the street.",
+    "goldAnswer": "The hotel garage costs 25 euros a night, paid at check-out together with the room, and guests take a ticket at the barrier when they drive in. Its height limit is two metres, so vans and cars with roof boxes are sent to the public car park across the street."
+  },
+  {
+    "question": "When is valet parking available, and what does it cost?",
+    "goldDocId": "parking",
+    "goldSpan": "Valet parking is available from seven in the morning until eleven at night, and the valet brings the car to the main door within fifteen minutes. It costs ten euros on top of the garage.",
+    "goldAnswer": "Valet parking is available from seven in the morning until eleven at night, and the valet brings the car to the main door within fifteen minutes. It costs ten euros on top of the garage."
+  },
+  {
+    "question": "Where do electric cars charge, and how is charging billed?",
+    "goldDocId": "parking",
+    "goldSpan": "Electric cars can charge at the four bays on level minus one. Charging is billed per kilowatt hour on the room.",
+    "goldAnswer": "Electric cars can charge at the four bays on level minus one. Charging is billed per kilowatt hour on the room."
+  },
+  {
+    "question": "Where do coaches drop guests, and where do they park?",
+    "goldDocId": "parking",
+    "goldSpan": "Coaches and minibuses drop guests at the side entrance on the quiet street, because the main entrance is too narrow for them to turn. They park at the coach park.",
+    "goldAnswer": "Coaches and minibuses drop guests at the side entrance on the quiet street, because the main entrance is too narrow for them to turn. They park at the coach park."
+  },
+  {
+    "question": "Where are garage tickets validated, and how long does a validated ticket work?",
+    "goldDocId": "parking",
+    "goldSpan": "Parking tickets for the garage are validated at the desk. A validated ticket opens the exit barrier for thirty minutes, which is enough time to load the car and pay nothing more.",
+    "goldAnswer": "Parking tickets for the garage are validated at the desk. A validated ticket opens the exit barrier for thirty minutes, which is enough time to load the car and pay nothing more."
+  },
+  {
+    "question": "How fast are extra towels brought, and why are they logged?",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "Extra towels and pillows are brought to the room within twenty minutes of the call, by the floor attendant on duty or by the night porter after ten. They are logged in the housekeeping tablet so that the room is not charged when the inventory is checked after departure.",
+    "goldAnswer": "Extra towels and pillows are brought to the room within twenty minutes of the call, by the floor attendant on duty or by the night porter after ten. They are logged in the housekeeping tablet so that the room is not charged when the inventory is checked after departure."
+  },
+  {
+    "question": "How does a guest skip cleaning, and what do they receive for it?",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "Guests who want no cleaning during the stay hang the green card on the outside of the door before nine in the morning. They receive a drinks voucher for each day.",
+    "goldAnswer": "Guests who want no cleaning during the stay hang the green card on the outside of the door before nine in the morning. They receive a drinks voucher for each day."
+  },
+  {
+    "question": "Do baby cots cost anything, and how far ahead must they be requested?",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "Baby cots are free and are set up before the guests arrive. They must be requested a day ahead.",
+    "goldAnswer": "Baby cots are free and are set up before the guests arrive. They must be requested a day ahead."
+  },
+  {
+    "question": "When does laundry come back, and where are the prices listed?",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "Laundry handed in at the desk before nine in the morning is washed, ironed and returned to the room by six in the evening the same day. Prices are on the laundry bag.",
+    "goldAnswer": "Laundry handed in at the desk before nine in the morning is washed, ironed and returned to the room by six in the evening the same day. Prices are on the laundry bag."
+  },
+  {
+    "question": "What happens when damage is found after departure, and who decides about charging?",
+    "goldDocId": "housekeeping-requests",
+    "goldSpan": "A stain or damage found after departure is photographed by housekeeping. The duty manager decides within two days whether the guest is charged, and the photos are attached to the invoice.",
+    "goldAnswer": "A stain or damage found after departure is photographed by housekeeping. The duty manager decides within two days whether the guest is charged, and the photos are attached to the invoice."
+  },
+  {
+    "question": "How are items found in rooms logged, and how long are they kept?",
+    "goldDocId": "lost-and-found",
+    "goldSpan": "Items found in rooms are logged in the lost property book with the room number and date, and a photo of each item goes on the online lost property list. They are kept for three months, and food, drinks and opened toiletries are thrown away on the same day they are found.",
+    "goldAnswer": "Items found in rooms are logged in the lost property book with the room number and date, and a photo of each item goes on the online lost property list. They are kept for three months, and food, drinks and opened toiletries are thrown away on the same day they are found."
+  },
+  {
+    "question": "When are lost items posted back, and how are they sent?",
+    "goldDocId": "lost-and-found",
+    "goldSpan": "Items are posted back only after the guest has paid the postage by card on the phone or through the payment link that we send by email. They are sent by tracked mail.",
+    "goldAnswer": "Items are posted back only after the guest has paid the postage by card on the phone or through the payment link that we send by email. They are sent by tracked mail."
+  },
+  {
+    "question": "Where do found phones and wallets go, and how are they returned?",
+    "goldDocId": "lost-and-found",
+    "goldSpan": "Phones and wallets go straight into the desk safe. Guests collect them in person.",
+    "goldAnswer": "Phones and wallets go straight into the desk safe. Guests collect them in person."
+  },
+  {
+    "question": "What happens to unclaimed valuable items and clothing?",
+    "goldDocId": "lost-and-found",
+    "goldSpan": "Unclaimed items of value are handed to the city lost property office after three months, together with a copy of the page from the lost property book. Clothing goes to charity.",
+    "goldAnswer": "Unclaimed items of value are handed to the city lost property office after three months, together with a copy of the page from the lost property book. Clothing goes to charity."
+  },
+  {
+    "question": "How do guests ask about a lost item, and how fast is it answered?",
+    "goldDocId": "lost-and-found",
+    "goldSpan": "Guests asking about a lost item fill in the online form. It is answered within two working days, even when nothing matching the description has been found in the hotel.",
+    "goldAnswer": "Guests asking about a lost item fill in the online form. It is answered within two working days, even when nothing matching the description has been found in the hotel."
+  }
+]

@@ -51,16 +51,16 @@ export function AroundYou({
             key={row.rank}
             className={cn(
               "relative flex h-11 items-center gap-3 border-t border-[#232C3D] px-5",
-              row.isYou && "bg-[#9FEF00]/[0.03]",
+              row.isYou && "bg-[#FF4D4D]/[0.03]",
             )}
           >
             {row.isYou ? (
-              <span className="absolute left-0 top-2 bottom-2 w-0.5 bg-[#9FEF00]/70" aria-hidden />
+              <span className="absolute left-0 top-2 bottom-2 w-0.5 bg-[#FF4D4D]/70" aria-hidden />
             ) : null}
             <span
               className={cn(
                 "w-7 font-mono text-sm tabular-nums",
-                row.isYou ? "text-[#9FEF00]" : "text-[#6B7891]",
+                row.isYou ? "text-[#FF4D4D]" : "text-[#6B7891]",
               )}
             >
               {row.rank}
@@ -71,7 +71,7 @@ export function AroundYou({
             <span className="flex min-w-0 flex-1 items-center gap-2 truncate text-sm text-[#A4B1CD]">
               {row.name}
               {row.isYou ? (
-                <span className="shrink-0 rounded border border-[#9FEF00]/40 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-[#9FEF00]">
+                <span className="shrink-0 rounded border border-[#FF4D4D]/40 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-[#FF4D4D]">
                   You
                 </span>
               ) : null}
@@ -79,7 +79,7 @@ export function AroundYou({
             <span
               className={cn(
                 "font-mono text-sm tabular-nums",
-                row.isYou ? "text-[#9FEF00]" : "text-[#A4B1CD]",
+                row.isYou ? "text-[#FF4D4D]" : "text-[#A4B1CD]",
               )}
             >
               {row.score.toLocaleString()}

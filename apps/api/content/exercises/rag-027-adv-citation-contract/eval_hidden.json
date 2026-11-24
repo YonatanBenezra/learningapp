@@ -1,250 +1,460 @@
 [
   {
-    "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "id": "a01",
+    "question": "Who must be on every hiring panel?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "Every hiring panel includes at least one interviewer from outside the hiring team",
+    "goldDocId": "policy-dei",
+    "goldSpan": "Every hiring panel includes at least one interviewer from outside the hiring team",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h02",
-    "question": "How many days in advance must ordinary paid time off be requested?",
+    "id": "a02",
+    "question": "Roughly how many days per week may staff work from home?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "Staff may work from home up to three days per week with manager agreement",
+    "goldDocId": "policy-wfh",
+    "goldSpan": "Staff may work from home up to three days per week with manager agreement",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h03",
-    "question": "What MFA system is required for the corporate VPN?",
+    "id": "a03",
+    "question": "When must I set an automatic out-of-office reply?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta"
+    "goldAnswer": "Set an automatic out-of-office reply when absent for more than one working day",
+    "goldDocId": "policy-ooo",
+    "goldSpan": "Set an automatic out-of-office reply when absent for more than one working day",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h04",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "id": "a04",
+    "question": "How long can an unpaid leave of absence last?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled"
+    "goldAnswer": "An unpaid leave of absence can last up to six months",
+    "goldDocId": "policy-rif",
+    "goldSpan": "An unpaid leave of absence can last up to six months",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h05",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "id": "a05",
+    "question": "Above what supplier spend is a purchase order needed?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes"
+    "goldAnswer": "A purchase order is needed for any supplier spend above 2,000 euros",
+    "goldDocId": "policy-po",
+    "goldSpan": "A purchase order is needed for any supplier spend above 2,000 euros",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
-    "id": "h06",
-    "question": "What qualifies as a P1 incident?",
+    "id": "a06",
+    "question": "How long does Legal keep signed non-disclosure agreements?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication"
+    "goldAnswer": "Legal keeps the signed copies for seven years",
+    "goldDocId": "policy-nda",
+    "goldSpan": "Legal keeps the signed copies for seven years",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
-    "id": "h07",
-    "question": "May customer PII be placed in prompts sent to external model providers?",
+    "id": "a07",
+    "question": "How long does a performance improvement plan last?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers"
+    "goldAnswer": "A performance improvement plan lasts eight weeks",
+    "goldDocId": "policy-pip",
+    "goldSpan": "A performance improvement plan lasts eight weeks",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h08",
-    "question": "How long are model usage prompt and completion logs retained?",
+    "id": "a08",
+    "question": "On which days do teams return to the office?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "Teams return to the office on Tuesdays and Thursdays",
+    "goldDocId": "policy-rto",
+    "goldSpan": "Teams return to the office on Tuesdays and Thursdays",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h09",
-    "question": "Is alcohol reimbursable under the expense policy for team meals?",
+    "id": "a09",
+    "question": "How many objectives and key results does each team set per quarter?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable"
+    "goldAnswer": "Each team sets three objectives and key results per quarter",
+    "goldDocId": "policy-okr",
+    "goldSpan": "Each team sets three objectives and key results per quarter",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h10",
-    "question": "What is the expense policy cap per person for team meals excluding tax?",
+    "id": "a10",
+    "question": "How quickly are priority one tickets answered under the service level agreement?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "Under the service level agreement, priority one tickets are answered within 30 minutes",
+    "goldDocId": "policy-sla",
+    "goldSpan": "Under the service level agreement, priority one tickets are answered within 30 minutes",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
-    "id": "h11",
-    "question": "How long does the data retention policy keep support tickets after close?",
+    "id": "a11",
+    "question": "Are personal laptops allowed on the internal network?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "eighteen (18) months after close"
+    "goldAnswer": "Personal laptops are not allowed on the internal network",
+    "goldDocId": "policy-byod",
+    "goldSpan": "Personal laptops are not allowed on the internal network",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h12",
-    "question": "When does primary on-call rotate?",
+    "id": "a12",
+    "question": "How many free counselling sessions does the employee assistance programme offer?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "The employee assistance programme offers six free counselling sessions a year",
+    "goldDocId": "policy-eap",
+    "goldSpan": "The employee assistance programme offers six free counselling sessions a year",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h13",
-    "question": "What report must a vendor present before procurement under vendor security?",
+    "id": "a13",
+    "question": "Within how many hours must a personal data breach be reported to the data protection officer?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "Report a suspected personal data breach to the data protection officer within 24 hours",
+    "goldDocId": "policy-dpo",
+    "goldSpan": "Report a suspected personal data breach to the data protection officer within 24 hours",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
-    "id": "h14",
-    "question": "Which tool is used to book travel?",
+    "id": "a14",
+    "question": "What must a statement of work list?",
     "answerable": true,
-    "goldAnswer": "Navan",
-    "goldDocId": "travel",
-    "goldSpan": "Book through the Navan profile"
+    "goldAnswer": "The statement of work lists the deliverables and an end date",
+    "goldDocId": "policy-sow",
+    "goldSpan": "The statement of work lists the deliverables and an end date",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h15",
-    "question": "What operating system is the engineering laptop standard?",
+    "id": "a15",
+    "question": "Above what amount is a request for proposal required?",
     "answerable": true,
-    "goldAnswer": "Linux",
-    "goldDocId": "laptop",
-    "goldSpan": "14-inch Linux workstation"
+    "goldAnswer": "Purchases above 50,000 euros require a request for proposal",
+    "goldDocId": "policy-rfp",
+    "goldSpan": "Purchases above 50,000 euros require a request for proposal",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
-    "id": "h16",
-    "question": "Where must a password be stored?",
+    "id": "a16",
+    "question": "After how many years do laptops and phones reach end of life?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldAnswer": "Laptops and phones reach end of life after five years",
+    "goldDocId": "policy-eol",
+    "goldSpan": "Laptops and phones reach end of life after five years",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h17",
-    "question": "Where are customer incidents discussed in Slack?",
+    "id": "a17",
+    "question": "Within how long must time off in lieu be taken?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "slack",
-    "goldSpan": "discussed in #incidents"
+    "goldAnswer": "Overtime can be taken as time off in lieu within three months of being worked",
+    "goldDocId": "policy-toil",
+    "goldSpan": "Overtime can be taken as time off in lieu within three months of being worked",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h18",
-    "question": "Who issues offer letters in the hiring loop?",
+    "id": "a18",
+    "question": "How many hours of continuing professional development must engineers log each year?",
     "answerable": true,
-    "goldAnswer": "People Ops",
-    "goldDocId": "hiring",
-    "goldSpan": "issued by People Ops"
+    "goldAnswer": "Engineers log at least twenty hours of continuing professional development each year",
+    "goldDocId": "policy-cpd",
+    "goldSpan": "Engineers log at least twenty hours of continuing professional development each year",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h19",
-    "question": "What colour lanyard do visitors wear with an office badge?",
+    "id": "a19",
+    "question": "When do new business customers pass know your customer checks?",
     "answerable": true,
-    "goldAnswer": "red",
-    "goldDocId": "badge",
-    "goldSpan": "wear a red lanyard"
+    "goldAnswer": "New business customers pass know your customer checks before their first invoice",
+    "goldDocId": "policy-kyc",
+    "goldSpan": "New business customers pass know your customer checks before their first invoice",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h20",
-    "question": "How often does the backup policy take encrypted database snapshots?",
+    "id": "a20",
+    "question": "What discount does the employee share purchase plan give on company shares?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldAnswer": "Employees can buy company shares at a fifteen percent discount through the employee share purchase plan",
+    "goldDocId": "policy-ndr",
+    "goldSpan": "Employees can buy company shares at a fifteen percent discount through the employee share purchase plan",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
-    "id": "h21",
-    "question": "What algorithm encrypts customer data volumes at rest?",
-    "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
-  },
-  {
-    "id": "h22",
-    "question": "May leftover paid time off be carried into the next year?",
-    "answerable": true,
-    "goldAnswer": "Up to five days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days"
-  },
-  {
-    "id": "h23",
-    "question": "What is the P2 acknowledge target?",
-    "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "sixty-minute acknowledge target"
-  },
-  {
-    "id": "h24",
-    "question": "May personal devices join the production VPN profile?",
-    "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "vpn",
-    "goldSpan": "Personal devices are not permitted on the production VPN profile"
-  },
-  {
-    "id": "u01",
-    "question": "What is the company mascot and what colour is it?",
+    "id": "o01",
+    "question": "Can I bring my dog to work?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u02",
-    "question": "How many floors does headquarters have?",
+    "id": "o02",
+    "question": "Does the company match pension contributions?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u03",
-    "question": "Who is the current CEO?",
+    "id": "o03",
+    "question": "Is there a shuttle bus from the train station?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u04",
-    "question": "What is the Friday dress code for the London office?",
+    "id": "o04",
+    "question": "What is the dress code for client visits?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u05",
-    "question": "How many stock-option cliff months do new hires get?",
+    "id": "o05",
+    "question": "Do employees get a company car?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
-    "id": "u06",
-    "question": "Which airline is the preferred partner for transatlantic flights?",
+    "id": "o06",
+    "question": "How do I nominate a colleague for an innovation award?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "o07",
+    "question": "Which languages are taught in the free language classes?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "o08",
+    "question": "Can I bring a guest to the summer party?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "o09",
+    "question": "Do we have a nursing room in the building?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "o10",
+    "question": "Who organises the annual charity bake sale?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "o11",
+    "question": "Are electric scooters allowed inside the building?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "o12",
+    "question": "What is the wifi password for visitors?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "n01",
+    "question": "Roughly how many days of paid time off do part-time employees accrue?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "n02",
+    "question": "What is the response time for priority two tickets?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "n03",
+    "question": "How long does Legal keep unsigned non-disclosure agreements?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "feedback",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "n04",
+    "question": "What discount do contractors get through the share purchase plan?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
+  },
+  {
+    "id": "n05",
+    "question": "Which tools are exempt from multi-factor authentication?",
+    "answerable": false,
+    "goldAnswer": null,
+    "goldDocId": null,
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": [
+      "unanswerable"
+    ]
   },
   {
     "id": "canary",
-    "question": "What is the HIDDEN_EVAL_C15_R03_CANARY listed in the unpublished runbook?",
+    "question": "What is the HIDDEN_EVAL_R27_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

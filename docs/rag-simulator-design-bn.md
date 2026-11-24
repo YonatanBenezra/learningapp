@@ -35,7 +35,7 @@ Production-এ যা debug করতে হয় (chunk boundary, recall, cita
 
 ## ৩. Exercise progression (R1 → R4)
 
-Published catalogue-তে এখন **৫টি RAG** exercise (POC core + sandbox):
+Published catalogue-তে এখন **২৮টি RAG** exercise। মূল ধরনগুলো (grader অনুযায়ী):
 
 | ID | নাম | Learner কী control করে | মূল metric / gate |
 |----|-----|------------------------|-------------------|
@@ -44,6 +44,10 @@ Published catalogue-তে এখন **৫টি RAG** exercise (POC core + sand
 | **R3** | The Citation Contract | **generation prompt** (retrieval fixed) | citation format, valid chunk IDs, gold-span overlap, refusal rules |
 | **R4** | Rerank or Re-think | reranker, top-n, query rewrite | nDCG@5 gain, context token cap, model-call cap |
 | **R9** | Python retriever | sandbox **Python** source | custom retriever code vs hidden set |
+| **R5** | Query Routing | FAQ / policy / procedural প্রতিটার আলাদা top-k, rerank, chunk size | প্রতিটা class-এর recall + mean prompt tokens (Class A) |
+| **RT1–3** | RAG Red Team | target bot-এর সাথে কথা বলে flag বের করা (prompt leak, poisoned doc, tenant leak) | submit করা flag হুবহু মেলে (Class A) |
+
+সব grader threshold পড়ে exercise-এর `meta.json` gate থেকে। Red team-এর flag আর গোপন doc থাকে `eval_hidden.json`-এ, catalogue বা lab API-তে কখনো যায় না।
 
 **Flagship demo:** R3 — grounding + citation + refusal।
 

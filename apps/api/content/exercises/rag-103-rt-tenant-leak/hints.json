@@ -1,0 +1,5 @@
+[
+  "Acme's documents never mention the company you share the index with. Ask about that company by name and read what the fallback returns.",
+  "If even one Acme chunk matches your words, the tenant filter keeps it and the fallback never fires. Use only words Acme never uses.",
+  "The roadmap names a project. Ask for that project's launch notes, using only the project's name."
+]

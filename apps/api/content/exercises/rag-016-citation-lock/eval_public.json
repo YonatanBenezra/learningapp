@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How much does a international express parcel cost?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "A international express parcel costs 28 euros to send.",
+    "goldDocId": "international-express-parcel",
+    "goldSpan": "A international express parcel costs 28 euros to send."
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "What is the size limit for a international pallet?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldAnswer": "The size limit for a international pallet is 174 cm on the longest side.",
+    "goldDocId": "international-pallet",
+    "goldSpan": "The size limit for a international pallet is 174 cm on the longest side."
   },
   {
     "id": "p3",
-    "question": "When does primary on-call rotate?",
+    "question": "What is the weight limit for a wine box?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "The weight limit for a wine box is 21 kg.",
+    "goldDocId": "wine-box",
+    "goldSpan": "The weight limit for a wine box is 21 kg."
   },
   {
     "id": "p4",
-    "question": "What report must production SaaS vendors present before procurement?",
+    "question": "How much is a medicine pouch insured for?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "A medicine pouch is insured for up to 596 euros.",
+    "goldDocId": "medicine-pouch",
+    "goldSpan": "A medicine pouch is insured for up to 596 euros."
   },
   {
     "id": "p5",
-    "question": "Where must production secrets never live?",
+    "question": "How much does a return parcel cost?",
     "answerable": true,
-    "goldAnswer": "git",
-    "goldDocId": "password",
-    "goldSpan": "Production secrets never live in git"
+    "goldAnswer": "A return parcel costs 69 euros to send.",
+    "goldDocId": "return-parcel",
+    "goldSpan": "A return parcel costs 69 euros to send."
+  },
+  {
+    "id": "p6",
+    "question": "How long does delivery of a signed-for parcel take?",
+    "answerable": true,
+    "goldAnswer": "Delivery of a signed-for parcel takes 5 working days.",
+    "goldDocId": "signed-for-parcel",
+    "goldSpan": "Delivery of a signed-for parcel takes 5 working days."
   }
 ]

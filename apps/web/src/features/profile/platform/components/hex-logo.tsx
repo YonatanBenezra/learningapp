@@ -13,10 +13,10 @@ export function HexLogo({ className, showWordmark = true }: HexLogoProps) {
         <path
           d="M20 4l14 8v16l-14 8-14-8V12L20 4z"
           fill="#151F2E"
-          stroke="#9FEF00"
+          stroke="#FF4D4D"
           strokeWidth="2"
         />
-        <path d="M20 14l6 3.5v7L20 28l-6-3.5v-7L20 14z" fill="#9FEF00" opacity={0.85} />
+        <path d="M20 14l6 3.5v7L20 28l-6-3.5v-7L20 14z" fill="#FF4D4D" opacity={0.85} />
       </svg>
       {showWordmark ? (
         <span className="text-base font-semibold tracking-tight text-platform-text">{brand.name}</span>

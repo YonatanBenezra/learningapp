@@ -1,12 +1,12 @@
 {
   "slug": "rag-004-rerank-or-rethink",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Two-Stage Retrieve + Rerank",
+  "title": "Five Copies and One Answer",
   "difficulty": "H",
   "catalogPhase": 4,
-  "corpusFile": "shared",
+  "corpusFile": "mirror-posts",
   "skills": [
     {
       "slug": "reranking",
@@ -21,7 +21,7 @@
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Phase 4 · Two-Stage Retrieve + Rerank\n\nProduction logs show high recall@20 but poor nDCG@5 — relevant chunks are retrieved then **buried**. Fix second-stage ordering.\n\nYou control the **reranker** (`none` / `title-boost` / `mmr`), **rerankTopN**, and an optional **query rewrite prompt**. Chunking is frozen.\n\nPass when **nDCG@5 improves by at least 0.15** over the lexical baseline, **context tokens ≤ 3000**, and **≤ 2 model calls per question**. Class B answer-correctness is advisory.\n",
+  "briefMd": "# Phase 4 · Five Copies and One Answer\n\nOn the company intranet, every change is announced once and then reposted by four or five teams, almost word for word (\"The new expense tool is live for the Finance team…\"). The reposts name the topic again and again but explain nothing. The answers live in a handbook section whose title says nothing about the topic (\"Finance handbook, part 3\").\n\nThe first stage counts how often the question's words appear in each page, so the reposts fill the top five. You rerank the first stage's top candidates (`rerankTopN`) with one of:\n\n- `none`: keep the first-stage order.\n- `title-boost`: move pages whose title shares words with the question to the top.\n- `mmr`: maximal marginal relevance, which picks the best page first, then prefers pages that are relevant but unlike the ones already picked.\n\nRetrieval sees whole pages, and there is no query rewrite (no model calls).\n\n**Gates:** mean nDCG@5 gain over the first stage ≥ 0.25 and context tokens (top 5) ≤ 300 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -43,24 +43,20 @@
         "type": "integer",
         "minimum": 5,
         "maximum": 50,
-        "default": 20
-      },
-      "queryRewritePrompt": {
-        "type": "string",
-        "default": ""
+        "default": 5
       }
     }
   },
   "thresholds": {
-    "ndcg_improvement": 0.15,
-    "context_tokens": 3000,
-    "model_calls_per_question": 2
+    "ndcg_improvement": 0.25,
+    "context_tokens": 300,
+    "model_calls_per_question": 0
   },
   "budget": {
-    "max_model_calls": 50,
-    "max_tokens": 80000,
-    "max_cost_eur": 0.2,
-    "wall_clock_s": 180
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
+    "wall_clock_s": 120
   },
   "gates": [
     {
@@ -68,27 +64,30 @@
       "class": "A",
       "metric": "ndcg_improvement",
       "op": "gte",
-      "value": 0.15
+      "value": 0.25
     },
     {
       "id": "context-tokens",
       "class": "A",
       "metric": "context_tokens",
       "op": "lte",
-      "value": 3000
+      "value": 300
     },
     {
-      "id": "calls-per-question",
+      "id": "model-calls-per-question",
       "class": "A",
       "metric": "model_calls_per_question",
       "op": "lte",
-      "value": 2
+      "value": 0
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r4"
 }

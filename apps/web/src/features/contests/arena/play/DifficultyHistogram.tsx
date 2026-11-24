@@ -3,8 +3,8 @@
 import { motion, useReducedMotion } from "motion/react";
 
 const BAR_COLORS = [
-  "#9FEF00",
-  "#9FEF00",
+  "#FF4D4D",
+  "#FF4D4D",
   "#FFAF00",
   "#FFAF00",
   "#FF3E3E",

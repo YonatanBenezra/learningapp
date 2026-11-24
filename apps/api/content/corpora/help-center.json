@@ -1,0 +1,442 @@
+[
+  {
+    "id": "refunds-answer",
+    "title": "Plan changes and money back",
+    "text": "If you downgrade or cancel within 14 days of a charge, the unused part is returned to the original card. The money reaches the card within 5 to 7 business days. Charges older than 14 days are not returned, but the plan stays active until the end of the period."
+  },
+  {
+    "id": "refunds-promo-1",
+    "title": "Refund questions answered",
+    "text": "Refund and money back questions are among the most common we get. We know refund matters to you, so our team is always happy to talk about money back and cancel. Watch this space for more on refund."
+  },
+  {
+    "id": "refunds-promo-2",
+    "title": "Cancel anytime: our money-back promise",
+    "text": "Join our next webinar about refund, money back and cancel. Product experts share tips on refund and answer live questions about charge. Seats are limited, so sign up today."
+  },
+  {
+    "id": "proration-answer",
+    "title": "Adding people mid-cycle",
+    "text": "When you add a member partway through a billing month, you pay only for the remaining days. That partial amount appears as a separate line on the next invoice."
+  },
+  {
+    "id": "proration-promo-1",
+    "title": "Inviting teammates: everything about billing",
+    "text": "Invite and teammate questions are among the most common we get. We know invite matters to you, so our team is always happy to talk about teammate and month. Watch this space for more on invite."
+  },
+  {
+    "id": "proration-promo-2",
+    "title": "Pay for what you use every month",
+    "text": "Join our next webinar about invite, teammate and month. Product experts share tips on invite and answer live questions about pay. Seats are limited, so sign up today."
+  },
+  {
+    "id": "export-answer",
+    "title": "Taking your data with you",
+    "text": "Workspace owners can download every project as a ZIP of CSV files from Settings, then Data. Exports over 2 GB are emailed as a link that stays valid for 72 hours."
+  },
+  {
+    "id": "export-promo-1",
+    "title": "Export your projects in one click",
+    "text": "Export and download questions are among the most common we get. We know export matters to you, so our team is always happy to talk about download and projects. Watch this space for more on export."
+  },
+  {
+    "id": "export-promo-2",
+    "title": "Your data, your download",
+    "text": "Join our next webinar about export, download and projects. Product experts share tips on export and answer live questions about data. Seats are limited, so sign up today."
+  },
+  {
+    "id": "trash-answer",
+    "title": "Trash and restoring",
+    "text": "Deleted tasks stay in the trash for 30 days, and any project member can restore them. After 30 days they are erased for good and support cannot recover them."
+  },
+  {
+    "id": "trash-promo-1",
+    "title": "Deleted a task by mistake? Read this",
+    "text": "Deleted and task questions are among the most common we get. We know deleted matters to you, so our team is always happy to talk about task and recover. Watch this space for more on deleted."
+  },
+  {
+    "id": "trash-promo-2",
+    "title": "Recover from mistakes with confidence",
+    "text": "Join our next webinar about deleted, task and recover. Product experts share tips on deleted and answer live questions about mistake. Seats are limited, so sign up today."
+  },
+  {
+    "id": "backup-codes-answer",
+    "title": "Sign-in protection",
+    "text": "You can turn on a second sign-in step with an authenticator app. If you lose your phone, use one of the ten backup codes shown when you set it up."
+  },
+  {
+    "id": "backup-codes-promo-1",
+    "title": "Lost your phone? Log in tips",
+    "text": "Phone and log in questions are among the most common we get. We know phone matters to you, so our team is always happy to talk about log in and code. Watch this space for more on phone."
+  },
+  {
+    "id": "backup-codes-promo-2",
+    "title": "Codes, phones and logging in",
+    "text": "Join our next webinar about phone, log in and code. Product experts share tips on phone and answer live questions about lost. Seats are limited, so sign up today."
+  },
+  {
+    "id": "guests-answer",
+    "title": "People outside your company",
+    "text": "Guests can see only the projects they are invited to and cannot create new projects. Guests are free and do not count as paid seats."
+  },
+  {
+    "id": "guests-promo-1",
+    "title": "Collaborate with clients and external partners",
+    "text": "Client and external questions are among the most common we get. We know client matters to you, so our team is always happy to talk about external and collaborator. Watch this space for more on client."
+  },
+  {
+    "id": "guests-promo-2",
+    "title": "Seats, clients and collaborators",
+    "text": "Join our next webinar about client, external and collaborator. Product experts share tips on client and answer live questions about seat. Seats are limited, so sign up today."
+  },
+  {
+    "id": "attachments-answer",
+    "title": "Attachments",
+    "text": "Each file attached to a task can be up to 250 MB on paid plans. On the free plan the limit is 10 MB per file."
+  },
+  {
+    "id": "attachments-promo-1",
+    "title": "Upload big files with ease",
+    "text": "File and upload questions are among the most common we get. We know file matters to you, so our team is always happy to talk about upload and free plan. Watch this space for more on file."
+  },
+  {
+    "id": "attachments-promo-2",
+    "title": "Files on the free plan",
+    "text": "Join our next webinar about file, upload and free plan. Product experts share tips on file and answer live questions about big. Seats are limited, so sign up today."
+  },
+  {
+    "id": "repeating-answer",
+    "title": "Repeating work",
+    "text": "Set a task to repeat daily, weekly or monthly from its due date menu. The next copy is created when the current one is marked complete, not on a fixed date."
+  },
+  {
+    "id": "repeating-promo-1",
+    "title": "Automate every week with repeating tasks",
+    "text": "Task and every week questions are among the most common we get. We know task matters to you, so our team is always happy to talk about every week and automatically. Watch this space for more on task."
+  },
+  {
+    "id": "repeating-promo-2",
+    "title": "Tasks that come back automatically",
+    "text": "Join our next webinar about task, every week and automatically. Product experts share tips on task and answer live questions about repeat. Seats are limited, so sign up today."
+  },
+  {
+    "id": "time-zones-answer",
+    "title": "Dates across time zones",
+    "text": "Due dates follow each viewer's own time zone. Due times are stored in the time zone of the person who set them."
+  },
+  {
+    "id": "time-zones-promo-1",
+    "title": "Deadlines for colleagues abroad",
+    "text": "Deadline and colleague questions are among the most common we get. We know deadline matters to you, so our team is always happy to talk about colleague and abroad. Watch this space for more on deadline."
+  },
+  {
+    "id": "time-zones-promo-2",
+    "title": "Time and deadline tips for global teams",
+    "text": "Join our next webinar about deadline, colleague and abroad. Product experts share tips on deadline and answer live questions about time. Seats are limited, so sign up today."
+  },
+  {
+    "id": "digest-answer",
+    "title": "Staying informed without the noise",
+    "text": "Choose a daily digest to receive one email at 8:00 local time instead of an email for every change. Mentions and assignments are still sent right away."
+  },
+  {
+    "id": "digest-promo-1",
+    "title": "Too many emails? A summary of our email features",
+    "text": "Emails and summary questions are among the most common we get. We know emails matters to you, so our team is always happy to talk about summary and too many. Watch this space for more on emails."
+  },
+  {
+    "id": "digest-promo-2",
+    "title": "Your day, your emails",
+    "text": "Join our next webinar about emails, summary and too many. Product experts share tips on emails and answer live questions about day. Seats are limited, so sign up today."
+  },
+  {
+    "id": "rate-limits-answer",
+    "title": "Building on the platform",
+    "text": "Each API token may make 100 requests per minute. Extra requests receive status 429 and should be retried after the time in the Retry-After header."
+  },
+  {
+    "id": "rate-limits-promo-1",
+    "title": "Integrations and scripts: make more calls",
+    "text": "Calls and integration questions are among the most common we get. We know calls matters to you, so our team is always happy to talk about integration and script. Watch this space for more on calls."
+  },
+  {
+    "id": "rate-limits-promo-2",
+    "title": "Requests, integrations and you",
+    "text": "Join our next webinar about calls, integration and script. Product experts share tips on calls and answer live questions about requests. Seats are limited, so sign up today."
+  },
+  {
+    "id": "sso-answer",
+    "title": "Signing in with your company account",
+    "text": "Single sign-on with SAML is available on the Enterprise plan. Once single sign-on is enforced, passwords stop working for members."
+  },
+  {
+    "id": "sso-promo-1",
+    "title": "Log in with your corporate identity provider",
+    "text": "Corporate and identity provider questions are among the most common we get. We know corporate matters to you, so our team is always happy to talk about identity provider and passwords. Watch this space for more on corporate."
+  },
+  {
+    "id": "sso-promo-2",
+    "title": "Passwords and plans explained",
+    "text": "Join our next webinar about corporate, identity provider and passwords. Product experts share tips on corporate and answer live questions about log in. Seats are limited, so sign up today."
+  },
+  {
+    "id": "closing-answer",
+    "title": "Closing a workspace",
+    "text": "Only the owner can close a workspace. Everything is kept for 14 days in case you change your mind, then permanently removed."
+  },
+  {
+    "id": "closing-promo-1",
+    "title": "Shut down or delete your account",
+    "text": "Account and shut down questions are among the most common we get. We know account matters to you, so our team is always happy to talk about shut down and delete. Watch this space for more on account."
+  },
+  {
+    "id": "closing-promo-2",
+    "title": "Account deletion: what to know",
+    "text": "Join our next webinar about account, shut down and delete. Product experts share tips on account and answer live questions about reopen. Seats are limited, so sign up today."
+  },
+  {
+    "id": "offline-answer",
+    "title": "Working on the go",
+    "text": "The phone app keeps the last 7 days of your tasks available without a connection. Edits made offline sync when you are back online."
+  },
+  {
+    "id": "offline-promo-1",
+    "title": "Tasks on a plane: offline and internet tips",
+    "text": "Plane and internet questions are among the most common we get. We know plane matters to you, so our team is always happy to talk about internet and offline. Watch this space for more on plane."
+  },
+  {
+    "id": "offline-promo-2",
+    "title": "Your phone, your tasks, anywhere",
+    "text": "Join our next webinar about plane, internet and offline. Product experts share tips on plane and answer live questions about phone. Seats are limited, so sign up today."
+  },
+  {
+    "id": "csv-import-answer",
+    "title": "Bringing in existing work",
+    "text": "Upload a CSV with one row per task; the first row must hold the column names. Up to 5,000 rows are imported at once."
+  },
+  {
+    "id": "csv-import-promo-1",
+    "title": "Move from Excel and spreadsheets",
+    "text": "Excel and spreadsheet questions are among the most common we get. We know excel matters to you, so our team is always happy to talk about spreadsheet and list. Watch this space for more on excel."
+  },
+  {
+    "id": "csv-import-promo-2",
+    "title": "Import your to-do list",
+    "text": "Join our next webinar about excel, spreadsheet and list. Product experts share tips on excel and answer live questions about import. Seats are limited, so sign up today."
+  },
+  {
+    "id": "roles-answer",
+    "title": "Who can do what",
+    "text": "Admins manage billing and members, and editors can change any task. Viewers can only read and comment."
+  },
+  {
+    "id": "roles-promo-1",
+    "title": "Read-only rights and comments",
+    "text": "Read-only and rights questions are among the most common we get. We know read-only matters to you, so our team is always happy to talk about rights and comments. Watch this space for more on read-only."
+  },
+  {
+    "id": "roles-promo-2",
+    "title": "Roles and payment settings",
+    "text": "Join our next webinar about read-only, rights and comments. Product experts share tips on read-only and answer live questions about payment. Seats are limited, so sign up today."
+  },
+  {
+    "id": "storage-answer",
+    "title": "Space for your files",
+    "text": "Each paid seat adds 10 GB of shared storage. The free plan has 2 GB for the whole workspace."
+  },
+  {
+    "id": "storage-promo-1",
+    "title": "Room for all your files",
+    "text": "Room and files questions are among the most common we get. We know room matters to you, so our team is always happy to talk about files and person. Watch this space for more on room."
+  },
+  {
+    "id": "storage-promo-2",
+    "title": "Storage on the free plan and beyond",
+    "text": "Join our next webinar about room, files and person. Product experts share tips on room and answer live questions about storage. Seats are limited, so sign up today."
+  },
+  {
+    "id": "vat-answer",
+    "title": "Paperwork for finance",
+    "text": "Add your VAT number in Billing settings and it appears on every future invoice. Invoices already issued cannot be changed."
+  },
+  {
+    "id": "vat-promo-1",
+    "title": "A guide to bills for your accountant",
+    "text": "Accountant and tax questions are among the most common we get. We know accountant matters to you, so our team is always happy to talk about tax and bill. Watch this space for more on accountant."
+  },
+  {
+    "id": "vat-promo-2",
+    "title": "Tax season and your invoices",
+    "text": "Join our next webinar about accountant, tax and bill. Product experts share tips on accountant and answer live questions about invoices. Seats are limited, so sign up today."
+  },
+  {
+    "id": "calendar-answer",
+    "title": "Seeing tasks in your calendar",
+    "text": "Subscribe to your personal calendar feed link to see due dates in Google or Outlook. The feed refreshes about once an hour."
+  },
+  {
+    "id": "calendar-promo-1",
+    "title": "Deadlines in Outlook and your calendar",
+    "text": "Deadlines and outlook questions are among the most common we get. We know deadlines matters to you, so our team is always happy to talk about outlook and calendar. Watch this space for more on deadlines."
+  },
+  {
+    "id": "calendar-promo-2",
+    "title": "Calendar updates you will love",
+    "text": "Join our next webinar about deadlines, outlook and calendar. Product experts share tips on deadlines and answer live questions about update. Seats are limited, so sign up today."
+  },
+  {
+    "id": "free-plan-answer",
+    "title": "What the free plan includes",
+    "text": "The free plan allows up to 3 projects and 5 members. History older than 90 days is hidden until you upgrade."
+  },
+  {
+    "id": "free-plan-promo-1",
+    "title": "Projects without paying: free forever",
+    "text": "Projects and paying questions are among the most common we get. We know projects matters to you, so our team is always happy to talk about paying and history. Watch this space for more on projects."
+  },
+  {
+    "id": "free-plan-promo-2",
+    "title": "History of our free plan",
+    "text": "Join our next webinar about projects, paying and history. Product experts share tips on projects and answer live questions about free. Seats are limited, so sign up today."
+  },
+  {
+    "id": "login-email-answer",
+    "title": "Updating your login",
+    "text": "Change the address you sign in with under Profile, and we send a confirmation link to the new address. The old address keeps working until the link is clicked."
+  },
+  {
+    "id": "login-email-promo-1",
+    "title": "Switch your login email in seconds",
+    "text": "New work address and login questions are among the most common we get. We know new work address matters to you, so our team is always happy to talk about login and switch. Watch this space for more on new work address."
+  },
+  {
+    "id": "login-email-promo-2",
+    "title": "New work address? Login help",
+    "text": "Join our next webinar about new work address, login and switch. Product experts share tips on new work address and answer live questions about email. Seats are limited, so sign up today."
+  },
+  {
+    "id": "automation-answer",
+    "title": "Letting the app do the busywork",
+    "text": "Rules can move, assign or tag tasks when a status changes. Each workspace can have 50 active rules on the Business plan."
+  },
+  {
+    "id": "automation-promo-1",
+    "title": "Automations: tasks assigned automatically",
+    "text": "Assigned automatically and automations questions are among the most common we get. We know assigned automatically matters to you, so our team is always happy to talk about automations and column. Watch this space for more on assigned automatically."
+  },
+  {
+    "id": "automation-promo-2",
+    "title": "Columns, tasks and automations",
+    "text": "Join our next webinar about assigned automatically, automations and column. Product experts share tips on assigned automatically and answer live questions about tasks. Seats are limited, so sign up today."
+  },
+  {
+    "id": "audit-log-answer",
+    "title": "Seeing who changed what",
+    "text": "Enterprise workspaces keep a log of member actions for 12 months. Admins can download the log as a CSV file."
+  },
+  {
+    "id": "audit-log-promo-1",
+    "title": "Which colleague deleted that project?",
+    "text": "Colleague and deleted questions are among the most common we get. We know colleague matters to you, so our team is always happy to talk about deleted and project. Watch this space for more on colleague."
+  },
+  {
+    "id": "audit-log-promo-2",
+    "title": "Project records made simple",
+    "text": "Join our next webinar about colleague, deleted and project. Product experts share tips on colleague and answer live questions about record. Seats are limited, so sign up today."
+  },
+  {
+    "id": "data-region-answer",
+    "title": "Where your data lives",
+    "text": "Workspaces created in Europe are stored in Frankfurt and copied to Dublin for backup. A workspace cannot be moved between regions after it is created."
+  },
+  {
+    "id": "data-region-promo-1",
+    "title": "Your information in the EU",
+    "text": "Information and EU questions are among the most common we get. We know information matters to you, so our team is always happy to talk about EU and country. Watch this space for more on information."
+  },
+  {
+    "id": "data-region-promo-2",
+    "title": "Moving country? Information for travellers",
+    "text": "Join our next webinar about information, EU and country. Product experts share tips on information and answer live questions about move. Seats are limited, so sign up today."
+  },
+  {
+    "id": "help-shortcuts",
+    "title": "Keyboard shortcuts",
+    "text": "Press ? anywhere in the app to see every shortcut. Press N to create a task and / to search."
+  },
+  {
+    "id": "help-dark-mode",
+    "title": "Dark mode",
+    "text": "Switch between light and dark themes under Profile, then Appearance. The setting follows each device."
+  },
+  {
+    "id": "help-avatar",
+    "title": "Changing your picture",
+    "text": "Upload a square image of at least 200 by 200 pixels under Profile."
+  },
+  {
+    "id": "help-labels",
+    "title": "Labels",
+    "text": "Labels are shared by every project in a workspace. Rename a label once and it changes everywhere."
+  },
+  {
+    "id": "help-templates",
+    "title": "Project templates",
+    "text": "Save any project as a template from its menu. Templates copy tasks and sections, not comments."
+  },
+  {
+    "id": "help-search",
+    "title": "Search tips",
+    "text": "Put a phrase in quotes to search for it exactly. Search covers tasks, comments and file names."
+  },
+  {
+    "id": "help-subtasks",
+    "title": "Subtasks",
+    "text": "A task can hold up to 100 subtasks, and subtasks can have their own assignee."
+  },
+  {
+    "id": "help-board-view",
+    "title": "Board view",
+    "text": "Drag tasks between columns to change their status. Columns can be renamed by the project admin."
+  },
+  {
+    "id": "help-mentions",
+    "title": "Mentions",
+    "text": "Type @ and a name to mention someone in a comment. They get a notification straight away."
+  },
+  {
+    "id": "help-favorites",
+    "title": "Favorites",
+    "text": "Star a project to pin it to the top of the sidebar."
+  },
+  {
+    "id": "help-languages",
+    "title": "Languages",
+    "text": "The app is available in twelve languages. Change yours under Profile, then Language."
+  },
+  {
+    "id": "help-accessibility",
+    "title": "Accessibility",
+    "text": "Every view works with a screen reader, and motion can be reduced under Appearance."
+  },
+  {
+    "id": "help-status-page",
+    "title": "Service status",
+    "text": "Live service status and past incidents are listed on the status page."
+  },
+  {
+    "id": "help-browser",
+    "title": "Supported browsers",
+    "text": "Use the latest two versions of Chrome, Firefox, Safari or Edge."
+  },
+  {
+    "id": "help-desktop",
+    "title": "Desktop app",
+    "text": "The desktop app for Windows and macOS updates itself in the background."
+  },
+  {
+    "id": "help-comments-edit",
+    "title": "Editing comments",
+    "text": "You can edit your own comments for 24 hours after posting them."
+  }
+]

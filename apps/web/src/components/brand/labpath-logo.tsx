@@ -1,63 +1,102 @@
-import Image from "next/image";
+import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
 
 type LabpathLogoProps = {
   size?: "sm" | "md" | "foot";
   className?: string;
+  /** Kept for API compatibility — wordmark is baked into the logo asset. */
   showWordmark?: boolean;
   wordmarkClassName?: string;
+  /** Stacked lockup (footer / marketing). */
+  withTagline?: boolean;
 };
 
 type LabpathLogoMarkProps = {
   className?: string;
 };
 
-/** Source asset is 202×236 — height-led sizing avoids square box side padding. */
-const LOGO_W = 202;
-const LOGO_H = 236;
-
 const sizes = {
-  sm: { className: "h-8 w-auto" },
-  md: { className: "h-9 w-auto" },
-  foot: { className: "h-[18px] w-auto" },
+  sm: { className: "h-9 w-auto max-w-[min(100%,15rem)]" },
+  md: { className: "h-10 w-auto max-w-[min(100%,17rem)]" },
+  foot: { className: "h-7 w-auto max-w-[12rem]" },
 } as const;
 
-/** Orange square mark — navbar / footer Figma spec. */
+const stackedSizes = {
+  sm: { className: "h-10 w-auto max-w-[min(100%,8.5rem)]" },
+  md: { className: "h-11 w-auto max-w-[min(100%,9.5rem)]" },
+  foot: { className: "h-9 w-auto max-w-[8rem]" },
+} as const;
+
+/** Compact mark — red glyph on transparent (auth / lockups). */
 export function LabpathLogoMark({ className }: LabpathLogoMarkProps) {
   return (
-    <span className={cn("lp-brand-mark", className)} aria-hidden>
-      <Image
-        src="/brand/labpath-logo.png"
+    <span className={cn("lp-brand-mark inline-flex", className)} aria-hidden>
+      {/* eslint-disable-next-line @next/next/no-img-element -- SVG brand mark */}
+      <img
+        src="/brand/ai-warss-icon-red-on-dark.svg"
         alt=""
-        width={LOGO_W}
-        height={LOGO_H}
-        className="lp-brand-mark-glyph object-contain"
+        width={480}
+        height={480}
+        className="lp-brand-mark-glyph h-7 w-7 object-contain"
       />
     </span>
   );
 }
 
+/**
+ * AI Warss logo from `ai-warss-svg-transparent`.
+ * - Navbar: horizontal wordmark
+ * - Marketing: stacked lockup (`withTagline`)
+ * Theme swaps via CSS (`data-theme`).
+ */
 export function LabpathLogo({
   size = "md",
   className,
-  showWordmark = false,
-  wordmarkClassName,
+  showWordmark: _showWordmark = false,
+  wordmarkClassName: _wordmarkClassName,
+  withTagline = false,
 }: LabpathLogoProps) {
-  const dim = sizes[size];
+  const dim = withTagline ? stackedSizes[size] : sizes[size];
+
+  // Dark UI: white + coral. Light UI: red on white.
+  const darkSrc = withTagline
+    ? "/brand/ai-warss-stacked-white-on-dark.svg"
+    : "/brand/ai-warss-horizontal-white-on-dark.svg";
+  const lightSrc = withTagline
+    ? "/brand/ai-warss-stacked-red-on-white.svg"
+    : "/brand/ai-warss-horizontal-red-on-white.svg";
+  // Intrinsic sizes after viewBox crop (approx).
+  const width = withTagline ? 400 : 870;
+  const height = withTagline ? 400 : 220;
 
   return (
-    <span className={cn("inline-flex items-center gap-1", className)}>
-      <Image
-        src="/brand/labpath-logo.png"
+    <span
+      className={cn("lp-brand-logo inline-flex items-center", className)}
+      role="img"
+      aria-label={brand.name}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element -- SVG brand logo */}
+      <img
+        src={darkSrc}
         alt=""
-        width={LOGO_W}
-        height={LOGO_H}
-        className={cn("shrink-0 object-contain", dim.className)}
-        priority
+        width={width}
+        height={height}
+        className={cn(
+          "lp-brand-logo-dark shrink-0 object-contain object-left",
+          dim.className,
+        )}
       />
-      {showWordmark ? (
-        <span className={cn("lp-site-nav-wordmark", wordmarkClassName)}>LabPath</span>
-      ) : null}
+      {/* eslint-disable-next-line @next/next/no-img-element -- SVG brand logo */}
+      <img
+        src={lightSrc}
+        alt=""
+        width={width}
+        height={height}
+        className={cn(
+          "lp-brand-logo-light shrink-0 object-contain object-left",
+          dim.className,
+        )}
+      />
     </span>
   );
 }

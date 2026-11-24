@@ -1,0 +1,6 @@
+[
+  "How many whole pages does it take to catch the answers, and what do they cost?",
+  "In the Query tab, read a retrieved page: how many of its five sentences does the question need?",
+  "Compression keeps the sentences that share the most words with the question. The fact being asked about shares its own words (\"weight limit\", \"insured\").",
+  "Keeping one sentence per page cuts each page to a fraction of its cost, so three pages fit easily."
+]

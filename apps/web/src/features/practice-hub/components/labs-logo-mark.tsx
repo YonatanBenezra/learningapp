@@ -5,10 +5,10 @@ export function LabsLogoMark({ className }: { className?: string }) {
       <path
         d="M20 4l14 8v16l-14 8-14-8V12L20 4z"
         fill="none"
-        stroke="#9FEF00"
+        stroke="#FF4D4D"
         strokeWidth="2"
       />
-      <path d="M12 20h16M20 12v16" fill="none" stroke="#9FEF00" strokeWidth="1.5" />
+      <path d="M12 20h16M20 12v16" fill="none" stroke="#FF4D4D" strokeWidth="1.5" />
     </svg>
   );
 }

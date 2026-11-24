@@ -23,7 +23,7 @@ export const envSchema = z.object({
   COOKIE_SECURE: z
     .enum(['true', 'false', 'auto'])
     .default('auto')
-    .transform((value) => value as 'true' | 'false' | 'auto'),
+    .transform((value) => value),
   COOKIE_DOMAIN: z.string().optional().default(''),
   INGEST_SIGNING_SECRET: z.string().min(16).default('change-me-ingest-secret'),
   SANDBOX_IMAGE: z.string().default('labpath-sandbox:local'),
@@ -42,6 +42,15 @@ export const envSchema = z.object({
   STRIPE_PRICE_ANNUAL: z.string().optional().default(''),
   OPENROUTER_API_KEY: z.string().optional().default(''),
   OPENROUTER_MODEL: z.string().default('google/gemini-2.5-flash'),
+  /** HMAC key for per-learner red team flags; rotate it to invalidate every flag. */
+  REDTEAM_FLAG_SECRET: z
+    .string()
+    .min(16)
+    .default('change-me-redteam-flag-secret'),
+  /** Where the RAG embedding and reranker models are cached (ONNX files). */
+  RAG_MODEL_CACHE_DIR: z.string().optional().default(''),
+  /** false: never download models at runtime; run `npm run models:fetch` first. */
+  RAG_MODELS_ALLOW_DOWNLOAD: z.enum(['true', 'false']).default('true'),
 });
 
 export type Env = z.infer<typeof envSchema>;

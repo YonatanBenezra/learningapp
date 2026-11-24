@@ -43,7 +43,7 @@ const FOOT_COLUMNS: readonly FootGroup[][] = [
         { label: "Documentation", href: "https://github.com/Bina-Labs/Labpath" },
         { label: "Changelog", href: "https://github.com/Bina-Labs/Labpath/releases" },
         { label: "RAG demo", href: routes.demoRagWorkspace },
-        { label: "Help", href: "mailto:hello@labpath.dev" },
+        { label: "Help", href: "mailto:hello@aiwarss.com" },
       ],
     },
     {
@@ -153,11 +153,7 @@ export function HomeLandingFooter() {
           <div className="lp-home-foot-grid">
             <div className="lp-home-foot-brand">
               <Link href={routes.home} className="lp-home-foot-logo-link">
-                <LabpathLogo
-                  size="md"
-                  showWordmark
-                  wordmarkClassName="lp-home-foot-wordmark"
-                />
+                <LabpathLogo size="md" withTagline />
               </Link>
               <p className="lp-home-foot-desc">
                 The practice platform for AI engineering teams—graded labs, hidden
@@ -218,7 +214,7 @@ export function HomeLandingFooter() {
                 {link.label}
               </Link>
             ))}
-            <span className="lp-home-foot-copy">© {year} LabPath</span>
+            <span className="lp-home-foot-copy">© {year} AI Warss</span>
           </div>
         </div>
       </div>

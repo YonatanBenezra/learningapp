@@ -76,7 +76,7 @@ function SignInFormInner() {
     <>
       <AuthFormIntro
         eyebrow="Welcome back"
-        title="Sign in to LabPath"
+        title="Sign in to AI Warss"
         subtitle="Pick up where you left off. Your runs and traces are waiting."
         subtitleShort="Your runs and traces are waiting."
       />
@@ -111,7 +111,7 @@ function SignInFormInner() {
           labelRight={
             <Link
               href="/magic-link"
-              className="text-xs font-semibold text-[#B2F233] hover:underline"
+              className="text-xs font-semibold text-[#FF4D4D] hover:underline"
             >
               Forgot password?
             </Link>

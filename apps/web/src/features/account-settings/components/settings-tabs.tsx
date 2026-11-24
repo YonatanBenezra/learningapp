@@ -34,14 +34,14 @@ export function SettingsTabs() {
               aria-selected={isActive}
               className={cn(
                 "relative py-4 text-sm font-medium transition-colors",
-                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9FEF00]",
+                "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF4D4D]",
                 isActive ? "text-[#F4F4F4]" : "text-[#8799B5] hover:text-[#F4F4F4]",
               )}
             >
               {tab.label}
               {isActive ? (
                 <span
-                  className="absolute bottom-0 left-0 h-0.5 w-full bg-[#9FEF00]"
+                  className="absolute bottom-0 left-0 h-0.5 w-full bg-[#FF4D4D]"
                   aria-hidden
                 />
               ) : null}

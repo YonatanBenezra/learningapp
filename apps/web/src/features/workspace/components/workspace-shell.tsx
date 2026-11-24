@@ -1,12 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loginPath, routes } from "@/config/routes";
-import {
-  ensureAuthSession,
-  getAuthSnapshot,
-} from "@/features/auth/auth-session";
+import { ensureAuthSession } from "@/features/auth/auth-session";
+import { useCachedAuthStatus } from "@/features/auth/use-auth-session";
 import { problemsApi } from "@/features/problems/problems-api";
 import { ApiError } from "@/lib/api-client";
 import type { Exercise } from "@/types/exercise";
@@ -16,6 +14,18 @@ import { waitForGrade, waitForRun, workspaceApi } from "../workspace-api";
 import { WORKER_OFFLINE_MESSAGE } from "../worker-offline-message";
 import type { HintList } from "@/types/hint";
 import { hintsApi } from "../hints-api";
+import { toolsApi } from "../tools-api";
+import { toolLocksFrom } from "../tool-locks";
+import type { ExerciseTools, LadderTool, ToolLadders, ToolTrack } from "@/types/tools";
+import { ToolUnlockCard } from "./tool-unlock-card";
+
+function heldIds(ladders: ToolLadders): Set<string> {
+  return new Set(
+    ladders.tracks.flatMap((track) =>
+      track.tools.filter((tool) => tool.unlocked).map((tool) => tool.id),
+    ),
+  );
+}
 import { GlobalLoader } from "@/components/ui/global-loader";
 import { WorkspacePracticeFrame } from "@/components/layout/workspace-practice-frame";
 import { BriefPanel, type BriefTab } from "./brief-panel";
@@ -75,9 +85,37 @@ export function WorkspaceShell({
   const [submitValid, setSubmitValid] = useState(false);
   const [labPayload, setLabPayload] = useState<Record<string, unknown>>({});
   const [hints, setHints] = useState<HintList | null>(null);
-  const [authAllowed, setAuthAllowed] = useState<boolean | null>(() =>
-    getAuthSnapshot().status === "authenticated" ? true : null,
+  const unlockHint = useCallback(async () => {
+    setHints(await hintsApi.unlockNext(slug));
+  }, [slug]);
+  // The tool ladder: tools this learner has not earned are greyed out.
+  const [tools, setTools] = useState<{ slug: string; data: ExerciseTools } | null>(null);
+  // The tools held when the ladder was last read; a pass that adds to it
+  // shows the unlock moment.
+  const heldRef = useRef<Set<string> | null>(null);
+  const [unlockMoment, setUnlockMoment] = useState<{
+    tools: LadderTool[];
+    tracks: ToolTrack[];
+    /** A staged level of this exercise still open after the win. */
+    stage: { level: number; title: string } | null;
+  } | null>(null);
+  const closeUnlockMoment = useCallback(() => setUnlockMoment(null), []);
+  // Bumped after an early unlock so the tools are read again.
+  const [toolsVersion, setToolsVersion] = useState(0);
+  const unlockTool = useCallback(async (toolId: string) => {
+    await toolsApi.unlock(toolId);
+    setToolsVersion((version) => version + 1);
+  }, []);
+  const refreshTools = useCallback(() => setToolsVersion((version) => version + 1), []);
+  const toolLocks = useMemo(
+    () =>
+      toolLocksFrom(tools?.slug === slug ? tools.data : null, unlockTool, refreshTools),
+    [tools, slug, unlockTool, refreshTools],
   );
+  // The session check's answer, or the cached session until it arrives.
+  const cachedAuth = useCachedAuthStatus();
+  const [authChecked, setAuthAllowed] = useState<boolean | null>(null);
+  const authAllowed = authChecked ?? (cachedAuth === "authenticated" ? true : null);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -169,6 +207,69 @@ export function WorkspaceShell({
     };
   }, [slug, exercise, onboarding]);
 
+  // Tools are fetched on open and again after a pass, which may earn some.
+  const passedRunId = grade?.verdict === "pass" ? (run?.id ?? null) : null;
+  useEffect(() => {
+    const onLadder =
+      exercise &&
+      !onboarding &&
+      authAllowed === true &&
+      (exercise.simulator === "rag" || exercise.simulator === "guardrails");
+    if (!onLadder) {
+      return;
+    }
+    let cancelled = false;
+    toolsApi
+      .forExercise(slug)
+      .then(async (data) => {
+        if (cancelled) {
+          return;
+        }
+        setTools({ slug, data });
+        if (!data.track) {
+          return;
+        }
+        const ladders = await toolsApi.ladders();
+        if (cancelled) {
+          return;
+        }
+        const before = heldRef.current;
+        heldRef.current = heldIds(ladders);
+        if (!before) {
+          return;
+        }
+        // Tools bought early already showed up as unlocked; only a pass
+        // (or a won level) earns the moment.
+        const earned = ladders.tracks
+          .flatMap((track) => track.tools)
+          .filter(
+            (tool) => tool.unlocked && tool.via !== "bought" && !before.has(tool.id),
+          );
+        if (earned.length > 0) {
+          const open = data.stages.find((stage) => stage.state === "current");
+          setUnlockMoment({
+            tools: earned,
+            tracks: ladders.tracks,
+            stage: open ? { level: open.level, title: open.title } : null,
+          });
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, exercise, onboarding, authAllowed, passedRunId, toolsVersion]);
+
+  const unlockCard = unlockMoment ? (
+    <ToolUnlockCard
+      currentSlug={slug}
+      stage={unlockMoment.stage}
+      tools={unlockMoment.tools}
+      tracks={unlockMoment.tracks}
+      onClose={closeUnlockMoment}
+    />
+  ) : null;
+
   useEffect(() => {
     return () => {
       abortRef.current?.abort();
@@ -231,8 +332,6 @@ export function WorkspaceShell({
     abortRef.current = abort;
     setPending(true);
     setSubmitError(null);
-    setGrade(null);
-    setRun(null);
     if (resultsCollapsed) {
       setResultsCollapsed(false);
       window.localStorage.setItem("lp-ws-results-collapsed", "0");
@@ -240,9 +339,23 @@ export function WorkspaceShell({
     try {
       const attempt = await workspaceApi.startAttempt(slug);
       const queued = await workspaceApi.submit(attempt.id, payload);
+      if (abort.signal.aborted) {
+        return;
+      }
+      // Keep the previous scorecard until the new run exists, so a rejected
+      // submit (e.g. 429 from the attempt policy) leaves the last result visible.
+      setGrade(null);
+      setRun({ id: queued.runId, status: queued.status });
       const finished = await waitForRun(
         queued.runId,
-        setRun,
+        (next) => {
+          setRun(next);
+          if (next.status !== "queued") {
+            setSubmitError((current) =>
+              current === WORKER_OFFLINE_MESSAGE ? null : current,
+            );
+          }
+        },
         abort.signal,
         () => {
           setSubmitError(WORKER_OFFLINE_MESSAGE);
@@ -309,6 +422,7 @@ export function WorkspaceShell({
         exercise={exercise}
         pathSlug={pathSlug}
         hints={hints}
+        onUnlockHint={unlockHint}
         run={run}
         grade={grade}
         pending={pending}
@@ -320,7 +434,9 @@ export function WorkspaceShell({
         onToggleBriefCollapsed={toggleBriefCollapsed}
         resultsCollapsed={resultsCollapsed}
         onToggleResultsCollapsed={toggleResultsCollapsed}
+        toolLocks={toolLocks}
       />
+      {unlockCard}
       </WorkspacePracticeFrame>
     );
   }
@@ -333,6 +449,7 @@ export function WorkspaceShell({
         exercise={exercise}
         pathSlug={pathSlug}
         hints={hints}
+        onUnlockHint={unlockHint}
         run={run}
         grade={grade}
         pending={pending}
@@ -347,7 +464,9 @@ export function WorkspaceShell({
         resultsCollapsed={resultsCollapsed}
         onToggleResultsCollapsed={toggleResultsCollapsed}
         showSimulationLab={ragShowsSimulationLab(exercise.submissionSchema)}
+        toolLocks={toolLocks}
       />
+      {unlockCard}
       </WorkspacePracticeFrame>
     );
   }

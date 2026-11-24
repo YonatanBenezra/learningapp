@@ -109,7 +109,7 @@ export function LevelCard({
                 aria-label="Level progress"
               >
                 <div
-                  className="h-full rounded-[2px] bg-[#9FEF00] transition-[width] duration-150"
+                  className="h-full rounded-[2px] bg-[#FF4D4D] transition-[width] duration-150"
                   style={{ width: `${fillPct}%` }}
                 />
               </div>

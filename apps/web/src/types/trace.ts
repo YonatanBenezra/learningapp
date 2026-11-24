@@ -3,12 +3,35 @@ export type TraceHit = {
   docId: string;
   score: number;
   text: string;
+  /** Public queries only: this chunk carries the gold sentence. */
+  goldHit?: boolean;
+  /** Rank before the rerank/boost step, when one ran. */
+  firstStageRank?: number | null;
+};
+
+/** One pipeline step a question went through, as the grader ran it. */
+export type TraceStage = {
+  id: string;
+  label: string;
+  detail: string;
+  /** Chunks that came out of the step. */
+  count: number;
+  /** Public questions: rank of the answer chunk after the step; null when gone. */
+  goldRank?: number | null;
+  ms: number;
 };
 
 export type TraceQuery = {
   source: string;
   question: string;
+  /** Public questions: every pipeline step, with timings (newer runs only). */
+  stages?: TraceStage[];
+  /** R4: what the first stage searched for after the learner's rewrite prompt. */
+  rewrittenQuery?: string;
   retrieved: TraceHit[];
+  /** Public queries only: the gold sentence reached the context. */
+  hit?: boolean;
+  contextTokens?: number;
   queryId?: string;
   timingLabel?: string;
 };
@@ -48,5 +71,9 @@ export type RunTrace = {
   sandbox?: { durationMs?: number };
   gated?: boolean;
   message?: string;
+  /** Guardrails G1/G2: each level as it ran. */
+  levels?: unknown[];
+  /** Guardrails G3: some feedback messages, layer by layer. */
+  cases?: unknown[];
 };
 

@@ -1,33 +1,34 @@
 {
   "slug": "rag-028-adv-rerank-rethink",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Two-Stage Retrieve + Rerank (Advanced)",
+  "title": "Speak the Handbook's Language",
   "difficulty": "H",
   "catalogPhase": 7,
-  "corpusFile": "shared",
+  "corpusFile": "staff-handbook",
   "skills": [
-    {
-      "slug": "reranking",
-      "name": "Reranking"
-    },
     {
       "slug": "retrieval-quality",
       "name": "Retrieval quality"
+    },
+    {
+      "slug": "prompt-design",
+      "name": "Prompt design"
     },
     {
       "slug": "evaluation-reading",
       "name": "Evaluation reading"
     }
   ],
-  "briefMd": "# Advanced · Retrieve + Rerank\n\nLarger candidate pools; nDCG@5 lift under strict model-call caps.",
+  "briefMd": "# Advanced · Speak the Handbook's Language\n\nThe staff handbook is written formally and always spells terms out: \"paid time off\", \"purchase order\", \"non-disclosure agreement\". Staff type \"PTO\", \"PO\" and \"NDAs\", and they make typos. The search counts matching words, so it finds the glossary and office notices instead of the policy.\n\nYou control an optional **query rewrite prompt** that runs on the live model before the search (your prompt is the system message, the question is the user message, and the first line of the reply is what the search uses), plus the **reranker** and **rerankTopN** for the candidates. A reranker can only reorder what the search found.\n\nThe rewrite costs one model call per question. In the Simulation Lab, press **Run rewrite** to see what your prompt produces for a question.\n\n**Gates:** nDCG@5 improves by at least 0.25 over searching with the question as asked, context tokens ≤ 300, and at most 1 model call per question.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
     "required": [
       "reranker",
-      "rerankTopN"
+      "rerankTopN",
+      "queryRewritePrompt"
     ],
     "properties": {
       "reranker": {
@@ -35,9 +36,11 @@
         "enum": [
           "none",
           "title-boost",
-          "mmr"
+          "mmr",
+          "cross-encoder"
         ],
-        "default": "none"
+        "default": "none",
+        "description": "Reorders the candidates the search found; it cannot add documents the search missed."
       },
       "rerankTopN": {
         "type": "integer",
@@ -52,14 +55,14 @@
     }
   },
   "thresholds": {
-    "ndcg_improvement": 0.15,
-    "context_tokens": 3000,
-    "model_calls_per_question": 2
+    "ndcg_improvement": 0.25,
+    "context_tokens": 300,
+    "model_calls_per_question": 1
   },
   "budget": {
-    "max_model_calls": 50,
-    "max_tokens": 80000,
-    "max_cost_eur": 0.2,
+    "max_model_calls": 120,
+    "max_tokens": 60000,
+    "max_cost_eur": 0.1,
     "wall_clock_s": 180
   },
   "gates": [
@@ -68,28 +71,31 @@
       "class": "A",
       "metric": "ndcg_improvement",
       "op": "gte",
-      "value": 0.15
+      "value": 0.25
     },
     {
       "id": "context-tokens",
       "class": "A",
       "metric": "context_tokens",
       "op": "lte",
-      "value": 3000
+      "value": 300
     },
     {
-      "id": "calls-per-question",
+      "id": "model-calls",
       "class": "A",
       "metric": "model_calls_per_question",
       "op": "lte",
-      "value": 2
+      "value": 1
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
   "graderArchetype": "rag-r4",
   "isPublished": true
 }

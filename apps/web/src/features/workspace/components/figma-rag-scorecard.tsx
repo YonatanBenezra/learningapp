@@ -5,46 +5,114 @@ import Link from "next/link";
 import { routes } from "@/config/routes";
 import { nextRagProblemCta } from "../rag-next-problem";
 import {
-  recallFromGrade,
-  recallHitsTotalFromGrade,
-} from "@/features/traces/rag-trace-meta";
+  formatGateNumber,
+  formatGateThreshold,
+  gateMetricLabel,
+  gradedGates,
+  isRatioGate,
+  type GateSpec,
+} from "../gates";
+import { recallHitsTotalFromGrade } from "@/features/traces/rag-trace-meta";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
+import { failureClassCopy } from "../failure-class-copy";
+import {
+  evalBreakdownOf,
+  RagHiddenSetBreakdown,
+  RagMissEvidence,
+} from "./rag-eval-breakdown";
+import { RagRunDiff, type RagRunSnapshot } from "./rag-run-diff";
 
 type FigmaRagScorecardProps = {
   run: Run;
   grade: Grade;
+  /** This run and the learner's previous graded submission, when there is one. */
+  diff?: { previous: RagRunSnapshot; current: RagRunSnapshot } | null;
+  /** Submissions made in this workspace session, including the graded one. */
   attempt?: number;
   exerciseSlug?: string;
 };
 
+type ScoreRow = {
+  key: string;
+  label: string;
+  actual: string;
+  threshold: string;
+  tone: "pass" | "fail" | "info";
+  sub?: string;
+};
+
+function elapsedFromRun(run: Run): string | null {
+  if (!run.startedAt || !run.finishedAt) {
+    return null;
+  }
+  const ms = Date.parse(run.finishedAt) - Date.parse(run.startedAt);
+  return Number.isFinite(ms) && ms >= 0 ? `${(ms / 1000).toFixed(1)}s` : null;
+}
+
+function isRecallMetric(metric: string): boolean {
+  return metric.startsWith("recall");
+}
+
+function rowsFromGates(
+  gates: GateSpec[],
+  recallCounts: { hits?: number; total?: number },
+): ScoreRow[] {
+  return gates.map((gate) => ({
+    key: gate.id ?? gate.metric,
+    label: gateMetricLabel(gate.metric),
+    actual: typeof gate.actual === "number" ? formatGateNumber(gate.metric, gate.actual) : "—",
+    threshold: formatGateThreshold(gate),
+    tone: gate.passed === true ? "pass" : gate.passed === false ? "fail" : "info",
+    sub:
+      isRecallMetric(gate.metric) &&
+      recallCounts.hits != null &&
+      recallCounts.total != null
+        ? `(${recallCounts.hits}/${recallCounts.total})`
+        : undefined,
+  }));
+}
+
+/** Older grades without `gateResults`: show raw metrics, without inventing thresholds. */
+function rowsFromMetrics(grade: Grade): ScoreRow[] {
+  return Object.entries(grade.metrics ?? {}).map(([key, metric]) => ({
+    key,
+    label: gateMetricLabel(key),
+    actual: formatGateNumber(key, Number(metric.value)),
+    threshold: "—",
+    tone: "info",
+  }));
+}
+
 export function FigmaRagScorecard({
   run,
   grade,
-  attempt = 1,
+  diff = null,
+  attempt,
   exerciseSlug,
 }: FigmaRagScorecardProps) {
   const passed = grade.verdict === "pass";
-  const recall = recallFromGrade(grade) ?? 0;
-  const threshold =
-    typeof grade.scorecard?.threshold === "number" ? grade.scorecard.threshold : 0.8;
-  const { hits, total } = recallHitsTotalFromGrade(grade);
+  const gates = gradedGates(grade.gateResults);
+  const recallCounts = recallHitsTotalFromGrade(grade);
+  const rows =
+    gates.length > 0 ? rowsFromGates(gates, recallCounts) : rowsFromMetrics(grade);
+  const barGate = gates.find(isRatioGate);
+  const barActual = typeof barGate?.actual === "number" ? barGate.actual : null;
+  const barPassed = barGate?.passed === true;
   const failing = grade.failingCases ?? [];
-  const totalCases =
-    typeof grade.scorecard?.totalCases === "number"
-      ? grade.scorecard.totalCases
-      : total ?? failing.length + (hits ?? 0);
   const caseIds = Array.isArray(grade.scorecard?.caseIds)
     ? (grade.scorecard.caseIds as string[])
     : null;
-  const failCount =
+  const { hits, total } = recallCounts;
+  const missSummary =
     hits != null && total != null
-      ? total - hits
-      : typeof grade.scorecard?.failingCount === "number"
-        ? grade.scorecard.failingCount
-        : failing.length;
-  const failureClass = grade.failureClasses?.[0];
+      ? `${total - hits} of ${total} missed`
+      : failing.length > 0
+        ? `${failing.length} sample${failing.length === 1 ? "" : "s"} shown`
+        : null;
+  const failureClasses = grade.failureClasses ?? [];
+  const breakdown = evalBreakdownOf(grade.scorecard);
   const failureDetail =
     typeof grade.scorecard?.failureDetail === "string"
       ? grade.scorecard.failureDetail
@@ -58,11 +126,7 @@ export function FigmaRagScorecard({
   const elapsed =
     typeof grade.scorecard?.elapsedSeconds === "number"
       ? `${grade.scorecard.elapsedSeconds.toFixed(1)}s`
-      : passed
-        ? "2.1s"
-        : "2.4s";
-  const meanTokens = grade.metrics?.meanTokens?.value ?? (passed ? 288 : 312);
-  const metricPassed = recall >= threshold;
+      : elapsedFromRun(run);
   const nextCta = exerciseSlug ? nextRagProblemCta(exerciseSlug) : null;
 
   return (
@@ -88,7 +152,7 @@ export function FigmaRagScorecard({
           <p className="lp-grd-score-hero-title">{headline}</p>
         </div>
         <p className="lp-grd-score-hero-meta">
-          Run succeeded · Grade complete · {elapsed}
+          Run succeeded · Grade complete{elapsed ? ` · ${elapsed}` : ""}
         </p>
         <nav className="lp-rag-score-hero-links" aria-label="Run links">
           <Link href={routes.run(run.id)}>Run</Link>
@@ -109,65 +173,82 @@ export function FigmaRagScorecard({
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="lp-rag-score-metric-name">recall@5</td>
-              <td
-                className={cn(
-                  "lp-rag-score-metric-value",
-                  metricPassed ? "is-pass" : "is-fail",
-                )}
-              >
-                {recall.toFixed(2)}
-                {!passed && hits != null && total != null ? (
-                  <span className="lp-rag-score-metric-sub">
-                    ({hits}/{total})
-                  </span>
-                ) : null}
-              </td>
-              <td className="lp-rag-score-metric-threshold">≥ {threshold.toFixed(2)}</td>
-              <td className="lp-rag-score-table-status">
-                <StatusPill tone={metricPassed ? "pass" : "fail"}>
-                  {metricPassed ? "pass" : "fail"}
-                </StatusPill>
-              </td>
-            </tr>
-            <tr>
-              <td className="lp-rag-score-metric-name">mean tokens</td>
-              <td className="lp-rag-score-metric-value">{Math.round(meanTokens)}</td>
-              <td className="lp-rag-score-metric-threshold">—</td>
-              <td className="lp-rag-score-table-status">
-                <StatusPill tone="info">info</StatusPill>
-              </td>
-            </tr>
+            {rows.length > 0 ? (
+              rows.map((row) => (
+                <tr key={row.key}>
+                  <td className="lp-rag-score-metric-name">{row.label}</td>
+                  <td
+                    className={cn(
+                      "lp-rag-score-metric-value",
+                      row.tone === "pass" && "is-pass",
+                      row.tone === "fail" && "is-fail",
+                    )}
+                  >
+                    {row.actual}
+                    {row.sub ? (
+                      <span className="lp-rag-score-metric-sub">{row.sub}</span>
+                    ) : null}
+                  </td>
+                  <td className="lp-rag-score-metric-threshold">{row.threshold}</td>
+                  <td className="lp-rag-score-table-status">
+                    <StatusPill tone={row.tone}>{row.tone}</StatusPill>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td className="lp-rag-score-metric-name" colSpan={4}>
+                  No metrics were recorded for this grade.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
 
-      <div className="lp-rag-score-threshold">
-        <div className="lp-rag-score-threshold-track" aria-hidden>
-          <span
-            className={cn(
-              "lp-rag-score-threshold-fill",
-              metricPassed ? "is-pass" : "is-fail",
-            )}
-            style={{ width: `${Math.min(100, Math.max(0, recall * 100))}%` }}
-          />
-          <span
-            className="lp-rag-score-threshold-mark"
-            style={{ left: `${threshold * 100}%` }}
-          />
+      {barGate && barActual != null ? (
+        <div className="lp-rag-score-threshold">
+          <div className="lp-rag-score-threshold-track" aria-hidden>
+            <span
+              className={cn(
+                "lp-rag-score-threshold-fill",
+                barPassed ? "is-pass" : "is-fail",
+              )}
+              style={{ width: `${Math.min(100, Math.max(0, barActual * 100))}%` }}
+            />
+            <span
+              className="lp-rag-score-threshold-mark"
+              style={{ left: `${barGate.value * 100}%` }}
+            />
+          </div>
+          <div className="lp-rag-score-threshold-labels">
+            <span>0</span>
+            <span style={{ left: `${barGate.value * 100}%` }}>
+              {barGate.value.toFixed(2)}
+            </span>
+            {/* Drop the end label when the threshold label would overlap it. */}
+            {barGate.value <= 0.85 ? <span>1.0</span> : null}
+          </div>
         </div>
-        <div className="lp-rag-score-threshold-labels">
-          <span>0</span>
-          <span style={{ left: `${threshold * 100}%` }}>{threshold.toFixed(2)}</span>
-          <span>1.0</span>
-        </div>
-      </div>
+      ) : null}
 
-      {!passed && failureClass ? (
+      {!passed && breakdown ? <RagMissEvidence breakdown={breakdown} /> : null}
+
+      {!passed && !breakdown && failureClasses.length > 0 ? (
         <section className="lp-rag-score-failure-block">
           <h3 className="lp-rag-score-section-label">Failure class</h3>
-          <code className="lp-rag-score-failure-code">{failureClass}</code>
+          <ul className="lp-rag-score-failure-classes">
+            {failureClasses.map((code) => (
+              <li key={code}>
+                <code className="lp-rag-score-failure-code">{code}</code>
+                {failureClassCopy(code) ? (
+                  <span className="lp-rag-score-failure-detail">
+                    {failureClassCopy(code)}
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
           {failureDetail ? (
             <p className="lp-rag-score-failure-detail">{failureDetail}</p>
           ) : null}
@@ -178,9 +259,9 @@ export function FigmaRagScorecard({
         <section className="lp-rag-score-failures">
           <div className="lp-rag-score-failures-head">
             <h3 className="lp-rag-score-section-label">Failing cases</h3>
-            <span className="lp-rag-score-failures-count">
-              {failCount} of {totalCases || "—"} missed
-            </span>
+            {missSummary ? (
+              <span className="lp-rag-score-failures-count">{missSummary}</span>
+            ) : null}
           </div>
           {failing.length > 0 ? (
             <ul className="lp-rag-score-failures-list">
@@ -188,21 +269,36 @@ export function FigmaRagScorecard({
                 <FailingCaseCard
                   key={`${item.question}-${index}`}
                   item={item}
-                  id={caseIds?.[index] ?? `q_h_${String(7 + index * 5).padStart(2, "0")}`}
+                  id={caseIds?.[index] ?? `Miss ${index + 1}`}
                 />
               ))}
             </ul>
           ) : (
             <p className="lp-rag-score-failures-empty">
-              No sample misses attached to this grade.
+              {breakdown
+                ? "No feedback-split question failed, so no question text is shown. Holdout misses are counted below."
+                : "No sample misses attached to this grade."}
             </p>
           )}
+          {breakdown && failing.length > 0 ? (
+            <p className="lp-rag-score-failures-note">
+              Only feedback-split questions are shown. Holdout misses are counted below and never revealed.
+            </p>
+          ) : null}
         </section>
       ) : null}
 
+      {breakdown ? <RagHiddenSetBreakdown breakdown={breakdown} /> : null}
+
+      {diff ? <RagRunDiff previous={diff.previous} current={diff.current} /> : null}
+
       {passed && nextCta ? (
         <footer className="lp-rag-score-footer">
-          <p className="lp-rag-score-footer-note">Solved in {attempt} attempts</p>
+          {attempt != null && attempt > 0 ? (
+            <p className="lp-rag-score-footer-note">
+              Solved in {attempt} attempt{attempt === 1 ? "" : "s"}
+            </p>
+          ) : null}
           <Link href={nextCta.href} className="lp-rag-score-next">
             {nextCta.label}
             <ArrowRight className="size-3.5" strokeWidth={2.25} aria-hidden />
@@ -250,6 +346,12 @@ function FailingCaseCard({ item, id }: { item: FailingCase; id: string }) {
         <p className="lp-rag-score-failure-note">
           <X className="size-3.5 shrink-0 stroke-[2.5]" aria-hidden />
           <span>{item.note}</span>
+        </p>
+      ) : null}
+      {item.answer ? (
+        <p className="lp-rag-score-failure-answer">
+          <span className="lp-rag-score-failure-answer-label">Model answered</span>
+          {item.answer}
         </p>
       ) : null}
     </li>

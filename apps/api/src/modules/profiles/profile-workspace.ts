@@ -1,4 +1,7 @@
-import { RECENT_PASS_WINDOW_MS, leaderboardRating } from '../leaderboard/leaderboard-rank';
+import {
+  RECENT_PASS_WINDOW_MS,
+  leaderboardRating,
+} from '../leaderboard/leaderboard-rank';
 import { calendarDateKey } from '../progress/calendar';
 import { computeStreak } from '../progress/streak';
 import type { ProfileMeta } from './profile-meta';
@@ -76,6 +79,7 @@ export function computePracticeRating(
   solves: number,
   passRows: { createdAt: Date }[],
   now = new Date(),
+  hintPoints = 0,
 ) {
   const recentCutoff = new Date(now.getTime() - RECENT_PASS_WINDOW_MS);
   let recentPasses = 0;
@@ -84,7 +88,10 @@ export function computePracticeRating(
       recentPasses += 1;
     }
   }
-  return { rating: leaderboardRating(solves, recentPasses), recentPasses };
+  return {
+    rating: leaderboardRating(solves, recentPasses, hintPoints),
+    recentPasses,
+  };
 }
 
 export function mergeMetaSkills(

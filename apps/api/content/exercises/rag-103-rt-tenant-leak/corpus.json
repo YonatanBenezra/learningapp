@@ -1,0 +1,32 @@
+[
+  {
+    "id": "pto",
+    "title": "Paid time off",
+    "text": "Full-time staff receive twenty-two (22) days of paid time off each calendar year. Requests must be submitted at least fourteen (14) days before the first day of leave, except for documented emergencies. Unused days may be carried into the next year up to a maximum of five (5) days; any remainder is forfeited on 31 January. Managers approve PTO in Workday before the leave starts."
+  },
+  {
+    "id": "vpn",
+    "title": "VPN and remote access",
+    "text": "Remote access to production networks requires the corporate VPN with hardware MFA enrolled in Okta. Split tunneling is disabled; all traffic must egress through the company gateway. Contractors use the same VPN image and must be offboarded within four hours of contract end. Personal devices are not permitted on the production VPN profile."
+  },
+  {
+    "id": "incident",
+    "title": "Incident response",
+    "text": "Priority-1 incidents must be acknowledged within fifteen (15) minutes. Page the on-call primary and post a timeline in Slack channel #incidents. A P1 is any event that blocks customer-facing checkout or authentication. Priority-2 events have a sixty-minute acknowledge target. Severity is set by the incident commander, not the reporter."
+  },
+  {
+    "id": "expense",
+    "title": "Expense policy",
+    "text": "Team meals are reimbursed up to forty-five euros (€45) per person excluding tax. Alcohol is never reimbursable. Expense reports must be submitted within thirty (30) days of the transaction date or they are declined automatically. Ride-hailing to the office is not reimbursable on ordinary workdays."
+  },
+  {
+    "id": "password",
+    "title": "Password and secrets",
+    "text": "Passwords are at least sixteen characters and stored only in 1Password. Production secrets never live in git. Rotate a leaked credential within one hour of detection. Shared logins are forbidden even for vendors."
+  },
+  {
+    "id": "slack",
+    "title": "Slack channels",
+    "text": "Customer incidents are discussed in #incidents, not DMs. Public channels are the default. External guests require a time-boxed multi-channel guest account. Do not paste production credentials into Slack."
+  }
+]

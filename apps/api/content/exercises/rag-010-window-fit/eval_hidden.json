@@ -1,242 +1,792 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "How much memory does the Air laptop in the office range have?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "32 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Air | 32 GB | 430 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "How much memory does the Pro laptop in the office range have?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "16 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Pro | 16 GB | 929 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "How much memory does the Max laptop in the office range have?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days"
+    "goldAnswer": "8 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Max | 8 GB | 554 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "How much memory does the Mini laptop in the office range have?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January"
+    "goldAnswer": "64 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Mini | 64 GB | 733 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "How much memory does the Air laptop in the studio range have?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta"
+    "goldAnswer": "32 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Air | 32 GB | 255 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "How much memory does the Pro laptop in the studio range have?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled"
+    "goldAnswer": "64 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Pro | 64 GB | 506 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "question": "How much memory does the Max laptop in the studio range have?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "16 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Max | 16 GB | 482 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "How much memory does the Mini laptop in the studio range have?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes"
+    "goldAnswer": "64 GB",
+    "goldDocId": "laptops",
+    "goldSpan": "| Mini | 64 GB | 1056 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "What screen size is the Air monitor in the office range?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication"
+    "goldAnswer": "24 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Air | 24 inch | 843 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "What screen size is the Pro monitor in the office range?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target"
+    "goldAnswer": "24 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Pro | 24 inch | 218 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "What screen size is the Max monitor in the office range?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers"
+    "goldAnswer": "32 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Max | 32 inch | 558 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "What screen size is the Mini monitor in the office range?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted"
+    "goldAnswer": "34 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Mini | 34 inch | 299 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "What screen size is the Air monitor in the studio range?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only"
+    "goldAnswer": "24 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Air | 24 inch | 493 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "What screen size is the Pro monitor in the studio range?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "34 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Pro | 34 inch | 736 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "What screen size is the Max monitor in the studio range?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable"
+    "goldAnswer": "32 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Max | 32 inch | 421 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "question": "What screen size is the Mini monitor in the studio range?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "34 inch",
+    "goldDocId": "monitors",
+    "goldSpan": "| Mini | 34 inch | 275 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "question": "What layout does the Air keyboard in the office range use?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "split",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Air | split | 366 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "What layout does the Pro keyboard in the office range use?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days"
+    "goldAnswer": "split",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Pro | split | 210 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "What layout does the Max keyboard in the office range use?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold"
+    "goldAnswer": "full size",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Max | full size | 598 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "question": "What layout does the Mini keyboard in the office range use?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "tenkeyless",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Mini | tenkeyless | 103 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h21",
-    "question": "Who is backup on-call for the week?",
+    "question": "What layout does the Air keyboard in the studio range use?",
     "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week"
+    "goldAnswer": "full size",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Air | full size | 874 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "What layout does the Pro keyboard in the studio range use?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs"
+    "goldAnswer": "full size",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Pro | full size | 842 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "What layout does the Max keyboard in the studio range use?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report"
+    "goldAnswer": "compact",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Max | compact | 609 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "What layout does the Mini keyboard in the studio range use?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form"
+    "goldAnswer": "full size",
+    "goldDocId": "keyboards",
+    "goldSpan": "| Mini | full size | 452 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "How long does the battery of the Air headset in the office range last?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days"
+    "goldAnswer": "40 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Air | 40 hours | 196 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "How long does the battery of the Pro headset in the office range last?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "40 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Pro | 40 hours | 886 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
   },
   {
     "id": "h27",
+    "question": "How long does the battery of the Max headset in the office range last?",
+    "answerable": true,
+    "goldAnswer": "50 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Max | 50 hours | 158 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "How long does the battery of the Mini headset in the office range last?",
+    "answerable": true,
+    "goldAnswer": "50 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Mini | 50 hours | 313 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "How long does the battery of the Air headset in the studio range last?",
+    "answerable": true,
+    "goldAnswer": "50 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Air | 50 hours | 1080 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "How long does the battery of the Pro headset in the studio range last?",
+    "answerable": true,
+    "goldAnswer": "20 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Pro | 20 hours | 789 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "How long does the battery of the Max headset in the studio range last?",
+    "answerable": true,
+    "goldAnswer": "30 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Max | 30 hours | 866 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How long does the battery of the Mini headset in the studio range last?",
+    "answerable": true,
+    "goldAnswer": "20 hours",
+    "goldDocId": "headsets",
+    "goldSpan": "| Mini | 20 hours | 269 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "How many ports does the Air dock in the office range have?",
+    "answerable": true,
+    "goldAnswer": "11 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Air | 11 ports | 134 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "How many ports does the Pro dock in the office range have?",
+    "answerable": true,
+    "goldAnswer": "6 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Pro | 6 ports | 635 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "How many ports does the Max dock in the office range have?",
+    "answerable": true,
+    "goldAnswer": "11 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Max | 11 ports | 859 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "How many ports does the Mini dock in the office range have?",
+    "answerable": true,
+    "goldAnswer": "4 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Mini | 4 ports | 764 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h37",
+    "question": "How many ports does the Air dock in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "11 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Air | 11 ports | 782 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h38",
+    "question": "How many ports does the Pro dock in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "4 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Pro | 4 ports | 229 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h39",
+    "question": "How many ports does the Max dock in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "6 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Max | 6 ports | 665 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h40",
+    "question": "How many ports does the Mini dock in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "4 ports",
+    "goldDocId": "docks",
+    "goldSpan": "| Mini | 4 ports | 826 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h41",
+    "question": "What resolution does the Air webcam in the office range record?",
+    "answerable": true,
+    "goldAnswer": "4K",
+    "goldDocId": "webcams",
+    "goldSpan": "| Air | 4K | 953 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h42",
+    "question": "What resolution does the Pro webcam in the office range record?",
+    "answerable": true,
+    "goldAnswer": "1080p",
+    "goldDocId": "webcams",
+    "goldSpan": "| Pro | 1080p | 228 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h43",
+    "question": "What resolution does the Max webcam in the office range record?",
+    "answerable": true,
+    "goldAnswer": "720p",
+    "goldDocId": "webcams",
+    "goldSpan": "| Max | 720p | 125 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h44",
+    "question": "What resolution does the Mini webcam in the office range record?",
+    "answerable": true,
+    "goldAnswer": "1080p",
+    "goldDocId": "webcams",
+    "goldSpan": "| Mini | 1080p | 658 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h45",
+    "question": "What resolution does the Air webcam in the studio range record?",
+    "answerable": true,
+    "goldAnswer": "1440p",
+    "goldDocId": "webcams",
+    "goldSpan": "| Air | 1440p | 560 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h46",
+    "question": "What resolution does the Pro webcam in the studio range record?",
+    "answerable": true,
+    "goldAnswer": "1440p",
+    "goldDocId": "webcams",
+    "goldSpan": "| Pro | 1440p | 339 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h47",
+    "question": "What resolution does the Max webcam in the studio range record?",
+    "answerable": true,
+    "goldAnswer": "720p",
+    "goldDocId": "webcams",
+    "goldSpan": "| Max | 720p | 792 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h48",
+    "question": "What resolution does the Mini webcam in the studio range record?",
+    "answerable": true,
+    "goldAnswer": "1440p",
+    "goldDocId": "webcams",
+    "goldSpan": "| Mini | 1440p | 1071 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h49",
+    "question": "How long is the warranty on the Air chair in the office range?",
+    "answerable": true,
+    "goldAnswer": "2 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Air | 2 years | 593 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h50",
+    "question": "How long is the warranty on the Pro chair in the office range?",
+    "answerable": true,
+    "goldAnswer": "2 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Pro | 2 years | 419 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h51",
+    "question": "How long is the warranty on the Max chair in the office range?",
+    "answerable": true,
+    "goldAnswer": "7 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Max | 7 years | 437 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h52",
+    "question": "How long is the warranty on the Mini chair in the office range?",
+    "answerable": true,
+    "goldAnswer": "2 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Mini | 2 years | 146 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h53",
+    "question": "How long is the warranty on the Air chair in the studio range?",
+    "answerable": true,
+    "goldAnswer": "5 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Air | 5 years | 490 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h54",
+    "question": "How long is the warranty on the Pro chair in the studio range?",
+    "answerable": true,
+    "goldAnswer": "2 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Pro | 2 years | 320 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h55",
+    "question": "How long is the warranty on the Max chair in the studio range?",
+    "answerable": true,
+    "goldAnswer": "5 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Max | 5 years | 1033 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h56",
+    "question": "How long is the warranty on the Mini chair in the studio range?",
+    "answerable": true,
+    "goldAnswer": "5 years",
+    "goldDocId": "desk-chairs",
+    "goldSpan": "| Mini | 5 years | 1078 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h57",
+    "question": "How much storage does the Air phone in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "256 GB",
+    "goldDocId": "phones",
+    "goldSpan": "| Air | 256 GB | 597 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h58",
+    "question": "How much storage does the Pro phone in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "128 GB",
+    "goldDocId": "phones",
+    "goldSpan": "| Pro | 128 GB | 1097 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h59",
+    "question": "How much storage does the Max phone in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "512 GB",
+    "goldDocId": "phones",
+    "goldSpan": "| Max | 512 GB | 259 euros |",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h60",
+    "question": "How much storage does the Mini phone in the studio range have?",
+    "answerable": true,
+    "goldAnswer": "128 GB",
+    "goldDocId": "phones",
+    "goldSpan": "| Mini | 128 GB | 429 euros |",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "canary",
     "question": "What is the HIDDEN_EVAL_R10_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
-  },
-  {
-    "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

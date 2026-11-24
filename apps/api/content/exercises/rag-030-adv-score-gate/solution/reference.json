@@ -1,5 +1,6 @@
 {
-  "reranker": "title-boost",
-  "rerankTopN": 20,
-  "queryRewritePrompt": ""
+  "topK": 2,
+  "hops": 2,
+  "hopSeeds": 1,
+  "hopQuery": "entities"
 }

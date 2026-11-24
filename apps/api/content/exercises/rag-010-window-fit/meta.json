@@ -1,9 +1,9 @@
 {
   "slug": "rag-010-window-fit",
-  "version": 1,
+  "version": 2,
   "type": "exercise",
   "simulator": "rag",
-  "title": "Metadata Scope & Window Fit",
+  "title": "Keep the Heading with the Row",
   "difficulty": "E",
   "catalogPhase": 2,
   "skills": [
@@ -20,7 +20,7 @@
       "name": "Content pipeline"
     }
   ],
-  "briefMd": "# Phase 2 · Metadata Scope & Window Fit\n\nMulti-tenant KBs fail when chunks span the wrong **policy sections** — the vector index returns plausible but out-of-scope text. Tune windows so each chunk aligns with document structure (heading-aware scope), mimicking metadata/ACL boundaries before retrieval.\n\n**Gate:** recall@5 ≥ 0.80 on the hidden support-KB eval.\n",
+  "briefMd": "# Phase 2 · Keep the Heading with the Row\n\nThe hardware catalogue is markdown: one page per category (Laptops, Monitors, Headsets…), a section per range, and a table per section. Every table uses the same model names (Air, Pro, Max, Mini), so a row on its own, such as `| Pro | 32 GB | 929 euros |`, could be any category in any range. Only the page title and the section heading say which \"Pro\" it is.\n\nYou control **chunk size**, **overlap** and **split strategy**. Retrieval is BM25, top 5 chunks. A question counts when the chunk holding its table row is retrieved.\n\n**Gates:** recall@5 ≥ 0.90 and mean context tokens (top-5 chunks) ≤ 165 on the hidden set.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -55,7 +55,8 @@
     }
   },
   "thresholds": {
-    "recall_at_5": 0.8
+    "recall_at_5": 0.9,
+    "mean_context_tokens": 165
   },
   "budget": {
     "max_model_calls": 0,
@@ -69,13 +70,24 @@
       "class": "A",
       "metric": "recall@5",
       "op": "gte",
-      "value": 0.8
+      "value": 0.9
+    },
+    {
+      "id": "mean-context-tokens",
+      "class": "A",
+      "metric": "mean_context_tokens",
+      "op": "lte",
+      "value": 165
     }
   ],
   "feedback": {
     "show_failing_cases": 3,
     "rotate": true
   },
-  "attemptPolicy": null,
-  "graderArchetype": "rag-r1"
+  "attemptPolicy": {
+    "maxSubmissions": 20,
+    "cooldownHours": 1
+  },
+  "graderArchetype": "rag-r1",
+  "corpusFile": "hardware-catalog"
 }

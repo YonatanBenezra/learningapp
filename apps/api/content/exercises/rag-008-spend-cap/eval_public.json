@@ -1,42 +1,34 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How much can I claim per day for food on a business trip?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "45 euros a day",
+    "goldDocId": "meals-2026",
+    "goldSpan": "On business trips you can claim up to 45 euros a day for food"
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "What is the limit for accepting supplier gifts?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldAnswer": "50 euros",
+    "goldDocId": "gifts-2026",
+    "goldSpan": "You may accept gifts from suppliers worth up to 50 euros"
   },
   {
     "id": "p3",
-    "question": "When does primary on-call rotate?",
+    "question": "What is the notice period after probation?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "two months",
+    "goldDocId": "notice-2026",
+    "goldSpan": "After probation, the notice period is two months"
   },
   {
     "id": "p4",
-    "question": "What report must production SaaS vendors present before procurement?",
+    "question": "What is the maximum bike value for leasing?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
-  },
-  {
-    "id": "p5",
-    "question": "Where must production secrets never live?",
-    "answerable": true,
-    "goldAnswer": "git",
-    "goldDocId": "password",
-    "goldSpan": "Production secrets never live in git"
+    "goldAnswer": "3,500 euros",
+    "goldDocId": "bikes-2026",
+    "goldSpan": "Staff can lease a bike worth up to 3,500 euros through payroll"
   }
 ]

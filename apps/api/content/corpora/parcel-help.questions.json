@@ -1,0 +1,1802 @@
+[
+  {
+    "service": "standard parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a standard parcel cost?",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "A standard parcel costs 47 euros to send.",
+    "goldAnswer": "A standard parcel costs 47 euros to send."
+  },
+  {
+    "service": "standard parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a standard parcel?",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "The weight limit for a standard parcel is 3 kg.",
+    "goldAnswer": "The weight limit for a standard parcel is 3 kg."
+  },
+  {
+    "service": "standard parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a standard parcel take?",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "Delivery of a standard parcel takes 4 working days.",
+    "goldAnswer": "Delivery of a standard parcel takes 4 working days."
+  },
+  {
+    "service": "standard parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a standard parcel?",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "The size limit for a standard parcel is 143 cm on the longest side.",
+    "goldAnswer": "The size limit for a standard parcel is 143 cm on the longest side."
+  },
+  {
+    "service": "standard parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a standard parcel insured for?",
+    "goldDocId": "standard-parcel",
+    "goldSpan": "A standard parcel is insured for up to 511 euros.",
+    "goldAnswer": "A standard parcel is insured for up to 511 euros."
+  },
+  {
+    "service": "express parcel",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a express parcel cost?",
+    "goldDocId": "express-parcel",
+    "goldSpan": "A express parcel costs 47 euros to send.",
+    "goldAnswer": "A express parcel costs 47 euros to send."
+  },
+  {
+    "service": "express parcel",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a express parcel?",
+    "goldDocId": "express-parcel",
+    "goldSpan": "The weight limit for a express parcel is 38 kg.",
+    "goldAnswer": "The weight limit for a express parcel is 38 kg."
+  },
+  {
+    "service": "express parcel",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a express parcel take?",
+    "goldDocId": "express-parcel",
+    "goldSpan": "Delivery of a express parcel takes 5 working days.",
+    "goldAnswer": "Delivery of a express parcel takes 5 working days."
+  },
+  {
+    "service": "express parcel",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a express parcel?",
+    "goldDocId": "express-parcel",
+    "goldSpan": "The size limit for a express parcel is 92 cm on the longest side.",
+    "goldAnswer": "The size limit for a express parcel is 92 cm on the longest side."
+  },
+  {
+    "service": "express parcel",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a express parcel insured for?",
+    "goldDocId": "express-parcel",
+    "goldSpan": "A express parcel is insured for up to 344 euros.",
+    "goldAnswer": "A express parcel is insured for up to 344 euros."
+  },
+  {
+    "service": "same-day parcel",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a same-day parcel cost?",
+    "goldDocId": "same-day-parcel",
+    "goldSpan": "A same-day parcel costs 17 euros to send.",
+    "goldAnswer": "A same-day parcel costs 17 euros to send."
+  },
+  {
+    "service": "same-day parcel",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a same-day parcel?",
+    "goldDocId": "same-day-parcel",
+    "goldSpan": "The weight limit for a same-day parcel is 25 kg.",
+    "goldAnswer": "The weight limit for a same-day parcel is 25 kg."
+  },
+  {
+    "service": "same-day parcel",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a same-day parcel take?",
+    "goldDocId": "same-day-parcel",
+    "goldSpan": "Delivery of a same-day parcel takes 3 working days.",
+    "goldAnswer": "Delivery of a same-day parcel takes 3 working days."
+  },
+  {
+    "service": "same-day parcel",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a same-day parcel?",
+    "goldDocId": "same-day-parcel",
+    "goldSpan": "The size limit for a same-day parcel is 30 cm on the longest side.",
+    "goldAnswer": "The size limit for a same-day parcel is 30 cm on the longest side."
+  },
+  {
+    "service": "same-day parcel",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a same-day parcel insured for?",
+    "goldDocId": "same-day-parcel",
+    "goldSpan": "A same-day parcel is insured for up to 75 euros.",
+    "goldAnswer": "A same-day parcel is insured for up to 75 euros."
+  },
+  {
+    "service": "large parcel",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a large parcel cost?",
+    "goldDocId": "large-parcel",
+    "goldSpan": "A large parcel costs 32 euros to send.",
+    "goldAnswer": "A large parcel costs 32 euros to send."
+  },
+  {
+    "service": "large parcel",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a large parcel?",
+    "goldDocId": "large-parcel",
+    "goldSpan": "The weight limit for a large parcel is 18 kg.",
+    "goldAnswer": "The weight limit for a large parcel is 18 kg."
+  },
+  {
+    "service": "large parcel",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a large parcel take?",
+    "goldDocId": "large-parcel",
+    "goldSpan": "Delivery of a large parcel takes 4 working days.",
+    "goldAnswer": "Delivery of a large parcel takes 4 working days."
+  },
+  {
+    "service": "large parcel",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a large parcel?",
+    "goldDocId": "large-parcel",
+    "goldSpan": "The size limit for a large parcel is 141 cm on the longest side.",
+    "goldAnswer": "The size limit for a large parcel is 141 cm on the longest side."
+  },
+  {
+    "service": "large parcel",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a large parcel insured for?",
+    "goldDocId": "large-parcel",
+    "goldSpan": "A large parcel is insured for up to 474 euros.",
+    "goldAnswer": "A large parcel is insured for up to 474 euros."
+  },
+  {
+    "service": "international parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a international parcel cost?",
+    "goldDocId": "international-parcel",
+    "goldSpan": "A international parcel costs 17 euros to send.",
+    "goldAnswer": "A international parcel costs 17 euros to send."
+  },
+  {
+    "service": "international parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a international parcel?",
+    "goldDocId": "international-parcel",
+    "goldSpan": "The weight limit for a international parcel is 24 kg.",
+    "goldAnswer": "The weight limit for a international parcel is 24 kg."
+  },
+  {
+    "service": "international parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a international parcel take?",
+    "goldDocId": "international-parcel",
+    "goldSpan": "Delivery of a international parcel takes 5 working days.",
+    "goldAnswer": "Delivery of a international parcel takes 5 working days."
+  },
+  {
+    "service": "international parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a international parcel?",
+    "goldDocId": "international-parcel",
+    "goldSpan": "The size limit for a international parcel is 77 cm on the longest side.",
+    "goldAnswer": "The size limit for a international parcel is 77 cm on the longest side."
+  },
+  {
+    "service": "international parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a international parcel insured for?",
+    "goldDocId": "international-parcel",
+    "goldSpan": "A international parcel is insured for up to 229 euros.",
+    "goldAnswer": "A international parcel is insured for up to 229 euros."
+  },
+  {
+    "service": "international express parcel",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a international express parcel cost?",
+    "goldDocId": "international-express-parcel",
+    "goldSpan": "A international express parcel costs 28 euros to send.",
+    "goldAnswer": "A international express parcel costs 28 euros to send."
+  },
+  {
+    "service": "international express parcel",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a international express parcel?",
+    "goldDocId": "international-express-parcel",
+    "goldSpan": "The weight limit for a international express parcel is 23 kg.",
+    "goldAnswer": "The weight limit for a international express parcel is 23 kg."
+  },
+  {
+    "service": "international express parcel",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a international express parcel take?",
+    "goldDocId": "international-express-parcel",
+    "goldSpan": "Delivery of a international express parcel takes 1 working day.",
+    "goldAnswer": "Delivery of a international express parcel takes 1 working day."
+  },
+  {
+    "service": "international express parcel",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a international express parcel?",
+    "goldDocId": "international-express-parcel",
+    "goldSpan": "The size limit for a international express parcel is 46 cm on the longest side.",
+    "goldAnswer": "The size limit for a international express parcel is 46 cm on the longest side."
+  },
+  {
+    "service": "international express parcel",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a international express parcel insured for?",
+    "goldDocId": "international-express-parcel",
+    "goldSpan": "A international express parcel is insured for up to 94 euros.",
+    "goldAnswer": "A international express parcel is insured for up to 94 euros."
+  },
+  {
+    "service": "economy parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a economy parcel cost?",
+    "goldDocId": "economy-parcel",
+    "goldSpan": "A economy parcel costs 14 euros to send.",
+    "goldAnswer": "A economy parcel costs 14 euros to send."
+  },
+  {
+    "service": "economy parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a economy parcel?",
+    "goldDocId": "economy-parcel",
+    "goldSpan": "The weight limit for a economy parcel is 25 kg.",
+    "goldAnswer": "The weight limit for a economy parcel is 25 kg."
+  },
+  {
+    "service": "economy parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a economy parcel take?",
+    "goldDocId": "economy-parcel",
+    "goldSpan": "Delivery of a economy parcel takes 6 working days.",
+    "goldAnswer": "Delivery of a economy parcel takes 6 working days."
+  },
+  {
+    "service": "economy parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a economy parcel?",
+    "goldDocId": "economy-parcel",
+    "goldSpan": "The size limit for a economy parcel is 33 cm on the longest side.",
+    "goldAnswer": "The size limit for a economy parcel is 33 cm on the longest side."
+  },
+  {
+    "service": "economy parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a economy parcel insured for?",
+    "goldDocId": "economy-parcel",
+    "goldSpan": "A economy parcel is insured for up to 451 euros.",
+    "goldAnswer": "A economy parcel is insured for up to 451 euros."
+  },
+  {
+    "service": "standard letter",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a standard letter cost?",
+    "goldDocId": "standard-letter",
+    "goldSpan": "A standard letter costs 83 euros to send.",
+    "goldAnswer": "A standard letter costs 83 euros to send."
+  },
+  {
+    "service": "standard letter",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a standard letter?",
+    "goldDocId": "standard-letter",
+    "goldSpan": "The weight limit for a standard letter is 7 kg.",
+    "goldAnswer": "The weight limit for a standard letter is 7 kg."
+  },
+  {
+    "service": "standard letter",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a standard letter take?",
+    "goldDocId": "standard-letter",
+    "goldSpan": "Delivery of a standard letter takes 4 working days.",
+    "goldAnswer": "Delivery of a standard letter takes 4 working days."
+  },
+  {
+    "service": "standard letter",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a standard letter?",
+    "goldDocId": "standard-letter",
+    "goldSpan": "The size limit for a standard letter is 89 cm on the longest side.",
+    "goldAnswer": "The size limit for a standard letter is 89 cm on the longest side."
+  },
+  {
+    "service": "standard letter",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a standard letter insured for?",
+    "goldDocId": "standard-letter",
+    "goldSpan": "A standard letter is insured for up to 309 euros.",
+    "goldAnswer": "A standard letter is insured for up to 309 euros."
+  },
+  {
+    "service": "registered letter",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a registered letter cost?",
+    "goldDocId": "registered-letter",
+    "goldSpan": "A registered letter costs 23 euros to send.",
+    "goldAnswer": "A registered letter costs 23 euros to send."
+  },
+  {
+    "service": "registered letter",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a registered letter?",
+    "goldDocId": "registered-letter",
+    "goldSpan": "The weight limit for a registered letter is 5 kg.",
+    "goldAnswer": "The weight limit for a registered letter is 5 kg."
+  },
+  {
+    "service": "registered letter",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a registered letter take?",
+    "goldDocId": "registered-letter",
+    "goldSpan": "Delivery of a registered letter takes 5 working days.",
+    "goldAnswer": "Delivery of a registered letter takes 5 working days."
+  },
+  {
+    "service": "registered letter",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a registered letter?",
+    "goldDocId": "registered-letter",
+    "goldSpan": "The size limit for a registered letter is 125 cm on the longest side.",
+    "goldAnswer": "The size limit for a registered letter is 125 cm on the longest side."
+  },
+  {
+    "service": "registered letter",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a registered letter insured for?",
+    "goldDocId": "registered-letter",
+    "goldSpan": "A registered letter is insured for up to 270 euros.",
+    "goldAnswer": "A registered letter is insured for up to 270 euros."
+  },
+  {
+    "service": "express letter",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a express letter cost?",
+    "goldDocId": "express-letter",
+    "goldSpan": "A express letter costs 29 euros to send.",
+    "goldAnswer": "A express letter costs 29 euros to send."
+  },
+  {
+    "service": "express letter",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a express letter?",
+    "goldDocId": "express-letter",
+    "goldSpan": "The weight limit for a express letter is 4 kg.",
+    "goldAnswer": "The weight limit for a express letter is 4 kg."
+  },
+  {
+    "service": "express letter",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a express letter take?",
+    "goldDocId": "express-letter",
+    "goldSpan": "Delivery of a express letter takes 3 working days.",
+    "goldAnswer": "Delivery of a express letter takes 3 working days."
+  },
+  {
+    "service": "express letter",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a express letter?",
+    "goldDocId": "express-letter",
+    "goldSpan": "The size limit for a express letter is 87 cm on the longest side.",
+    "goldAnswer": "The size limit for a express letter is 87 cm on the longest side."
+  },
+  {
+    "service": "express letter",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a express letter insured for?",
+    "goldDocId": "express-letter",
+    "goldSpan": "A express letter is insured for up to 727 euros.",
+    "goldAnswer": "A express letter is insured for up to 727 euros."
+  },
+  {
+    "service": "international letter",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a international letter cost?",
+    "goldDocId": "international-letter",
+    "goldSpan": "A international letter costs 54 euros to send.",
+    "goldAnswer": "A international letter costs 54 euros to send."
+  },
+  {
+    "service": "international letter",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a international letter?",
+    "goldDocId": "international-letter",
+    "goldSpan": "The weight limit for a international letter is 10 kg.",
+    "goldAnswer": "The weight limit for a international letter is 10 kg."
+  },
+  {
+    "service": "international letter",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a international letter take?",
+    "goldDocId": "international-letter",
+    "goldSpan": "Delivery of a international letter takes 2 working days.",
+    "goldAnswer": "Delivery of a international letter takes 2 working days."
+  },
+  {
+    "service": "international letter",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a international letter?",
+    "goldDocId": "international-letter",
+    "goldSpan": "The size limit for a international letter is 95 cm on the longest side.",
+    "goldAnswer": "The size limit for a international letter is 95 cm on the longest side."
+  },
+  {
+    "service": "international letter",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a international letter insured for?",
+    "goldDocId": "international-letter",
+    "goldSpan": "A international letter is insured for up to 502 euros.",
+    "goldAnswer": "A international letter is insured for up to 502 euros."
+  },
+  {
+    "service": "large letter",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a large letter cost?",
+    "goldDocId": "large-letter",
+    "goldSpan": "A large letter costs 53 euros to send.",
+    "goldAnswer": "A large letter costs 53 euros to send."
+  },
+  {
+    "service": "large letter",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a large letter?",
+    "goldDocId": "large-letter",
+    "goldSpan": "The weight limit for a large letter is 26 kg.",
+    "goldAnswer": "The weight limit for a large letter is 26 kg."
+  },
+  {
+    "service": "large letter",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a large letter take?",
+    "goldDocId": "large-letter",
+    "goldSpan": "Delivery of a large letter takes 4 working days.",
+    "goldAnswer": "Delivery of a large letter takes 4 working days."
+  },
+  {
+    "service": "large letter",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a large letter?",
+    "goldDocId": "large-letter",
+    "goldSpan": "The size limit for a large letter is 188 cm on the longest side.",
+    "goldAnswer": "The size limit for a large letter is 188 cm on the longest side."
+  },
+  {
+    "service": "large letter",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a large letter insured for?",
+    "goldDocId": "large-letter",
+    "goldSpan": "A large letter is insured for up to 696 euros.",
+    "goldAnswer": "A large letter is insured for up to 696 euros."
+  },
+  {
+    "service": "full pallet",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a full pallet cost?",
+    "goldDocId": "full-pallet",
+    "goldSpan": "A full pallet costs 10 euros to send.",
+    "goldAnswer": "A full pallet costs 10 euros to send."
+  },
+  {
+    "service": "full pallet",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a full pallet?",
+    "goldDocId": "full-pallet",
+    "goldSpan": "The weight limit for a full pallet is 36 kg.",
+    "goldAnswer": "The weight limit for a full pallet is 36 kg."
+  },
+  {
+    "service": "full pallet",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a full pallet take?",
+    "goldDocId": "full-pallet",
+    "goldSpan": "Delivery of a full pallet takes 3 working days.",
+    "goldAnswer": "Delivery of a full pallet takes 3 working days."
+  },
+  {
+    "service": "full pallet",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a full pallet?",
+    "goldDocId": "full-pallet",
+    "goldSpan": "The size limit for a full pallet is 57 cm on the longest side.",
+    "goldAnswer": "The size limit for a full pallet is 57 cm on the longest side."
+  },
+  {
+    "service": "full pallet",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a full pallet insured for?",
+    "goldDocId": "full-pallet",
+    "goldSpan": "A full pallet is insured for up to 457 euros.",
+    "goldAnswer": "A full pallet is insured for up to 457 euros."
+  },
+  {
+    "service": "half pallet",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a half pallet cost?",
+    "goldDocId": "half-pallet",
+    "goldSpan": "A half pallet costs 13 euros to send.",
+    "goldAnswer": "A half pallet costs 13 euros to send."
+  },
+  {
+    "service": "half pallet",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a half pallet?",
+    "goldDocId": "half-pallet",
+    "goldSpan": "The weight limit for a half pallet is 22 kg.",
+    "goldAnswer": "The weight limit for a half pallet is 22 kg."
+  },
+  {
+    "service": "half pallet",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a half pallet take?",
+    "goldDocId": "half-pallet",
+    "goldSpan": "Delivery of a half pallet takes 2 working days.",
+    "goldAnswer": "Delivery of a half pallet takes 2 working days."
+  },
+  {
+    "service": "half pallet",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a half pallet?",
+    "goldDocId": "half-pallet",
+    "goldSpan": "The size limit for a half pallet is 55 cm on the longest side.",
+    "goldAnswer": "The size limit for a half pallet is 55 cm on the longest side."
+  },
+  {
+    "service": "half pallet",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a half pallet insured for?",
+    "goldDocId": "half-pallet",
+    "goldSpan": "A half pallet is insured for up to 740 euros.",
+    "goldAnswer": "A half pallet is insured for up to 740 euros."
+  },
+  {
+    "service": "express pallet",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a express pallet cost?",
+    "goldDocId": "express-pallet",
+    "goldSpan": "A express pallet costs 60 euros to send.",
+    "goldAnswer": "A express pallet costs 60 euros to send."
+  },
+  {
+    "service": "express pallet",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a express pallet?",
+    "goldDocId": "express-pallet",
+    "goldSpan": "The weight limit for a express pallet is 29 kg.",
+    "goldAnswer": "The weight limit for a express pallet is 29 kg."
+  },
+  {
+    "service": "express pallet",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a express pallet take?",
+    "goldDocId": "express-pallet",
+    "goldSpan": "Delivery of a express pallet takes 2 working days.",
+    "goldAnswer": "Delivery of a express pallet takes 2 working days."
+  },
+  {
+    "service": "express pallet",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a express pallet?",
+    "goldDocId": "express-pallet",
+    "goldSpan": "The size limit for a express pallet is 32 cm on the longest side.",
+    "goldAnswer": "The size limit for a express pallet is 32 cm on the longest side."
+  },
+  {
+    "service": "express pallet",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a express pallet insured for?",
+    "goldDocId": "express-pallet",
+    "goldSpan": "A express pallet is insured for up to 436 euros.",
+    "goldAnswer": "A express pallet is insured for up to 436 euros."
+  },
+  {
+    "service": "international pallet",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a international pallet cost?",
+    "goldDocId": "international-pallet",
+    "goldSpan": "A international pallet costs 57 euros to send.",
+    "goldAnswer": "A international pallet costs 57 euros to send."
+  },
+  {
+    "service": "international pallet",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a international pallet?",
+    "goldDocId": "international-pallet",
+    "goldSpan": "The weight limit for a international pallet is 6 kg.",
+    "goldAnswer": "The weight limit for a international pallet is 6 kg."
+  },
+  {
+    "service": "international pallet",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a international pallet take?",
+    "goldDocId": "international-pallet",
+    "goldSpan": "Delivery of a international pallet takes 1 working day.",
+    "goldAnswer": "Delivery of a international pallet takes 1 working day."
+  },
+  {
+    "service": "international pallet",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a international pallet?",
+    "goldDocId": "international-pallet",
+    "goldSpan": "The size limit for a international pallet is 174 cm on the longest side.",
+    "goldAnswer": "The size limit for a international pallet is 174 cm on the longest side."
+  },
+  {
+    "service": "international pallet",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a international pallet insured for?",
+    "goldDocId": "international-pallet",
+    "goldSpan": "A international pallet is insured for up to 375 euros.",
+    "goldAnswer": "A international pallet is insured for up to 375 euros."
+  },
+  {
+    "service": "return parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a return parcel cost?",
+    "goldDocId": "return-parcel",
+    "goldSpan": "A return parcel costs 69 euros to send.",
+    "goldAnswer": "A return parcel costs 69 euros to send."
+  },
+  {
+    "service": "return parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a return parcel?",
+    "goldDocId": "return-parcel",
+    "goldSpan": "The weight limit for a return parcel is 11 kg.",
+    "goldAnswer": "The weight limit for a return parcel is 11 kg."
+  },
+  {
+    "service": "return parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a return parcel take?",
+    "goldDocId": "return-parcel",
+    "goldSpan": "Delivery of a return parcel takes 3 working days.",
+    "goldAnswer": "Delivery of a return parcel takes 3 working days."
+  },
+  {
+    "service": "return parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a return parcel?",
+    "goldDocId": "return-parcel",
+    "goldSpan": "The size limit for a return parcel is 179 cm on the longest side.",
+    "goldAnswer": "The size limit for a return parcel is 179 cm on the longest side."
+  },
+  {
+    "service": "return parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a return parcel insured for?",
+    "goldDocId": "return-parcel",
+    "goldSpan": "A return parcel is insured for up to 210 euros.",
+    "goldAnswer": "A return parcel is insured for up to 210 euros."
+  },
+  {
+    "service": "express return",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a express return cost?",
+    "goldDocId": "express-return",
+    "goldSpan": "A express return costs 9 euros to send.",
+    "goldAnswer": "A express return costs 9 euros to send."
+  },
+  {
+    "service": "express return",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a express return?",
+    "goldDocId": "express-return",
+    "goldSpan": "The weight limit for a express return is 33 kg.",
+    "goldAnswer": "The weight limit for a express return is 33 kg."
+  },
+  {
+    "service": "express return",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a express return take?",
+    "goldDocId": "express-return",
+    "goldSpan": "Delivery of a express return takes 4 working days.",
+    "goldAnswer": "Delivery of a express return takes 4 working days."
+  },
+  {
+    "service": "express return",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a express return?",
+    "goldDocId": "express-return",
+    "goldSpan": "The size limit for a express return is 38 cm on the longest side.",
+    "goldAnswer": "The size limit for a express return is 38 cm on the longest side."
+  },
+  {
+    "service": "express return",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a express return insured for?",
+    "goldDocId": "express-return",
+    "goldSpan": "A express return is insured for up to 351 euros.",
+    "goldAnswer": "A express return is insured for up to 351 euros."
+  },
+  {
+    "service": "international return",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a international return cost?",
+    "goldDocId": "international-return",
+    "goldSpan": "A international return costs 38 euros to send.",
+    "goldAnswer": "A international return costs 38 euros to send."
+  },
+  {
+    "service": "international return",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a international return?",
+    "goldDocId": "international-return",
+    "goldSpan": "The weight limit for a international return is 9 kg.",
+    "goldAnswer": "The weight limit for a international return is 9 kg."
+  },
+  {
+    "service": "international return",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a international return take?",
+    "goldDocId": "international-return",
+    "goldSpan": "Delivery of a international return takes 1 working day.",
+    "goldAnswer": "Delivery of a international return takes 1 working day."
+  },
+  {
+    "service": "international return",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a international return?",
+    "goldDocId": "international-return",
+    "goldSpan": "The size limit for a international return is 41 cm on the longest side.",
+    "goldAnswer": "The size limit for a international return is 41 cm on the longest side."
+  },
+  {
+    "service": "international return",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a international return insured for?",
+    "goldDocId": "international-return",
+    "goldSpan": "A international return is insured for up to 604 euros.",
+    "goldAnswer": "A international return is insured for up to 604 euros."
+  },
+  {
+    "service": "small packet",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a small packet cost?",
+    "goldDocId": "small-packet",
+    "goldSpan": "A small packet costs 60 euros to send.",
+    "goldAnswer": "A small packet costs 60 euros to send."
+  },
+  {
+    "service": "small packet",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a small packet?",
+    "goldDocId": "small-packet",
+    "goldSpan": "The weight limit for a small packet is 26 kg.",
+    "goldAnswer": "The weight limit for a small packet is 26 kg."
+  },
+  {
+    "service": "small packet",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a small packet take?",
+    "goldDocId": "small-packet",
+    "goldSpan": "Delivery of a small packet takes 2 working days.",
+    "goldAnswer": "Delivery of a small packet takes 2 working days."
+  },
+  {
+    "service": "small packet",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a small packet?",
+    "goldDocId": "small-packet",
+    "goldSpan": "The size limit for a small packet is 50 cm on the longest side.",
+    "goldAnswer": "The size limit for a small packet is 50 cm on the longest side."
+  },
+  {
+    "service": "small packet",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a small packet insured for?",
+    "goldDocId": "small-packet",
+    "goldSpan": "A small packet is insured for up to 301 euros.",
+    "goldAnswer": "A small packet is insured for up to 301 euros."
+  },
+  {
+    "service": "tracked packet",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a tracked packet cost?",
+    "goldDocId": "tracked-packet",
+    "goldSpan": "A tracked packet costs 39 euros to send.",
+    "goldAnswer": "A tracked packet costs 39 euros to send."
+  },
+  {
+    "service": "tracked packet",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a tracked packet?",
+    "goldDocId": "tracked-packet",
+    "goldSpan": "The weight limit for a tracked packet is 14 kg.",
+    "goldAnswer": "The weight limit for a tracked packet is 14 kg."
+  },
+  {
+    "service": "tracked packet",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a tracked packet take?",
+    "goldDocId": "tracked-packet",
+    "goldSpan": "Delivery of a tracked packet takes 4 working days.",
+    "goldAnswer": "Delivery of a tracked packet takes 4 working days."
+  },
+  {
+    "service": "tracked packet",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a tracked packet?",
+    "goldDocId": "tracked-packet",
+    "goldSpan": "The size limit for a tracked packet is 110 cm on the longest side.",
+    "goldAnswer": "The size limit for a tracked packet is 110 cm on the longest side."
+  },
+  {
+    "service": "tracked packet",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a tracked packet insured for?",
+    "goldDocId": "tracked-packet",
+    "goldSpan": "A tracked packet is insured for up to 425 euros.",
+    "goldAnswer": "A tracked packet is insured for up to 425 euros."
+  },
+  {
+    "service": "document tube",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a document tube cost?",
+    "goldDocId": "document-tube",
+    "goldSpan": "A document tube costs 23 euros to send.",
+    "goldAnswer": "A document tube costs 23 euros to send."
+  },
+  {
+    "service": "document tube",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a document tube?",
+    "goldDocId": "document-tube",
+    "goldSpan": "The weight limit for a document tube is 26 kg.",
+    "goldAnswer": "The weight limit for a document tube is 26 kg."
+  },
+  {
+    "service": "document tube",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a document tube take?",
+    "goldDocId": "document-tube",
+    "goldSpan": "Delivery of a document tube takes 2 working days.",
+    "goldAnswer": "Delivery of a document tube takes 2 working days."
+  },
+  {
+    "service": "document tube",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a document tube?",
+    "goldDocId": "document-tube",
+    "goldSpan": "The size limit for a document tube is 164 cm on the longest side.",
+    "goldAnswer": "The size limit for a document tube is 164 cm on the longest side."
+  },
+  {
+    "service": "document tube",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a document tube insured for?",
+    "goldDocId": "document-tube",
+    "goldSpan": "A document tube is insured for up to 852 euros.",
+    "goldAnswer": "A document tube is insured for up to 852 euros."
+  },
+  {
+    "service": "bike box",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a bike box cost?",
+    "goldDocId": "bike-box",
+    "goldSpan": "A bike box costs 95 euros to send.",
+    "goldAnswer": "A bike box costs 95 euros to send."
+  },
+  {
+    "service": "bike box",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a bike box?",
+    "goldDocId": "bike-box",
+    "goldSpan": "The weight limit for a bike box is 3 kg.",
+    "goldAnswer": "The weight limit for a bike box is 3 kg."
+  },
+  {
+    "service": "bike box",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a bike box take?",
+    "goldDocId": "bike-box",
+    "goldSpan": "Delivery of a bike box takes 6 working days.",
+    "goldAnswer": "Delivery of a bike box takes 6 working days."
+  },
+  {
+    "service": "bike box",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a bike box?",
+    "goldDocId": "bike-box",
+    "goldSpan": "The size limit for a bike box is 111 cm on the longest side.",
+    "goldAnswer": "The size limit for a bike box is 111 cm on the longest side."
+  },
+  {
+    "service": "bike box",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a bike box insured for?",
+    "goldDocId": "bike-box",
+    "goldSpan": "A bike box is insured for up to 423 euros.",
+    "goldAnswer": "A bike box is insured for up to 423 euros."
+  },
+  {
+    "service": "furniture delivery",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a furniture delivery cost?",
+    "goldDocId": "furniture-delivery",
+    "goldSpan": "A furniture delivery costs 15 euros to send.",
+    "goldAnswer": "A furniture delivery costs 15 euros to send."
+  },
+  {
+    "service": "furniture delivery",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a furniture delivery?",
+    "goldDocId": "furniture-delivery",
+    "goldSpan": "The weight limit for a furniture delivery is 6 kg.",
+    "goldAnswer": "The weight limit for a furniture delivery is 6 kg."
+  },
+  {
+    "service": "furniture delivery",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a furniture delivery take?",
+    "goldDocId": "furniture-delivery",
+    "goldSpan": "Delivery of a furniture delivery takes 3 working days.",
+    "goldAnswer": "Delivery of a furniture delivery takes 3 working days."
+  },
+  {
+    "service": "furniture delivery",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a furniture delivery?",
+    "goldDocId": "furniture-delivery",
+    "goldSpan": "The size limit for a furniture delivery is 170 cm on the longest side.",
+    "goldAnswer": "The size limit for a furniture delivery is 170 cm on the longest side."
+  },
+  {
+    "service": "furniture delivery",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a furniture delivery insured for?",
+    "goldDocId": "furniture-delivery",
+    "goldSpan": "A furniture delivery is insured for up to 452 euros.",
+    "goldAnswer": "A furniture delivery is insured for up to 452 euros."
+  },
+  {
+    "service": "two-person delivery",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a two-person delivery cost?",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "A two-person delivery costs 58 euros to send.",
+    "goldAnswer": "A two-person delivery costs 58 euros to send."
+  },
+  {
+    "service": "two-person delivery",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a two-person delivery?",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "The weight limit for a two-person delivery is 11 kg.",
+    "goldAnswer": "The weight limit for a two-person delivery is 11 kg."
+  },
+  {
+    "service": "two-person delivery",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a two-person delivery take?",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "Delivery of a two-person delivery takes 3 working days.",
+    "goldAnswer": "Delivery of a two-person delivery takes 3 working days."
+  },
+  {
+    "service": "two-person delivery",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a two-person delivery?",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "The size limit for a two-person delivery is 105 cm on the longest side.",
+    "goldAnswer": "The size limit for a two-person delivery is 105 cm on the longest side."
+  },
+  {
+    "service": "two-person delivery",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a two-person delivery insured for?",
+    "goldDocId": "two-person-delivery",
+    "goldSpan": "A two-person delivery is insured for up to 562 euros.",
+    "goldAnswer": "A two-person delivery is insured for up to 562 euros."
+  },
+  {
+    "service": "chilled parcel",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a chilled parcel cost?",
+    "goldDocId": "chilled-parcel",
+    "goldSpan": "A chilled parcel costs 81 euros to send.",
+    "goldAnswer": "A chilled parcel costs 81 euros to send."
+  },
+  {
+    "service": "chilled parcel",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a chilled parcel?",
+    "goldDocId": "chilled-parcel",
+    "goldSpan": "The weight limit for a chilled parcel is 8 kg.",
+    "goldAnswer": "The weight limit for a chilled parcel is 8 kg."
+  },
+  {
+    "service": "chilled parcel",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a chilled parcel take?",
+    "goldDocId": "chilled-parcel",
+    "goldSpan": "Delivery of a chilled parcel takes 5 working days.",
+    "goldAnswer": "Delivery of a chilled parcel takes 5 working days."
+  },
+  {
+    "service": "chilled parcel",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a chilled parcel?",
+    "goldDocId": "chilled-parcel",
+    "goldSpan": "The size limit for a chilled parcel is 195 cm on the longest side.",
+    "goldAnswer": "The size limit for a chilled parcel is 195 cm on the longest side."
+  },
+  {
+    "service": "chilled parcel",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a chilled parcel insured for?",
+    "goldDocId": "chilled-parcel",
+    "goldSpan": "A chilled parcel is insured for up to 853 euros.",
+    "goldAnswer": "A chilled parcel is insured for up to 853 euros."
+  },
+  {
+    "service": "fragile parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a fragile parcel cost?",
+    "goldDocId": "fragile-parcel",
+    "goldSpan": "A fragile parcel costs 65 euros to send.",
+    "goldAnswer": "A fragile parcel costs 65 euros to send."
+  },
+  {
+    "service": "fragile parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a fragile parcel?",
+    "goldDocId": "fragile-parcel",
+    "goldSpan": "The weight limit for a fragile parcel is 17 kg.",
+    "goldAnswer": "The weight limit for a fragile parcel is 17 kg."
+  },
+  {
+    "service": "fragile parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a fragile parcel take?",
+    "goldDocId": "fragile-parcel",
+    "goldSpan": "Delivery of a fragile parcel takes 6 working days.",
+    "goldAnswer": "Delivery of a fragile parcel takes 6 working days."
+  },
+  {
+    "service": "fragile parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a fragile parcel?",
+    "goldDocId": "fragile-parcel",
+    "goldSpan": "The size limit for a fragile parcel is 198 cm on the longest side.",
+    "goldAnswer": "The size limit for a fragile parcel is 198 cm on the longest side."
+  },
+  {
+    "service": "fragile parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a fragile parcel insured for?",
+    "goldDocId": "fragile-parcel",
+    "goldSpan": "A fragile parcel is insured for up to 349 euros.",
+    "goldAnswer": "A fragile parcel is insured for up to 349 euros."
+  },
+  {
+    "service": "wine box",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a wine box cost?",
+    "goldDocId": "wine-box",
+    "goldSpan": "A wine box costs 33 euros to send.",
+    "goldAnswer": "A wine box costs 33 euros to send."
+  },
+  {
+    "service": "wine box",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a wine box?",
+    "goldDocId": "wine-box",
+    "goldSpan": "The weight limit for a wine box is 21 kg.",
+    "goldAnswer": "The weight limit for a wine box is 21 kg."
+  },
+  {
+    "service": "wine box",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a wine box take?",
+    "goldDocId": "wine-box",
+    "goldSpan": "Delivery of a wine box takes 5 working days.",
+    "goldAnswer": "Delivery of a wine box takes 5 working days."
+  },
+  {
+    "service": "wine box",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a wine box?",
+    "goldDocId": "wine-box",
+    "goldSpan": "The size limit for a wine box is 83 cm on the longest side.",
+    "goldAnswer": "The size limit for a wine box is 83 cm on the longest side."
+  },
+  {
+    "service": "wine box",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a wine box insured for?",
+    "goldDocId": "wine-box",
+    "goldSpan": "A wine box is insured for up to 379 euros.",
+    "goldAnswer": "A wine box is insured for up to 379 euros."
+  },
+  {
+    "service": "locker drop-off",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a locker drop-off cost?",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "A locker drop-off costs 66 euros to send.",
+    "goldAnswer": "A locker drop-off costs 66 euros to send."
+  },
+  {
+    "service": "locker drop-off",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a locker drop-off?",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "The weight limit for a locker drop-off is 10 kg.",
+    "goldAnswer": "The weight limit for a locker drop-off is 10 kg."
+  },
+  {
+    "service": "locker drop-off",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a locker drop-off take?",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "Delivery of a locker drop-off takes 1 working day.",
+    "goldAnswer": "Delivery of a locker drop-off takes 1 working day."
+  },
+  {
+    "service": "locker drop-off",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a locker drop-off?",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "The size limit for a locker drop-off is 94 cm on the longest side.",
+    "goldAnswer": "The size limit for a locker drop-off is 94 cm on the longest side."
+  },
+  {
+    "service": "locker drop-off",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a locker drop-off insured for?",
+    "goldDocId": "locker-drop-off",
+    "goldSpan": "A locker drop-off is insured for up to 125 euros.",
+    "goldAnswer": "A locker drop-off is insured for up to 125 euros."
+  },
+  {
+    "service": "locker pick-up",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a locker pick-up cost?",
+    "goldDocId": "locker-pick-up",
+    "goldSpan": "A locker pick-up costs 23 euros to send.",
+    "goldAnswer": "A locker pick-up costs 23 euros to send."
+  },
+  {
+    "service": "locker pick-up",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a locker pick-up?",
+    "goldDocId": "locker-pick-up",
+    "goldSpan": "The weight limit for a locker pick-up is 31 kg.",
+    "goldAnswer": "The weight limit for a locker pick-up is 31 kg."
+  },
+  {
+    "service": "locker pick-up",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a locker pick-up take?",
+    "goldDocId": "locker-pick-up",
+    "goldSpan": "Delivery of a locker pick-up takes 5 working days.",
+    "goldAnswer": "Delivery of a locker pick-up takes 5 working days."
+  },
+  {
+    "service": "locker pick-up",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a locker pick-up?",
+    "goldDocId": "locker-pick-up",
+    "goldSpan": "The size limit for a locker pick-up is 125 cm on the longest side.",
+    "goldAnswer": "The size limit for a locker pick-up is 125 cm on the longest side."
+  },
+  {
+    "service": "locker pick-up",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a locker pick-up insured for?",
+    "goldDocId": "locker-pick-up",
+    "goldSpan": "A locker pick-up is insured for up to 626 euros.",
+    "goldAnswer": "A locker pick-up is insured for up to 626 euros."
+  },
+  {
+    "service": "saturday parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a saturday parcel cost?",
+    "goldDocId": "saturday-parcel",
+    "goldSpan": "A saturday parcel costs 11 euros to send.",
+    "goldAnswer": "A saturday parcel costs 11 euros to send."
+  },
+  {
+    "service": "saturday parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a saturday parcel?",
+    "goldDocId": "saturday-parcel",
+    "goldSpan": "The weight limit for a saturday parcel is 4 kg.",
+    "goldAnswer": "The weight limit for a saturday parcel is 4 kg."
+  },
+  {
+    "service": "saturday parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a saturday parcel take?",
+    "goldDocId": "saturday-parcel",
+    "goldSpan": "Delivery of a saturday parcel takes 5 working days.",
+    "goldAnswer": "Delivery of a saturday parcel takes 5 working days."
+  },
+  {
+    "service": "saturday parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a saturday parcel?",
+    "goldDocId": "saturday-parcel",
+    "goldSpan": "The size limit for a saturday parcel is 47 cm on the longest side.",
+    "goldAnswer": "The size limit for a saturday parcel is 47 cm on the longest side."
+  },
+  {
+    "service": "saturday parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a saturday parcel insured for?",
+    "goldDocId": "saturday-parcel",
+    "goldSpan": "A saturday parcel is insured for up to 878 euros.",
+    "goldAnswer": "A saturday parcel is insured for up to 878 euros."
+  },
+  {
+    "service": "evening parcel",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a evening parcel cost?",
+    "goldDocId": "evening-parcel",
+    "goldSpan": "A evening parcel costs 93 euros to send.",
+    "goldAnswer": "A evening parcel costs 93 euros to send."
+  },
+  {
+    "service": "evening parcel",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a evening parcel?",
+    "goldDocId": "evening-parcel",
+    "goldSpan": "The weight limit for a evening parcel is 23 kg.",
+    "goldAnswer": "The weight limit for a evening parcel is 23 kg."
+  },
+  {
+    "service": "evening parcel",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a evening parcel take?",
+    "goldDocId": "evening-parcel",
+    "goldSpan": "Delivery of a evening parcel takes 4 working days.",
+    "goldAnswer": "Delivery of a evening parcel takes 4 working days."
+  },
+  {
+    "service": "evening parcel",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a evening parcel?",
+    "goldDocId": "evening-parcel",
+    "goldSpan": "The size limit for a evening parcel is 67 cm on the longest side.",
+    "goldAnswer": "The size limit for a evening parcel is 67 cm on the longest side."
+  },
+  {
+    "service": "evening parcel",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a evening parcel insured for?",
+    "goldDocId": "evening-parcel",
+    "goldSpan": "A evening parcel is insured for up to 799 euros.",
+    "goldAnswer": "A evening parcel is insured for up to 799 euros."
+  },
+  {
+    "service": "signed-for parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a signed-for parcel cost?",
+    "goldDocId": "signed-for-parcel",
+    "goldSpan": "A signed-for parcel costs 91 euros to send.",
+    "goldAnswer": "A signed-for parcel costs 91 euros to send."
+  },
+  {
+    "service": "signed-for parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a signed-for parcel?",
+    "goldDocId": "signed-for-parcel",
+    "goldSpan": "The weight limit for a signed-for parcel is 33 kg.",
+    "goldAnswer": "The weight limit for a signed-for parcel is 33 kg."
+  },
+  {
+    "service": "signed-for parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a signed-for parcel take?",
+    "goldDocId": "signed-for-parcel",
+    "goldSpan": "Delivery of a signed-for parcel takes 5 working days.",
+    "goldAnswer": "Delivery of a signed-for parcel takes 5 working days."
+  },
+  {
+    "service": "signed-for parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a signed-for parcel?",
+    "goldDocId": "signed-for-parcel",
+    "goldSpan": "The size limit for a signed-for parcel is 48 cm on the longest side.",
+    "goldAnswer": "The size limit for a signed-for parcel is 48 cm on the longest side."
+  },
+  {
+    "service": "signed-for parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a signed-for parcel insured for?",
+    "goldDocId": "signed-for-parcel",
+    "goldSpan": "A signed-for parcel is insured for up to 269 euros.",
+    "goldAnswer": "A signed-for parcel is insured for up to 269 euros."
+  },
+  {
+    "service": "cash-on-delivery parcel",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a cash-on-delivery parcel cost?",
+    "goldDocId": "cash-on-delivery-parcel",
+    "goldSpan": "A cash-on-delivery parcel costs 19 euros to send.",
+    "goldAnswer": "A cash-on-delivery parcel costs 19 euros to send."
+  },
+  {
+    "service": "cash-on-delivery parcel",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a cash-on-delivery parcel?",
+    "goldDocId": "cash-on-delivery-parcel",
+    "goldSpan": "The weight limit for a cash-on-delivery parcel is 17 kg.",
+    "goldAnswer": "The weight limit for a cash-on-delivery parcel is 17 kg."
+  },
+  {
+    "service": "cash-on-delivery parcel",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a cash-on-delivery parcel take?",
+    "goldDocId": "cash-on-delivery-parcel",
+    "goldSpan": "Delivery of a cash-on-delivery parcel takes 2 working days.",
+    "goldAnswer": "Delivery of a cash-on-delivery parcel takes 2 working days."
+  },
+  {
+    "service": "cash-on-delivery parcel",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a cash-on-delivery parcel?",
+    "goldDocId": "cash-on-delivery-parcel",
+    "goldSpan": "The size limit for a cash-on-delivery parcel is 111 cm on the longest side.",
+    "goldAnswer": "The size limit for a cash-on-delivery parcel is 111 cm on the longest side."
+  },
+  {
+    "service": "cash-on-delivery parcel",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a cash-on-delivery parcel insured for?",
+    "goldDocId": "cash-on-delivery-parcel",
+    "goldSpan": "A cash-on-delivery parcel is insured for up to 483 euros.",
+    "goldAnswer": "A cash-on-delivery parcel is insured for up to 483 euros."
+  },
+  {
+    "service": "oversized parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a oversized parcel cost?",
+    "goldDocId": "oversized-parcel",
+    "goldSpan": "A oversized parcel costs 9 euros to send.",
+    "goldAnswer": "A oversized parcel costs 9 euros to send."
+  },
+  {
+    "service": "oversized parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a oversized parcel?",
+    "goldDocId": "oversized-parcel",
+    "goldSpan": "The weight limit for a oversized parcel is 29 kg.",
+    "goldAnswer": "The weight limit for a oversized parcel is 29 kg."
+  },
+  {
+    "service": "oversized parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a oversized parcel take?",
+    "goldDocId": "oversized-parcel",
+    "goldSpan": "Delivery of a oversized parcel takes 1 working day.",
+    "goldAnswer": "Delivery of a oversized parcel takes 1 working day."
+  },
+  {
+    "service": "oversized parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a oversized parcel?",
+    "goldDocId": "oversized-parcel",
+    "goldSpan": "The size limit for a oversized parcel is 145 cm on the longest side.",
+    "goldAnswer": "The size limit for a oversized parcel is 145 cm on the longest side."
+  },
+  {
+    "service": "oversized parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a oversized parcel insured for?",
+    "goldDocId": "oversized-parcel",
+    "goldSpan": "A oversized parcel is insured for up to 393 euros.",
+    "goldAnswer": "A oversized parcel is insured for up to 393 euros."
+  },
+  {
+    "service": "garden tool box",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a garden tool box cost?",
+    "goldDocId": "garden-tool-box",
+    "goldSpan": "A garden tool box costs 92 euros to send.",
+    "goldAnswer": "A garden tool box costs 92 euros to send."
+  },
+  {
+    "service": "garden tool box",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a garden tool box?",
+    "goldDocId": "garden-tool-box",
+    "goldSpan": "The weight limit for a garden tool box is 22 kg.",
+    "goldAnswer": "The weight limit for a garden tool box is 22 kg."
+  },
+  {
+    "service": "garden tool box",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a garden tool box take?",
+    "goldDocId": "garden-tool-box",
+    "goldSpan": "Delivery of a garden tool box takes 5 working days.",
+    "goldAnswer": "Delivery of a garden tool box takes 5 working days."
+  },
+  {
+    "service": "garden tool box",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a garden tool box?",
+    "goldDocId": "garden-tool-box",
+    "goldSpan": "The size limit for a garden tool box is 150 cm on the longest side.",
+    "goldAnswer": "The size limit for a garden tool box is 150 cm on the longest side."
+  },
+  {
+    "service": "garden tool box",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a garden tool box insured for?",
+    "goldDocId": "garden-tool-box",
+    "goldSpan": "A garden tool box is insured for up to 347 euros.",
+    "goldAnswer": "A garden tool box is insured for up to 347 euros."
+  },
+  {
+    "service": "laptop sleeve parcel",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a laptop sleeve parcel cost?",
+    "goldDocId": "laptop-sleeve-parcel",
+    "goldSpan": "A laptop sleeve parcel costs 15 euros to send.",
+    "goldAnswer": "A laptop sleeve parcel costs 15 euros to send."
+  },
+  {
+    "service": "laptop sleeve parcel",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a laptop sleeve parcel?",
+    "goldDocId": "laptop-sleeve-parcel",
+    "goldSpan": "The weight limit for a laptop sleeve parcel is 40 kg.",
+    "goldAnswer": "The weight limit for a laptop sleeve parcel is 40 kg."
+  },
+  {
+    "service": "laptop sleeve parcel",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a laptop sleeve parcel take?",
+    "goldDocId": "laptop-sleeve-parcel",
+    "goldSpan": "Delivery of a laptop sleeve parcel takes 3 working days.",
+    "goldAnswer": "Delivery of a laptop sleeve parcel takes 3 working days."
+  },
+  {
+    "service": "laptop sleeve parcel",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a laptop sleeve parcel?",
+    "goldDocId": "laptop-sleeve-parcel",
+    "goldSpan": "The size limit for a laptop sleeve parcel is 182 cm on the longest side.",
+    "goldAnswer": "The size limit for a laptop sleeve parcel is 182 cm on the longest side."
+  },
+  {
+    "service": "laptop sleeve parcel",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a laptop sleeve parcel insured for?",
+    "goldDocId": "laptop-sleeve-parcel",
+    "goldSpan": "A laptop sleeve parcel is insured for up to 665 euros.",
+    "goldAnswer": "A laptop sleeve parcel is insured for up to 665 euros."
+  },
+  {
+    "service": "medicine pouch",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a medicine pouch cost?",
+    "goldDocId": "medicine-pouch",
+    "goldSpan": "A medicine pouch costs 45 euros to send.",
+    "goldAnswer": "A medicine pouch costs 45 euros to send."
+  },
+  {
+    "service": "medicine pouch",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a medicine pouch?",
+    "goldDocId": "medicine-pouch",
+    "goldSpan": "The weight limit for a medicine pouch is 32 kg.",
+    "goldAnswer": "The weight limit for a medicine pouch is 32 kg."
+  },
+  {
+    "service": "medicine pouch",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a medicine pouch take?",
+    "goldDocId": "medicine-pouch",
+    "goldSpan": "Delivery of a medicine pouch takes 6 working days.",
+    "goldAnswer": "Delivery of a medicine pouch takes 6 working days."
+  },
+  {
+    "service": "medicine pouch",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a medicine pouch?",
+    "goldDocId": "medicine-pouch",
+    "goldSpan": "The size limit for a medicine pouch is 167 cm on the longest side.",
+    "goldAnswer": "The size limit for a medicine pouch is 167 cm on the longest side."
+  },
+  {
+    "service": "medicine pouch",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a medicine pouch insured for?",
+    "goldDocId": "medicine-pouch",
+    "goldSpan": "A medicine pouch is insured for up to 596 euros.",
+    "goldAnswer": "A medicine pouch is insured for up to 596 euros."
+  },
+  {
+    "service": "camping gear bag",
+    "kind": "price",
+    "crowded": false,
+    "question": "How much does a camping gear bag cost?",
+    "goldDocId": "camping-gear-bag",
+    "goldSpan": "A camping gear bag costs 74 euros to send.",
+    "goldAnswer": "A camping gear bag costs 74 euros to send."
+  },
+  {
+    "service": "camping gear bag",
+    "kind": "weight",
+    "crowded": false,
+    "question": "What is the weight limit for a camping gear bag?",
+    "goldDocId": "camping-gear-bag",
+    "goldSpan": "The weight limit for a camping gear bag is 17 kg.",
+    "goldAnswer": "The weight limit for a camping gear bag is 17 kg."
+  },
+  {
+    "service": "camping gear bag",
+    "kind": "delivery",
+    "crowded": false,
+    "question": "How long does delivery of a camping gear bag take?",
+    "goldDocId": "camping-gear-bag",
+    "goldSpan": "Delivery of a camping gear bag takes 1 working day.",
+    "goldAnswer": "Delivery of a camping gear bag takes 1 working day."
+  },
+  {
+    "service": "camping gear bag",
+    "kind": "size",
+    "crowded": false,
+    "question": "What is the size limit for a camping gear bag?",
+    "goldDocId": "camping-gear-bag",
+    "goldSpan": "The size limit for a camping gear bag is 36 cm on the longest side.",
+    "goldAnswer": "The size limit for a camping gear bag is 36 cm on the longest side."
+  },
+  {
+    "service": "camping gear bag",
+    "kind": "insurance",
+    "crowded": false,
+    "question": "How much is a camping gear bag insured for?",
+    "goldDocId": "camping-gear-bag",
+    "goldSpan": "A camping gear bag is insured for up to 680 euros.",
+    "goldAnswer": "A camping gear bag is insured for up to 680 euros."
+  },
+  {
+    "service": "ski bag",
+    "kind": "price",
+    "crowded": true,
+    "question": "How much does a ski bag cost?",
+    "goldDocId": "ski-bag",
+    "goldSpan": "A ski bag costs 82 euros to send.",
+    "goldAnswer": "A ski bag costs 82 euros to send."
+  },
+  {
+    "service": "ski bag",
+    "kind": "weight",
+    "crowded": true,
+    "question": "What is the weight limit for a ski bag?",
+    "goldDocId": "ski-bag",
+    "goldSpan": "The weight limit for a ski bag is 29 kg.",
+    "goldAnswer": "The weight limit for a ski bag is 29 kg."
+  },
+  {
+    "service": "ski bag",
+    "kind": "delivery",
+    "crowded": true,
+    "question": "How long does delivery of a ski bag take?",
+    "goldDocId": "ski-bag",
+    "goldSpan": "Delivery of a ski bag takes 6 working days.",
+    "goldAnswer": "Delivery of a ski bag takes 6 working days."
+  },
+  {
+    "service": "ski bag",
+    "kind": "size",
+    "crowded": true,
+    "question": "What is the size limit for a ski bag?",
+    "goldDocId": "ski-bag",
+    "goldSpan": "The size limit for a ski bag is 126 cm on the longest side.",
+    "goldAnswer": "The size limit for a ski bag is 126 cm on the longest side."
+  },
+  {
+    "service": "ski bag",
+    "kind": "insurance",
+    "crowded": true,
+    "question": "How much is a ski bag insured for?",
+    "goldDocId": "ski-bag",
+    "goldSpan": "A ski bag is insured for up to 518 euros.",
+    "goldAnswer": "A ski bag is insured for up to 518 euros."
+  }
+]

@@ -3,11 +3,10 @@
 import { Hexagon, Send, Trophy } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { canaryPreview, type G1LevelWin } from "../guardrails-g1-debrief";
-import {
-  G1_LEVELS,
-  type G1SimulatorProfile,
-} from "../guardrails-workspace-data";
+import { type G1SimulatorProfile } from "../guardrails-workspace-data";
+import { useGuardrailsLevels } from "../guardrails-levels";
 import { simulationsApi, type G1Turn } from "../simulations-api";
+import { AllLevelsCheck, type LevelCheckState } from "./guardrails-all-levels";
 
 type ChatLine =
   | { kind: "user"; text: string; time: string }
@@ -41,12 +40,10 @@ function focusChatInput(input: HTMLTextAreaElement | null, selectAll = false) {
   if (!input || input.disabled) {
     return;
   }
-  requestAnimationFrame(() => {
-    input.focus();
-    if (selectAll) {
-      input.select();
-    }
-  });
+  input.focus({ preventScroll: true });
+  if (selectAll) {
+    input.select();
+  }
 }
 
 function detectorLine(turn: G1Turn, attempt: number): string {
@@ -92,10 +89,26 @@ export function GuardrailsG1ChatPanel({
   const [levelWin, setLevelWin] = useState<G1Turn | null>(null);
   const [sendAttempts, setSendAttempts] = useState(0);
   const [winTime, setWinTime] = useState<string | null>(null);
+  const [levelCheck, setLevelCheck] = useState<LevelCheckState>({ status: "idle" });
   const logRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // Focus the composer once a reply is in. The textarea is disabled while a
+  // message is pending, so this waits for the render that enables it again.
+  const refocusRef = useRef<"focus" | "select" | null>(null);
+  useEffect(() => {
+    if (pending || !refocusRef.current) {
+      return;
+    }
+    focusChatInput(inputRef.current, refocusRef.current === "select");
+    refocusRef.current = null;
+  }, [pending]);
+  // Ready to type when the lab opens and on every level switch.
+  useEffect(() => {
+    focusChatInput(inputRef.current);
+  }, [level, exerciseSlug]);
 
-  const levelMeta = G1_LEVELS.find((row) => row.level === level) ?? G1_LEVELS[0];
+  const levels = useGuardrailsLevels("g1");
+  const levelMeta = levels.find((row) => row.level === level) ?? levels[0];
 
   useEffect(() => {
     const log = logRef.current;
@@ -112,6 +125,7 @@ export function GuardrailsG1ChatPanel({
     setSendAttempts(0);
     setWinTime(null);
     setMessage("");
+    setLevelCheck({ status: "idle" });
   }, [simulator.appTitle, simulator.openingGreeting, simulator.statusLine]);
   const levelCleared = clearedLevels.has(level) || Boolean(levelWin);
 
@@ -122,6 +136,37 @@ export function GuardrailsG1ChatPanel({
     : failNotice
       ? "Try another angle…"
       : "Try to break the level…";
+
+  /** The composer text, or the last message sent when the composer is empty. */
+  const lastSent = [...lines].reverse().find((line) => line.kind === "user");
+  const checkText = message.trim() || (lastSent?.kind === "user" ? lastSent.text : "");
+
+  async function checkAllLevels() {
+    const text = checkText;
+    if (!text || disabled) {
+      return;
+    }
+    setLevelCheck({ status: "pending" });
+    try {
+      const turns = await Promise.all(
+        levels.map((row) => simulationsApi.g1Turn(exerciseSlug, row.level, text)),
+      );
+      setLevelCheck({
+        status: "done",
+        results: turns.map((turn, index) => ({
+          level: levels[index].level,
+          title: levels[index].title,
+          won: turn.won,
+          note: turn.won ? "leaked" : turn.filtered ? "filtered" : "held",
+        })),
+      });
+    } catch (caught: unknown) {
+      setLevelCheck({
+        status: "error",
+        message: caught instanceof Error ? caught.message : "Check failed",
+      });
+    }
+  }
 
   function resetLevel() {
     setLines([openingLine(simulator)]);
@@ -145,9 +190,12 @@ export function GuardrailsG1ChatPanel({
     let clearedThisTurn = false;
     try {
       const turn = await simulationsApi.g1Turn(exerciseSlug, level, userText);
-      const attempt = sendAttempts + 1;
-      setSendAttempts(attempt);
-      onAttempt();
+      // Only attacks count as attempts; a guest question is not a try.
+      const attempt = turn.attackAttempt ? sendAttempts + 1 : sendAttempts;
+      if (turn.attackAttempt) {
+        setSendAttempts(attempt);
+        onAttempt();
+      }
       const detector = detectorLine(turn, attempt);
       setLines((current) => [
         ...current,
@@ -181,19 +229,19 @@ export function GuardrailsG1ChatPanel({
         setFailNotice(
           turn.filtered
             ? "Not yet — canary not detected. Partial leak was filtered. Rephrase and try again."
-            : "Not yet — canary not detected. The concierge refused. Rephrase and try again; focus on their role and wording.",
+            : "Not yet — canary not detected. The concierge refused. Rephrase and try again.",
         );
       }
     } catch (caught: unknown) {
       setMessage(userText);
       onDraftChange(userText);
       setFailNotice(caught instanceof Error ? caught.message : "Send failed");
-      focusChatInput(inputRef.current, true);
+      refocusRef.current = "select";
     } finally {
-      setPending(false);
-      if (!clearedThisTurn) {
-        focusChatInput(inputRef.current);
+      if (!clearedThisTurn && !refocusRef.current) {
+        refocusRef.current = "focus";
       }
+      setPending(false);
     }
   }
 
@@ -261,7 +309,13 @@ export function GuardrailsG1ChatPanel({
         </div>
       </div>
 
-      <div className="lp-grd-chat-log" ref={logRef}>
+      <div
+        className="lp-grd-chat-log"
+        ref={logRef}
+        role="log"
+        aria-live="polite"
+        aria-label="Conversation with the concierge"
+      >
         {lines.map((line, index) => {
           if (line.kind === "user") {
             return (
@@ -319,6 +373,9 @@ export function GuardrailsG1ChatPanel({
             onChange={(event) => {
               setMessage(event.target.value);
               onDraftChange(event.target.value);
+              if (levelCheck.status === "done" || levelCheck.status === "error") {
+                setLevelCheck({ status: "idle" });
+              }
             }}
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
@@ -328,6 +385,7 @@ export function GuardrailsG1ChatPanel({
             }}
             disabled={disabled || pending}
             rows={2}
+            aria-label="Message to the concierge"
             placeholder={placeholder}
             className="lp-grd-chat-input"
           />
@@ -340,6 +398,12 @@ export function GuardrailsG1ChatPanel({
             Send
           </button>
         </div>
+        <AllLevelsCheck
+          state={levelCheck}
+          disabled={disabled || pending || !checkText}
+          onCheck={() => void checkAllLevels()}
+          label={message.trim() ? "Check this message on all 3 levels" : "Check last message on all 3 levels"}
+        />
         <footer className="lp-grd-chat-foot">
           <p>
             {gradePending

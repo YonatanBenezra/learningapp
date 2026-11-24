@@ -27,13 +27,13 @@ function BrandHexIcon() {
     <svg width={34} height={34} viewBox="0 0 34 34" fill="none" aria-hidden>
       <path
         d="M17 4L28 10.5V23.5L17 30L6 23.5V10.5L17 4Z"
-        stroke="#9FEF00"
+        stroke="#FF4D4D"
         strokeWidth={2.5}
         strokeLinejoin="round"
       />
       <path
         d="M17 11L23 14.5V20.5L17 24L11 20.5V14.5L17 11Z"
-        stroke="#9FEF00"
+        stroke="#FF4D4D"
         strokeWidth={1.75}
         strokeLinejoin="round"
         opacity={0.85}
@@ -79,7 +79,7 @@ function FlagScene({ uid }: { uid: string }) {
         />
         <path
           d="M96 60 C88 70 76 66 66 58 L66 102 C76 110 88 112 96 104 Z"
-          fill="#9FEF00"
+          fill="#FF4D4D"
         />
       </g>
     </svg>
@@ -98,8 +98,8 @@ function BannerInner({
   uid: string;
 }) {
   return (
-    <div className="group relative h-[300px] w-full overflow-hidden rounded-[24px] border border-white/10 bg-[#141B29] shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9),0_0_80px_-30px_rgba(159,239,0,0.35)] transition-transform duration-150 hover:-translate-y-1">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#9FEF00] to-transparent opacity-70" aria-hidden />
+    <div className="group relative h-[300px] w-full overflow-hidden rounded-[24px] border border-white/10 bg-[#141B29] shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9),0_0_80px_-30px_rgba(255, 77, 77,0.35)] transition-transform duration-150 hover:-translate-y-1">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#FF4D4D] to-transparent opacity-70" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#5C8A00] via-[#7FB800]/70 to-transparent"
         style={{ clipPath: "polygon(58% 100%, 100% 22%, 100% 100%)" }}
@@ -117,7 +117,7 @@ function BannerInner({
             <span className="font-normal text-[#A4B1CD]"> CTF</span>
           </span>
         </div>
-        <p className="mt-3 inline-flex items-center gap-0.5 self-start rounded-md border border-[#9FEF00]/25 bg-[#9FEF00]/10 px-2 py-0.5 font-mono text-[11px] text-[#9FEF00]">
+        <p className="mt-3 inline-flex items-center gap-0.5 self-start rounded-md border border-[#FF4D4D]/25 bg-[#FF4D4D]/10 px-2 py-0.5 font-mono text-[11px] text-[#FF4D4D]">
           <span>{flagText}</span>
           <span className="lp-event-hero-caret" aria-hidden>
             |
@@ -181,7 +181,7 @@ export default function EventHero({
   }
 
   const blobs = [
-    { cls: "lp-event-hero-blob--1", color: "bg-[#9FEF00]/60", size: 320, style: { top: -40, right: "12%" } },
+    { cls: "lp-event-hero-blob--1", color: "bg-[#FF4D4D]/60", size: 320, style: { top: -40, right: "12%" } },
     { cls: "lp-event-hero-blob--2", color: "bg-[#7BC700]/40", size: 260, style: { bottom: -80, left: -40 } },
     { cls: "lp-event-hero-blob--3", color: "bg-[#8A94A8]/35", size: 280, style: { top: -60, left: "8%" } },
     { cls: "lp-event-hero-blob--4", color: "bg-[#6B7488]/25", size: 220, style: { top: -50, left: "40%" } },
@@ -240,7 +240,7 @@ export default function EventHero({
       <div
         className="absolute left-1/2 top-1/2 h-[180px] w-[88%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[30px] border border-white/10 bg-[#141B29]/95 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl md:h-[270px] md:w-[480px]"
       >
-        <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#9FEF00] to-transparent opacity-70" aria-hidden />
+        <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#FF4D4D] to-transparent opacity-70" aria-hidden />
 
         <div
           className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#5C8A00] via-[#7FB800]/70 to-transparent"
@@ -263,7 +263,7 @@ export default function EventHero({
               <span className="font-normal text-[#A4B1CD]"> CTF</span>
             </span>
           </div>
-          <p className="mt-3 hidden items-center gap-0.5 rounded-md border border-[#9FEF00]/25 bg-[#9FEF00]/10 px-2 py-0.5 font-mono text-[11px] text-[#9FEF00] md:mt-4 md:inline-flex">
+          <p className="mt-3 hidden items-center gap-0.5 rounded-md border border-[#FF4D4D]/25 bg-[#FF4D4D]/10 px-2 py-0.5 font-mono text-[11px] text-[#FF4D4D] md:mt-4 md:inline-flex">
             <span>{flagText}</span>
             <span className="lp-event-hero-caret" aria-hidden>
               |

@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelRight, ShieldCheck } from "lucide-react";
+import { AlertTriangle, PanelRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import type { FailingCase, Grade } from "@/types/grade";
@@ -8,6 +8,7 @@ import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
 import { FigmaGuardScorecard } from "./figma-guard-scorecard";
 import { FigmaRagScorecard } from "./figma-rag-scorecard";
+import type { RagRunSnapshot } from "./rag-run-diff";
 import { FigmaRagScorecardGrading } from "./figma-rag-scorecard-grading";
 import { ScorecardEmptyState } from "./scorecard-empty-state";
 import { ScorecardIntervals } from "./scorecard-intervals";
@@ -33,6 +34,8 @@ type RunPanelProps = {
   exerciseSlug?: string;
   /** Mobile tab layout: no panel collapse control */
   mobileChrome?: boolean;
+  /** RAG: this run next to the previous graded submission. */
+  ragDiff?: { previous: RagRunSnapshot; current: RagRunSnapshot } | null;
 };
 
 export function RunPanel({
@@ -48,6 +51,7 @@ export function RunPanel({
   attempt = 1,
   exerciseSlug,
   mobileChrome = false,
+  ragDiff = null,
 }: RunPanelProps) {
   const isRag = simulator === "rag";
   const isGuard = simulator === "guardrails";
@@ -113,6 +117,16 @@ export function RunPanel({
     run &&
     !grade &&
     (pending || run.status === "queued" || run.status === "running");
+  // A finished run with no grade (failed, over budget, or the grade fetch
+  // failed) would otherwise leave the figma results pane blank.
+  const figmaRunEnded =
+    figmaScorecard &&
+    (isRag || (isGuard && figmaGuardScorecard)) &&
+    run &&
+    !grade &&
+    !pending &&
+    run.status !== "queued" &&
+    run.status !== "running";
 
   return (
     <aside
@@ -234,6 +248,7 @@ export function RunPanel({
           <FigmaRagScorecard
             run={run}
             grade={grade}
+            diff={ragDiff}
             attempt={attempt}
             exerciseSlug={exerciseSlug}
           />
@@ -241,9 +256,40 @@ export function RunPanel({
           <FigmaGuardScorecard run={run} grade={grade} />
         ) : grade ? (
           <Scorecard grade={grade} onboarding={onboarding} />
+        ) : figmaRunEnded && run ? (
+          <RunEndedState run={run} showShortcut={!mobileChrome} />
         ) : null}
       </div>
     </aside>
+  );
+}
+
+/** Results pane for a run that ended without a scorecard. */
+function RunEndedState({ run, showShortcut }: { run: Run; showShortcut: boolean }) {
+  const copy =
+    run.status === "killed_budget"
+      ? {
+          title: "Run stopped: over budget",
+          lead: "This run hit the exercise's time or cost budget before it finished, so it has no score. Try a lighter config and submit again.",
+        }
+      : run.status === "failed"
+        ? {
+            title: "Run failed",
+            lead: "The grader could not finish this run, so it has no score. Check your config and submit again.",
+          }
+        : {
+            title: "Grade not available",
+            lead: "The run finished but its grade could not be loaded. Submit again to get a scorecard.",
+          };
+  return (
+    <ScorecardEmptyState
+      title={copy.title}
+      lead={copy.lead}
+      detail={run.errorMessage ?? run.errorCode ?? null}
+      icon={<AlertTriangle strokeWidth={2.1} style={{ color: "var(--color-status-fail)" }} />}
+      shortcutLabel={showShortcut ? "⌘ ↵ to submit again" : null}
+      alert
+    />
   );
 }
 
@@ -264,7 +310,7 @@ function Scorecard({ grade, onboarding = false }: { grade: Grade; onboarding?: b
         <div className="lp-ws-score-hero">
           <span className="lp-ws-score-hero-verdict">{grade.verdict}</span>
           <p className="lp-ws-score-hero-title">{headline}</p>
-          <p className="lp-ws-score-hero-meta">Run succeeded · Grade complete · 2.4s</p>
+          <p className="lp-ws-score-hero-meta">Run succeeded · Grade complete</p>
         </div>
       ) : (
         <span className={`lp-ws-verdict lp-ws-verdict--${grade.verdict}`} data-testid="verdict">

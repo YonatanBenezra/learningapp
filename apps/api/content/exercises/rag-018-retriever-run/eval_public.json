@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How do I clear error E-4201?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "reset the unit to factory settings and restore its saved profile",
+    "goldDocId": "err-4201",
+    "goldSpan": "To clear it, reset the unit to factory settings and restore its saved profile"
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "Which team handles E-8502 if it keeps coming back?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldAnswer": "Logistics",
+    "goldDocId": "err-8502",
+    "goldSpan": "If it comes back within 12 hours, open a ticket with the Logistics team"
   },
   {
     "id": "p3",
-    "question": "When does primary on-call rotate?",
+    "question": "How do I clear error E-5680?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "recalibrate it from the service menu under Diagnostics",
+    "goldDocId": "err-5680",
+    "goldSpan": "To clear it, recalibrate it from the service menu under Diagnostics"
   },
   {
     "id": "p4",
-    "question": "What report must production SaaS vendors present before procurement?",
+    "question": "What reward do I get for bringing a friend into the company?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "2,000 euros after six months",
+    "goldDocId": "policy-referrals",
+    "goldSpan": "If someone you recommend is hired and stays six months, you receive a 2,000 euro bonus"
   },
   {
     "id": "p5",
-    "question": "Where must production secrets never live?",
+    "question": "How long is the trial period when I start, and how quickly can it be ended?",
     "answerable": true,
-    "goldAnswer": "git",
-    "goldDocId": "password",
-    "goldSpan": "Production secrets never live in git"
+    "goldAnswer": "Six months; two weeks of notice",
+    "goldDocId": "policy-probation",
+    "goldSpan": "New hires have a six-month probation period with a review at three months"
+  },
+  {
+    "id": "p6",
+    "question": "If I have a health condition, can I get a special chair or different working times?",
+    "answerable": true,
+    "goldAnswer": "Yes, adjustments can be requested",
+    "goldDocId": "policy-adjustments",
+    "goldSpan": "Staff with a disability or long-term condition can request adjustments such as special equipment or flexible hours"
   }
 ]

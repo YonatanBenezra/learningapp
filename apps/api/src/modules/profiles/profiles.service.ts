@@ -22,6 +22,7 @@ import { calendarDateKey } from '../progress/calendar';
 import { computeStreak } from '../progress/streak';
 import { toSkillScoreView } from '../skills/skill-decay';
 import {
+  hintPointsSpent,
   leaderboardRating,
   RECENT_PASS_WINDOW_MS,
 } from '../leaderboard/leaderboard-rank';
@@ -31,6 +32,7 @@ import {
   RECENT_SOLVE_LIMIT,
 } from './profile-slug';
 import { toPublicVerifiedResult } from '../assessments/public-verified-result';
+import { toolPointsByUser } from '../practice/tools/tools.service';
 
 @Injectable()
 export class ProfilesService {
@@ -38,6 +40,27 @@ export class ProfilesService {
     private readonly prisma: PrismaService,
     private readonly accounts: AccountService,
   ) {}
+
+  /** Points spent on hints for solved problems and on tools unlocked early. */
+  private async hintPoints(
+    userId: string,
+    solvedSlugs: Set<string>,
+  ): Promise<number> {
+    const unlocks = await this.prisma.hintUnlock.findMany({
+      where: { userId },
+      select: { hintIndex: true, exercise: { select: { slug: true } } },
+    });
+    const tools = await toolPointsByUser(this.prisma, [userId]);
+    return (
+      hintPointsSpent(
+        unlocks.map((unlock) => ({
+          slug: unlock.exercise.slug,
+          hintIndex: unlock.hintIndex,
+        })),
+        solvedSlugs,
+      ) + (tools.get(userId) ?? 0)
+    );
+  }
 
   async getPublic(slug: string) {
     const normalized = slug.trim().toLowerCase();
@@ -121,7 +144,11 @@ export class ProfilesService {
       }
     }
 
-    const practiceRating = leaderboardRating(solved.size, recentPasses);
+    const practiceRating = leaderboardRating(
+      solved.size,
+      recentPasses,
+      await this.hintPoints(user.id, new Set(solved.keys())),
+    );
     const qualifiedDays = passRows.map((row) =>
       calendarDateKey(row.createdAt, 'UTC'),
     );
@@ -204,20 +231,16 @@ export class ProfilesService {
       solvedSlugs.size,
       passRows,
       now,
+      await this.hintPoints(userId, solvedSlugs),
     );
     const contestRating = await this.bestContestRating(userId);
     const effectiveRating = contestRating ?? rating;
 
     const qualifiedDays = qualifiedDaysFromPasses(passRows);
-    const streak = computeStreak(
-      qualifiedDays,
-      calendarDateKey(now, 'UTC'),
-    );
+    const streak = computeStreak(qualifiedDays, calendarDateKey(now, 'UTC'));
 
     const meta = parseProfileMeta(user.profileMeta);
-    const skillNames = skills.map((row) =>
-      toSkillScoreView(row, now).name,
-    );
+    const skillNames = skills.map((row) => toSkillScoreView(row, now).name);
     const mergedMeta = mergeMetaSkills(meta, skillNames);
 
     const xpDays = buildXpDays(

@@ -22,6 +22,7 @@ import {
 } from "@/features/traces/demo/rag-trace-demo-data";
 import {
   buildRagPipeline,
+  recallLabelFromGrade,
   buildRagTraceMeta,
   enrichTraceQueries,
   recallFromTraceAndGrade,
@@ -30,7 +31,7 @@ import {
 } from "@/features/traces/rag-trace-meta";
 import type { Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
-import type { RunTrace, TraceHit, TraceQuery } from "@/types/trace";
+import type { RunTrace, TraceHit, TraceQuery, TraceStage } from "@/types/trace";
 import { cn } from "@/lib/utils";
 import "@/features/traces/trace-page.css";
 
@@ -57,7 +58,9 @@ export function RagTraceView({
   demoPresentation = false,
 }: RagTraceViewProps) {
   const [payloadOpen, setPayloadOpen] = useState(false);
-  const [openQueries, setOpenQueries] = useState<Record<number, boolean>>({ 0: true });
+  const [openQueries, setOpenQueries] = useState<Record<number, boolean>>({
+    0: true,
+  });
 
   const meta = useMemo(() => {
     if (demoPresentation) {
@@ -94,8 +97,7 @@ export function RagTraceView({
     meta.createdDisplay ??
     (trace.createdAt ? formatWhen(trace.createdAt) : "—");
   const exerciseSlug = meta.exerciseSlug;
-  const exerciseLabel =
-    meta.exerciseTitle ?? exerciseSlug ?? "—";
+  const exerciseLabel = meta.exerciseTitle ?? exerciseSlug ?? "—";
   const hiddenBadgeCount = meta.hiddenQueryCount ?? "—";
 
   return (
@@ -107,7 +109,10 @@ export function RagTraceView({
           <p className="lp-trace-lead">Retrieval steps for this run (RAG)</p>
           <div className="lp-trace-crumb-row">
             <nav className="lp-trace-crumb" aria-label="Trace links">
-              <Link href={routes.problems} className="text-lp-brand hover:underline">
+              <Link
+                href={routes.problems}
+                className="text-lp-brand hover:underline"
+              >
                 Problems
               </Link>
               {exerciseSlug ? (
@@ -122,11 +127,17 @@ export function RagTraceView({
                 </>
               ) : null}
               <span aria-hidden> · </span>
-              <Link href={routes.run(runId)} className="text-lp-brand hover:underline">
+              <Link
+                href={routes.run(runId)}
+                className="text-lp-brand hover:underline"
+              >
                 Run
               </Link>
               <span aria-hidden> · </span>
-              <Link href={routes.dashboard} className="text-lp-brand hover:underline">
+              <Link
+                href={routes.dashboard}
+                className="text-lp-brand hover:underline"
+              >
                 Dashboard
               </Link>
             </nav>
@@ -141,7 +152,7 @@ export function RagTraceView({
               >
                 <span className="lp-trace-status-pill-dot" aria-hidden />
                 {recall != null
-                  ? `${verdict} · recall@5 ${recall.toFixed(2)}`
+                  ? `${verdict} · ${recallLabelFromGrade(grade)} ${recall.toFixed(2)}`
                   : verdict}
               </span>
             ) : null}
@@ -192,7 +203,11 @@ export function RagTraceView({
               <h2 className="lp-trace-run-overview-title">Overview</h2>
             </div>
             <dl className="lp-trace-overview">
-              <OverviewRow label="Run ID" value={meta.runIdDisplay ?? trace.runId} mono />
+              <OverviewRow
+                label="Run ID"
+                value={meta.runIdDisplay ?? trace.runId}
+                mono
+              />
               <OverviewRow label="Simulator" value={trace.simulator ?? "rag"} />
               <OverviewRow
                 label="Exercise"
@@ -216,14 +231,27 @@ export function RagTraceView({
                 onClick={() => setPayloadOpen((v) => !v)}
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  <Code2 className="size-3.5 shrink-0 text-lp-muted" aria-hidden />
-                  <span className="lp-trace-payload-toggle-label">Raw payload</span>
-                  <span className="lp-trace-payload-toggle-size">{payloadKb} KB</span>
+                  <Code2
+                    className="size-3.5 shrink-0 text-lp-muted"
+                    aria-hidden
+                  />
+                  <span className="lp-trace-payload-toggle-label">
+                    Raw payload
+                  </span>
+                  <span className="lp-trace-payload-toggle-size">
+                    {payloadKb} KB
+                  </span>
                 </span>
                 {payloadOpen ? (
-                  <ChevronDown className="size-4 shrink-0 text-lp-muted" aria-hidden />
+                  <ChevronDown
+                    className="size-4 shrink-0 text-lp-muted"
+                    aria-hidden
+                  />
                 ) : (
-                  <ChevronRight className="size-4 shrink-0 text-lp-muted" aria-hidden />
+                  <ChevronRight
+                    className="size-4 shrink-0 text-lp-muted"
+                    aria-hidden
+                  />
                 )}
               </button>
               <div
@@ -393,23 +421,59 @@ function QueryAccordion({
       >
         <span className="flex min-w-0 flex-1 items-start gap-2">
           {open ? (
-            <ChevronDown className="mt-1 size-4 shrink-0 text-lp-muted" aria-hidden />
+            <ChevronDown
+              className="mt-1 size-4 shrink-0 text-lp-muted"
+              aria-hidden
+            />
           ) : (
-            <ChevronRight className="mt-1 size-4 shrink-0 text-lp-muted" aria-hidden />
+            <ChevronRight
+              className="mt-1 size-4 shrink-0 text-lp-muted"
+              aria-hidden
+            />
           )}
           <span className="min-w-0">
             <span className="lp-trace-query-source">{query.source}</span>
             <span className="lp-trace-query-question">{query.question}</span>
+            {query.rewrittenQuery ? (
+              <span className="lp-trace-query-rewrite">
+                searched for: {query.rewrittenQuery}
+              </span>
+            ) : null}
           </span>
         </span>
-        {query.timingLabel ? (
-          <span className="lp-trace-query-timing">{query.timingLabel}</span>
-        ) : null}
+        <span className="flex shrink-0 items-center gap-1.5">
+          {typeof query.hit === "boolean" ? (
+            <span
+              className={cn(
+                "lp-trace-hit-badge",
+                query.hit
+                  ? "lp-trace-hit-badge--pass"
+                  : "lp-trace-hit-badge--fail",
+              )}
+            >
+              {query.hit ? "answer in context" : "answer missed"}
+            </span>
+          ) : null}
+          {typeof query.contextTokens === "number" ? (
+            <span className="lp-trace-query-timing">
+              {query.contextTokens} tok
+            </span>
+          ) : null}
+          {query.timingLabel ? (
+            <span className="lp-trace-query-timing">{query.timingLabel}</span>
+          ) : null}
+        </span>
       </button>
+      {open ? <QueryPath query={query} /> : null}
       {open ? (
         <ul className="lp-trace-hit-list m-0 list-none p-0">
           {query.retrieved.map((hit, index) => (
-            <HitRow key={`${hit.chunkId}-${hit.docId}`} hit={hit} topHit={index === 0} />
+            <HitRow
+              key={`${hit.chunkId}-${hit.docId}`}
+              hit={hit}
+              topHit={index === 0}
+              maxScore={Math.max(0, ...query.retrieved.map((row) => row.score))}
+            />
           ))}
         </ul>
       ) : null}
@@ -417,8 +481,156 @@ function QueryAccordion({
   );
 }
 
-function HitRow({ hit, topHit }: { hit: TraceHit; topHit?: boolean }) {
-  const pct = Math.min(100, Math.max(0, hit.score * 100));
+/**
+ * The stages this question went through, left to right: what was searched,
+ * where the answer chunk ranked before and after the rerank, and what reached
+ * the context. Gold positions exist for public questions only.
+ */
+function QueryPath({ query }: { query: TraceQuery }) {
+  if (query.stages && query.stages.length > 0) {
+    return <QueryWaterfall query={query} stages={query.stages} />;
+  }
+  const goldIndex = query.retrieved.findIndex((hit) => hit.goldHit === true);
+  const gold = goldIndex >= 0 ? query.retrieved[goldIndex] : null;
+  const reranked = query.retrieved.some(
+    (hit) => hit.firstStageRank !== undefined,
+  );
+  const steps: { label: string; value: string; tone?: "pass" | "fail" }[] = [
+    {
+      label: "Searched",
+      value: query.rewrittenQuery
+        ? `"${query.rewrittenQuery}"`
+        : "the question",
+    },
+  ];
+  if (reranked) {
+    steps.push({
+      label: "Rerank",
+      value: gold
+        ? `answer #${gold.firstStageRank ?? "?"} → #${goldIndex + 1}`
+        : "reordered the candidates",
+    });
+  }
+  steps.push({
+    label: "Context",
+    value: `${query.retrieved.length} chunk${query.retrieved.length === 1 ? "" : "s"}${
+      typeof query.contextTokens === "number"
+        ? ` · ${query.contextTokens} tok`
+        : ""
+    }`,
+  });
+  if (typeof query.hit === "boolean") {
+    steps.push({
+      label: "Result",
+      value: query.hit ? `answer at #${goldIndex + 1}` : "answer missed",
+      tone: query.hit ? "pass" : "fail",
+    });
+  }
+  return (
+    <ol
+      className="lp-trace-path"
+      aria-label="Stages this question went through"
+    >
+      {steps.map((step) => (
+        <li key={step.label} className={cn(step.tone && `is-${step.tone}`)}>
+          <span className="lp-trace-path-label">{step.label}</span>
+          <span className="lp-trace-path-value">{step.value}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+/**
+ * Every step the grader ran for this question, as a waterfall: each bar
+ * starts where the previous step ended and is as long as the step took. The
+ * answer column shows where the answer chunk stood after each step.
+ */
+function QueryWaterfall({
+  query,
+  stages,
+}: {
+  query: TraceQuery;
+  stages: TraceStage[];
+}) {
+  const total = stages.reduce((sum, stage) => sum + stage.ms, 0);
+  // Where each bar starts: when every step before it had finished.
+  const starts = stages.map((_, index) =>
+    stages.slice(0, index).reduce((sum, stage) => sum + stage.ms, 0),
+  );
+  return (
+    <div
+      className="lp-trace-fall"
+      aria-label="Steps this question went through"
+    >
+      <ol className="lp-trace-fall-list">
+        {stages.map((stage, index) => {
+          const left = total > 0 ? (starts[index] / total) * 100 : 0;
+          const width = total > 0 ? Math.max(1.5, (stage.ms / total) * 100) : 0;
+          const answer =
+            stage.goldRank === undefined
+              ? null
+              : stage.goldRank === null
+                ? { text: "answer gone", tone: "fail" }
+                : { text: `answer #${stage.goldRank}`, tone: "pass" };
+          return (
+            <li key={`${stage.id}-${index}`} className="lp-trace-fall-row">
+              <span className="lp-trace-fall-label">{stage.label}</span>
+              <span className="lp-trace-fall-detail">{stage.detail}</span>
+              <span
+                className={cn(
+                  "lp-trace-fall-answer",
+                  answer && `is-${answer.tone}`,
+                )}
+              >
+                {answer?.text ?? ""}
+              </span>
+              <span className="lp-trace-fall-track" aria-hidden>
+                <span
+                  className="lp-trace-fall-bar"
+                  style={{
+                    left: `${Math.min(left, 98.5)}%`,
+                    width: `${width}%`,
+                  }}
+                />
+              </span>
+              <span className="lp-trace-fall-ms">{formatMs(stage.ms)}</span>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="lp-trace-fall-foot">
+        {query.retrieved.length} chunk{query.retrieved.length === 1 ? "" : "s"}{" "}
+        in context
+        {typeof query.contextTokens === "number"
+          ? ` · ${query.contextTokens} tok`
+          : ""}{" "}
+        · {formatMs(total)} in total
+      </p>
+    </div>
+  );
+}
+
+function formatMs(ms: number): string {
+  if (ms < 0.01) {
+    return "<0.01 ms";
+  }
+  return `${ms < 10 ? ms.toFixed(2) : Math.round(ms)} ms`;
+}
+
+function HitRow({
+  hit,
+  topHit,
+  maxScore,
+}: {
+  hit: TraceHit;
+  topHit?: boolean;
+  maxScore: number;
+}) {
+  // Scores are BM25 relevance, not 0–1 similarity: draw the bar relative to the
+  // best hit for this query.
+  const pct =
+    maxScore > 0 ? Math.min(100, Math.max(0, (hit.score / maxScore) * 100)) : 0;
   const chunkLabel = `${hit.docId} · ${hit.chunkId}`;
   return (
     <li className={cn("lp-trace-hit-row", topHit && "lp-trace-hit-row--top")}>
@@ -434,19 +646,42 @@ function HitRow({ hit, topHit }: { hit: TraceHit; topHit?: boolean }) {
             {chunkLabel}
           </span>
           {topHit ? <span className="lp-trace-hit-badge">top hit</span> : null}
+          {hit.goldHit ? (
+            <span className="lp-trace-hit-badge lp-trace-hit-badge--pass">
+              gold
+            </span>
+          ) : null}
+          {hit.firstStageRank !== undefined ? (
+            <span
+              className="lp-trace-hit-moved"
+              title="Rank before the rerank step"
+            >
+              {hit.firstStageRank === null
+                ? "outside first stage"
+                : `first stage #${hit.firstStageRank}`}
+            </span>
+          ) : null}
         </div>
-        <div className="lp-trace-hit-score-group" aria-label={`Similarity ${hit.score.toFixed(2)}`}>
+        <div
+          className="lp-trace-hit-score-group"
+          aria-label={`Relevance ${hit.score.toFixed(2)}`}
+        >
           <span
             className={cn(
               "lp-trace-hit-score-val",
-              topHit ? "lp-trace-hit-score-val--top" : "lp-trace-hit-score-val--dim",
+              topHit
+                ? "lp-trace-hit-score-val--top"
+                : "lp-trace-hit-score-val--dim",
             )}
           >
             {hit.score.toFixed(2)}
           </span>
           <span className="lp-trace-hit-track">
             <span
-              className={cn("lp-trace-hit-fill", topHit && "lp-trace-hit-fill--top")}
+              className={cn(
+                "lp-trace-hit-fill",
+                topHit && "lp-trace-hit-fill--top",
+              )}
               style={{ width: `${pct}%` }}
             />
           </span>

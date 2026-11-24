@@ -1,0 +1,6 @@
+[
+  "Run BM25 and print the top two posts for a question: what do they look like?",
+  "Counting how often a word appears rewards repetition, and repetition is all the spam has.",
+  "Real answers use many different words; spam uses a handful again and again. Compare distinct words with total words.",
+  "Score posts by how many different question words they contain, weighted by their share of distinct words, and return the top two."
+]

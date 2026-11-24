@@ -18,7 +18,7 @@ import { SandboxHarness } from '../harnesses/sandbox/sandbox.harness';
 import { isSandboxRagSlug } from '../../catalogue/exercises/exercises.constants';
 import type { PeItem } from '../harnesses/prompt-engineering/pe.types';
 import type { AgentItem } from '../harnesses/agent/agent.types';
-import type { HiddenItem } from '../harnesses/rag/rag.types';
+import type { HiddenItem, PublicItem } from '../harnesses/rag/rag.types';
 import { WORKER_VERSION } from '../processors/grade-job';
 
 type PipelineResult = {
@@ -102,6 +102,7 @@ export class GradingPipeline {
         hidden: hidden as HiddenItem[],
         publicItems,
         budget: exercise.budget,
+        gates: exercise.gates,
       });
     } else if (exercise.simulator === 'rag') {
       if (!assets.corpusUri) {
@@ -111,10 +112,12 @@ export class GradingPipeline {
       result = await this.ragHarness.execute({
         slug: exercise.slug,
         runId,
+        userId: run.submission.attempt.userId,
         payload: run.submission.payload,
         docs,
         hidden: hidden as HiddenItem[],
         publicItems,
+        gates: exercise.gates,
       });
     } else if (exercise.simulator === 'evaluation') {
       result = await this.evaluationHarness.execute({
@@ -232,18 +235,24 @@ export class GradingPipeline {
   }
 }
 
-function publicQuestions(value: unknown): { question: string }[] {
+/** Public samples with their (public) gold labels, for trace hit markers. */
+function publicQuestions(value: unknown): PublicItem[] {
   if (!Array.isArray(value)) {
     return [];
   }
-  const questions: { question: string }[] = [];
+  const questions: PublicItem[] = [];
   for (const item of value) {
     if (!item || typeof item !== 'object' || !('question' in item)) {
       continue;
     }
-    const question = (item as { question: unknown }).question;
-    if (typeof question === 'string') {
-      questions.push({ question });
+    const row = item as Record<string, unknown>;
+    if (typeof row.question === 'string') {
+      questions.push({
+        question: row.question,
+        goldDocId: typeof row.goldDocId === 'string' ? row.goldDocId : null,
+        goldSpan: typeof row.goldSpan === 'string' ? row.goldSpan : null,
+        class: typeof row.class === 'string' ? row.class : null,
+      });
     }
   }
   return questions;

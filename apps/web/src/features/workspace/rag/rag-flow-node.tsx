@@ -18,7 +18,7 @@ import {
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { cn } from "@/lib/utils";
 
-export type RagFlowNodeState = "active" | "done" | "dim" | "neutral";
+export type RagFlowNodeState = "active" | "done" | "dim" | "neutral" | "fail";
 
 export type RagFlowIconAccent = {
   fg: string;
@@ -30,6 +30,8 @@ export type RagFlowNodeData = {
   subtitle?: string;
   state: RagFlowNodeState;
   badge?: "control" | "done";
+  /** Selected in the stepper / by click; its detail shows under the canvas. */
+  focused?: boolean;
   icon: LucideIcon;
   iconAccent: RagFlowIconAccent;
 };
@@ -85,6 +87,8 @@ export function RagFlowNode({ data }: NodeProps) {
         done && "lp-rf-node--done",
         dim && "lp-rf-node--dim",
         node.state === "neutral" && "lp-rf-node--neutral",
+        node.state === "fail" && "lp-rf-node--fail",
+        node.focused && "lp-rf-node--focused",
       )}
     >
       <Handle type="target" position={Position.Left} className="lp-rf-handle" />

@@ -471,6 +471,15 @@
   color: var(--lp-ink);
 }
 
+.lp-trace-query-rewrite {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--lp-muted);
+}
+
 .lp-trace-query-timing {
   flex-shrink: 0;
   padding-top: 0.15rem;
@@ -670,5 +679,162 @@
     flex: 1;
     max-width: none;
     width: auto;
+  }
+}
+
+.lp-trace-hit-badge--pass {
+  color: var(--color-status-pass);
+  border-color: color-mix(in srgb, var(--color-status-pass) 45%, transparent);
+  background: color-mix(in srgb, var(--color-status-pass) 12%, transparent);
+}
+
+.lp-trace-hit-badge--fail {
+  color: var(--color-status-fail);
+  border-color: color-mix(in srgb, var(--color-status-fail) 45%, transparent);
+  background: color-mix(in srgb, var(--color-status-fail) 12%, transparent);
+}
+
+.lp-trace-hit-moved {
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+/* Stages one question went through (searched, rerank, context, result). */
+.lp-trace-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+}
+
+.lp-trace-path li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.4rem;
+}
+
+.lp-trace-path li + li::before {
+  content: "→";
+  margin-right: 0.2rem;
+  color: var(--lp-muted);
+}
+
+.lp-trace-path-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-trace-path-value {
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  color: var(--lp-ink);
+}
+
+.lp-trace-path li.is-pass .lp-trace-path-value {
+  color: var(--lp-success, #0f766e);
+}
+
+.lp-trace-path li.is-fail .lp-trace-path-value {
+  color: var(--lp-danger, #b91c1c);
+}
+
+/* Waterfall: every step the grader ran for one question, with timings. */
+.lp-trace-fall {
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+}
+
+.lp-trace-fall-list {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-trace-fall-row {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) 6.5rem minmax(4rem, 9rem) 3.5rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+}
+
+.lp-trace-fall-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lp-trace-fall-detail {
+  color: var(--lp-ink);
+  min-width: 0;
+}
+
+.lp-trace-fall-answer {
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-trace-fall-answer.is-pass {
+  color: var(--color-status-pass);
+}
+
+.lp-trace-fall-answer.is-fail {
+  color: var(--color-status-fail);
+}
+
+.lp-trace-fall-track {
+  position: relative;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-border) 70%, transparent);
+}
+
+.lp-trace-fall-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--color-brand);
+}
+
+.lp-trace-fall-ms {
+  font-family: var(--font-geist-mono, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  text-align: right;
+  color: var(--lp-muted);
+}
+
+.lp-trace-fall-foot {
+  margin: 0.5rem 0 0;
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+@media (max-width: 720px) {
+  .lp-trace-fall-row {
+    grid-template-columns: 6rem minmax(0, 1fr) 5.5rem;
+  }
+
+  .lp-trace-fall-track,
+  .lp-trace-fall-ms {
+    display: none;
   }
 }

@@ -18,7 +18,7 @@
   --live-code-text: #d6dce6;
   --live-code-muted: #6b7689;
   --live-code-kw: #88c9f7;
-  --live-code-str: #aced2c;
+  --live-code-str: #ff6b6b;
   --live-code-cmt: #6b7689;
 
   box-sizing: border-box;
@@ -177,13 +177,13 @@ html:not([data-theme="dark"]) .lp-home-live {
 /* Preview shell — border/bg/shadow via Tailwind on .lp-home-live-preview */
 
 .lp-home-live--htb {
-  --live-ember: #9fef00;
-  --live-ember-hover: #aced2c;
+  --live-ember: #FF4D4D;
+  --live-ember-hover: #ff6b6b;
   --live-ember-on: #121c2b;
-  --live-code-str: #9fef00;
+  --live-code-str: #FF4D4D;
   --live-code-kw: #88c9f7;
   --live-teal: #88c9f7;
-  --live-check-bg: color-mix(in srgb, #9fef00 14%, #141d2b);
+  --live-check-bg: color-mix(in srgb, #FF4D4D 14%, #141d2b);
 }
 
 .lp-home-live--htb .lp-home-live-title {
@@ -191,7 +191,7 @@ html:not([data-theme="dark"]) .lp-home-live {
 }
 
 .lp-home-live--htb .lp-home-live-check-icon {
-  color: #9fef00;
+  color: #FF4D4D;
 }
 
 .lp-home-live-dots {
@@ -386,18 +386,18 @@ html:not([data-theme="dark"]) .lp-home-live {
   gap: 6px;
   padding: 3px 9px;
   border-radius: 999px;
-  background: color-mix(in srgb, #9fef00 14%, transparent);
+  background: color-mix(in srgb, #FF4D4D 14%, transparent);
   font-family: var(--lp-font-mono);
   font-size: 12px;
   font-weight: 500;
-  color: #9fef00;
+  color: #FF4D4D;
 }
 
 .lp-home-live-pass-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #9fef00;
+  background: #FF4D4D;
 }
 
 .lp-home-live-recall {

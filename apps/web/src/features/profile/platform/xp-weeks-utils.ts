@@ -95,7 +95,7 @@ export function xpBarColor(xp: number): string {
   if (xp < 15) return "#2F4A1A";
   if (xp < 40) return "#4E7A12";
   if (xp < 80) return "#74B308";
-  return "#9FEF00";
+  return "#FF4D4D";
 }
 
 export function computeXpStats(weeks: XpWeek[]) {

@@ -47,7 +47,7 @@ export function DashboardAppsPanel({ open, anchor, onClose }: DashboardAppsPanel
             onClick={onClose}
           />
           <motion.nav
-            aria-label="LabPath apps"
+            aria-label="AI Warss apps"
             className="lp-dash-apps-panel"
             style={{ top: anchor.top, right: anchor.right }}
             initial={{ opacity: 0, y: -8, scale: 0.98 }}

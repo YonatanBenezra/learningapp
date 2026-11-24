@@ -10,20 +10,21 @@ import type { Run } from "@/types/run";
 import type { Exercise } from "@/types/exercise";
 import { cn } from "@/lib/utils";
 import { RagFlowGraph } from "./rag-flow-graph";
+import { RagLabPanel } from "./rag-lab-panel";
 import { RunPanel } from "./run-panel";
 import { SubmissionSurface } from "./submission-surface";
 import type { FigmaBriefContent } from "./brief-panel";
+import { BriefMarkdown } from "./brief-markdown";
+// Mobile layout styles (scoped to .lp-ws--mobile / .lp-ws-mobile-*).
+import "../demo/workspace-demo.css";
 
-export type WorkspaceMobileStep = "brief" | "submit" | "results";
+export type WorkspaceMobileStep = "brief" | "submit" | "lab" | "results";
 
-const MOBILE_STEPS: ReadonlyArray<{
-  id: WorkspaceMobileStep;
-  label: string;
-  index: number;
-}> = [
-  { id: "brief", label: "Brief", index: 1 },
-  { id: "submit", label: "Submit", index: 2 },
-  { id: "results", label: "Results", index: 3 },
+const MOBILE_STEPS: ReadonlyArray<{ id: WorkspaceMobileStep; label: string }> = [
+  { id: "brief", label: "Brief" },
+  { id: "submit", label: "Submit" },
+  { id: "lab", label: "Lab" },
+  { id: "results", label: "Results" },
 ];
 
 const DIFFICULTY_LABELS = { E: "Easy", M: "Medium", H: "Hard" } as const;
@@ -38,7 +39,22 @@ type WorkspaceDemoMobileProps = {
   pending: boolean;
   submitError: string | null;
   initialValues: Record<string, unknown>;
+  /** The learner's live config, restored when the Submit step remounts. */
+  restoreValues?: Record<string, unknown> | null;
   onSubmit: (payload: Record<string, unknown>) => void;
+  onValidityChange?: (valid: boolean) => void;
+  onValuesChange?: (payload: Record<string, unknown>) => void;
+  /** Editor heading derived from the submission schema. */
+  editorTitle: string;
+  /** Number shown next to the submit button (the attempt being made). */
+  nextAttempt: number;
+  /** Submissions made so far, for "Solved in N attempts". */
+  submittedAttempts: number;
+  /** Show the Simulation Lab step (RAG exercises with a lab). */
+  showLab?: boolean;
+  labPayload?: Record<string, unknown>;
+  /** Submissions left under the attempt policy; hidden when null. */
+  budget?: { label: string; exhausted: boolean } | null;
 };
 
 export function WorkspaceDemoMobile({
@@ -51,20 +67,31 @@ export function WorkspaceDemoMobile({
   pending,
   submitError,
   initialValues,
+  restoreValues,
   onSubmit,
+  onValidityChange,
+  onValuesChange,
+  editorTitle,
+  nextAttempt,
+  submittedAttempts,
+  showLab = false,
+  labPayload,
+  budget = null,
 }: WorkspaceDemoMobileProps) {
-  const activeMeta = MOBILE_STEPS.find((s) => s.id === step) ?? MOBILE_STEPS[0];
+  const steps = MOBILE_STEPS.filter((item) => item.id !== "lab" || showLab);
+  const activeIndex = Math.max(0, steps.findIndex((s) => s.id === step));
+  const activeMeta = steps[activeIndex] ?? steps[0];
 
   return (
     <div className="lp-ws-mobile">
       <div className="lp-ws-mobile-top">
         <span className="lp-ws-mobile-step" aria-live="polite">
-          {activeMeta.index} · {activeMeta.label}
+          {activeIndex + 1} · {activeMeta.label}
         </span>
       </div>
 
       <div className="lp-ws-mobile-segments" role="tablist" aria-label="Workspace steps">
-        {MOBILE_STEPS.map((item) => (
+        {steps.map((item) => (
           <button
             key={item.id}
             type="button"
@@ -105,14 +132,25 @@ export function WorkspaceDemoMobile({
                 pending={pending}
                 error={submitError}
                 initialValues={initialValues}
-                title="Chunking config"
+                restoreValues={restoreValues}
+                title={editorTitle}
                 onSubmit={onSubmit}
+                onValidityChange={onValidityChange}
+                onValuesChange={onValuesChange}
                 figmaLayout
                 figmaGrade={grade}
-                figmaAttempt={3}
+                figmaAttempt={nextAttempt}
+                figmaBudget={budget}
               />
             </div>
           </div>
+        ) : null}
+        {step === "lab" && showLab ? (
+          <RagLabPanel
+            slug={exercise.slug}
+            payload={labPayload ?? initialValues}
+            gates={exercise.gates}
+          />
         ) : null}
         {step === "results" ? (
           <RunPanel
@@ -122,7 +160,7 @@ export function WorkspaceDemoMobile({
             collapsed={false}
             figmaScorecard
             pending={pending}
-            attempt={3}
+            attempt={submittedAttempts}
             exerciseSlug={exercise.slug}
             mobileChrome
           />
@@ -143,7 +181,25 @@ function MobileBriefPane({
 }) {
   const [publicOpen, setPublicOpen] = useState(false);
   const [hintsOpen, setHintsOpen] = useState(false);
+  const [hintPending, setHintPending] = useState(false);
+  const [hintError, setHintError] = useState<string | null>(null);
   const unlockedHints = content.hints.filter((h) => h.unlocked).length;
+  const lockedHints = content.hints.length - unlockedHints;
+
+  async function unlockHint() {
+    if (!content.onUnlockHint) {
+      return;
+    }
+    setHintPending(true);
+    setHintError(null);
+    try {
+      await content.onUnlockHint();
+    } catch (caught: unknown) {
+      setHintError(caught instanceof Error ? caught.message : "Could not unlock the hint.");
+    } finally {
+      setHintPending(false);
+    }
+  }
 
   return (
     <div className="lp-ws-mobile-brief flex min-h-0 flex-1 flex-col">
@@ -174,11 +230,27 @@ function MobileBriefPane({
         </div>
         <p className="mt-3 text-[0.8125rem] leading-relaxed text-lp-muted">{content.goal}</p>
         <div className="mt-4 rounded-lg border border-lp-brand/35 bg-[color-mix(in_srgb,var(--color-brand)_6%,var(--color-card))] px-3 py-3">
-          <p className="text-[1.5rem] font-bold leading-none text-lp-brand">
-            {content.constraint.metric} {content.constraint.threshold}
-          </p>
+          {(content.constraint.gates ?? [
+            { metric: content.constraint.metric, threshold: content.constraint.threshold },
+          ]).map((gate) => (
+            <p
+              key={gate.metric}
+              className="text-[1.15rem] font-bold leading-tight text-lp-brand"
+            >
+              {gate.metric} {gate.threshold}
+            </p>
+          ))}
           <p className="mt-1.5 text-[0.6875rem] text-lp-muted">{content.constraint.footnote}</p>
         </div>
+
+        {content.fullBriefMd ? (
+          <section className="mt-4">
+            <h2 className="mb-1.5 text-[0.625rem] font-bold uppercase tracking-[0.06em] text-lp-muted">
+              Full brief
+            </h2>
+            <BriefMarkdown text={content.fullBriefMd} compact />
+          </section>
+        ) : null}
 
         <button
           type="button"
@@ -205,6 +277,8 @@ function MobileBriefPane({
           </ul>
         ) : null}
 
+        {content.hints.length > 0 ? (
+          <>
         <button
           type="button"
           className="lp-ws-mobile-row"
@@ -212,7 +286,7 @@ function MobileBriefPane({
           onClick={() => setHintsOpen((v) => !v)}
         >
           <span className="text-[0.8125rem] font-semibold text-lp-ink">
-            Hints · {unlockedHints} unlocked
+            Hints · {unlockedHints} of {content.hints.length} unlocked
           </span>
           <ChevronRight
             className={cn("size-4 text-lp-muted transition-transform", hintsOpen && "rotate-90")}
@@ -231,7 +305,24 @@ function MobileBriefPane({
                 </p>
               ) : null,
             )}
+            {lockedHints > 0 && content.onUnlockHint ? (
+              <button
+                type="button"
+                className="text-[0.8125rem] font-semibold text-lp-brand disabled:opacity-60"
+                onClick={() => void unlockHint()}
+                disabled={hintPending}
+              >
+                {hintPending ? "Unlocking…" : "Unlock next hint"}
+              </button>
+            ) : null}
+            {hintError ? (
+              <p className="text-[0.75rem] text-lp-status-fail" role="alert">
+                {hintError}
+              </p>
+            ) : null}
           </div>
+        ) : null}
+          </>
         ) : null}
       </div>
       <footer className="lp-ws-mobile-footer">

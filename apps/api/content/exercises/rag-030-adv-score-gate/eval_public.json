@@ -1,42 +1,56 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "What is the nightly hotel limit for the design summit?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "140 euros",
+    "goldDocId": "travel-porto",
+    "goldSpan": "Hotels in Porto may cost at most 140 euros a night on business trips",
+    "evidence": [
+      {
+        "docId": "event-design-summit",
+        "span": "This year the design summit takes place in Porto in March"
+      },
+      {
+        "docId": "travel-porto",
+        "span": "Hotels in Porto may cost at most 140 euros a night on business trips"
+      }
+    ]
   },
   {
     "id": "p2",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "Who approves the budget for Project Saffron onboarding?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway; split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "Mira Okafor",
+    "goldDocId": "team-atlas",
+    "goldSpan": "The Atlas team is led by Mira Okafor, who approves the team budget and hiring",
+    "evidence": [
+      {
+        "docId": "project-saffron-onboarding",
+        "span": "Project Saffron onboarding is run by the Atlas team"
+      },
+      {
+        "docId": "team-atlas",
+        "span": "The Atlas team is led by Mira Okafor, who approves the team budget and hiring"
+      }
+    ]
   },
   {
     "id": "p3",
-    "question": "How long are support tickets kept after close?",
+    "question": "In which month does the contract with the maker of the Nimbus speaker renew?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
-  },
-  {
-    "id": "p4",
-    "question": "When does the primary on-call rotate each week?",
-    "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
-  },
-  {
-    "id": "p5",
-    "question": "What report must vendors present before procurement?",
-    "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "January",
+    "goldDocId": "supplier-varden-electronics",
+    "goldSpan": "Our contract with Varden Electronics renews every January, and ending it needs 60 days of notice",
+    "evidence": [
+      {
+        "docId": "product-nimbus-speaker",
+        "span": "The Nimbus speaker is manufactured for us by Varden Electronics"
+      },
+      {
+        "docId": "supplier-varden-electronics",
+        "span": "Our contract with Varden Electronics renews every January, and ending it needs 60 days of notice"
+      }
+    ]
   }
 ]

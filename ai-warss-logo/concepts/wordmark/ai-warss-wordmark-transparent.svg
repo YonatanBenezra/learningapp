@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 190" width="610" height="190" role="img" aria-label="AI Warss">
+  <defs>
+    <!-- Letters are drawn as shapes, so the logo looks the same on every machine -->
+    <g id="word" fill="none" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+      <g stroke="#141414">
+        <polyline points="60,113 88,47 116,113"/>
+        <line x1="142" y1="47" x2="142" y2="113"/>
+        <polyline points="186,47 204,113 222,62 240,113 258,47"/>
+        <polyline points="280,113 308,47 336,113"/>
+        <path d="M362,113 V47 H384 a17.5,17.5 0 0 1 0,35 H362 M382,82 L402,113"/>
+        <path d="M474,47 H446 a16.5,16.5 0 0 0 0,33 H458 a16.5,16.5 0 0 1 0,33 H426"/>
+      </g>
+      <path stroke="#E8421C" d="M548,47 H520 a16.5,16.5 0 0 0 0,33 H532 a16.5,16.5 0 0 1 0,33 H500"/>
+    </g>
+    <clipPath id="top"><polygon points="0,0 610,0 610,58.5 0,74.5"/></clipPath>
+    <clipPath id="bottom"><polygon points="0,77.5 610,61.5 610,190 0,190"/></clipPath>
+  </defs>
+
+  
+
+  <!-- The word, sliced by one diagonal cut -->
+  <g clip-path="url(#top)"><use href="#word" x="5"/></g>
+  <g clip-path="url(#bottom)"><use href="#word" x="-5"/></g>
+
+  <text x="305" y="160" text-anchor="middle" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="14" letter-spacing="5" fill="#6B665C">RAG · GUARDRAILS · EVALS</text>
+</svg>

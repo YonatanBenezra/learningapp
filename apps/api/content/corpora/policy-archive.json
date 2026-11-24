@@ -1,0 +1,177 @@
+[
+  {
+    "id": "hotel-stays-2023",
+    "title": "Hotel stays",
+    "text": "Effective 2023-02. Hotels may cost at most 120 euros a night in most cities. In capital cities the limit is 160 euros a night. Rooms are booked at least 7 days before the trip."
+  },
+  {
+    "id": "hotel-stays-2024",
+    "title": "Hotel stays",
+    "text": "Effective 2024-06. Hotels may cost at most 135 euros a night in most cities. In capital cities the limit is 175 euros a night. Rooms are booked at least 10 days before the trip."
+  },
+  {
+    "id": "hotel-stays-2026",
+    "title": "Hotel stays",
+    "text": "Effective 2026-01. Hotels may cost at most 150 euros a night in most cities. In capital cities the limit is 190 euros a night. Rooms are booked at least 14 days before the trip."
+  },
+  {
+    "id": "hotel-stays-draft",
+    "title": "Hotel stays",
+    "text": "Draft, not yet approved. Proposed changes to the hotel stays policy. Hotels may cost at most 170 euros a night in most cities. In capital cities the limit is 210 euros a night. Rooms are booked at least 21 days before the trip."
+  },
+  {
+    "id": "meals-on-trips-2022",
+    "title": "Meals on trips",
+    "text": "Effective 2022-09. The daily meal allowance abroad is 40 euros. At home the daily meal allowance is 25 euros. Client dinners may cost up to 60 euros per guest."
+  },
+  {
+    "id": "meals-on-trips-2025",
+    "title": "Meals on trips",
+    "text": "Effective 2025-03. The daily meal allowance abroad is 50 euros. At home the daily meal allowance is 30 euros. Client dinners may cost up to 70 euros per guest."
+  },
+  {
+    "id": "meals-on-trips-draft",
+    "title": "Meals on trips",
+    "text": "Draft, not yet approved. Proposed changes to the meals on trips policy. The daily meal allowance abroad is 55 euros. At home the daily meal allowance is 35 euros. Client dinners may cost up to 85 euros per guest."
+  },
+  {
+    "id": "home-office-2021",
+    "title": "Home office",
+    "text": "Effective 2021-05. Home office equipment is paid up to 300 euros every three years. Internet at home is refunded at 15 euros a month. Staff work from home up to 2 days a week."
+  },
+  {
+    "id": "home-office-2023",
+    "title": "Home office",
+    "text": "Effective 2023-10. Home office equipment is paid up to 350 euros every three years. Internet at home is refunded at 20 euros a month. Staff work from home up to 3 days a week."
+  },
+  {
+    "id": "home-office-2026",
+    "title": "Home office",
+    "text": "Effective 2026-04. Home office equipment is paid up to 400 euros every three years. Internet at home is refunded at 25 euros a month. Staff work from home up to 3.5 days a week."
+  },
+  {
+    "id": "mileage-2023",
+    "title": "Mileage",
+    "text": "Effective 2023-01. Driving your own car on business is refunded at 25 cents a kilometre. Electric cars get an extra 2 cents a kilometre. Trips shorter than 5 kilometres are not refunded."
+  },
+  {
+    "id": "mileage-2025",
+    "title": "Mileage",
+    "text": "Effective 2025-07. Driving your own car on business is refunded at 30 cents a kilometre. Electric cars get an extra 4 cents a kilometre. Trips shorter than 10 kilometres are not refunded."
+  },
+  {
+    "id": "mileage-draft",
+    "title": "Mileage",
+    "text": "Draft, not yet approved. Proposed changes to the mileage policy. Driving your own car on business is refunded at 33 cents a kilometre. Electric cars get an extra 5 cents a kilometre. Trips shorter than 8 kilometres are not refunded."
+  },
+  {
+    "id": "learning-budget-2022",
+    "title": "Learning budget",
+    "text": "Effective 2022-01. Every member of staff has a learning budget of 600 euros a year. Courses above 300 euros need the manager's approval. Unused budget of up to 0 euros moves to the next year."
+  },
+  {
+    "id": "learning-budget-2024",
+    "title": "Learning budget",
+    "text": "Effective 2024-01. Every member of staff has a learning budget of 800 euros a year. Courses above 400 euros need the manager's approval. Unused budget of up to 100 euros moves to the next year."
+  },
+  {
+    "id": "learning-budget-2026",
+    "title": "Learning budget",
+    "text": "Effective 2026-01. Every member of staff has a learning budget of 1000 euros a year. Courses above 500 euros need the manager's approval. Unused budget of up to 200 euros moves to the next year."
+  },
+  {
+    "id": "learning-budget-draft",
+    "title": "Learning budget",
+    "text": "Draft, not yet approved. Proposed changes to the learning budget policy. Every member of staff has a learning budget of 1200 euros a year. Courses above 600 euros need the manager's approval. Unused budget of up to 300 euros moves to the next year."
+  },
+  {
+    "id": "phones-2023",
+    "title": "Phones",
+    "text": "Effective 2023-05. Company phones are replaced every 2 years. Roaming data abroad is included up to 5 gigabytes a month. Personal phones used for work get 10 euros a month."
+  },
+  {
+    "id": "phones-2025",
+    "title": "Phones",
+    "text": "Effective 2025-11. Company phones are replaced every 3 years. Roaming data abroad is included up to 10 gigabytes a month. Personal phones used for work get 15 euros a month."
+  },
+  {
+    "id": "parental-leave-2021",
+    "title": "Parental leave",
+    "text": "Effective 2021-01. Parents receive 12 weeks of fully paid leave. The leave can be split into up to 2 blocks. It must be taken within 9 months of the birth."
+  },
+  {
+    "id": "parental-leave-2024",
+    "title": "Parental leave",
+    "text": "Effective 2024-09. Parents receive 16 weeks of fully paid leave. The leave can be split into up to 3 blocks. It must be taken within 12 months of the birth."
+  },
+  {
+    "id": "parental-leave-draft",
+    "title": "Parental leave",
+    "text": "Draft, not yet approved. Proposed changes to the parental leave policy. Parents receive 20 weeks of fully paid leave. The leave can be split into up to 4 blocks. It must be taken within 18 months of the birth."
+  },
+  {
+    "id": "bike-lease-2022",
+    "title": "Bike lease",
+    "text": "Effective 2022-04. Bikes worth up to 1500 euros can be leased through the salary. The lease runs for 24 months. At the end the bike can be bought for 20 percent of its price."
+  },
+  {
+    "id": "bike-lease-2023",
+    "title": "Bike lease",
+    "text": "Effective 2023-08. Bikes worth up to 2500 euros can be leased through the salary. The lease runs for 36 months. At the end the bike can be bought for 15 percent of its price."
+  },
+  {
+    "id": "bike-lease-2025",
+    "title": "Bike lease",
+    "text": "Effective 2025-05. Bikes worth up to 3000 euros can be leased through the salary. The lease runs for 48 months. At the end the bike can be bought for 10 percent of its price."
+  },
+  {
+    "id": "gifts-2020",
+    "title": "Gifts",
+    "text": "Effective 2020-11. Gifts from suppliers may be accepted up to 25 euros. Gifts above the limit are reported within 14 days. Gifts to clients may cost up to 50 euros each."
+  },
+  {
+    "id": "gifts-2024",
+    "title": "Gifts",
+    "text": "Effective 2024-02. Gifts from suppliers may be accepted up to 50 euros. Gifts above the limit are reported within 7 days. Gifts to clients may cost up to 75 euros each."
+  },
+  {
+    "id": "gifts-draft",
+    "title": "Gifts",
+    "text": "Draft, not yet approved. Proposed changes to the gifts policy. Gifts from suppliers may be accepted up to 40 euros. Gifts above the limit are reported within 5 days. Gifts to clients may cost up to 60 euros each."
+  },
+  {
+    "id": "sick-leave-2022",
+    "title": "Sick leave",
+    "text": "Effective 2022-06. A doctor's note is needed after 2 days of sick leave. Sick leave is reported to the manager before 9 in the morning. Full salary is paid for the first 26 weeks of illness."
+  },
+  {
+    "id": "sick-leave-2026",
+    "title": "Sick leave",
+    "text": "Effective 2026-02. A doctor's note is needed after 3 days of sick leave. Sick leave is reported to the manager before 10 in the morning. Full salary is paid for the first 52 weeks of illness."
+  },
+  {
+    "id": "overtime-2023",
+    "title": "Overtime",
+    "text": "Effective 2023-03. Overtime is paid at 125 percent of the hourly rate. Overtime above 10 hours a month needs approval in advance. Overtime can be taken as time off within 3 months."
+  },
+  {
+    "id": "overtime-2025",
+    "title": "Overtime",
+    "text": "Effective 2025-09. Overtime is paid at 150 percent of the hourly rate. Overtime above 20 hours a month needs approval in advance. Overtime can be taken as time off within 6 months."
+  },
+  {
+    "id": "overtime-draft",
+    "title": "Overtime",
+    "text": "Draft, not yet approved. Proposed changes to the overtime policy. Overtime is paid at 175 percent of the hourly rate. Overtime above 15 hours a month needs approval in advance. Overtime can be taken as time off within 12 months."
+  },
+  {
+    "id": "relocation-2021",
+    "title": "Relocation",
+    "text": "Effective 2021-08. Moving costs are paid up to 3000 euros. Temporary housing is paid for 4 weeks. Relocation costs are paid back if you leave within 24 months."
+  },
+  {
+    "id": "relocation-2024",
+    "title": "Relocation",
+    "text": "Effective 2024-11. Moving costs are paid up to 5000 euros. Temporary housing is paid for 8 weeks. Relocation costs are paid back if you leave within 12 months."
+  }
+]

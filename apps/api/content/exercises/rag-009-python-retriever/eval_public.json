@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "How many PTO days do full-time staff get each year?",
+    "question": "How much notice do I need to give for an electric car charger?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "Ask at least 9 working days in advance.",
+    "goldDocId": "getting-to-the-office",
+    "goldSpan": "Ask at least 9 working days in advance."
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "Which phone extension takes requests for a spare laptop?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldAnswer": "Requests go to phone extension 2586.",
+    "goldDocId": "equipment-on-loan",
+    "goldSpan": "Requests go to phone extension 2586."
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "Which phone extension takes requests for a massage session?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Requests go to phone extension 2545.",
+    "goldDocId": "health-and-wellbeing",
+    "goldSpan": "Requests go to phone extension 2545."
   },
   {
     "id": "p4",
-    "question": "How long are prompt and completion logs kept?",
+    "question": "During which hours is meeting catering available?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "It is available from 10:00 until 19:00.",
+    "goldDocId": "food-and-drink",
+    "goldSpan": "It is available from 10:00 until 19:00."
   },
   {
     "id": "p5",
-    "question": "When does primary on-call rotate?",
+    "question": "How late can I cancel the homework club without being charged?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "Cancel at least 8 hours before, or the slot is charged.",
+    "goldDocId": "family-and-care",
+    "goldSpan": "Cancel at least 8 hours before, or the slot is charged."
+  },
+  {
+    "id": "p6",
+    "question": "How often may I use relocation support each month?",
+    "answerable": true,
+    "goldAnswer": "Each person may use it 7 times a month.",
+    "goldDocId": "moving-and-settling-in",
+    "goldSpan": "Each person may use it 7 times a month."
   }
 ]

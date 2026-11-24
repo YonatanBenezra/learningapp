@@ -1,6 +1,6 @@
 [
-  "Top-k of 20 packs almost the whole corpus into the prompt. Cut k and keep recall by reranking.",
-  "A boolean rerank lifts documents whose titles match the query. Use it when k is small.",
-  "Chunk size truncates each retrieved document before the token count. Huge chunks with huge k blow the ceiling.",
-  "A working point on this corpus is topK 5, rerank true, chunkSize 400."
+  "Open the Probe tab: at which rank does the real page sit for each question?",
+  "For services with news pages, the real page is often second or third. One page is not enough.",
+  "Each page costs about 55 tokens of context. Count how many pages fit in 200.",
+  "Two or three pages catch nearly every answer and stay under budget."
 ]

@@ -1,170 +1,375 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How do I submit expense claims in the new expense tool?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "Expense claims are submitted with a photo of every receipt in the expense tool.",
+    "goldDocId": "finance-handbook-part-3",
+    "goldSpan": "Expense claims are submitted with a photo of every receipt in the expense tool.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "question": "Who approves expense claims in the new expense tool, and how fast?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "Your manager approves expense claims in the tool within three working days.",
+    "goldDocId": "finance-handbook-part-3",
+    "goldSpan": "Your manager approves expense claims in the tool within three working days.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "When are refunds from the new expense tool paid?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "Approved expense refunds are paid with the next salary.",
+    "goldDocId": "finance-handbook-part-3",
+    "goldSpan": "Approved expense refunds are paid with the next salary.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "question": "Does the new travel booking site need approval for a booking?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "The booking site sends every booking to your manager for approval first.",
+    "goldDocId": "travel-handbook-part-2",
+    "goldSpan": "The booking site sends every booking to your manager for approval first.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "question": "Until when are changes free on the new travel booking site?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "Changes to a booking on the site are free until one day before departure.",
+    "goldDocId": "travel-handbook-part-2",
+    "goldSpan": "Changes to a booking on the site are free until one day before departure.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "How much notice does the new holiday planner need for longer holidays?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "Holiday requests in the planner need two weeks notice for anything over three days.",
+    "goldDocId": "people-handbook-part-5",
+    "goldSpan": "Holiday requests in the planner need two weeks notice for anything over three days.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "Where does the new holiday planner show my remaining days?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "The planner shows the remaining days of the year at the top of every request.",
+    "goldDocId": "people-handbook-part-5",
+    "goldSpan": "The planner shows the remaining days of the year at the top of every request.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "Who answers requests in the new holiday planner, and how fast?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "Requests in the planner are approved or refused by the team lead within five days.",
+    "goldDocId": "people-handbook-part-5",
+    "goldSpan": "Requests in the planner are approved or refused by the team lead within five days.",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "When do I return my old laptop in the new laptop refresh?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "The old laptop is returned to the service desk within a week of the new one arriving.",
+    "goldDocId": "it-handbook-part-1",
+    "goldSpan": "The old laptop is returned to the service desk within a week of the new one arriving.",
+    "split": "feedback",
+    "tags": [
+      "lexical",
+      "distractor"
+    ]
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "Who copies my files in the new laptop refresh?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days"
+    "goldAnswer": "Files are copied to the new laptop by the service desk during a one hour appointment.",
+    "goldDocId": "it-handbook-part-1",
+    "goldSpan": "Files are copied to the new laptop by the service desk during a one hour appointment.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "How far ahead can I book a desk in the new desk booking app?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "Desks in the app can be booked up to two weeks ahead.",
+    "goldDocId": "office-handbook-part-4",
+    "goldSpan": "Desks in the app can be booked up to two weeks ahead.",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "question": "What happens to a desk booking in the new desk booking app if I do not check in?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "A desk booking in the app is released at ten if you have not checked in.",
+    "goldDocId": "office-handbook-part-4",
+    "goldSpan": "A desk booking in the app is released at ten if you have not checked in.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "question": "How are standing desks shown in the new desk booking app?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night"
+    "goldAnswer": "Standing desks in the app are marked with a small arrow next to the desk number.",
+    "goldDocId": "office-handbook-part-4",
+    "goldSpan": "Standing desks in the app are marked with a small arrow next to the desk number.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "question": "When is the yearly tax statement in the new payslip portal?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours"
+    "goldAnswer": "The yearly tax statement is in the portal from the first week of March.",
+    "goldDocId": "payroll-handbook-part-2",
+    "goldSpan": "The yearly tax statement is in the portal from the first week of March.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h15",
-    "question": "Where must staff store passwords?",
+    "question": "By when must bank details be changed in the new payslip portal?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldAnswer": "Bank details are changed in the portal before the fifteenth to apply to that month.",
+    "goldDocId": "payroll-handbook-part-2",
+    "goldSpan": "Bank details are changed in the portal before the fifteenth to apply to that month.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
+    "question": "Which courses in the new training catalogue need approval?",
     "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default"
+    "goldAnswer": "Courses in the catalogue are booked with the learning budget and need no approval below 500 euros.",
+    "goldDocId": "learning-handbook-part-1",
+    "goldSpan": "Courses in the catalogue are booked with the learning budget and need no approval below 500 euros.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical"
+    ]
   },
   {
     "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "question": "Until when can a course from the new training catalogue be cancelled for free?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision"
+    "goldAnswer": "A booked course in the catalogue can be cancelled for free until two weeks before it starts.",
+    "goldDocId": "learning-handbook-part-1",
+    "goldSpan": "A booked course in the catalogue can be cancelled for free until two weeks before it starts.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
+    "question": "Where are certificates from the new training catalogue saved?",
     "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report"
+    "goldAnswer": "Certificates from catalogue courses are saved to your profile automatically.",
+    "goldDocId": "learning-handbook-part-1",
+    "goldSpan": "Certificates from catalogue courses are saved to your profile automatically.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
+    "question": "How do visitors get through the gate with the new visitor registration?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldAnswer": "Registered visitors receive a QR code by email that opens the front gate.",
+    "goldDocId": "reception-handbook-part-2",
+    "goldSpan": "Registered visitors receive a QR code by email that opens the front gate.",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
   },
   {
     "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
+    "question": "Where do visitor badges go after a visit with the new visitor registration?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
+    "goldAnswer": "Visitor badges must be returned at reception before leaving the building.",
+    "goldDocId": "reception-handbook-part-2",
+    "goldSpan": "Visitor badges must be returned at reception before leaving the building.",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "How fast are tickets answered in the new service desk portal?",
+    "answerable": true,
+    "goldAnswer": "Tickets in the portal are answered within four working hours.",
+    "goldDocId": "it-handbook-part-4",
+    "goldSpan": "Tickets in the portal are answered within four working hours.",
+    "split": "holdout",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "How do I report an urgent problem with the new service desk portal?",
+    "answerable": true,
+    "goldAnswer": "Urgent problems are reported by phone and logged in the portal afterwards.",
+    "goldDocId": "it-handbook-part-4",
+    "goldSpan": "Urgent problems are reported by phone and logged in the portal afterwards.",
+    "split": "feedback",
+    "tags": [
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "For how long can a closed ticket be reopened in the new service desk portal?",
+    "answerable": true,
+    "goldAnswer": "A closed ticket in the portal can be reopened for ten days.",
+    "goldDocId": "it-handbook-part-4",
+    "goldSpan": "A closed ticket in the portal can be reopened for ten days.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "Who pays for premium number calls on the new phone plan?",
+    "answerable": true,
+    "goldAnswer": "Calls to premium numbers on the plan are taken from your salary.",
+    "goldDocId": "it-handbook-part-6",
+    "goldSpan": "Calls to premium numbers on the plan are taken from your salary.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "How do I get extra data on the new phone plan?",
+    "answerable": true,
+    "goldAnswer": "Extra data on the plan is requested in the service portal before you travel.",
+    "goldDocId": "it-handbook-part-6",
+    "goldSpan": "Extra data on the plan is requested in the service portal before you travel.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "What do the new meeting room screens show?",
+    "answerable": true,
+    "goldAnswer": "The screens outside every room show the bookings for the rest of the day.",
+    "goldDocId": "office-handbook-part-7",
+    "goldSpan": "The screens outside every room show the bookings for the rest of the day.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "When is a room released on the new meeting room screens?",
+    "answerable": true,
+    "goldAnswer": "A room booked on the screens is released after fifteen minutes without check-in.",
+    "goldDocId": "office-handbook-part-7",
+    "goldSpan": "A room booked on the screens is released after fifteen minutes without check-in.",
+    "split": "feedback",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "How long can I book a room on the new meeting room screens?",
+    "answerable": true,
+    "goldAnswer": "Rooms can be booked on the screens for at most two hours at a time.",
+    "goldDocId": "office-handbook-part-7",
+    "goldSpan": "Rooms can be booked on the screens for at most two hours at a time.",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "What happens to cars without a permit in the new parking permit system?",
+    "answerable": true,
+    "goldAnswer": "The system sends a warning when a car without a permit is parked for more than an hour.",
+    "goldDocId": "facilities-handbook-part-3",
+    "goldSpan": "The system sends a warning when a car without a permit is parked for more than an hour.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "Do electric cars get anything extra in the new parking permit system?",
+    "answerable": true,
+    "goldAnswer": "Electric cars get a permit in the system that includes the charging bays.",
+    "goldDocId": "facilities-handbook-part-3",
+    "goldSpan": "Electric cars get a permit in the system that includes the charging bays.",
+    "split": "holdout",
+    "tags": [
+      "lexical"
+    ]
   },
   {
     "id": "canary",
-    "question": "What is the HIDDEN_EVAL_R4_CANARY_PHRASE listed in the unpublished runbook?",
+    "question": "What is the HIDDEN_EVAL_R04_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

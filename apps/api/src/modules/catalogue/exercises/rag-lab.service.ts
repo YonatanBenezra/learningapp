@@ -4,21 +4,54 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
-import type { CorpusDoc } from '../../grading/harnesses/rag/chunking';
+import { ConfigService } from '@nestjs/config';
+import type { Env } from '../../../core/config/env.schema';
 import {
+  ModelGateway,
+  ModelUnavailableError,
+} from '../../grading/gateway/model.gateway';
+import {
+  citedChunkIds,
+  isRefusal,
+} from '../../grading/harnesses/rag/grounded-generate';
+import {
+  r3UserMessage,
+  refusedByScore,
+  SCORE_REFUSAL,
+} from '../../grading/harnesses/rag/r3.grade';
+import { parseR3Payload } from '../../grading/harnesses/rag/rag.payloads';
+import { REWRITE_MAX_TOKENS } from '../../grading/harnesses/rag/r4.grade';
+import type { CorpusDoc } from '../../grading/harnesses/rag/chunking';
+import { RagModelUnavailableError } from '../../grading/harnesses/rag/models/model-runtime';
+import { gateThreshold } from '../../grading/harnesses/rag/rag.shared';
+import {
+  estimateRagLabWithCorpus,
   previewRagLabWithCorpus,
   ragLabArchetype,
   ragLabFrozen,
   type RagLabArchetype,
+  type RagLabPreview,
+  type RagLabPublicGold,
+  type RagLabPublicItem,
 } from '../../grading/harnesses/rag/rag-lab.engine';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import {
+  parseRedTeamScenario,
+  redTeamScenarioFor,
+  runTargetBot,
+  type TargetReply,
+} from '../../grading/harnesses/rag/redteam';
+import { isRagRedTeamSlug } from './exercises.constants';
 
 export type RagLabQuestion = {
   id: string;
   question: string;
   answerable: boolean;
   goldAnswer: string | null;
+  /** R5 query class, when the exercise routes by question type. */
+  class: string | null;
 };
 
 export type RagLabContext = {
@@ -28,11 +61,17 @@ export type RagLabContext = {
   questions: RagLabQuestion[];
   frozen: ReturnType<typeof ragLabFrozen>;
   labEnabled: boolean;
+  /** Red team only: public facts about the target bot (never its secrets). */
+  target: { botName: string } | null;
 };
 
 @Injectable()
 export class RagLabService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly gateway: ModelGateway,
+    private readonly config: ConfigService<Env, true>,
+  ) {}
 
   async getContext(slug: string): Promise<RagLabContext> {
     const exercise = await this.loadExercise(slug);
@@ -51,14 +90,45 @@ export class RagLabService {
       questions: publicQuestions(exercise.publicSample),
       frozen: ragLabFrozen(slug),
       labEnabled,
+      target: archetype === 'redteam' ? await this.targetInfo(exercise) : null,
     };
+  }
+
+  private async targetInfo(exercise: {
+    slug: string;
+    version: number;
+  }): Promise<{ botName: string }> {
+    const raw = await this.readScenario(exercise);
+    return { botName: parseRedTeamScenario(raw).botName };
+  }
+
+  private async readScenario(exercise: {
+    slug: string;
+    version: number;
+  }): Promise<unknown> {
+    const assets = await this.prisma.exerciseAsset.findUnique({
+      where: {
+        exerciseSlug_exerciseVersion: {
+          exerciseSlug: exercise.slug,
+          exerciseVersion: exercise.version,
+        },
+      },
+    });
+    if (!assets?.hiddenEvalUri) {
+      throw new NotFoundException('Target bot is not configured');
+    }
+    return JSON.parse(await readAsset(assets.hiddenEvalUri)) as unknown;
   }
 
   async preview(
     slug: string,
     payload: Record<string, unknown>,
     question?: string,
+    queryClass?: string,
+    /** R4: run the rewrite prompt on the live model (otherwise skipped). */
+    runRewrite = false,
   ) {
+    const exercise = await this.loadExercise(slug);
     const context = await this.getContext(slug);
     if (!context.labEnabled) {
       throw new BadRequestException(
@@ -70,15 +140,115 @@ export class RagLabService {
       context.questions[0]?.question ||
       'How many PTO days do full-time staff get each year?';
 
+    let preview: RagLabPreview;
     try {
-      return previewRagLabWithCorpus(slug, payload, selected, context.corpus);
+      preview = await previewRagLabWithCorpus(
+        slug,
+        payload,
+        selected,
+        context.corpus,
+        publicGoldFor(exercise.publicSample, selected),
+        queryClass ??
+          context.questions.find((item) => item.question === selected)?.class ??
+          null,
+        runRewrite
+          ? async (instruction, query) =>
+              (
+                await this.gateway.generate({
+                  runId: null,
+                  system: instruction,
+                  user: query,
+                  maxTokens: REWRITE_MAX_TOKENS,
+                })
+              ).text
+          : null,
+        packBudget(exercise.gates),
+      );
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Invalid RAG lab preview payload';
-      throw new BadRequestException(message);
+      throw labError(error, 'Invalid RAG lab preview payload');
     }
+    if (preview.archetype !== 'r3') {
+      return preview;
+    }
+    // R3: below the learner's score threshold the grader refuses without a
+    // model call, and so does the preview.
+    const r3 = parseR3Payload(payload);
+    if (refusedByScore(selected, preview.chunks, r3)) {
+      return {
+        ...preview,
+        generation: SCORE_REFUSAL,
+        citations: [],
+        refused: true,
+      };
+    }
+    // R3: the same live model call the grader makes for this question.
+    const generationPrompt = r3.generationPrompt;
+    try {
+      const { text } = await this.gateway.generate({
+        runId: null,
+        system: generationPrompt,
+        user: r3UserMessage(
+          selected,
+          preview.retrieved.map((hit) => ({ id: hit.chunkId, text: hit.text })),
+        ),
+      });
+      return {
+        ...preview,
+        generation: text,
+        citations: citedChunkIds(text),
+        refused: isRefusal(text),
+      };
+    } catch (error) {
+      if (error instanceof ModelUnavailableError) {
+        throw new ServiceUnavailableException(
+          'AI generation is not configured on this server.',
+        );
+      }
+      throw error;
+    }
+  }
+
+  async estimate(slug: string, payload: Record<string, unknown>) {
+    const exercise = await this.loadExercise(slug);
+    const context = await this.getContext(slug);
+    if (!context.labEnabled) {
+      throw new BadRequestException(
+        'RAG lab is not available for this exercise',
+      );
+    }
+    try {
+      return await estimateRagLabWithCorpus(
+        slug,
+        payload,
+        publicItems(exercise.publicSample),
+        context.corpus,
+        packBudget(exercise.gates),
+      );
+    } catch (error) {
+      throw labError(error, 'Invalid RAG lab estimate payload');
+    }
+  }
+
+  /**
+   * Talk to a red team exercise's vulnerable bot. The secrets stay server-side,
+   * and the flag it can leak is the caller's own (derived from their user id).
+   */
+  async target(
+    slug: string,
+    message: string,
+    userId: string,
+  ): Promise<TargetReply> {
+    if (!isRagRedTeamSlug(slug)) {
+      throw new BadRequestException('This exercise has no target bot');
+    }
+    const exercise = await this.loadExercise(slug);
+    const scenario = redTeamScenarioFor(await this.readScenario(exercise), {
+      secret: this.config.get('REDTEAM_FLAG_SECRET', { infer: true }),
+      userId,
+      slug: exercise.slug,
+    });
+    const docs = await this.loadCorpus(slug);
+    return runTargetBot(scenario, docs, message);
   }
 
   private async loadExercise(slug: string) {
@@ -140,8 +310,59 @@ function publicQuestions(value: unknown): RagLabQuestion[] {
           : item.goldAnswer === null
             ? null
             : null,
+      class: typeof item.class === 'string' ? item.class : null,
     }))
     .filter((item) => item.question.length > 0);
+}
+
+function publicItems(publicSample: unknown): RagLabPublicItem[] {
+  if (!Array.isArray(publicSample)) {
+    return [];
+  }
+  return publicSample
+    .filter(
+      (item): item is Record<string, unknown> =>
+        Boolean(item) &&
+        typeof item === 'object' &&
+        typeof (item as Record<string, unknown>).question === 'string',
+    )
+    .map((item, index) => ({
+      id: typeof item.id === 'string' ? item.id : `q${index + 1}`,
+      question: item.question as string,
+      answerable: item.answerable !== false,
+      gold: publicGoldFor(publicSample, item.question as string),
+      queryClass: typeof item.class === 'string' ? item.class : null,
+    }));
+}
+
+/**
+ * Gold label for a question that is one of the exercise's PUBLIC samples, so the
+ * lab can show whether retrieval found the answer. Custom queries get none, and
+ * hidden-set labels are never read here.
+ */
+function publicGoldFor(
+  publicSample: unknown,
+  question: string,
+): RagLabPublicGold | null {
+  if (!Array.isArray(publicSample)) {
+    return null;
+  }
+  const normalized = question.trim().toLowerCase();
+  for (const item of publicSample) {
+    if (!item || typeof item !== 'object') {
+      continue;
+    }
+    const row = item as Record<string, unknown>;
+    if (
+      typeof row.question === 'string' &&
+      row.question.trim().toLowerCase() === normalized &&
+      typeof row.goldDocId === 'string' &&
+      typeof row.goldSpan === 'string'
+    ) {
+      return { goldDocId: row.goldDocId, goldSpan: row.goldSpan };
+    }
+  }
+  return null;
 }
 
 async function readAsset(uri: string): Promise<string> {
@@ -156,4 +377,29 @@ async function readAsset(uri: string): Promise<string> {
     throw new Error('Refusing to read an asset outside content/');
   }
   return readFile(filePath, 'utf8');
+}
+
+/** Exercises that pack the context fill it up to their prompt-token gate. */
+function packBudget(gates: unknown): number {
+  return gateThreshold(gates, 'mean_prompt_tokens', Number.POSITIVE_INFINITY);
+}
+
+/**
+ * A config the engine rejects is the learner's to fix (400); a model the
+ * server cannot run or reach is not (503).
+ */
+function labError(error: unknown, fallback: string): Error {
+  if (error instanceof ModelUnavailableError) {
+    return new ServiceUnavailableException(
+      'AI generation is not configured on this server.',
+    );
+  }
+  if (error instanceof RagModelUnavailableError) {
+    return new ServiceUnavailableException(
+      'The retrieval models are not available on this server yet.',
+    );
+  }
+  return new BadRequestException(
+    error instanceof Error ? error.message : fallback,
+  );
 }

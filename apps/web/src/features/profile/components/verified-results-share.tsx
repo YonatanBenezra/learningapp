@@ -148,7 +148,7 @@ export function VerifiedResultsShare({
                   {result.bandLabel} · {formatWhen(result.issuedAt)}
                 </span>
                 {result.revoked ? (
-                  <span className="lp-acc-result-flag">Revoked by LabPath</span>
+                  <span className="lp-acc-result-flag">Revoked by AI Warss</span>
                 ) : null}
               </div>
               <label

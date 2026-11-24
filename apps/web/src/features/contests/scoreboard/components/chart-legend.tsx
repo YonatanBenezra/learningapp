@@ -30,7 +30,7 @@ export function ChartLegend({
           <li key={op.id}>
             <button
               type="button"
-              className="flex items-center gap-2 rounded-md px-1 py-0.5 text-[13px] text-[#A4B1CD] transition-opacity hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]"
+              className="flex items-center gap-2 rounded-md px-1 py-0.5 text-[13px] text-[#A4B1CD] transition-opacity hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]"
               style={{ opacity: isHidden ? 0.35 : dimmed ? 0.15 : 1 }}
               onClick={() => onToggle(op.id)}
               onMouseEnter={() => onHighlight(op.id)}

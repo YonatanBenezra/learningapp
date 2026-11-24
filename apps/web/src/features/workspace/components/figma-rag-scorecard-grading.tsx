@@ -22,7 +22,6 @@ export function FigmaRagScorecardGrading({
   pending = false,
 }: FigmaRagScorecardGradingProps) {
   const [elapsedSec, setElapsedSec] = useState(0);
-  const [retrievalDone, setRetrievalDone] = useState(12);
 
   const inFlight =
     pending || run.status === "queued" || run.status === "running";
@@ -32,59 +31,35 @@ export function FigmaRagScorecardGrading({
       return;
     }
     setElapsedSec(0);
-    setRetrievalDone(0);
     const started = Date.now();
     const tick = window.setInterval(() => {
       setElapsedSec(Math.max(0, Math.floor((Date.now() - started) / 1000)));
-      setRetrievalDone((n) => (n >= 40 ? 40 : n + 1));
-    }, 320);
+    }, 500);
     return () => window.clearInterval(tick);
   }, [inFlight, run.id]);
 
-  const chunkCount =
-    typeof run.tokensIn === "number" && run.tokensIn > 0
-      ? Math.max(40, Math.round(run.tokensIn / 18))
-      : 212;
-
+  // Only the run status is real-time; the worker reports no per-step progress,
+  // so the steps mirror status rather than simulating chunk/query counts.
   const steps = useMemo(() => {
-    const queuedDone = elapsedSec >= 1;
-    const chunkingDone = elapsedSec >= 2;
-    const retrievalComplete = retrievalDone >= 40;
-    const retrievalCount = Math.min(40, retrievalDone);
-
+    const running = run.status === "running";
     return [
       {
         id: "queued",
-        label: "Queued",
-        state: queuedDone ? ("done" as const) : ("active" as const),
+        label: "Queued for the grading worker",
+        state: running ? ("done" as const) : ("active" as const),
       },
       {
-        id: "chunk",
-        label: `Chunking corpus · ${chunkCount} chunks`,
-        state: !queuedDone
-          ? ("pending" as const)
-          : chunkingDone
-            ? ("done" as const)
-            : ("active" as const),
-      },
-      {
-        id: "retrieve",
-        label: retrievalComplete
-          ? "Retrieval complete · 40 / 40"
-          : `Running retrieval · ${retrievalCount} / 40`,
-        state: !chunkingDone
-          ? ("pending" as const)
-          : retrievalComplete
-            ? ("done" as const)
-            : ("active" as const),
+        id: "grade",
+        label: "Running your config on the hidden set",
+        state: running ? ("active" as const) : ("pending" as const),
       },
       {
         id: "score",
-        label: "Scoring on hidden set",
-        state: retrievalComplete ? ("active" as const) : ("pending" as const),
+        label: "Scoring gates",
+        state: "pending" as const,
       },
     ];
-  }, [chunkCount, elapsedSec, retrievalDone]);
+  }, [run.status]);
 
   const queuedLabel =
     run.status === "queued"
@@ -101,7 +76,9 @@ export function FigmaRagScorecardGrading({
             <Loader2 className="lp-rag-score-grading-spin" aria-hidden />
             grading
           </span>
-          <p className="lp-rag-score-grading-title">Running retrieval…</p>
+          <p className="lp-rag-score-grading-title">
+            {run.status === "running" ? "Grading…" : "Waiting for a worker…"}
+          </p>
         </div>
         <p className="lp-rag-score-grading-meta">
           {formatRunId(run.id)} · {queuedLabel}
@@ -124,6 +101,12 @@ export function FigmaRagScorecardGrading({
           </li>
         ))}
       </ol>
+
+      {run.status === "queued" && elapsedSec >= 30 ? (
+        <p className="lp-rag-score-grading-meta" role="status">
+          Still queued after {elapsedSec}s. The grading worker may be down.
+        </p>
+      ) : null}
 
       <div className="lp-rag-score-grading-skel" aria-hidden>
         <span />

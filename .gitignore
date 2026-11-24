@@ -22,3 +22,6 @@ npm-debug.log*
 
 infra/postgres/data/
 apps/api/var/
+
+# RAG engine model files (npm run models:fetch)
+apps/api/.cache/

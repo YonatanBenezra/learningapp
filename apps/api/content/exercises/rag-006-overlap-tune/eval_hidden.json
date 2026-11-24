@@ -1,242 +1,446 @@
 [
   {
     "id": "h01",
-    "question": "How many paid time off days do full-time staff receive each calendar year?",
+    "question": "How do I reset my badge PIN, and when does the new one arrive?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "Open the badge app and choose Reset PIN. The new PIN arrives by text message within five minutes.",
+    "goldDocId": "badge-pin-reset",
+    "goldSpan": "Open the badge app and choose Reset PIN. The new PIN arrives by text message within five minutes.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must ordinary PTO be requested?",
+    "question": "What happens after three wrong badge PIN attempts, and who unlocks it?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "A badge locks after three wrong PIN attempts. Reception can unlock it once you show photo ID.",
+    "goldDocId": "badge-pin-reset",
+    "goldSpan": "A badge locks after three wrong PIN attempts. Reception can unlock it once you show photo ID.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h03",
-    "question": "How many unused PTO days may be carried into the next year?",
+    "question": "When is a replacement for a lost badge ready?",
     "answerable": true,
-    "goldAnswer": "5 days",
-    "goldDocId": "pto",
-    "goldSpan": "carried into the next year up to a maximum of five (5) days"
+    "goldAnswer": "Lost badges are blocked as soon as you report them in the app. A replacement badge is ready at reception the next working day.",
+    "goldDocId": "badge-pin-reset",
+    "goldSpan": "Lost badges are blocked as soon as you report them in the app. A replacement badge is ready at reception the next working day.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h04",
-    "question": "When are leftover PTO days forfeited?",
+    "question": "Where do I add a printer from, and what does that install?",
     "answerable": true,
-    "goldAnswer": "31 January",
-    "goldDocId": "pto",
-    "goldSpan": "forfeited on 31 January"
+    "goldAnswer": "Add printers from the Self Service app, not from system settings. The app installs the right driver and the badge release queue.",
+    "goldDocId": "printer-setup",
+    "goldSpan": "Add printers from the Self Service app, not from system settings. The app installs the right driver and the badge release queue.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h05",
-    "question": "What MFA system is required for the corporate VPN?",
+    "question": "Why can I not print in colour, and who can turn it on?",
     "answerable": true,
-    "goldAnswer": "Okta hardware MFA",
-    "goldDocId": "vpn",
-    "goldSpan": "hardware MFA enrolled in Okta"
+    "goldAnswer": "Colour printing is off by default for every account. Ask your manager to approve colour in the service portal.",
+    "goldDocId": "printer-setup",
+    "goldSpan": "Colour printing is off by default for every account. Ask your manager to approve colour in the service portal.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "paraphrase"
+    ]
   },
   {
     "id": "h06",
-    "question": "Is split tunneling allowed on the corporate VPN?",
+    "question": "How long do unreleased print jobs stay in the queue?",
     "answerable": true,
-    "goldAnswer": "No, split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "Split tunneling is disabled"
+    "goldAnswer": "Print jobs wait in the queue for twelve hours. Jobs that nobody releases are deleted after that.",
+    "goldDocId": "printer-setup",
+    "goldSpan": "Print jobs wait in the queue for twelve hours. Jobs that nobody releases are deleted after that.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h07",
-    "question": "How quickly must contractors be offboarded from VPN after contract end?",
+    "question": "When does laptop disk encryption start, and how long does it take?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "Disk encryption turns on automatically at the first sign-in. The first encryption pass can take up to two hours.",
+    "goldDocId": "laptop-encryption",
+    "goldSpan": "Disk encryption turns on automatically at the first sign-in. The first encryption pass can take up to two hours.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h08",
-    "question": "What is the acknowledge target for a Priority-1 incident?",
+    "question": "Should I keep my laptop plugged in during encryption, and what pauses it?",
     "answerable": true,
-    "goldAnswer": "15 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "acknowledged within fifteen (15) minutes"
+    "goldAnswer": "Keep the laptop plugged in while encryption runs. Closing the lid pauses it until the next start.",
+    "goldDocId": "laptop-encryption",
+    "goldSpan": "Keep the laptop plugged in while encryption runs. Closing the lid pauses it until the next start.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h09",
-    "question": "What qualifies as a P1 incident?",
+    "question": "Where is the laptop recovery key kept, and who can read it?",
     "answerable": true,
-    "goldAnswer": "Anything that blocks customer-facing checkout or authentication",
-    "goldDocId": "incident",
-    "goldSpan": "blocks customer-facing checkout or authentication"
+    "goldAnswer": "The recovery key is stored in your device record. Only the service desk can read it after checking your identity.",
+    "goldDocId": "laptop-encryption",
+    "goldSpan": "The recovery key is stored in your device record. Only the service desk can read it after checking your identity.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h10",
-    "question": "What is the P2 acknowledge target?",
+    "question": "How do I set up the VPN, and when does it connect?",
     "answerable": true,
-    "goldAnswer": "60 minutes",
-    "goldDocId": "incident",
-    "goldSpan": "Priority-2 events have a sixty-minute acknowledge target"
+    "goldAnswer": "Install the VPN client from Self Service and sign in with your work account. The client connects on its own whenever you leave the office network.",
+    "goldDocId": "vpn-access",
+    "goldSpan": "Install the VPN client from Self Service and sign in with your work account. The client connects on its own whenever you leave the office network.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h11",
-    "question": "May customer PII be sent to external model providers in prompts?",
+    "question": "Do video calls go through the VPN?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "model-usage",
-    "goldSpan": "must not be placed in prompts sent to external model providers"
+    "goldAnswer": "Split tunnelling sends video calls outside the VPN. Everything else goes through the company network.",
+    "goldDocId": "vpn-access",
+    "goldSpan": "Split tunnelling sends video calls outside the VPN. Everything else goes through the company network.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h12",
-    "question": "How long are prompt and completion logs retained?",
+    "question": "How long does a VPN session last?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days and then deleted"
+    "goldAnswer": "VPN sessions end after ten hours. Sign in again to start a new session.",
+    "goldDocId": "vpn-access",
+    "goldSpan": "VPN sessions end after ten hours. Sign in again to start a new session.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h13",
-    "question": "What identifiers may internal fine-tunes use?",
+    "question": "How do I get a shared mailbox, and who approves new members?",
     "answerable": true,
-    "goldAnswer": "Hashed identifiers only",
-    "goldDocId": "model-usage",
-    "goldSpan": "hashed identifiers only"
+    "goldAnswer": "Request a shared mailbox through the service portal and name two owners. The owners approve every new member from then on.",
+    "goldDocId": "shared-mailboxes",
+    "goldSpan": "Request a shared mailbox through the service portal and name two owners. The owners approve every new member from then on.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h14",
-    "question": "What is the per-person meal reimbursement cap excluding tax?",
+    "question": "Whose name appears when I send from a shared mailbox, and where are sent copies kept?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "Messages sent from a shared mailbox show its name, not yours. Sent copies are stored in the shared mailbox, not in your own.",
+    "goldDocId": "shared-mailboxes",
+    "goldSpan": "Messages sent from a shared mailbox show its name, not yours. Sent copies are stored in the shared mailbox, not in your own.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h15",
-    "question": "Are alcoholic drinks reimbursable?",
+    "question": "What is the shared mailbox quota, and when do owners get warned?",
     "answerable": true,
-    "goldAnswer": "No",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable"
+    "goldAnswer": "Shared mailboxes have a 50 GB quota. Owners get a warning email at 45 GB.",
+    "goldDocId": "shared-mailboxes",
+    "goldSpan": "Shared mailboxes have a 50 GB quota. Owners get a warning email at 45 GB.",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h16",
-    "question": "After how many days is a late expense report auto-declined?",
+    "question": "How do I request software that is not in Self Service, and how long does the review take?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "Request software that is not in Self Service through the service portal. Security reviews the request within three working days.",
+    "goldDocId": "software-requests",
+    "goldSpan": "Request software that is not in Self Service through the service portal. Security reviews the request within three working days.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h17",
-    "question": "How long are support tickets kept after close?",
+    "question": "Do free trials need a request, and what happens to trials that skip review?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "Free trials still need a request. Trials that skip the review are removed during the weekly scan.",
+    "goldDocId": "software-requests",
+    "goldSpan": "Free trials still need a request. Trials that skip the review are removed during the weekly scan.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h18",
-    "question": "How long are chat transcripts retained?",
+    "question": "Which browser extensions can I install?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "Chat transcripts are kept for ninety (90) days"
+    "goldAnswer": "Browser extensions come from the approved list only. Other extensions are switched off at the next policy refresh.",
+    "goldDocId": "software-requests",
+    "goldSpan": "Browser extensions come from the approved list only. Other extensions are switched off at the next policy refresh.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h19",
-    "question": "How long are offboarding laptop disk images kept?",
+    "question": "How do I enrol a work phone, and what installs afterwards?",
     "answerable": true,
-    "goldAnswer": "3 years",
-    "goldDocId": "retention",
-    "goldSpan": "retained for three (3) years for legal hold"
+    "goldAnswer": "Enrol a work phone by scanning the code on the setup page. Email and the chat app install themselves afterwards.",
+    "goldDocId": "phone-setup",
+    "goldSpan": "Enrol a work phone by scanning the code on the setup page. Email and the chat app install themselves afterwards.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h20",
-    "question": "At what weekday and time does primary on-call rotate, including timezone?",
+    "question": "What happens if I do not update my phone for 30 days?",
     "answerable": true,
-    "goldAnswer": "Monday 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "A phone that is not updated for 30 days loses access to email. Access comes back as soon as the update is installed.",
+    "goldDocId": "phone-setup",
+    "goldSpan": "A phone that is not updated for 30 days loses access to email. Access comes back as soon as the update is installed.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h21",
-    "question": "Who is backup on-call for the week?",
+    "question": "How do I report a lost phone, and does the wipe touch personal photos?",
     "answerable": true,
-    "goldAnswer": "The previous primary",
-    "goldDocId": "oncall",
-    "goldSpan": "The previous primary becomes backup for that week"
+    "goldAnswer": "Report a lost phone in the service portal so it can be wiped. Personal photos on an enrolled personal phone are not touched by the wipe.",
+    "goldDocId": "phone-setup",
+    "goldSpan": "Report a lost phone in the service portal so it can be wiped. Personal photos on an enrolled personal phone are not touched by the wipe.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h22",
-    "question": "Where are on-call handoff notes stored?",
+    "question": "Where do I change my password, and when does it reach every system?",
     "answerable": true,
-    "goldAnswer": "oncall-handbook repo under /handoffs",
-    "goldDocId": "oncall",
-    "goldSpan": "oncall-handbook repo under /handoffs"
+    "goldAnswer": "Change your password at the self-service password page. The new password reaches every system within fifteen minutes.",
+    "goldDocId": "password-changes",
+    "goldSpan": "Change your password at the self-service password page. The new password reaches every system within fifteen minutes.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h23",
-    "question": "What report must a production SaaS vendor present before procurement?",
+    "question": "How often do passwords expire, and when do reminders start?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "current SOC 2 Type II report"
+    "goldAnswer": "Passwords expire every 180 days. You get reminder emails during the last two weeks.",
+    "goldDocId": "password-changes",
+    "goldSpan": "Passwords expire every 180 days. You get reminder emails during the last two weeks.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h24",
-    "question": "How are new tools requested?",
+    "question": "Can I reuse an old password?",
     "answerable": true,
-    "goldAnswer": "Through the security-review form",
-    "goldDocId": "vendor",
-    "goldSpan": "requested through the security-review form"
+    "goldAnswer": "The last ten passwords cannot be reused. A password from a known leak list is rejected straight away.",
+    "goldDocId": "password-changes",
+    "goldSpan": "The last ten passwords cannot be reused. A password from a known leak list is rejected straight away.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "paraphrase"
+    ]
   },
   {
     "id": "h25",
-    "question": "What is the maximum length of a vendor security waiver?",
+    "question": "How should I share files, and when do external links expire?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "vendor",
-    "goldSpan": "time-boxed waiver no longer than ninety days"
+    "goldAnswer": "Share files from the company drive with a link, not as attachments. Links to people outside the company expire after 30 days.",
+    "goldDocId": "file-sharing",
+    "goldSpan": "Share files from the company drive with a link, not as attachments. Links to people outside the company expire after 30 days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h26",
-    "question": "Where must all VPN traffic egress?",
+    "question": "Can a confidential folder be shared with a supplier?",
     "answerable": true,
-    "goldAnswer": "The company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "Folders marked confidential cannot be shared outside the company. The share button stays grey for them.",
+    "goldDocId": "file-sharing",
+    "goldSpan": "Folders marked confidential cannot be shared outside the company. The share button stays grey for them.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h27",
-    "question": "What is the HIDDEN_EVAL_R6_CANARY_PHRASE listed in the unpublished runbook?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
+    "question": "How long can deleted drive files be recovered?",
+    "answerable": true,
+    "goldAnswer": "Deleted files stay in the drive bin for 60 days. After that only the service desk can restore them, within another 30 days.",
+    "goldDocId": "file-sharing",
+    "goldSpan": "Deleted files stay in the drive bin for 60 days. After that only the service desk can restore them, within another 30 days.",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h28",
-    "question": "What is the CEO's salary?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
+    "question": "What do I do when my second monitor stays black?",
+    "answerable": true,
+    "goldAnswer": "If a second monitor stays black, unplug the dock for ten seconds. Most screens come back after the dock restarts.",
+    "goldDocId": "monitor-and-dock-issues",
+    "goldSpan": "If a second monitor stays black, unplug the dock for ten seconds. Most screens come back after the dock restarts.",
+    "split": "holdout",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h29",
-    "question": "Which office floor is the cafeteria on?",
-    "answerable": false,
-    "goldAnswer": null,
-    "goldDocId": null,
-    "goldSpan": null
+    "question": "How are dock firmware updates installed?",
+    "answerable": true,
+    "goldAnswer": "Docks need the firmware pushed every quarter. The update runs overnight while the laptop is connected.",
+    "goldDocId": "monitor-and-dock-issues",
+    "goldSpan": "Docks need the firmware pushed every quarter. The update runs overnight while the laptop is connected.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
   },
   {
     "id": "h30",
-    "question": "What is the Wi-Fi password for guests?",
+    "question": "How do I get a faulty dock replaced, and how fast?",
+    "answerable": true,
+    "goldAnswer": "Report a faulty dock in the service portal. A swap is left at reception within two working days.",
+    "goldDocId": "monitor-and-dock-issues",
+    "goldSpan": "Report a faulty dock in the service portal. A swap is left at reception within two working days.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "paraphrase"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "How early should managers request accounts for a new starter?",
+    "answerable": true,
+    "goldAnswer": "Managers request accounts for new starters at least five working days before day one. Late requests are handled the same day only for urgent cases.",
+    "goldDocId": "new-starter-accounts",
+    "goldSpan": "Managers request accounts for new starters at least five working days before day one. Late requests are handled the same day only for urgent cases.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "How does a new starter get their first password?",
+    "answerable": true,
+    "goldAnswer": "The new starter gets a temporary password by text on day one. It must be changed at the first sign-in.",
+    "goldDocId": "new-starter-accounts",
+    "goldSpan": "The new starter gets a temporary password by text on day one. It must be changed at the first sign-in.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "How does a new starter get finance system access?",
+    "answerable": true,
+    "goldAnswer": "Access to finance systems needs a separate request. The finance owner approves it within two working days.",
+    "goldDocId": "new-starter-accounts",
+    "goldSpan": "Access to finance systems needs a separate request. The finance owner approves it within two working days.",
+    "split": "feedback",
+    "tags": [
+      "multi-sentence",
+      "lexical"
+    ]
+  },
+  {
+    "id": "canary",
+    "question": "What is the HIDDEN_EVAL_R06_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

@@ -1,10 +1,9 @@
 "use client";
 
+import { useGuardrailsLevels } from "../guardrails-levels";
 import { Check, Lock } from "lucide-react";
 import type { FigmaBriefContent } from "./brief-panel";
 import {
-  G1_LEVELS,
-  G2_LEVELS,
   guardrailsObjective,
   guardrailsSubtitle,
   type GuardrailsVariant,
@@ -30,7 +29,7 @@ export function GuardrailsBriefExtras({
   onLiveModeChange,
   hints,
 }: GuardrailsBriefExtrasProps) {
-  const levels = variant === "g2" ? G2_LEVELS : G1_LEVELS;
+  const levels = useGuardrailsLevels(variant === "g2" ? "g2" : "g1");
   const activeMeta = levels.find((row) => row.level === activeLevel) ?? levels[0];
 
   return (

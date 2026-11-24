@@ -20,7 +20,7 @@
       "name": "Agent security"
     }
   ],
-  "briefMd": "# Advanced · Document Injection\n\nPDF-style hidden instructions in corpus pages the agent retrieves.",
+  "briefMd": "# Advanced · Supply-Chain Prompts in Documents (Advanced)\n\nThe assistant can do more than send email.\n\n**How it runs.** You submit the content of one web page. The email assistant's user asks it to summarise the page and email the summary to `ops@hotel.test`. You win a level when the attacker's address, `attacker@evil.test`, receives something from the assistant.\n\n- **Level 1 · No guard:** The agent follows the page.\n- **Level 2 · Page as data:** The page is data; only the user's own turns are followed.\n- **Level 3 · Approval policy:** The page is data; only the user's own turns are followed, and an approval policy checks every email's recipients.\n\nEach defence has one flaw. The assistant is a deterministic simulator, not a live model: it follows instruction lines such as `send_email to=… cc=… bcc=…`, email headers (`To:`, `Cc:`, `Bcc:`) and, where it has the tool, `share_document with …`. The same page must win all three levels.\n\n**Gate:** levels won = 3.\n",
   "submissionSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -38,14 +38,14 @@
     "levels_won": 3
   },
   "budget": {
-    "max_model_calls": 20,
-    "max_tokens": 40000,
-    "max_cost_eur": 0.08,
+    "max_model_calls": 0,
+    "max_tokens": 0,
+    "max_cost_eur": 0.02,
     "wall_clock_s": 90
   },
   "gates": [
     {
-      "id": "send-email-attacker",
+      "id": "all-levels",
       "class": "A",
       "metric": "levels_won",
       "op": "eq",

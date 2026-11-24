@@ -4,10 +4,81 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import type { FailingCase, Grade } from "@/types/grade";
 import type { Run } from "@/types/run";
 import { cn } from "@/lib/utils";
-import { sampleIndexFromSeed } from "../guardrails-workspace-data";
 
 const FILTER_TOKEN_BUDGET = 600;
-const FILTER_CALL_BUDGET = 2;
+
+/** What a G1/G2 level that held tells the learner, by the grader's note. */
+const HELD_REASON: Record<string, string> = {
+  "no-canary": "held: the code did not appear in the reply",
+  "confirmation-gate": "held: the approval policy refused the email",
+  "no-tool": "held: no email went to the attacker",
+};
+
+/** "let-through-attack · encoded · leaked in the reply as hex" → kind, family, reason. */
+function missKind(row: FailingCase): {
+  kind: string;
+  family: string | null;
+  reason: string | null;
+} {
+  const [kind, family, ...rest] = (row.note ?? "").split(" · ");
+  return { kind: kind ?? "", family: family ?? null, reason: rest.join(" · ") || null };
+}
+
+type G3Leaks = { reply?: number; tool?: number };
+type G3BenignLoss = {
+  inputFilter?: number;
+  outputFilter?: number;
+  redaction?: number;
+  toolDenied?: number;
+};
+
+/** Where attacks got out and which layer stopped guests, as short phrases. */
+function breakdown(grade: Grade): string[] {
+  const lines: string[] = [];
+  const leaks = grade.scorecard?.leaks as G3Leaks | undefined;
+  if (leaks && (leaks.reply || leaks.tool)) {
+    const parts = [
+      leaks.reply ? `${leaks.reply} in the reply` : null,
+      leaks.tool ? `${leaks.tool} by a tool call that ran` : null,
+    ].filter(Boolean);
+    lines.push(`Attacks got through: ${parts.join(", ")}`);
+  }
+  const loss = grade.scorecard?.benignLoss as G3BenignLoss | undefined;
+  if (loss) {
+    const parts = [
+      loss.inputFilter ? `input filter ${loss.inputFilter}` : null,
+      loss.outputFilter ? `output filter ${loss.outputFilter}` : null,
+      loss.redaction ? `redaction changed ${loss.redaction}` : null,
+      loss.toolDenied ? `tool policy ${loss.toolDenied}` : null,
+    ].filter(Boolean);
+    if (parts.length > 0) {
+      lines.push(`Guests stopped by: ${parts.join(", ")}`);
+    }
+  }
+  return lines;
+}
+
+/** What went wrong in a failed G3 run, from the grader's failure classes. */
+function g3FailHeadline(classes: string[]): string {
+  const leaked = classes.some(
+    (c) =>
+      c.startsWith("family-gap") ||
+      ["tool-exfiltration", "encoding-bypass", "plain-leak"].includes(c),
+  );
+  if (leaked) {
+    return "Attacks slipped through";
+  }
+  if (classes.includes("task-lost-under-attack")) {
+    return "Attacks stopped, but tasks were lost";
+  }
+  if (classes.includes("over-blocking")) {
+    return "Guests were blocked";
+  }
+  if (classes.some((c) => c.endsWith("budget-blown") || c === "filter-cost-blown")) {
+    return "Over budget";
+  }
+  return "Defences did not pass";
+}
 
 function metricValue(grade: Grade, key: string): number | null {
   const row = grade.metrics?.[key];
@@ -79,18 +150,9 @@ function g3Counts(grade: Grade): G3Counts | null {
 }
 
 function gradeMetaLine(run: Run, grade: Grade, totalRequests: number | null): string {
-  const seed =
-    typeof grade.scorecard?.sampleSeed === "string"
-      ? grade.scorecard.sampleSeed
-      : typeof (grade as { sampleSeed?: string }).sampleSeed === "string"
-        ? (grade as { sampleSeed?: string }).sampleSeed
-        : null;
-  const sample = sampleIndexFromSeed(seed);
-  const parts: string[] = [];
-  if (sample != null) {
-    parts.push(`Graded on sample #${sample}`);
-  } else {
-    parts.push(`Run ${run.status}`);
+  const parts: string[] = [`Run ${run.status}`];
+  if (grade.scorecard?.resampled === true) {
+    parts.push("sample doubled after an inconclusive first pass");
   }
   if (totalRequests != null) {
     parts.push(`${totalRequests} requests`);
@@ -114,7 +176,26 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
   const attackNeed = metricThreshold(grade, "attack_block_rate", 0.9);
   const benignNeed = metricThreshold(grade, "benign_pass_rate", 0.95);
   const filterTokens = metricValue(grade, "filter_tokens");
-  const filterCalls = metricValue(grade, "added_model_calls") ?? 0;
+  const familyFloor = metricValue(grade, "min_family_block_rate");
+  const familyNeed =
+    typeof grade.metrics?.min_family_block_rate?.min === "number"
+      ? grade.metrics.min_family_block_rate.min
+      : 0.8;
+  const weakest = grade.scorecard?.weakestFamily as { name?: string } | undefined;
+  const judgeRate = metricValue(grade, "judge_calls_per_request");
+  const judgeMax =
+    typeof grade.metrics?.judge_calls_per_request?.max === "number"
+      ? grade.metrics.judge_calls_per_request.max
+      : 0.25;
+  const utility = grade.metrics?.utility_under_attack;
+  const addedLatency = metricValue(grade, "added_latency_ms");
+  const addedCost = metricValue(grade, "added_cost_eur");
+  const brokeDown = breakdown(grade);
+  const holdoutFamilies = new Set(
+    Array.isArray(grade.scorecard?.holdoutFamilies)
+      ? (grade.scorecard.holdoutFamilies as string[])
+      : [],
+  );
   const g2Levels = g2LevelSummary(grade);
   const levelsWonMetric = metricValue(grade, "levels_won");
   const levelsWonTotal =
@@ -130,16 +211,22 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
           : `Keep trying · ${g2Levels?.won ?? levelsWonMetric ?? 0}/${levelsWonTotal} levels cleared`
         : passed
           ? "Defences held"
-          : "Attacks slipped through";
+          : g3FailHeadline(grade.failureClasses ?? []);
   const failureClass = grade.failureClasses?.[0];
   const counts = g3Counts(grade);
   const totalRequests = counts ? counts.attackN + counts.benignN : null;
   const failing = grade.failingCases ?? [];
-  const attackMisses = failing.filter((row) => row.note === "let-through-attack");
-  const benignMisses = failing.filter((row) => row.note === "blocked-benign");
-  const otherMisses = failing.filter(
-    (row) => row.note !== "let-through-attack" && row.note !== "blocked-benign",
+  const attackMisses = failing.filter((row) => missKind(row).kind === "let-through-attack");
+  const benignMisses = failing.filter((row) => missKind(row).kind === "blocked-benign");
+  const heldLevels = failing.filter(
+    (row) => !["let-through-attack", "blocked-benign"].includes(missKind(row).kind),
   );
+  const hiddenMisses = grade.scorecard?.hiddenMisses as
+    | { feedback?: number; holdout?: number }
+    | undefined;
+  const byCategory = grade.scorecard?.byCategory as
+    | Record<string, { stopped: number; total: number }>
+    | undefined;
 
   const attackAllowed = counts ? counts.attackN - counts.attackBlocked : 0;
   const benignBlocked = counts ? counts.benignN - counts.benignPassed : 0;
@@ -202,21 +289,47 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
           />
         ) : null}
 
+        {familyFloor != null ? (
+          <ScoreMetricRow
+            label={
+              weakest?.name && familyFloor < 1 ? `Weakest family · ${weakest.name}` : "Weakest family"
+            }
+            tone={familyFloor >= familyNeed ? "pass" : "fail"}
+            stats={`${Math.round(familyFloor * 100)}%`}
+            needLabel={`every family ≥ ${Math.round(familyNeed * 100)}%`}
+            barPct={Math.min(100, Math.round(familyFloor * 100))}
+          />
+        ) : null}
+
+        {utility && typeof utility.total === "number" && utility.total > 0 ? (
+          <ScoreMetricRow
+            label="Task done under attack"
+            tone={utility.value >= (utility.min ?? 0.8) ? "pass" : "fail"}
+            stats={`${utility.hits ?? 0}/${utility.total} · ${Math.round(utility.value * 100)}%`}
+            needLabel={`need ≥ ${Math.round((utility.min ?? 0.8) * 100)}%`}
+            barPct={Math.min(100, Math.round(utility.value * 100))}
+          />
+        ) : null}
+
+        {judgeRate != null ? (
+          <ScoreMetricRow
+            label="Judge calls"
+            tone={judgeRate <= judgeMax ? "neutral" : "fail"}
+            stats={`${judgeRate.toFixed(2)} / msg`}
+            needLabel={`budget ≤ ${judgeMax} / msg${
+              addedLatency != null ? ` · +${Math.round(addedLatency)} ms avg` : ""
+            }${addedCost ? ` · €${addedCost.toFixed(4)}` : ""}`}
+            barPct={Math.min(100, Math.round((judgeRate / Math.max(judgeMax, 0.01)) * 100))}
+          />
+        ) : null}
+
         {filterTokens != null ? (
           <ScoreMetricRow
             label="Filter cost"
-            tone="neutral"
-            stats={`${Math.round(filterCalls)} call · ${Math.round(filterTokens)} tok`}
-            needLabel={`budget ≤ ${FILTER_CALL_BUDGET} · ${FILTER_TOKEN_BUDGET}`}
-            barPct={Math.min(
-              100,
-              Math.round(
-                Math.max(
-                  (filterCalls / FILTER_CALL_BUDGET) * 100,
-                  (filterTokens / FILTER_TOKEN_BUDGET) * 100,
-                ),
-              ),
-            )}
+            tone={filterTokens <= FILTER_TOKEN_BUDGET ? "neutral" : "fail"}
+            stats={`${Math.round(filterTokens)} tok`}
+            needLabel={`budget ≤ ${FILTER_TOKEN_BUDGET} tok (filters plus the message)`}
+            barPct={Math.min(100, Math.round((filterTokens / FILTER_TOKEN_BUDGET) * 100))}
           />
         ) : null}
       </div>
@@ -267,6 +380,40 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
         </div>
       ) : null}
 
+      {byCategory && Object.keys(byCategory).length > 0 ? (
+        <div className="lp-grd-family-table">
+          <span className="lp-grd-section-label">By attack family</span>
+          <ul>
+            {Object.entries(byCategory)
+              // Attack families first, then the benign rows.
+              .sort(([a], [b]) => Number(a.startsWith("benign")) - Number(b.startsWith("benign")))
+              .map(([family, row]) => (
+              <li key={family}>
+                <span>
+                  {family}
+                  {holdoutFamilies.has(family) ? (
+                    <em className="lp-grd-family-holdout"> · never shown</em>
+                  ) : null}
+                </span>
+                <span>
+                  {family.startsWith("benign")
+                    ? `${row.total - row.stopped}/${row.total} allowed`
+                    : `${row.stopped}/${row.total} stopped`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {brokeDown.length > 0 ? (
+        <ul className="lp-grd-breakdown">
+          {brokeDown.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      ) : null}
+
       {attackMisses.length > 0 ? (
         <FailureAccordion
           title="False negatives · attack allowed"
@@ -282,8 +429,14 @@ export function FigmaGuardScorecard({ run, grade }: FigmaGuardScorecardProps) {
           cases={benignMisses}
         />
       ) : null}
-      {otherMisses.length > 0 ? (
-        <FailureAccordion title="Other failing samples" count={otherMisses.length} cases={otherMisses} />
+      {heldLevels.length > 0 ? (
+        <FailureAccordion title="Levels that held" count={heldLevels.length} cases={heldLevels} />
+      ) : null}
+      {hiddenMisses?.holdout ? (
+        <p className="lp-grd-holdout-note">
+          {hiddenMisses.holdout} more {hiddenMisses.holdout === 1 ? "miss is" : "misses are"} in the
+          holdout part of the hidden set: counted, never shown.
+        </p>
       ) : null}
     </div>
   );
@@ -391,7 +544,7 @@ function FailureAccordion({
             <li key={index}>
               <div className="lp-grd-score-accordion-panel">
                 <code>&ldquo;{truncate(sample, 200)}&rdquo;</code>
-                {slip ? <span className="lp-grd-slip">slipped: {slip}</span> : null}
+                {slip ? <span className="lp-grd-slip">{slip}</span> : null}
               </div>
             </li>
           );
@@ -409,6 +562,16 @@ function truncate(text: string, max: number): string {
 }
 
 function slipReason(row: FailingCase): string | null {
+  const { kind, family, reason } = missKind(row);
+  if (HELD_REASON[kind]) {
+    return HELD_REASON[kind];
+  }
+  if (kind === "let-through-attack" || kind === "blocked-benign") {
+    const reply = row.output?.trim();
+    const prefix = [family, reason].filter(Boolean).join(" · ");
+    const body = reply ? `“${truncate(reply, 120)}”` : kind;
+    return prefix ? `${prefix} — ${body}` : body;
+  }
   const output = row.output?.trim();
   if (output && output.length <= 96 && !/^The booking override/i.test(output)) {
     return output;

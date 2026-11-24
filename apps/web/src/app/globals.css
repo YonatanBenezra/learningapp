@@ -24,7 +24,7 @@
   --arena-ink: #0b1220;
   --arena-text-2: #4a5568;
   --arena-text-3: #7b8597;
-  /* Primary arena accent = LabPath ember brand (legacy token names: arena-lime) */
+  /* Primary arena accent = AI Warss ember brand (legacy token names: arena-lime) */
   --arena-lime: var(--color-brand);
   --arena-lime-fg: var(--color-brand);
   --arena-cyan: #0891b2;
@@ -127,7 +127,7 @@ html[data-theme="dark"] {
 }
 
 @theme inline {
-  /* LabPath design tokens (use in Tailwind: bg-lp-elevated, text-lp-ink, etc.) */
+  /* AI Warss design tokens (use in Tailwind: bg-lp-elevated, text-lp-ink, etc.) */
   --color-lp-ink: var(--color-ink);
   --color-lp-muted: var(--color-muted);
   --color-lp-subtle: var(--color-subtle);
@@ -158,7 +158,7 @@ html[data-theme="dark"] {
   --color-platform-border: #1e2939;
   --color-platform-text: #f4f4f4;
   --color-platform-muted: #8799b5;
-  --color-platform-accent: #9fef00;
+  --color-platform-accent: #ff4d4d;
   --color-platform-accent-on: #121c2b;
   --color-platform-danger: #ff5c5c;
   --color-platform-card-hover: #1a2537;
@@ -346,4 +346,27 @@ body {
 
 .animate-spotlight {
   animation: spotlight 2s ease 0.75s 1 forwards;
+}
+
+/* AI Warss logo — theme swap (must beat `.lp-dash-htb-nav-brand img { display: block }`) */
+.lp-brand-logo {
+  position: relative;
+}
+
+.lp-brand-logo > .lp-brand-logo-light,
+.lp-dash-htb-nav-brand .lp-brand-logo > .lp-brand-logo-light,
+.lp-site-nav-brand .lp-brand-logo > .lp-brand-logo-light {
+  display: none;
+}
+
+html[data-theme="light"] .lp-brand-logo > .lp-brand-logo-dark,
+html[data-theme="light"] .lp-dash-htb-nav-brand .lp-brand-logo > .lp-brand-logo-dark,
+html[data-theme="light"] .lp-site-nav-brand .lp-brand-logo > .lp-brand-logo-dark {
+  display: none;
+}
+
+html[data-theme="light"] .lp-brand-logo > .lp-brand-logo-light,
+html[data-theme="light"] .lp-dash-htb-nav-brand .lp-brand-logo > .lp-brand-logo-light,
+html[data-theme="light"] .lp-site-nav-brand .lp-brand-logo > .lp-brand-logo-light {
+  display: block;
 }

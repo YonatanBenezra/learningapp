@@ -1,5 +1,5 @@
 {
-  "note": "Phases 1–7 — 30 catalogue + 15 Core 15 advanced (45 live). Core 15 contest uses advanced slugs only.",
+  "note": "Phases 1–7 — 30 catalogue + 15 Core 15 advanced + R5 query routing + bilingual retrieval + 3 RAG red team levels (50 live). Core 15 contest uses advanced slugs only.",
   "slugs": [
     "rag-001-chunk-it-right",
     "rag-006-overlap-tune",
@@ -45,6 +45,11 @@
     "grd-022-adv-filter-stack",
     "grd-023-adv-wilson-gate",
     "grd-024-adv-benign-pass",
-    "grd-025-adv-policy-window"
+    "grd-025-adv-policy-window",
+    "rag-101-rt-prompt-leak",
+    "rag-102-rt-poisoned-doc",
+    "rag-103-rt-tenant-leak",
+    "rag-031-query-routing",
+    "rag-032-two-languages"
   ]
 }

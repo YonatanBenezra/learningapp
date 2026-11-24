@@ -78,7 +78,7 @@ export function EventHeroActions({ event }: EventHeroActionsProps) {
         onClick={() => void onEnroll()}
         className={cn(
           "inline-flex h-[46px] items-center justify-center gap-1 rounded-md px-6 text-sm font-semibold text-[#0F1520] transition-opacity duration-150",
-          "bg-[#9FEF00] hover:opacity-92 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]",
+          "bg-[#FF4D4D] hover:opacity-92 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]",
           "disabled:cursor-not-allowed disabled:opacity-45",
         )}
       >
@@ -88,7 +88,7 @@ export function EventHeroActions({ event }: EventHeroActionsProps) {
       </button>
       <Link
         href={routes.contestScoreboard(event.slug)}
-        className="inline-flex h-[46px] items-center justify-center gap-2 rounded-md bg-[#1E2636] px-5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-[#283246] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]"
+        className="inline-flex h-[46px] items-center justify-center gap-2 rounded-md bg-[#1E2636] px-5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-[#283246] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]"
       >
         <BarChart3 className="size-4" aria-hidden />
         View scoreboard
@@ -96,7 +96,7 @@ export function EventHeroActions({ event }: EventHeroActionsProps) {
       <div className="relative" ref={shareRef}>
         <button
           type="button"
-          className="inline-flex size-[46px] items-center justify-center rounded-md border border-[#2A3446] text-[#A4B1CD] transition-colors duration-150 hover:border-[#9FEF00]/40 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9FEF00]"
+          className="inline-flex size-[46px] items-center justify-center rounded-md border border-[#2A3446] text-[#A4B1CD] transition-colors duration-150 hover:border-[#FF4D4D]/40 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF4D4D]"
           aria-label="Share event"
           aria-expanded={shareOpen}
           onClick={() => setShareOpen((v) => !v)}

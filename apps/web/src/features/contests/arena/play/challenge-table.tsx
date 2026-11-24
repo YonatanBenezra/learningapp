@@ -31,12 +31,12 @@ function ChallengeRow({
       type="button"
       onClick={onSelect}
       className={cn(
-        "grid h-[38px] w-full grid-cols-[minmax(0,1fr)_80px_110px_1fr] items-center gap-2 border-b border-[#1A2232] px-4 text-left text-sm transition-colors hover:cursor-pointer hover:bg-[#1C2537] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9FEF00]/40 focus-visible:ring-inset",
+        "grid h-[38px] w-full grid-cols-[minmax(0,1fr)_80px_110px_1fr] items-center gap-2 border-b border-[#1A2232] px-4 text-left text-sm transition-colors hover:cursor-pointer hover:bg-[#1C2537] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4D4D]/40 focus-visible:ring-inset",
         active && "bg-[#1C2537]/80",
       )}
     >
       <span className="flex min-w-0 items-center gap-2 truncate text-white">
-        {solved ? <Check className="size-3.5 shrink-0 text-[#9FEF00]" aria-hidden /> : null}
+        {solved ? <Check className="size-3.5 shrink-0 text-[#FF4D4D]" aria-hidden /> : null}
         <span className="truncate">{challenge.title}</span>
         {!solved && challenge.solves > 0 ? (
           <span className="shrink-0 text-xs text-[#6B7891]">{challenge.solves} solves</span>
@@ -47,7 +47,7 @@ function ChallengeRow({
           </span>
         ) : null}
       </span>
-      <span className={cn("font-mono tabular-nums", solved ? "text-[#9FEF00]" : "text-white")}>
+      <span className={cn("font-mono tabular-nums", solved ? "text-[#FF4D4D]" : "text-white")}>
         {challenge.currentPoints}
       </span>
       <span className="text-sm lowercase" style={{ color: tone?.color ?? "#A4B1CD" }}>
@@ -75,7 +75,7 @@ function TableSection({
 }) {
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(true);
-  const accent = kind === "unsolved" ? "#FFAF00" : "#9FEF00";
+  const accent = kind === "unsolved" ? "#FFAF00" : "#FF4D4D";
 
   return (
     <section className="mt-7 first:mt-0">
@@ -163,7 +163,7 @@ export function ChallengeBoardTable({
           value={filters.query}
           onChange={(e) => onFiltersChange({ ...filters, query: e.target.value })}
           placeholder="Search challenges by name or category"
-          className="h-10 w-full rounded-full border border-[#2A3446] bg-transparent py-0 pl-4 pr-10 text-sm text-white outline-none transition-colors placeholder:text-[#6B7891] focus:border-[#9FEF00] focus:ring-2 focus:ring-[#9FEF00]/20"
+          className="h-10 w-full rounded-full border border-[#2A3446] bg-transparent py-0 pl-4 pr-10 text-sm text-white outline-none transition-colors placeholder:text-[#6B7891] focus:border-[#FF4D4D] focus:ring-2 focus:ring-[#FF4D4D]/20"
         />
       </label>
 

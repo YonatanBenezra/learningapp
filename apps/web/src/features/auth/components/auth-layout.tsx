@@ -28,7 +28,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
     router.push(routes.home);
   };
 
-  const prompt = isSignUp ? "Already have an account?" : "New to LabPath?";
+  const prompt = isSignUp ? "Already have an account?" : "New to AI Warss?";
   const ctaHref = isSignUp ? routes.signIn : routes.signUp;
   const ctaLabel = isSignUp ? "Sign in" : "Create account";
   const footNote = isSignUp
@@ -41,13 +41,13 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         className="pointer-events-none absolute inset-0 opacity-30"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(159,239,0,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(159,239,0,0.035) 1px, transparent 1px)",
+            "linear-gradient(rgba(255, 77, 77,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 77, 77,0.035) 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -right-32 top-0 h-72 w-72 rounded-full bg-[#9FEF00]/8 blur-3xl"
+        className="pointer-events-none absolute -right-32 top-0 h-72 w-72 rounded-full bg-[#FF4D4D]/8 blur-3xl"
         aria-hidden
       />
 

@@ -22,7 +22,7 @@ export type ScoreboardEntry = {
 };
 
 export const CHART_SERIES_COLORS = [
-  "#9FEF00",
+  "#FF4D4D",
   "#FF3E5F",
   "#FFB020",
   "#A855F7",

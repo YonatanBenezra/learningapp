@@ -98,7 +98,7 @@ export function DashboardNotificationsPanel({
             )}
 
             <footer className="lp-dash-updates-foot">
-              <span className="lp-dash-updates-foot-muted">LabPath changelog</span>
+              <span className="lp-dash-updates-foot-muted">AI Warss changelog</span>
               <span className="lp-dash-updates-foot-links">
                 <a
                   href={LABPATH_CHANGELOG_RSS_URL}

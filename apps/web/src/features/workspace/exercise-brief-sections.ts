@@ -75,19 +75,37 @@ export function subtitleFromExerciseBrief(briefMd: string): string | null {
 /** First prose paragraph from catalogue briefMd (skips markdown headings). */
 export function goalFromExerciseBrief(briefMd: string, title: string): string {
   const blocks = briefMd.trim().split(/\n\n+/);
-  for (const block of blocks) {
-    if (/^#+\s/.test(block)) {
-      continue;
-    }
-    if (block.startsWith(">")) {
-      continue;
-    }
-    const text = block.replace(/\*\*([^*]+)\*\*/g, "$1").trim();
-    if (text.length > 0) {
-      return text;
-    }
+  const index = goalBlockIndex(blocks);
+  if (index >= 0) {
+    return plainGoalText(blocks[index] ?? "");
   }
   return `Complete "${title}" and pass the hidden grading set.`;
+}
+
+/**
+ * The rest of briefMd for the "Full brief" section: drops the leading `# title`
+ * and the paragraph already shown as the goal. Empty when nothing else remains.
+ */
+export function briefAfterGoal(briefMd: string): string {
+  const blocks = briefMd.trim().split(/\n\n+/);
+  const goalIndex = goalBlockIndex(blocks);
+  const rest = blocks.filter(
+    (block, index) => index !== goalIndex && !(index === 0 && /^#\s/.test(block)),
+  );
+  const hasProse = rest.some((block) => !/^#+\s/.test(block) && block.trim().length > 0);
+  return hasProse ? rest.join("\n\n").trim() : "";
+}
+
+function plainGoalText(block: string): string {
+  return block.replace(/\*\*([^*]+)\*\*/g, "$1").trim();
+}
+
+/** First prose block (not a heading or quote); -1 when there is none. */
+function goalBlockIndex(blocks: string[]): number {
+  return blocks.findIndex(
+    (block) =>
+      !/^#+\s/.test(block) && !block.startsWith(">") && plainGoalText(block).length > 0,
+  );
 }
 
 function whatYouReceiveFor(simulator: Exercise["simulator"], label: string): string[] {

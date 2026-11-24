@@ -20,7 +20,7 @@ export function FlagIllustration({ className }: { className?: string }) {
       <path d="M80 28V126" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" />
       <path
         d="M82 36H82C82 36 124 44 124 68C124 92 108 104 92 108H82V36Z"
-        fill="#9FEF00"
+        fill="#FF4D4D"
       />
       <path
         d="M84 40L112 64L104 88L84 100V40Z"

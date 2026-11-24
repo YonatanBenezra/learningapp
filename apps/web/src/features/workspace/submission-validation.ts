@@ -49,7 +49,7 @@ function validateField(
     return null;
   }
 
-  if (property.type === "integer") {
+  if (property.type === "integer" || property.type === "number") {
     if (value === "" || value == null) {
       return `${label} is required`;
     }
@@ -109,7 +109,7 @@ export function validateSubmission(
     if (property.type === "boolean" || property.enum?.length) {
       return false;
     }
-    if (property.type === "integer") {
+    if (property.type === "integer" || property.type === "number") {
       const numeric = Number(values[key]);
       return Number.isFinite(numeric);
     }

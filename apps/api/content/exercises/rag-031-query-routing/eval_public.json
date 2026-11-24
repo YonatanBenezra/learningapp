@@ -1,0 +1,56 @@
+[
+  {
+    "id": "p1",
+    "class": "faq",
+    "question": "How far ahead can I book a desk?",
+    "answerable": true,
+    "goldAnswer": "Fourteen days",
+    "goldDocId": "it-faq",
+    "goldSpan": "Desk booking opens fourteen days ahead"
+  },
+  {
+    "id": "p2",
+    "class": "faq",
+    "question": "When are shared drives archived?",
+    "answerable": true,
+    "goldAnswer": "After twelve months without edits",
+    "goldDocId": "it-faq",
+    "goldSpan": "Shared drives are archived after twelve months without edits"
+  },
+  {
+    "id": "p3",
+    "class": "policy",
+    "question": "Where must production secrets never live?",
+    "answerable": true,
+    "goldAnswer": "git",
+    "goldDocId": "password",
+    "goldSpan": "Production secrets never live in git"
+  },
+  {
+    "id": "p4",
+    "class": "policy",
+    "question": "Do domestic flights under three hours have to be economy?",
+    "answerable": true,
+    "goldAnswer": "Yes",
+    "goldDocId": "travel",
+    "goldSpan": "Domestic flights below three hours must be economy"
+  },
+  {
+    "id": "p5",
+    "class": "procedural",
+    "question": "What are the steps to return faulty hardware?",
+    "answerable": true,
+    "goldAnswer": "To return faulty hardware, first log a fault ticket with the asset tag and a photo. Next, back up any local data to your shared drive. Finally, drop the device at the help desk and collect a loan replacement.",
+    "goldDocId": "proc-hardware-return",
+    "goldSpan": "To return faulty hardware, first log a fault ticket with the asset tag and a photo. Next, back up any local data to your shared drive. Finally, drop the device at the help desk and collect a loan replacement."
+  },
+  {
+    "id": "p6",
+    "class": "procedural",
+    "question": "How do I rotate an API key?",
+    "answerable": true,
+    "goldAnswer": "To rotate an API key, first create the new key in the secrets manager. Next, deploy every service that reads the key and confirm it starts with the new value. Finally, revoke the old key and note the rotation in the change log.",
+    "goldDocId": "proc-key-rotation",
+    "goldSpan": "To rotate an API key, first create the new key in the secrets manager. Next, deploy every service that reads the key and confirm it starts with the new value. Finally, revoke the old key and note the rotation in the change log."
+  }
+]

@@ -8,19 +8,20 @@ import type { HintList } from "@/types/hint";
 import { buildG1Debrief, type G1LevelWin } from "../guardrails-g1-debrief";
 import { buildGuardrailsFigmaBrief } from "../guardrails-brief-from-exercise";
 import {
-  G1_LEVELS,
-  G2_LEVELS,
   g2PageChrome,
   g2SamplePage,
   g1SimulatorProfile,
   guardrailsVariantForExercise,
-  sampleIndexFromSeed,
 } from "../guardrails-workspace-data";
 import { defaultsFromSubmissionSchema } from "../figma-brief-from-exercise";
 import { GuardrailsG1ChatPanel } from "./guardrails-g1-chat-panel";
 import { GuardrailsLeftPanel } from "./guardrails-left-panel";
 import { GuardrailsG2Panel } from "./guardrails-g2-panel";
 import { GuardrailsG3Panel } from "./guardrails-g3-panel";
+import type { ToolLocks } from "../tool-locks";
+import { workspaceApi } from "../workspace-api";
+import { GuardrailsLevelsProvider, useExerciseLevels } from "../guardrails-levels";
+import type { SubmissionHistoryItem } from "@/types/submission";
 import { GuardrailsWorkspaceChrome } from "./guardrails-workspace-chrome";
 import { RunPanel } from "./run-panel";
 import { WorkspaceSplit } from "./workspace-split";
@@ -33,6 +34,8 @@ type WorkspaceGuardrailsFigmaShellProps = {
   pathSlug?: string;
   backHref?: string;
   hints?: HintList | null;
+  /** Unlocks the next hint via the hints API; absent where hints are disabled. */
+  onUnlockHint?: () => Promise<void>;
   run: Run | null;
   grade: Grade | null;
   pending: boolean;
@@ -44,6 +47,8 @@ type WorkspaceGuardrailsFigmaShellProps = {
   onToggleBriefCollapsed: () => void;
   resultsCollapsed: boolean;
   onToggleResultsCollapsed: () => void;
+  /** Practice only: G3 layers and features the learner has not earned. */
+  toolLocks?: ToolLocks | null;
 };
 
 export function WorkspaceGuardrailsFigmaShell({
@@ -51,6 +56,7 @@ export function WorkspaceGuardrailsFigmaShell({
   pathSlug,
   backHref,
   hints = null,
+  onUnlockHint,
   run,
   grade,
   pending,
@@ -62,6 +68,7 @@ export function WorkspaceGuardrailsFigmaShell({
   onToggleBriefCollapsed,
   resultsCollapsed,
   onToggleResultsCollapsed,
+  toolLocks = null,
 }: WorkspaceGuardrailsFigmaShellProps) {
   const variant = guardrailsVariantForExercise(exercise)!;
   const g1Simulator = useMemo(
@@ -78,6 +85,31 @@ export function WorkspaceGuardrailsFigmaShell({
   const [pageContent, setPageContent] = useState(() => g2SamplePage(exercise));
   const [g1WinsByLevel, setG1WinsByLevel] = useState<Record<number, G1LevelWin>>({});
   const [g1ShowDebrief, setG1ShowDebrief] = useState(false);
+  const [g3History, setG3History] = useState<SubmissionHistoryItem[] | null>(null);
+  const exerciseLevels = useExerciseLevels(exercise.slug, variant);
+  // Reload the G3 run history on open and whenever a graded run lands.
+  const historyKey = `${run?.id ?? ""}:${grade ? "graded" : ""}`;
+  useEffect(() => {
+    if (variant !== "g3") {
+      return;
+    }
+    let cancelled = false;
+    workspaceApi
+      .listSubmissions(exercise.slug)
+      .then((rows) => {
+        if (!cancelled) {
+          setG3History(rows);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setG3History(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [variant, exercise.slug, historyKey]);
 
   const figmaBrief = useMemo(
     () =>
@@ -123,16 +155,10 @@ export function WorkspaceGuardrailsFigmaShell({
     }
   }, [onValidityChange, pageContent, submitAttackPrompt, variant]);
 
-  const levelRows = variant === "g2" ? G2_LEVELS : G1_LEVELS;
+  const levelRows = exerciseLevels;
   const levelMeta = levelRows.find((row) => row.level === activeLevel) ?? levelRows[0];
   const attempts = variant === "g1" ? chatAttempts : gradeAttempts + chatAttempts;
-  const g3SampleIndex = sampleIndexFromSeed(grade?.scorecard?.sampleSeed);
-  const g3ChromeMeta =
-    variant === "g3"
-      ? g3SampleIndex
-        ? `Attempt ${gradeAttempts + 1} · sample #${g3SampleIndex}`
-        : `Attempt ${gradeAttempts + 1}`
-      : undefined;
+  const g3ChromeMeta = variant === "g3" ? `Attempt ${gradeAttempts + 1}` : undefined;
 
   const handleGradeSubmit = (payload: Record<string, unknown>) => {
     setGradeAttempts((n) => n + 1);
@@ -149,7 +175,7 @@ export function WorkspaceGuardrailsFigmaShell({
   const activeLevelCleared = clearedLevels.has(activeLevel);
   const g1Debrief =
     variant === "g1" && g1ShowDebrief && g1WinsByLevel[activeLevel]
-      ? buildG1Debrief(g1WinsByLevel[activeLevel])
+      ? buildG1Debrief(g1WinsByLevel[activeLevel], exerciseLevels)
       : null;
 
   const levelChrome = (
@@ -236,8 +262,10 @@ export function WorkspaceGuardrailsFigmaShell({
           initialValues={formDefaults}
           draftVersion={gradeAttempts + 1}
           historyCount={gradeAttempts}
+          history={g3History}
           onSubmit={handleGradeSubmit}
           onValidityChange={onValidityChange}
+          toolLocks={toolLocks}
         />
       </div>
     );
@@ -257,6 +285,8 @@ export function WorkspaceGuardrailsFigmaShell({
         liveMode={liveMode}
         onLiveModeChange={setLiveMode}
         hints={figmaBrief.hints}
+        hintPointsSpent={figmaBrief.hintPointsSpent}
+        onUnlockHint={backHref ? undefined : onUnlockHint}
         debrief={g1Debrief}
         onDismissDebrief={() => setG1ShowDebrief(false)}
         collapsed={briefCollapsed}
@@ -265,6 +295,7 @@ export function WorkspaceGuardrailsFigmaShell({
     );
 
   return (
+    <GuardrailsLevelsProvider levels={exerciseLevels}>
     <div className="lp-ws lp-ws--guardrails lp-ws--grd-figma">
       {variant === "g1" || variant === "g2" ? levelChrome : null}
       {variant === "g3" ? (
@@ -322,5 +353,6 @@ export function WorkspaceGuardrailsFigmaShell({
         }
       />
     </div>
+    </GuardrailsLevelsProvider>
   );
 }

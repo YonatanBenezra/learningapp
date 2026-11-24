@@ -7,6 +7,7 @@ import {
 } from '../../../common/utils/gen-cache-blob';
 import { canonicalJson } from '../../../common/validation/json-schema';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import { OpenRouterService } from '../../llm/openrouter.service';
 import {
   asRecord,
   BudgetEnforcer,
@@ -14,6 +15,7 @@ import {
 } from '../budget/budget.enforcer';
 import {
   costEurMicros,
+  countTokens,
   estimateTokens,
   PINNED_EMBED_MODEL,
   PINNED_GEN_MODEL,
@@ -46,6 +48,22 @@ export type GatewayCompleteResult = {
   cacheHit: boolean;
 };
 
+export type GatewayGenerateInput = {
+  /** Graded run to bill; null for ungraded lab previews (no run budget). */
+  runId: string | null;
+  system: string;
+  user: string;
+  maxTokens?: number;
+};
+
+/** Thrown when a live model call is needed but no provider is configured. */
+export class ModelUnavailableError extends Error {
+  constructor(message = 'Live generation is not configured on this server.') {
+    super(message);
+    this.name = 'ModelUnavailableError';
+  }
+}
+
 export type GatewayEmbedResult = {
   embedding: number[];
   modelVersion: string;
@@ -59,10 +77,141 @@ export type GatewayEmbedResult = {
 export class ModelGateway {
   private readonly logger = new Logger(ModelGateway.name);
 
+  /** Serialises run bookkeeping so parallel calls don't lose counter updates. */
+  private readonly runLocks = new Map<string, Promise<void>>();
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly budget: BudgetEnforcer,
+    private readonly openRouter: OpenRouterService,
   ) {}
+
+  /**
+   * Real model call (pinned OpenRouter model, temperature 0), cached by
+   * (model, prompt, params) so re-grading the same submission returns the same
+   * text without a second call. Graded runs are budget-checked and billed.
+   */
+  async generate(input: GatewayGenerateInput): Promise<GatewayCompleteResult> {
+    const maxTokens = input.maxTokens ?? 320;
+    const modelVersion = `openrouter:${this.openRouter.modelId()}`;
+    const promptHash = hashToken(`${input.system}\u0000${input.user}`);
+    const paramsHash = hashToken(
+      canonicalJson({ temperature: 0, maxTokens, kind: 'chat' }),
+    );
+    const cached = await this.prisma.genCache.findUnique({
+      where: {
+        modelVersion_promptHash_paramsHash: {
+          modelVersion,
+          promptHash,
+          paramsHash,
+        },
+      },
+    });
+    if (cached) {
+      const blob = (await tryReadGenCacheBlob(cached.blobUri)) as {
+        text?: unknown;
+      } | null;
+      if (blob && typeof blob.text === 'string') {
+        await this.recordCacheHit(cached.id, 'gen');
+        if (input.runId) {
+          await this.withRunLock(input.runId, () =>
+            this.touchRun(input.runId as string, {
+              cacheHit: true,
+              modelVersion,
+            }),
+          );
+        }
+        return {
+          text: blob.text,
+          modelVersion,
+          tokensIn: 0,
+          tokensOut: 0,
+          costEurMicros: 0,
+          cacheHit: true,
+        };
+      }
+      await this.prisma.genCache.delete({ where: { id: cached.id } });
+    }
+
+    if (!this.openRouter.isConfigured()) {
+      throw new ModelUnavailableError(
+        'Live generation needs OPENROUTER_API_KEY on the API and worker.',
+      );
+    }
+    // Live calls are billed with the same tokenizer the RAG gates count with.
+    const estimatedIn = countTokens(`${input.system}\n${input.user}`);
+    if (input.runId) {
+      await this.budget.assertWithinBudget(input.runId, {
+        calls: 1,
+        tokens: estimatedIn + maxTokens,
+        costEurMicros: costEurMicros(estimatedIn, maxTokens),
+      });
+    }
+
+    const text = await this.openRouter.chat(
+      [
+        { role: 'system', content: input.system },
+        { role: 'user', content: input.user },
+      ],
+      { temperature: 0, maxTokens },
+    );
+    const tokensOut = countTokens(text);
+    const micros = costEurMicros(estimatedIn, tokensOut);
+    const blobUri = await writeGenCacheBlob(
+      `${promptHash.slice(0, 24)}-${paramsHash.slice(0, 8)}`,
+      { text },
+    );
+    await this.prisma.genCache.upsert({
+      where: {
+        modelVersion_promptHash_paramsHash: {
+          modelVersion,
+          promptHash,
+          paramsHash,
+        },
+      },
+      create: { modelVersion, promptHash, paramsHash, blobUri, hits: 0 },
+      update: { blobUri },
+    });
+    if (input.runId) {
+      await this.withRunLock(input.runId, () =>
+        this.touchRun(input.runId as string, {
+          cacheHit: false,
+          modelVersion,
+          tokensIn: estimatedIn,
+          tokensOut,
+          costEurMicros: micros,
+        }),
+      );
+    }
+    this.logger.log(
+      `live gen model=${modelVersion} run=${input.runId ?? 'lab'} tokens≈${estimatedIn + tokensOut}`,
+    );
+    return {
+      text,
+      modelVersion,
+      tokensIn: estimatedIn,
+      tokensOut,
+      costEurMicros: micros,
+      cacheHit: false,
+    };
+  }
+
+  private async withRunLock(
+    runId: string,
+    task: () => Promise<void>,
+  ): Promise<void> {
+    const previous = this.runLocks.get(runId) ?? Promise.resolve();
+    const next = previous.then(task, task);
+    const settled = next.catch(() => undefined);
+    this.runLocks.set(runId, settled);
+    try {
+      await next;
+    } finally {
+      if (this.runLocks.get(runId) === settled) {
+        this.runLocks.delete(runId);
+      }
+    }
+  }
 
   async complete(input: GatewayCompleteInput): Promise<GatewayCompleteResult> {
     const modelVersion = PINNED_GEN_MODEL;

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "mean-prompt-tokens",
+    "class": "A",
+    "metric": "mean_prompt_tokens",
+    "op": "lte",
+    "value": 185
+  },
+  {
+    "id": "recall-at-k",
+    "class": "A",
+    "metric": "recall@k",
+    "op": "gte",
+    "value": 0.95
+  }
+]

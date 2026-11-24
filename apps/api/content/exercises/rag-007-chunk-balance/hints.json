@@ -1,0 +1,6 @@
+[
+  "Open a missed question in the Chunks tab: which sentence of the answer is in the chunk, and which one is in the next chunk?",
+  "Overlap carries the end of one chunk into the next, so both halves of an answer meet again, but the repeated text makes every chunk bigger. Check the token meter when you raise it.",
+  "Every answer here is exactly one paragraph. A split that cuts on paragraphs first never puts a boundary inside an answer.",
+  "Recursive splitting cuts on blank lines first. A chunk size a little above the longest paragraph (about 390 characters) gives one answer per chunk with no overlap at all."
+]

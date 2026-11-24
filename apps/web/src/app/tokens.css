@@ -1,5 +1,5 @@
 /**
- * LabPath design tokens (HTB-inspired dark: navy canvas + neon green accent).
+ * AI Warss design tokens (HTB-inspired dark: navy canvas + neon green accent).
  * Legacy --color-* names map here so existing CSS keeps working.
  */
 
@@ -100,11 +100,11 @@ html[data-theme="dark"] {
   --lp-text-tertiary: #6a7a94;
   --lp-text-heading: #f4f4f4;
 
-  /* Accent — neon lime (legacy token name: ember) */
-  --lp-accent-ember: #9fef00;
-  --lp-accent-ember-hover: #aced2c;
-  --lp-accent-on-ember: #0b121f;
-  --lp-accent-ember-soft: color-mix(in srgb, #9fef00 14%, #141d2b);
+  /* Accent — coral (logo S / brand primary; legacy token name: ember) */
+  --lp-accent-ember: #ff4d4d;
+  --lp-accent-ember-hover: #ff6b6b;
+  --lp-accent-on-ember: #0b0b0e;
+  --lp-accent-ember-soft: color-mix(in srgb, #ff4d4d 14%, #141d2b);
 
   /* Secondary accent — light blue */
   --lp-signal-teal: #88c9f7;

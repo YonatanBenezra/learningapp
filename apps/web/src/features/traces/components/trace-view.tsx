@@ -8,6 +8,7 @@ import {
   DEMO_TRACE_RUN_ID,
 } from "@/features/traces/demo/rag-trace-demo-data";
 import { RagTraceView } from "@/features/traces/components/rag-trace-view";
+import { GuardrailsTraceBody } from "@/features/traces/components/guardrails-trace-view";
 import { tracesApi } from "@/features/traces/traces-api";
 import { workspaceApi } from "@/features/workspace/workspace-api";
 import { ApiError } from "@/lib/api-client";
@@ -199,6 +200,33 @@ function TraceViewLive({ runId }: TraceViewProps) {
   const gated = Boolean(trace.gated);
   const isAgent = trace.simulator === "agent" || steps.length > 0;
 
+  if (trace.simulator === "guardrails") {
+    const g3 = Array.isArray(trace.cases);
+    return (
+      <div className="lp-page lp-page-trace">
+        <div className="lp-trace">
+          <TraceHeader runId={runId} simulator={trace.simulator} />
+          <div className="lp-run-stats">
+            <Stat
+              label={g3 ? "Sampled messages" : "Levels"}
+              value={formatCount(g3 ? trace.k : (trace.levels?.length ?? 3))}
+            />
+            {g3 ? (
+              <Stat label="Messages shown here" value={formatCount(trace.cases?.length)} />
+            ) : null}
+            <Stat label="Judge cost" value={formatCost(trace.costEurMicros)} />
+          </div>
+          <GuardrailsTraceBody trace={trace} />
+          <p className="lp-run-note">
+            <Link href={routes.run(runId)} className="lp-link">
+              Back to run
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (trace.simulator === "rag") {
     if (queries.length === 0) {
       return (
@@ -382,7 +410,7 @@ function TraceHeader({
         <h1 className="lp-run-title">Trace</h1>
         <p className="lp-run-lead">
           {simulator === "guardrails"
-            ? "Probe and guard steps for this run."
+            ? "What each level or layer did in this run."
             : simulator === "rag"
               ? "Retrieval steps for this run."
               : waiting

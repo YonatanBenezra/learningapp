@@ -147,6 +147,36 @@
   background: color-mix(in srgb, var(--lp-surface-elevated) 92%, transparent);
 }
 
+/* Versioned corpora: status, family, version and effective date. */
+.lp-rag-lab-doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+  margin: 0 0 0.35rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-doc-status {
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: color-mix(in srgb, var(--lp-ink) 8%, transparent);
+}
+
+.lp-rag-lab-doc-status.is-current {
+  color: var(--lp-grd-teal, #0f766e);
+  background: color-mix(in srgb, var(--lp-grd-teal, #0f766e) 14%, transparent);
+}
+
+.lp-rag-lab-doc-status.is-draft {
+  color: var(--lp-grd-fail-accent, #b45309);
+  background: color-mix(in srgb, var(--lp-grd-fail-accent, #b45309) 12%, transparent);
+}
+
 .lp-rag-lab-doc-head {
   display: flex;
   flex-wrap: wrap;
@@ -278,6 +308,31 @@
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.45;
+}
+
+/* R4: what the first stage searched for after the rewrite prompt. */
+.lp-rag-lab-rewrite {
+  border-style: solid;
+  background: color-mix(in srgb, var(--color-brand) 6%, transparent);
+}
+
+.lp-rag-lab-rewrite-skipped {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.85rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px dashed var(--lp-border);
+  border-radius: 0.45rem;
+}
+
+.lp-rag-lab-rewrite-skipped p {
+  flex: 1 1 16rem;
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
 }
 
 .lp-rag-lab-compare {
@@ -522,5 +577,405 @@
 @media (max-width: 900px) {
   .lp-rag-lab-compare {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Preview readout: this query's numbers against what the grader measures. */
+.lp-rag-lab-readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.5rem;
+  margin: 0 0 0.85rem;
+}
+
+.lp-rag-lab-readout > div {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+}
+
+.lp-rag-lab-readout dt {
+  margin: 0 0 0.2rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-readout dd {
+  margin: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9375rem;
+  font-weight: 650;
+}
+
+.lp-rag-lab-readout dd.is-pass {
+  color: var(--color-status-pass);
+}
+
+.lp-rag-lab-readout dd.is-fail {
+  color: var(--color-status-fail);
+}
+
+.lp-rag-lab-readout-sub {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--lp-muted);
+}
+
+.lp-rag-lab-hit--answer {
+  border-color: color-mix(in srgb, var(--color-status-pass) 55%, var(--lp-border));
+}
+
+.lp-rag-lab-hit-answer {
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-status-pass) 16%, transparent);
+  color: var(--color-status-pass);
+  font-size: 0.6875rem;
+  font-weight: 650;
+}
+
+.lp-rag-lab-chunk-count {
+  margin-left: 0.45rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--lp-muted);
+}
+
+/* Live public estimate under the pipeline (Submission tab). */
+.lp-rag-meter {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.5rem 0.75rem 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--color-ink) 6%, var(--color-card));
+}
+
+.lp-rag-meter-title {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-meter-title span {
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.lp-rag-meter-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.lp-rag-meter-label {
+  color: var(--lp-muted);
+}
+
+.lp-rag-meter-value {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-weight: 650;
+}
+
+.lp-rag-meter-value small {
+  margin-left: 0.25rem;
+  font-weight: 500;
+  color: var(--lp-muted);
+}
+
+.lp-rag-meter-value.is-pass {
+  color: var(--color-status-pass);
+}
+
+.lp-rag-meter-value.is-fail {
+  color: var(--color-status-fail);
+}
+
+.lp-rag-meter-track {
+  height: 0.3rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lp-muted) 20%, transparent);
+}
+
+.lp-rag-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.lp-rag-meter-fill.is-pass {
+  background: var(--color-status-pass);
+}
+
+.lp-rag-meter-fill.is-fail {
+  background: var(--color-status-fail);
+}
+
+/* Red team target bot console. */
+.lp-rt-console {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lp-rt-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.lp-rt-intro {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-rt-clear {
+  flex-shrink: 0;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--lp-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lp-rt-clear:hover:not(:disabled) {
+  color: var(--lp-ink);
+}
+
+.lp-rt-clear:disabled {
+  opacity: 0.55;
+}
+
+.lp-rt-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-rt-empty {
+  font-size: 0.8125rem;
+  color: var(--lp-muted);
+}
+
+.lp-rt-turn {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.lp-rt-you,
+.lp-rt-bot {
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.lp-rt-you span,
+.lp-rt-bot > span {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rt-you {
+  justify-self: end;
+  max-width: 85%;
+  background: color-mix(in srgb, var(--color-brand) 12%, var(--color-card));
+}
+
+.lp-rt-bot {
+  justify-self: start;
+  max-width: 92%;
+  border: 1px solid var(--lp-border);
+  background: var(--color-card);
+}
+
+.lp-rt-bot p {
+  margin: 0;
+  /* Bot replies can be multi-line (lists, leaked prompts): keep their newlines. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.lp-rt-bot.is-blocked {
+  border-color: color-mix(in srgb, var(--color-status-fail) 45%, var(--lp-border));
+}
+
+.lp-rt-cites {
+  margin-top: 0.35rem !important;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  color: var(--lp-muted);
+}
+
+.lp-rt-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.lp-rt-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.45rem;
+  background: var(--color-card);
+  color: var(--lp-ink);
+  font-size: 0.8125rem;
+}
+
+.lp-rt-form button {
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  border-radius: 0.45rem;
+  background: var(--color-brand);
+  color: var(--color-brand-on);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.lp-rt-form button:disabled {
+  opacity: 0.55;
+}
+
+/* Errors the live estimate cannot hide (sign-in, rate limit, model down). */
+.lp-rag-meter-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}
+
+.lp-rag-meter-error {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lp-danger, #b91c1c);
+}
+
+/* R3: the answer preview calls a real model, so it runs on request. */
+.lp-rag-lab-run {
+  margin-left: auto;
+  padding: 0.35rem 0.75rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: var(--color-brand);
+  color: var(--color-brand-on);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lp-rag-lab-run:disabled {
+  opacity: 0.6;
+}
+
+.lp-rag-lab-gen-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--lp-muted);
+  font-size: 0.8125rem;
+}
+
+/* Probe: every public question under the current config. */
+.lp-rag-probe {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.lp-rag-probe-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lp-muted);
+}
+
+.lp-rag-probe-summary strong {
+  color: var(--lp-ink);
+  font-weight: 650;
+}
+
+.lp-rag-probe-busy {
+  font-style: italic;
+}
+
+.lp-rag-probe-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.lp-rag-probe-table th,
+.lp-rag-probe-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--lp-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp-rag-probe-table thead th {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-rag-probe-table tbody th {
+  font-weight: 500;
+  color: var(--lp-ink);
+}
+
+.lp-rag-probe-table td {
+  font-family: ui-monospace, monospace;
+  white-space: nowrap;
+  color: var(--lp-muted);
+}
+
+.lp-rag-probe .is-up,
+.lp-rag-probe-table td.is-up {
+  color: var(--color-status-pass);
+}
+
+.lp-rag-probe .is-down,
+.lp-rag-probe-table td.is-down {
+  color: var(--color-status-fail);
+}
+
+@media (max-width: 640px) {
+  .lp-rag-probe-table thead th:nth-child(4),
+  .lp-rag-probe-table td:nth-child(4) {
+    display: none;
   }
 }

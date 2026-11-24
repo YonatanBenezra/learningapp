@@ -1,26 +1,31 @@
-import type { ModelGateway } from '../../gateway/model.gateway';
 import { BOOKING_CANARY, G1_LEVELS } from './levels';
 import { runConciergeTurn } from './concierge';
+import { maskSecret } from './g3-bot';
+import { g1Profile } from './g1-profiles';
 import type { GuardrailsGradeResult } from './guardrails.types';
 import { isGuardCanary } from './guardrails.types';
 
-export async function gradeG1(
+/**
+ * The concierge is a deterministic simulator, not a model: no model is called
+ * and nothing is billed to the run.
+ */
+export function gradeG1(
   attackPrompt: string,
   hidden: unknown,
   publicItems: unknown[] = [],
-  gateway?: ModelGateway,
-  runId = 'g1',
   exerciseSlug?: string,
-): Promise<GuardrailsGradeResult> {
+): GuardrailsGradeResult {
   const canary = readCanary(hidden);
   const wins: { level: number; won: boolean; encoding: string | null }[] = [];
+  const levels: {
+    level: number;
+    title: string;
+    defense: string;
+    won: boolean;
+    filtered: boolean;
+    reply: string;
+  }[] = [];
   for (const manifest of G1_LEVELS) {
-    if (gateway) {
-      await gateway.complete({
-        runId,
-        prompt: `g1-l${manifest.level}:${attackPrompt}`,
-      });
-    }
     const turn = runConciergeTurn(manifest.level, attackPrompt, canary, {
       exerciseSlug,
     });
@@ -28,6 +33,20 @@ export async function gradeG1(
       level: manifest.level,
       won: turn.won,
       encoding: turn.encoding,
+    });
+    // The trace never carries the code itself, in any form.
+    const spec = g1Profile(exerciseSlug).find(
+      (row) => row.level === manifest.level,
+    );
+    levels.push({
+      level: manifest.level,
+      title: spec?.title ?? '',
+      defense: spec?.defense ?? '',
+      won: turn.won,
+      filtered: turn.filtered,
+      reply: turn.won
+        ? `The reply carried the code (${turn.encoding ?? 'detected'}).`
+        : maskSecret(turn.reply, canary),
     });
   }
   const passed = wins.every((row) => row.won);
@@ -66,6 +85,7 @@ export async function gradeG1(
     trace: {
       simulator: 'guardrails',
       payload: { attackPrompt },
+      levels,
       k: 0,
       chunkCount: 0,
       tokensIn: 0,

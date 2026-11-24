@@ -37,7 +37,7 @@ export function EventDetailsSidebar({ event }: { event: EventDetailsData }) {
             <PanelHeading>Your progress</PanelHeading>
             <Link
               href={routes.contestPlay(event.slug)}
-              className="text-[13px] font-semibold text-[#9FEF00] hover:underline"
+              className="text-[13px] font-semibold text-[#FF4D4D] hover:underline"
             >
               Open board →
             </Link>
@@ -51,7 +51,7 @@ export function EventDetailsSidebar({ event }: { event: EventDetailsData }) {
               </span>
             </p>
             {progress.rank != null ? (
-              <p className="font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-[#9FEF00]">
+              <p className="font-[family-name:var(--font-jetbrains-mono)] text-sm font-semibold text-[#FF4D4D]">
                 #{progress.rank}
                 {progress.rankDelta > 0 ? ` ▲${progress.rankDelta}` : ""}
               </p>
@@ -65,7 +65,7 @@ export function EventDetailsSidebar({ event }: { event: EventDetailsData }) {
             aria-valuemax={progress.flagsTotal}
           >
             <div
-              className="h-full rounded-full bg-[#9FEF00] transition-[width] duration-300"
+              className="h-full rounded-full bg-[#FF4D4D] transition-[width] duration-300"
               style={{
                 width: `${Math.min(100, (progress.flagsSolved / Math.max(1, progress.flagsTotal)) * 100)}%`,
               }}
@@ -102,7 +102,7 @@ export function EventDetailsSidebar({ event }: { event: EventDetailsData }) {
         </div>
         <Link
           href={event.host.websiteUrl}
-          className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-[#9FEF00] hover:underline"
+          className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-[#FF4D4D] hover:underline"
         >
           {event.host.websiteLabel}
           <ExternalLink className="size-3.5 opacity-80" aria-hidden />

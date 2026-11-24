@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "How far ahead do I book trips on the new travel booking site?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "Flights and trains on the booking site are booked at least seven days before the trip.",
+    "goldDocId": "travel-handbook-part-2",
+    "goldSpan": "Flights and trains on the booking site are booked at least seven days before the trip."
   },
   {
     "id": "p2",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "How often are laptops replaced in the new laptop refresh?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway; split tunneling is disabled",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "Laptops are replaced every four years, or earlier when a repair costs more than half.",
+    "goldDocId": "it-handbook-part-1",
+    "goldSpan": "Laptops are replaced every four years, or earlier when a repair costs more than half."
   },
   {
     "id": "p3",
-    "question": "How long are support tickets kept after close?",
+    "question": "When do payslips appear in the new payslip portal?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "Payslips appear in the portal two days before the salary is paid.",
+    "goldDocId": "payroll-handbook-part-2",
+    "goldSpan": "Payslips appear in the portal two days before the salary is paid."
   },
   {
     "id": "p4",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "Who registers visitors in the new visitor registration, and when?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "Visitors are registered by their host at least one day before the visit.",
+    "goldDocId": "reception-handbook-part-2",
+    "goldSpan": "Visitors are registered by their host at least one day before the visit."
   },
   {
     "id": "p5",
-    "question": "What report must vendors present before procurement?",
+    "question": "How much data abroad does the new phone plan include?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "The plan includes ten gigabytes of data abroad every month.",
+    "goldDocId": "it-handbook-part-6",
+    "goldSpan": "The plan includes ten gigabytes of data abroad every month."
+  },
+  {
+    "id": "p6",
+    "question": "When are permits renewed in the new parking permit system?",
+    "answerable": true,
+    "goldAnswer": "Permits in the system are renewed every year in January.",
+    "goldDocId": "facilities-handbook-part-3",
+    "goldSpan": "Permits in the system are renewed every year in January."
   }
 ]

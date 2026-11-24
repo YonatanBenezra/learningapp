@@ -7,6 +7,7 @@ import {
   Settings,
   Trophy,
   User,
+  Wrench,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,6 +33,7 @@ export function DashboardHtbNav({ user }: DashboardHtbNavProps) {
   const settingsActive =
     pathname === routes.dashboardSettings || pathname.startsWith(`${routes.dashboardSettings}/`);
   const labsActive = pathname === routes.practiceHub;
+  const toolsActive = pathname === routes.dashboardTools;
   const contestsActive =
     pathname === routes.contestHub || pathname.startsWith("/events/");
   const rankingActive =
@@ -81,6 +83,13 @@ export function DashboardHtbNav({ user }: DashboardHtbNavProps) {
           >
             <LayoutGrid {...navIconProps} />
             {workspacePractice.label}
+          </Link>
+          <Link
+            href={routes.dashboardTools}
+            className={`lp-dash-htb-nav-link${toolsActive ? " is-active" : ""}`}
+          >
+            <Wrench {...navIconProps} />
+            Tools
           </Link>
           <Link
             href={workspaceContests.href}

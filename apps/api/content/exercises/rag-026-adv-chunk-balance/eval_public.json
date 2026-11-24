@@ -1,42 +1,50 @@
 [
   {
     "id": "p1",
-    "question": "How many PTO days do full-time staff get each year?",
+    "question": "What voucher was added to the account after the blender call?",
     "answerable": true,
-    "goldAnswer": "22 days",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "as a thank you for your patience i have added a voucher for fifteen euros to your account for your next order",
+    "goldDocId": "call-about-a-broken-blender",
+    "goldSpan": "as a thank you for your patience i have added a voucher for fifteen euros to your account for your next order"
   },
   {
     "id": "p2",
-    "question": "Is alcohol reimbursable on team meals?",
+    "question": "Do I need to contact my bank about the reversed duplicate payment?",
     "answerable": true,
-    "goldAnswer": "No. Alcohol is never reimbursable.",
-    "goldDocId": "expense",
-    "goldSpan": "Alcohol is never reimbursable."
+    "goldAnswer": "your bank may show the reversed payment as pending for a while but you do not need to contact them about it",
+    "goldDocId": "call-about-a-double-charge",
+    "goldSpan": "your bank may show the reversed payment as pending for a while but you do not need to contact them about it"
   },
   {
     "id": "p3",
-    "question": "Which Slack channel is used for incident timelines?",
+    "question": "Will support ever ask for my password on the phone?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "we never ask for your password on the phone so if anyone calls and asks for it please hang up and report it",
+    "goldDocId": "call-about-a-password-reset",
+    "goldSpan": "we never ask for your password on the phone so if anyone calls and asks for it please hang up and report it"
   },
   {
     "id": "p4",
-    "question": "How long are prompt and completion logs kept?",
+    "question": "Are the coffee settings kept if I restart the subscription?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "you can restart the coffee subscription at any time in the app and your old grind and roast settings are kept",
+    "goldDocId": "call-about-a-subscription-cancellation",
+    "goldSpan": "you can restart the coffee subscription at any time in the app and your old grind and roast settings are kept"
   },
   {
     "id": "p5",
-    "question": "When does primary on-call rotate?",
+    "question": "What happens if the washing machine fault comes back after the repair?",
     "answerable": true,
-    "goldAnswer": "Every Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "if the same fault comes back within ninety days of the repair we replace the whole washing machine instead",
+    "goldDocId": "call-about-a-warranty-repair",
+    "goldSpan": "if the same fault comes back within ninety days of the repair we replace the whole washing machine instead"
+  },
+  {
+    "id": "p6",
+    "question": "Within how many days are price drops matched?",
+    "answerable": true,
+    "goldAnswer": "price drops are only matched within fourteen days of purchase and only for the exact same model in our own shop",
+    "goldDocId": "call-about-a-price-drop",
+    "goldSpan": "price drops are only matched within fourteen days of purchase and only for the exact same model in our own shop"
   }
 ]

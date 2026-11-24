@@ -2,6 +2,8 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { loadPublishedSlugs } from '../../../content/content-paths';
 import {
+  isRagR5Slug,
+  isRagRedTeamSlug,
   isRagR1Slug,
   isRagR2Slug,
   isRagR3Slug,
@@ -10,9 +12,22 @@ import {
 } from './exercises.constants';
 
 type GraderArchetype =
-  'rag-r1' | 'rag-r2' | 'rag-r3' | 'rag-r4' | 'rag-sandbox';
+  | 'rag-r1'
+  | 'rag-r2'
+  | 'rag-r3'
+  | 'rag-r4'
+  | 'rag-r5'
+  | 'rag-redteam'
+  | 'rag-sandbox';
 
+/** Same order as RagHarness.execute: red team and R5 are matched first. */
 function harnessArchetype(slug: string): GraderArchetype | 'unknown' {
+  if (isRagRedTeamSlug(slug)) {
+    return 'rag-redteam';
+  }
+  if (isRagR5Slug(slug)) {
+    return 'rag-r5';
+  }
   if (isSandboxRagSlug(slug)) {
     return 'rag-sandbox';
   }

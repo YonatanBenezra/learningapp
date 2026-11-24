@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 190" width="600" height="190" role="img" aria-label="AI Warss">
+  <defs>
+    <linearGradient id="flow" gradientUnits="userSpaceOnUse" x1="55" y1="0" x2="545" y2="0">
+      <stop offset="0" stop-color="#4F46E5"/>
+      <stop offset="0.55" stop-color="#C026D3"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+  </defs>
+
+  
+
+  <!-- Single-line letters drawn as shapes (no font needed); the two S's share rails -->
+  <g fill="none" stroke="url(#flow)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="60,113 88,47 116,113"/>
+    <line x1="142" y1="47" x2="142" y2="113"/>
+    <polyline points="186,47 204,113 222,47 240,113 258,47"/>
+    <polyline points="280,113 308,47 336,113"/>
+    <path d="M362,113 V47 H384 a17.5,17.5 0 0 1 0,35 H362 M382,82 L402,113"/>
+    <path d="M512,47 H446 a16.5,16.5 0 0 0 0,33 H458 a16.5,16.5 0 0 1 0,33 H426"/>
+    <path d="M540,47 H512 a16.5,16.5 0 0 0 0,33 H524 a16.5,16.5 0 0 1 0,33 H458"/>
+  </g>
+  <g fill="url(#flow)">
+    <circle cx="88" cy="101" r="6"/>
+    <circle cx="308" cy="101" r="6"/>
+  </g>
+
+  <text x="300" y="158" text-anchor="middle" font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="14" letter-spacing="5" fill="#6B6B76">RAG · GUARDRAILS · EVALS</text>
+</svg>

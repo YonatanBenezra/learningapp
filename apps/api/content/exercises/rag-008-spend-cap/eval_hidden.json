@@ -1,170 +1,595 @@
 [
   {
     "id": "h01",
-    "question": "How many days of paid time off do staff receive each calendar year?",
+    "question": "What is the nightly hotel limit in most cities?",
     "answerable": true,
-    "goldAnswer": "22",
-    "goldDocId": "pto",
-    "goldSpan": "twenty-two (22) days of paid time off"
+    "goldAnswer": "160 euros a night",
+    "goldDocId": "hotels-2026",
+    "goldSpan": "Hotels may cost at most 160 euros a night in most cities",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h02",
-    "question": "How many days in advance must staff request ordinary leave?",
+    "question": "How much can a hotel room cost per night on a business trip?",
     "answerable": true,
-    "goldAnswer": "14 days",
-    "goldDocId": "pto",
-    "goldSpan": "at least fourteen (14) days before the first day of leave"
+    "goldAnswer": "160 euros a night",
+    "goldDocId": "hotels-2026",
+    "goldSpan": "Hotels may cost at most 160 euros a night in most cities",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h03",
-    "question": "How is remote access traffic required to leave the network?",
+    "question": "What is the mileage rate for using my own car?",
     "answerable": true,
-    "goldAnswer": "Through the company gateway",
-    "goldDocId": "vpn",
-    "goldSpan": "all traffic must egress through the company gateway"
+    "goldAnswer": "0.30 euros per kilometre",
+    "goldDocId": "mileage-2026",
+    "goldSpan": "Business trips in your own car are reimbursed at 0.30 euros per kilometre",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h04",
-    "question": "How quickly must contractors lose remote access after contract end?",
+    "question": "How much is reimbursed per kilometre when I drive my car for work?",
     "answerable": true,
-    "goldAnswer": "Within four hours",
-    "goldDocId": "vpn",
-    "goldSpan": "offboarded within four hours of contract end"
+    "goldAnswer": "0.30 euros per kilometre",
+    "goldDocId": "mileage-2026",
+    "goldSpan": "Business trips in your own car are reimbursed at 0.30 euros per kilometre",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h05",
-    "question": "Where should staff post an incident timeline?",
+    "question": "How big is the yearly learning budget?",
     "answerable": true,
-    "goldAnswer": "#incidents",
-    "goldDocId": "incident",
-    "goldSpan": "post a timeline in Slack channel #incidents"
+    "goldAnswer": "1,500 euros a year",
+    "goldDocId": "learning-2026",
+    "goldSpan": "Every employee has 1,500 euros a year for courses, books and conference tickets",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h06",
-    "question": "How long are model prompt logs retained in days?",
+    "question": "How much money do I get each year for courses and books?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "model-usage",
-    "goldSpan": "retained for thirty (30) days"
+    "goldAnswer": "1,500 euros a year",
+    "goldDocId": "learning-2026",
+    "goldSpan": "Every employee has 1,500 euros a year for courses, books and conference tickets",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h07",
-    "question": "What is the team meal reimbursement cap per person excluding tax?",
+    "question": "How many weeks of paid parental leave do new parents get?",
     "answerable": true,
-    "goldAnswer": "€45",
-    "goldDocId": "expense",
-    "goldSpan": "up to forty-five euros (€45) per person excluding tax"
+    "goldAnswer": "twenty weeks",
+    "goldDocId": "parental-2026",
+    "goldSpan": "New parents may take twenty weeks away from work at full salary",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h08",
-    "question": "How many days after a transaction must expense reports be submitted?",
+    "question": "How long is parental leave at full salary?",
     "answerable": true,
-    "goldAnswer": "30 days",
-    "goldDocId": "expense",
-    "goldSpan": "within thirty (30) days of the transaction date"
+    "goldAnswer": "twenty weeks",
+    "goldDocId": "parental-2026",
+    "goldSpan": "New parents may take twenty weeks away from work at full salary",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h09",
-    "question": "How long are support tickets kept after close?",
+    "question": "How many days a year can I work from another country?",
     "answerable": true,
-    "goldAnswer": "18 months",
-    "goldDocId": "retention",
-    "goldSpan": "kept for eighteen (18) months after close"
+    "goldAnswer": "thirty days a year",
+    "goldDocId": "abroad-2026",
+    "goldSpan": "You may work from a country other than your contract country for up to thirty days a year",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h10",
-    "question": "How many days are chat transcripts kept?",
+    "question": "For how long may I work abroad each year?",
     "answerable": true,
-    "goldAnswer": "90 days",
-    "goldDocId": "retention",
-    "goldSpan": "kept for ninety (90) days"
+    "goldAnswer": "thirty days a year",
+    "goldDocId": "abroad-2026",
+    "goldSpan": "You may work from a country other than your contract country for up to thirty days a year",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h11",
-    "question": "When does the primary on-call rotate each week?",
+    "question": "How much is on-call pay per week?",
     "answerable": true,
-    "goldAnswer": "Monday at 09:00 UTC",
-    "goldDocId": "oncall",
-    "goldSpan": "rotates every Monday at 09:00 UTC"
+    "goldAnswer": "200 euros a week",
+    "goldDocId": "on-call-2026",
+    "goldSpan": "Engineers receive 200 euros for each week on the on-call rota",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h12",
-    "question": "What report must vendors present before procurement?",
+    "question": "What do engineers get for a week on the on-call rota?",
     "answerable": true,
-    "goldAnswer": "SOC 2 Type II",
-    "goldDocId": "vendor",
-    "goldSpan": "SOC 2 Type II report before procurement"
+    "goldAnswer": "200 euros a week",
+    "goldDocId": "on-call-2026",
+    "goldSpan": "Engineers receive 200 euros for each week on the on-call rota",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h13",
-    "question": "What is the hotel cap per night in Tier-1 cities?",
+    "question": "How big is the referral bonus?",
     "answerable": true,
-    "goldAnswer": "€180",
-    "goldDocId": "travel",
-    "goldSpan": "one hundred eighty euros (€180) per night"
+    "goldAnswer": "2,000 euros",
+    "goldDocId": "referrals-2026",
+    "goldSpan": "A successful referral earns a 2,000 euro bonus once the new hire has stayed six months",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h14",
-    "question": "How quickly must lost laptop devices be reported to IT?",
+    "question": "What bonus do I get when someone I referred is hired?",
     "answerable": true,
-    "goldAnswer": "Within two hours",
-    "goldDocId": "laptop",
-    "goldSpan": "reported to IT within two hours"
+    "goldAnswer": "2,000 euros",
+    "goldDocId": "referrals-2026",
+    "goldSpan": "A successful referral earns a 2,000 euro bonus once the new hire has stayed six months",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h15",
-    "question": "Where must staff store passwords?",
+    "question": "How long must a work password be?",
     "answerable": true,
-    "goldAnswer": "1Password",
-    "goldDocId": "password",
-    "goldSpan": "stored only in 1Password"
+    "goldAnswer": "16 characters",
+    "goldDocId": "passwords-2026",
+    "goldSpan": "Work passwords must be at least 16 characters long",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h16",
-    "question": "Which channels are the default for staff discussion?",
+    "question": "What is the minimum password length?",
     "answerable": true,
-    "goldAnswer": "Public channels",
-    "goldDocId": "slack",
-    "goldSpan": "Public channels are the default"
+    "goldAnswer": "16 characters",
+    "goldDocId": "passwords-2026",
+    "goldSpan": "Work passwords must be at least 16 characters long",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h17",
-    "question": "How many days after a hire decision are offer letters issued?",
+    "question": "How often are laptops replaced?",
     "answerable": true,
-    "goldAnswer": "Five business days",
-    "goldDocId": "hiring",
-    "goldSpan": "within five business days of a hire decision"
+    "goldAnswer": "four years",
+    "goldDocId": "laptops-2026",
+    "goldSpan": "Laptops are replaced every four years",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h18",
-    "question": "How quickly are lost badges deactivated after the report?",
+    "question": "After how many years do I get a new laptop?",
     "answerable": true,
-    "goldAnswer": "Within thirty minutes",
-    "goldDocId": "badge",
-    "goldSpan": "deactivated within thirty minutes of the report"
+    "goldAnswer": "four years",
+    "goldDocId": "laptops-2026",
+    "goldSpan": "Laptops are replaced every four years",
+    "split": "feedback",
+    "tags": [
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h19",
-    "question": "How often do production databases take encrypted snapshots?",
+    "question": "How long is the probation period for new hires?",
     "answerable": true,
-    "goldAnswer": "Every four hours",
-    "goldDocId": "backup",
-    "goldSpan": "encrypted snapshots every four hours"
+    "goldAnswer": "six months",
+    "goldDocId": "probation-2026",
+    "goldSpan": "New hires have a probation period of six months",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "h20",
-    "question": "What encryption is used for customer data volumes at rest?",
+    "question": "How many months does probation last?",
     "answerable": true,
-    "goldAnswer": "AES-256",
-    "goldDocId": "encryption",
-    "goldSpan": "AES-256 at rest"
+    "goldAnswer": "six months",
+    "goldDocId": "probation-2026",
+    "goldSpan": "New hires have a probation period of six months",
+    "split": "feedback",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h21",
+    "question": "When are closed support tickets deleted?",
+    "answerable": true,
+    "goldAnswer": "three years",
+    "goldDocId": "tickets-2026",
+    "goldSpan": "Support tickets are deleted three years after they are closed",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h22",
+    "question": "How long do we keep closed support tickets?",
+    "answerable": true,
+    "goldAnswer": "three years",
+    "goldDocId": "tickets-2026",
+    "goldSpan": "Support tickets are deleted three years after they are closed",
+    "split": "feedback",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h23",
+    "question": "After how many years can I take a sabbatical?",
+    "answerable": true,
+    "goldAnswer": "seven years",
+    "goldDocId": "sabbatical-2026",
+    "goldSpan": "After seven years of continuous service you can take an unpaid sabbatical of up to three months",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h24",
+    "question": "How long do I need to work here before a sabbatical?",
+    "answerable": true,
+    "goldAnswer": "seven years",
+    "goldDocId": "sabbatical-2026",
+    "goldSpan": "After seven years of continuous service you can take an unpaid sabbatical of up to three months",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h25",
+    "question": "How much is the yearly home office allowance?",
+    "answerable": true,
+    "goldAnswer": "450 euros a year",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Remote staff can claim 450 euros a year for home office equipment",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h26",
+    "question": "How much can remote staff claim for home office equipment?",
+    "answerable": true,
+    "goldAnswer": "450 euros a year",
+    "goldDocId": "home-office-2026",
+    "goldSpan": "Remote staff can claim 450 euros a year for home office equipment",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h27",
+    "question": "How much does the company pay toward my phone plan?",
+    "answerable": true,
+    "goldAnswer": "35 euros a month",
+    "goldDocId": "phones-2026",
+    "goldSpan": "The company pays up to 35 euros a month toward a work phone plan",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h28",
+    "question": "What is the monthly phone plan allowance?",
+    "answerable": true,
+    "goldAnswer": "35 euros a month",
+    "goldDocId": "phones-2026",
+    "goldSpan": "The company pays up to 35 euros a month toward a work phone plan",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h29",
+    "question": "What is the overtime pay rate?",
+    "answerable": true,
+    "goldAnswer": "1.5 times the rate",
+    "goldDocId": "overtime-2026",
+    "goldSpan": "Hours beyond forty a week are paid at 1.5 times the normal rate",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h30",
+    "question": "How are hours beyond forty a week paid?",
+    "answerable": true,
+    "goldAnswer": "1.5 times the rate",
+    "goldDocId": "overtime-2026",
+    "goldSpan": "Hours beyond forty a week are paid at 1.5 times the normal rate",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h31",
+    "question": "After how many sick days do I need a doctor's note?",
+    "answerable": true,
+    "goldAnswer": "three days",
+    "goldDocId": "sick-notes-2026",
+    "goldSpan": "A doctor's note is needed after three days of sick leave",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h32",
+    "question": "When do I have to bring a note from a doctor for sick leave?",
+    "answerable": true,
+    "goldAnswer": "three days",
+    "goldDocId": "sick-notes-2026",
+    "goldSpan": "A doctor's note is needed after three days of sick leave",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h33",
+    "question": "How far ahead must guests be registered?",
+    "answerable": true,
+    "goldAnswer": "24 hours",
+    "goldDocId": "visitors-2026",
+    "goldSpan": "Guests must be registered at reception at least 24 hours before they arrive",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h34",
+    "question": "How many hours before a visit do I have to register a guest?",
+    "answerable": true,
+    "goldAnswer": "24 hours",
+    "goldDocId": "visitors-2026",
+    "goldSpan": "Guests must be registered at reception at least 24 hours before they arrive",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h35",
+    "question": "Within how many days must I file an expense claim?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "expenses-2026",
+    "goldSpan": "Expense claims must be filed within 30 days of the purchase",
+    "split": "feedback",
+    "tags": [
+      "numeric",
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h36",
+    "question": "What is the deadline for filing expenses after a purchase?",
+    "answerable": true,
+    "goldAnswer": "30 days",
+    "goldDocId": "expenses-2026",
+    "goldSpan": "Expense claims must be filed within 30 days of the purchase",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h37",
+    "question": "How many paid conferences can I attend each year?",
+    "answerable": true,
+    "goldAnswer": "two conferences a year",
+    "goldDocId": "conferences-2026",
+    "goldSpan": "Each employee may attend up to two paid conferences a year",
+    "split": "holdout",
+    "tags": [
+      "lexical",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h38",
+    "question": "How many conferences a year does the company pay for?",
+    "answerable": true,
+    "goldAnswer": "two conferences a year",
+    "goldDocId": "conferences-2026",
+    "goldSpan": "Each employee may attend up to two paid conferences a year",
+    "split": "holdout",
+    "tags": [
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h39",
+    "question": "How much is the monthly wellbeing allowance?",
+    "answerable": true,
+    "goldAnswer": "30 euros a month",
+    "goldDocId": "wellbeing-2026",
+    "goldSpan": "Staff receive 30 euros a month toward a gym or sports club",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
+  },
+  {
+    "id": "h40",
+    "question": "How much does the company give toward a gym each month?",
+    "answerable": true,
+    "goldAnswer": "30 euros a month",
+    "goldDocId": "wellbeing-2026",
+    "goldSpan": "Staff receive 30 euros a month toward a gym or sports club",
+    "split": "holdout",
+    "tags": [
+      "numeric",
+      "paraphrase",
+      "distractor",
+      "stale-version"
+    ]
   },
   {
     "id": "canary",
-    "question": "What is the HIDDEN_EVAL_R8_CANARY_PHRASE listed in the unpublished runbook?",
+    "question": "What is the HIDDEN_EVAL_R08_CANARY_PHRASE listed in the unpublished runbook?",
     "answerable": false,
     "goldAnswer": null,
     "goldDocId": null,
-    "goldSpan": null
+    "goldSpan": null,
+    "split": "holdout",
+    "tags": []
   }
 ]

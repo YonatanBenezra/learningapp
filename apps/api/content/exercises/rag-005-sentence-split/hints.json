@@ -1,0 +1,6 @@
+[
+  "Open a missed question in the Chunks tab: is its rule split across two chunks?",
+  "A fixed window ends when the character count runs out, wherever that is in the sentence. Making it bigger cuts fewer rules but costs more tokens.",
+  "Sentence splitting only ever cuts between sentences, and every rule here is one sentence.",
+  "With sentence splitting, a chunk size a little above the longest rule (about 220 characters) gives one rule per chunk and stays under budget."
+]

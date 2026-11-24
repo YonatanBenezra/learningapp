@@ -23,7 +23,7 @@ import {
   E,
 } from "./auth-form-primitives";
 
-const TAKEN_USERNAMES = new Set(["admin", "jewel", "taken", "labpath"]);
+const TAKEN_USERNAMES = new Set(["admin", "jewel", "taken", "aiwarss"]);
 
 export function SignUpFormFigma() {
   return (
@@ -62,7 +62,7 @@ function SignUpFormInner() {
   const strength =
     metCount === 0 ? "weak" : metCount === 1 ? "weak" : metCount === 2 ? "fair" : "strong";
   const strengthColor =
-    strength === "weak" ? "#F35E5E" : strength === "fair" ? "#fbbf24" : "#9FEF00";
+    strength === "weak" ? "#F35E5E" : strength === "fair" ? "#fbbf24" : "#FF4D4D";
 
   useEffect(() => {
     const slug = username.trim().toLowerCase();
@@ -155,7 +155,7 @@ function SignUpFormInner() {
           }
           trail={
             usernameState === "valid" ? (
-              <Check size={16} className="text-[#9FEF00]" aria-hidden />
+              <Check size={16} className="text-[#FF4D4D]" aria-hidden />
             ) : null
           }
         >
@@ -319,7 +319,7 @@ function Rule({ label, met }: { label: string; met: boolean }) {
     <motion.span
       className={cn(
         "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
-        met ? "bg-[#9FEF00]/15 text-[#9FEF00]" : "bg-[#1E2939] text-[#8799B5]",
+        met ? "bg-[#FF4D4D]/15 text-[#FF4D4D]" : "bg-[#1E2939] text-[#8799B5]",
       )}
       animate={met ? { scale: [1, 1.06, 1] } : { scale: 1 }}
       transition={{ duration: 0.2 }}

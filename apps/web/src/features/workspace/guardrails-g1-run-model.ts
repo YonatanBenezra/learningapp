@@ -46,13 +46,11 @@ export function buildG1RunDetailModel(
   const verdict = grade?.verdict ?? null;
   const inFlight = run.status === "queued" || run.status === "running";
 
-  const base = DEMO_G1_RUN_DETAIL;
-
+  // Built only from the run and its grade: no demo values leak into real runs.
   return {
-    ...base,
     runId,
     runIdDisplay: run.id.length > 18 ? `${run.id.slice(0, 12)}…${run.id.slice(-4)}` : run.id,
-    attempt: 1,
+    attempt: null,
     exerciseSlug: run.exerciseSlug ?? GUARDRAILS_G1_SLUG,
     exerciseTitle: run.title ?? "Break the Concierge",
     verdict: inFlight ? null : verdict,
@@ -64,7 +62,7 @@ export function buildG1RunDetailModel(
       levelReached: wins.length ? `${levelsWon} / ${totalLevels}` : "—",
       levelFoot: maxCleared ? `Through level ${maxCleared}` : "Hidden grading",
       messages: "—",
-      messagesFoot: "Open trace for full log",
+      messagesFoot: "Grading sends one message per level",
       canaryEvent: "—",
       canaryFoot: wins.find((row) => row.won)?.encoding ?? "—",
       timeOnLevel: "—",
@@ -79,7 +77,7 @@ export function buildG1RunDetailModel(
             : `Level ${row.level} held`,
           kind: row.won ? ("cleared" as const) : ("turn-quiet" as const),
         }))
-      : base.timeline.slice(0, 1),
-    messages: base.messages.slice(0, 0),
+      : [],
+    messages: [],
   };
 }

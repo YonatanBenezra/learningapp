@@ -12,13 +12,23 @@ import type { Grade } from "@/types/grade";
 import { cn } from "@/lib/utils";
 import { InfoTip } from "./info-tip";
 import { IconCode } from "./workspace-icons";
+import { ToolGroupHead } from "./tool-lock";
+import {
+  groupFieldsByTool,
+  lockedDefaults,
+  schemaWithoutLocked,
+  type ToolLocks,
+} from "../tool-locks";
 
 type SchemaProperty = {
   type?: string;
   minimum?: number;
   maximum?: number;
+  /** Step for `number` fields (JSON Schema multipleOf). */
+  multipleOf?: number;
   enum?: unknown[];
   default?: unknown;
+  description?: string;
 };
 
 type SubmissionSchema = {
@@ -35,6 +45,12 @@ type SubmissionSurfaceProps = {
   errorHref?: string | null;
   errorLinkLabel?: string | null;
   initialValues?: Record<string, unknown>;
+  /**
+   * Live values to start from when this surface (re)mounts, e.g. after a mobile
+   * step switch. Read on mount only; "Reset to starter config" still uses
+   * `initialValues`.
+   */
+  restoreValues?: Record<string, unknown> | null;
   lead?: string;
   title?: string;
   simulator?: string;
@@ -44,9 +60,115 @@ type SubmissionSurfaceProps = {
   figmaLayout?: boolean;
   figmaGrade?: Grade | null;
   figmaAttempt?: number;
+  /** "N of M submissions left · resets HH:MM"; hidden when null. */
+  figmaBudget?: { label: string; exhausted: boolean } | null;
+  /**
+   * Stage inspector: the pipeline stage in focus. Its fields come first,
+   * with their trade-off; the others stay editable but step back.
+   */
+  inspect?: { id: string; title: string; detail: string; fields: string[] } | null;
+  /**
+   * Practice only: the tool ladder. Controls are grouped by tool, the
+   * exercise's new tool first; locked tools stay greyed at their defaults.
+   */
+  toolLocks?: ToolLocks | null;
 };
 
+/** Known tools fold away when an exercise shows more controls than this. */
+const KNOWN_FIELDS_UNFOLDED = 3;
+
 const RAG_PIPELINE = ["Corpus", "Chunk", "Retrieve", "Grade"] as const;
+
+/** Units the RAG graders actually measure these fields in. */
+const RAG_FIELD_UNITS: Record<string, string> = {
+  chunkSize: "chars",
+  overlap: "chars",
+  topK: "chunks",
+  rerankTopN: "chunks",
+  compressSentences: "sentences",
+  expandNeighbors: "chunks",
+};
+
+/** What each RAG toggle does in the grader, when the schema has no description. */
+const RAG_FIELD_HELP: Record<string, string> = {
+  rerank:
+    "Fetch 4× top-k candidates, then move chunks whose document title matches the query to the top.",
+  retrievalMode:
+    "bm25 matches keywords, dense matches meaning with embeddings, hybrid mixes both by hybridAlpha.",
+  hybridAlpha: "Weight on the dense score in hybrid mode: 0 is pure BM25, 1 is pure dense.",
+  embeddingModel:
+    "english is bge-small, trained on English; multilingual is e5-small, trained on about 100 languages including Bangla.",
+  statusFilter: "Which documents may reach the context, by their status metadata.",
+  reranker:
+    "title-boost and mmr are heuristics; cross-encoder is a model that reads the question and each candidate together.",
+  dedupe: "exact drops identical pages; near drops pages whose words overlap at least the threshold.",
+  dedupeThreshold: "Share of distinct words two pages must share to count as copies.",
+  hops: "1 searches once; 2 searches again with the question plus what the first search found.",
+  router:
+    "none sends every question to the default profile; rules uses your routing rules; top-document routes by the best-matching document's type.",
+  defaultRoute: "Profile for questions no rule matches (and for every question when the router is none).",
+  refuseBelowScore:
+    "Refuse without calling the model when the best BM25 score is below this (0 = always call the model).",
+  hopSeeds: "How many passages from the first search feed the second query.",
+  hopQuery: "passage adds whole passages to the second query; entities adds only the new names they mention.",
+  filterStage: "pre filters the index before top-k; post drops failing chunks after top-k.",
+  minScoreRatio:
+    "After top-k, drop every chunk scoring below this share of the best chunk's score (0 = keep all k).",
+  compressSentences:
+    "Keep only this many sentences of each retrieved page, the ones sharing the most words with the question (0 = send pages whole).",
+  expandNeighbors:
+    "Send each retrieved chunk with this many neighbouring chunks on each side, from the same page (0 = the chunk alone).",
+};
+
+/** One line per knob: what you gain and what you pay when you raise it. */
+const RAG_FIELD_TRADEOFF: Record<string, string> = {
+  chunkSize: "Bigger chunks keep more context together, but every chunk sent costs more tokens.",
+  overlap: "More overlap keeps answers that straddle a boundary whole, but repeats text and adds chunks.",
+  splitStrategy: "Splitting on structure keeps units whole; fixed windows cut wherever the count runs out.",
+  topK: "More chunks catch answers that rank lower, and every one of them is paid for.",
+  retrievalMode: "Keywords win on exact terms and ids; embeddings win on reworded questions.",
+  hybridAlpha: "Higher leans on meaning, lower on exact words.",
+  embeddingModel: "The multilingual model reads across languages; the English one is sharper on English alone.",
+  rerank: "Reordering by title helps when titles name the topic, and hurts when they mislead.",
+  reranker: "Each reranker fixes a different problem: misleading titles, copies, or weak first-stage scores.",
+  rerankTopN: "A wider window lets the reranker reach lower answers, at more work per question.",
+  statusFilter: "Stricter filters drop stale versions, and anything without the right status.",
+  filterStage: "Filtering after top-k is cheaper but can leave fewer than k chunks.",
+  minScoreRatio: "A higher cutoff sends fewer chunks on clear wins, but can drop a close second.",
+  compressSentences: "Fewer sentences per chunk save tokens, but can drop the one that answers.",
+  expandNeighbors: "A wider window brings the sentences around a hit, and costs tokens for every one.",
+  dedupe: "Removing copies frees budget, but a loose threshold can drop the answer page.",
+  dedupeThreshold: "Lower treats more pages as copies.",
+  hops: "A second search finds what the first one only points to, at twice the retrieval.",
+  hopSeeds: "More seeds give the second search more to go on, and more noise.",
+  hopQuery: "Carrying names keeps the second search focused; whole passages drift.",
+  queryRewritePrompt: "A rewrite fixes how people ask, at one model call per question.",
+  generationPrompt: "Stricter instructions make citations reliable, but can make the model refuse too often.",
+  refuseBelowScore: "A higher threshold saves model calls, but refuses questions it could have answered.",
+};
+
+function ragFieldHelp(name: string, property: SchemaProperty): string {
+  return (
+    property.description ??
+    RAG_FIELD_HELP[name] ??
+    (name.endsWith("Rerank") ? RAG_FIELD_HELP.rerank : undefined) ??
+    "Toggle this option."
+  );
+}
+
+/** Unit for a RAG field, including per-class routing fields (faqTopK, …). */
+function ragFieldUnit(name: string): string | undefined {
+  if (RAG_FIELD_UNITS[name]) {
+    return RAG_FIELD_UNITS[name];
+  }
+  if (name.endsWith("TopK")) {
+    return "chunks";
+  }
+  if (name.endsWith("ChunkSize")) {
+    return "chars";
+  }
+  return undefined;
+}
 const GUARD_PIPELINE = ["Probe", "Guard", "Model", "Grade"] as const;
 
 function guardModeFromFields(fields: string[]) {
@@ -90,6 +212,7 @@ export function SubmissionSurface({
   errorHref,
   errorLinkLabel,
   initialValues,
+  restoreValues,
   lead,
   title = "Submission",
   simulator,
@@ -98,15 +221,35 @@ export function SubmissionSurface({
   onValuesChange,
   figmaLayout = false,
   figmaGrade = null,
-  figmaAttempt = 3,
+  figmaAttempt = 1,
+  figmaBudget = null,
+  inspect = null,
+  toolLocks = null,
 }: SubmissionSurfaceProps) {
   const parsed = useMemo(() => asSubmissionSchema(schema), [schema]);
-  const [values, setValues] = useState<Record<string, unknown>>({});
+  const [rawValues, setValues] = useState<Record<string, unknown>>(() => ({
+    ...defaultsFrom(parsed),
+    ...initialValues,
+    ...restoreValues,
+  }));
+  // Locked tools are held at their defaults; what the learner typed before
+  // comes back once the tool is unlocked.
+  const held = useMemo(() => lockedDefaults(toolLocks, parsed), [toolLocks, parsed]);
+  const values = useMemo(() => ({ ...rawValues, ...held }), [rawValues, held]);
+  const [showKnown, setShowKnown] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const isRag = simulator === "rag";
   const isGuard = simulator === "guardrails";
 
+  // Reset only when the schema or starter values change after mount; the
+  // mount itself is seeded above (so restored values are not overwritten).
+  const seededFromRef = useRef({ parsed, initialValues });
   useEffect(() => {
+    const seeded = seededFromRef.current;
+    if (seeded.parsed === parsed && seeded.initialValues === initialValues) {
+      return;
+    }
+    seededFromRef.current = { parsed, initialValues };
     setValues({ ...defaultsFrom(parsed), ...initialValues });
   }, [parsed, initialValues]);
 
@@ -120,8 +263,8 @@ export function SubmissionSurface({
     !(guardMode?.id === "defend");
 
   const validation = useMemo(
-    () => validateSubmission(parsed, values),
-    [parsed, values],
+    () => validateSubmission(schemaWithoutLocked(parsed, held), values),
+    [parsed, held, values],
   );
   const isValid = validation.ok;
 
@@ -144,7 +287,7 @@ export function SubmissionSurface({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const result = validateSubmission(parsed, values);
+    const result = validateSubmission(schemaWithoutLocked(parsed, held), values);
     if (!result.ok) {
       setValidationError(result.message);
       return;
@@ -169,6 +312,31 @@ export function SubmissionSurface({
       ? Math.round((values.overlap / chunkSize) * 100)
       : null;
 
+  const renderField = (key: string, property: SchemaProperty) => (
+    <Field
+      key={key}
+      name={key}
+      property={property}
+      value={values[key]}
+      required={parsed.required ? parsed.required.includes(key) : true}
+      rag={isRag}
+      figmaLayout
+      emphasis={
+        inspect && inspect.fields.length > 0
+          ? inspect.fields.includes(key)
+            ? "focus"
+            : "dim"
+          : undefined
+      }
+      tradeoff={inspect?.fields.includes(key) ? RAG_FIELD_TRADEOFF[key] : undefined}
+      overlapPct={overlapPct}
+      onChange={(next) => {
+        setValidationError(null);
+        setValues((current) => ({ ...current, [key]: next }));
+      }}
+    />
+  );
+
   if (figmaLayout && isRag) {
     return (
       <div className="lp-ws-rag-figma-editor flex min-h-0 flex-1 flex-col">
@@ -179,24 +347,87 @@ export function SubmissionSurface({
               className="grid grid-cols-3 gap-3 max-sm:grid-cols-1"
               onSubmit={handleSubmit}
             >
-              {fields.map(([key, property]) => (
-                <Field
-                  key={key}
-                  name={key}
-                  property={property}
-                  value={values[key]}
-                  required={
-                    parsed.required ? parsed.required.includes(key) : true
-                  }
-                  rag={isRag}
-                  figmaLayout
-                  overlapPct={overlapPct}
-                  onChange={(next) => {
-                    setValidationError(null);
-                    setValues((current) => ({ ...current, [key]: next }));
-                  }}
-                />
-              ))}
+              {inspect ? (
+                <div className="lp-ws-inspector col-span-full" aria-live="polite">
+                  <span className="lp-ws-inspector-kicker">Stage inspector</span>
+                  <strong>{inspect.title}</strong>
+                  <span>
+                    {inspect.fields.length > 0
+                      ? inspect.detail
+                      : "Fixed by the exercise: nothing to set here. Pick a stage marked “you control”."}
+                  </span>
+                </div>
+              ) : null}
+              {toolLocks
+                ? (() => {
+                    const groups = groupFieldsByTool(fields, toolLocks);
+                    const known = groups.filter(
+                      (group) => group.tool?.state === "unlocked",
+                    );
+                    const knownCount = known.reduce(
+                      (sum, group) => sum + group.fields.length,
+                      0,
+                    );
+                    const foldKnown =
+                      knownCount > KNOWN_FIELDS_UNFOLDED &&
+                      groups.some((group) => group.tool?.state === "new");
+                    let foldShown = false;
+                    return groups.map((group) => {
+                      const tool = group.tool;
+                      const folded =
+                        foldKnown && tool?.state === "unlocked" && !showKnown;
+                      const toggle =
+                        foldKnown && tool?.state === "unlocked" && !foldShown ? (
+                          <div className="lp-tool-known" key="known-fold">
+                            <span>
+                              <strong>
+                                {known.length === 1
+                                  ? "1 tool you already have"
+                                  : `${known.length} tools you already have`}
+                              </strong>{" "}
+                              ({known.map((row) => row.tool?.title).join(", ")}), pre-filled.
+                            </span>
+                            <button
+                              type="button"
+                              className="lp-tool-unlock"
+                              aria-expanded={showKnown}
+                              onClick={() => setShowKnown((open) => !open)}
+                            >
+                              {showKnown ? "Hide" : `Show ${knownCount} controls`}
+                            </button>
+                          </div>
+                        ) : null;
+                      if (toggle) {
+                        foldShown = true;
+                      }
+                      const body = folded ? null : (
+                        <section
+                          key={tool?.id ?? "other"}
+                          className={cn("lp-tool-group", tool && `is-${tool.state}`)}
+                        >
+                          {tool ? (
+                            <ToolGroupHead
+                              tool={tool}
+                              cost={toolLocks.cost}
+                              onUnlock={toolLocks.onUnlock}
+                            />
+                          ) : null}
+                          <fieldset
+                            className="lp-tool-fields"
+                            disabled={tool?.state === "locked"}
+                          >
+                            {inspectedFirst(group.fields, inspect?.fields ?? []).map(
+                              ([key, property]) => renderField(key, property),
+                            )}
+                          </fieldset>
+                        </section>
+                      );
+                      return toggle ? [toggle, body] : body;
+                    });
+                  })()
+                : inspectedFirst(fields, inspect?.fields ?? []).map(([key, property]) =>
+                    renderField(key, property),
+                  )}
               {validationError ? (
                 <p className="text-[0.8125rem] text-red-400 sm:col-span-3">{validationError}</p>
               ) : null}
@@ -225,6 +456,17 @@ export function SubmissionSurface({
             Reset to starter config
           </button>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            {figmaBudget ? (
+              <span
+                className={cn(
+                  "text-[0.6875rem] font-medium",
+                  figmaBudget.exhausted ? "text-lp-status-fail" : "text-lp-muted",
+                )}
+                aria-live="polite"
+              >
+                {figmaBudget.label}
+              </span>
+            ) : null}
             <span className="text-[0.6875rem] font-medium text-lp-muted">
               attempt {figmaAttempt}
             </span>
@@ -404,6 +646,8 @@ function Field({
   codeLab,
   figmaLayout = false,
   overlapPct,
+  emphasis,
+  tradeoff,
   onChange,
 }: {
   name: string;
@@ -415,9 +659,18 @@ function Field({
   figmaLayout?: boolean;
   chunkSize?: number;
   overlapPct?: number | null;
+  /** Stage inspector: this field sets the stage in focus, or another one. */
+  emphasis?: "focus" | "dim";
+  /** Stage inspector: what raising this knob gains and costs. */
+  tradeoff?: string;
   onChange: (value: unknown) => void;
 }) {
   const label = labelFor(name);
+  const emphasisClass =
+    emphasis === "focus" ? "lp-ws-field-focus" : emphasis === "dim" ? "lp-ws-field-dim" : undefined;
+  const tradeoffLine = tradeoff ? (
+    <span className="lp-ws-field-tradeoff">{tradeoff}</span>
+  ) : null;
   const wide = isWideField(property);
   const lang = languageFor(name);
 
@@ -425,7 +678,7 @@ function Field({
     if (rag && figmaLayout) {
       const options = property.enum.map(String);
       return (
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className={cn("flex min-w-0 flex-col gap-1", emphasisClass)}>
           <div className="flex items-center justify-between gap-2 font-mono text-[0.6875rem] text-lp-muted">
             <span className="flex items-center gap-1 text-lp-ink/90">
               {name}
@@ -455,6 +708,7 @@ function Field({
           <span className="font-mono text-[0.625rem] text-lp-muted">
             {options.join(" · ")}
           </span>
+          {tradeoffLine}
         </div>
       );
     }
@@ -516,7 +770,7 @@ function Field({
 
   if (property.type === "boolean") {
     return (
-      <label className={`lp-ws-check lp-ws-field--wide${rag ? " lp-rag-check" : ""}`}>
+      <label className={cn("lp-ws-check lp-ws-field--wide", rag && "lp-rag-check", emphasisClass)}>
         <input
           type="checkbox"
           name={name}
@@ -526,7 +780,8 @@ function Field({
         {rag ? (
           <span>
             <strong>{label}</strong>
-            <span>Toggle this option for the retrieval pipeline</span>
+            <span>{ragFieldHelp(name, property)}</span>
+            {tradeoffLine}
           </span>
         ) : (
           label
@@ -541,24 +796,20 @@ function Field({
     const numeric =
       typeof value === "number" && Number.isFinite(value) ? value : min;
     if (rag && figmaLayout && property.minimum != null && property.maximum != null) {
-      const rangeLabel = `${min} - ${max}`;
+      const rangeLabel = `${min} – ${max}`;
       const footnote =
         name === "overlap" && overlapPct != null
-          ? `${overlapPct}% of chunk`
-          : name === "chunkSize"
-            ? rangeLabel
-            : rangeLabel;
+          ? `${rangeLabel} · ${overlapPct}% of chunk`
+          : rangeLabel;
+      const unit = ragFieldUnit(name);
       const boxBorder =
         name === "chunkSize"
           ? "border-lp-brand/55 focus-within:border-lp-brand"
           : "border-lp-border focus-within:border-lp-brand/70";
       return (
-        <div className="flex min-w-0 flex-col gap-1">
+        <div className={cn("flex min-w-0 flex-col gap-1", emphasisClass)}>
           <div className="flex items-center justify-between gap-2 font-mono text-[0.6875rem]">
             <span className="text-lp-ink/90">{name}</span>
-            {name === "chunkSize" ? (
-              <span className="text-lp-muted">{rangeLabel}</span>
-            ) : null}
           </div>
           <div
             className={cn(
@@ -577,9 +828,12 @@ function Field({
               onChange={(event) => onChange(parseInteger(event.target.value))}
               className="min-w-0 flex-1 bg-transparent font-mono text-[0.875rem] font-semibold text-lp-brand outline-none [appearance:textfield] [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-outer-spin-button]:m-0"
             />
-            <span className="shrink-0 font-mono text-[0.6875rem] text-lp-muted">tokens</span>
+            {unit ? (
+              <span className="shrink-0 font-mono text-[0.6875rem] text-lp-muted">{unit}</span>
+            ) : null}
           </div>
           <span className="font-mono text-[0.625rem] text-lp-muted">{footnote}</span>
+          {tradeoffLine}
         </div>
       );
     }
@@ -626,6 +880,41 @@ function Field({
     );
   }
 
+  if (property.type === "number") {
+    // Fractional knobs such as hybridAlpha: a slider when bounded.
+    const min = property.minimum ?? 0;
+    const max = property.maximum ?? 1;
+    const step = property.multipleOf ?? 0.05;
+    const numeric = typeof value === "number" && Number.isFinite(value) ? value : min;
+    return (
+      <label
+        className={cn(
+          wide ? "lp-field lp-ws-field--wide" : "lp-field lp-rag-slider",
+          emphasisClass,
+        )}
+      >
+        <span className="lp-rag-slider-top">
+          <span className="lp-field-label">{label}</span>
+          <strong>{numeric.toFixed(2)}</strong>
+        </span>
+        <input
+          type="range"
+          name={name}
+          min={min}
+          max={max}
+          step={step}
+          value={numeric}
+          onChange={(event) => onChange(Number(event.target.value))}
+          className="lp-rag-range"
+        />
+        <span className="lp-ws-field-hint">
+          {property.description ?? RAG_FIELD_HELP[name] ?? `${min}–${max}`}
+        </span>
+        {tradeoffLine}
+      </label>
+    );
+  }
+
   const long = isLongField(name);
   const text = typeof value === "string" ? value : "";
   if (codeLab && long) {
@@ -656,8 +945,9 @@ function Field({
   }
 
   return (
-    <label className="lp-field lp-ws-field--wide">
+    <label className={cn("lp-field lp-ws-field--wide", emphasisClass)}>
       <span className="lp-field-label">{label}</span>
+      {tradeoffLine}
       {long ? (
         <textarea
           name={name}
@@ -674,12 +964,26 @@ function Field({
           name={name}
           value={text}
           required={required}
+          placeholder={name === "flag" ? "AIWARSS{…}" : undefined}
+          spellCheck={name === "flag" ? false : undefined}
+          autoComplete={name === "flag" ? "off" : undefined}
           onChange={(event) => onChange(event.target.value)}
           className="lp-field-input"
         />
       )}
     </label>
   );
+}
+
+/** The inspected stage's fields first, then the rest, each in schema order. */
+function inspectedFirst<T extends [string, unknown]>(fields: T[], inspected: string[]): T[] {
+  if (inspected.length === 0) {
+    return fields;
+  }
+  return [
+    ...fields.filter(([key]) => inspected.includes(key)),
+    ...fields.filter(([key]) => !inspected.includes(key)),
+  ];
 }
 
 function asSchema(value: unknown): SubmissionSchema {
@@ -696,7 +1000,7 @@ function defaultsFrom(schema: SubmissionSchema): Record<string, unknown> {
       values[key] = property.default;
       continue;
     }
-    if (property.type === "integer") {
+    if (property.type === "integer" || property.type === "number") {
       values[key] = property.minimum ?? 0;
       continue;
     }
@@ -730,7 +1034,8 @@ function isLongField(name: string) {
     key.includes("spec") ||
     key.includes("content") ||
     key.includes("source") ||
-    key.includes("schema")
+    key.includes("schema") ||
+    key.includes("rules")
   );
 }
 

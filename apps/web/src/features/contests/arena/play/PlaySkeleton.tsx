@@ -62,7 +62,7 @@ function TableSectionSkel({
   rows,
   titleWidth,
 }: {
-  accent: "#FFAF00" | "#9FEF00";
+  accent: "#FFAF00" | "#FF4D4D";
   rows: number;
   titleWidth: string;
 }) {
@@ -135,7 +135,7 @@ export function PlaySkeleton() {
             <Skel className="mt-5 h-10 w-full max-w-[420px] !rounded-full !border !border-[#2A3446] !bg-transparent" />
 
             <TableSectionSkel accent="#FFAF00" rows={6} titleWidth="w-40" />
-            <TableSectionSkel accent="#9FEF00" rows={2} titleWidth="w-24" />
+            <TableSectionSkel accent="#FF4D4D" rows={2} titleWidth="w-24" />
           </div>
 
           <aside

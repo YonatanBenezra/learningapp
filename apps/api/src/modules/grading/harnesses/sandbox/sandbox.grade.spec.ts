@@ -11,19 +11,16 @@ import type { HiddenItem } from '../rag/rag.types';
 import { learnerInputJson, materialiseLearnerInput } from './sandbox.input';
 import { gradeSandboxRetriever } from './sandbox.grade';
 
-const contentRoot = path.join(
-  process.cwd(),
-  'content/exercises/rag-009-python-retriever',
-);
+const fixtures = path.join(__dirname, '../__fixtures__/internal-policy');
 
 function loadJson<T>(name: string): T {
-  return JSON.parse(readFileSync(path.join(contentRoot, name), 'utf8')) as T;
+  return JSON.parse(readFileSync(path.join(fixtures, name), 'utf8')) as T;
 }
 
 describe('sandbox retriever grader', () => {
-  const docs = loadJson<CorpusDoc[]>('corpus.json');
-  const hidden = loadJson<HiddenItem[]>('eval_hidden.json');
-  const publicItems = loadJson<HiddenItem[]>('eval_public.json');
+  const docs = loadJson<CorpusDoc[]>('sandbox.corpus.json');
+  const hidden = loadJson<HiddenItem[]>('sandbox.eval_hidden.json');
+  const publicItems = loadJson<HiddenItem[]>('sandbox.eval_public.json');
 
   it('strips gold answers and canaries from the sandbox workspace', () => {
     const input = materialiseLearnerInput(docs, hidden);
@@ -108,5 +105,81 @@ describe('sandbox retriever grader', () => {
     expect(oom.verdict).toBe('fail');
     expect(oom.failureClasses).toEqual([SANDBOX_ERROR_CODES.OOM]);
     expect(JSON.stringify(oom)).not.toContain('HIDDEN_EVAL');
+  });
+
+  describe('holdout questions cannot be smuggled out', () => {
+    const holdout = hidden.filter(
+      (item) =>
+        item.split === 'holdout' && !item.question.includes('HIDDEN_EVAL'),
+    );
+    const blob = holdout.map((item) => item.question).join(' | ');
+    const ok = (stdout: string) => ({
+      ok: true,
+      errorCode: SANDBOX_ERROR_CODES.OK,
+      exitCode: 0,
+      stdout,
+      stderr: '',
+      durationMs: 1,
+      memoryPeakMb: 1,
+      runtime: 'runc' as const,
+    });
+
+    it('never echoes passages that are not corpus spans', async () => {
+      // Every question "retrieves" the holdout questions as its passage.
+      const stdout = JSON.stringify({
+        results: hidden.map((item) => ({ id: item.id, passages: [blob] })),
+      });
+      const result = await gradeSandboxRetriever(
+        SANDBOX_REFERENCE_PAYLOAD,
+        docs,
+        hidden,
+        publicItems,
+        () => Promise.resolve(ok(stdout)),
+      );
+      const shown =
+        JSON.stringify(result.failingCases) + JSON.stringify(result.trace);
+      expect(result.verdict).toBe('fail');
+      for (const item of holdout) {
+        expect(shown).not.toContain(item.question);
+      }
+    });
+
+    it('never shows stderr from the hidden run', async () => {
+      const calls: string[] = [];
+      const result = await gradeSandboxRetriever(
+        SANDBOX_REFERENCE_PAYLOAD,
+        docs,
+        hidden,
+        publicItems,
+        (input) => {
+          const questions = (
+            JSON.parse(input.workspaceFiles?.['input.json'] ?? '{}') as {
+              questions: { question: string }[];
+            }
+          ).questions;
+          calls.push(
+            questions.length > publicItems.length ? 'hidden' : 'public',
+          );
+          // Crash with the questions it was given in the error message.
+          return Promise.resolve({
+            ...ok(''),
+            ok: questions.length <= publicItems.length,
+            errorCode:
+              questions.length <= publicItems.length
+                ? SANDBOX_ERROR_CODES.OK
+                : SANDBOX_ERROR_CODES.RUNTIME_ERROR,
+            stderr: `Traceback: ${questions.map((q) => q.question).join(' | ')}`,
+          });
+        },
+      );
+      expect(calls).toEqual(['hidden', 'public']);
+      const shown = JSON.stringify(result);
+      for (const item of holdout) {
+        expect(shown).not.toContain(item.question);
+      }
+      expect(result.failingCases[0]?.note).toMatch(
+        /runs on the public samples/,
+      );
+    });
   });
 });

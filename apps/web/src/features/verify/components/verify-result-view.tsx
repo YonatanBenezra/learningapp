@@ -40,17 +40,17 @@ const STATUS_COPY: Record<
   valid: {
     badge: "Valid signature",
     title: "Verified assessment result",
-    lead: "LabPath issued and signed this result. The signature matches our published key.",
+    lead: "AI Warss issued and signed this result. The signature matches our published key.",
   },
   revoked: {
     badge: "Revoked",
     title: "Revoked assessment result",
-    lead: "This result was genuinely issued by LabPath but has been withdrawn after human review. The signature still verifies.",
+    lead: "This result was genuinely issued by AI Warss but has been withdrawn after human review. The signature still verifies.",
   },
   invalid: {
     badge: "Invalid or unknown",
     title: "Result could not be verified",
-    lead: "This id is unknown, malformed, or the signature does not match LabPath's published keys.",
+    lead: "This id is unknown, malformed, or the signature does not match AI Warss published keys.",
   },
 };
 
@@ -210,7 +210,7 @@ export function VerifyResultView({ resultId }: { resultId: string }) {
           className={`lp-vf-hero lp-vf-hero--${status === "valid" ? "valid" : status}`}
         >
           <div>
-            <p className="lp-vf-kicker">LabPath verification</p>
+            <p className="lp-vf-kicker">AI Warss verification</p>
             <h1 className="lp-vf-title">{copy.title}</h1>
             <p className="lp-vf-lead">{copy.lead}</p>
             {result?.revokeReasonCode ? (
@@ -226,10 +226,10 @@ export function VerifyResultView({ resultId }: { resultId: string }) {
 
         {result ? <ResultBody result={result} /> : null}
 
-        <section className="lp-vf-panel" aria-label="What LabPath asserts">
-          <h2 className="lp-vf-panel-title">What LabPath asserts</h2>
+        <section className="lp-vf-panel" aria-label="What AI Warss asserts">
+          <h2 className="lp-vf-panel-title">What AI Warss asserts</h2>
           <p className="lp-vf-panel-copy">
-            LabPath asserts what was solved, under what conditions, on what
+            AI Warss asserts what was solved, under what conditions, on what
             date. This is a point-in-time verified assessment result — not a
             professional certification, employment guarantee, or accreditation.
           </p>
@@ -246,7 +246,7 @@ export function VerifyResultView({ resultId }: { resultId: string }) {
               Published signing keys
             </a>
             <Link href={routes.home} className="lp-ct-btn">
-              About LabPath
+              About AI Warss
             </Link>
           </div>
         </section>

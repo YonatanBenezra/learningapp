@@ -26,11 +26,11 @@ export function FilterCheckbox({
         className={cn(
           "inline-flex size-4 shrink-0 items-center justify-center rounded border",
           checked
-            ? "border-[#9FEF00] bg-[#9FEF00]/15"
+            ? "border-[#FF4D4D] bg-[#FF4D4D]/15"
             : "border-[#2A3446] bg-transparent",
         )}
       >
-        {checked ? <Check className="size-3 text-[#9FEF00]" strokeWidth={3} /> : null}
+        {checked ? <Check className="size-3 text-[#FF4D4D]" strokeWidth={3} /> : null}
       </span>
       {dotColor ? (
         <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: dotColor }} aria-hidden />

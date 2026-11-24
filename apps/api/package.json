@@ -18,6 +18,7 @@
     "test:ci": "jest --testPathIgnorePatterns='nn-content-pipeline|ft-content-pipeline|va1-pool|n1\\.grade|p1\\.grade|a1\\.grade|agent\\.slice|benchmark/|evaluation/|fine-tuning\\.grade'",
     "test:e2e": "SANDBOX_ALLOW_RUNC_FALLBACK=true jest --config ./test/jest-e2e.json",
     "content:validate": "node scripts/content/validate-cli.mjs",
+    "models:fetch": "node scripts/models/fetch-rag-models.mjs",
     "content:sync-catalogue": "node scripts/content/sync-catalogue.mjs",
     "content:seed-core-15": "node scripts/content/seed-core-15.mjs",
     "content:smoke-contest-p0": "node scripts/content/smoke-contest-p0.mjs",
@@ -35,6 +36,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@huggingface/transformers": "^4.3.2",
     "@nestjs/bullmq": "^11.0.5",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
@@ -52,6 +54,7 @@
     "cookie-parser": "^1.4.7",
     "helmet": "^8.3.0",
     "ioredis": "^6.0.0",
+    "js-tiktoken": "^1.0.21",
     "nestjs-pino": "^4.6.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -106,7 +109,7 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "<rootDir>/../test/jest-host-typed-arrays.environment.cjs"
   },
   "prisma": {
     "seed": "node prisma/seed.mjs"

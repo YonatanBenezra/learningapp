@@ -4,6 +4,7 @@ import { publicDisplayName } from '../profiles/profile-slug';
 import {
   LEADERBOARD_RULE,
   RECENT_PASS_WINDOW_MS,
+  hintPointsSpent,
   leaderboardRating,
   sortLeaderboardRows,
 } from './leaderboard-rank';
@@ -14,6 +15,7 @@ import {
   strongestTracksFromCounts,
   type LeaderboardTrackKey,
 } from './leaderboard-tracks';
+import { toolPointsByUser } from '../practice/tools/tools.service';
 
 export type LeaderboardEntry = {
   rank: number;
@@ -21,6 +23,8 @@ export type LeaderboardEntry = {
   displayName: string;
   solves: number;
   recentPasses: number;
+  /** Points spent on hints for solved problems. */
+  hintPoints: number;
   rating: number;
   streakDays: number;
   trackPasses: Record<LeaderboardTrackKey, number>;
@@ -94,6 +98,28 @@ export class LeaderboardService {
       },
     });
 
+    const unlocks = await this.prisma.hintUnlock.findMany({
+      where: { userId: { in: candidates.map((row) => row.id) } },
+      select: {
+        userId: true,
+        hintIndex: true,
+        exercise: { select: { slug: true } },
+      },
+    });
+    const toolPoints = await toolPointsByUser(
+      this.prisma,
+      candidates.map((row) => row.id),
+    );
+    const unlocksByUser = new Map<
+      string,
+      { slug: string; hintIndex: number }[]
+    >();
+    for (const unlock of unlocks) {
+      const list = unlocksByUser.get(unlock.userId) ?? [];
+      list.push({ slug: unlock.exercise.slug, hintIndex: unlock.hintIndex });
+      unlocksByUser.set(unlock.userId, list);
+    }
+
     const byUser = new Map<
       string,
       {
@@ -156,12 +182,22 @@ export class LeaderboardService {
             trackPasses[key] = stats.trackSlugs[key].size;
           }
           const strongestTracks = strongestTracksFromCounts(trackPasses);
+          const hintPoints =
+            hintPointsSpent(
+              unlocksByUser.get(candidate.id) ?? [],
+              stats.slugs,
+            ) + (toolPoints.get(candidate.id) ?? 0);
           return {
             slug: candidate.profileSlug as string,
             displayName: publicDisplayName(candidate.displayName),
             solves: stats.slugs.size,
             recentPasses: stats.recentPasses,
-            rating: leaderboardRating(stats.slugs.size, stats.recentPasses),
+            hintPoints,
+            rating: leaderboardRating(
+              stats.slugs.size,
+              stats.recentPasses,
+              hintPoints,
+            ),
             streakDays: streakDaysFromPassDates(stats.passDates),
             trackPasses,
             strongestTracks,
@@ -178,6 +214,7 @@ export class LeaderboardService {
         displayName: row.displayName,
         solves: row.solves,
         recentPasses: row.recentPasses,
+        hintPoints: row.hintPoints,
         rating: row.rating,
         streakDays: row.streakDays,
         trackPasses: row.trackPasses,
